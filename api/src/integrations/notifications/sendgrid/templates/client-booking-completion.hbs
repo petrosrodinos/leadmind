@@ -1,0 +1,142 @@
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>Thank you for visiting, {{client.first_name}}!</title>
+    <style>
+      body {
+        font-family: 'Segoe UI', Roboto, sans-serif;
+        background-color: #f8fafc;
+        margin: 0;
+        padding: 20px;
+        color: #111827;
+      }
+      .email {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        max-width: 640px;
+        margin: auto;
+        overflow: hidden;
+      }
+      .header {
+        background: #6366f1;
+        color: #fff;
+        padding: 24px 32px;
+        text-align: center;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 600;
+      }
+      .body {
+        padding: 32px;
+      }
+      .section {
+        margin-bottom: 24px;
+      }
+      .section h2 {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #374151;
+      }
+      .cta {
+        margin-top: 24px;
+        text-align: center;
+      }
+      .cta a {
+        background: #6366f1;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 6px;
+        font-weight: 600;
+        text-decoration: none;
+      }
+      .footer {
+        background: #f9fafb;
+        padding: 20px;
+        font-size: 13px;
+        color: #555;
+        text-align: center;
+      }
+      .provider-info {
+        margin-top: 10px;
+        line-height: 1.5;
+      }
+      .provider-info strong {
+        display: block;
+        font-weight: 600;
+      }
+      .provider-info a {
+        color: #0d6efd;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class='email'>
+      <!-- Header -->
+      <div class='header'>
+        <h1>Thank you, {{client.first_name}}! 💜</h1>
+      </div>
+
+      <!-- Body -->
+      <div class='body'>
+        <div class='section'>
+          <p>
+            We truly enjoyed having you for your
+            <strong>{{service.name}}</strong>
+            session. We hope you left feeling great and that the experience was
+            everything you expected.
+          </p>
+        </div>
+
+        <!-- Feedback Request -->
+        <div class='section'>
+          <h2>We’d love your feedback</h2>
+          <p>
+            Your opinion means a lot to us! If you have a moment, please share
+            your thoughts — it helps us improve and also lets others know what
+            to expect.
+          </p>
+          <div class='cta'>
+            <a href='{{booking_url}}'>Leave Feedback</a>
+          </div>
+        </div>
+
+        <!-- Rebook CTA -->
+        <div class='section'>
+          <h2>See you again soon?</h2>
+          <p>
+            If you’d like to book your next appointment, it only takes a minute:
+          </p>
+          <div class='cta'>
+            <a href='{{provider_url}}'>Book Again</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class='footer'>
+        <div class='provider-info'>
+          {{#if provider.title}}
+            <strong>{{provider.title}}</strong>
+          {{/if}}
+          {{#if provider.email}}
+            <div>Email:
+              <a href='mailto:{{provider.email}}'>{{provider.email}}</a></div>
+          {{/if}}
+          {{#if provider.phone}}
+            <div>Phone:
+              <a href='tel:{{provider.phone}}'>{{provider.phone}}</a></div>
+          {{/if}}
+          {{#if provider.address}}
+            <div>{{provider.address}}</div>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

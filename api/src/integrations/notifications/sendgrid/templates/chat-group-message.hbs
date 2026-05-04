@@ -1,0 +1,143 @@
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>Message from {{provider.title}}</title>
+    <style>
+      body {
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        background-color: #f6f9fc;
+        color: #333;
+        margin: 0;
+        padding: 0;
+      }
+      .email-wrapper {
+        max-width: 600px;
+        margin: 30px auto;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+      }
+      .header {
+        background: #0d6efd;
+        color: #fff;
+        padding: 20px;
+        text-align: center;
+      }
+      .header img {
+        max-height: 50px;
+        margin-bottom: 10px;
+      }
+      .content {
+        padding: 30px;
+      }
+       .button-wrapper {
+        text-align: center;
+        margin-top: 30px;
+      }
+      .button {
+        display: inline-block;
+        background-color: #0d6efd;
+        color: #fff !important;
+        text-decoration: none;
+        padding: 12px 24px;
+        border-radius: 6px;
+        font-weight: 600;
+      }
+      .button:hover {
+        background-color: #0b5ed7;
+      }
+      .note {
+        color: #777;
+        font-size: 13px;
+        margin-top: 10px;
+        line-height: 1.5;
+      }
+      .message {
+        background: #f1f4f8;
+        border-radius: 6px;
+        padding: 20px;
+        margin: 20px 0;
+        line-height: 1.6;
+      }
+      .footer {
+        background: #f9fafb;
+        padding: 20px;
+        font-size: 13px;
+        color: #555;
+        text-align: center;
+      }
+      .provider-info {
+        margin-top: 10px;
+        line-height: 1.5;
+      }
+      .provider-info strong {
+        display: block;
+        font-weight: 600;
+      }
+      .provider-info a {
+        color: #0d6efd;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class='email-wrapper'>
+      <div class='header'>
+        {{#if provider.logo}}
+          <img src='{{provider.logo}}' alt='{{provider.title}}' />
+        {{/if}}
+        <h2>{{provider.title}}</h2>
+      </div>
+
+      <div class='content'>
+        <p>Hi {{recipient.first_name}},</p>
+        <p>You’ve received a new message from
+          <strong>{{provider.title}}</strong>.</p>
+
+        <div class='message'>
+          {{{content}}}
+        </div>
+
+         <p class='note'>
+          Please do not reply directly to this email. To continue the
+          conversation, use your communication page with
+          <strong>{{provider.title}}</strong>
+          by clicking below.
+        </p>
+
+        <div class='button-wrapper'>
+          <a href='{{chat_url}}' class='button' target='_blank'>
+            Go to Communication Page
+          </a>
+        </div>
+      </div>
+
+        <p>Best regards,<br />
+          The
+          {{provider.title}}
+          Team</p>
+      </div>
+
+      <div class='footer'>
+        <div class='provider-info'>
+          {{#if provider.title}}
+            <strong>{{provider.title}}</strong>
+          {{/if}}
+          {{#if provider.email}}
+            <div>Email:
+              <a href='mailto:{{provider.email}}'>{{provider.email}}</a></div>
+          {{/if}}
+          {{#if provider.phone}}
+            <div>Phone:
+              <a href='tel:{{provider.phone}}'>{{provider.phone}}</a></div>
+          {{/if}}
+          {{#if provider.address}}
+            <div>{{provider.address}}</div>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

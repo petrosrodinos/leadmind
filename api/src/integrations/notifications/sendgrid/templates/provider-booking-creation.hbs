@@ -1,0 +1,213 @@
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>New Booking Created - {{business.name}}</title>
+    <style>
+      body {
+        font-family: 'Segoe UI', Roboto, sans-serif;
+        background-color: #f8fafc;
+        margin: 0;
+        padding: 20px;
+        color: #111827;
+      }
+      .email {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        max-width: 640px;
+        margin: auto;
+        overflow: hidden;
+      }
+      .header {
+        background: #1e40af;
+        color: #fff;
+        padding: 24px 32px;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 600;
+      }
+      .header p {
+        margin: 6px 0 0;
+        font-size: 14px;
+        opacity: 0.9;
+      }
+      .body {
+        padding: 32px;
+      }
+      .section {
+        margin-bottom: 28px;
+      }
+      .section h2 {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 12px;
+        color: #374151;
+      }
+      .details-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .details-table th,
+      .details-table td {
+        padding: 12px;
+        text-align: left;
+        font-size: 14px;
+        border-bottom: 1px solid #f3f4f6;
+      }
+      .details-table th {
+        background: #f9fafb;
+        color: #374151;
+        font-weight: 500;
+      }
+      .details-table td:last-child {
+        text-align: right;
+        font-weight: 600;
+        color: #111827;
+      }
+      .total-row td {
+        border-top: 2px solid #e5e7eb;
+        font-size: 16px;
+      }
+      .status-badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+      .status-CONFIRMED {
+        background: #d1fae5;
+        color: #065f46;
+      }
+      .cta {
+        margin-top: 24px;
+        text-align: center;
+      }
+      .cta a {
+        background: #1e40af;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 6px;
+        font-weight: 600;
+        text-decoration: none;
+      }
+      .footer {
+        background: #f9fafb;
+        padding: 24px;
+        font-size: 13px;
+        color: #6b7280;
+        text-align: center;
+        border-top: 1px solid #e5e7eb;
+      }
+    </style>
+  </head>
+  <body>
+    <div class='email'>
+      <!-- Header -->
+      <div class='header'>
+        <h1>New Booking Received</h1>
+        <p>
+          Booking Ref:
+          {{booking.uuid}}
+          |
+          {{formatDate booking.date}}
+        </p>
+      </div>
+
+      <!-- Body -->
+      <div class='body'>
+        <div class='section'>
+          <h2>Booking Details</h2>
+          <table class='details-table'>
+            <tbody>
+              <tr>
+                <th>Status</th>
+                <td>
+                  <span
+                    class='status-badge status-{{booking.status}}'
+                  >{{booking.status}}</span>
+                </td>
+              </tr>
+              <tr>
+                <th>Service</th>
+                <td>{{service.name}}</td>
+              </tr>
+              {{#if booking.employee_name}}
+                <tr>
+                  <th>With</th>
+                  <td>{{booking.employee_name}}</td>
+                </tr>
+              {{/if}}
+              <tr>
+                <th>Duration</th>
+                <td>{{booking.duration}}</td>
+              </tr>
+              <tr>
+                <th>Time</th>
+                <td>{{booking.start_time_provider}}
+                  -
+                  {{booking.end_time_provider}}</td>
+              </tr>
+              <tr>
+                <th>Location</th>
+                <td>{{booking.location_type}}<br />{{booking.address}}</td>
+              </tr>
+              <tr>
+                <th>Payment Method</th>
+                <td>{{booking.payment_type}}</td>
+              </tr>
+              <tr class='total-row'>
+                <th>Total Price</th>
+                <td>${{formatPrice booking.price}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class='section'>
+          <h2>Client Information</h2>
+          <table class='details-table'>
+            <tbody>
+              <tr>
+                <th>Name</th>
+                <td>{{client.first_name}} {{client.last_name}}</td>
+              </tr>
+              <tr>
+                <th>Email</th>
+                <td>{{client.email}}</td>
+              </tr>
+              <tr>
+                <th>Phone</th>
+                <td>{{client.phone}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        {{#if booking.client_notes}}
+          <div class='section'>
+            <h2>Client Notes</h2>
+            <p>{{booking.client_notes}}</p>
+          </div>
+        {{/if}}
+
+      </div>
+
+      <!-- Footer -->
+      <div class='footer'>
+        <p>
+          This email was automatically sent to notify you of a new client
+          booking.
+        </p>
+        <p>
+          {{#if business.email}}Email: {{business.email}} |{{/if}}
+          {{#if business.phone}} Phone: {{business.phone}}{{/if}}
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

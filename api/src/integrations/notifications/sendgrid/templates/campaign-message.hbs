@@ -1,0 +1,162 @@
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>{{subject}}</title>
+    <style>
+      body {
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        background-color: #f6f9fc;
+        color: #333;
+        margin: 0;
+        padding: 0;
+      }
+
+      .email-wrapper {
+        max-width: 600px;
+        margin: 30px auto;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+      }
+
+      .header {
+        background: #0d6efd;
+        color: #fff;
+        padding: 20px;
+        text-align: center;
+      }
+
+      .header img {
+        max-height: 50px;
+        margin-bottom: 10px;
+      }
+
+      .content {
+        padding: 30px;
+        line-height: 1.6;
+      }
+
+      .message {
+        background: #f1f4f8;
+        border-radius: 6px;
+        padding: 20px;
+        margin: 20px 0;
+      }
+
+      .button-wrapper {
+        text-align: center;
+        margin-top: 30px;
+      }
+
+      .button {
+        display: inline-block;
+        background-color: #0d6efd;
+        color: #fff !important;
+        text-decoration: none;
+        padding: 12px 24px;
+        border-radius: 6px;
+        font-weight: 600;
+      }
+
+      .button:hover {
+        background-color: #0b5ed7;
+      }
+
+      .note {
+        color: #777;
+        font-size: 13px;
+        margin-top: 10px;
+        line-height: 1.5;
+      }
+
+      .footer {
+        background: #f9fafb;
+        padding: 20px;
+        font-size: 13px;
+        color: #555;
+        text-align: center;
+      }
+
+      .provider-info {
+        margin-top: 10px;
+        line-height: 1.5;
+      }
+
+      .provider-info strong {
+        display: block;
+        font-weight: 600;
+      }
+
+      .provider-info a {
+        color: #0d6efd;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class='email-wrapper'>
+      <div class='header'>
+        {{#if provider.logo}}
+          <img src='{{provider.logo}}' alt='{{provider.title}}' />
+        {{/if}}
+        <h2>{{provider.title}}</h2>
+      </div>
+
+      <div class='content'>
+
+        <div class='message'>
+          {{{content}}}
+        </div>
+
+        <div class='button-wrapper'>
+          <a href='{{provider_page}}' class='button' target='_blank'>
+            Visit Our Website
+          </a>
+        </div>
+
+        <p style='margin-top: 30px;'>
+          Best regards,<br />
+          The
+          <strong>{{provider.title}}</strong>
+          Team
+        </p>
+      </div>
+
+      <div class='footer'>
+        <div class='provider-info'>
+          {{#if provider.title}}
+            <strong>{{provider.title}}</strong>
+          {{/if}}
+
+          {{#if provider.email}}
+            <div>
+              Email:
+              <a href='mailto:{{provider.email}}'>{{provider.email}}</a>
+            </div>
+          {{/if}}
+
+          {{#if provider.phone}}
+            <div>
+              Phone:
+              <a href='tel:{{provider.phone}}'>{{provider.phone}}</a>
+            </div>
+          {{/if}}
+
+          {{#if provider.address}}
+            <div>{{provider.address}}</div>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+    <img
+      src='{{analytics_url}}'
+      width='1'
+      height='1'
+      style='display:none;'
+      alt=''
+    />
+  </body>
+</html>

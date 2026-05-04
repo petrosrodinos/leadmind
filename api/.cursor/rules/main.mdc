@@ -1,0 +1,560 @@
+---
+alwaysApply: true
+description: 'This file defines architectural rules, naming conventions, and coding patterns for AI coding agents working in a NestJS + TypeScript backend. Follow these rules precisely when reading, writing, or refactoring code.'
+---
+
+# AI Agent Rules — NestJS Backend
+
+## 1. Purpose
+
+This file defines architectural rules, naming conventions, and coding patterns for AI coding agents working in a NestJS + TypeScript backend. Follow these rules precisely when reading, writing, or refactoring code.
+
+---
+
+## 2. Project Structure Guidelines
+
+```
+src/
+├── main.ts                        # Bootstrap: CORS, Swagger, global middleware
+├── app.module.ts                  # Root module: imports all feature modules
+├── app.controller.ts              # Minimal root controller (health check only)
+├── modules/                       # Feature-based domain modules
+├── core/                          # Infrastructure: database, cache, websockets, queues
+├── shared/                        # Cross-cutting: guards, decorators, pipes, config, utils
+├── integrations/                  # Third-party service wrappers (payment, email, storage, AI)
+└── background/                    # Cron jobs and background processors
+```
+
+### Key Principles
+
+- `modules/` — every domain feature is self-contained here
+- `core/` — low-level infrastructure modules (DB, Redis, WebSockets) with no business logic
+- `shared/` — reusable cross-cutting concerns exported and injected anywhere
+- `integrations/` — each external service has its own module; never call SDKs directly in feature modules
+- `background/` — cron and queue processors are isolated from main request flow
+
+---
+
+## 3. Module Architecture
+
+### Feature Module Structure
+
+Every domain feature follows this exact layout:
+
+```
+modules/<feature-name>/
+├── <feature-name>.module.ts
+├── <feature-name>.controller.ts
+├── <feature-name>.service.ts
+├── dto/
+│   ├── create-<feature-name>.dto.ts
+│   ├── update-<feature-name>.dto.ts
+│   └── <feature-name>-query.schema.ts   # Zod schema for query params
+├── entities/
+│   └── <feature-name>.entity.ts         # Swagger response entity
+├── interfaces/
+│   └── <feature-name>.interface.ts      # TypeScript response interfaces
+└── utils/ (optional)
+    └── <feature-name>.utils.ts
+```
+
+### Module Registration
+
+- Every feature module declares its own controller and service
+- `PrismaModule` is imported wherever DB access is needed
+- Integration modules are imported into feature modules that need them
+- The root `AppModule` imports all feature modules — no dynamic lazy loading
+
+### Internal Modules
+
+Put internal infrastructure facades (mail, SMS, cache, storage, AI) in a dedicated location (e.g., `modules/internal/` or `shared/services/`). Feature modules import these facades — never the underlying SDK directly.
+
+---
+
+## 4. Naming Conventions
+
+### Files
+
+| Type         | Pattern                     | Example                     |
+| ------------ | --------------------------- | --------------------------- |
+| Module       | `<feature>.module.ts`       | `feature.module.ts`         |
+| Controller   | `<feature>.controller.ts`   | `feature.controller.ts`     |
+| Service      | `<feature>.service.ts`      | `feature.service.ts`        |
+| Create DTO   | `create-<feature>.dto.ts`   | `create-feature.dto.ts`     |
+| Update DTO   | `update-<feature>.dto.ts`   | `update-feature.dto.ts`     |
+| Entity       | `<feature>.entity.ts`       | `feature.entity.ts`         |
+| Interface    | `<feature>.interface.ts`    | `feature.interface.ts`      |
+| Query Schema | `<feature>-query.schema.ts` | `feature-query.schema.ts`   |
+| Guard        | `<name>.guard.ts`           | `jwt.guard.ts`              |
+| Decorator    | `<name>.decorator.ts`       | `current-user.decorator.ts` |
+| Strategy     | `<name>.strategy.ts`        | `jwt.strategy.ts`           |
+| Pipe         | `<name>.pipe.ts`            | `zod-validation.pipe.ts`    |
+| Processor    | `<name>.processor.ts`       | `feature.processor.ts`      |
+| Config       | `<service>.config.ts`       | `service.config.ts`         |
+| Utils        | `<feature>.utils.ts`        | `feature.utils.ts`          |
+| Constants    | `<name>.constants.ts`       | `feature.constants.ts`      |
+
+All files use `kebab-case`.
+
+### Classes
+
+| Type       | Pattern                | Example                                |
+| ---------- | ---------------------- | -------------------------------------- |
+| Module     | `<Feature>Module`      | `FeatureModule`                        |
+| Controller | `<Feature>Controller`  | `FeatureController`                    |
+| Service    | `<Feature>Service`     | `FeatureService`                       |
+| DTO        | `<Action><Feature>Dto` | `CreateFeatureDto`, `UpdateFeatureDto` |
+| Entity     | `<Feature>`            | `Feature`                              |
+| Guard      | `<Name>Guard`          | `JwtGuard`, `RolesGuard`               |
+| Strategy   | `<Name>Strategy`       | `JwtStrategy`                          |
+| Pipe       | `<Name>Pipe`           | `ZodValidationPipe`                    |
+| Interface  | `<Feature>[Purpose]`   | `Feature`, `FeatureListResponse`       |
+
+---
+
+## 5. Controllers Guidelines
+
+- Controllers handle HTTP routing only — no business logic
+- Inject and call the feature's service; nothing else
+- Use `@UseGuards(JwtGuard)` for protected routes; add `RolesGuard` when role checks are needed
+- Use `@CurrentUser()` to extract the authenticated user from the request
+- Use `@CurrentUser('field_name')` to extract a specific field from the user object
+- Decorate list endpoints with `@ApiQuery` and validate query params via `ZodValidationPipe`
+- Decorate all endpoints and response shapes with `@ApiTags`, `@ApiOperation`, `@ApiResponse` for Swagger
+- Use `@UseInterceptors(ClassSerializerInterceptor)` when DTO serialization is needed
+- Default HTTP methods: `POST` create, `GET` list/get, `PATCH` update, `DELETE` delete
+
+```ts
+@Controller('feature')
+@UseGuards(JwtGuard)
+export class FeatureController {
+  constructor(private readonly featureService: FeatureService) {}
+
+  @Post()
+  create(
+    @CurrentUser('account_uuid') accountUuid: string,
+    @Body() dto: CreateFeatureDto,
+  ) {
+    return this.featureService.create(accountUuid, dto);
+  }
+
+  @Get()
+  findAll(
+    @CurrentUser('account_uuid') accountUuid: string,
+    @Query(new ZodValidationPipe(FeatureQuerySchema)) query: FeatureQueryType,
+  ) {
+    return this.featureService.findAll(accountUuid, query);
+  }
+}
+```
+
+---
+
+## 6. Services Guidelines
+
+- Services contain all business logic and data access
+- Inject `PrismaService` for DB calls — no repository classes
+- Inject other services directly via constructor DI when cross-module logic is needed
+- Throw NestJS exceptions (`NotFoundException`, `ConflictException`, etc.) — never raw `Error`
+- Use `setImmediate(async () => { ... })` for fire-and-forget side effects (emails, notifications) — wrap in `try/catch` internally
+- Delete sensitive fields (e.g., passwords) before returning data to the controller
+- Services do not call `res` or `req` — they are HTTP-agnostic
+
+```ts
+@Injectable()
+export class FeatureService {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly otherService: OtherService,
+  ) {}
+
+  async create(accountUuid: string, dto: CreateFeatureDto): Promise<Feature> {
+    const existing = await this.prisma.feature.findFirst({
+      where: { name: dto.name, account_uuid: accountUuid },
+    });
+    if (existing) throw new ConflictException('Feature already exists');
+
+    const feature = await this.prisma.feature.create({
+      data: { ...dto, account_uuid: accountUuid },
+    });
+
+    setImmediate(async () => {
+      try {
+        await this.otherService.notify(feature);
+      } catch {}
+    });
+
+    return feature;
+  }
+}
+```
+
+---
+
+## 7. DTOs and Validation
+
+### Create DTOs
+
+Use `class-validator` decorators. Add `@ApiProperty` for Swagger.
+
+```ts
+export class CreateFeatureDto {
+  @ApiProperty({ description: 'Name of the feature', example: 'Example' })
+  @IsString()
+  @MinLength(1)
+  name: string;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  description?: string;
+}
+```
+
+### Update DTOs
+
+Always extend `PartialType` from `@nestjs/swagger`:
+
+```ts
+export class UpdateFeatureDto extends PartialType(CreateFeatureDto) {}
+```
+
+### Query Schemas
+
+Use Zod schemas for query parameter validation (not class-validator):
+
+```ts
+export const FeatureQuerySchema = z.object({
+  page: z
+    .string()
+    .optional()
+    .transform((v) => (v ? parseInt(v, 10) : 1)),
+  limit: z
+    .string()
+    .optional()
+    .transform((v) => (v ? parseInt(v, 10) : 10)),
+  search: z.string().optional(),
+  order_by: z.enum(['created_at', 'name']).optional().default('created_at'),
+  order_direction: z.enum(['asc', 'desc']).optional().default('desc'),
+});
+
+export type FeatureQueryType = z.infer<typeof FeatureQuerySchema>;
+```
+
+Apply with `ZodValidationPipe` at the controller level:
+
+```ts
+@Get()
+findAll(@Query(new ZodValidationPipe(FeatureQuerySchema)) query: FeatureQueryType) { ... }
+```
+
+### Rules
+
+- Use `class-validator` for body DTOs; use Zod for query schemas
+- Always use `PartialType` for update DTOs — never redeclare fields
+- Export the inferred Zod type alongside the schema in the same file
+- Services trust validated data — no re-validation inside services
+
+---
+
+## 8. Database & Data Access Layer
+
+**ORM**: Prisma with PostgreSQL.
+
+- All DB access is through the injected `PrismaService` — no repository classes, no raw SQL
+- `PrismaService` is provided by `PrismaModule`; import `PrismaModule` in any module that needs DB access
+- Use Prisma-generated types from `generated/prisma` for enums and model types — do not redeclare them
+- Use `upsert()` for create-or-update patterns
+- Use `include` for eager loading relations
+- Use `Promise.all()` to run independent queries (e.g., data + count) in parallel
+- Use `$transaction()` when multiple writes must be atomic
+
+### Pagination Pattern
+
+Return a consistent shape for all paginated list endpoints:
+
+```ts
+return {
+  data: items,
+  pagination: {
+    total: count,
+    page: query.page,
+    limit: query.limit,
+    total_pages: Math.ceil(count / query.limit),
+    has_next: query.page < Math.ceil(count / query.limit),
+    has_prev: query.page > 1,
+  },
+};
+```
+
+### Data Access Rules
+
+- `findUnique` / `findFirst` for single records; `findMany` for lists
+- Always pass `skip` and `take` for paginated queries
+- Never call Prisma from a controller — always through a service
+- Services own all DB interaction
+
+---
+
+## 9. Authentication & Authorization
+
+### Authentication
+
+- JWT with Passport — `passport-jwt` strategy
+- Tokens signed with `@nestjs/jwt` and a `JWT_SECRET` from config
+- Strategy validates the token and attaches the user payload to `request.user`
+- Password hashing with `bcrypt` (salt rounds: 10)
+
+### Guards
+
+- `JwtGuard` — validates Bearer token; throws `UnauthorizedException` on failure
+- `RolesGuard` — checks the `@Roles()` decorator metadata; allows privileged roles to bypass restrictions
+- WebSocket endpoints use a separate `WsJwtGuard`
+
+### Usage
+
+```ts
+@UseGuards(JwtGuard)               // Auth only
+@UseGuards(JwtGuard, RolesGuard)   // Auth + role check
+@Roles('ADMIN')                    // Set required role
+
+@CurrentUser()                     // Full user object
+@CurrentUser('account_uuid')       // Specific field from user
+```
+
+### Rules
+
+- All non-public endpoints must have `@UseGuards(JwtGuard)`
+- Use `@Roles()` with `RolesGuard` for role-based endpoint restrictions
+- Never decode or verify tokens manually in a controller or service
+- Auth strategy and guards live in `shared/` — do not duplicate them in feature modules
+
+---
+
+## 10. Error Handling & Logging
+
+### Exception Types
+
+Always throw NestJS exceptions — never a raw `new Error()`:
+
+| Exception               | HTTP | When to use                   |
+| ----------------------- | ---- | ----------------------------- |
+| `BadRequestException`   | 400  | Invalid input, malformed data |
+| `UnauthorizedException` | 401  | Missing or invalid token      |
+| `ForbiddenException`    | 403  | Insufficient permissions      |
+| `NotFoundException`     | 404  | Resource not found            |
+| `ConflictException`     | 409  | Duplicate resource            |
+
+### Error Handling Rules
+
+- Services throw exceptions; the default NestJS exception filter handles HTTP mapping
+- Wrap entire service method bodies in `try/catch` only when you need to rethrow with a cleaner message
+- Fire-and-forget blocks (`setImmediate`) must always have an internal `try/catch` — failures must not surface
+- Use static error code constants for repeated messages (e.g., `ErrorCodes.Feature.ALREADY_EXISTS`)
+- Do not add a global exception filter unless the default behavior is insufficient
+
+---
+
+## 11. Configuration & Environment
+
+### Framework
+
+`@nestjs/config` with environment-specific `.env` files.
+
+### Setup
+
+- Validate all env vars at startup using a Zod schema; the app must not boot if validation fails
+- Use `ConfigModule.forRoot({ isGlobal: true })` — import it once in `AppModule`
+- Export a typed config loader function that maps raw `process.env` values to typed properties
+- Access config via injected `ConfigService` — never use `process.env` directly in feature code
+
+```ts
+const ConfigModule = ConfigModule.forRoot({
+  isGlobal: true,
+  envFilePath: [`.env.${process.env.NODE_ENV || 'local'}`],
+  ignoreEnvFile: process.env.NODE_ENV === 'production',
+  load: [envConfig],
+  validate: validateEnv,
+});
+```
+
+### Environment Files
+
+- `.env.local` — local development
+- `.env.development` — remote dev
+- `.env.staging` — staging
+- `.env.production` — production
+- `.env.template` — reference file committed to the repo
+
+### Rules
+
+- All env vars are prefixed consistently (e.g., `DATABASE_URL`, `JWT_SECRET`)
+- Optional integration keys are `z.string().optional()` in the Zod schema so the app boots without them
+- Static app-level config (URLs, categories, fee structures) lives in `shared/config/` as typed constants
+- Integration-specific config (API keys, endpoints) lives in `integrations/<service>/config/`
+
+---
+
+## 12. Do / Don't Rules
+
+| Do                                                   | Don't                                           |
+| ---------------------------------------------------- | ----------------------------------------------- |
+| Put all business logic in services                   | Put logic in controllers                        |
+| Use `PrismaService` directly in services             | Create repository classes around Prisma         |
+| Use `PartialType(CreateDto)` for update DTOs         | Redeclare properties in update DTOs             |
+| Use class-validator for body DTOs                    | Use class-validator for query params            |
+| Use Zod schemas for query param validation           | Use manual query param parsing                  |
+| Throw NestJS exceptions (`NotFoundException`, etc.)  | Throw `new Error()` from services               |
+| Wrap fire-and-forget in `setImmediate` + `try/catch` | `await` side effects in the request path        |
+| Import integration modules into feature modules      | Import SDK clients directly into services       |
+| Define all guards and decorators in `shared/`        | Duplicate auth logic in feature modules         |
+| Use `@nestjs/config` + `ConfigService` for env vars  | Access `process.env` directly in features       |
+| Export Zod inferred types next to their schemas      | Re-define types that duplicate Zod shapes       |
+| Use `Promise.all()` for independent parallel queries | Await independent DB calls sequentially         |
+| Use `$transaction()` for multi-write atomicity       | Make multi-step writes without a transaction    |
+| Return paginated lists as `{ data, pagination }`     | Return raw arrays for paginated endpoints       |
+| Use Prisma-generated enums from `generated/prisma`   | Redeclare enums that Prisma already provides    |
+| Delete sensitive fields before returning data        | Return DB records with hashed passwords or keys |
+| Use `@ApiProperty` on all DTO fields                 | Leave Swagger decorators off DTO fields         |
+
+---
+
+## 13. Examples
+
+### Feature Module
+
+```ts
+@Module({
+  imports: [PrismaModule, IntegrationModule],
+  controllers: [FeatureController],
+  providers: [FeatureService],
+  exports: [FeatureService],
+})
+export class FeatureModule {}
+```
+
+### Service with Pagination
+
+```ts
+async findAll(accountUuid: string, query: FeatureQueryType) {
+  const where = { account_uuid: accountUuid, ...(query.search && { name: { contains: query.search } }) };
+
+  const [items, count] = await Promise.all([
+    this.prisma.feature.findMany({
+      where,
+      skip: (query.page - 1) * query.limit,
+      take: query.limit,
+      orderBy: { [query.order_by]: query.order_direction },
+    }),
+    this.prisma.feature.count({ where }),
+  ]);
+
+  return {
+    data: items,
+    pagination: {
+      total: count,
+      page: query.page,
+      limit: query.limit,
+      total_pages: Math.ceil(count / query.limit),
+      has_next: query.page < Math.ceil(count / query.limit),
+      has_prev: query.page > 1,
+    },
+  };
+}
+```
+
+### JWT Guard
+
+```ts
+@Injectable()
+export class JwtGuard extends AuthGuard('jwt') {
+  getRequest(context: ExecutionContext) {
+    return context.switchToHttp().getRequest();
+  }
+}
+```
+
+### Roles Guard
+
+```ts
+@Injectable()
+export class RolesGuard implements CanActivate {
+  constructor(private readonly reflector: Reflector) {}
+
+  canActivate(context: ExecutionContext): boolean {
+    const roles = this.reflector.get<string[]>(ROLES_KEY, context.getHandler());
+    if (!roles) return true;
+    const { user } = context.switchToHttp().getRequest();
+    return roles.includes(user.role);
+  }
+}
+```
+
+### CurrentUser Decorator
+
+```ts
+export const CurrentUser = createParamDecorator(
+  (field: string | undefined, ctx: ExecutionContext) => {
+    const request = ctx.switchToHttp().getRequest();
+    return field ? request.user?.[field] : request.user;
+  },
+);
+```
+
+### ZodValidationPipe
+
+```ts
+@Injectable()
+export class ZodValidationPipe implements PipeTransform {
+  constructor(private readonly schema: ZodSchema) {}
+
+  transform(value: unknown) {
+    const result = this.schema.safeParse(value);
+    if (!result.success) throw new BadRequestException(result.error.format());
+    return result.data;
+  }
+}
+```
+
+### Zustand Store (Prisma transaction)
+
+```ts
+async createWithRelated(dto: CreateFeatureDto) {
+  return this.prisma.$transaction(async (tx) => {
+    const parent = await tx.feature.create({ data: dto });
+    await tx.relatedEntity.create({ data: { feature_id: parent.id } });
+    return parent;
+  });
+}
+```
+
+### Fire-and-Forget Side Effect
+
+```ts
+setImmediate(async () => {
+  try {
+    await this.notificationService.send({ userId, event: 'feature.created' });
+  } catch (error) {
+    // intentionally swallowed — do not propagate
+  }
+});
+```
+
+### Env Validation (Zod)
+
+```ts
+const EnvSchema = z.object({
+  NODE_ENV: z.enum(['local', 'development', 'staging', 'production']),
+  PORT: z.coerce.number().default(3000),
+  DATABASE_URL: z.string().url(),
+  JWT_SECRET: z.string().min(1),
+  EXTERNAL_API_KEY: z.string().optional(),
+});
+
+export const validateEnv = (config: Record<string, unknown>) => {
+  const result = EnvSchema.safeParse(config);
+  if (!result.success)
+    throw new Error(`Config validation failed: ${result.error.message}`);
+  return result.data;
+};
+```

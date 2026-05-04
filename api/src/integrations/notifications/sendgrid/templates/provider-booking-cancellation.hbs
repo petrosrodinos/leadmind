@@ -1,0 +1,212 @@
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>Booking Cancelled - {{booking.uuid}}</title>
+    <style>
+      body {
+        font-family: 'Segoe UI', Roboto, sans-serif;
+        background-color: #f8fafc;
+        margin: 0;
+        padding: 20px;
+        color: #111827;
+      }
+      .email {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        max-width: 640px;
+        margin: auto;
+        overflow: hidden;
+      }
+      .header {
+        background: #ef4444;
+        color: #fff;
+        padding: 24px 32px;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 600;
+      }
+      .body {
+        padding: 32px;
+      }
+      .section {
+        margin-bottom: 28px;
+      }
+      .section h2 {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 12px;
+        color: #374151;
+      }
+      .details-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .details-table th,
+      .details-table td {
+        padding: 12px;
+        text-align: left;
+        font-size: 14px;
+        border-bottom: 1px solid #f3f4f6;
+      }
+      .details-table th {
+        background: #f9fafb;
+        color: #374151;
+        font-weight: 500;
+      }
+      .details-table td:last-child {
+        text-align: right;
+        font-weight: 600;
+        color: #111827;
+      }
+      .cta {
+        margin-top: 24px;
+        text-align: center;
+      }
+      .cta a {
+        background: #ef4444;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 6px;
+        font-weight: 600;
+        text-decoration: none;
+      }
+       .footer {
+        background: #f9fafb;
+        padding: 20px;
+        font-size: 13px;
+        color: #555;
+        text-align: center;
+      }
+      .provider-info {
+        margin-top: 10px;
+        line-height: 1.5;
+      }
+      .provider-info strong {
+        display: block;
+        font-weight: 600;
+      }
+      .provider-info a {
+        color: #0d6efd;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class='email'>
+      <!-- Header -->
+      <div class='header'>
+        <h1>Booking Cancelled - {{service.name}}</h1>
+        <p style='margin:0;font-size:14px;'>Ref:
+          {{booking.uuid}}
+      </div>
+
+      <!-- Body -->
+      <div class='body'>
+        <div class='section'>
+          <p>
+            A booking has been
+            <strong>cancelled</strong>. Please review the details below.
+          </p>
+          {{#if booking.client_status_change_description}}
+            <p><strong>Cancellation Reason (Client):</strong>
+              {{booking.client_status_change_description}}</p>
+          {{else if booking.provider_status_change_description}}
+            <p><strong>Cancellation Reason (Business):</strong>
+              {{booking.provider_status_change_description}}</p>
+          {{/if}}
+        </div>
+
+        <!-- Booking Info -->
+        <div class='section'>
+          <h2>Booking Details</h2>
+          <table class='details-table'>
+            <tbody>
+              <tr>
+                <th>Service</th>
+                <td>{{service.name}}</td>
+              </tr>
+              {{#if booking.employee_name}}
+              <tr>
+                <th>With</th>
+                <td>{{booking.employee_name}}</td>
+              </tr>
+              {{/if}}
+              <tr>
+                <th>Date</th>
+                <td>{{formatDate booking.date}}</td>
+              </tr>
+              <tr>
+                <th>Time</th>
+                <td>{{booking.start_time_provider}} - {{booking.end_time_provider}}</td>
+              </tr>
+              <tr>
+                <th>Duration</th>
+                <td>{{booking.duration}}</td>
+              </tr>
+              <tr>
+                <th>Payment Type</th>
+                <td>{{booking.payment_type}}</td>
+              </tr>
+              <tr>
+                <th>Total Price</th>
+                <td>${{formatPrice booking.price}}</td>
+              </tr>
+              <tr>
+                <th>Status</th>
+                <td>{{booking.status}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Client Info -->
+        <div class='section'>
+          <h2>Client Information</h2>
+          <table class='details-table'>
+            <tbody>
+              <tr>
+                <th>Name</th>
+                <td>{{client.first_name}} {{client.last_name}}</td>
+              </tr>
+              <tr>
+                <th>Email</th>
+                <td>{{client.email}}</td>
+              </tr>
+              {{#if client.phone}}
+                <tr>
+                  <th>Phone</th>
+                  <td>{{client.phone}}</td>
+                </tr>
+              {{/if}}
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+      <!-- Footer -->
+     <div class='footer'>
+        <div class='provider-info'>
+          {{#if provider.title}}
+            <strong>{{provider.title}}</strong>
+          {{/if}}
+          {{#if provider.email}}
+            <div>Email:
+              <a href='mailto:{{provider.email}}'>{{provider.email}}</a></div>
+          {{/if}}
+          {{#if provider.phone}}
+            <div>Phone:
+              <a href='tel:{{provider.phone}}'>{{provider.phone}}</a></div>
+          {{/if}}
+          {{#if provider.address}}
+            <div>{{provider.address}}</div>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

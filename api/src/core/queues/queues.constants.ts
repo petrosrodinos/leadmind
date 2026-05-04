@@ -1,0 +1,1 @@
+export const BULL_BOARD_ADAPTER = 'BULL_BOARD_ADAPTER';

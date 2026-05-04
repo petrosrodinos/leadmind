@@ -1,0 +1,7 @@
+---
+alwaysApply: true
+---
+
+Always read and follow /app/.cursor/rules/main.mdc before coding for the app.
+
+Always read and follow ./api/cursor/rules/main.mdc before coding for the api.
