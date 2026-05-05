@@ -1,25 +1,30 @@
 @import "tailwindcss";
 @import "@heroui/styles";
 
+/* ─── Base / legacy custom properties ────────────────────────────────────────
+   Dark values as defaults. Theme blocks below come AFTER in the cascade
+   so they correctly override these per-theme.
+───────────────────────────────────────────────────────────────────────────── */
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow: rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  --text:          oklch(0.55 0.012 240);
+  --text-h:        oklch(0.935 0.006 240);
+  --bg:            oklch(0.135 0.006 240);
+  --border:        oklch(0.280 0.010 240);
+  --accent:        oklch(0.62 0.22 240);
+  --accent-bg:     oklch(0.62 0.22 240 / 0.15);
+  --accent-border: oklch(0.62 0.22 240 / 0.45);
+  --social-bg:     oklch(0.200 0.007 240 / 0.5);
+  --shadow:
+    oklch(0 0 0 / 0.4) 0 10px 15px -3px,
+    oklch(0 0 0 / 0.25) 0 4px 6px -2px;
 
-  --sans: system-ui, "Segoe UI", Roboto, sans-serif;
+  --sans:    system-ui, "Segoe UI", Roboto, sans-serif;
   --heading: system-ui, "Segoe UI", Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+  --mono:    ui-monospace, Consolas, monospace;
 
   font: 18px/145% var(--sans);
   letter-spacing: 0.18px;
-  color-scheme: light dark;
+  color-scheme: dark;
   color: var(--text);
   background: var(--bg);
   font-synthesis: none;
@@ -32,17 +37,54 @@
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow: rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
+/* ─── Theme overrides ─────────────────────────────────────────────────────────
+   Unlayered + placed AFTER :root → same specificity, later wins.
+   Both blocks override HeroUI's @layer theme AND the :root defaults above.
+───────────────────────────────────────────────────────────────────────────── */
+
+[data-theme="dark"] {
+  --accent:            oklch(0.62 0.22 240);
+  --accent-foreground: oklch(0.98 0 0);
+
+  --background: oklch(0.135 0.006 240);
+
+  --surface:            oklch(0.200 0.007 240);
+  --surface-foreground: oklch(0.935 0.006 240);
+  --surface-secondary:  oklch(0.238 0.007 240);
+  --surface-tertiary:   oklch(0.272 0.006 240);
+
+  --overlay:            oklch(0.215 0.007 240);
+  --overlay-foreground: oklch(0.935 0.006 240);
+
+  --field-background:  oklch(0.208 0.007 240);
+  --field-border:      oklch(0.310 0.012 240);
+  --field-placeholder: oklch(0.46 0.012 240);
+
+  --focus: var(--accent);
+  --link:  oklch(0.74 0.18 240);
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+
+  --accent:            oklch(0.50 0.24 240);
+  --accent-foreground: oklch(0.98 0 0);
+
+  /* Restore light borders & backgrounds overridden by :root */
+  --border:    oklch(0.88 0.006 240);
+  --separator: oklch(0.90 0.005 240);
+
+  --field-border: oklch(0.82 0.008 240);
+
+  /* Reset legacy vars for light mode */
+  --text:          oklch(0.42 0.010 240);
+  --text-h:        oklch(0.15 0.010 240);
+  --bg:            oklch(0.985 0.004 240);
+  --border:        oklch(0.88 0.006 240);
+  --shadow:
+    oklch(0 0 0 / 0.08) 0 10px 15px -3px,
+    oklch(0 0 0 / 0.05) 0 4px 6px -2px;
+
+  --focus: var(--accent);
+  --link:  oklch(0.48 0.22 240);
 }

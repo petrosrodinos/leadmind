@@ -1,26 +1,24 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@/lib/utils";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, Button, Label, Input, FieldError } from "@heroui/react";
 import { SignInSchema, type SignInFormValues } from "../../../validation-schemas/auth";
 import { useSignin } from "@/features/auth/hooks/use-auth";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 
-interface UserAuthFormProps {
+interface SignInFormProps {
   className?: string;
-  props?: any;
 }
 
-export function SignInForm({ className, ...props }: UserAuthFormProps) {
+export function SignInForm({ className }: SignInFormProps) {
   const { mutate, isPending } = useSignin();
 
-  const form = useForm<SignInFormValues>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignInFormValues>({
     resolver: zodResolver(SignInSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
+    defaultValues: { email: "", password: "" },
   });
 
   function onSubmit(data: SignInFormValues) {
@@ -28,44 +26,40 @@ export function SignInForm({ className, ...props }: UserAuthFormProps) {
   }
 
   return (
-    <div className={cn("grid gap-6 text-left", className)} {...props}>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="grid gap-4">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem className="space-y-1">
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input placeholder="username" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem className="space-y-1">
-                  <div className="flex items-center justify-between">
-                    <FormLabel>Password</FormLabel>
-                  </div>
-                  <FormControl>
-                    <Input placeholder="********" {...field} type="password" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button className="mt-2" disabled={isPending} loading={isPending}>
-              Login
-            </Button>
-          </div>
-        </form>
-      </Form>
-    </div>
+    <Form onSubmit={handleSubmit(onSubmit)} className={cn("grid gap-4 text-left", className)}>
+      <div className="flex flex-col gap-1">
+        <Label htmlFor="signin-email">Email</Label>
+        <Input
+          id="signin-email"
+          {...register("email")}
+          placeholder="username"
+          type="email"
+          fullWidth
+        />
+        {errors.email && <FieldError>{errors.email.message}</FieldError>}
+      </div>
+
+      <div className="flex flex-col gap-1">
+        <Label htmlFor="signin-password">Password</Label>
+        <Input
+          id="signin-password"
+          {...register("password")}
+          placeholder="********"
+          type="password"
+          fullWidth
+        />
+        {errors.password && <FieldError>{errors.password.message}</FieldError>}
+      </div>
+
+      <Button
+        type="submit"
+        isDisabled={isPending}
+        isPending={isPending}
+        fullWidth
+        className="mt-2"
+      >
+        Login
+      </Button>
+    </Form>
   );
 }

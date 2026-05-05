@@ -8,7 +8,7 @@ export default function DashboardLayout() {
   const drawerState = useOverlayState();
 
   return (
-    <div className="flex h-screen bg-gray-50 overflow-hidden">
+    <div className="flex h-screen bg-background overflow-hidden">
       {/* Desktop sidebar */}
       <Sidebar />
 

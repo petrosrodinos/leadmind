@@ -31,8 +31,8 @@ export default function UserMenuPopover({ collapsed = false, placement = 'top' }
   const AvatarBadge = ({ size = 'md' }: { size?: 'sm' | 'md' }) => (
     <div
       className={cn(
-        'rounded-full bg-gradient-to-br from-violet-500 to-violet-700 text-white flex items-center justify-center font-semibold shrink-0 select-none shadow-sm',
-        size === 'md' ? 'h-8 w-8 text-xs' : 'h-7 w-7 text-xs',
+        'rounded-full bg-accent text-accent-foreground flex items-center justify-center font-semibold shrink-0 select-none shadow-sm',
+        size === 'md' ? 'h-7 w-7 text-xs' : 'h-6 w-6 text-xs',
       )}
     >
       {initials}
@@ -43,10 +43,10 @@ export default function UserMenuPopover({ collapsed = false, placement = 'top' }
     <Popover>
       <Popover.Trigger
         className={cn(
-          'group w-full rounded-xl transition-all duration-150 cursor-pointer outline-none',
+          'group w-full rounded-lg transition-all duration-150 cursor-pointer outline-none',
           collapsed
-            ? 'flex justify-center p-1.5 hover:bg-gray-100'
-            : 'flex items-center gap-2.5 px-3 py-1.5 hover:bg-gray-100',
+            ? 'flex justify-center p-1.5 hover:bg-surface-secondary'
+            : 'flex items-center gap-2 px-2 py-1 hover:bg-surface-secondary',
         )}
       >
         {collapsed ? (
@@ -55,43 +55,41 @@ export default function UserMenuPopover({ collapsed = false, placement = 'top' }
           <>
             <AvatarBadge />
             <div className="flex-1 min-w-0 text-left">
-              <p className="text-xs font-semibold text-gray-900 truncate leading-snug">{displayName}</p>
-              <p className="text-xs text-gray-400 truncate leading-snug">{email ?? ''}</p>
+              <p className="text-xs font-semibold text-foreground truncate leading-snug">{displayName}</p>
+              <p className="text-xs text-muted truncate leading-snug">{email ?? ''}</p>
             </div>
-            <ChevronsUpDown className="h-3.5 w-3.5 text-gray-400 shrink-0 group-hover:text-gray-600 transition-colors ml-2" />
+            <ChevronsUpDown className="h-3 w-3 text-muted shrink-0 group-hover:text-foreground transition-colors" />
           </>
         )}
       </Popover.Trigger>
 
       <Popover.Content
         placement={placement === 'top' ? 'top start' : 'bottom end'}
-        className="w-48 p-0 rounded-xl border border-gray-100 bg-white shadow-lg shadow-black/10 overflow-hidden"
+        className="w-40 p-0 rounded-xl border border-border bg-overlay shadow-overlay overflow-hidden"
       >
         <Popover.Dialog>
-          {/* Menu items */}
           <div className="py-1">
             {menuItems.map(({ label, icon: Icon, onClick }) => (
               <button
                 key={label}
                 onClick={onClick}
-                className="w-full flex items-center gap-2.5 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors duration-100 group/item"
+                className="w-full flex items-center gap-2 px-2.5 py-1 text-sm text-foreground hover:bg-surface-secondary transition-colors duration-100 group/item"
               >
-                <span className="h-5 w-5 rounded-md bg-gray-100 group-hover/item:bg-gray-200 flex items-center justify-center transition-colors duration-100 shrink-0">
-                  <Icon className="h-3 w-3 text-gray-500" />
+                <span className="h-5 w-5 rounded-md bg-default group-hover/item:bg-surface-tertiary flex items-center justify-center transition-colors duration-100 shrink-0">
+                  <Icon className="h-3 w-3 text-muted" />
                 </span>
                 {label}
               </button>
             ))}
           </div>
 
-          {/* Logout */}
           <div className="px-1.5 pb-1.5">
             <button
               onClick={logout}
-              className="w-full flex items-center gap-2.5 px-2 py-1.5 rounded-lg text-sm text-red-600 hover:bg-red-50 transition-colors duration-100 group/logout"
+              className="w-full flex items-center gap-2 px-2 py-1 rounded-lg text-sm text-danger hover:bg-danger/10 transition-colors duration-100 group/logout"
             >
-              <span className="h-5 w-5 rounded-md bg-red-50 group-hover/logout:bg-red-100 flex items-center justify-center transition-colors duration-100 shrink-0">
-                <LogOut className="h-3 w-3 text-red-500" />
+              <span className="h-5 w-5 rounded-md bg-danger/10 group-hover/logout:bg-danger/15 flex items-center justify-center transition-colors duration-100 shrink-0">
+                <LogOut className="h-3 w-3 text-danger" />
               </span>
               Log out
             </button>

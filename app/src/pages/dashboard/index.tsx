@@ -13,39 +13,36 @@ export default function DashboardHome() {
 
   return (
     <div className="space-y-6">
-      {/* Greeting card */}
-      <div className="bg-white rounded-xl border border-gray-200 p-6">
-        <p className="text-2xl font-semibold text-gray-900">
+      <div className="bg-surface rounded-xl border border-border p-6">
+        <p className="text-2xl font-semibold text-foreground">
           Welcome back, {displayName} 👋
         </p>
-        <p className="mt-1 text-sm text-gray-500">
+        <p className="mt-1 text-sm text-muted">
           Here's what's happening with your leads today.
         </p>
       </div>
 
-      {/* Stat placeholder cards */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => (
           <div
             key={stat.label}
-            className="bg-white rounded-xl border border-gray-200 p-5 flex flex-col gap-2"
+            className="bg-surface rounded-xl border border-border p-5 flex flex-col gap-2"
           >
-            <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+            <p className="text-xs font-medium text-muted uppercase tracking-wide">
               {stat.label}
             </p>
-            <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
+            <p className="text-3xl font-bold text-foreground">{stat.value}</p>
           </div>
         ))}
       </div>
 
-      {/* Placeholder content area */}
-      <div className="bg-white rounded-xl border border-gray-200 p-6">
-        <p className="text-sm font-medium text-gray-700 mb-4">Recent Activity</p>
+      <div className="bg-surface rounded-xl border border-border p-6">
+        <p className="text-sm font-medium text-foreground mb-4">Recent Activity</p>
         <div className="space-y-3">
           {[1, 2, 3].map((i) => (
             <div
               key={i}
-              className="h-10 rounded-lg bg-gray-100 animate-pulse"
+              className="h-10 rounded-lg bg-surface-secondary animate-pulse"
             />
           ))}
         </div>

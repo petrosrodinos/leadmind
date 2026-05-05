@@ -15,9 +15,9 @@ const navItems = [
   { label: 'Settings',  icon: Settings,          href: Routes.dashboard.settings, end: false },
 ];
 
-const activeClass  = 'bg-violet-50 text-violet-700 font-medium';
-const inactiveClass = 'text-gray-600 hover:bg-gray-100 hover:text-gray-900';
-const baseClass    = 'flex items-center rounded-lg transition-all duration-200 w-full';
+const activeClass   = 'bg-accent/15 text-accent font-medium';
+const inactiveClass = 'text-muted hover:bg-surface-secondary hover:text-foreground';
+const baseClass     = 'flex items-center rounded-lg transition-all duration-200 w-full';
 
 export default function SidebarContent({ collapsed, onNavigate }: SidebarContentProps) {
   return (
