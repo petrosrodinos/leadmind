@@ -1,0 +1,1098 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "version": "0.0",
+    "x-build-id": "zxhtb9D2Em3SAjYz7"
+  },
+  "servers": [
+    {
+      "url": "https://api.apify.com/v2"
+    }
+  ],
+  "paths": {
+    "/acts/apify~google-search-scraper/run-sync-get-dataset-items": {
+      "post": {
+        "operationId": "run-sync-get-dataset-items-apify-google-search-scraper",
+        "x-openai-isConsequential": false,
+        "summary": "Executes an Actor, waits for its completion, and returns Actor's dataset items in response.",
+        "tags": ["Run Actor"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/inputSchema"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "token",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Enter your Apify token here"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/acts/apify~google-search-scraper/runs": {
+      "post": {
+        "operationId": "runs-sync-apify-google-search-scraper",
+        "x-openai-isConsequential": false,
+        "summary": "Executes an Actor and returns information about the initiated run in response.",
+        "tags": ["Run Actor"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/inputSchema"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "token",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Enter your Apify token here"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/runsResponseSchema"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/acts/apify~google-search-scraper/run-sync": {
+      "post": {
+        "operationId": "run-sync-apify-google-search-scraper",
+        "x-openai-isConsequential": false,
+        "summary": "Executes an Actor, waits for completion, and returns the OUTPUT from Key-value store in response.",
+        "tags": ["Run Actor"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/inputSchema"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "token",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Enter your Apify token here"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "inputSchema": {
+        "type": "object",
+        "required": ["queries"],
+        "properties": {
+          "queries": {
+            "title": "Search term(s)",
+            "pattern": "[^\\s]+",
+            "type": "string",
+            "description": "Use regular search words or enter Google Search URLs. You can also apply [advanced Google search techniques](https://blog.apify.com/how-to-scrape-google-like-a-pro/), such as <code>AI site:twitter.com</code> or <code>javascript OR python</code>. You can also define selected search filters as separate fields below (in the <code>Advanced search filters</code> section). Just ensure that your queries do not exceed 32 words to comply with Google Search limits."
+          },
+          "resultsPerPage": {
+            "title": "Results per page",
+            "minimum": 1,
+            "maximum": 100,
+            "type": "integer",
+            "description": "Specifies the desired number of results per page that is passed to Google Search as the `num` parameter. However, Google applies its own internal filtering and quality checks, so the actual number of returned results may differ from this value, especially on the first page. To potentially retrieve more results closer to your desired count, consider enabling the \"Unfiltered results\" option from the \"Additional settings\" section below, which includes results that Google normally filters out."
+          },
+          "maxPagesPerQuery": {
+            "title": "Max pages per search",
+            "minimum": 1,
+            "type": "integer",
+            "description": "Maximum number of pages to scrape per search query. Each page contains approximately 10 results."
+          },
+          "disableGoogleSearchResults": {
+            "title": "Disable Google Search results",
+            "type": "boolean",
+            "description": "When enabled, skips extraction of traditional organic search results and focuses exclusively on AI-powered search features (Google AI Mode, Perplexity AI, ChatGPT search). Use this option when you only need AI-generated answers and want to reduce processing time and costs by excluding standard search results.",
+            "default": false
+          },
+          "aiModeSearch": {
+            "title": "⏩ Add-on: Google AI Mode ($)",
+            "type": "object",
+            "description": "Scrapes Google's AI-generated overview responses that appear at the top of search results. Essential for Answer Engine Optimization (AEO) and Generative Engine Optimization (GEO) strategies—track how your brand, products, or content appear in Google's AI summaries, monitor competitor mentions, and identify opportunities to improve your visibility in AI-powered search. An additional fee applies per successful AI result retrieved. See the Pricing tab for your subscription tier rate.",
+            "properties": {
+              "enableAiMode": {
+                "title": "Enable Google AI Mode",
+                "description": "Fetches an AI answer from Google AI Mode.",
+                "type": "boolean"
+              }
+            },
+            "default": {
+              "enableAiMode": false
+            }
+          },
+          "perplexitySearch": {
+            "title": "⏩ Add-on: Perplexity AI search ($)",
+            "type": "object",
+            "description": "Enable Perplexity to retrieve AI-generated answers and citations using the Sonar model. This feature is designed for cross-platform analysis, allowing you to directly compare other AI search model results against Perplexity's perspective to identify narrative differences and coverage gaps.<br><br>Note: An additional fee applies per result when this feature is active. Please refer to the Pricing tab for your specific rate.",
+            "properties": {
+              "enablePerplexity": {
+                "title": "Enable Perplexity AI search",
+                "description": "Fetches an AI answer from Perplexity.",
+                "type": "boolean"
+              },
+              "searchRecency": {
+                "title": "Search Recency",
+                "type": "string",
+                "enum": ["day", "week", "month", "year"],
+                "description": "Filter search results based on their recency."
+              },
+              "returnImages": {
+                "title": "Include images in Perplexity AI answers",
+                "description": "If enabled, Perplexity will search for and return relevant images as part of the AI response.",
+                "type": "boolean"
+              },
+              "returnRelatedQuestions": {
+                "title": "Include related questions in Perplexity AI answers",
+                "description": "If enabled, Perplexity will generate and return a list of follow-up questions related to your search query.",
+                "type": "boolean"
+              }
+            },
+            "default": {
+              "enablePerplexity": false,
+              "returnImages": false,
+              "returnRelatedQuestions": false
+            }
+          },
+          "chatGptSearch": {
+            "title": "⏩ Add-on: ChatGPT search ($)",
+            "type": "object",
+            "description": "Enable ChatGPT to retrieve AI-generated answers powered by OpenAI's search model. This feature is designed for cross-platform analysis, allowing you to directly compare other AI search model results against ChatGPT's perspective to identify narrative differences, coverage gaps, and search engine biases.<br><br>The output includes query fan-out under <code>queryFanOut</code>, showing additional search queries the model generated to answer your question.<br><br>Note: An additional fee applies per result when this feature is active. Please refer to the Pricing tab for your specific rate.",
+            "properties": {
+              "enableChatGpt": {
+                "title": "Enable ChatGPT search",
+                "description": "Fetches an AI answer from ChatGPT for every query to compare against other AI models.",
+                "type": "boolean"
+              }
+            },
+            "default": {
+              "enableChatGpt": false
+            }
+          },
+          "copilotSearch": {
+            "title": "⏩ Add-on: Copilot search ($)",
+            "type": "object",
+            "description": "Enable Copilot to retrieve AI-generated answers powered by Microsoft Copilot.",
+            "properties": {
+              "enableCopilot": {
+                "title": "Enable Copilot search",
+                "description": "Fetches an AI answer from Copilot for every query to compare against other AI models",
+                "type": "boolean"
+              },
+              "copilotSearchMode": {
+                "title": "Copilot search mode",
+                "type": "string",
+                "enum": ["chat", "reasoning", "smart", "study"],
+                "description": "Select which Copilot chat mode to use for the request:<br><br>• <b>chat</b> - Standard conversational mode. Best for general queries and quick answers.<br>• <b>reasoning</b> - Deep analytical mode. Best for complex questions requiring logical depth.<br>• <b>smart</b> - Balanced mode combining speed and reasoning for most use cases.<br>• <b>study</b> - Detailed explanatory mode. Best for educational and research-oriented prompts."
+              }
+            },
+            "default": {
+              "enableCopilot": false
+            }
+          },
+          "maximumLeadsEnrichmentRecords": {
+            "title": "⏩ Add-on: Extract business leads information - Maximum leads per domain ($)",
+            "type": "integer",
+            "description": "Enrich your results with detailed contact and company information, including employee names, job titles, emails, phone numbers, LinkedIn profiles, and key company data like industry and number of employees.<br><br>This setting allows you to set the maximum number of leads records you want to scrape per each domain found. By default, it's set to 0 which means that no leads information will be scraped.<br><br>⚠️ Note that some of the fields contain <b>personal data</b>. GDPR protects personal data in the European Union and by other regulations around the world. You should not scrape personal data unless you have a legitimate reason to do so. If you're unsure whether your use case is legitimate, please consult an attorney.<br><br>To keep your leads relevant, we automatically filter out large chains and online platforms (e.g., social media, retail giants, food delivery services).<br><br>⚠️ <b>Cost warning:</b> This is a multiplier. Requesting 10 leads for 1,000 domains will attempt to find 10,000 total leads. You are only charged for leads successfully found.",
+            "default": 0
+          },
+          "leadsEnrichmentDepartments": {
+            "title": "Leads departments selection",
+            "type": "array",
+            "description": "You can use this filter to include only specific departments (like Sales, Marketing, or C-Suite). Note: This will only work if the ⏩ Add-on: Extract business leads information - Maximum leads per domain (maximumLeadsEnrichmentRecords) option is enabled. Please note that some job titles are sometimes miscategorized in the wrong departments.",
+            "items": {
+              "type": "string",
+              "enum": [
+                "c_suite",
+                "product",
+                "engineering_technical",
+                "design",
+                "education",
+                "finance",
+                "human_resources",
+                "information_technology",
+                "legal",
+                "marketing",
+                "medical_health",
+                "operations",
+                "sales",
+                "consulting"
+              ],
+              "enumTitles": [
+                "C-Suite",
+                "Product",
+                "Engineering & Technical",
+                "Design",
+                "Education",
+                "Finance",
+                "Human Resources",
+                "Information Technology",
+                "Legal",
+                "Marketing",
+                "Medical & Health",
+                "Operations",
+                "Sales",
+                "Consulting"
+              ]
+            }
+          },
+          "verifyLeadsEnrichmentEmails": {
+            "title": "⏩ Add-on: Email verification ($)",
+            "type": "boolean",
+            "description": "When enabled, verifies the email address of each lead extracted during business leads enrichment. Each lead receives an <b>emailVerification</b> object with the verification result and quality assessment.<br><br><b>Charged (decisive results):</b> valid (<code>ok</code>), invalid, and disposable email addresses.<br><b>Not charged:</b> catch-all, unknown, and error results.<br><br>⚠️ This add-on requires business leads enrichment to be enabled.",
+            "default": false
+          },
+          "focusOnPaidAds": {
+            "title": "⏩ Add-on: Enable paid results (ads) extraction ($)",
+            "type": "boolean",
+            "description": "Enable extraction of paid results (Google Ads). This feature improves ad detection accuracy by using an ad-specialized proxy to perform up to 3 retries for each search query. Best used for queries likely to show ads. An extra cost per search page applies when enabled, regardless of ads found. Pricing depends on your Apify subscription plan.",
+            "default": false
+          },
+          "countryCode": {
+            "title": "Country",
+            "enum": [
+              "",
+              "af",
+              "al",
+              "dz",
+              "as",
+              "ad",
+              "ao",
+              "ai",
+              "aq",
+              "ag",
+              "ar",
+              "am",
+              "aw",
+              "au",
+              "at",
+              "az",
+              "bs",
+              "bh",
+              "bd",
+              "bb",
+              "by",
+              "be",
+              "bz",
+              "bj",
+              "bm",
+              "bt",
+              "bo",
+              "ba",
+              "bw",
+              "bv",
+              "br",
+              "io",
+              "bn",
+              "bg",
+              "bf",
+              "bi",
+              "kh",
+              "cm",
+              "ca",
+              "cv",
+              "ky",
+              "cf",
+              "td",
+              "cl",
+              "cn",
+              "cx",
+              "cc",
+              "co",
+              "km",
+              "cg",
+              "cd",
+              "ck",
+              "cr",
+              "ci",
+              "hr",
+              "cu",
+              "cy",
+              "cz",
+              "dk",
+              "dj",
+              "dm",
+              "do",
+              "ec",
+              "eg",
+              "sv",
+              "gq",
+              "er",
+              "ee",
+              "et",
+              "fk",
+              "fo",
+              "fj",
+              "fi",
+              "fr",
+              "gf",
+              "pf",
+              "tf",
+              "ga",
+              "gm",
+              "ge",
+              "de",
+              "gh",
+              "gi",
+              "gr",
+              "gl",
+              "gd",
+              "gp",
+              "gu",
+              "gt",
+              "gn",
+              "gw",
+              "gy",
+              "ht",
+              "hm",
+              "va",
+              "hn",
+              "hk",
+              "hu",
+              "is",
+              "in",
+              "id",
+              "ir",
+              "iq",
+              "ie",
+              "il",
+              "it",
+              "jm",
+              "jp",
+              "jo",
+              "kz",
+              "ke",
+              "ki",
+              "kp",
+              "kr",
+              "kw",
+              "kg",
+              "la",
+              "lv",
+              "lb",
+              "ls",
+              "lr",
+              "ly",
+              "li",
+              "lt",
+              "lu",
+              "mo",
+              "mk",
+              "mg",
+              "mw",
+              "my",
+              "mv",
+              "ml",
+              "mt",
+              "mh",
+              "mq",
+              "mr",
+              "mu",
+              "yt",
+              "mx",
+              "fm",
+              "md",
+              "mc",
+              "mn",
+              "me",
+              "ms",
+              "ma",
+              "mz",
+              "mm",
+              "na",
+              "nr",
+              "np",
+              "nl",
+              "an",
+              "nc",
+              "nz",
+              "ni",
+              "ne",
+              "ng",
+              "nu",
+              "nf",
+              "mp",
+              "no",
+              "om",
+              "pk",
+              "pw",
+              "ps",
+              "pa",
+              "pg",
+              "py",
+              "pe",
+              "ph",
+              "pn",
+              "pl",
+              "pt",
+              "pr",
+              "qa",
+              "re",
+              "ro",
+              "ru",
+              "rw",
+              "sh",
+              "kn",
+              "lc",
+              "pm",
+              "vc",
+              "ws",
+              "sm",
+              "st",
+              "sa",
+              "sn",
+              "rs",
+              "sc",
+              "sl",
+              "sg",
+              "sk",
+              "si",
+              "sb",
+              "so",
+              "za",
+              "gs",
+              "es",
+              "lk",
+              "sd",
+              "sr",
+              "sj",
+              "sz",
+              "se",
+              "ch",
+              "sy",
+              "tw",
+              "tj",
+              "tz",
+              "th",
+              "tl",
+              "tg",
+              "tk",
+              "to",
+              "tt",
+              "tn",
+              "tr",
+              "tm",
+              "tc",
+              "tv",
+              "ug",
+              "ua",
+              "ae",
+              "gb",
+              "us",
+              "um",
+              "uy",
+              "uz",
+              "vu",
+              "ve",
+              "vn",
+              "vg",
+              "vi",
+              "wf",
+              "eh",
+              "ye",
+              "zm",
+              "zw"
+            ],
+            "type": "string",
+            "description": "Specifies the country used for the search and the Google Search domain (e.g. <code>google.es</code> for Spain). By default, the Actor uses United States (<code>google.com</code>)."
+          },
+          "searchLanguage": {
+            "title": "Search language",
+            "enum": [
+              "",
+              "ar",
+              "bg",
+              "ca",
+              "cs",
+              "da",
+              "de",
+              "el",
+              "en",
+              "es",
+              "et",
+              "fi",
+              "fr",
+              "hr",
+              "hu",
+              "id",
+              "is",
+              "it",
+              "iw",
+              "ja",
+              "ko",
+              "lt",
+              "lv",
+              "nl",
+              "no",
+              "pl",
+              "pt",
+              "ro",
+              "ru",
+              "sk",
+              "sl",
+              "sr",
+              "sv",
+              "tr",
+              "zh-CN",
+              "zh-TW"
+            ],
+            "type": "string",
+            "description": "Restricts search results to pages in a specific language. For example, choosing 'German' results in pages only in German. Passed to Google Search as the <code>lr</code> URL query parameter. <a href='https://developers.google.com/custom-search/v1/reference/rest/v1/cse/list' target='_blank'>Read more here</a>.",
+            "default": ""
+          },
+          "languageCode": {
+            "title": "Interface Language",
+            "enum": [
+              "",
+              "af",
+              "sq",
+              "sm",
+              "ar",
+              "az",
+              "eu",
+              "be",
+              "bn",
+              "bh",
+              "bs",
+              "bg",
+              "ca",
+              "zh-CN",
+              "zh-TW",
+              "hr",
+              "cs",
+              "da",
+              "nl",
+              "en",
+              "eo",
+              "et",
+              "fo",
+              "fi",
+              "fr",
+              "fy",
+              "gl",
+              "ka",
+              "de",
+              "el",
+              "gu",
+              "iw",
+              "hi",
+              "hu",
+              "is",
+              "id",
+              "ia",
+              "ga",
+              "it",
+              "ja",
+              "jw",
+              "kn",
+              "ko",
+              "la",
+              "lv",
+              "lt",
+              "mk",
+              "ms",
+              "ml",
+              "mt",
+              "mr",
+              "ne",
+              "no",
+              "nn",
+              "oc",
+              "fa",
+              "pl",
+              "pt-BR",
+              "pt-PT",
+              "pa",
+              "ro",
+              "ru",
+              "gd",
+              "sr",
+              "si",
+              "sk",
+              "sl",
+              "es",
+              "su",
+              "sw",
+              "sv",
+              "tl",
+              "ta",
+              "te",
+              "th",
+              "ti",
+              "tr",
+              "uk",
+              "ur",
+              "uz",
+              "vi",
+              "cy",
+              "xh",
+              "zu"
+            ],
+            "type": "string",
+            "description": "Language of the Google Search interface (menus, buttons, etc. - not the search results themselves). Passed to Google Search as the <code>hl</code> URL query parameter. From Google Reference: You can use the <code>hl</code> request parameter to identify the language of your graphical interface. The <code>hl</code> parameter value may affect search results, especially on international queries when language restriction (using the <code>lr</code> parameter) is not explicitly specified. <a href='https://developers.google.com/custom-search/v1/reference/rest/v1/cse/list' target='_blank'>Read more here</a>.",
+            "default": ""
+          },
+          "locationUule": {
+            "title": "Exact location (Google UULE parameter)",
+            "type": "string",
+            "description": "The code for the exact location for the Google search. It's passed to Google Search as the <code>uule</code> URL query parameter. You can use the <a href='https://padavvan.github.io/' target='_blank'>UULE code generator</a>. Learn more about <a href='https://moz.com/ugc/geolocation-the-ultimate-tip-to-emulate-local-search' target='_blank'>emulating local search</a>."
+          },
+          "forceExactMatch": {
+            "title": "Force exact match",
+            "type": "boolean",
+            "description": "If checked, the scraper will search for the exact phrase in the query. This is done by wrapping the query in quotes. Note that this may return fewer results. Also note that if you're using operators such as OR or AND, the whole query will be wrapped in quotes, such as <code>\"Windows AND macOS\"</code>. If you want to search for queries such as <code>\"Windows\" AND \"macOS\"</code>, you need to specify them directly in the <code>queries</code> field.",
+            "default": false
+          },
+          "site": {
+            "title": "Site",
+            "pattern": "^([\\w-]+\\.)+\\w+$",
+            "type": "string",
+            "description": "Limits the search to a specific site, such as: <code>site:example.com</code>. Note that the <code>site</code> filter takes precedence over the <code>relatedToSite</code> filter. If both filters are set, the <code>relatedToSite</code> filter will be ignored and not added to the search queries."
+          },
+          "relatedToSite": {
+            "title": "Related to site",
+            "pattern": "^([\\w-]+\\.)+\\w+$",
+            "type": "string",
+            "description": "Filters pages related to a specific site, such as: <code>related:example.com</code>. Note that the <code>site</code> filter takes precedence over the <code>relatedToSite</code> filter. If both filters are set, the <code>relatedToSite</code> filter will be ignored and not added to the search queries."
+          },
+          "wordsInTitle": {
+            "title": "Words in title",
+            "maxItems": 32,
+            "type": "array",
+            "description": "Filters pages with specific words in the title. The scraper uses the <code>intitle:</code> operator, even for multiple words (e.g. <code>recipe site:allrecipes.com intitle:\"easy apple\" intitle:pie</code>). There's also a <code>allintitle:</code> operator available, but it's problematic when combined with other search filters, so the scraper avoids using it. If you need to use the <code>allintitle:</code> operator specifically, you can include it in your custom queries from the <code>queries</code> field.",
+            "default": [],
+            "items": {
+              "type": "string"
+            }
+          },
+          "wordsInText": {
+            "title": "Words in text",
+            "maxItems": 32,
+            "type": "array",
+            "description": "Filters pages with specific words in the text. The scraper uses the <code>intext:</code> operator, even for multiple words (e.g. <code>cartoon site:wikipedia.com intext:cat intext:mouse</code>). There's also a <code>allintext:</code> operator available, but it's problematic when combined with other search filters, so the scraper avoids using it. If you need to use the <code>allintext:</code> operator specifically, you can include it in your custom queries from the <code>queries</code> field.",
+            "default": [],
+            "items": {
+              "type": "string"
+            }
+          },
+          "wordsInUrl": {
+            "title": "Words in URL",
+            "maxItems": 32,
+            "type": "array",
+            "description": "Filters pages with specific words in the URL. The scraper uses the <code>inurl:</code> operator, even for multiple words (e.g. <code>recipe site:allrecipes.com inurl:apple inurl:pie</code>). There's also a <code>allinurl:</code> operator available, but it's problematic when combined with other search filters, so the scraper avoids using it. If you need to use the <code>allinurl:</code> operator specifically, you can include it in your custom queries from the <code>queries</code> field.",
+            "default": [],
+            "items": {
+              "type": "string"
+            }
+          },
+          "quickDateRange": {
+            "title": "Quick date range",
+            "pattern": "^[hdwmy]\\d*$",
+            "type": "string",
+            "description": "Filters results from a specific date range. d[number] specifies the number of past days (e.g. the past 10 days can be written as d10). The same applies to hours, weeks, months, and years: h[number], w[number], m[number], y[number]. Example for the past year: 'y1' or even 'y'. The value is passed to Google Search using the <code>tbs</code> URL query parameter, prefixed with <code>qdr:</code>. You should avoid combining this filter with the <code>beforeDate</code> and <code>afterDate</code> filters to prevent conflicts."
+          },
+          "beforeDate": {
+            "title": "Before date",
+            "pattern": "^(\\d{4})-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])(T[0-2]\\d:[0-5]\\d(:[0-5]\\d)?(\\.\\d+)?Z?)?$|^(\\d+)\\s*(minute|hour|day|week|month|year)s?$",
+            "type": "string",
+            "description": "Filters results from before the specified date. Either absolute date (e.g. `2024-05-03`) or relative date from now into the past (e.g. `8 days`, `3 months`). Absolute time is always interpreted in the UTC timezone, not your local timezone - please convert accordingly. Supported relative date & time units: `days`, `weeks`, `months`, `years`. You should avoid combining this filter with the `quickDateRange` filter to prevent conflicts."
+          },
+          "afterDate": {
+            "title": "After date",
+            "pattern": "^(\\d{4})-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])(T[0-2]\\d:[0-5]\\d(:[0-5]\\d)?(\\.\\d+)?Z?)?$|^(\\d+)\\s*(minute|hour|day|week|month|year)s?$",
+            "type": "string",
+            "description": "Filters results from after the specified date. Either absolute date (e.g. `2024-05-03`) or relative date from now into the past (e.g. `8 days`, `3 months`). Absolute time is always interpreted in the UTC timezone, not your local timezone - please convert accordingly. Supported relative date & time units: `days`, `weeks`, `months`, `years`. You should avoid combining this filter with the `quickDateRange` filter to prevent conflicts."
+          },
+          "fileTypes": {
+            "title": "File types",
+            "maxItems": 10,
+            "type": "array",
+            "description": "Filters results of specific file types using the <code>filetype:</code> operator, such as <code>filetype:pdf</code>. You can select multiple file types as well. They will be combined with the <code>OR</code> operator, for example: <code>filetype:doc OR filetype:txt</code>. If you need to use a file type that is not in the list (such as a source code file type), you can include it in your custom queries from the <code>queries</code> field, using the <code>filetype:</code> operator.",
+            "items": {
+              "type": "string",
+              "enum": [
+                "pdf",
+                "csv",
+                "epub",
+                "ps",
+                "htm",
+                "html",
+                "xls",
+                "xlsx",
+                "ppt",
+                "pptx",
+                "doc",
+                "docx",
+                "odp",
+                "ods",
+                "odt",
+                "rtf",
+                "svg",
+                "tex",
+                "txt",
+                "wml",
+                "wap",
+                "xml",
+                "xps",
+                "md",
+                "readme",
+                "log",
+                "yml",
+                "yaml",
+                "toml",
+                "ipynb",
+                "sas",
+                "sql",
+                "rdf",
+                "avif",
+                "avi",
+                "mkv",
+                "mov",
+                "flv",
+                "asf",
+                "ogv"
+              ],
+              "enumTitles": [
+                "Adobe Portable Document Format (pdf)",
+                "Comma-Separated Values (csv)",
+                "Electronic Publication (epub)",
+                "Adobe PostScript (ps)",
+                "HTML (htm)",
+                "HTML (html)",
+                "Microsoft Excel (xls)",
+                "Microsoft Excel (xlsx)",
+                "Microsoft PowerPoint (ppt)",
+                "Microsoft PowerPoint (pptx)",
+                "Microsoft Word (doc)",
+                "Microsoft Word (docx)",
+                "OpenOffice presentation (odp)",
+                "OpenOffice spreadsheet (ods)",
+                "OpenOffice text (odt)",
+                "Rich Text Format (rtf)",
+                "Scalable Vector Graphics (svg)",
+                "TeX/LaTeX (tex)",
+                "Text (txt)",
+                "Wireless Markup Language (wml)",
+                "Wireless Markup Language (wap)",
+                "XML (xml)",
+                "XML Paper Specification (xps)",
+                "Markdown (md)",
+                "Readme (readme)",
+                "Log file (log)",
+                "YAML (yml)",
+                "YAML (yaml)",
+                "TOML (toml)",
+                "Jupyter Notebook (ipynb)",
+                "SAS (sas)",
+                "SQL (sql)",
+                "Resource Description Framework (rdf)",
+                "AV1 Image File Format (avif)",
+                "Audio Video Interleave (avi)",
+                "Matroska Multimedia Container (mkv)",
+                "QuickTime Movie (mov)",
+                "Flash Video (flv)",
+                "Advanced Systems Format (asf)",
+                "Ogg Video (ogv)"
+              ]
+            }
+          },
+          "mobileResults": {
+            "title": "Mobile results",
+            "type": "boolean",
+            "description": "If checked the scraper will return results for mobile version of Google search. Otherwise desktop results are returned.",
+            "default": false
+          },
+          "includeUnfilteredResults": {
+            "title": "Unfiltered results",
+            "type": "boolean",
+            "description": "If checked the lower quality results that Google normally filters out will be included.",
+            "default": false
+          },
+          "saveHtml": {
+            "title": "Save HTML to dataset",
+            "type": "boolean",
+            "description": "If checked the HTML of the Google Search results pages will be stored to the default dataset, under the <code>html</code> property. This is useful if you need to process the HTML, but it makes the dataset large.",
+            "default": false
+          },
+          "saveHtmlToKeyValueStore": {
+            "title": "Save HTML to key-value store",
+            "type": "boolean",
+            "description": "If checked the HTML of the Google Search results pages will be stored to the default key-value store and links to the files stored to the dataset under the <code>htmlSnapshotUrl</code> property. This is useful for debugging since you can easily view the pages in the browser. However, the use of this feature may slow down the Actor.",
+            "default": true
+          },
+          "includeIcons": {
+            "title": "Include icon image data (base64)",
+            "type": "boolean",
+            "description": "If checked, all of the results (organicResults, paidResults, suggestedResults) will contain Base64-encoded icon image data if found.",
+            "default": false
+          }
+        }
+      },
+      "runsResponseSchema": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "actId": {
+                "type": "string"
+              },
+              "userId": {
+                "type": "string"
+              },
+              "startedAt": {
+                "type": "string",
+                "format": "date-time",
+                "example": "2025-01-08T00:00:00.000Z"
+              },
+              "finishedAt": {
+                "type": "string",
+                "format": "date-time",
+                "example": "2025-01-08T00:00:00.000Z"
+              },
+              "status": {
+                "type": "string",
+                "example": "READY"
+              },
+              "meta": {
+                "type": "object",
+                "properties": {
+                  "origin": {
+                    "type": "string",
+                    "example": "API"
+                  },
+                  "userAgent": {
+                    "type": "string"
+                  }
+                }
+              },
+              "stats": {
+                "type": "object",
+                "properties": {
+                  "inputBodyLen": {
+                    "type": "integer",
+                    "example": 2000
+                  },
+                  "rebootCount": {
+                    "type": "integer",
+                    "example": 0
+                  },
+                  "restartCount": {
+                    "type": "integer",
+                    "example": 0
+                  },
+                  "resurrectCount": {
+                    "type": "integer",
+                    "example": 0
+                  },
+                  "computeUnits": {
+                    "type": "integer",
+                    "example": 0
+                  }
+                }
+              },
+              "options": {
+                "type": "object",
+                "properties": {
+                  "build": {
+                    "type": "string",
+                    "example": "latest"
+                  },
+                  "timeoutSecs": {
+                    "type": "integer",
+                    "example": 300
+                  },
+                  "memoryMbytes": {
+                    "type": "integer",
+                    "example": 1024
+                  },
+                  "diskMbytes": {
+                    "type": "integer",
+                    "example": 2048
+                  }
+                }
+              },
+              "buildId": {
+                "type": "string"
+              },
+              "defaultKeyValueStoreId": {
+                "type": "string"
+              },
+              "defaultDatasetId": {
+                "type": "string"
+              },
+              "defaultRequestQueueId": {
+                "type": "string"
+              },
+              "buildNumber": {
+                "type": "string",
+                "example": "1.0.0"
+              },
+              "containerUrl": {
+                "type": "string"
+              },
+              "usage": {
+                "type": "object",
+                "properties": {
+                  "ACTOR_COMPUTE_UNITS": {
+                    "type": "integer",
+                    "example": 0
+                  },
+                  "DATASET_READS": {
+                    "type": "integer",
+                    "example": 0
+                  },
+                  "DATASET_WRITES": {
+                    "type": "integer",
+                    "example": 0
+                  },
+                  "KEY_VALUE_STORE_READS": {
+                    "type": "integer",
+                    "example": 0
+                  },
+                  "KEY_VALUE_STORE_WRITES": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "KEY_VALUE_STORE_LISTS": {
+                    "type": "integer",
+                    "example": 0
+                  },
+                  "REQUEST_QUEUE_READS": {
+                    "type": "integer",
+                    "example": 0
+                  },
+                  "REQUEST_QUEUE_WRITES": {
+                    "type": "integer",
+                    "example": 0
+                  },
+                  "DATA_TRANSFER_INTERNAL_GBYTES": {
+                    "type": "integer",
+                    "example": 0
+                  },
+                  "DATA_TRANSFER_EXTERNAL_GBYTES": {
+                    "type": "integer",
+                    "example": 0
+                  },
+                  "PROXY_RESIDENTIAL_TRANSFER_GBYTES": {
+                    "type": "integer",
+                    "example": 0
+                  },
+                  "PROXY_SERPS": {
+                    "type": "integer",
+                    "example": 0
+                  }
+                }
+              },
+              "usageTotalUsd": {
+                "type": "number",
+                "example": 0.00005
+              },
+              "usageUsd": {
+                "type": "object",
+                "properties": {
+                  "ACTOR_COMPUTE_UNITS": {
+                    "type": "integer",
+                    "example": 0
+                  },
+                  "DATASET_READS": {
+                    "type": "integer",
+                    "example": 0
+                  },
+                  "DATASET_WRITES": {
+                    "type": "integer",
+                    "example": 0
+                  },
+                  "KEY_VALUE_STORE_READS": {
+                    "type": "integer",
+                    "example": 0
+                  },
+                  "KEY_VALUE_STORE_WRITES": {
+                    "type": "number",
+                    "example": 0.00005
+                  },
+                  "KEY_VALUE_STORE_LISTS": {
+                    "type": "integer",
+                    "example": 0
+                  },
+                  "REQUEST_QUEUE_READS": {
+                    "type": "integer",
+                    "example": 0
+                  },
+                  "REQUEST_QUEUE_WRITES": {
+                    "type": "integer",
+                    "example": 0
+                  },
+                  "DATA_TRANSFER_INTERNAL_GBYTES": {
+                    "type": "integer",
+                    "example": 0
+                  },
+                  "DATA_TRANSFER_EXTERNAL_GBYTES": {
+                    "type": "integer",
+                    "example": 0
+                  },
+                  "PROXY_RESIDENTIAL_TRANSFER_GBYTES": {
+                    "type": "integer",
+                    "example": 0
+                  },
+                  "PROXY_SERPS": {
+                    "type": "integer",
+                    "example": 0
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
