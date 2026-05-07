@@ -2,7 +2,7 @@
 
 ## Objective
 
-Build the `outreach` NestJS module that owns the full lifecycle of `OutreachMessage` rows: AI-drafted messages (created by Task 05's pipeline), user edits, dispatching via Email (SendGrid), SMS (Twilio), and LinkedIn (placeholder), and follow-up sequences with configurable delays.
+Build the `outreach` NestJS module that owns the full lifecycle of `OutreachMessage` rows: AI-drafted messages (created by Task 05's pipeline), user edits, dispatching via Email (resend), SMS,Phone Call (Twilio), and LinkedIn (placeholder), and follow-up sequences with configurable delays.
 
 ## Domain reminder
 
@@ -70,7 +70,7 @@ Build the `outreach` NestJS module that owns the full lifecycle of `OutreachMess
 
 ## Technical Notes
 
-- Existing `MailService` is at `integrations/notifications/sendgrid/services/mail.service.ts`
+- Existing `MailService` is at `integrations/notifications/resend`
 - Existing `SmsService` is at `integrations/notifications/twillio/services/sms.service.ts`
 - BullMQ delayed job: `queue.add('send', { message_uuid }, { delay: ms(delayHours + 'h') })`
 - Recipient resolution: `email = message.contact.lead.email`, `phone = message.contact.lead.phone`
