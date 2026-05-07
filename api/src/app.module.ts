@@ -14,6 +14,7 @@ import { BullBoardModule } from './core/queues/bull-board.module';
 import { FiltersModule } from './modules/filters/filters.module';
 import { LeadsModule } from './modules/leads/leads.module';
 import { ContactsModule } from './modules/contacts/contacts.module';
+import { OutreachModule } from './modules/outreach/outreach.module';
 import { WorkersModule } from './workers/workers.module';
 
 @Module({
@@ -32,6 +33,7 @@ import { WorkersModule } from './workers/workers.module';
     FiltersModule,
     LeadsModule,
     ContactsModule,
+    OutreachModule,
     WorkersModule,
   ],
   controllers: [AppController],
