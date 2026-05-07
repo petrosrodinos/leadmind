@@ -2,7 +2,7 @@
 
 ## Objective
 
-Extend the existing `integrations/ai/` module with three AI operations and place each at the right scope:
+using the existing `integrations/ai/` module, create three AI operations at shared/services/ai and place each at the right scope:
 
 | Operation                       | Scope    | Persists to                                                  |
 | ------------------------------- | -------- | ------------------------------------------------------------ |
@@ -65,10 +65,10 @@ Also implement the `ai-process` BullMQ worker that runs the full pipeline for ea
 
 - Use `generateObject` from Vercel AI SDK for the scoring step:
   ```ts
-  import { generateObject } from 'ai';
-  import { z } from 'zod';
+  import { generateObject } from "ai";
+  import { z } from "zod";
   const { object } = await generateObject({
-    model: openai('gpt-4o-mini'),
+    model: openai("gpt-4o-mini"),
     schema: z.object({ score: z.number().min(1).max(10), reasoning: z.string() }),
     prompt: SCORE_PROMPT(lead, filter.ai_instructions),
   });

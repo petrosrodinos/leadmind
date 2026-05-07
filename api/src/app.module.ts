@@ -12,6 +12,8 @@ import { ApifyModule } from './integrations/apify/apify.module';
 import { QueuesModule } from './core/queues/queues.module';
 import { BullBoardModule } from './core/queues/bull-board.module';
 import { FiltersModule } from './modules/filters/filters.module';
+import { LeadsModule } from './modules/leads/leads.module';
+import { ContactsModule } from './modules/contacts/contacts.module';
 import { WorkersModule } from './workers/workers.module';
 
 @Module({
@@ -28,6 +30,8 @@ import { WorkersModule } from './workers/workers.module';
     QueuesModule,
     BullBoardModule,
     FiltersModule,
+    LeadsModule,
+    ContactsModule,
     WorkersModule,
   ],
   controllers: [AppController],

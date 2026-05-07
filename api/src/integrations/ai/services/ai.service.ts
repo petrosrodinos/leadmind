@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { embed, generateObject, generateText, streamText } from 'ai';
 import {
+    AICostResponse,
     AIGenerateObjectResponse,
     AIGenerateOptions,
     AIGenerateTextResponse,
@@ -53,6 +54,50 @@ export class AiService {
         }
     }
 
+
+    async generateObjectWithSchema<T>(options: AIGenerateOptions & { schema: z.ZodSchema<T> }): Promise<{ response: T; usage: AICostResponse }> {
+        const maxRetries = 3;
+        let lastError: Error;
+
+        for (let attempt = 1; attempt <= maxRetries; attempt++) {
+            try {
+                const modelAdapter = this.aiConfig.getModelAdapter(options.provider, options.model);
+
+                const { object, usage } = await generateObject({
+                    model: modelAdapter,
+                    schema: options.schema,
+                    prompt: options.prompt,
+                    system: options?.system || 'You are a helpful assistant.',
+                    temperature: options.temperature,
+                    maxTokens: options.maxTokens,
+                });
+
+                const cost = calculateAiCost({
+                    provider: options.provider,
+                    model: options.model,
+                    inputTokens: usage.promptTokens,
+                    outputTokens: usage.completionTokens,
+                });
+
+                return {
+                    response: object,
+                    usage: cost,
+                };
+            } catch (error) {
+                lastError = error;
+
+                if (attempt < maxRetries) {
+                    this.logger.warn(`Schema validation error on attempt ${attempt}, retrying... Error: ${error.message}`);
+                    continue;
+                }
+
+                this.logger.error(`Error generating object on attempt ${attempt}: ${error.message}`);
+                throw new Error(`Failed to generate object: ${error.message}`);
+            }
+        }
+
+        throw lastError || new Error('Failed to generate object after all retry attempts');
+    }
 
     async generateTextWithSchema(options: AIGenerateOptions): Promise<AIGenerateObjectResponse> {
         const maxRetries = 3;
