@@ -1,64 +1,100 @@
-# Task: AI Pipeline (Scoring, Enrichment, Ideas, Message Generation)
+# Task: AI Pipeline (Enrichment, Scoring, Outreach Drafting)
 
 ## Objective
 
-Extend the existing `integrations/ai/` module with four distinct AI operations: lead scoring (1–10), website enrichment (summary from scraping the lead's website), business idea generation (2–3 ideas), and personalized outreach message generation. Also implement the `ai-process` BullMQ worker that runs the full pipeline automatically for new leads.
+Extend the existing `integrations/ai/` module with three AI operations and place each at the right scope:
+
+| Operation                       | Scope    | Persists to                                                  |
+| ------------------------------- | -------- | ------------------------------------------------------------ |
+| Website enrichment              | public   | `Lead.enrichment_data`                                       |
+| Scoring (1–10)                  | per-user | `Contact.score`                                              |
+| Outreach drafting (per channel) | per-user | New `OutreachMessage` rows (one per `filter.channels` entry) |
+
+Also implement the `ai-process` BullMQ worker that runs the full pipeline for each new Contact created by Task 04.
+
+> **Important:** there is no `Contact.ideas` and no `Contact.generated_message` in the schema. AI-drafted outreach lives **only** on `OutreachMessage` rows — one per channel listed in the parent Filter's `channels` array, generated using `filter.ai_instructions`.
+
+## Domain reminder
+
+- **Enrichment is global** — a website summary is the same regardless of which user is interested. It lives on Lead.
+- **Scoring is per-user** — depends on the user's filter context (`ai_instructions`). It lives on Contact.
+- **Outreach drafting is per-user, per-channel** — produces one `OutreachMessage { status: PENDING, content, channel }` for each channel in `filter.channels`. The message is a draft awaiting user review; the user dispatches it via `POST /outreach/messages/:uuid/send` (Task 07), which transitions `PENDING → SENT` via the `outreach-send` worker.
 
 ## Requirements
 
 - Build on the existing `integrations/ai/services/ai.service.ts` — do not replace it
 - Use the Vercel AI SDK (`ai` package) with the existing OpenAI provider setup
-- Each AI operation must be its own method in a new `LeadAiService`
+- Each AI operation is a method on either `LeadAiService` (enrichment, public) or `ContactAiService` (per-user)
 - Cost tracking must use the existing `ai-cost.ts` utilities
-- The `ai-process` worker runs scoring → enrichment → ideas → message generation in sequence for each new lead
-- AI operations must be idempotent: skip if result already exists (e.g., don't re-score if `lead.score` is set)
-- `aiInstructions` from the lead's parent `Filter` override the default prompt for message generation
+- The `ai-process` worker runs `enrichLead` (if needed) → `scoreContact` → `draftOutreachMessages` (only when `filter.ai_instructions` is set and `filter.channels.length > 0`)
+- AI operations must be idempotent:
+  - `enrichLead`: skip if `lead.enrichment_data` already set
+  - `scoreContact`: skip if `contact.score` already set
+  - `draftOutreachMessages`: skip per-channel if a `PENDING` `OutreachMessage` for `(contact, channel)` already exists (don't overwrite the user's edits)
+- `ai_instructions` from the parent `Filter` is the primary input to both scoring and message drafting
 
 ## Subtasks
 
-- [ ] Create `api/src/modules/leads/services/lead-ai.service.ts` — `LeadAiService`:
-  - Inject `PrismaService`, `AiService` (existing integration)
-  - `scoreLead(lead: Lead): Promise<number>` — prompt: given lead data, return a score 1–10 as JSON `{ score: number, reasoning: string }`. Update `lead.score` in DB.
-  - `enrichLead(lead: Lead): Promise<object>` — if `lead.website` exists, use `axios.get` to fetch the homepage HTML (max 10KB), pass to AI for summary. Update `lead.enrichmentData` in DB.
-  - `generateIdeas(lead: Lead): Promise<string[]>` — prompt: suggest 2–3 business opportunities for this lead. Return as JSON array. Update `lead.ideas` in DB.
-  - `generateMessage(lead: Lead, filter?: Filter): Promise<string>` — prompt: generate a personalized outreach message using `filter.aiInstructions` if provided, else default cold email. Use `lead.channel` or `filter.channel` to tailor tone. Update `lead.generatedMessage` and `lead.messageChannel` in DB.
-- [ ] Create prompt templates as private constants in `lead-ai.service.ts`:
-  - `SCORE_PROMPT`, `ENRICH_PROMPT`, `IDEAS_PROMPT`, `EMAIL_PROMPT`, `SMS_PROMPT`, `CALL_SCRIPT_PROMPT`
-- [ ] Use structured output (Zod schema via Vercel AI SDK `generateObject`) for scoring and ideas to avoid parsing errors
+- [ ] Create `api/src/modules/leads/services/lead-ai.service.ts` — `LeadAiService` (public-scope AI):
+  - Inject `PrismaService`, `AiService`
+  - `enrichLead(lead: Lead): Promise<object | null>` — if `lead.website` exists, fetch homepage HTML (max 10KB), pass to AI for summary. Update `lead.enrichment_data`. Idempotent.
+- [ ] Create `api/src/modules/contacts/services/contact-ai.service.ts` — `ContactAiService` (per-user AI):
+  - Inject `PrismaService`, `AiService`
+  - `scoreContact(contact, lead, filter): Promise<number>` — prompt uses lead data + `filter.ai_instructions`. Returns `{ score, reasoning }`. Updates `contact.score`. Idempotent.
+  - `draftOutreachMessages(contact, lead, filter): Promise<OutreachMessage[]>`:
+    1. If `!filter.ai_instructions || filter.channels.length === 0` → return `[]` (no-op)
+    2. For each `channel` in `filter.channels`:
+       - Skip if a `PENDING` OutreachMessage already exists for `(contact_uuid, channel)`
+       - Generate channel-appropriate content using `filter.ai_instructions` + lead data + `lead.enrichment_data`
+       - Create `OutreachMessage { user_uuid: contact.user_uuid, contact_uuid: contact.uuid, channel, subject?: string, content: string, status: PENDING }`
+    3. Return the created rows
+- [ ] Create prompt templates as private constants:
+  - `ENRICH_PROMPT` (in `LeadAiService`)
+  - `SCORE_PROMPT`, `EMAIL_PROMPT`, `SMS_PROMPT`, `LINKEDIN_PROMPT` (in `ContactAiService`)
+- [ ] Use structured output (Zod schema via Vercel AI SDK `generateObject`) for scoring to avoid parsing errors
 - [ ] Create `api/src/workers/ai-process.worker.ts` — `AiProcessWorker`:
   - `@Processor(AI_PROCESS_QUEUE, { concurrency: 5 })`
-  - Payload: `{ leadId: number }`
-  - Steps: load lead + filter, run `scoreLead` → `enrichLead` → `generateIdeas` → `generateMessage` in sequence
-  - Catch errors per step: if one step fails, log and continue to next (partial results are acceptable)
+  - Payload (default): `{ contact_uuid: string, action?: 'enrich' | 'score' | 'draft' }`
+  - Payload (lead-only enrichment from Task 06): `{ lead_uuid: string, action: 'enrich' }`
+  - When `contact_uuid` is provided: load Contact (include `lead`, `filter`); if `action` is omitted run all three steps in sequence (enrich → score → draft); if `action` is provided, run only that step
+  - Catch errors per step: log and continue to next (partial results are acceptable)
 - [ ] Register `AiProcessWorker` in `workers.module.ts`
-- [ ] Add `LeadAiService` to a new `api/src/modules/leads/leads.module.ts` (also used by Task 06)
+- [ ] Add `LeadAiService` to `LeadsModule`; add `ContactAiService` to `ContactsModule`
 
 ## Technical Notes
 
-- Use `generateObject` from Vercel AI SDK for structured outputs:
+- Use `generateObject` from Vercel AI SDK for the scoring step:
   ```ts
   import { generateObject } from 'ai';
   import { z } from 'zod';
   const { object } = await generateObject({
     model: openai('gpt-4o-mini'),
     schema: z.object({ score: z.number().min(1).max(10), reasoning: z.string() }),
-    prompt: `...`,
+    prompt: SCORE_PROMPT(lead, filter.ai_instructions),
   });
   ```
-- Use `gpt-4o-mini` for scoring/ideas (cost-effective), `gpt-4o` only for message generation
-- Website enrichment: fetch HTML → strip tags (use a simple regex or `cheerio` if already available) → truncate to 3000 chars before sending to AI
+- For `draftOutreachMessages`, use `generateText` (free-form) per channel; channel-specific prompt templates control tone and length:
+  - `EMAIL` — formal, may include a subject line; populate `OutreachMessage.subject`
+  - `SMS` — brief (≤160 chars ideally), no subject
+  - `LINKEDIN` — conversational, no subject
+- Use `gpt-4o-mini` for scoring (cost-effective), `gpt-4o` for drafting messages
+- Website enrichment: fetch HTML → strip tags (regex or `cheerio`) → truncate to 3000 chars before sending to AI
 - Install `cheerio` if not present: `npm install cheerio`
-- Scoring prompt must include: lead name, company, title, industry, description, website summary
-- Message generation prompt must include: lead data + enrichment summary + ideas + `aiInstructions`
+- Scoring prompt must include: lead name, company, title, industry, description, website summary (`lead.enrichment_data`), and `filter.ai_instructions` (the user's targeting criteria)
+- Drafting prompt must include: lead data + enrichment summary + `filter.ai_instructions`
 - Default message prompts live in `api/src/shared/config/email/index.ts` — add new constants there
+- The "skip if PENDING already exists" check: `prisma.outreachMessage.findFirst({ where: { contact_uuid, channel, status: 'PENDING' } })` — if present, don't redraft (preserves user edits)
 
 ## Acceptance Criteria
 
-- [ ] `LeadAiService.scoreLead()` returns a number 1–10 and persists it to `lead.score`
-- [ ] `LeadAiService.enrichLead()` skips leads with no `website` and sets `enrichmentData: null`
-- [ ] `LeadAiService.generateIdeas()` returns an array of 2–3 strings and persists to `lead.ideas`
-- [ ] `LeadAiService.generateMessage()` uses `filter.aiInstructions` when provided
-- [ ] `AiProcessWorker` processes a job from `ai-process` queue end-to-end without throwing
-- [ ] A lead with `score` already set is not re-scored (idempotent)
-- [ ] Unit test: mock `AiService`, assert `scoreLead` calls AI with correct prompt structure
-- [ ] Unit test: assert `generateMessage` includes `aiInstructions` text in the prompt when filter has them
+- [ ] `LeadAiService.enrichLead()` skips leads with no `website` and returns `null`
+- [ ] `LeadAiService.enrichLead()` is a no-op when `lead.enrichment_data` is already set
+- [ ] `ContactAiService.scoreContact()` returns a number 1–10 and persists it to `contact.score`; second call is a no-op
+- [ ] `ContactAiService.draftOutreachMessages()` creates one `OutreachMessage` row per channel in `filter.channels` with `status: PENDING`
+- [ ] `draftOutreachMessages` is a no-op when `filter.ai_instructions` is empty or `filter.channels` is empty
+- [ ] Re-running `draftOutreachMessages` does not duplicate PENDING drafts for channels that already have one
+- [ ] `AiProcessWorker` processes a `{ contact_uuid }` job end-to-end without throwing — for a contact whose filter has `ai_instructions: "..."` and `channels: [EMAIL, SMS]`, it produces 2 OutreachMessage rows
+- [ ] Two users with Contacts on the same Lead get independent `score` and independent OutreachMessage drafts; the Lead's `enrichment_data` is shared
+- [ ] No code path writes to `Contact.ideas` or `Contact.generated_message` (those columns no longer exist)
+- [ ] Unit test: mock `AiService`, assert `scoreContact` calls AI with `filter.ai_instructions` in the prompt
+- [ ] Unit test: assert `draftOutreachMessages` produces exactly `filter.channels.length` OutreachMessage rows

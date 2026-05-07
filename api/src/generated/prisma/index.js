@@ -104,9 +104,137 @@ exports.Prisma.UserScalarFieldEnum = {
   updated_at: 'updated_at'
 };
 
+exports.Prisma.FilterScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  user_uuid: 'user_uuid',
+  name: 'name',
+  source_type: 'source_type',
+  query_config: 'query_config',
+  enabled: 'enabled',
+  cron_schedule: 'cron_schedule',
+  channels: 'channels',
+  ai_instructions: 'ai_instructions',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.RawLeadScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  filter_uuid: 'filter_uuid',
+  source_type: 'source_type',
+  raw_data: 'raw_data',
+  processed_at: 'processed_at',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.LeadScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  raw_lead_uuid: 'raw_lead_uuid',
+  name: 'name',
+  email: 'email',
+  phone: 'phone',
+  company: 'company',
+  website: 'website',
+  linkedin_url: 'linkedin_url',
+  title: 'title',
+  location: 'location',
+  industry: 'industry',
+  description: 'description',
+  source_type: 'source_type',
+  raw_data: 'raw_data',
+  enrichment_data: 'enrichment_data',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.ContactScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  user_uuid: 'user_uuid',
+  lead_uuid: 'lead_uuid',
+  filter_uuid: 'filter_uuid',
+  status: 'status',
+  score: 'score',
+  notes: 'notes',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.ContactTagScalarFieldEnum = {
+  id: 'id',
+  contact_uuid: 'contact_uuid',
+  tag: 'tag',
+  created_at: 'created_at'
+};
+
+exports.Prisma.InteractionScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  contact_uuid: 'contact_uuid',
+  user_uuid: 'user_uuid',
+  type: 'type',
+  content: 'content',
+  metadata: 'metadata',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.OutreachMessageScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  user_uuid: 'user_uuid',
+  contact_uuid: 'contact_uuid',
+  channel: 'channel',
+  subject: 'subject',
+  content: 'content',
+  status: 'status',
+  scheduled_at: 'scheduled_at',
+  sent_at: 'sent_at',
+  metadata: 'metadata',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.OutreachSequenceScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  user_uuid: 'user_uuid',
+  name: 'name',
+  steps: 'steps',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.FilterJobScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  filter_uuid: 'filter_uuid',
+  status: 'status',
+  leads_found: 'leads_found',
+  duration: 'duration',
+  error: 'error',
+  started_at: 'started_at',
+  completed_at: 'completed_at',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
+};
+
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
@@ -118,6 +246,12 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
+};
 exports.AuthRole = exports.$Enums.AuthRole = {
   USER: 'USER',
   ADMIN: 'ADMIN',
@@ -125,8 +259,55 @@ exports.AuthRole = exports.$Enums.AuthRole = {
   SUPPORT: 'SUPPORT'
 };
 
+exports.SourceType = exports.$Enums.SourceType = {
+  LINKEDIN: 'LINKEDIN',
+  GOOGLE_MAPS: 'GOOGLE_MAPS',
+  MANUAL: 'MANUAL'
+};
+
+exports.Channel = exports.$Enums.Channel = {
+  EMAIL: 'EMAIL',
+  SMS: 'SMS',
+  LINKEDIN: 'LINKEDIN'
+};
+
+exports.LeadStatus = exports.$Enums.LeadStatus = {
+  NEW: 'NEW',
+  CONTACTED: 'CONTACTED',
+  CONVERTED: 'CONVERTED',
+  ARCHIVED: 'ARCHIVED'
+};
+
+exports.JobStatus = exports.$Enums.JobStatus = {
+  PENDING: 'PENDING',
+  RUNNING: 'RUNNING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
+};
+
+exports.MsgStatus = exports.$Enums.MsgStatus = {
+  PENDING: 'PENDING',
+  SENT: 'SENT',
+  FAILED: 'FAILED'
+};
+
+exports.InteractionType = exports.$Enums.InteractionType = {
+  NOTE: 'NOTE',
+  CALL: 'CALL',
+  EMAIL: 'EMAIL'
+};
+
 exports.Prisma.ModelName = {
-  User: 'User'
+  User: 'User',
+  Filter: 'Filter',
+  RawLead: 'RawLead',
+  Lead: 'Lead',
+  Contact: 'Contact',
+  ContactTag: 'ContactTag',
+  Interaction: 'Interaction',
+  OutreachMessage: 'OutreachMessage',
+  OutreachSequence: 'OutreachSequence',
+  FilterJob: 'FilterJob'
 };
 /**
  * Create the Client
@@ -136,10 +317,10 @@ const config = {
   "clientVersion": "7.2.0",
   "engineVersion": "0c8ef2ce45c83248ab3df073180d5eda9e8be7a3",
   "activeProvider": "postgresql",
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel User {\n  id       Int     @id @default(autoincrement())\n  uuid     String  @unique @default(uuid())\n  email    String  @unique\n  phone    String? @unique\n  password String\n\n  role       AuthRole\n  created_at DateTime @default(now())\n  updated_at DateTime @updatedAt\n\n  @@index([email])\n  @@index([phone])\n  @@index([uuid])\n  @@map(\"users\")\n}\n\nenum AuthRole {\n  USER\n  ADMIN\n  SUPER_ADMIN\n  SUPPORT\n}\n"
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel User {\n  id         Int      @id @default(autoincrement())\n  uuid       String   @unique @default(uuid())\n  email      String   @unique\n  phone      String?  @unique\n  password   String\n  role       AuthRole\n  created_at DateTime @default(now())\n  updated_at DateTime @updatedAt\n\n  filters            Filter[]\n  contacts           Contact[]\n  outreach_messages  OutreachMessage[]\n  outreach_sequences OutreachSequence[]\n  interactions       Interaction[]\n\n  @@index([email])\n  @@index([phone])\n  @@index([uuid])\n  @@map(\"users\")\n}\n\nmodel Filter {\n  id              Int        @id @default(autoincrement())\n  uuid            String     @unique @default(uuid())\n  user_uuid       String\n  name            String\n  source_type     SourceType\n  query_config    Json\n  enabled         Boolean    @default(true)\n  cron_schedule   String?\n  channels        Channel[]  @default([EMAIL])\n  ai_instructions String?\n  created_at      DateTime   @default(now())\n  updated_at      DateTime   @updatedAt\n\n  user      User        @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)\n  raw_leads RawLead[]\n  contacts  Contact[]\n  jobs      FilterJob[]\n\n  @@index([user_uuid])\n}\n\nmodel RawLead {\n  id           Int        @id @default(autoincrement())\n  uuid         String     @unique @default(uuid())\n  filter_uuid  String\n  source_type  SourceType\n  raw_data     Json\n  processed_at DateTime?\n  created_at   DateTime   @default(now())\n  updated_at   DateTime   @updatedAt\n\n  filter Filter @relation(fields: [filter_uuid], references: [uuid], onDelete: Cascade)\n  lead   Lead?\n\n  @@index([filter_uuid])\n}\n\n// Lead is the generic, public, app-wide record of a person/business.\n// It has no owner. Per-user state (status, score, notes) lives on Contact;\n// AI-drafted outreach lives on OutreachMessage (one per filter.channel).\n// Each Lead is created from a RawLead (`raw_lead_uuid`), which is the audit\n// record of what the scraper returned.\nmodel Lead {\n  id              Int        @id @default(autoincrement())\n  uuid            String     @unique @default(uuid())\n  raw_lead_uuid   String?    @unique\n  name            String?\n  email           String?\n  phone           String?\n  company         String?\n  website         String?\n  linkedin_url    String?\n  title           String?\n  location        String?\n  industry        String?\n  description     String?\n  source_type     SourceType\n  raw_data        Json?\n  enrichment_data Json?\n  created_at      DateTime   @default(now())\n  updated_at      DateTime   @updatedAt\n\n  raw_lead RawLead?  @relation(fields: [raw_lead_uuid], references: [uuid], onDelete: SetNull)\n  contacts Contact[]\n\n  @@index([email])\n  @@index([linkedin_url])\n}\n\n// Contact = the user's connection to a Lead. Owns per-user state:\n// status, AI score, notes. AI-drafted outreach is stored on OutreachMessage\n// (one per filter.channel), not on Contact.\nmodel Contact {\n  id          Int        @id @default(autoincrement())\n  uuid        String     @unique @default(uuid())\n  user_uuid   String\n  lead_uuid   String\n  filter_uuid String?\n  status      LeadStatus @default(NEW)\n  score       Int?\n  notes       String?\n  created_at  DateTime   @default(now())\n  updated_at  DateTime   @updatedAt\n\n  user              User              @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)\n  lead              Lead              @relation(fields: [lead_uuid], references: [uuid], onDelete: Cascade)\n  filter            Filter?           @relation(fields: [filter_uuid], references: [uuid], onDelete: SetNull)\n  tags              ContactTag[]\n  interactions      Interaction[]\n  outreach_messages OutreachMessage[]\n\n  @@unique([user_uuid, lead_uuid])\n  @@index([user_uuid])\n  @@index([status])\n  @@index([lead_uuid])\n}\n\nmodel ContactTag {\n  id           Int      @id @default(autoincrement())\n  contact_uuid String\n  tag          String\n  created_at   DateTime @default(now())\n\n  contact Contact @relation(fields: [contact_uuid], references: [uuid], onDelete: Cascade)\n\n  @@unique([contact_uuid, tag])\n  @@index([contact_uuid])\n}\n\nmodel Interaction {\n  id           Int             @id @default(autoincrement())\n  uuid         String          @unique @default(uuid())\n  contact_uuid String\n  user_uuid    String\n  type         InteractionType\n  content      String?\n  metadata     Json?\n  created_at   DateTime        @default(now())\n  updated_at   DateTime        @updatedAt\n\n  contact Contact @relation(fields: [contact_uuid], references: [uuid], onDelete: Cascade)\n  user    User    @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)\n\n  @@index([contact_uuid])\n  @@index([user_uuid])\n}\n\nmodel OutreachMessage {\n  id           Int       @id @default(autoincrement())\n  uuid         String    @unique @default(uuid())\n  user_uuid    String\n  contact_uuid String\n  channel      Channel\n  subject      String?\n  content      String\n  status       MsgStatus @default(PENDING)\n  scheduled_at DateTime?\n  sent_at      DateTime?\n  metadata     Json?\n  created_at   DateTime  @default(now())\n  updated_at   DateTime  @updatedAt\n\n  user    User    @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)\n  contact Contact @relation(fields: [contact_uuid], references: [uuid], onDelete: Cascade)\n\n  @@index([user_uuid])\n  @@index([contact_uuid])\n  @@index([status])\n}\n\nmodel OutreachSequence {\n  id         Int      @id @default(autoincrement())\n  uuid       String   @unique @default(uuid())\n  user_uuid  String\n  name       String\n  steps      Json\n  created_at DateTime @default(now())\n  updated_at DateTime @updatedAt\n\n  user User @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)\n\n  @@index([user_uuid])\n}\n\nmodel FilterJob {\n  id           Int       @id @default(autoincrement())\n  uuid         String    @unique @default(uuid())\n  filter_uuid  String\n  status       JobStatus @default(PENDING)\n  leads_found  Int       @default(0)\n  duration     Int       @default(0)\n  error        String?\n  started_at   DateTime  @default(now())\n  completed_at DateTime?\n  created_at   DateTime  @default(now())\n  updated_at   DateTime  @updatedAt\n\n  filter Filter @relation(fields: [filter_uuid], references: [uuid], onDelete: Cascade)\n\n  @@index([filter_uuid])\n  @@index([status])\n}\n\nenum AuthRole {\n  USER\n  ADMIN\n  SUPER_ADMIN\n  SUPPORT\n}\n\nenum SourceType {\n  LINKEDIN\n  GOOGLE_MAPS\n  MANUAL\n}\n\nenum Channel {\n  EMAIL\n  SMS\n  LINKEDIN\n}\n\nenum LeadStatus {\n  NEW\n  CONTACTED\n  CONVERTED\n  ARCHIVED\n}\n\nenum JobStatus {\n  PENDING\n  RUNNING\n  COMPLETED\n  FAILED\n}\n\nenum MsgStatus {\n  PENDING\n  SENT\n  FAILED\n}\n\nenum InteractionType {\n  NOTE\n  CALL\n  EMAIL\n}\n"
 }
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"uuid\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"phone\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"role\",\"kind\":\"enum\",\"type\":\"AuthRole\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":\"users\"}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"uuid\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"phone\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"role\",\"kind\":\"enum\",\"type\":\"AuthRole\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"filters\",\"kind\":\"object\",\"type\":\"Filter\",\"relationName\":\"FilterToUser\"},{\"name\":\"contacts\",\"kind\":\"object\",\"type\":\"Contact\",\"relationName\":\"ContactToUser\"},{\"name\":\"outreach_messages\",\"kind\":\"object\",\"type\":\"OutreachMessage\",\"relationName\":\"OutreachMessageToUser\"},{\"name\":\"outreach_sequences\",\"kind\":\"object\",\"type\":\"OutreachSequence\",\"relationName\":\"OutreachSequenceToUser\"},{\"name\":\"interactions\",\"kind\":\"object\",\"type\":\"Interaction\",\"relationName\":\"InteractionToUser\"}],\"dbName\":\"users\"},\"Filter\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"uuid\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user_uuid\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"source_type\",\"kind\":\"enum\",\"type\":\"SourceType\"},{\"name\":\"query_config\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"enabled\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"cron_schedule\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"channels\",\"kind\":\"enum\",\"type\":\"Channel\"},{\"name\":\"ai_instructions\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"FilterToUser\"},{\"name\":\"raw_leads\",\"kind\":\"object\",\"type\":\"RawLead\",\"relationName\":\"FilterToRawLead\"},{\"name\":\"contacts\",\"kind\":\"object\",\"type\":\"Contact\",\"relationName\":\"ContactToFilter\"},{\"name\":\"jobs\",\"kind\":\"object\",\"type\":\"FilterJob\",\"relationName\":\"FilterToFilterJob\"}],\"dbName\":null},\"RawLead\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"uuid\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"filter_uuid\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"source_type\",\"kind\":\"enum\",\"type\":\"SourceType\"},{\"name\":\"raw_data\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"processed_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"filter\",\"kind\":\"object\",\"type\":\"Filter\",\"relationName\":\"FilterToRawLead\"},{\"name\":\"lead\",\"kind\":\"object\",\"type\":\"Lead\",\"relationName\":\"LeadToRawLead\"}],\"dbName\":null},\"Lead\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"uuid\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"raw_lead_uuid\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"phone\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"company\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"website\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"linkedin_url\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"location\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"industry\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"source_type\",\"kind\":\"enum\",\"type\":\"SourceType\"},{\"name\":\"raw_data\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"enrichment_data\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"raw_lead\",\"kind\":\"object\",\"type\":\"RawLead\",\"relationName\":\"LeadToRawLead\"},{\"name\":\"contacts\",\"kind\":\"object\",\"type\":\"Contact\",\"relationName\":\"ContactToLead\"}],\"dbName\":null},\"Contact\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"uuid\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user_uuid\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lead_uuid\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"filter_uuid\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"LeadStatus\"},{\"name\":\"score\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"notes\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"ContactToUser\"},{\"name\":\"lead\",\"kind\":\"object\",\"type\":\"Lead\",\"relationName\":\"ContactToLead\"},{\"name\":\"filter\",\"kind\":\"object\",\"type\":\"Filter\",\"relationName\":\"ContactToFilter\"},{\"name\":\"tags\",\"kind\":\"object\",\"type\":\"ContactTag\",\"relationName\":\"ContactToContactTag\"},{\"name\":\"interactions\",\"kind\":\"object\",\"type\":\"Interaction\",\"relationName\":\"ContactToInteraction\"},{\"name\":\"outreach_messages\",\"kind\":\"object\",\"type\":\"OutreachMessage\",\"relationName\":\"ContactToOutreachMessage\"}],\"dbName\":null},\"ContactTag\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"contact_uuid\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tag\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"contact\",\"kind\":\"object\",\"type\":\"Contact\",\"relationName\":\"ContactToContactTag\"}],\"dbName\":null},\"Interaction\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"uuid\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"contact_uuid\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user_uuid\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"enum\",\"type\":\"InteractionType\"},{\"name\":\"content\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"contact\",\"kind\":\"object\",\"type\":\"Contact\",\"relationName\":\"ContactToInteraction\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"InteractionToUser\"}],\"dbName\":null},\"OutreachMessage\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"uuid\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user_uuid\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"contact_uuid\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"channel\",\"kind\":\"enum\",\"type\":\"Channel\"},{\"name\":\"subject\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"content\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"MsgStatus\"},{\"name\":\"scheduled_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"sent_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"OutreachMessageToUser\"},{\"name\":\"contact\",\"kind\":\"object\",\"type\":\"Contact\",\"relationName\":\"ContactToOutreachMessage\"}],\"dbName\":null},\"OutreachSequence\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"uuid\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user_uuid\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"steps\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"OutreachSequenceToUser\"}],\"dbName\":null},\"FilterJob\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"uuid\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"filter_uuid\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"JobStatus\"},{\"name\":\"leads_found\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"duration\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"error\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"started_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"completed_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"filter\",\"kind\":\"object\",\"type\":\"Filter\",\"relationName\":\"FilterToFilterJob\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
 config.compilerWasm = {
       getRuntime: async () => require('./query_compiler_bg.js'),

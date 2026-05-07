@@ -2,11 +2,18 @@
 
 ## Objective
 
-Build the CRM interface: a contacts list with status pipeline view, a contact detail page with interaction timeline, notes, tags, outreach history, and status management. Integrates with the Contacts API from Task 08.
+Build the CRM interface: a contacts list with status pipeline view, a contact detail page with interaction timeline, notes, tags, AI outputs (score, ideas, generated message), outreach history, and status management. Integrates with the Contacts API from Task 08.
+
+## Domain reminder
+
+- A **Contact** owns the user-specific data: `status`, `score`, `notes`, `tags`. Contact info (name, email, phone, company, etc.) is read from the joined `lead` field. There are **no** `ideas` or `generated_message` columns.
+- AI re-generation actions: `POST /contacts/:uuid/score` (rescore) and `POST /contacts/:uuid/draft-messages` (regenerate one PENDING `OutreachMessage` per channel listed in the parent filter, using `filter.ai_instructions`).
+- Outreach drafts and sent history are `OutreachMessage` rows. List via `GET /contacts/:uuid/messages`. Edit/send/delete an individual message via the Outreach module: `PUT /outreach/messages/:uuid`, `POST /outreach/messages/:uuid/send`, `DELETE /outreach/messages/:uuid`.
+- All resource lookups use `uuid`.
 
 ## Requirements
 
-- Two views for contacts list: table view and Kanban-style pipeline view (grouped by status)
+- Two views for contacts list: **table view** and **Kanban-style pipeline view** (grouped by status)
 - Contact detail page shows a full activity timeline combining all interaction types
 - Tags displayed as colored chips with add/remove inline
 - Status change via drag-drop in Kanban or dropdown in table view
@@ -14,56 +21,63 @@ Build the CRM interface: a contacts list with status pipeline view, a contact de
 
 ## Subtasks
 
-- [ ] Create `app/lib/api/contacts.ts` — typed API wrappers for all contacts endpoints
-- [ ] Create `app/lib/types/contact.ts` — TypeScript types for Contact, ContactTag, Interaction
-- [ ] Create `app/components/contacts/ContactsTable.tsx`:
-  - Columns: Name, Company, Email, Phone, Status badge, Tags (chip list), Last Interaction date, Actions
-  - Row click navigates to `/contacts/:id`
-- [ ] Create `app/components/contacts/PipelineView.tsx` — Kanban board:
-  - 5 columns: New, Qualified, Contacted, Replied, Closed
-  - Each column shows a card per contact with name, company, score (if from a lead), and tag chips
-  - Drag-and-drop between columns calls `PUT /contacts/:id/status` (use `@hello-pangea/dnd` or `dnd-kit`)
+- [ ] Create `app/src/features/contacts/services/contacts.service.ts` — typed API wrappers for all contacts endpoints
+- [ ] Create `app/src/features/outreach/services/outreach.service.ts` — typed API wrappers for outreach message edit/send/delete
+- [ ] Create `app/src/features/contacts/interfaces/contact.interface.ts` — TypeScript types: `Contact` (status, score, notes), `ContactTag`, `Interaction`, `OutreachMessage`, joined `lead: Lead`
+- [ ] Create `app/src/pages/dashboard/pages/contacts/components/contacts-table.tsx`:
+  - Columns: Name (`lead.name`), Company (`lead.company`), Email (`lead.email`), Phone (`lead.phone`), Status badge (`contact.status`), Score (`contact.score`), Tags (chip list), Last Interaction date, Actions
+  - Row click navigates to `/dashboard/contacts/:uuid`
+- [ ] Create `app/src/pages/dashboard/pages/contacts/components/pipeline-view.tsx` — Kanban board:
+  - 4 columns matching `LeadStatus`: NEW, CONTACTED, CONVERTED, ARCHIVED
+  - Each card: name, company, score (colored), tag chips
+  - Drag-and-drop between columns calls `PUT /contacts/:uuid/status` (use `@hello-pangea/dnd` or `dnd-kit`)
 - [ ] Install drag-and-drop: `npm install @hello-pangea/dnd`
-- [ ] Create `app/components/contacts/ContactDetail.tsx` — detail view:
-  - Header: name, company, title, avatar initials
-  - Meta fields: email, phone, website, location
-  - Status badge with dropdown to change status
-  - Tags section: chip list with inline "Add tag" input (pressing Enter adds, clicking × removes)
-  - Notes section: text input to add note, list of notes below
-  - "Send Outreach" button → opens `SendOutreachModal` (reuse from Task 10)
-  - Linked lead section: if contact was converted from a lead, show score + ideas
-- [ ] Create `app/components/contacts/InteractionTimeline.tsx`:
-  - Renders a vertical timeline of all interactions
-  - Each item: icon (email/sms/call/note/status), timestamp (relative), content preview
-  - Colors: EMAIL=blue, SMS=green, CALL=purple, NOTE=gray, STATUS_CHANGE=orange
-- [ ] Create `app/(dashboard)/contacts/page.tsx`:
-  - View toggle button (Table / Pipeline)
-  - Persists view preference to `localStorage`
-  - Filter bar: status, tags, search input
-- [ ] Create `app/(dashboard)/contacts/[id]/page.tsx` — contact detail with `ContactDetail` + `InteractionTimeline`
-- [ ] Create `app/components/contacts/NewContactModal.tsx` — modal form for creating a contact manually
+- [ ] Create `app/src/pages/dashboard/pages/contacts/components/contact-detail.tsx`:
+  - Header: name (from `contact.lead.name`), company, title, avatar initials
+  - Meta fields (read-only, from `contact.lead`): email, phone, website, location, linkedin_url, industry
+  - Per-user section (editable): status badge with dropdown, score (read-only — set by AI), notes textarea
+  - Tags section: chip list with inline "Add tag" input (Enter adds, × removes)
+  - **Drafted outreach panel:** list of `OutreachMessage` rows where `status: PENDING`, grouped by channel. Each row exposes Edit / Send / Delete (calls `PUT /outreach/messages/:uuid`, `POST /outreach/messages/:uuid/send`, `DELETE /outreach/messages/:uuid`).
+  - **Sent history panel:** list of `OutreachMessage` rows where `status` is `SENT` or `FAILED`, ordered by `sent_at desc`.
+  - "Rescore" button → `POST /contacts/:uuid/score`
+  - "Redraft messages" button → `POST /contacts/:uuid/draft-messages` (regenerates one PENDING message per channel)
+- [ ] Create `app/src/pages/dashboard/pages/contacts/components/interaction-timeline.tsx`:
+  - Vertical timeline of all interactions (from `GET /contacts/:uuid/interactions`)
+  - Each item: icon, timestamp (relative), content preview
+  - Type → icon: `EMAIL` → Mail (blue), `CALL` → Phone (purple), `NOTE` → StickyNote (gray)
+- [ ] Create `app/src/pages/dashboard/pages/contacts/index.tsx`:
+  - View toggle button (Table / Pipeline) — persists to `localStorage`
+  - Filter bar: status, tags, min score, search input
+- [ ] Create `app/src/pages/dashboard/pages/contacts/pages/detail/index.tsx` (uses `:uuid` route) — composes `ContactDetail` + `InteractionTimeline`
+- [ ] Create `app/src/pages/dashboard/pages/contacts/components/new-contact-modal.tsx` — modal for manual creation (creates a `MANUAL`-source Lead + Contact in one call)
 
 ## Technical Notes
 
-- Interaction icon mapping:
+- Interaction icon mapping (only the 3 enum values):
   ```ts
-  const ICONS = { EMAIL: Mail, SMS: MessageSquare, CALL: Phone, NOTE: StickyNote, STATUS_CHANGE: ArrowRight }
+  const ICONS = { EMAIL: Mail, CALL: Phone, NOTE: StickyNote };
   ```
-- Tag add/remove: optimistic update on UI, call `PUT /contacts/:id/tags` with full new tag array
-- For Kanban DnD, on drop: immediately update local state (optimistic), then call API; revert on error
+- Status changes that come back as Interactions of type `NOTE` (per the schema) can be visually distinguished by parsing the `content` prefix `"Status changed from"` — render with an arrow icon if matched.
+- Tag add/remove: optimistic update on UI, call `PUT /contacts/:uuid/tags` with full new tag array
+- For Kanban DnD, on drop: optimistic local state update, then API; revert on error
 - Relative timestamps: use `date-fns` `formatDistanceToNow`
 - Install `date-fns` if not present: `npm install date-fns`
 - Contact list pagination: same pattern as leads (URL search params)
+- Drafted outreach list: filter to `status === 'PENDING'`. Channel chips above the list let the user filter to one channel at a time. Edit opens an inline form or modal that submits via `PUT /outreach/messages/:uuid`.
 
 ## Acceptance Criteria
 
-- [ ] Contacts list shows table view by default with all columns
-- [ ] Toggle switches to Kanban pipeline view grouped by status
-- [ ] Dragging a contact card to another column updates the status via API
-- [ ] Contact detail page shows all meta fields and tags
-- [ ] Adding a note via the notes section appears immediately in the interaction timeline
-- [ ] Status change via dropdown creates a STATUS_CHANGE entry in the timeline
-- [ ] "Send Outreach" opens the modal, submits, and adds interaction entry
+- [ ] Contacts list shows table view by default with all columns including Score
+- [ ] Toggle switches to Kanban pipeline view grouped by `NEW | CONTACTED | CONVERTED | ARCHIVED`
+- [ ] Dragging a contact card to another column updates `PUT /contacts/:uuid/status`
+- [ ] Contact detail page shows Lead meta (read-only) and Contact per-user state (editable)
+- [ ] Drafted outreach panel renders one row per PENDING `OutreachMessage`; Edit, Send, and Delete buttons call the right Outreach endpoints
+- [ ] Sent history panel renders SENT/FAILED messages in reverse chronological order
+- [ ] "Rescore" button hits `POST /contacts/:uuid/score`
+- [ ] "Redraft messages" button hits `POST /contacts/:uuid/draft-messages` and produces one PENDING message per channel in the parent filter
+- [ ] Adding a note via the notes section appears immediately in the timeline
+- [ ] Status change creates a NOTE interaction with `"Status changed from..."` content
 - [ ] Tags can be added and removed inline; saved on each change
-- [ ] Contacts created from leads show the linked lead's score and ideas
 - [ ] Page transitions between list and detail preserve the active filter state
+- [ ] Two users browsing their own CRM never see each other's contacts (server-enforced; verify by switching JWTs)
+- [ ] No UI references `contact.ideas` or `contact.generated_message` (those fields are gone)

@@ -1,26 +1,34 @@
-# Task: CRM Module (Contacts, Notes, Tags, Interaction History)
+# Task: CRM Module (Contacts, Notes, Tags, Interactions, AI Actions)
 
 ## Objective
 
-Build the `contacts` NestJS feature module implementing full CRM functionality: contact CRUD, status lifecycle management (New → Qualified → Contacted → Replied → Closed), notes, tags, interaction history, and outreach from the contact detail view. Also wire the `POST /leads/:id/convert` stub to actually create a contact from a lead.
+Build the `contacts` NestJS feature module — the **per-user CRM core** of LeadFinder. Contacts own all per-user state: status, AI score, ideas, drafted messages, notes, tags, interactions, and outreach history. Most "lead actions" from the original spec live here, since Lead is now public/global.
+
+## Domain reminder
+
+- **Contact** = `(User × Lead)`. The connection between a user and a public Lead, with `@@unique([user_uuid, lead_uuid])`.
+- **A Contact owns:** `status`, `score`, `notes`, plus its `tags` and `interactions`. AI-drafted outreach lives on `OutreachMessage` rows (Task 07), not on Contact.
+- **A Contact does NOT own:** the lead's name/email/phone/company/website/etc. (those live on the public Lead). It also does NOT have `ideas` or `generated_message` columns.
+- The scrape worker (Task 04) auto-creates Contacts when a filter discovers a Lead. Manual contact creation goes through `POST /contacts` (creates a `MANUAL`-source Lead first if needed).
 
 ## Requirements
 
-- All endpoints require JWT auth; contacts are scoped to `userId`
-- Converting a lead to a contact copies all available fields and sets `leadId` on the contact
-- Each status change must create an `Interaction` record of type `STATUS_CHANGE`
+- All endpoints require JWT auth; contacts are scoped to `user_uuid` from JWT
+- All resource lookups use `uuid` in the URL
+- Each status change creates an `Interaction` record (`type: NOTE` with `content: "Status changed from X to Y"`, since the schema's `InteractionType` enum is `NOTE | CALL | EMAIL` — there's no STATUS_CHANGE, so use `NOTE` with a structured content prefix)
 - Adding a note creates an `Interaction` record of type `NOTE`
-- Sending outreach from a contact creates an `OutreachMessage` and an `Interaction` of type `EMAIL/SMS/CALL`
 - Tags are managed via `ContactTag` table — replace on update (delete all, re-insert)
+- AI action endpoints: `score` (writes `Contact.score`) and `draft-messages` (creates `OutreachMessage` rows via `ContactAiService.draftOutreachMessages`). There are **no** `ideas` or `message` endpoints — those columns don't exist.
+- Sending outreach is handled by the Outreach module (Task 07): `POST /outreach/messages/:uuid/send`. The CRM module exposes `GET /contacts/:uuid/messages` to list a contact's drafts and sent history, but doesn't own the send flow.
 
 ## Subtasks
 
-- [ ] Create `api/src/modules/contacts/dto/create-contact.dto.ts`:
-  - `firstName/lastName/email/phone/company/website/title/location` all optional strings
+- [ ] Create `api/src/modules/contacts/dto/create-contact.dto.ts` (manual creation):
+  - `name?: string`, `email?: string`, `phone?: string`, `company?: string`, `website?: string`, `title?: string`, `location?: string` (used to build a `MANUAL`-source Lead)
   - `tags?: string[]`
   - `notes?: string`
-  - `leadId?: number`
-- [ ] Create `api/src/modules/contacts/dto/update-contact.dto.ts` — `PartialType(CreateContactDto)` minus `leadId`
+- [ ] Create `api/src/modules/contacts/dto/update-contact.dto.ts`:
+  - `notes?: string` (the only field directly editable on Contact — most "contact info" actually lives on Lead)
 - [ ] Create `api/src/modules/contacts/dto/update-status.dto.ts`:
   - `status: LeadStatus`
 - [ ] Create `api/src/modules/contacts/dto/add-note.dto.ts`:
@@ -28,46 +36,54 @@ Build the `contacts` NestJS feature module implementing full CRM functionality: 
 - [ ] Create `api/src/modules/contacts/dto/update-tags.dto.ts`:
   - `tags: string[]` (`@IsArray @IsString({ each: true })`)
 - [ ] Create `api/src/modules/contacts/contacts.service.ts`:
-  - `create(userId, dto)` — creates Contact + ContactTags + initial Interaction (type `NOTE` if notes provided)
-  - `findAll(userId, query)` — paginated; filter by `status`, `tags`; text search on name/email/company
-  - `findOne(userId, id)` — includes `tags`, latest 20 `interactions`, linked `lead`
-  - `update(userId, id, dto)` — updates fields (not status or tags — use dedicated methods)
-  - `remove(userId, id)`
-  - `updateStatus(userId, id, dto)` — updates `status`, creates `Interaction { type: STATUS_CHANGE, content: 'Status changed to {new}' }`
-  - `updateTags(userId, id, dto)` — deletes all `ContactTag` for contact, re-inserts new tags
-  - `addNote(userId, id, dto)` — creates `Interaction { type: NOTE, content }`
-  - `getInteractions(userId, id)` — returns all interactions ordered by `createdAt desc`
-  - `sendOutreach(userId, id, dto: SendOutreachDto)` — delegates to `OutreachService.send()`, creates `Interaction { type: EMAIL/SMS/CALL }`
-  - `convertFromLead(userId, leadId)` — check lead exists, check not already converted (`contact.leadId`), create Contact from lead fields, update `Lead.status = CONTACTED`
-- [ ] Create `api/src/modules/contacts/contacts.controller.ts` with all routes from ARCHITECTURE.md
-- [ ] Create `api/src/modules/contacts/contacts.module.ts` — imports `PrismaModule`, `OutreachModule`; exports `ContactsService`
-- [ ] Update `LeadsService.convertToContact()` stub to call `ContactsService.convertFromLead()`
+  - `create(userUuid, dto)` — creates a `MANUAL` Lead from the contact info, then a Contact pointing at it; persists tags + initial NOTE Interaction if `notes` provided
+  - `findAll(userUuid, query)` — paginated; filter by `status`, `tags`, `min_score`; text search delegated to Lead fields via `where: { lead: { OR: [...] } }`
+  - `findOne(userUuid, uuid)` — includes `tags`, latest 20 `interactions`, full linked `lead`
+  - `update(userUuid, uuid, dto)` — updates `notes` only (status and tags use dedicated methods)
+  - `remove(userUuid, uuid)`
+  - `updateStatus(userUuid, uuid, dto)` — updates `status`, creates `Interaction { type: NOTE, content: "Status changed from {old} to {new}" }`
+  - `updateTags(userUuid, uuid, dto)` — deletes all `ContactTag` for contact, re-inserts new tags
+  - `addNote(userUuid, uuid, dto)` — creates `Interaction { type: NOTE, content }`
+  - `getInteractions(userUuid, uuid)` — returns all interactions ordered by `created_at desc`
+  - `convertFromLead(userUuid, leadUuid)` — verify Lead exists, check `findFirst({ where: { user_uuid, lead_uuid: leadUuid } })` for existing Contact (throw `ConflictException` if found), create new Contact with `status: NEW`
+  - `triggerScore(userUuid, uuid)` — enqueue `{ contact_uuid: uuid, action: 'score' }` to `ai-process` queue
+  - `triggerDraftMessages(userUuid, uuid)` — enqueue `{ contact_uuid: uuid, action: 'draft' }` to `ai-process` queue (delegates to `ContactAiService.draftOutreachMessages`, which uses `filter.ai_instructions` + `filter.channels` to create one PENDING `OutreachMessage` per channel)
+  - `listMessages(userUuid, uuid)` — return all `OutreachMessage` rows for this contact (drafts + sent), ordered by `created_at desc`
+- [ ] Create `api/src/modules/contacts/contacts.controller.ts` with all routes from ARCHITECTURE.md (Contacts section)
+- [ ] Create `api/src/modules/contacts/contacts.module.ts` — imports `PrismaModule`, `OutreachModule`, `BullModule`; exports `ContactsService`
 - [ ] Register `ContactsModule` in `app.module.ts`
+- [ ] Update the `ai-process.worker.ts` (Task 05) to honor an optional `action` field on `{ contact_uuid }` payloads so manual triggers can run a single AI step
 
 ## Technical Notes
 
 - `findAll` tag filtering: use Prisma nested `where: { tags: { some: { tag: { in: tagsArray } } } }`
+- `findAll` text search: delegate to lead via `where: { lead: { OR: [{ name: ... }, { email: ... }, { company: ... }] } }`
 - `findOne` response shape:
   ```ts
   {
-    ...contact,
-    tags: string[],           // extracted from ContactTag records
-    interactions: Interaction[],
-    lead: { id, score, ideas, generatedMessage } | null
+    ...contact,                       // status, score, notes (no ideas/generated_message)
+    tags: string[],                   // extracted from ContactTag records
+    interactions: Interaction[],      // latest 20
+    outreach_messages: OutreachMessage[], // drafts + sent
+    lead: Lead                        // full public lead — name, email, phone, company, website, etc.
   }
   ```
-- The `convertFromLead` method must check `prisma.contact.findFirst({ where: { leadId } })` first — throw `ConflictException` if already converted
-- Status transition validation: enforce the sequence `NEW → QUALIFIED → CONTACTED → REPLIED → CLOSED` — reject if the new status is not the next valid step OR allow any forward move (simpler: allow any status change, no strict ordering)
-- `Interaction.content` for `STATUS_CHANGE`: `"Status changed from {old} to {new}"`
+- `convertFromLead` uniqueness: rely on the `@@unique([user_uuid, lead_uuid])` index — wrap the create in try/catch on `P2002` to return 409
+- Status transition: allow any forward move; do not enforce strict ordering
+- `Interaction.content` for status change: `"Status changed from {old} to {new}"` with `type: NOTE`
+- The `ai-process` worker payload supports an optional `action?: 'enrich' | 'score' | 'draft'` field that, when set, causes the worker to run only that step instead of the full pipeline
 
 ## Acceptance Criteria
 
-- [ ] `POST /contacts` creates a contact with tags and returns the full contact object
-- [ ] `GET /contacts/:id` includes `tags`, `interactions`, and linked lead summary
-- [ ] `PUT /contacts/:id/status` creates an `Interaction` record of type `STATUS_CHANGE`
-- [ ] `POST /contacts/:id/notes` creates an `Interaction` record of type `NOTE`
-- [ ] `PUT /contacts/:id/tags` replaces all tags (no duplicates in `ContactTag`)
-- [ ] `POST /leads/:id/convert` creates a `Contact` with `leadId` set and returns the new contact
-- [ ] `POST /leads/:id/convert` a second time returns `409 Conflict`
-- [ ] `POST /contacts/:id/send` creates an `OutreachMessage` AND an `Interaction`
-- [ ] `GET /contacts/:id/interactions` returns history in reverse chronological order
+- [ ] `POST /contacts` creates a Contact (and a `MANUAL` Lead behind the scenes) with tags and returns the full contact + lead object
+- [ ] `POST /contacts/from-lead/:lead_uuid` creates a Contact for the current user and returns 409 on second call
+- [ ] `GET /contacts/:uuid` includes `tags`, `interactions`, full linked `lead`, and `outreach_messages` (drafts + sent)
+- [ ] `PUT /contacts/:uuid/status` creates an `Interaction` recording the change
+- [ ] `POST /contacts/:uuid/notes` creates an `Interaction` of type `NOTE`
+- [ ] `PUT /contacts/:uuid/tags` replaces all tags (no duplicates in `ContactTag`)
+- [ ] `POST /contacts/:uuid/score` enqueues a single-step AI job (`action: 'score'`) and returns `{ jobId }`
+- [ ] `POST /contacts/:uuid/draft-messages` enqueues `action: 'draft'`; on completion, exactly `filter.channels.length` PENDING OutreachMessage rows exist for the contact
+- [ ] `GET /contacts/:uuid/messages` returns the contact's OutreachMessage rows ordered by `created_at desc`
+- [ ] `GET /contacts/:uuid/interactions` returns history in reverse chronological order
+- [ ] Two users with Contacts on the same Lead see independent `score`, `notes`, and OutreachMessage drafts
+- [ ] No `/contacts/:uuid/ideas` or `/contacts/:uuid/message` endpoints exist (those concepts were removed)

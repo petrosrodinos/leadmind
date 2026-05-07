@@ -131,9 +131,137 @@ exports.Prisma.UserScalarFieldEnum = {
   updated_at: 'updated_at'
 };
 
+exports.Prisma.FilterScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  user_uuid: 'user_uuid',
+  name: 'name',
+  source_type: 'source_type',
+  query_config: 'query_config',
+  enabled: 'enabled',
+  cron_schedule: 'cron_schedule',
+  channels: 'channels',
+  ai_instructions: 'ai_instructions',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.RawLeadScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  filter_uuid: 'filter_uuid',
+  source_type: 'source_type',
+  raw_data: 'raw_data',
+  processed_at: 'processed_at',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.LeadScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  raw_lead_uuid: 'raw_lead_uuid',
+  name: 'name',
+  email: 'email',
+  phone: 'phone',
+  company: 'company',
+  website: 'website',
+  linkedin_url: 'linkedin_url',
+  title: 'title',
+  location: 'location',
+  industry: 'industry',
+  description: 'description',
+  source_type: 'source_type',
+  raw_data: 'raw_data',
+  enrichment_data: 'enrichment_data',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.ContactScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  user_uuid: 'user_uuid',
+  lead_uuid: 'lead_uuid',
+  filter_uuid: 'filter_uuid',
+  status: 'status',
+  score: 'score',
+  notes: 'notes',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.ContactTagScalarFieldEnum = {
+  id: 'id',
+  contact_uuid: 'contact_uuid',
+  tag: 'tag',
+  created_at: 'created_at'
+};
+
+exports.Prisma.InteractionScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  contact_uuid: 'contact_uuid',
+  user_uuid: 'user_uuid',
+  type: 'type',
+  content: 'content',
+  metadata: 'metadata',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.OutreachMessageScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  user_uuid: 'user_uuid',
+  contact_uuid: 'contact_uuid',
+  channel: 'channel',
+  subject: 'subject',
+  content: 'content',
+  status: 'status',
+  scheduled_at: 'scheduled_at',
+  sent_at: 'sent_at',
+  metadata: 'metadata',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.OutreachSequenceScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  user_uuid: 'user_uuid',
+  name: 'name',
+  steps: 'steps',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.FilterJobScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  filter_uuid: 'filter_uuid',
+  status: 'status',
+  leads_found: 'leads_found',
+  duration: 'duration',
+  error: 'error',
+  started_at: 'started_at',
+  completed_at: 'completed_at',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
+};
+
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
@@ -145,6 +273,12 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
+};
 exports.AuthRole = exports.$Enums.AuthRole = {
   USER: 'USER',
   ADMIN: 'ADMIN',
@@ -152,8 +286,55 @@ exports.AuthRole = exports.$Enums.AuthRole = {
   SUPPORT: 'SUPPORT'
 };
 
+exports.SourceType = exports.$Enums.SourceType = {
+  LINKEDIN: 'LINKEDIN',
+  GOOGLE_MAPS: 'GOOGLE_MAPS',
+  MANUAL: 'MANUAL'
+};
+
+exports.Channel = exports.$Enums.Channel = {
+  EMAIL: 'EMAIL',
+  SMS: 'SMS',
+  LINKEDIN: 'LINKEDIN'
+};
+
+exports.LeadStatus = exports.$Enums.LeadStatus = {
+  NEW: 'NEW',
+  CONTACTED: 'CONTACTED',
+  CONVERTED: 'CONVERTED',
+  ARCHIVED: 'ARCHIVED'
+};
+
+exports.InteractionType = exports.$Enums.InteractionType = {
+  NOTE: 'NOTE',
+  CALL: 'CALL',
+  EMAIL: 'EMAIL'
+};
+
+exports.MsgStatus = exports.$Enums.MsgStatus = {
+  PENDING: 'PENDING',
+  SENT: 'SENT',
+  FAILED: 'FAILED'
+};
+
+exports.JobStatus = exports.$Enums.JobStatus = {
+  PENDING: 'PENDING',
+  RUNNING: 'RUNNING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
+};
+
 exports.Prisma.ModelName = {
-  User: 'User'
+  User: 'User',
+  Filter: 'Filter',
+  RawLead: 'RawLead',
+  Lead: 'Lead',
+  Contact: 'Contact',
+  ContactTag: 'ContactTag',
+  Interaction: 'Interaction',
+  OutreachMessage: 'OutreachMessage',
+  OutreachSequence: 'OutreachSequence',
+  FilterJob: 'FilterJob'
 };
 
 /**

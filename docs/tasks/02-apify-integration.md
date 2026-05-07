@@ -2,7 +2,9 @@
 
 ## Objective
 
-Build a NestJS integration module at `api/src/integrations/apify/` that provides an Apify HTTP client and source-specific adapters for LinkedIn search, generic lead finder, Google search scraping, and a custom source interface. The module must be injectable into any other module.
+Build a NestJS integration module at `api/src/integrations/apify/` that provides an Apify HTTP client and source-specific adapters for LinkedIn search and Google Maps lead scraping. The module must be injectable into any other module.
+
+> **Source types in scope:** `LINKEDIN`, `GOOGLE_MAPS` (matches the `SourceType` enum in `schema.prisma`). The `MANUAL` source does not call Apify — it's a marker for hand-entered Contacts.
 
 ## Requirements
 
@@ -19,25 +21,25 @@ Build a NestJS integration module at `api/src/integrations/apify/` that provides
   ```ts
   export const APIFY_ACTORS = {
     LINKEDIN_SEARCH: 'apify/linkedin-profile-scraper',
-    GENERIC_LEAD: 'apify/website-content-crawler',
+    GOOGLE_MAPS_SEARCH: 'compass/google-maps-extractor',
     GOOGLE_SEARCH: 'apify/google-search-scraper',
+    GENERIC_LEAD: 'apify/website-content-crawler',
   };
   ```
 - [ ] Create `api/src/integrations/apify/interfaces/apify.interfaces.ts` with:
   - `ApifyRunInput` (generic JSON)
-  - `NormalizedLead` interface: `{ name?, email?, phone?, company?, website?, linkedinUrl?, title?, location?, industry?, description?, rawData: Record<string, any> }`
+  - `NormalizedLead` interface: `{ name?, email?, phone?, company?, website?, linkedin_url?, title?, location?, industry?, description?, raw_data: Record<string, any> }` (use snake_case keys to match the `Lead` schema)
 - [ ] Create `api/src/integrations/apify/apify.client.ts` — wraps Axios, exposes:
   - `runActor(actorId: string, input: object): Promise<any[]>` — calls `POST /v2/acts/{actorId}/run-sync-get-dataset-items?token=...&waitForFinish=300`
 - [ ] Create `api/src/integrations/apify/adapters/linkedin.adapter.ts` — `LinkedInAdapter`:
-  - `buildInput(queryConfig): ApifyRunInput` — maps `{ keywords, location, industry, limit }` to Apify LinkedIn actor input format
+  - `buildInput(query_config): ApifyRunInput` — maps `{ keywords, location, industry, limit }` to Apify LinkedIn actor input format
   - `normalize(rawItem): NormalizedLead` — maps LinkedIn profile fields to `NormalizedLead`
-- [ ] Create `api/src/integrations/apify/adapters/google.adapter.ts` — `GoogleAdapter`:
-  - `buildInput(queryConfig): ApifyRunInput`
-  - `normalize(rawItem): NormalizedLead`
-- [ ] Create `api/src/integrations/apify/adapters/generic.adapter.ts` — `GenericApifyAdapter` (fallback, minimal normalization)
+- [ ] Create `api/src/integrations/apify/adapters/google-maps.adapter.ts` — `GoogleMapsAdapter`:
+  - `buildInput(query_config): ApifyRunInput` — maps `{ query, location, limit }` to the Google Maps actor input
+  - `normalize(rawItem): NormalizedLead` — maps Google Maps places to `NormalizedLead` (business name, website, phone, address → location)
 - [ ] Create `api/src/integrations/apify/apify.service.ts` — `ApifyService`:
-  - `scrapeLeads(sourceType: SourceType, queryConfig: object): Promise<NormalizedLead[]>`
-  - Delegates to the correct adapter based on `sourceType`
+  - `scrapeLeads(source_type: SourceType, query_config: object): Promise<NormalizedLead[]>`
+  - Delegates to the correct adapter based on `source_type` (`LINKEDIN` or `GOOGLE_MAPS`); throws for `MANUAL`
 - [ ] Create `api/src/integrations/apify/apify.module.ts` — exports `ApifyService`
 - [ ] Register `ApifyModule` in `api/src/app.module.ts`
 
@@ -51,15 +53,17 @@ Build a NestJS integration module at `api/src/integrations/apify/` that provides
   ```json
   { "searchUrl": "https://www.linkedin.com/search/results/people/?keywords=...", "maxResults": 50 }
   ```
-- Google Search actor input shape:
+- Google Maps actor input shape (`compass/google-maps-extractor`):
   ```json
-  { "queries": ["..."], "maxPagesPerQuery": 2, "resultsPerPage": 10 }
+  { "searchStringsArray": ["..."], "locationQuery": "...", "maxCrawledPlacesPerSearch": 50 }
   ```
 
 ## Acceptance Criteria
 
 - [ ] `ApifyService` is injectable and exported from `ApifyModule`
 - [ ] `scrapeLeads('LINKEDIN', { keywords: 'CEO', location: 'NYC', limit: 10 })` returns `NormalizedLead[]` without throwing
+- [ ] `scrapeLeads('GOOGLE_MAPS', { query: 'plumbers', location: 'Athens', limit: 10 })` returns `NormalizedLead[]` without throwing
+- [ ] `scrapeLeads('MANUAL', ...)` throws (or returns `[]`) — Apify is not invoked for manual filters
 - [ ] `APIFY_API_TOKEN` missing from env causes app to fail startup (Zod validation)
-- [ ] Each adapter's `normalize()` method filters out items with neither `email` nor `linkedinUrl` (don't create empty leads)
-- [ ] Unit test: mock `ApifyClient`, assert `scrapeLeads` calls correct adapter per `sourceType`
+- [ ] Each adapter's `normalize()` method filters out items with neither `email` nor `linkedin_url` (don't create empty leads)
+- [ ] Unit test: mock `ApifyClient`, assert `scrapeLeads` calls correct adapter per `source_type`

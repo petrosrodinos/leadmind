@@ -108,159 +108,176 @@ api/src/
 
 ## 3. DOMAIN MODEL
 
+### Domain boundaries
+
+- **Lead** is the **generic, public, app-wide** record of a person/business. It has no owner. Each Lead is created from a `RawLead` (`raw_lead_uuid` FK) — the audit record of what the scraper returned.
+- **Contact** is the **per-user connection to a Lead**. It owns per-user state: `status`, AI `score`, `notes`, plus interactions and outreach history. **No `ideas` or `generated_message` columns** — AI-drafted outreach lives on `OutreachMessage`.
+- **OutreachMessage** is where AI-generated messages live. When a Filter has both `ai_instructions` and at least one entry in `channels`, the AI pipeline creates one `OutreachMessage` per `(contact, channel)` with `status: PENDING` — the user reviews and triggers the actual send.
+- **All foreign keys reference `uuid`, not `id`.** Tables retain `id` as the autoincrement primary key, but every FK column is `*_uuid String` referencing the parent's `uuid`.
+- Column names are **snake_case**.
+
+### End-to-end flow
+
+```
+Filter (cron or manual)
+  → ApifyService.scrapeLeads (Task 02/04)
+    → RawLead inserted (audit)
+      → Lead upserted (global, dedup by email/linkedin_url; raw_lead_uuid set on first creation)
+        → Contact upserted for filter.user_uuid (per-user view of the lead)
+          → ai-process queue: { contact_uuid }
+            ├─ LeadAiService.enrichLead (writes Lead.enrichment_data, public)
+            ├─ ContactAiService.scoreContact (writes Contact.score, per-user)
+            └─ if filter.ai_instructions && filter.channels.length > 0:
+               ContactAiService.draftOutreachMessages
+                 → for each channel in filter.channels:
+                   create OutreachMessage { contact_uuid, channel, content, status: PENDING }
+              (user reviews drafts; POST /contacts/:uuid/messages/:uuid/send dispatches via outreach-send queue)
+```
+
 ### Enums
 
 ```
-SourceType:   LINKEDIN | GOOGLE | GOV | APIFY_GENERIC | CUSTOM
-Channel:      EMAIL | SMS | PHONE_CALL
-LeadStatus:   NEW | QUALIFIED | CONTACTED | REPLIED | CLOSED
+SourceType:   LINKEDIN | GOOGLE_MAPS | MANUAL
+Channel:      EMAIL | SMS | LINKEDIN
+LeadStatus:   NEW | CONTACTED | CONVERTED | ARCHIVED
 JobStatus:    PENDING | RUNNING | COMPLETED | FAILED
-MsgStatus:    PENDING | SENT | FAILED | DELIVERED | OPENED | REPLIED
-InteractionType: EMAIL | SMS | CALL | NOTE | STATUS_CHANGE
-UserRole:     USER | ADMIN | SUPER_ADMIN | SUPPORT  (existing)
+MsgStatus:    PENDING | SENT | FAILED
+InteractionType: NOTE | CALL | EMAIL
+AuthRole:     USER | ADMIN | SUPER_ADMIN | SUPPORT  (existing)
 ```
 
 ### Entities / Tables
 
-**User** (existing — extend with relations)
+**User** (existing — extend with relations only; no new columns)
 
 **Filter**
 | Field | Type | Notes |
 |-------|------|-------|
 | id | Int PK | |
 | uuid | String unique | |
-| userId | Int FK→User | |
+| user_uuid | String FK→User.uuid | |
 | name | String | |
-| sourceType | SourceType | |
-| queryConfig | Json | source-specific params |
+| source_type | SourceType | |
+| query_config | Json | source-specific params |
 | enabled | Boolean | default true |
-| cronSchedule | String? | cron expression |
-| channel | Channel | default EMAIL |
-| aiInstructions | String? | custom AI prompt |
-| createdAt / updatedAt | DateTime | |
+| cron_schedule | String? | cron expression |
+| channels | Channel[] | default `[EMAIL]` — multi-channel |
+| ai_instructions | String? | custom AI prompt |
+| created_at / updated_at | DateTime | |
 
 **RawLead**
 | Field | Type | Notes |
 |-------|------|-------|
 | id | Int PK | |
 | uuid | String unique | |
-| filterId | Int FK→Filter | |
-| sourceType | SourceType | |
-| rawData | Json | original scraped payload |
-| processedAt | DateTime? | null until processed |
-| createdAt | DateTime | |
+| filter_uuid | String FK→Filter.uuid | |
+| source_type | SourceType | |
+| raw_data | Json | original scraped payload |
+| processed_at | DateTime? | null until processed into a Lead |
+| created_at / updated_at | DateTime | |
 
-**Lead**
+**Lead** (public — no owner)
 | Field | Type | Notes |
 |-------|------|-------|
 | id | Int PK | |
 | uuid | String unique | |
-| userId | Int FK→User | |
-| filterId | Int? FK→Filter | |
+| raw_lead_uuid | String? unique FK→RawLead.uuid | source RawLead (null for MANUAL leads) |
 | name | String? | |
-| email | String? | |
+| email | String? | indexed for global dedup |
 | phone | String? | |
 | company | String? | |
 | website | String? | |
-| linkedinUrl | String? | |
+| linkedin_url | String? | indexed for global dedup |
 | title | String? | |
 | location | String? | |
 | industry | String? | |
 | description | String? | |
-| sourceType | SourceType | |
-| rawData | Json? | |
-| score | Int? | 1–10 |
-| enrichmentData | Json? | website summary etc. |
-| ideas | Json? | String[] |
-| generatedMessage | String? | |
-| messageChannel | Channel? | |
-| status | LeadStatus | default NEW |
-| createdAt / updatedAt | DateTime | |
+| source_type | SourceType | |
+| raw_data | Json? | |
+| enrichment_data | Json? | public — e.g., website summary |
+| created_at / updated_at | DateTime | |
 
-**Contact** (CRM)
+**Contact** (per-user view of a Lead — owns per-user state)
 | Field | Type | Notes |
 |-------|------|-------|
 | id | Int PK | |
 | uuid | String unique | |
-| userId | Int FK→User | |
-| leadId | Int? FK→Lead | source lead |
-| firstName | String? | |
-| lastName | String? | |
-| email | String? | |
-| phone | String? | |
-| company | String? | |
-| website | String? | |
-| title | String? | |
-| location | String? | |
+| user_uuid | String FK→User.uuid | |
+| lead_uuid | String FK→Lead.uuid | |
+| filter_uuid | String? FK→Filter.uuid | which filter surfaced this lead for the user |
 | status | LeadStatus | default NEW |
-| notes | String? | |
-| createdAt / updatedAt | DateTime | |
+| score | Int? | 1–10 — per-user match score |
+| notes | String? | user's notes |
+| created_at / updated_at | DateTime | |
+| `@@unique([user_uuid, lead_uuid])` | | one Contact per (user, lead) |
+
+> AI-drafted messages **do not live on Contact**. They live on `OutreachMessage` rows (one per channel from `filter.channels`).
 
 **ContactTag**
 | Field | Type | Notes |
 |-------|------|-------|
 | id | Int PK | |
-| contactId | Int FK→Contact | |
+| contact_uuid | String FK→Contact.uuid | |
 | tag | String | |
+| `@@unique([contact_uuid, tag])` | | |
 
 **Interaction**
 | Field | Type | Notes |
 |-------|------|-------|
 | id | Int PK | |
 | uuid | String unique | |
-| contactId | Int FK→Contact | |
-| userId | Int FK→User | |
+| contact_uuid | String FK→Contact.uuid | |
+| user_uuid | String FK→User.uuid | |
 | type | InteractionType | |
 | content | String? | message or note text |
 | metadata | Json? | extra data |
-| createdAt | DateTime | |
+| created_at / updated_at | DateTime | |
 
 **OutreachMessage**
 | Field | Type | Notes |
 |-------|------|-------|
 | id | Int PK | |
 | uuid | String unique | |
-| userId | Int FK→User | |
-| leadId | Int? FK→Lead | |
-| contactId | Int? FK→Contact | |
-| channel | Channel | |
+| user_uuid | String FK→User.uuid | |
+| contact_uuid | String FK→Contact.uuid | required — outreach goes through a Contact |
+| channel | Channel | single channel per message |
 | subject | String? | email subject |
 | content | String | message body |
 | status | MsgStatus | default PENDING |
-| scheduledAt | DateTime? | for sequences |
-| sentAt | DateTime? | |
+| scheduled_at | DateTime? | for sequences |
+| sent_at | DateTime? | |
 | metadata | Json? | provider response |
-| createdAt | DateTime | |
+| created_at / updated_at | DateTime | |
 
 **OutreachSequence**
 | Field | Type | Notes |
 |-------|------|-------|
 | id | Int PK | |
 | uuid | String unique | |
-| userId | Int FK→User | |
+| user_uuid | String FK→User.uuid | |
 | name | String | |
 | steps | Json | [{delayHours, channel, template}] |
-| createdAt | DateTime | |
+| created_at / updated_at | DateTime | |
 
 **FilterJob**
 | Field | Type | Notes |
 |-------|------|-------|
 | id | Int PK | |
 | uuid | String unique | |
-| filterId | Int FK→Filter | |
+| filter_uuid | String FK→Filter.uuid | |
 | status | JobStatus | |
-| leadsFound | Int | default 0 |
+| leads_found | Int | default 0 |
 | error | String? | |
-| startedAt | DateTime | |
-| completedAt | DateTime? | |
-| createdAt | DateTime | |
+| started_at | DateTime | |
+| completed_at | DateTime? | |
+| created_at / updated_at | DateTime | |
 
 ### Key Relationships
 
-- User → many Filters, Leads, Contacts, OutreachMessages
-- Filter → many RawLeads, Leads, FilterJobs
-- Lead → many OutreachMessages; optionally becomes one Contact
-- Contact → many ContactTags, Interactions, OutreachMessages
+- User → many Filters, Contacts, OutreachMessages, OutreachSequences, Interactions (no direct relation to Lead — leads are public)
+- Filter → many RawLeads, FilterJobs, Contacts (the contacts the filter surfaced)
+- Lead → many Contacts (one per user who has it in their CRM)
+- Contact → many ContactTags, Interactions, OutreachMessages; belongs to exactly one User and one Lead
 
 ---
 
@@ -280,34 +297,46 @@ POST   /filters/:id/run            — manually trigger scrape job
 GET    /filters/:id/jobs           — job history for filter
 ```
 
-### Leads
+### Leads (public, read-mostly)
+
+Leads are global. Listing/getting a Lead is allowed for any authenticated user; only public fields are returned. Per-user state (status, score, ideas, generated_message) is not exposed here — it lives on Contact.
 
 ```
-GET    /leads                      — list (score, status, source, search query params)
-GET    /leads/:id                  — get one with full AI data
-PUT    /leads/:id                  — update (status, manual edits)
-DELETE /leads/:id                  — delete
-POST   /leads/:id/score            — trigger AI scoring
-POST   /leads/:id/enrich           — trigger AI enrichment
-POST   /leads/:id/ideas            — trigger AI idea generation
-POST   /leads/:id/message          — generate AI outreach message
-POST   /leads/:id/send             — send outreach message immediately
-POST   /leads/:id/convert          — convert lead → contact
+GET    /leads                      — list public leads (search, source filter)
+GET    /leads/:uuid                — get one public lead (no per-user state)
+POST   /leads/:uuid/enrich         — trigger AI website-enrichment (writes Lead.enrichment_data — public)
 ```
 
-### Contacts (CRM)
+`POST /leads/:uuid/contacts` — convert a Lead into a Contact for the current user — is exposed under the Contacts API as `POST /contacts/from-lead/:lead_uuid` (see below).
+
+### Contacts (CRM — per-user)
 
 ```
 GET    /contacts                   — list (status, tags, search)
-POST   /contacts                   — create manually
-GET    /contacts/:id               — get with tags + interactions
-PUT    /contacts/:id               — update fields
-DELETE /contacts/:id               — delete
-PUT    /contacts/:id/status        — update status
-PUT    /contacts/:id/tags          — replace tag set
-POST   /contacts/:id/notes         — add note (creates Interaction)
-GET    /contacts/:id/interactions  — interaction history
-POST   /contacts/:id/send          — send outreach
+POST   /contacts                   — create manually (creates a MANUAL Lead first if needed)
+POST   /contacts/from-lead/:lead_uuid — adopt a public Lead as a Contact for the current user
+GET    /contacts/:uuid             — get with tags, interactions, linked Lead, drafted outreach_messages
+PUT    /contacts/:uuid             — update fields (notes)
+DELETE /contacts/:uuid             — delete
+PUT    /contacts/:uuid/status      — update status
+PUT    /contacts/:uuid/tags        — replace tag set
+POST   /contacts/:uuid/notes       — add note (creates Interaction)
+GET    /contacts/:uuid/interactions — interaction history
+POST   /contacts/:uuid/score       — trigger AI scoring (writes Contact.score)
+POST   /contacts/:uuid/draft-messages — trigger AI to (re)draft OutreachMessage rows for every channel in the filter (uses filter.ai_instructions)
+GET    /contacts/:uuid/messages    — list this contact's OutreachMessage rows (drafts + sent)
+```
+
+### Outreach
+
+```
+GET    /outreach/messages          — list user's messages (filter by contact_uuid, status)
+PUT    /outreach/messages/:uuid    — edit a PENDING (drafted) message (subject/content)
+POST   /outreach/messages/:uuid/send — dispatch a PENDING message via the outreach-send queue
+DELETE /outreach/messages/:uuid    — delete a draft
+POST   /outreach/sequences         — create sequence
+GET    /outreach/sequences         — list sequences
+POST   /outreach/sequences/:uuid/assign — assign a sequence to a contact
 ```
 
 ### Outreach
