@@ -28,7 +28,7 @@ export default function AppRoutes() {
       <Route
         path="/dashboard/*"
         element={
-          <ProtectedRoute loggedIn={false}>
+          <ProtectedRoute loggedIn={true}>
             <DashboardLayout />
           </ProtectedRoute>
         }

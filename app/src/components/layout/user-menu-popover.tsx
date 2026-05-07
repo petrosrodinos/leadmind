@@ -65,7 +65,7 @@ export default function UserMenuPopover({ collapsed = false, placement = 'top' }
 
       <Popover.Content
         placement={placement === 'top' ? 'top start' : 'bottom end'}
-        className="w-40 p-0 rounded-xl border border-border bg-overlay shadow-overlay overflow-hidden"
+        className="w-36 p-0 rounded-xl border border-border bg-overlay shadow-overlay overflow-hidden"
       >
         <Popover.Dialog>
           <div className="py-1">
@@ -73,7 +73,7 @@ export default function UserMenuPopover({ collapsed = false, placement = 'top' }
               <button
                 key={label}
                 onClick={onClick}
-                className="w-full flex items-center gap-2 px-2.5 py-1 text-sm text-foreground hover:bg-surface-secondary transition-colors duration-100 group/item"
+                className="w-full flex items-center gap-2 px-1.5 py-1 text-sm text-foreground hover:bg-surface-secondary transition-colors duration-100 group/item"
               >
                 <span className="h-5 w-5 rounded-md bg-default group-hover/item:bg-surface-tertiary flex items-center justify-center transition-colors duration-100 shrink-0">
                   <Icon className="h-3 w-3 text-muted" />
@@ -83,10 +83,10 @@ export default function UserMenuPopover({ collapsed = false, placement = 'top' }
             ))}
           </div>
 
-          <div className="px-1.5 pb-1.5">
+          <div className="px-1 pb-1">
             <button
               onClick={logout}
-              className="w-full flex items-center gap-2 px-2 py-1 rounded-lg text-sm text-danger hover:bg-danger/10 transition-colors duration-100 group/logout"
+              className="w-full flex items-center gap-2 px-1.5 py-1 rounded-lg text-sm text-danger hover:bg-danger/10 transition-colors duration-100 group/logout"
             >
               <span className="h-5 w-5 rounded-md bg-danger/10 group-hover/logout:bg-danger/15 flex items-center justify-center transition-colors duration-100 shrink-0">
                 <LogOut className="h-3 w-3 text-danger" />
