@@ -19,6 +19,6 @@ import { WebsiteContentCrawlerAdapter } from './website-content-crawler/website-
         WebsiteContentCrawlerAdapter,
         ApifyService,
     ],
-    exports: [ApifyService],
+    exports: [ApifyService, WebsiteContentCrawlerAdapter],
 })
 export class ApifyModule { }

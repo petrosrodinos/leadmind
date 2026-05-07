@@ -9,6 +9,10 @@ import { RedisCacheModule } from './modules/internal/redis-cache/redis-cache.mod
 import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule } from './shared/config/env/env.module';
 import { ApifyModule } from './integrations/apify/apify.module';
+import { QueuesModule } from './core/queues/queues.module';
+import { BullBoardModule } from './core/queues/bull-board.module';
+import { FiltersModule } from './modules/filters/filters.module';
+import { WorkersModule } from './workers/workers.module';
 
 @Module({
   imports: [
@@ -21,6 +25,10 @@ import { ApifyModule } from './integrations/apify/apify.module';
     // GraphQLModule,
     AuthModule,
     ApifyModule,
+    QueuesModule,
+    BullBoardModule,
+    FiltersModule,
+    WorkersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

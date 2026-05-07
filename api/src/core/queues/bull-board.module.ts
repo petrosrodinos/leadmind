@@ -3,32 +3,33 @@ import { createBullBoard } from '@bull-board/api';
 import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
 import { ExpressAdapter } from '@bull-board/express';
 import { Queue } from 'bullmq';
-import { getQueueToken } from '@nestjs/bullmq';
-import { BullModule } from '@nestjs/bullmq';
-import { BULL_BOARD_ADAPTER } from './queues.constants';
+import { BullModule, getQueueToken } from '@nestjs/bullmq';
+import { AI_PROCESS_QUEUE, BULL_BOARD_ADAPTER, FILTER_SCRAPE_QUEUE } from './queues.constants';
 
 
 @Global()
 @Module({
     imports: [
         BullModule.registerQueue(
-            // { name: MESSAGE_QUEUE },
+            { name: FILTER_SCRAPE_QUEUE },
+            { name: AI_PROCESS_QUEUE },
         ),
     ],
     providers: [
         {
             provide: BULL_BOARD_ADAPTER,
             inject: [
-                // getQueueToken(CAMPAIGN_QUEUE),
+                getQueueToken(FILTER_SCRAPE_QUEUE),
+                getQueueToken(AI_PROCESS_QUEUE),
             ],
-            useFactory: (campaignQueue: Queue, messageQueue: Queue) => {
+            useFactory: (filterScrapeQueue: Queue, aiProcessQueue: Queue) => {
                 const serverAdapter = new ExpressAdapter();
                 serverAdapter.setBasePath('/admin/queues');
 
                 createBullBoard({
                     queues: [
-                        new BullMQAdapter(campaignQueue),
-                        new BullMQAdapter(messageQueue),
+                        new BullMQAdapter(filterScrapeQueue),
+                        new BullMQAdapter(aiProcessQueue),
                     ],
                     serverAdapter,
                 });
@@ -40,4 +41,3 @@ import { BULL_BOARD_ADAPTER } from './queues.constants';
     exports: [BULL_BOARD_ADAPTER, BullModule],
 })
 export class BullBoardModule { }
-

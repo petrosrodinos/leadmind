@@ -1,4 +1,4 @@
-import { UnauthorizedException } from '@nestjs/common';
+import { ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { JsonWebTokenError } from 'jsonwebtoken';
 import { GqlExecutionContext } from '@nestjs/graphql';
@@ -8,12 +8,15 @@ export class JwtGuard extends AuthGuard('jwt') {
         super();
     }
 
-    getRequest(context: any) {
-        const ctx = GqlExecutionContext.create(context);
-        return ctx.getContext().req;
+    getRequest(context: ExecutionContext) {
+        if (context.getType<'graphql' | 'http'>() === 'graphql') {
+            const ctx = GqlExecutionContext.create(context);
+            return ctx.getContext().req;
+        }
+        return context.switchToHttp().getRequest();
     }
 
-    handleRequest(err: any, user: any, info: any, context: any, status: any) {
+    handleRequest(err: any, user: any, info: any, context: ExecutionContext, status: any) {
         if (info instanceof JsonWebTokenError) {
             throw new UnauthorizedException({
                 message: 'Invalid token',
@@ -28,9 +31,10 @@ export class JwtGuard extends AuthGuard('jwt') {
             });
         }
 
-        const ctx = GqlExecutionContext.create(context);
-        const gqlContext = ctx.getContext();
-        gqlContext.user = user;
+        if (context.getType<'graphql' | 'http'>() === 'graphql') {
+            const ctx = GqlExecutionContext.create(context);
+            ctx.getContext().user = user;
+        }
 
         return super.handleRequest(err, user, info, context, status);
     }
