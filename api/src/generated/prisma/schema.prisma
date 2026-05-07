@@ -229,6 +229,9 @@ enum AuthRole {
 enum SourceType {
   LINKEDIN
   GOOGLE_MAPS
+  GOOGLE_SEARCH
+  GENERIC_LEAD
+  WEBSITE_CRAWLER
   MANUAL
 }
 

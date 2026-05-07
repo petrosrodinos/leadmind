@@ -8,6 +8,7 @@ import { RedisModule } from './core/databases/redis/redis.module';
 import { RedisCacheModule } from './modules/internal/redis-cache/redis-cache.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule } from './shared/config/env/env.module';
+import { ApifyModule } from './integrations/apify/apify.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { ConfigModule } from './shared/config/env/env.module';
     RedisCacheModule,
     // GraphQLModule,
     AuthModule,
+    ApifyModule,
   ],
   controllers: [AppController],
   providers: [AppService],

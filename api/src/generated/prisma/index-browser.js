@@ -289,6 +289,9 @@ exports.AuthRole = exports.$Enums.AuthRole = {
 exports.SourceType = exports.$Enums.SourceType = {
   LINKEDIN: 'LINKEDIN',
   GOOGLE_MAPS: 'GOOGLE_MAPS',
+  GOOGLE_SEARCH: 'GOOGLE_SEARCH',
+  GENERIC_LEAD: 'GENERIC_LEAD',
+  WEBSITE_CRAWLER: 'WEBSITE_CRAWLER',
   MANUAL: 'MANUAL'
 };
 
