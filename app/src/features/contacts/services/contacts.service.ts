@@ -3,6 +3,7 @@ import { ApiRoutes } from "@/config/api/routes";
 import type {
     Contact,
     CreateContactPayload,
+    Interaction,
     ListContactsQuery,
     OutreachMessage,
     PaginatedContacts,
@@ -129,5 +130,14 @@ export const listContactMessages = async (uuid: string): Promise<OutreachMessage
         return response.data;
     } catch (error: any) {
         throw new Error(error?.response?.data?.message || "Failed to load messages.");
+    }
+};
+
+export const listContactInteractions = async (uuid: string): Promise<Interaction[]> => {
+    try {
+        const response = await axiosInstance.get(ApiRoutes.contacts.interactions(uuid));
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error?.response?.data?.message || "Failed to load interactions.");
     }
 };

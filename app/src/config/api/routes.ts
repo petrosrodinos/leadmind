@@ -46,6 +46,12 @@ export const ApiRoutes = {
         send_message: (uuid: string) => `/outreach/messages/${uuid}/send`,
         delete_message: (uuid: string) => `/outreach/messages/${uuid}`,
     },
+    dashboard: {
+        prefix: "/dashboard",
+        stats: "/dashboard/stats",
+        top_contacts: "/dashboard/top-contacts",
+        pending_drafts: "/dashboard/pending-drafts",
+    },
     filters: {
         prefix: "/filters",
         list: "/filters",

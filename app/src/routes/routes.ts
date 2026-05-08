@@ -11,6 +11,7 @@ export const Routes = {
         root: "/dashboard",
         leads_directory: "/dashboard/leads-directory",
         leads: "/dashboard/leads",
+        contacts: "/dashboard/contacts",
         contacts_detail: "/dashboard/contacts/:uuid",
         filters: "/dashboard/filters",
         filters_new: "/dashboard/filters/new",

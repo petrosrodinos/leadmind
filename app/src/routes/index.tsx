@@ -14,6 +14,7 @@ import FilterDetailPage from "@/pages/dashboard/pages/filters/pages/detail";
 import FilterContactsPage from "@/pages/dashboard/pages/filters/pages/contacts";
 import EditFilterPage from "@/pages/dashboard/pages/filters/pages/edit";
 import FilterJobsPage from "@/pages/dashboard/pages/filters/pages/jobs";
+import ContactsPage from "@/pages/dashboard/pages/contacts";
 import ContactDetailPage from "@/pages/dashboard/pages/contacts/pages/detail";
 
 export default function AppRoutes() {
@@ -45,6 +46,7 @@ export default function AppRoutes() {
         <Route index element={<DashboardHome />} />
         <Route path="leads-directory" element={<LeadsDirectoryPage />} />
         <Route path="leads" element={<LeadsPage />} />
+        <Route path="contacts" element={<ContactsPage />} />
         <Route path="contacts/:uuid" element={<ContactDetailPage />} />
         <Route path="filters" element={<FiltersPage />} />
         <Route path="filters/new" element={<NewFilterPage />} />

@@ -9,7 +9,7 @@ interface SidebarContentProps {
 
 const navItems = [
   { label: 'Dashboard',       icon: LayoutDashboard, href: Routes.dashboard.root, end: true },
-  { label: 'My Leads',        icon: Users,           href: Routes.dashboard.leads, end: false },
+  { label: 'My Leads',        icon: Users,           href: Routes.dashboard.contacts, end: false },
   { label: 'Leads Directory', icon: Globe,           href: Routes.dashboard.leads_directory, end: false },
   { label: 'Filters',         icon: Filter,          href: Routes.dashboard.filters, end: false },
   { label: 'Map Search',      icon: MapPin,          href: Routes.dashboard.map, end: false },

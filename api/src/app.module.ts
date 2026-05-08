@@ -17,6 +17,7 @@ import { LeadsModule } from './modules/leads/leads.module';
 import { ContactsModule } from './modules/contacts/contacts.module';
 import { OutreachModule } from './modules/outreach/outreach.module';
 import { SearchModule } from './modules/search/search.module';
+import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { WorkersModule } from './workers/workers.module';
 
 @Module({
@@ -38,6 +39,7 @@ import { WorkersModule } from './workers/workers.module';
     ContactsModule,
     OutreachModule,
     SearchModule,
+    DashboardModule,
     WorkersModule,
   ],
   controllers: [AppController],

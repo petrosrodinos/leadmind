@@ -47,6 +47,7 @@ import {
 } from "@/features/outreach/hooks/use-outreach";
 import { ScoreBadge, StatusChip } from "@/pages/dashboard/pages/leads/components/badges";
 import { EditMessageModal } from "@/pages/dashboard/pages/leads/components/edit-message-modal";
+import { InteractionTimeline } from "@/pages/dashboard/pages/contacts/components/interaction-timeline";
 import { cn } from "@/lib/utils";
 
 const STATUS_OPTIONS: Array<{ id: LeadStatus; label: string }> = [
@@ -58,6 +59,7 @@ const STATUS_OPTIONS: Array<{ id: LeadStatus; label: string }> = [
 
 const TABS = [
     { id: "overview", label: "Overview" },
+    { id: "timeline", label: "Timeline" },
     { id: "outreach", label: "Outreach" },
     { id: "crm", label: "CRM" },
 ] as const;
@@ -168,6 +170,8 @@ export default function ContactDetailPage() {
                     </div>
                 ) : activeTab === "overview" ? (
                     <OverviewTab contact={contact} />
+                ) : activeTab === "timeline" ? (
+                    <TimelineTab contact={contact} />
                 ) : activeTab === "outreach" ? (
                     <OutreachTab contact={contact} />
                 ) : (
@@ -234,6 +238,14 @@ function OverviewTab({ contact }: TabContactProps) {
                 )}
             </Section>
         </div>
+    );
+}
+
+function TimelineTab({ contact }: TabContactProps) {
+    return (
+        <Section title="Activity">
+            <InteractionTimeline contactUuid={contact.uuid} />
+        </Section>
     );
 }
 

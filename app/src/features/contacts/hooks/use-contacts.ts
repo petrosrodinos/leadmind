@@ -4,6 +4,7 @@ import {
     createContactFromLead,
     deleteContact,
     getContact,
+    listContactInteractions,
     listContactMessages,
     listContacts,
     triggerContactScore,
@@ -26,6 +27,7 @@ export const contactsQueryKeys = {
     list: (query: ListContactsQuery) => ["contacts", "list", query] as const,
     detail: (uuid: string) => ["contacts", "detail", uuid] as const,
     messages: (uuid: string) => ["outreach-messages", uuid] as const,
+    interactions: (uuid: string) => ["contact-interactions", uuid] as const,
 };
 
 const anyContactProcessing = (page: PaginatedContacts | undefined): boolean => {
@@ -61,6 +63,14 @@ export function useContactMessages(uuid: string | null | undefined) {
     return useQuery({
         queryKey: uuid ? contactsQueryKeys.messages(uuid) : ["outreach-messages", "none"],
         queryFn: () => listContactMessages(uuid as string),
+        enabled: !!uuid,
+    });
+}
+
+export function useContactInteractions(uuid: string | null | undefined) {
+    return useQuery({
+        queryKey: uuid ? contactsQueryKeys.interactions(uuid) : ["contact-interactions", "none"],
+        queryFn: () => listContactInteractions(uuid as string),
         enabled: !!uuid,
     });
 }
@@ -169,6 +179,7 @@ export function useUpdateContactStatus() {
         onSettled: (_data, _error, vars) => {
             qc.invalidateQueries({ queryKey: contactsQueryKeys.all });
             qc.invalidateQueries({ queryKey: contactsQueryKeys.detail(vars.uuid) });
+            qc.invalidateQueries({ queryKey: contactsQueryKeys.interactions(vars.uuid) });
         },
     });
 }
@@ -214,6 +225,7 @@ export function useUpdateContactNotes() {
             updateContactNotes(vars.uuid, vars.notes),
         onSuccess: (_data, vars) => {
             qc.invalidateQueries({ queryKey: contactsQueryKeys.detail(vars.uuid) });
+            qc.invalidateQueries({ queryKey: contactsQueryKeys.interactions(vars.uuid) });
             toast({ title: "Notes saved", duration: 1500 });
         },
         onError: (error: Error) => {

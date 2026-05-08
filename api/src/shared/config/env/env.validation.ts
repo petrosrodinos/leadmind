@@ -30,6 +30,9 @@ const EnvSchema = z.object({
     BULL_BOARD_PASSWORD: z.string().optional(),
     APIFY_API_TOKEN: z.string().min(1),
     ELASTICSEARCH_URL: z.string().url().optional(),
+    ELASTICSEARCH_API_KEY: z.string().optional(),
+    ELASTICSEARCH_USERNAME: z.string().optional(),
+    ELASTICSEARCH_PASSWORD: z.string().optional(),
 });
 
 export function validateEnv(config: Record<string, unknown>) {
