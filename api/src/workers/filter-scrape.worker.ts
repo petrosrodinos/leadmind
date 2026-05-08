@@ -1,7 +1,7 @@
 import { Processor, WorkerHost, InjectQueue } from '@nestjs/bullmq';
 import { Logger } from '@nestjs/common';
 import { Job, Queue } from 'bullmq';
-import { Filter, JobStatus, Prisma } from '@/generated/prisma';
+import { Filter, JobStatus, JobTrigger, Prisma } from '@/generated/prisma';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { ApifyService } from '@/integrations/apify/apify.service';
 import { ElasticsearchService } from '@/integrations/elasticsearch/elasticsearch.service';
@@ -27,7 +27,7 @@ export class FilterScrapeWorker extends WorkerHost {
     }
 
     async process(job: Job<FilterScrapeJobData>): Promise<{ filter_job_uuid: string; new_contacts: number } | null> {
-        const { filter_uuid } = job.data;
+        const { filter_uuid, manual } = job.data;
 
         const filter = await this.prisma.filter.findUnique({ where: { uuid: filter_uuid } });
         if (!filter) {
@@ -39,6 +39,7 @@ export class FilterScrapeWorker extends WorkerHost {
             data: {
                 filter_uuid: filter.uuid,
                 status: JobStatus.RUNNING,
+                trigger: manual ? JobTrigger.MANUAL : JobTrigger.SCHEDULED,
                 started_at: new Date(),
             },
         });

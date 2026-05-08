@@ -46,4 +46,14 @@ export const ApiRoutes = {
         send_message: (uuid: string) => `/outreach/messages/${uuid}/send`,
         delete_message: (uuid: string) => `/outreach/messages/${uuid}`,
     },
+    filters: {
+        prefix: "/filters",
+        list: "/filters",
+        create: "/filters",
+        get: (uuid: string) => `/filters/${uuid}`,
+        update: (uuid: string) => `/filters/${uuid}`,
+        remove: (uuid: string) => `/filters/${uuid}`,
+        run: (uuid: string) => `/filters/${uuid}/run`,
+        jobs: (uuid: string) => `/filters/${uuid}/jobs`,
+    },
 }

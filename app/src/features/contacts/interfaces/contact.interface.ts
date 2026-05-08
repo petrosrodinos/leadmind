@@ -83,6 +83,8 @@ export interface ListContactsQuery {
     min_score?: number;
     tags?: string[];
     source_type?: SourceType;
+    filter_uuid?: string;
+    lead_uuid?: string;
 }
 
 export interface PaginatedContacts {

@@ -88,6 +88,8 @@ export class ContactsService {
             user_uuid,
             ...(query.status && { status: query.status }),
             ...(query.min_score != null && { score: { gte: query.min_score } }),
+            ...(query.filter_uuid && { filter_uuid: query.filter_uuid }),
+            ...(query.lead_uuid && { lead_uuid: query.lead_uuid }),
             ...(query.tags && query.tags.length > 0
                 ? { tags: { some: { tag: { in: query.tags } } } }
                 : {}),

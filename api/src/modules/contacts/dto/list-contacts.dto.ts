@@ -44,6 +44,16 @@ export class ListContactsDto {
     @IsString()
     search?: string;
 
+    @ApiPropertyOptional({ description: 'Restrict to contacts that came from this filter' })
+    @IsOptional()
+    @IsString()
+    filter_uuid?: string;
+
+    @ApiPropertyOptional({ description: 'Restrict to contacts pointing at this lead' })
+    @IsOptional()
+    @IsString()
+    lead_uuid?: string;
+
     @ApiPropertyOptional({ default: 1, minimum: 1 })
     @IsOptional()
     @Type(() => Number)

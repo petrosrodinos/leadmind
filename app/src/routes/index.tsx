@@ -8,6 +8,12 @@ import DashboardLayout from "@/pages/dashboard/layout";
 import DashboardHome from "@/pages/dashboard";
 import LeadsDirectoryPage from "@/pages/dashboard/pages/leads-directory";
 import LeadsPage from "@/pages/dashboard/pages/leads";
+import FiltersPage from "@/pages/dashboard/pages/filters";
+import NewFilterPage from "@/pages/dashboard/pages/filters/pages/new";
+import FilterDetailPage from "@/pages/dashboard/pages/filters/pages/detail";
+import FilterContactsPage from "@/pages/dashboard/pages/filters/pages/contacts";
+import EditFilterPage from "@/pages/dashboard/pages/filters/pages/edit";
+import FilterJobsPage from "@/pages/dashboard/pages/filters/pages/jobs";
 
 export default function AppRoutes() {
   return (
@@ -38,6 +44,14 @@ export default function AppRoutes() {
         <Route index element={<DashboardHome />} />
         <Route path="leads-directory" element={<LeadsDirectoryPage />} />
         <Route path="leads" element={<LeadsPage />} />
+        <Route path="filters" element={<FiltersPage />} />
+        <Route path="filters/new" element={<NewFilterPage />} />
+        <Route path="filters/:uuid" element={<FilterDetailPage />}>
+          <Route index element={<Navigate to="contacts" replace />} />
+          <Route path="contacts" element={<FilterContactsPage />} />
+          <Route path="jobs" element={<FilterJobsPage />} />
+          <Route path="edit" element={<EditFilterPage />} />
+        </Route>
       </Route>
 
       {/* Default redirect */}

@@ -94,6 +94,7 @@ export type SourceType = (typeof SourceType)[keyof typeof SourceType]
 export const Channel: {
   EMAIL: 'EMAIL',
   SMS: 'SMS',
+  PHONE_CALL: 'PHONE_CALL',
   LINKEDIN: 'LINKEDIN'
 };
 
@@ -118,6 +119,14 @@ export const JobStatus: {
 };
 
 export type JobStatus = (typeof JobStatus)[keyof typeof JobStatus]
+
+
+export const JobTrigger: {
+  MANUAL: 'MANUAL',
+  SCHEDULED: 'SCHEDULED'
+};
+
+export type JobTrigger = (typeof JobTrigger)[keyof typeof JobTrigger]
 
 
 export const MsgStatus: {
@@ -158,6 +167,10 @@ export const LeadStatus: typeof $Enums.LeadStatus
 export type JobStatus = $Enums.JobStatus
 
 export const JobStatus: typeof $Enums.JobStatus
+
+export type JobTrigger = $Enums.JobTrigger
+
+export const JobTrigger: typeof $Enums.JobTrigger
 
 export type MsgStatus = $Enums.MsgStatus
 
@@ -12799,6 +12812,7 @@ export namespace Prisma {
     uuid: string | null
     filter_uuid: string | null
     status: $Enums.JobStatus | null
+    trigger: $Enums.JobTrigger | null
     leads_found: number | null
     duration: number | null
     error: string | null
@@ -12813,6 +12827,7 @@ export namespace Prisma {
     uuid: string | null
     filter_uuid: string | null
     status: $Enums.JobStatus | null
+    trigger: $Enums.JobTrigger | null
     leads_found: number | null
     duration: number | null
     error: string | null
@@ -12827,6 +12842,7 @@ export namespace Prisma {
     uuid: number
     filter_uuid: number
     status: number
+    trigger: number
     leads_found: number
     duration: number
     error: number
@@ -12855,6 +12871,7 @@ export namespace Prisma {
     uuid?: true
     filter_uuid?: true
     status?: true
+    trigger?: true
     leads_found?: true
     duration?: true
     error?: true
@@ -12869,6 +12886,7 @@ export namespace Prisma {
     uuid?: true
     filter_uuid?: true
     status?: true
+    trigger?: true
     leads_found?: true
     duration?: true
     error?: true
@@ -12883,6 +12901,7 @@ export namespace Prisma {
     uuid?: true
     filter_uuid?: true
     status?: true
+    trigger?: true
     leads_found?: true
     duration?: true
     error?: true
@@ -12984,6 +13003,7 @@ export namespace Prisma {
     uuid: string
     filter_uuid: string
     status: $Enums.JobStatus
+    trigger: $Enums.JobTrigger
     leads_found: number
     duration: number
     error: string | null
@@ -13017,6 +13037,7 @@ export namespace Prisma {
     uuid?: boolean
     filter_uuid?: boolean
     status?: boolean
+    trigger?: boolean
     leads_found?: boolean
     duration?: boolean
     error?: boolean
@@ -13032,6 +13053,7 @@ export namespace Prisma {
     uuid?: boolean
     filter_uuid?: boolean
     status?: boolean
+    trigger?: boolean
     leads_found?: boolean
     duration?: boolean
     error?: boolean
@@ -13047,6 +13069,7 @@ export namespace Prisma {
     uuid?: boolean
     filter_uuid?: boolean
     status?: boolean
+    trigger?: boolean
     leads_found?: boolean
     duration?: boolean
     error?: boolean
@@ -13062,6 +13085,7 @@ export namespace Prisma {
     uuid?: boolean
     filter_uuid?: boolean
     status?: boolean
+    trigger?: boolean
     leads_found?: boolean
     duration?: boolean
     error?: boolean
@@ -13071,7 +13095,7 @@ export namespace Prisma {
     updated_at?: boolean
   }
 
-  export type FilterJobOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "filter_uuid" | "status" | "leads_found" | "duration" | "error" | "started_at" | "completed_at" | "created_at" | "updated_at", ExtArgs["result"]["filterJob"]>
+  export type FilterJobOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "filter_uuid" | "status" | "trigger" | "leads_found" | "duration" | "error" | "started_at" | "completed_at" | "created_at" | "updated_at", ExtArgs["result"]["filterJob"]>
   export type FilterJobInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     filter?: boolean | FilterDefaultArgs<ExtArgs>
   }
@@ -13092,6 +13116,7 @@ export namespace Prisma {
       uuid: string
       filter_uuid: string
       status: $Enums.JobStatus
+      trigger: $Enums.JobTrigger
       leads_found: number
       duration: number
       error: string | null
@@ -13527,6 +13552,7 @@ export namespace Prisma {
     readonly uuid: FieldRef<"FilterJob", 'String'>
     readonly filter_uuid: FieldRef<"FilterJob", 'String'>
     readonly status: FieldRef<"FilterJob", 'JobStatus'>
+    readonly trigger: FieldRef<"FilterJob", 'JobTrigger'>
     readonly leads_found: FieldRef<"FilterJob", 'Int'>
     readonly duration: FieldRef<"FilterJob", 'Int'>
     readonly error: FieldRef<"FilterJob", 'String'>
@@ -14110,6 +14136,7 @@ export namespace Prisma {
     uuid: 'uuid',
     filter_uuid: 'filter_uuid',
     status: 'status',
+    trigger: 'trigger',
     leads_found: 'leads_found',
     duration: 'duration',
     error: 'error',
@@ -14333,6 +14360,20 @@ export namespace Prisma {
    * Reference to a field of type 'JobStatus[]'
    */
   export type ListEnumJobStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'JobStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'JobTrigger'
+   */
+  export type EnumJobTriggerFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'JobTrigger'>
+    
+
+
+  /**
+   * Reference to a field of type 'JobTrigger[]'
+   */
+  export type ListEnumJobTriggerFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'JobTrigger[]'>
     
 
 
@@ -15144,6 +15185,7 @@ export namespace Prisma {
     uuid?: StringFilter<"FilterJob"> | string
     filter_uuid?: StringFilter<"FilterJob"> | string
     status?: EnumJobStatusFilter<"FilterJob"> | $Enums.JobStatus
+    trigger?: EnumJobTriggerFilter<"FilterJob"> | $Enums.JobTrigger
     leads_found?: IntFilter<"FilterJob"> | number
     duration?: IntFilter<"FilterJob"> | number
     error?: StringNullableFilter<"FilterJob"> | string | null
@@ -15159,6 +15201,7 @@ export namespace Prisma {
     uuid?: SortOrder
     filter_uuid?: SortOrder
     status?: SortOrder
+    trigger?: SortOrder
     leads_found?: SortOrder
     duration?: SortOrder
     error?: SortOrderInput | SortOrder
@@ -15177,6 +15220,7 @@ export namespace Prisma {
     NOT?: FilterJobWhereInput | FilterJobWhereInput[]
     filter_uuid?: StringFilter<"FilterJob"> | string
     status?: EnumJobStatusFilter<"FilterJob"> | $Enums.JobStatus
+    trigger?: EnumJobTriggerFilter<"FilterJob"> | $Enums.JobTrigger
     leads_found?: IntFilter<"FilterJob"> | number
     duration?: IntFilter<"FilterJob"> | number
     error?: StringNullableFilter<"FilterJob"> | string | null
@@ -15192,6 +15236,7 @@ export namespace Prisma {
     uuid?: SortOrder
     filter_uuid?: SortOrder
     status?: SortOrder
+    trigger?: SortOrder
     leads_found?: SortOrder
     duration?: SortOrder
     error?: SortOrderInput | SortOrder
@@ -15214,6 +15259,7 @@ export namespace Prisma {
     uuid?: StringWithAggregatesFilter<"FilterJob"> | string
     filter_uuid?: StringWithAggregatesFilter<"FilterJob"> | string
     status?: EnumJobStatusWithAggregatesFilter<"FilterJob"> | $Enums.JobStatus
+    trigger?: EnumJobTriggerWithAggregatesFilter<"FilterJob"> | $Enums.JobTrigger
     leads_found?: IntWithAggregatesFilter<"FilterJob"> | number
     duration?: IntWithAggregatesFilter<"FilterJob"> | number
     error?: StringNullableWithAggregatesFilter<"FilterJob"> | string | null
@@ -16051,6 +16097,7 @@ export namespace Prisma {
   export type FilterJobCreateInput = {
     uuid?: string
     status?: $Enums.JobStatus
+    trigger?: $Enums.JobTrigger
     leads_found?: number
     duration?: number
     error?: string | null
@@ -16066,6 +16113,7 @@ export namespace Prisma {
     uuid?: string
     filter_uuid: string
     status?: $Enums.JobStatus
+    trigger?: $Enums.JobTrigger
     leads_found?: number
     duration?: number
     error?: string | null
@@ -16078,6 +16126,7 @@ export namespace Prisma {
   export type FilterJobUpdateInput = {
     uuid?: StringFieldUpdateOperationsInput | string
     status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
+    trigger?: EnumJobTriggerFieldUpdateOperationsInput | $Enums.JobTrigger
     leads_found?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
     error?: NullableStringFieldUpdateOperationsInput | string | null
@@ -16093,6 +16142,7 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     filter_uuid?: StringFieldUpdateOperationsInput | string
     status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
+    trigger?: EnumJobTriggerFieldUpdateOperationsInput | $Enums.JobTrigger
     leads_found?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
     error?: NullableStringFieldUpdateOperationsInput | string | null
@@ -16107,6 +16157,7 @@ export namespace Prisma {
     uuid?: string
     filter_uuid: string
     status?: $Enums.JobStatus
+    trigger?: $Enums.JobTrigger
     leads_found?: number
     duration?: number
     error?: string | null
@@ -16119,6 +16170,7 @@ export namespace Prisma {
   export type FilterJobUpdateManyMutationInput = {
     uuid?: StringFieldUpdateOperationsInput | string
     status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
+    trigger?: EnumJobTriggerFieldUpdateOperationsInput | $Enums.JobTrigger
     leads_found?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
     error?: NullableStringFieldUpdateOperationsInput | string | null
@@ -16133,6 +16185,7 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     filter_uuid?: StringFieldUpdateOperationsInput | string
     status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
+    trigger?: EnumJobTriggerFieldUpdateOperationsInput | $Enums.JobTrigger
     leads_found?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
     error?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17076,11 +17129,19 @@ export namespace Prisma {
     not?: NestedEnumJobStatusFilter<$PrismaModel> | $Enums.JobStatus
   }
 
+  export type EnumJobTriggerFilter<$PrismaModel = never> = {
+    equals?: $Enums.JobTrigger | EnumJobTriggerFieldRefInput<$PrismaModel>
+    in?: $Enums.JobTrigger[] | ListEnumJobTriggerFieldRefInput<$PrismaModel>
+    notIn?: $Enums.JobTrigger[] | ListEnumJobTriggerFieldRefInput<$PrismaModel>
+    not?: NestedEnumJobTriggerFilter<$PrismaModel> | $Enums.JobTrigger
+  }
+
   export type FilterJobCountOrderByAggregateInput = {
     id?: SortOrder
     uuid?: SortOrder
     filter_uuid?: SortOrder
     status?: SortOrder
+    trigger?: SortOrder
     leads_found?: SortOrder
     duration?: SortOrder
     error?: SortOrder
@@ -17101,6 +17162,7 @@ export namespace Prisma {
     uuid?: SortOrder
     filter_uuid?: SortOrder
     status?: SortOrder
+    trigger?: SortOrder
     leads_found?: SortOrder
     duration?: SortOrder
     error?: SortOrder
@@ -17115,6 +17177,7 @@ export namespace Prisma {
     uuid?: SortOrder
     filter_uuid?: SortOrder
     status?: SortOrder
+    trigger?: SortOrder
     leads_found?: SortOrder
     duration?: SortOrder
     error?: SortOrder
@@ -17138,6 +17201,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumJobStatusFilter<$PrismaModel>
     _max?: NestedEnumJobStatusFilter<$PrismaModel>
+  }
+
+  export type EnumJobTriggerWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.JobTrigger | EnumJobTriggerFieldRefInput<$PrismaModel>
+    in?: $Enums.JobTrigger[] | ListEnumJobTriggerFieldRefInput<$PrismaModel>
+    notIn?: $Enums.JobTrigger[] | ListEnumJobTriggerFieldRefInput<$PrismaModel>
+    not?: NestedEnumJobTriggerWithAggregatesFilter<$PrismaModel> | $Enums.JobTrigger
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumJobTriggerFilter<$PrismaModel>
+    _max?: NestedEnumJobTriggerFilter<$PrismaModel>
   }
 
   export type FilterCreateNestedManyWithoutUserInput = {
@@ -17927,6 +18000,10 @@ export namespace Prisma {
     set?: $Enums.JobStatus
   }
 
+  export type EnumJobTriggerFieldUpdateOperationsInput = {
+    set?: $Enums.JobTrigger
+  }
+
   export type FilterUpdateOneRequiredWithoutJobsNestedInput = {
     create?: XOR<FilterCreateWithoutJobsInput, FilterUncheckedCreateWithoutJobsInput>
     connectOrCreate?: FilterCreateOrConnectWithoutJobsInput
@@ -18291,6 +18368,13 @@ export namespace Prisma {
     not?: NestedEnumJobStatusFilter<$PrismaModel> | $Enums.JobStatus
   }
 
+  export type NestedEnumJobTriggerFilter<$PrismaModel = never> = {
+    equals?: $Enums.JobTrigger | EnumJobTriggerFieldRefInput<$PrismaModel>
+    in?: $Enums.JobTrigger[] | ListEnumJobTriggerFieldRefInput<$PrismaModel>
+    notIn?: $Enums.JobTrigger[] | ListEnumJobTriggerFieldRefInput<$PrismaModel>
+    not?: NestedEnumJobTriggerFilter<$PrismaModel> | $Enums.JobTrigger
+  }
+
   export type NestedEnumJobStatusWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.JobStatus | EnumJobStatusFieldRefInput<$PrismaModel>
     in?: $Enums.JobStatus[] | ListEnumJobStatusFieldRefInput<$PrismaModel>
@@ -18299,6 +18383,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumJobStatusFilter<$PrismaModel>
     _max?: NestedEnumJobStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumJobTriggerWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.JobTrigger | EnumJobTriggerFieldRefInput<$PrismaModel>
+    in?: $Enums.JobTrigger[] | ListEnumJobTriggerFieldRefInput<$PrismaModel>
+    notIn?: $Enums.JobTrigger[] | ListEnumJobTriggerFieldRefInput<$PrismaModel>
+    not?: NestedEnumJobTriggerWithAggregatesFilter<$PrismaModel> | $Enums.JobTrigger
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumJobTriggerFilter<$PrismaModel>
+    _max?: NestedEnumJobTriggerFilter<$PrismaModel>
   }
 
   export type FilterCreateWithoutUserInput = {
@@ -18748,6 +18842,7 @@ export namespace Prisma {
   export type FilterJobCreateWithoutFilterInput = {
     uuid?: string
     status?: $Enums.JobStatus
+    trigger?: $Enums.JobTrigger
     leads_found?: number
     duration?: number
     error?: string | null
@@ -18761,6 +18856,7 @@ export namespace Prisma {
     id?: number
     uuid?: string
     status?: $Enums.JobStatus
+    trigger?: $Enums.JobTrigger
     leads_found?: number
     duration?: number
     error?: string | null
@@ -18890,6 +18986,7 @@ export namespace Prisma {
     uuid?: StringFilter<"FilterJob"> | string
     filter_uuid?: StringFilter<"FilterJob"> | string
     status?: EnumJobStatusFilter<"FilterJob"> | $Enums.JobStatus
+    trigger?: EnumJobTriggerFilter<"FilterJob"> | $Enums.JobTrigger
     leads_found?: IntFilter<"FilterJob"> | number
     duration?: IntFilter<"FilterJob"> | number
     error?: StringNullableFilter<"FilterJob"> | string | null
@@ -20398,6 +20495,7 @@ export namespace Prisma {
     id?: number
     uuid?: string
     status?: $Enums.JobStatus
+    trigger?: $Enums.JobTrigger
     leads_found?: number
     duration?: number
     error?: string | null
@@ -20482,6 +20580,7 @@ export namespace Prisma {
   export type FilterJobUpdateWithoutFilterInput = {
     uuid?: StringFieldUpdateOperationsInput | string
     status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
+    trigger?: EnumJobTriggerFieldUpdateOperationsInput | $Enums.JobTrigger
     leads_found?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
     error?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20495,6 +20594,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
     status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
+    trigger?: EnumJobTriggerFieldUpdateOperationsInput | $Enums.JobTrigger
     leads_found?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
     error?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20508,6 +20608,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
     status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
+    trigger?: EnumJobTriggerFieldUpdateOperationsInput | $Enums.JobTrigger
     leads_found?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
     error?: NullableStringFieldUpdateOperationsInput | string | null

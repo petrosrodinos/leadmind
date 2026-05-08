@@ -241,6 +241,7 @@ exports.Prisma.FilterJobScalarFieldEnum = {
   uuid: 'uuid',
   filter_uuid: 'filter_uuid',
   status: 'status',
+  trigger: 'trigger',
   leads_found: 'leads_found',
   duration: 'duration',
   error: 'error',
@@ -299,6 +300,7 @@ exports.SourceType = exports.$Enums.SourceType = {
 exports.Channel = exports.$Enums.Channel = {
   EMAIL: 'EMAIL',
   SMS: 'SMS',
+  PHONE_CALL: 'PHONE_CALL',
   LINKEDIN: 'LINKEDIN'
 };
 
@@ -326,6 +328,11 @@ exports.JobStatus = exports.$Enums.JobStatus = {
   RUNNING: 'RUNNING',
   COMPLETED: 'COMPLETED',
   FAILED: 'FAILED'
+};
+
+exports.JobTrigger = exports.$Enums.JobTrigger = {
+  MANUAL: 'MANUAL',
+  SCHEDULED: 'SCHEDULED'
 };
 
 exports.Prisma.ModelName = {

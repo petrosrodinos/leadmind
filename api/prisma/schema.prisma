@@ -201,17 +201,18 @@ model OutreachSequence {
 }
 
 model FilterJob {
-  id           Int       @id @default(autoincrement())
-  uuid         String    @unique @default(uuid())
+  id           Int        @id @default(autoincrement())
+  uuid         String     @unique @default(uuid())
   filter_uuid  String
-  status       JobStatus @default(PENDING)
-  leads_found  Int       @default(0)
-  duration     Int       @default(0)
+  status       JobStatus  @default(PENDING)
+  trigger      JobTrigger @default(SCHEDULED)
+  leads_found  Int        @default(0)
+  duration     Int        @default(0)
   error        String?
-  started_at   DateTime  @default(now())
+  started_at   DateTime   @default(now())
   completed_at DateTime?
-  created_at   DateTime  @default(now())
-  updated_at   DateTime  @updatedAt
+  created_at   DateTime   @default(now())
+  updated_at   DateTime   @updatedAt
 
   filter Filter @relation(fields: [filter_uuid], references: [uuid], onDelete: Cascade)
 
@@ -239,6 +240,7 @@ enum SourceType {
 enum Channel {
   EMAIL
   SMS
+  PHONE_CALL
   LINKEDIN
 }
 
@@ -254,6 +256,11 @@ enum JobStatus {
   RUNNING
   COMPLETED
   FAILED
+}
+
+enum JobTrigger {
+  MANUAL
+  SCHEDULED
 }
 
 enum MsgStatus {
