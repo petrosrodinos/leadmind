@@ -9,6 +9,7 @@ export const Routes = {
     },
     dashboard: {
         root: "/dashboard",
+        leads_directory: "/dashboard/leads-directory",
         leads: "/dashboard/leads",
         map: "/dashboard/map",
         analytics: "/dashboard/analytics",

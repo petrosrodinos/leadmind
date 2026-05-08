@@ -84,6 +84,7 @@ export const SourceType: {
   GOOGLE_SEARCH: 'GOOGLE_SEARCH',
   GENERIC_LEAD: 'GENERIC_LEAD',
   WEBSITE_CRAWLER: 'WEBSITE_CRAWLER',
+  GEMI: 'GEMI',
   MANUAL: 'MANUAL'
 };
 
@@ -15227,7 +15228,7 @@ export namespace Prisma {
     email: string
     phone?: string | null
     password: string
-    role: $Enums.AuthRole
+    role?: $Enums.AuthRole
     created_at?: Date | string
     updated_at?: Date | string
     filters?: FilterCreateNestedManyWithoutUserInput
@@ -15243,7 +15244,7 @@ export namespace Prisma {
     email: string
     phone?: string | null
     password: string
-    role: $Enums.AuthRole
+    role?: $Enums.AuthRole
     created_at?: Date | string
     updated_at?: Date | string
     filters?: FilterUncheckedCreateNestedManyWithoutUserInput
@@ -15290,7 +15291,7 @@ export namespace Prisma {
     email: string
     phone?: string | null
     password: string
-    role: $Enums.AuthRole
+    role?: $Enums.AuthRole
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -18645,7 +18646,7 @@ export namespace Prisma {
     email: string
     phone?: string | null
     password: string
-    role: $Enums.AuthRole
+    role?: $Enums.AuthRole
     created_at?: Date | string
     updated_at?: Date | string
     contacts?: ContactCreateNestedManyWithoutUserInput
@@ -18660,7 +18661,7 @@ export namespace Prisma {
     email: string
     phone?: string | null
     password: string
-    role: $Enums.AuthRole
+    role?: $Enums.AuthRole
     created_at?: Date | string
     updated_at?: Date | string
     contacts?: ContactUncheckedCreateNestedManyWithoutUserInput
@@ -19196,7 +19197,7 @@ export namespace Prisma {
     email: string
     phone?: string | null
     password: string
-    role: $Enums.AuthRole
+    role?: $Enums.AuthRole
     created_at?: Date | string
     updated_at?: Date | string
     filters?: FilterCreateNestedManyWithoutUserInput
@@ -19211,7 +19212,7 @@ export namespace Prisma {
     email: string
     phone?: string | null
     password: string
-    role: $Enums.AuthRole
+    role?: $Enums.AuthRole
     created_at?: Date | string
     updated_at?: Date | string
     filters?: FilterUncheckedCreateNestedManyWithoutUserInput
@@ -19707,7 +19708,7 @@ export namespace Prisma {
     email: string
     phone?: string | null
     password: string
-    role: $Enums.AuthRole
+    role?: $Enums.AuthRole
     created_at?: Date | string
     updated_at?: Date | string
     filters?: FilterCreateNestedManyWithoutUserInput
@@ -19722,7 +19723,7 @@ export namespace Prisma {
     email: string
     phone?: string | null
     password: string
-    role: $Enums.AuthRole
+    role?: $Enums.AuthRole
     created_at?: Date | string
     updated_at?: Date | string
     filters?: FilterUncheckedCreateNestedManyWithoutUserInput
@@ -19821,7 +19822,7 @@ export namespace Prisma {
     email: string
     phone?: string | null
     password: string
-    role: $Enums.AuthRole
+    role?: $Enums.AuthRole
     created_at?: Date | string
     updated_at?: Date | string
     filters?: FilterCreateNestedManyWithoutUserInput
@@ -19836,7 +19837,7 @@ export namespace Prisma {
     email: string
     phone?: string | null
     password: string
-    role: $Enums.AuthRole
+    role?: $Enums.AuthRole
     created_at?: Date | string
     updated_at?: Date | string
     filters?: FilterUncheckedCreateNestedManyWithoutUserInput
@@ -19969,7 +19970,7 @@ export namespace Prisma {
     email: string
     phone?: string | null
     password: string
-    role: $Enums.AuthRole
+    role?: $Enums.AuthRole
     created_at?: Date | string
     updated_at?: Date | string
     filters?: FilterCreateNestedManyWithoutUserInput
@@ -19984,7 +19985,7 @@ export namespace Prisma {
     email: string
     phone?: string | null
     password: string
-    role: $Enums.AuthRole
+    role?: $Enums.AuthRole
     created_at?: Date | string
     updated_at?: Date | string
     filters?: FilterUncheckedCreateNestedManyWithoutUserInput

@@ -1,0 +1,99 @@
+import type { Lead, SourceType } from "@/features/leads/interfaces/lead.interface";
+
+export const LeadStatus = {
+    NEW: "NEW",
+    CONTACTED: "CONTACTED",
+    CONVERTED: "CONVERTED",
+    ARCHIVED: "ARCHIVED",
+} as const;
+
+export type LeadStatus = (typeof LeadStatus)[keyof typeof LeadStatus];
+
+export const Channel = {
+    EMAIL: "EMAIL",
+    SMS: "SMS",
+    LINKEDIN: "LINKEDIN",
+} as const;
+
+export type Channel = (typeof Channel)[keyof typeof Channel];
+
+export const MsgStatus = {
+    PENDING: "PENDING",
+    SENT: "SENT",
+    FAILED: "FAILED",
+} as const;
+
+export type MsgStatus = (typeof MsgStatus)[keyof typeof MsgStatus];
+
+export const InteractionType = {
+    NOTE: "NOTE",
+    CALL: "CALL",
+    EMAIL: "EMAIL",
+} as const;
+
+export type InteractionType = (typeof InteractionType)[keyof typeof InteractionType];
+
+export interface OutreachMessage {
+    uuid: string;
+    user_uuid: string;
+    contact_uuid: string;
+    channel: Channel;
+    subject: string | null;
+    content: string;
+    status: MsgStatus;
+    scheduled_at: string | null;
+    sent_at: string | null;
+    metadata: Record<string, unknown> | null;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface Interaction {
+    uuid: string;
+    contact_uuid: string;
+    user_uuid: string;
+    type: InteractionType;
+    content: string | null;
+    metadata: Record<string, unknown> | null;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface Contact {
+    uuid: string;
+    user_uuid: string;
+    lead_uuid: string;
+    filter_uuid: string | null;
+    status: LeadStatus;
+    score: number | null;
+    notes: string | null;
+    created_at: string;
+    updated_at: string;
+    tags: string[];
+    lead: Lead;
+    outreach_messages?: OutreachMessage[];
+    interactions?: Interaction[];
+}
+
+export interface ListContactsQuery {
+    page?: number;
+    limit?: number;
+    search?: string;
+    status?: LeadStatus;
+    min_score?: number;
+    tags?: string[];
+    source_type?: SourceType;
+}
+
+export interface PaginatedContacts {
+    data: Contact[];
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+}
+
+export interface UpdateMessagePayload {
+    subject?: string;
+    content?: string;
+}

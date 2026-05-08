@@ -6,6 +6,8 @@ import SignUp from "@/pages/auth/pages/sign-up";
 import AuthLayout from "@/pages/auth/layout";
 import DashboardLayout from "@/pages/dashboard/layout";
 import DashboardHome from "@/pages/dashboard";
+import LeadsDirectoryPage from "@/pages/dashboard/pages/leads-directory";
+import LeadsPage from "@/pages/dashboard/pages/leads";
 
 export default function AppRoutes() {
   return (
@@ -34,6 +36,8 @@ export default function AppRoutes() {
         }
       >
         <Route index element={<DashboardHome />} />
+        <Route path="leads-directory" element={<LeadsDirectoryPage />} />
+        <Route path="leads" element={<LeadsPage />} />
       </Route>
 
       {/* Default redirect */}

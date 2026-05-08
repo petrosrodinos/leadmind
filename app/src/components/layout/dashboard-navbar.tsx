@@ -9,11 +9,12 @@ interface DashboardNavbarProps {
 }
 
 const pageTitles: Record<string, string> = {
-  [Routes.dashboard.root]:      'Dashboard',
-  [Routes.dashboard.leads]:     'Leads',
-  [Routes.dashboard.map]:       'Map Search',
-  [Routes.dashboard.analytics]: 'Analytics',
-  [Routes.dashboard.settings]:  'Settings',
+  [Routes.dashboard.root]:             'Dashboard',
+  [Routes.dashboard.leads]:            'My Leads',
+  [Routes.dashboard.leads_directory]:  'Leads Directory',
+  [Routes.dashboard.map]:              'Map Search',
+  [Routes.dashboard.analytics]:        'Analytics',
+  [Routes.dashboard.settings]:         'Settings',
 };
 
 export default function DashboardNavbar({ onMenuClick }: DashboardNavbarProps) {

@@ -1,0 +1,100 @@
+import axiosInstance from "@/config/api/axios";
+import { ApiRoutes } from "@/config/api/routes";
+import type {
+    Contact,
+    ListContactsQuery,
+    OutreachMessage,
+    PaginatedContacts,
+} from "../interfaces/contact.interface";
+import type { LeadStatus } from "../interfaces/contact.interface";
+
+export const listContacts = async (
+    query: ListContactsQuery = {},
+): Promise<PaginatedContacts> => {
+    try {
+        const params: Record<string, unknown> = { ...query };
+        if (Array.isArray(query.tags)) {
+            params.tags = query.tags.length > 0 ? query.tags.join(",") : undefined;
+        }
+        const response = await axiosInstance.get(ApiRoutes.contacts.list, { params });
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error?.response?.data?.message || "Failed to load contacts.");
+    }
+};
+
+export const getContact = async (uuid: string): Promise<Contact> => {
+    try {
+        const response = await axiosInstance.get(ApiRoutes.contacts.get(uuid));
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error?.response?.data?.message || "Failed to load contact.");
+    }
+};
+
+export const createContactFromLead = async (lead_uuid: string): Promise<Contact> => {
+    try {
+        const response = await axiosInstance.post(ApiRoutes.contacts.from_lead(lead_uuid));
+        return response.data;
+    } catch (error: any) {
+        if (error?.response?.status === 409) {
+            const err = new Error("This lead is already in your CRM.");
+            (err as any).status = 409;
+            throw err;
+        }
+        throw new Error(error?.response?.data?.message || "Failed to add lead to CRM.");
+    }
+};
+
+export const updateContactStatus = async (
+    uuid: string,
+    status: LeadStatus,
+): Promise<Contact> => {
+    try {
+        const response = await axiosInstance.put(ApiRoutes.contacts.update_status(uuid), {
+            status,
+        });
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error?.response?.data?.message || "Failed to update status.");
+    }
+};
+
+export const updateContactNotes = async (
+    uuid: string,
+    notes: string,
+): Promise<Contact> => {
+    try {
+        const response = await axiosInstance.put(ApiRoutes.contacts.update(uuid), { notes });
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error?.response?.data?.message || "Failed to save notes.");
+    }
+};
+
+export const triggerContactScore = async (uuid: string): Promise<{ jobId: string }> => {
+    try {
+        const response = await axiosInstance.post(ApiRoutes.contacts.score(uuid));
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error?.response?.data?.message || "Failed to enqueue rescore.");
+    }
+};
+
+export const triggerDraftMessages = async (uuid: string): Promise<{ jobId: string }> => {
+    try {
+        const response = await axiosInstance.post(ApiRoutes.contacts.draft_messages(uuid));
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error?.response?.data?.message || "Failed to enqueue redraft.");
+    }
+};
+
+export const listContactMessages = async (uuid: string): Promise<OutreachMessage[]> => {
+    try {
+        const response = await axiosInstance.get(ApiRoutes.contacts.messages(uuid));
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error?.response?.data?.message || "Failed to load messages.");
+    }
+};

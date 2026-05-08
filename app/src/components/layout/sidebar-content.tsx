@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Users, MapPin, BarChart3, Settings } from 'lucide-react';
+import { LayoutDashboard, Users, MapPin, BarChart3, Settings, Globe } from 'lucide-react';
 import { Routes } from '@/routes/routes';
 
 interface SidebarContentProps {
@@ -8,11 +8,12 @@ interface SidebarContentProps {
 }
 
 const navItems = [
-  { label: 'Dashboard', icon: LayoutDashboard, href: Routes.dashboard.root, end: true },
-  { label: 'Leads',     icon: Users,            href: Routes.dashboard.leads, end: false },
-  { label: 'Map Search',icon: MapPin,            href: Routes.dashboard.map, end: false },
-  { label: 'Analytics', icon: BarChart3,         href: Routes.dashboard.analytics, end: false },
-  { label: 'Settings',  icon: Settings,          href: Routes.dashboard.settings, end: false },
+  { label: 'Dashboard',       icon: LayoutDashboard, href: Routes.dashboard.root, end: true },
+  { label: 'My Leads',        icon: Users,           href: Routes.dashboard.leads, end: false },
+  { label: 'Leads Directory', icon: Globe,           href: Routes.dashboard.leads_directory, end: false },
+  { label: 'Map Search',      icon: MapPin,          href: Routes.dashboard.map, end: false },
+  { label: 'Analytics',       icon: BarChart3,       href: Routes.dashboard.analytics, end: false },
+  { label: 'Settings',        icon: Settings,        href: Routes.dashboard.settings, end: false },
 ];
 
 const activeClass   = 'bg-accent/15 text-accent font-medium';

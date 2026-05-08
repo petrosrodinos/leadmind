@@ -292,6 +292,7 @@ exports.SourceType = exports.$Enums.SourceType = {
   GOOGLE_SEARCH: 'GOOGLE_SEARCH',
   GENERIC_LEAD: 'GENERIC_LEAD',
   WEBSITE_CRAWLER: 'WEBSITE_CRAWLER',
+  GEMI: 'GEMI',
   MANUAL: 'MANUAL'
 };
 

@@ -18,4 +18,32 @@ export const ApiRoutes = {
     google_maps: {
         timezone: "/google-maps/timezone",
     },
+    leads: {
+        prefix: "/leads",
+        list: "/leads",
+        get: (uuid: string) => `/leads/${uuid}`,
+        enrich: (uuid: string) => `/leads/${uuid}/enrich`,
+    },
+    contacts: {
+        prefix: "/contacts",
+        list: "/contacts",
+        create: "/contacts",
+        get: (uuid: string) => `/contacts/${uuid}`,
+        update: (uuid: string) => `/contacts/${uuid}`,
+        remove: (uuid: string) => `/contacts/${uuid}`,
+        update_status: (uuid: string) => `/contacts/${uuid}/status`,
+        update_tags: (uuid: string) => `/contacts/${uuid}/tags`,
+        add_note: (uuid: string) => `/contacts/${uuid}/notes`,
+        interactions: (uuid: string) => `/contacts/${uuid}/interactions`,
+        score: (uuid: string) => `/contacts/${uuid}/score`,
+        draft_messages: (uuid: string) => `/contacts/${uuid}/draft-messages`,
+        messages: (uuid: string) => `/contacts/${uuid}/messages`,
+        from_lead: (lead_uuid: string) => `/contacts/from-lead/${lead_uuid}`,
+    },
+    outreach: {
+        list_messages: "/outreach/messages",
+        update_message: (uuid: string) => `/outreach/messages/${uuid}`,
+        send_message: (uuid: string) => `/outreach/messages/${uuid}/send`,
+        delete_message: (uuid: string) => `/outreach/messages/${uuid}`,
+    },
 }

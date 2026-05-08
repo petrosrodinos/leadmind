@@ -1,0 +1,199 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+    createContactFromLead,
+    getContact,
+    listContactMessages,
+    listContacts,
+    triggerContactScore,
+    triggerDraftMessages,
+    updateContactNotes,
+    updateContactStatus,
+} from "../services/contacts.service";
+import type {
+    Contact,
+    LeadStatus,
+    ListContactsQuery,
+    PaginatedContacts,
+} from "../interfaces/contact.interface";
+import { toast } from "@/hooks/use-toast";
+
+export const contactsQueryKeys = {
+    all: ["contacts"] as const,
+    list: (query: ListContactsQuery) => ["contacts", "list", query] as const,
+    detail: (uuid: string) => ["contacts", "detail", uuid] as const,
+    messages: (uuid: string) => ["outreach-messages", uuid] as const,
+};
+
+const anyContactProcessing = (page: PaginatedContacts | undefined): boolean => {
+    if (!page) return false;
+    return page.data.some((c) => c.score == null);
+};
+
+export function useContacts(query: ListContactsQuery) {
+    return useQuery({
+        queryKey: contactsQueryKeys.list(query),
+        queryFn: () => listContacts(query),
+        placeholderData: (prev) => prev,
+        refetchInterval: (q) => (anyContactProcessing(q.state.data) ? 30_000 : false),
+    });
+}
+
+export function useContact(uuid: string | null | undefined) {
+    return useQuery({
+        queryKey: uuid ? contactsQueryKeys.detail(uuid) : ["contacts", "detail", "none"],
+        queryFn: () => getContact(uuid as string),
+        enabled: !!uuid,
+        refetchInterval: (q) => {
+            const c = q.state.data as Contact | undefined;
+            if (!c) return false;
+            const drafting = c.outreach_messages?.length === 0;
+            const scoring = c.score == null;
+            return drafting || scoring ? 30_000 : false;
+        },
+    });
+}
+
+export function useContactMessages(uuid: string | null | undefined) {
+    return useQuery({
+        queryKey: uuid ? contactsQueryKeys.messages(uuid) : ["outreach-messages", "none"],
+        queryFn: () => listContactMessages(uuid as string),
+        enabled: !!uuid,
+    });
+}
+
+export function useAddLeadToCrm() {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: (lead_uuid: string) => createContactFromLead(lead_uuid),
+        onSuccess: () => {
+            toast({
+                title: "Added to your CRM",
+                description: "The lead is now in your contacts.",
+                duration: 2500,
+            });
+            qc.invalidateQueries({ queryKey: contactsQueryKeys.all });
+        },
+        onError: (error: Error) => {
+            toast({
+                title: "Could not add lead",
+                description: error.message,
+                duration: 3000,
+                variant: (error as any).status === 409 ? undefined : "error",
+            });
+        },
+    });
+}
+
+export function useUpdateContactStatus() {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: (vars: { uuid: string; status: LeadStatus }) =>
+            updateContactStatus(vars.uuid, vars.status),
+        onMutate: async (vars) => {
+            await qc.cancelQueries({ queryKey: contactsQueryKeys.all });
+            const lists = qc.getQueriesData<PaginatedContacts>({ queryKey: ["contacts", "list"] });
+            for (const [key, value] of lists) {
+                if (!value) continue;
+                qc.setQueryData<PaginatedContacts>(key, {
+                    ...value,
+                    data: value.data.map((c) =>
+                        c.uuid === vars.uuid ? { ...c, status: vars.status } : c,
+                    ),
+                });
+            }
+            const detail = qc.getQueryData<Contact>(contactsQueryKeys.detail(vars.uuid));
+            if (detail) {
+                qc.setQueryData<Contact>(contactsQueryKeys.detail(vars.uuid), {
+                    ...detail,
+                    status: vars.status,
+                });
+            }
+            return { lists, detail };
+        },
+        onError: (error: Error, _vars, ctx) => {
+            for (const [key, value] of ctx?.lists ?? []) {
+                qc.setQueryData(key, value);
+            }
+            if (ctx?.detail) {
+                qc.setQueryData(contactsQueryKeys.detail(ctx.detail.uuid), ctx.detail);
+            }
+            toast({
+                title: "Could not update status",
+                description: error.message,
+                duration: 3000,
+                variant: "error",
+            });
+        },
+        onSettled: (_data, _error, vars) => {
+            qc.invalidateQueries({ queryKey: contactsQueryKeys.all });
+            qc.invalidateQueries({ queryKey: contactsQueryKeys.detail(vars.uuid) });
+        },
+    });
+}
+
+export function useUpdateContactNotes() {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: (vars: { uuid: string; notes: string }) =>
+            updateContactNotes(vars.uuid, vars.notes),
+        onSuccess: (_data, vars) => {
+            qc.invalidateQueries({ queryKey: contactsQueryKeys.detail(vars.uuid) });
+            toast({ title: "Notes saved", duration: 1500 });
+        },
+        onError: (error: Error) => {
+            toast({
+                title: "Could not save notes",
+                description: error.message,
+                duration: 3000,
+                variant: "error",
+            });
+        },
+    });
+}
+
+export function useRescoreContact() {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: (uuid: string) => triggerContactScore(uuid),
+        onSuccess: (_data, uuid) => {
+            toast({
+                title: "Rescore queued",
+                description: "We'll refresh the AI score shortly.",
+                duration: 2500,
+            });
+            qc.invalidateQueries({ queryKey: contactsQueryKeys.detail(uuid) });
+        },
+        onError: (error: Error) => {
+            toast({
+                title: "Could not enqueue rescore",
+                description: error.message,
+                duration: 3000,
+                variant: "error",
+            });
+        },
+    });
+}
+
+export function useRedraftMessages() {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: (uuid: string) => triggerDraftMessages(uuid),
+        onSuccess: (_data, uuid) => {
+            toast({
+                title: "Redraft queued",
+                description: "AI is generating new outreach drafts.",
+                duration: 2500,
+            });
+            qc.invalidateQueries({ queryKey: contactsQueryKeys.detail(uuid) });
+            qc.invalidateQueries({ queryKey: contactsQueryKeys.messages(uuid) });
+        },
+        onError: (error: Error) => {
+            toast({
+                title: "Could not enqueue redraft",
+                description: error.message,
+                duration: 3000,
+                variant: "error",
+            });
+        },
+    });
+}

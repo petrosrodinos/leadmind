@@ -1,0 +1,166 @@
+import type { Key } from "@heroui/react";
+import { Input, Label, ListBox, Select, Slider } from "@heroui/react";
+import { Search } from "lucide-react";
+import { LeadStatus } from "@/features/contacts/interfaces/contact.interface";
+import type { SourceType } from "@/features/leads/interfaces/lead.interface";
+import { SOURCE_OPTIONS } from "@/features/leads/constants/source-options";
+
+const STATUS_OPTIONS: Array<{ id: LeadStatus; label: string }> = [
+    { id: LeadStatus.NEW, label: "New" },
+    { id: LeadStatus.CONTACTED, label: "Contacted" },
+    { id: LeadStatus.CONVERTED, label: "Converted" },
+    { id: LeadStatus.ARCHIVED, label: "Archived" },
+];
+
+interface LeadFiltersProps {
+    search: string;
+    onSearchChange: (s: string) => void;
+    status: LeadStatus | undefined;
+    onStatusChange: (s: LeadStatus | undefined) => void;
+    minScore: number;
+    onMinScoreChange: (n: number) => void;
+    sourceType: SourceType | undefined;
+    onSourceTypeChange: (s: SourceType | undefined) => void;
+    tags: string[];
+    onTagsChange: (tags: string[]) => void;
+    availableTags: string[];
+}
+
+export function LeadFilters({
+    search,
+    onSearchChange,
+    status,
+    onStatusChange,
+    minScore,
+    onMinScoreChange,
+    sourceType,
+    onSourceTypeChange,
+    tags,
+    onTagsChange,
+    availableTags,
+}: LeadFiltersProps) {
+    return (
+        <div className="bg-surface rounded-xl border border-border p-4 grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+            <div className="lg:col-span-2">
+                <Label htmlFor="contacts-search" className="mb-1 block">
+                    Search
+                </Label>
+                <div className="relative">
+                    <Search className="size-4 text-muted absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <Input
+                        id="contacts-search"
+                        placeholder="Name, company, email…"
+                        className="pl-9"
+                        value={search}
+                        onChange={(e) => onSearchChange(e.target.value)}
+                        fullWidth
+                    />
+                </div>
+            </div>
+
+            <div>
+                <Select
+                    className="w-full"
+                    placeholder="All statuses"
+                    value={status ?? null}
+                    onChange={(v) => onStatusChange((v as LeadStatus) || undefined)}
+                >
+                    <Label>Status</Label>
+                    <Select.Trigger>
+                        <Select.Value />
+                        <Select.Indicator />
+                    </Select.Trigger>
+                    <Select.Popover>
+                        <ListBox>
+                            <ListBox.Item id="" textValue="All statuses">
+                                All statuses
+                                <ListBox.ItemIndicator />
+                            </ListBox.Item>
+                            {STATUS_OPTIONS.map((opt) => (
+                                <ListBox.Item key={opt.id} id={opt.id} textValue={opt.label}>
+                                    {opt.label}
+                                    <ListBox.ItemIndicator />
+                                </ListBox.Item>
+                            ))}
+                        </ListBox>
+                    </Select.Popover>
+                </Select>
+            </div>
+
+            <div>
+                <Select
+                    className="w-full"
+                    placeholder="All sources"
+                    value={sourceType ?? null}
+                    onChange={(v) => onSourceTypeChange((v as SourceType) || undefined)}
+                >
+                    <Label>Source</Label>
+                    <Select.Trigger>
+                        <Select.Value />
+                        <Select.Indicator />
+                    </Select.Trigger>
+                    <Select.Popover>
+                        <ListBox>
+                            <ListBox.Item id="" textValue="All sources">
+                                All sources
+                                <ListBox.ItemIndicator />
+                            </ListBox.Item>
+                            {SOURCE_OPTIONS.map((opt) => (
+                                <ListBox.Item key={opt.id} id={opt.id} textValue={opt.label}>
+                                    {opt.label}
+                                    <ListBox.ItemIndicator />
+                                </ListBox.Item>
+                            ))}
+                        </ListBox>
+                    </Select.Popover>
+                </Select>
+            </div>
+
+            <div className="lg:col-span-1">
+                <Slider
+                    className="w-full"
+                    minValue={1}
+                    maxValue={10}
+                    step={1}
+                    value={minScore}
+                    onChange={(v) => onMinScoreChange(Array.isArray(v) ? v[0] : v)}
+                >
+                    <Label>Min score</Label>
+                    <Slider.Output />
+                    <Slider.Track>
+                        <Slider.Fill />
+                        <Slider.Thumb />
+                    </Slider.Track>
+                </Slider>
+            </div>
+
+            {availableTags.length > 0 && (
+                <div className="lg:col-span-5">
+                    <Select
+                        className="w-full"
+                        placeholder="All tags"
+                        selectionMode="multiple"
+                        value={tags as Key[]}
+                        onChange={(keys) => onTagsChange((keys as Key[]).map(String))}
+                    >
+                        <Label>Tags</Label>
+                        <Select.Trigger>
+                            <Select.Value />
+                            <Select.Indicator />
+                        </Select.Trigger>
+                        <Select.Popover>
+                            <ListBox selectionMode="multiple">
+                                {availableTags.map((tag) => (
+                                    <ListBox.Item key={tag} id={tag} textValue={tag}>
+                                        {tag}
+                                        <ListBox.ItemIndicator />
+                                    </ListBox.Item>
+                                ))}
+                            </ListBox>
+                        </Select.Popover>
+                    </Select>
+                </div>
+            )}
+        </div>
+    );
+}
