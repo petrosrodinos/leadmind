@@ -1,50 +1,16 @@
-import { useEffect, useMemo, useState } from "react";
-import {
-    Button,
-    Chip,
-    Drawer,
-    Label,
-    ListBox,
-    Select,
-    TextArea,
-} from "@heroui/react";
-import {
-    Mail,
-    MessageCircle,
-    Pencil,
-    RefreshCcw,
-    Send,
-    Sparkles,
-    Trash,
-} from "lucide-react";
+import { useMemo } from "react";
+import { Link } from "react-router-dom";
+import { Button, Chip, Drawer } from "@heroui/react";
+import { ExternalLink, Mail, MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
     Channel,
-    LeadStatus,
     MsgStatus,
-    type OutreachMessage,
 } from "@/features/contacts/interfaces/contact.interface";
 import { SOURCE_LABEL } from "@/features/leads/constants/source-options";
-import {
-    useContact,
-    useRedraftMessages,
-    useRescoreContact,
-    useUpdateContactNotes,
-    useUpdateContactStatus,
-} from "@/features/contacts/hooks/use-contacts";
-import {
-    useDeleteOutreachMessage,
-    useSendOutreachMessage,
-} from "@/features/outreach/hooks/use-outreach";
-import { ScoreBadge } from "./badges";
-import { EditMessageModal } from "./edit-message-modal";
-
-const STATUS_OPTIONS: Array<{ id: LeadStatus; label: string }> = [
-    { id: LeadStatus.NEW, label: "New" },
-    { id: LeadStatus.CONTACTED, label: "Contacted" },
-    { id: LeadStatus.CONVERTED, label: "Converted" },
-    { id: LeadStatus.ARCHIVED, label: "Archived" },
-];
+import { useContact } from "@/features/contacts/hooks/use-contacts";
+import { Routes } from "@/routes/routes";
+import { ScoreBadge, StatusChip } from "./badges";
 
 const channelIcon = (channel: Channel) => {
     if (channel === Channel.EMAIL) return Mail;
@@ -61,20 +27,6 @@ interface LeadDrawerProps {
 export function LeadDrawer({ contactUuid, isOpen, onOpenChange }: LeadDrawerProps) {
     const { data: contact, isLoading } = useContact(contactUuid);
 
-    const updateStatus = useUpdateContactStatus();
-    const updateNotes = useUpdateContactNotes();
-    const rescore = useRescoreContact();
-    const redraft = useRedraftMessages();
-    const sendMessage = useSendOutreachMessage();
-    const deleteMessage = useDeleteOutreachMessage();
-
-    const [editingMessage, setEditingMessage] = useState<OutreachMessage | null>(null);
-    const [notes, setNotes] = useState("");
-
-    useEffect(() => {
-        if (contact) setNotes(contact.notes ?? "");
-    }, [contact?.uuid, contact?.notes]);
-
     const { drafts, sentHistory } = useMemo(() => {
         const messages = contact?.outreach_messages ?? [];
         const drafts = messages.filter((m) => m.status === MsgStatus.PENDING);
@@ -88,311 +40,93 @@ export function LeadDrawer({ contactUuid, isOpen, onOpenChange }: LeadDrawerProp
         return { drafts, sentHistory };
     }, [contact?.outreach_messages]);
 
-    const notesDirty = (contact?.notes ?? "") !== notes;
-
     return (
-        <>
-            <Drawer.Backdrop isOpen={isOpen} onOpenChange={onOpenChange}>
-                <Drawer.Content placement="right">
-                    <Drawer.Dialog className="sm:max-w-2xl">
-                        <Drawer.CloseTrigger />
-                        <Drawer.Header>
-                            <Drawer.Heading>
-                                {contact?.lead.name ?? (isLoading ? "Loading…" : "Contact")}
-                            </Drawer.Heading>
-                        </Drawer.Header>
-                        <Drawer.Body>
-                            {!contact ? (
-                                <div className="space-y-3">
-                                    {Array.from({ length: 5 }).map((_, i) => (
-                                        <div
-                                            key={i}
-                                            className="h-12 rounded-lg bg-surface-secondary animate-pulse"
-                                        />
+        <Drawer.Backdrop isOpen={isOpen} onOpenChange={onOpenChange}>
+            <Drawer.Content placement="right">
+                <Drawer.Dialog className="w-full sm:max-w-lg lg:max-w-xl">
+                    <Drawer.CloseTrigger />
+                    <Drawer.Header>
+                        <Drawer.Heading>
+                            {isLoading && !contact ? (
+                                <span className="inline-block h-6 w-40 rounded-md bg-surface-secondary animate-pulse align-middle" />
+                            ) : (
+                                contact?.lead.name ?? "Contact"
+                            )}
+                        </Drawer.Heading>
+                    </Drawer.Header>
+                    <Drawer.Body>
+                        {!contact ? (
+                            <div className="space-y-3">
+                                {Array.from({ length: 5 }).map((_, i) => (
+                                    <div
+                                        key={i}
+                                        className="h-12 rounded-lg bg-surface-secondary animate-pulse"
+                                    />
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="flex flex-col gap-5">
+                                {/* Quick state */}
+                                <div className="flex items-center gap-2 flex-wrap">
+                                    <StatusChip status={contact.status} />
+                                    <ScoreBadge score={contact.score} />
+                                    {contact.tags.map((tag) => (
+                                        <Chip key={tag} size="sm" variant="soft">
+                                            <Chip.Label>{tag}</Chip.Label>
+                                        </Chip>
                                     ))}
                                 </div>
-                            ) : (
-                                <div className="flex flex-col gap-6">
-                                    {/* Lead facts */}
-                                    <Section title="Lead">
-                                        <div className="grid gap-3 sm:grid-cols-2">
-                                            <Field label="Company" value={contact.lead.company} />
-                                            <Field label="Email" value={contact.lead.email} />
-                                            <Field label="Phone" value={contact.lead.phone} />
-                                            <Field label="Title" value={contact.lead.title} />
-                                            <Field
-                                                label="Location"
-                                                value={contact.lead.location}
-                                            />
-                                            <Field
-                                                label="Industry"
-                                                value={contact.lead.industry}
-                                            />
-                                            <Field
-                                                label="Website"
-                                                value={contact.lead.website}
-                                                link
-                                            />
-                                            <Field
-                                                label="LinkedIn"
-                                                value={contact.lead.linkedin_url}
-                                                link
-                                            />
-                                            <Field
-                                                label="Source"
-                                                value={SOURCE_LABEL[contact.lead.source_type]}
-                                            />
-                                        </div>
+
+                                {/* Lead facts */}
+                                <Section title="Lead">
+                                    <div className="grid gap-3 grid-cols-1 sm:grid-cols-2">
+                                        <Field label="Company" value={contact.lead.company} />
+                                        <Field label="Email" value={contact.lead.email} />
+                                        <Field label="Phone" value={contact.lead.phone} />
+                                        <Field label="Title" value={contact.lead.title} />
+                                        <Field label="Location" value={contact.lead.location} />
+                                        <Field label="Industry" value={contact.lead.industry} />
+                                        <Field label="Website" value={contact.lead.website} link />
                                         <Field
-                                            label="Description"
-                                            value={contact.lead.description}
+                                            label="LinkedIn"
+                                            value={contact.lead.linkedin_url}
+                                            link
                                         />
+                                        <Field
+                                            label="Source"
+                                            value={SOURCE_LABEL[contact.lead.source_type]}
+                                        />
+                                    </div>
+                                    <Field
+                                        label="Description"
+                                        value={contact.lead.description}
+                                    />
+                                </Section>
+
+                                {/* Notes */}
+                                {contact.notes && (
+                                    <Section title="Notes">
+                                        <p className="text-sm text-foreground whitespace-pre-line break-words">
+                                            {contact.notes}
+                                        </p>
                                     </Section>
+                                )}
 
-                                    {/* Public enrichment */}
-                                    <Section title="Public enrichment summary">
-                                        {contact.lead.enrichment_data &&
-                                        Object.keys(contact.lead.enrichment_data).length > 0 ? (
-                                            <pre className="text-xs text-foreground whitespace-pre-wrap break-words font-mono p-3 rounded-lg bg-surface-secondary border border-border">
-                                                {JSON.stringify(
-                                                    contact.lead.enrichment_data,
-                                                    null,
-                                                    2,
-                                                )}
-                                            </pre>
-                                        ) : (
-                                            <p className="text-sm text-muted italic">
-                                                No enrichment available yet.
-                                            </p>
-                                        )}
-                                    </Section>
-
-                                    {/* Per-user state */}
-                                    <Section
-                                        title="Your CRM"
-                                        action={
-                                            <div className="flex items-center gap-2">
-                                                <Button
-                                                    size="sm"
-                                                    variant="tertiary"
-                                                    isDisabled={rescore.isPending}
-                                                    isPending={rescore.isPending}
-                                                    onPress={() => rescore.mutate(contact.uuid)}
-                                                >
-                                                    <Sparkles className="size-3.5" />
-                                                    Rescore
-                                                </Button>
-                                                <Button
-                                                    size="sm"
-                                                    variant="secondary"
-                                                    isDisabled={redraft.isPending}
-                                                    isPending={redraft.isPending}
-                                                    onPress={() => redraft.mutate(contact.uuid)}
-                                                >
-                                                    <RefreshCcw className="size-3.5" />
-                                                    Redraft messages
-                                                </Button>
-                                            </div>
-                                        }
-                                    >
-                                        <div className="grid gap-3 sm:grid-cols-3">
-                                            <div>
-                                                <p className="text-xs font-medium text-muted uppercase tracking-wide mb-1">
-                                                    Status
-                                                </p>
-                                                <Select
-                                                    className="w-full"
-                                                    value={contact.status}
-                                                    onChange={(v) =>
-                                                        updateStatus.mutate({
-                                                            uuid: contact.uuid,
-                                                            status: v as LeadStatus,
-                                                        })
-                                                    }
-                                                >
-                                                    <Select.Trigger>
-                                                        <Select.Value />
-                                                        <Select.Indicator />
-                                                    </Select.Trigger>
-                                                    <Select.Popover>
-                                                        <ListBox>
-                                                            {STATUS_OPTIONS.map((opt) => (
-                                                                <ListBox.Item
-                                                                    key={opt.id}
-                                                                    id={opt.id}
-                                                                    textValue={opt.label}
-                                                                >
-                                                                    {opt.label}
-                                                                    <ListBox.ItemIndicator />
-                                                                </ListBox.Item>
-                                                            ))}
-                                                        </ListBox>
-                                                    </Select.Popover>
-                                                </Select>
-                                            </div>
-                                            <div>
-                                                <p className="text-xs font-medium text-muted uppercase tracking-wide mb-1">
-                                                    AI Score
-                                                </p>
-                                                <ScoreBadge score={contact.score} />
-                                            </div>
-                                            <div>
-                                                <p className="text-xs font-medium text-muted uppercase tracking-wide mb-1">
-                                                    Tags
-                                                </p>
-                                                <div className="flex flex-wrap gap-1">
-                                                    {contact.tags.length === 0 ? (
-                                                        <span className="text-sm text-muted italic">
-                                                            No tags
-                                                        </span>
-                                                    ) : (
-                                                        contact.tags.map((tag) => (
-                                                            <Chip
-                                                                key={tag}
-                                                                size="sm"
-                                                                variant="soft"
-                                                            >
-                                                                <Chip.Label>{tag}</Chip.Label>
-                                                            </Chip>
-                                                        ))
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div className="mt-3 flex flex-col gap-1.5">
-                                            <Label htmlFor="contact-notes">Notes</Label>
-                                            <TextArea
-                                                id="contact-notes"
-                                                aria-label="Notes"
-                                                rows={5}
-                                                value={notes}
-                                                onChange={(e) => setNotes(e.target.value)}
-                                            />
-                                            <div className="flex justify-end">
-                                                <Button
-                                                    size="sm"
-                                                    variant="secondary"
-                                                    isDisabled={
-                                                        !notesDirty || updateNotes.isPending
-                                                    }
-                                                    isPending={updateNotes.isPending}
-                                                    onPress={() =>
-                                                        updateNotes.mutate({
-                                                            uuid: contact.uuid,
-                                                            notes,
-                                                        })
-                                                    }
-                                                >
-                                                    Save notes
-                                                </Button>
-                                            </div>
-                                        </div>
-                                    </Section>
-
-                                    {/* Pending drafts */}
-                                    <Section
-                                        title={`Drafted outreach (${drafts.length})`}
-                                        emptyText="No pending drafts. Click Redraft messages to generate new ones."
-                                    >
-                                        <div className="flex flex-col gap-2">
-                                            {drafts.map((m) => {
-                                                const Icon = channelIcon(m.channel);
-                                                return (
-                                                    <div
-                                                        key={m.uuid}
-                                                        className="rounded-lg border border-border bg-surface-secondary p-3 flex flex-col gap-2"
-                                                    >
-                                                        <div className="flex items-center justify-between gap-2">
-                                                            <div className="flex items-center gap-2 min-w-0">
-                                                                <Icon className="size-4 text-muted shrink-0" />
-                                                                <Chip size="sm" variant="soft">
-                                                                    <Chip.Label>
-                                                                        {m.channel}
-                                                                    </Chip.Label>
-                                                                </Chip>
-                                                                {m.subject && (
-                                                                    <span className="text-sm font-medium text-foreground truncate">
-                                                                        {m.subject}
-                                                                    </span>
-                                                                )}
-                                                            </div>
-                                                            <div className="flex items-center gap-1 shrink-0">
-                                                                <Button
-                                                                    size="sm"
-                                                                    variant="tertiary"
-                                                                    onPress={() =>
-                                                                        setEditingMessage(m)
-                                                                    }
-                                                                >
-                                                                    <Pencil className="size-3.5" />
-                                                                </Button>
-                                                                <Button
-                                                                    size="sm"
-                                                                    variant="tertiary"
-                                                                    isDisabled={
-                                                                        sendMessage.isPending
-                                                                    }
-                                                                    onPress={() =>
-                                                                        sendMessage.mutate({
-                                                                            uuid: m.uuid,
-                                                                            contact_uuid:
-                                                                                contact.uuid,
-                                                                        })
-                                                                    }
-                                                                >
-                                                                    <Send className="size-3.5" />
-                                                                </Button>
-                                                                <Button
-                                                                    size="sm"
-                                                                    variant="tertiary"
-                                                                    isDisabled={
-                                                                        deleteMessage.isPending
-                                                                    }
-                                                                    onPress={() =>
-                                                                        deleteMessage.mutate({
-                                                                            uuid: m.uuid,
-                                                                            contact_uuid:
-                                                                                contact.uuid,
-                                                                        })
-                                                                    }
-                                                                >
-                                                                    <Trash className="size-3.5" />
-                                                                </Button>
-                                                            </div>
-                                                        </div>
-                                                        <p className="text-sm text-muted line-clamp-3 whitespace-pre-line">
-                                                            {m.content}
-                                                        </p>
-                                                    </div>
-                                                );
-                                            })}
-                                        </div>
-                                    </Section>
-
-                                    {/* Sent history */}
-                                    <Section
-                                        title={`Sent history (${sentHistory.length})`}
-                                        emptyText="No messages have been sent yet."
-                                    >
-                                        <div className="flex flex-col gap-2">
-                                            {sentHistory.map((m) => (
+                                {/* Pending drafts */}
+                                <Section
+                                    title={`Drafted outreach (${drafts.length})`}
+                                    emptyText="No pending drafts."
+                                >
+                                    <div className="flex flex-col gap-2">
+                                        {drafts.map((m) => {
+                                            const Icon = channelIcon(m.channel);
+                                            return (
                                                 <div
                                                     key={m.uuid}
-                                                    className="rounded-lg border border-border p-3 flex flex-col gap-1"
+                                                    className="rounded-lg border border-border bg-surface-secondary p-3 flex flex-col gap-2"
                                                 >
-                                                    <div className="flex items-center gap-2">
-                                                        <Chip
-                                                            size="sm"
-                                                            color={
-                                                                m.status === MsgStatus.SENT
-                                                                    ? "success"
-                                                                    : "danger"
-                                                            }
-                                                            variant="soft"
-                                                        >
-                                                            <Chip.Label>{m.status}</Chip.Label>
-                                                        </Chip>
+                                                    <div className="flex items-center gap-2 min-w-0 flex-wrap">
+                                                        <Icon className="size-4 text-muted shrink-0" />
                                                         <Chip size="sm" variant="soft">
                                                             <Chip.Label>{m.channel}</Chip.Label>
                                                         </Chip>
@@ -401,52 +135,95 @@ export function LeadDrawer({ contactUuid, isOpen, onOpenChange }: LeadDrawerProp
                                                                 {m.subject}
                                                             </span>
                                                         )}
-                                                        <span className="ml-auto text-xs text-muted">
-                                                            {m.sent_at
-                                                                ? new Date(
-                                                                      m.sent_at,
-                                                                  ).toLocaleString()
-                                                                : "—"}
-                                                        </span>
                                                     </div>
-                                                    <p className="text-sm text-muted line-clamp-2 whitespace-pre-line">
+                                                    <p className="text-sm text-muted line-clamp-3 whitespace-pre-line">
                                                         {m.content}
                                                     </p>
                                                 </div>
-                                            ))}
-                                        </div>
-                                    </Section>
-                                </div>
-                            )}
-                        </Drawer.Body>
-                        <Drawer.Footer>
-                            <Button slot="close" variant="secondary">
-                                Close
-                            </Button>
-                        </Drawer.Footer>
-                    </Drawer.Dialog>
-                </Drawer.Content>
-            </Drawer.Backdrop>
-            <EditMessageModal
-                message={editingMessage}
-                isOpen={editingMessage !== null}
-                onOpenChange={(open) => {
-                    if (!open) setEditingMessage(null);
-                }}
-                contact_uuid={contact?.uuid}
-            />
-        </>
+                                            );
+                                        })}
+                                    </div>
+                                </Section>
+
+                                {/* Sent history */}
+                                <Section
+                                    title={`Sent history (${sentHistory.length})`}
+                                    emptyText="No messages have been sent yet."
+                                >
+                                    <div className="flex flex-col gap-2">
+                                        {sentHistory.map((m) => (
+                                            <div
+                                                key={m.uuid}
+                                                className="rounded-lg border border-border p-3 flex flex-col gap-1"
+                                            >
+                                                <div className="flex items-center gap-2 flex-wrap">
+                                                    <Chip
+                                                        size="sm"
+                                                        color={
+                                                            m.status === MsgStatus.SENT
+                                                                ? "success"
+                                                                : "danger"
+                                                        }
+                                                        variant="soft"
+                                                    >
+                                                        <Chip.Label>{m.status}</Chip.Label>
+                                                    </Chip>
+                                                    <Chip size="sm" variant="soft">
+                                                        <Chip.Label>{m.channel}</Chip.Label>
+                                                    </Chip>
+                                                    {m.subject && (
+                                                        <span className="text-sm font-medium text-foreground truncate">
+                                                            {m.subject}
+                                                        </span>
+                                                    )}
+                                                    <span className="ml-auto text-xs text-muted whitespace-nowrap">
+                                                        {m.sent_at
+                                                            ? new Date(
+                                                                  m.sent_at,
+                                                              ).toLocaleString()
+                                                            : "—"}
+                                                    </span>
+                                                </div>
+                                                <p className="text-sm text-muted line-clamp-2 whitespace-pre-line">
+                                                    {m.content}
+                                                </p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </Section>
+                            </div>
+                        )}
+                    </Drawer.Body>
+                    <Drawer.Footer>
+                        <Button slot="close" variant="secondary">
+                            Close
+                        </Button>
+                        {contact && (
+                            <Link
+                                to={Routes.dashboard.contacts_detail.replace(
+                                    ":uuid",
+                                    contact.uuid,
+                                )}
+                            >
+                                <Button>
+                                    <ExternalLink className="size-4" />
+                                    Open full page
+                                </Button>
+                            </Link>
+                        )}
+                    </Drawer.Footer>
+                </Drawer.Dialog>
+            </Drawer.Content>
+        </Drawer.Backdrop>
     );
 }
 
 function Section({
     title,
-    action,
     children,
     emptyText,
 }: {
     title: string;
-    action?: React.ReactNode;
     children: React.ReactNode;
     emptyText?: string;
 }) {
@@ -455,10 +232,7 @@ function Section({
         (children as any).props.children.length === 0;
     return (
         <section className="flex flex-col gap-3">
-            <div className="flex items-center justify-between gap-2">
-                <h3 className="text-sm font-semibold text-foreground">{title}</h3>
-                {action}
-            </div>
+            <h3 className="text-sm font-semibold text-foreground">{title}</h3>
             {empty && emptyText ? (
                 <p className="text-sm text-muted italic">{emptyText}</p>
             ) : (
@@ -494,7 +268,9 @@ function Field({
                     {value}
                 </a>
             ) : (
-                <p className="text-sm text-foreground mt-0.5 whitespace-pre-line">{value}</p>
+                <p className="text-sm text-foreground mt-0.5 whitespace-pre-line break-words">
+                    {value}
+                </p>
             )}
         </div>
     );

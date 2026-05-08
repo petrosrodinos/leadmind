@@ -4,6 +4,7 @@ import { Search } from "lucide-react";
 import { LeadStatus } from "@/features/contacts/interfaces/contact.interface";
 import type { SourceType } from "@/features/leads/interfaces/lead.interface";
 import { SOURCE_OPTIONS } from "@/features/leads/constants/source-options";
+import { useFilters } from "@/features/filters/hooks/use-filters";
 
 const STATUS_OPTIONS: Array<{ id: LeadStatus; label: string }> = [
     { id: LeadStatus.NEW, label: "New" },
@@ -21,6 +22,8 @@ interface LeadFiltersProps {
     onMinScoreChange: (n: number) => void;
     sourceType: SourceType | undefined;
     onSourceTypeChange: (s: SourceType | undefined) => void;
+    filterUuid: string | undefined;
+    onFilterUuidChange: (uuid: string | undefined) => void;
     tags: string[];
     onTagsChange: (tags: string[]) => void;
     availableTags: string[];
@@ -35,12 +38,16 @@ export function LeadFilters({
     onMinScoreChange,
     sourceType,
     onSourceTypeChange,
+    filterUuid,
+    onFilterUuidChange,
     tags,
     onTagsChange,
     availableTags,
 }: LeadFiltersProps) {
+    const { data: filters = [] } = useFilters();
+
     return (
-        <div className="bg-surface rounded-xl border border-border p-4 grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+        <div className="bg-surface rounded-xl border border-border p-4 grid gap-4 md:grid-cols-2 lg:grid-cols-6">
             <div className="lg:col-span-2">
                 <Label htmlFor="contacts-search" className="mb-1 block">
                     Search
@@ -116,6 +123,39 @@ export function LeadFilters({
                 </Select>
             </div>
 
+            <div>
+                <Select
+                    className="w-full"
+                    placeholder="All filters"
+                    value={filterUuid ?? null}
+                    onChange={(v) => onFilterUuidChange((v as string) || undefined)}
+                >
+                    <Label>Filter</Label>
+                    <Select.Trigger>
+                        <Select.Value />
+                        <Select.Indicator />
+                    </Select.Trigger>
+                    <Select.Popover>
+                        <ListBox>
+                            <ListBox.Item id="" textValue="All filters">
+                                All filters
+                                <ListBox.ItemIndicator />
+                            </ListBox.Item>
+                            {filters.map((f) => (
+                                <ListBox.Item
+                                    key={f.uuid}
+                                    id={f.uuid}
+                                    textValue={f.name}
+                                >
+                                    {f.name}
+                                    <ListBox.ItemIndicator />
+                                </ListBox.Item>
+                            ))}
+                        </ListBox>
+                    </Select.Popover>
+                </Select>
+            </div>
+
             <div className="lg:col-span-1">
                 <Slider
                     className="w-full"
@@ -135,7 +175,7 @@ export function LeadFilters({
             </div>
 
             {availableTags.length > 0 && (
-                <div className="lg:col-span-5">
+                <div className="lg:col-span-6">
                     <Select
                         className="w-full"
                         placeholder="All tags"

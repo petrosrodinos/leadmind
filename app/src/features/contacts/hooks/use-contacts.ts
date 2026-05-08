@@ -1,6 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+    createContact,
     createContactFromLead,
+    deleteContact,
     getContact,
     listContactMessages,
     listContacts,
@@ -8,9 +10,11 @@ import {
     triggerDraftMessages,
     updateContactNotes,
     updateContactStatus,
+    updateContactTags,
 } from "../services/contacts.service";
 import type {
     Contact,
+    CreateContactPayload,
     LeadStatus,
     ListContactsQuery,
     PaginatedContacts,
@@ -58,6 +62,44 @@ export function useContactMessages(uuid: string | null | undefined) {
         queryKey: uuid ? contactsQueryKeys.messages(uuid) : ["outreach-messages", "none"],
         queryFn: () => listContactMessages(uuid as string),
         enabled: !!uuid,
+    });
+}
+
+export function useCreateContact() {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: (payload: CreateContactPayload) => createContact(payload),
+        onSuccess: () => {
+            qc.invalidateQueries({ queryKey: contactsQueryKeys.all });
+            toast({ title: "Lead added", duration: 1500 });
+        },
+        onError: (error: Error) => {
+            toast({
+                title: "Could not add lead",
+                description: error.message,
+                duration: 3000,
+                variant: "error",
+            });
+        },
+    });
+}
+
+export function useDeleteContact() {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: (uuid: string) => deleteContact(uuid),
+        onSuccess: () => {
+            qc.invalidateQueries({ queryKey: contactsQueryKeys.all });
+            toast({ title: "Contact deleted", duration: 1500 });
+        },
+        onError: (error: Error) => {
+            toast({
+                title: "Could not delete contact",
+                description: error.message,
+                duration: 3000,
+                variant: "error",
+            });
+        },
     });
 }
 
@@ -119,6 +161,40 @@ export function useUpdateContactStatus() {
             }
             toast({
                 title: "Could not update status",
+                description: error.message,
+                duration: 3000,
+                variant: "error",
+            });
+        },
+        onSettled: (_data, _error, vars) => {
+            qc.invalidateQueries({ queryKey: contactsQueryKeys.all });
+            qc.invalidateQueries({ queryKey: contactsQueryKeys.detail(vars.uuid) });
+        },
+    });
+}
+
+export function useUpdateContactTags() {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: (vars: { uuid: string; tags: string[] }) =>
+            updateContactTags(vars.uuid, vars.tags),
+        onMutate: async (vars) => {
+            await qc.cancelQueries({ queryKey: contactsQueryKeys.detail(vars.uuid) });
+            const detail = qc.getQueryData<Contact>(contactsQueryKeys.detail(vars.uuid));
+            if (detail) {
+                qc.setQueryData<Contact>(contactsQueryKeys.detail(vars.uuid), {
+                    ...detail,
+                    tags: vars.tags,
+                });
+            }
+            return { detail };
+        },
+        onError: (error: Error, vars, ctx) => {
+            if (ctx?.detail) {
+                qc.setQueryData(contactsQueryKeys.detail(vars.uuid), ctx.detail);
+            }
+            toast({
+                title: "Could not update tags",
                 description: error.message,
                 duration: 3000,
                 variant: "error",

@@ -1,6 +1,7 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import type { Selection } from "@heroui/react";
 import {
+    Button,
     Checkbox,
     Chip,
     ListBox,
@@ -8,6 +9,7 @@ import {
     Select,
     Table,
 } from "@heroui/react";
+import { Trash } from "lucide-react";
 import {
     createColumnHelper,
     flexRender,
@@ -19,8 +21,12 @@ import {
     LeadStatus,
     MsgStatus,
 } from "@/features/contacts/interfaces/contact.interface";
-import { SOURCE_LABEL } from "@/features/leads/constants/source-options";
-import { useUpdateContactStatus } from "@/features/contacts/hooks/use-contacts";
+import { SourceBadge } from "@/features/leads/components/source-badge";
+import {
+    useDeleteContact,
+    useUpdateContactStatus,
+} from "@/features/contacts/hooks/use-contacts";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { ScoreBadge } from "./badges";
 
 const STATUS_OPTIONS: Array<{ id: LeadStatus; label: string }> = [
@@ -60,6 +66,8 @@ export function LeadsTable({
     onSelectionChange,
 }: LeadsTableProps) {
     const updateStatus = useUpdateContactStatus();
+    const deleteContact = useDeleteContact();
+    const [deleteTarget, setDeleteTarget] = useState<Contact | null>(null);
 
     const columns = useMemo(
         () => [
@@ -90,11 +98,7 @@ export function LeadsTable({
             columnHelper.accessor((row) => row.lead.source_type, {
                 id: "source",
                 header: "Source",
-                cell: (info) => (
-                    <Chip size="sm" variant="soft">
-                        <Chip.Label>{SOURCE_LABEL[info.getValue()]}</Chip.Label>
-                    </Chip>
-                ),
+                cell: (info) => <SourceBadge source={info.getValue()} />,
             }),
             columnHelper.accessor("status", {
                 id: "status",
@@ -155,8 +159,26 @@ export function LeadsTable({
                     );
                 },
             }),
+            columnHelper.display({
+                id: "actions",
+                header: "",
+                cell: (info) => (
+                    <div onClick={(e) => e.stopPropagation()} className="flex justify-end">
+                        <Button
+                            size="sm"
+                            variant="tertiary"
+                            className="text-danger"
+                            isDisabled={deleteContact.isPending}
+                            onPress={() => setDeleteTarget(info.row.original)}
+                            aria-label={`Delete ${info.row.original.lead.name ?? "contact"}`}
+                        >
+                            <Trash className="size-3.5" />
+                        </Button>
+                    </div>
+                ),
+            }),
         ],
-        [updateStatus],
+        [updateStatus, deleteContact.isPending],
     );
 
     const table = useReactTable({
@@ -177,6 +199,12 @@ export function LeadsTable({
         } else {
             onSelectionChange(new Set(Array.from(keys, String)));
         }
+    };
+
+    const handleConfirmDelete = async () => {
+        if (!deleteTarget) return;
+        await deleteContact.mutateAsync(deleteTarget.uuid);
+        setDeleteTarget(null);
     };
 
     return (
@@ -309,6 +337,20 @@ export function LeadsTable({
                     </Pagination>
                 </Table.Footer>
             </Table>
+
+            <ConfirmDialog
+                isOpen={deleteTarget !== null}
+                onOpenChange={(open) => {
+                    if (!open) setDeleteTarget(null);
+                }}
+                title={`Delete contact "${deleteTarget?.lead.name ?? "this contact"}"?`}
+                description="This removes the contact from your CRM. The underlying lead record stays in the public directory."
+                confirmLabel="Delete"
+                cancelLabel="Cancel"
+                variant="danger"
+                isPending={deleteContact.isPending}
+                onConfirm={handleConfirmDelete}
+            />
         </div>
     );
 }

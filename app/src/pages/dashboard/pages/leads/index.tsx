@@ -1,15 +1,15 @@
-import { useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useMemo, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { Button } from "@heroui/react";
+import { Plus } from "lucide-react";
 import { LeadsTable } from "./components/leads-table";
 import { LeadFilters } from "./components/lead-filters";
-import { LeadDrawer } from "./components/lead-drawer";
-import {
-    LeadStatus,
-    type Contact,
-} from "@/features/contacts/interfaces/contact.interface";
+import { CreateContactModal } from "./components/create-contact-modal";
+import { LeadStatus } from "@/features/contacts/interfaces/contact.interface";
 import { SourceType } from "@/features/leads/interfaces/lead.interface";
 import { useContacts } from "@/features/contacts/hooks/use-contacts";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
+import { Routes } from "@/routes/routes";
 
 const PAGE_SIZE = 20;
 
@@ -26,6 +26,7 @@ export default function LeadsPage() {
     const search = searchParams.get("search") ?? "";
     const statusParam = searchParams.get("status");
     const sourceParam = searchParams.get("source_type");
+    const filterUuid = searchParams.get("filter_uuid") || undefined;
     const minScore = Math.max(1, Math.min(10, Number(searchParams.get("min_score") ?? 1)));
     const tags = (searchParams.get("tags") ?? "")
         .split(",")
@@ -36,8 +37,8 @@ export default function LeadsPage() {
     const sourceType = isSourceType(sourceParam) ? sourceParam : undefined;
 
     const [selectedKeys, setSelectedKeys] = useState<Set<string>>(new Set());
-    const [drawerContact, setDrawerContact] = useState<Contact | null>(null);
-    const [drawerOpen, setDrawerOpen] = useState(false);
+    const [createOpen, setCreateOpen] = useState(false);
+    const navigate = useNavigate();
 
     const updateParams = (next: Record<string, string | undefined | null>) => {
         const params = new URLSearchParams(searchParams);
@@ -57,10 +58,11 @@ export default function LeadsPage() {
             search: debouncedSearch || undefined,
             status,
             source_type: sourceType,
+            filter_uuid: filterUuid,
             min_score: minScore > 1 ? minScore : undefined,
             tags: tags.length > 0 ? tags : undefined,
         }),
-        [page, debouncedSearch, status, sourceType, minScore, tags.join(",")],
+        [page, debouncedSearch, status, sourceType, filterUuid, minScore, tags.join(",")],
     );
 
     const { data, isLoading, isFetching } = useContacts(query);
@@ -73,15 +75,16 @@ export default function LeadsPage() {
         return Array.from(set).sort();
     }, [contacts]);
 
-    // Keep drawer contact fresh when list refetches.
-    useEffect(() => {
-        if (!drawerContact) return;
-        const updated = contacts.find((c) => c.uuid === drawerContact.uuid);
-        if (updated) setDrawerContact(updated);
-    }, [contacts]);
-
     return (
         <div className="space-y-4">
+            <div className="flex items-center justify-between gap-2 flex-wrap">
+                <h1 className="text-xl font-semibold text-foreground">Leads</h1>
+                <Button onPress={() => setCreateOpen(true)}>
+                    <Plus className="size-4" />
+                    Add lead
+                </Button>
+            </div>
+
             <LeadFilters
                 search={search}
                 onSearchChange={(s) => updateParams({ search: s, page: "1" })}
@@ -93,6 +96,8 @@ export default function LeadsPage() {
                 }
                 sourceType={sourceType}
                 onSourceTypeChange={(s) => updateParams({ source_type: s, page: "1" })}
+                filterUuid={filterUuid}
+                onFilterUuidChange={(u) => updateParams({ filter_uuid: u, page: "1" })}
                 tags={tags}
                 onTagsChange={(next) =>
                     updateParams({
@@ -112,21 +117,16 @@ export default function LeadsPage() {
                 total={data?.total ?? 0}
                 totalPages={data?.totalPages ?? 1}
                 onPageChange={(p) => updateParams({ page: String(p) })}
-                onRowClick={(c) => {
-                    setDrawerContact(c);
-                    setDrawerOpen(true);
-                }}
+                onRowClick={(c) =>
+                    navigate(Routes.dashboard.contacts_detail.replace(":uuid", c.uuid))
+                }
                 selectedKeys={selectedKeys}
                 onSelectionChange={setSelectedKeys}
             />
 
-            <LeadDrawer
-                contactUuid={drawerOpen ? drawerContact?.uuid ?? null : null}
-                isOpen={drawerOpen}
-                onOpenChange={(open) => {
-                    setDrawerOpen(open);
-                    if (!open) setDrawerContact(null);
-                }}
+            <CreateContactModal
+                isOpen={createOpen}
+                onOpenChange={setCreateOpen}
             />
         </div>
     );

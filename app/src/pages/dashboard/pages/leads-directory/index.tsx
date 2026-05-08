@@ -1,7 +1,6 @@
 import { useMemo, useState } from "react";
 import {
     Button,
-    Chip,
     Drawer,
     Input,
     Label,
@@ -20,6 +19,7 @@ import {
 import { Check, Plus, Search, Sparkles } from "lucide-react";
 import type { Lead, SourceType } from "@/features/leads/interfaces/lead.interface";
 import { SOURCE_LABEL, SOURCE_OPTIONS } from "@/features/leads/constants/source-options";
+import { SourceBadge } from "@/features/leads/components/source-badge";
 import { useEnrichLead, useLeads } from "@/features/leads/hooks/use-leads";
 import { useAddLeadToCrm } from "@/features/contacts/hooks/use-contacts";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
@@ -78,11 +78,7 @@ export default function LeadsDirectoryPage() {
             }),
             columnHelper.accessor("source_type", {
                 header: "Source",
-                cell: (info) => (
-                    <Chip size="sm" variant="soft">
-                        <Chip.Label>{SOURCE_LABEL[info.getValue()]}</Chip.Label>
-                    </Chip>
-                ),
+                cell: (info) => <SourceBadge source={info.getValue()} />,
             }),
             columnHelper.accessor("location", {
                 header: "Location",

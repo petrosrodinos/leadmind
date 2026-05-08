@@ -9,7 +9,7 @@ import {
     Trash,
 } from "lucide-react";
 import cronstrue from "cronstrue";
-import { SOURCE_LABEL } from "@/features/leads/constants/source-options";
+import { SourceBadge } from "@/features/leads/components/source-badge";
 import { Channel } from "@/features/contacts/interfaces/contact.interface";
 import { JobStatus, type Filter, type FilterJob } from "@/features/filters/interfaces/filter.interface";
 import { SourceType } from "@/features/leads/interfaces/lead.interface";
@@ -98,9 +98,7 @@ export function FilterCard({ filter }: FilterCardProps) {
                         {filter.name}
                     </h3>
                     <div className="flex items-center gap-1.5 flex-wrap">
-                        <Chip size="sm" variant="soft">
-                            <Chip.Label>{SOURCE_LABEL[filter.source_type]}</Chip.Label>
-                        </Chip>
+                        <SourceBadge source={filter.source_type} />
                         {filter.channels.map((c) => (
                             <Chip key={c} size="sm" variant="soft" color="accent">
                                 <Chip.Label>{CHANNEL_LABEL[c]}</Chip.Label>

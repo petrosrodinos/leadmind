@@ -99,3 +99,15 @@ export interface UpdateMessagePayload {
     subject?: string;
     content?: string;
 }
+
+export interface CreateContactPayload {
+    name?: string;
+    email?: string;
+    phone?: string;
+    company?: string;
+    website?: string;
+    title?: string;
+    location?: string;
+    tags?: string[];
+    notes?: string;
+}

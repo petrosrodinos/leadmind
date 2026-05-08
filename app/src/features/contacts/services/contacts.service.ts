@@ -2,6 +2,7 @@ import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type {
     Contact,
+    CreateContactPayload,
     ListContactsQuery,
     OutreachMessage,
     PaginatedContacts,
@@ -32,6 +33,24 @@ export const getContact = async (uuid: string): Promise<Contact> => {
     }
 };
 
+export const createContact = async (payload: CreateContactPayload): Promise<Contact> => {
+    try {
+        const response = await axiosInstance.post(ApiRoutes.contacts.create, payload);
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error?.response?.data?.message || "Failed to create contact.");
+    }
+};
+
+export const deleteContact = async (uuid: string): Promise<{ uuid: string }> => {
+    try {
+        const response = await axiosInstance.delete(ApiRoutes.contacts.remove(uuid));
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error?.response?.data?.message || "Failed to delete contact.");
+    }
+};
+
 export const createContactFromLead = async (lead_uuid: string): Promise<Contact> => {
     try {
         const response = await axiosInstance.post(ApiRoutes.contacts.from_lead(lead_uuid));
@@ -57,6 +76,20 @@ export const updateContactStatus = async (
         return response.data;
     } catch (error: any) {
         throw new Error(error?.response?.data?.message || "Failed to update status.");
+    }
+};
+
+export const updateContactTags = async (
+    uuid: string,
+    tags: string[],
+): Promise<Contact> => {
+    try {
+        const response = await axiosInstance.put(ApiRoutes.contacts.update_tags(uuid), {
+            tags,
+        });
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error?.response?.data?.message || "Failed to update tags.");
     }
 };
 
