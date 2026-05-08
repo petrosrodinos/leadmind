@@ -11,6 +11,12 @@
       "sourceType": "github",
       "computedHash": "c008c80aff1eec1aba190edf421772a3f350e91405d4207575092b663c3702a7"
     },
+    "elasticsearch-onboarding": {
+      "source": "elastic/agent-skills",
+      "sourceType": "github",
+      "skillPath": "plugins/elasticsearch/skills/elasticsearch-onboarding/SKILL.md",
+      "computedHash": "9553237a975be618f8194a6243c55db4cf5eb7703c697ac4914a601fbbbe48f3"
+    },
     "frontend-design": {
       "source": "anthropics/skills",
       "sourceType": "github",

@@ -4,6 +4,7 @@ import { Channel, Contact, Filter, Lead, MsgStatus, OutreachMessage } from '@/ge
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { AiService } from '@/integrations/ai/services/ai.service';
 import { AiModels, AiProviders } from '@/integrations/ai/interfaces/ai.interface';
+import { ElasticsearchService } from '@/integrations/elasticsearch/elasticsearch.service';
 
 const SCORE_SCHEMA = z.object({
     score: z.number().min(1).max(10),
@@ -110,6 +111,7 @@ export class ContactAiService {
     constructor(
         private readonly prisma: PrismaService,
         private readonly aiService: AiService,
+        private readonly elasticsearchService: ElasticsearchService,
     ) { }
 
     /**
@@ -138,6 +140,14 @@ export class ContactAiService {
             where: { uuid: contact.uuid },
             data: { score: response.score },
         });
+
+        const fresh = await this.prisma.contact.findUnique({
+            where: { uuid: contact.uuid },
+            include: { lead: true, tags: true },
+        });
+        if (fresh) {
+            await this.elasticsearchService.indexContact(fresh);
+        }
 
         this.logger.log(
             `Contact ${contact.uuid}: scored ${response.score}/10 (${usage.totalTokens} tokens, $${usage.totalCost.toFixed(5)})`,

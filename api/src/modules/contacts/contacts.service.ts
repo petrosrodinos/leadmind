@@ -15,6 +15,7 @@ import {
     SourceType,
 } from '@/generated/prisma';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
+import { ElasticsearchService } from '@/integrations/elasticsearch/elasticsearch.service';
 import { AI_PROCESS_QUEUE } from '@/core/queues/queues.constants';
 import { AddNoteDto } from './dto/add-note.dto';
 import { CreateContactDto } from './dto/create-contact.dto';
@@ -27,6 +28,7 @@ import { UpdateTagsDto } from './dto/update-tags.dto';
 export class ContactsService {
     constructor(
         private readonly prisma: PrismaService,
+        private readonly elasticsearchService: ElasticsearchService,
         @InjectQueue(AI_PROCESS_QUEUE) private readonly aiProcessQueue: Queue,
     ) { }
 
@@ -70,6 +72,9 @@ export class ContactsService {
                 },
             });
         }
+
+        await this.elasticsearchService.indexLead(lead);
+        await this.reindexContact(contact.uuid);
 
         return this.findOne(user_uuid, contact.uuid);
     }
@@ -158,6 +163,7 @@ export class ContactsService {
     async remove(user_uuid: string, uuid: string): Promise<{ uuid: string }> {
         await this.requireOwnedContact(user_uuid, uuid);
         await this.prisma.contact.delete({ where: { uuid } });
+        await this.elasticsearchService.deleteContact(uuid);
         return { uuid };
     }
 
@@ -187,6 +193,8 @@ export class ContactsService {
             }),
         ]);
 
+        await this.reindexContact(uuid);
+
         return updated;
     }
 
@@ -209,6 +217,8 @@ export class ContactsService {
                 ]
                 : []),
         ]);
+
+        await this.reindexContact(uuid);
 
         return { tags: unique };
     }
@@ -258,6 +268,7 @@ export class ContactsService {
                     status: LeadStatus.NEW,
                 },
             });
+            await this.reindexContact(contact.uuid);
             return this.findOne(user_uuid, contact.uuid);
         } catch (error) {
             if (
@@ -309,5 +320,15 @@ export class ContactsService {
             throw new NotFoundException(`Contact ${uuid} not found`);
         }
         return contact;
+    }
+
+    private async reindexContact(uuid: string): Promise<void> {
+        const fresh = await this.prisma.contact.findUnique({
+            where: { uuid },
+            include: { lead: true, tags: true },
+        });
+        if (fresh) {
+            await this.elasticsearchService.indexContact(fresh);
+        }
     }
 }

@@ -4,6 +4,7 @@ import { Job, Queue } from 'bullmq';
 import { Filter, JobStatus, Prisma } from '@/generated/prisma';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { ApifyService } from '@/integrations/apify/apify.service';
+import { ElasticsearchService } from '@/integrations/elasticsearch/elasticsearch.service';
 import { NormalizedLead } from '@/integrations/apify/interfaces/apify.interfaces';
 import { AI_PROCESS_QUEUE, FILTER_SCRAPE_QUEUE } from '@/core/queues/queues.constants';
 
@@ -19,6 +20,7 @@ export class FilterScrapeWorker extends WorkerHost {
     constructor(
         private readonly prisma: PrismaService,
         private readonly apifyService: ApifyService,
+        private readonly elasticsearchService: ElasticsearchService,
         @InjectQueue(AI_PROCESS_QUEUE) private readonly aiProcessQueue: Queue,
     ) {
         super();
@@ -111,6 +113,7 @@ export class FilterScrapeWorker extends WorkerHost {
             const lead_data = this.mapToLead(normalized);
 
             let lead = await this.prisma.lead.findFirst({ where: dedup_where });
+            const is_new_lead = !lead;
             if (!lead) {
                 lead = await this.prisma.lead.create({
                     data: {
@@ -125,6 +128,8 @@ export class FilterScrapeWorker extends WorkerHost {
                     data: lead_data,
                 });
             }
+
+            await this.elasticsearchService.indexLead(lead);
 
             const existing_contact = await this.prisma.contact.findUnique({
                 where: {
@@ -143,7 +148,10 @@ export class FilterScrapeWorker extends WorkerHost {
                         filter_uuid: filter.uuid,
                     },
                 });
+                await this.elasticsearchService.indexContact({ ...contact, lead, tags: [] });
                 new_contact_uuids.push(contact.uuid);
+            } else if (!is_new_lead) {
+                await this.reindexContactsForLead(lead.uuid);
             }
 
             await this.prisma.rawLead.update({
@@ -153,6 +161,16 @@ export class FilterScrapeWorker extends WorkerHost {
         }
 
         return new_contact_uuids;
+    }
+
+    private async reindexContactsForLead(lead_uuid: string): Promise<void> {
+        const contacts = await this.prisma.contact.findMany({
+            where: { lead_uuid },
+            include: { lead: true, tags: true },
+        });
+        for (const contact of contacts) {
+            await this.elasticsearchService.indexContact(contact);
+        }
     }
 
     private mapToLead(normalized: NormalizedLead) {

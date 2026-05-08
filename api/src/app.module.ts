@@ -9,12 +9,14 @@ import { RedisCacheModule } from './modules/internal/redis-cache/redis-cache.mod
 import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule } from './shared/config/env/env.module';
 import { ApifyModule } from './integrations/apify/apify.module';
+import { ElasticsearchModule } from './integrations/elasticsearch/elasticsearch.module';
 import { QueuesModule } from './core/queues/queues.module';
 import { BullBoardModule } from './core/queues/bull-board.module';
 import { FiltersModule } from './modules/filters/filters.module';
 import { LeadsModule } from './modules/leads/leads.module';
 import { ContactsModule } from './modules/contacts/contacts.module';
 import { OutreachModule } from './modules/outreach/outreach.module';
+import { SearchModule } from './modules/search/search.module';
 import { WorkersModule } from './workers/workers.module';
 
 @Module({
@@ -28,12 +30,14 @@ import { WorkersModule } from './workers/workers.module';
     // GraphQLModule,
     AuthModule,
     ApifyModule,
+    ElasticsearchModule,
     QueuesModule,
     BullBoardModule,
     FiltersModule,
     LeadsModule,
     ContactsModule,
     OutreachModule,
+    SearchModule,
     WorkersModule,
   ],
   controllers: [AppController],
