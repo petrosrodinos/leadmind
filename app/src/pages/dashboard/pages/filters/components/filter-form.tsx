@@ -31,14 +31,28 @@ import {
 const SOURCE_OPTIONS: Array<{ id: SourceType; label: string }> = [
     { id: SourceType.LINKEDIN, label: "LinkedIn" },
     { id: SourceType.GOOGLE_MAPS, label: "Google Maps" },
+    { id: SourceType.GENERIC_LEAD, label: "Generic Lead Finder" },
     { id: SourceType.MANUAL, label: "Manual" },
 ];
 
 const CHANNEL_OPTIONS: Array<{ id: Channel; label: string }> = [
     { id: Channel.EMAIL, label: "Email" },
     { id: Channel.SMS, label: "SMS" },
-    { id: Channel.LINKEDIN, label: "LinkedIn" },
 ];
+
+const splitCsv = (s: string | undefined): string[] | undefined => {
+    if (!s) return undefined;
+    const arr = s
+        .split(",")
+        .map((p) => p.trim())
+        .filter(Boolean);
+    return arr.length > 0 ? arr : undefined;
+};
+
+const joinCsv = (arr: unknown): string => {
+    if (Array.isArray(arr)) return arr.filter((v) => typeof v === "string").join(", ");
+    return "";
+};
 
 const CRON_NONE = "__none__";
 
@@ -87,6 +101,7 @@ const buildDefaults = (initial?: Filter): FilterFormValues => {
     const source_type = (initial?.source_type as
         | typeof SourceType.LINKEDIN
         | typeof SourceType.GOOGLE_MAPS
+        | typeof SourceType.GENERIC_LEAD
         | typeof SourceType.MANUAL) ?? SourceType.LINKEDIN;
     const channels = (initial?.channels?.length
         ? initial.channels
@@ -120,6 +135,26 @@ const buildDefaults = (initial?: Filter): FilterFormValues => {
             query_config: {
                 query: typeof cfg.query === "string" ? cfg.query : "",
                 location: typeof cfg.location === "string" ? cfg.location : "",
+                limit: typeof cfg.limit === "number" ? cfg.limit : undefined,
+            },
+            enabled,
+            cron_schedule,
+            channels,
+            ai_instructions,
+        };
+    }
+    if (source_type === SourceType.GENERIC_LEAD) {
+        return {
+            name,
+            source_type: SourceType.GENERIC_LEAD,
+            query_config: {
+                titles: joinCsv(cfg.titles),
+                industries: joinCsv(cfg.industries),
+                industry_keywords: joinCsv(cfg.industry_keywords),
+                company_country: joinCsv(cfg.company_country),
+                seniority: joinCsv(cfg.seniority),
+                first_name: typeof cfg.first_name === "string" ? cfg.first_name : "",
+                last_name: typeof cfg.last_name === "string" ? cfg.last_name : "",
                 limit: typeof cfg.limit === "number" ? cfg.limit : undefined,
             },
             enabled,
@@ -186,6 +221,21 @@ export function FilterForm({
             setValue("query_config", { query: "", location: "" } as never, {
                 shouldValidate: false,
             });
+        } else if (next === SourceType.GENERIC_LEAD) {
+            setValue("source_type", SourceType.GENERIC_LEAD, { shouldValidate: false });
+            setValue(
+                "query_config",
+                {
+                    titles: "",
+                    industries: "",
+                    industry_keywords: "",
+                    company_country: "",
+                    seniority: "",
+                    first_name: "",
+                    last_name: "",
+                } as never,
+                { shouldValidate: false },
+            );
         } else {
             setValue("source_type", SourceType.MANUAL, { shouldValidate: false });
             setValue("query_config", {} as never, { shouldValidate: false });
@@ -193,10 +243,31 @@ export function FilterForm({
     };
 
     const submit: SubmitHandler<FilterFormValues> = async (values) => {
-        const cfg: Record<string, unknown> = { ...(values.query_config as object) };
-        // Strip empty strings so the backend doesn't store them.
-        for (const k of Object.keys(cfg)) {
-            if (cfg[k] === "" || cfg[k] == null) delete cfg[k];
+        let cfg: Record<string, unknown> = { ...(values.query_config as object) };
+
+        // GENERIC_LEAD's actor expects arrays for several fields. Convert the
+        // comma-separated strings the user typed into string[] before sending.
+        if (values.source_type === SourceType.GENERIC_LEAD) {
+            const cs = values.query_config as Record<string, any>;
+            cfg = {
+                ...(splitCsv(cs.titles) ? { titles: splitCsv(cs.titles) } : {}),
+                ...(splitCsv(cs.industries) ? { industries: splitCsv(cs.industries) } : {}),
+                ...(splitCsv(cs.industry_keywords)
+                    ? { industry_keywords: splitCsv(cs.industry_keywords) }
+                    : {}),
+                ...(splitCsv(cs.company_country)
+                    ? { company_country: splitCsv(cs.company_country) }
+                    : {}),
+                ...(splitCsv(cs.seniority) ? { seniority: splitCsv(cs.seniority) } : {}),
+                ...(cs.first_name ? { first_name: cs.first_name } : {}),
+                ...(cs.last_name ? { last_name: cs.last_name } : {}),
+                ...(cs.limit != null ? { limit: cs.limit } : {}),
+            };
+        } else {
+            // Strip empty strings so the backend doesn't store them.
+            for (const k of Object.keys(cfg)) {
+                if (cfg[k] === "" || cfg[k] == null) delete cfg[k];
+            }
         }
 
         const payload: CreateFilterPayload = {
@@ -545,6 +616,104 @@ function QueryConfigFields({
                     />
                     <p className="text-xs text-muted">
                         Max places to fetch per run.
+                    </p>
+                </div>
+            </div>
+        );
+    }
+
+    if (sourceType === SourceType.GENERIC_LEAD) {
+        return (
+            <div className="grid gap-3 sm:grid-cols-2">
+                <div className="flex flex-col gap-1.5 sm:col-span-2">
+                    <Label htmlFor="cfg-titles">Job titles</Label>
+                    <Input
+                        id="cfg-titles"
+                        placeholder="ceo, founder, head of growth"
+                        {...register("query_config.titles" as const)}
+                    />
+                    <p className="text-xs text-muted">
+                        Comma-separated job titles to match. Leave blank to skip
+                        title filtering.
+                    </p>
+                </div>
+                <div className="flex flex-col gap-1.5">
+                    <Label htmlFor="cfg-industries">Industries</Label>
+                    <Input
+                        id="cfg-industries"
+                        placeholder="software, fintech"
+                        {...register("query_config.industries" as const)}
+                    />
+                    <p className="text-xs text-muted">
+                        Comma-separated industries from Apollo's taxonomy.
+                    </p>
+                </div>
+                <div className="flex flex-col gap-1.5">
+                    <Label htmlFor="cfg-industry-keywords">Industry keywords</Label>
+                    <Input
+                        id="cfg-industry-keywords"
+                        placeholder="b2b saas, devtools"
+                        {...register("query_config.industry_keywords" as const)}
+                    />
+                    <p className="text-xs text-muted">
+                        Free-text keywords matched against company descriptions.
+                    </p>
+                </div>
+                <div className="flex flex-col gap-1.5">
+                    <Label htmlFor="cfg-company-country">Company country</Label>
+                    <Input
+                        id="cfg-company-country"
+                        placeholder="US, GB"
+                        {...register("query_config.company_country" as const)}
+                    />
+                    <p className="text-xs text-muted">
+                        Comma-separated ISO-2 country codes the company operates in.
+                    </p>
+                </div>
+                <div className="flex flex-col gap-1.5">
+                    <Label htmlFor="cfg-seniority">Seniority</Label>
+                    <Input
+                        id="cfg-seniority"
+                        placeholder="c_suite, vp, director"
+                        {...register("query_config.seniority" as const)}
+                    />
+                    <p className="text-xs text-muted">
+                        Comma-separated seniority levels (Apollo values).
+                    </p>
+                </div>
+                <div className="flex flex-col gap-1.5">
+                    <Label htmlFor="cfg-first-name">First name</Label>
+                    <Input
+                        id="cfg-first-name"
+                        placeholder="(optional)"
+                        {...register("query_config.first_name" as const)}
+                    />
+                    <p className="text-xs text-muted">
+                        Optional — narrows results to a specific first name.
+                    </p>
+                </div>
+                <div className="flex flex-col gap-1.5">
+                    <Label htmlFor="cfg-last-name">Last name</Label>
+                    <Input
+                        id="cfg-last-name"
+                        placeholder="(optional)"
+                        {...register("query_config.last_name" as const)}
+                    />
+                    <p className="text-xs text-muted">
+                        Optional — narrows results to a specific last name.
+                    </p>
+                </div>
+                <div className="flex flex-col gap-1.5 sm:col-span-2">
+                    <Label htmlFor="cfg-limit-gl">Limit</Label>
+                    <Input
+                        id="cfg-limit-gl"
+                        type="number"
+                        placeholder="100"
+                        {...register("query_config.limit" as const)}
+                    />
+                    <p className="text-xs text-muted">
+                        Max contacts to fetch per run. Apollo charges per result, so
+                        keep this conservative.
                     </p>
                 </div>
             </div>

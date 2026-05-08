@@ -15,6 +15,22 @@ const googleMapsConfigSchema = z.object({
     limit: z.coerce.number().int().positive().optional(),
 });
 
+/**
+ * UI-side schema: all comma-separated fields are kept as strings here and
+ * split into string[] on submit (the Apify generic-lead-finder actor expects
+ * arrays).
+ */
+const genericLeadConfigSchema = z.object({
+    titles: z.string().optional(),
+    industries: z.string().optional(),
+    industry_keywords: z.string().optional(),
+    company_country: z.string().optional(),
+    seniority: z.string().optional(),
+    first_name: z.string().optional(),
+    last_name: z.string().optional(),
+    limit: z.coerce.number().int().positive().optional(),
+});
+
 const manualConfigSchema = z.record(z.string(), z.string());
 
 const channelSchema = z
@@ -37,6 +53,10 @@ export const FilterFormSchema = z.discriminatedUnion("source_type", [
     baseSchema.extend({
         source_type: z.literal(SourceType.GOOGLE_MAPS),
         query_config: googleMapsConfigSchema,
+    }),
+    baseSchema.extend({
+        source_type: z.literal(SourceType.GENERIC_LEAD),
+        query_config: genericLeadConfigSchema,
     }),
     baseSchema.extend({
         source_type: z.literal(SourceType.MANUAL),
