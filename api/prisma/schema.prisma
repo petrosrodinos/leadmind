@@ -19,7 +19,7 @@ model User {
   email      String   @unique
   phone      String?  @unique
   password   String
-  role       AuthRole
+  role       AuthRole @default(USER)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
@@ -232,6 +232,7 @@ enum SourceType {
   GOOGLE_SEARCH
   GENERIC_LEAD
   WEBSITE_CRAWLER
+  GEMI // greek business directory
   MANUAL
 }
 
