@@ -34,23 +34,31 @@ export class ApifyService {
 
     private resolve(source_type: SourceType): { adapter: ApifyAdapter; actor_id: string } {
         switch (source_type) {
-            case 'LINKEDIN':
+            case SourceType.LINKEDIN:
                 return { adapter: this.linkedinLeadsAdapter, actor_id: APIFY_ACTORS.LINKEDIN_LEADS };
-            case 'GOOGLE_MAPS':
+            case SourceType.GOOGLE_MAPS:
                 return { adapter: this.googleMapsAdapter, actor_id: APIFY_ACTORS.GOOGLE_MAPS };
-            case 'GOOGLE_SEARCH':
+            case SourceType.GOOGLE_SEARCH:
                 return { adapter: this.googleSearchAdapter, actor_id: APIFY_ACTORS.GOOGLE_SEARCH };
-            case 'GENERIC_LEAD':
+            case SourceType.GENERIC_LEAD:
                 return { adapter: this.genericLeadFinderAdapter, actor_id: APIFY_ACTORS.GENERIC_LEAD };
-            case 'WEBSITE_CRAWLER':
+            case SourceType.WEBSITE_CRAWLER:
                 return {
                     adapter: this.websiteContentCrawlerAdapter,
                     actor_id: APIFY_ACTORS.WEBSITE_CONTENT_CRAWLER,
                 };
-            case 'MANUAL':
-                throw new BadRequestException('MANUAL source type does not invoke Apify');
-            default:
-                throw new BadRequestException(`Unsupported source type: ${source_type}`);
+            case SourceType.MANUAL:
+                throw new BadRequestException(
+                    `${SourceType.MANUAL} source type does not invoke Apify`,
+                );
+            case SourceType.GEMI:
+                throw new BadRequestException(
+                    `${SourceType.GEMI} source type does not invoke Apify`,
+                );
+            default: {
+                const _exhaustive: never = source_type;
+                throw new BadRequestException(`Unsupported source type: ${_exhaustive}`);
+            }
         }
     }
 }

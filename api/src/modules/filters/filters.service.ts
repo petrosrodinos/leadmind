@@ -202,34 +202,42 @@ export class FiltersService {
         }
 
         switch (source_type) {
-            case 'LINKEDIN':
+            case SourceType.LINKEDIN:
                 if (!query_config.keywords) {
-                    throw new BadRequestException('LINKEDIN filter requires query_config.keywords');
-                }
-                return;
-            case 'GOOGLE_MAPS':
-                if (!query_config.query) {
-                    throw new BadRequestException('GOOGLE_MAPS filter requires query_config.query');
-                }
-                return;
-            case 'GOOGLE_SEARCH':
-                if (!query_config.queries) {
-                    throw new BadRequestException('GOOGLE_SEARCH filter requires query_config.queries');
-                }
-                return;
-            case 'WEBSITE_CRAWLER':
-                if (!Array.isArray(query_config.start_urls) || query_config.start_urls.length === 0) {
                     throw new BadRequestException(
-                        'WEBSITE_CRAWLER filter requires query_config.start_urls (non-empty array)',
+                        `${SourceType.LINKEDIN} filter requires query_config.keywords`,
                     );
                 }
                 return;
-            case 'GENERIC_LEAD':
+            case SourceType.GOOGLE_MAPS:
+                if (!query_config.query) {
+                    throw new BadRequestException(
+                        `${SourceType.GOOGLE_MAPS} filter requires query_config.query`,
+                    );
+                }
                 return;
-            case 'MANUAL':
+            case SourceType.GOOGLE_SEARCH:
+                if (!query_config.queries) {
+                    throw new BadRequestException(
+                        `${SourceType.GOOGLE_SEARCH} filter requires query_config.queries`,
+                    );
+                }
                 return;
-            default:
-                throw new BadRequestException(`Unsupported source_type: ${source_type}`);
+            case SourceType.WEBSITE_CRAWLER:
+                if (!Array.isArray(query_config.start_urls) || query_config.start_urls.length === 0) {
+                    throw new BadRequestException(
+                        `${SourceType.WEBSITE_CRAWLER} filter requires query_config.start_urls (non-empty array)`,
+                    );
+                }
+                return;
+            case SourceType.GENERIC_LEAD:
+            case SourceType.GEMI:
+            case SourceType.MANUAL:
+                return;
+            default: {
+                const _exhaustive: never = source_type;
+                throw new BadRequestException(`Unsupported source_type: ${_exhaustive}`);
+            }
         }
     }
 }

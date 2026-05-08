@@ -23,10 +23,23 @@ import type {
     Filter,
 } from "@/features/filters/interfaces/filter.interface";
 import { LocationAutocomplete } from "@/components/ui/location-autocomplete";
+import { MultiSelect } from "@/components/ui/multi-select";
+import {
+    BUSINESS_MODELS,
+    COMPANY_SIZES,
+    COUNTRIES,
+    DEPARTMENTS,
+    INDUSTRIES,
+    REVENUES,
+    REVENUE_LABELS,
+    SENIORITY_LEVELS,
+} from "@/features/filters/constants/generic-lead-finder";
 import {
     FilterFormSchema,
     type FilterFormValues,
 } from "../validation-schemas/filter";
+
+const REVENUE_OPTIONS = REVENUES.map((v) => ({ value: v, label: REVENUE_LABELS[v] }));
 
 const SOURCE_OPTIONS: Array<{ id: SourceType; label: string }> = [
     { id: SourceType.LINKEDIN, label: "LinkedIn" },
@@ -52,6 +65,11 @@ const splitCsv = (s: string | undefined): string[] | undefined => {
 const joinCsv = (arr: unknown): string => {
     if (Array.isArray(arr)) return arr.filter((v) => typeof v === "string").join(", ");
     return "";
+};
+
+const asStringArray = (v: unknown): string[] => {
+    if (!Array.isArray(v)) return [];
+    return v.filter((x): x is string => typeof x === "string");
 };
 
 const CRON_NONE = "__none__";
@@ -120,7 +138,7 @@ const buildDefaults = (initial?: Filter): FilterFormValues => {
                 keywords: typeof cfg.keywords === "string" ? cfg.keywords : "",
                 location: typeof cfg.location === "string" ? cfg.location : "",
                 industry: typeof cfg.industry === "string" ? cfg.industry : "",
-                limit: typeof cfg.limit === "number" ? cfg.limit : undefined,
+                limit: typeof cfg.limit === "number" ? cfg.limit : 100,
             },
             enabled,
             cron_schedule,
@@ -135,7 +153,7 @@ const buildDefaults = (initial?: Filter): FilterFormValues => {
             query_config: {
                 query: typeof cfg.query === "string" ? cfg.query : "",
                 location: typeof cfg.location === "string" ? cfg.location : "",
-                limit: typeof cfg.limit === "number" ? cfg.limit : undefined,
+                limit: typeof cfg.limit === "number" ? cfg.limit : 100,
             },
             enabled,
             cron_schedule,
@@ -149,13 +167,19 @@ const buildDefaults = (initial?: Filter): FilterFormValues => {
             source_type: SourceType.GENERIC_LEAD,
             query_config: {
                 titles: joinCsv(cfg.titles),
-                industries: joinCsv(cfg.industries),
                 industry_keywords: joinCsv(cfg.industry_keywords),
-                company_country: joinCsv(cfg.company_country),
-                seniority: joinCsv(cfg.seniority),
+                company_domains: joinCsv(cfg.company_domains),
+                industries: asStringArray(cfg.industries),
+                seniority: asStringArray(cfg.seniority),
+                departments: asStringArray(cfg.departments),
+                company_size: asStringArray(cfg.company_size),
+                revenue: asStringArray(cfg.revenue),
+                person_country: asStringArray(cfg.person_country),
+                company_country: asStringArray(cfg.company_country),
+                business_model: asStringArray(cfg.business_model),
                 first_name: typeof cfg.first_name === "string" ? cfg.first_name : "",
                 last_name: typeof cfg.last_name === "string" ? cfg.last_name : "",
-                limit: typeof cfg.limit === "number" ? cfg.limit : undefined,
+                limit: typeof cfg.limit === "number" ? cfg.limit : 100,
             },
             enabled,
             cron_schedule,
@@ -227,10 +251,16 @@ export function FilterForm({
                 "query_config",
                 {
                     titles: "",
-                    industries: "",
                     industry_keywords: "",
-                    company_country: "",
-                    seniority: "",
+                    company_domains: "",
+                    industries: [],
+                    seniority: [],
+                    departments: [],
+                    company_size: [],
+                    revenue: [],
+                    person_country: [],
+                    company_country: [],
+                    business_model: [],
                     first_name: "",
                     last_name: "",
                 } as never,
@@ -245,24 +275,35 @@ export function FilterForm({
     const submit: SubmitHandler<FilterFormValues> = async (values) => {
         let cfg: Record<string, unknown> = { ...(values.query_config as object) };
 
-        // GENERIC_LEAD's actor expects arrays for several fields. Convert the
-        // comma-separated strings the user typed into string[] before sending.
+        // GENERIC_LEAD's actor expects arrays for several fields. Multi-select
+        // fields already come through as string[] (driven by enums); free-text
+        // fields are still comma-separated and need splitting here.
         if (values.source_type === SourceType.GENERIC_LEAD) {
             const cs = values.query_config as Record<string, any>;
-            cfg = {
-                ...(splitCsv(cs.titles) ? { titles: splitCsv(cs.titles) } : {}),
-                ...(splitCsv(cs.industries) ? { industries: splitCsv(cs.industries) } : {}),
-                ...(splitCsv(cs.industry_keywords)
-                    ? { industry_keywords: splitCsv(cs.industry_keywords) }
-                    : {}),
-                ...(splitCsv(cs.company_country)
-                    ? { company_country: splitCsv(cs.company_country) }
-                    : {}),
-                ...(splitCsv(cs.seniority) ? { seniority: splitCsv(cs.seniority) } : {}),
-                ...(cs.first_name ? { first_name: cs.first_name } : {}),
-                ...(cs.last_name ? { last_name: cs.last_name } : {}),
-                ...(cs.limit != null ? { limit: cs.limit } : {}),
-            };
+            const arrayKeys = [
+                "industries",
+                "seniority",
+                "departments",
+                "company_size",
+                "revenue",
+                "person_country",
+                "company_country",
+                "business_model",
+            ] as const;
+            const out: Record<string, unknown> = {};
+            for (const k of arrayKeys) {
+                if (Array.isArray(cs[k]) && cs[k].length > 0) out[k] = cs[k];
+            }
+            const titles = splitCsv(cs.titles);
+            if (titles) out.titles = titles;
+            const ik = splitCsv(cs.industry_keywords);
+            if (ik) out.industry_keywords = ik;
+            const cd = splitCsv(cs.company_domains);
+            if (cd) out.company_domains = cd;
+            if (cs.first_name) out.first_name = cs.first_name;
+            if (cs.last_name) out.last_name = cs.last_name;
+            if (cs.limit != null) out.limit = cs.limit;
+            cfg = out;
         } else {
             // Strip empty strings so the backend doesn't store them.
             for (const k of Object.keys(cfg)) {
@@ -623,101 +664,7 @@ function QueryConfigFields({
     }
 
     if (sourceType === SourceType.GENERIC_LEAD) {
-        return (
-            <div className="grid gap-3 sm:grid-cols-2">
-                <div className="flex flex-col gap-1.5 sm:col-span-2">
-                    <Label htmlFor="cfg-titles">Job titles</Label>
-                    <Input
-                        id="cfg-titles"
-                        placeholder="ceo, founder, head of growth"
-                        {...register("query_config.titles" as const)}
-                    />
-                    <p className="text-xs text-muted">
-                        Comma-separated job titles to match. Leave blank to skip
-                        title filtering.
-                    </p>
-                </div>
-                <div className="flex flex-col gap-1.5">
-                    <Label htmlFor="cfg-industries">Industries</Label>
-                    <Input
-                        id="cfg-industries"
-                        placeholder="software, fintech"
-                        {...register("query_config.industries" as const)}
-                    />
-                    <p className="text-xs text-muted">
-                        Comma-separated industries from Apollo's taxonomy.
-                    </p>
-                </div>
-                <div className="flex flex-col gap-1.5">
-                    <Label htmlFor="cfg-industry-keywords">Industry keywords</Label>
-                    <Input
-                        id="cfg-industry-keywords"
-                        placeholder="b2b saas, devtools"
-                        {...register("query_config.industry_keywords" as const)}
-                    />
-                    <p className="text-xs text-muted">
-                        Free-text keywords matched against company descriptions.
-                    </p>
-                </div>
-                <div className="flex flex-col gap-1.5">
-                    <Label htmlFor="cfg-company-country">Company country</Label>
-                    <Input
-                        id="cfg-company-country"
-                        placeholder="US, GB"
-                        {...register("query_config.company_country" as const)}
-                    />
-                    <p className="text-xs text-muted">
-                        Comma-separated ISO-2 country codes the company operates in.
-                    </p>
-                </div>
-                <div className="flex flex-col gap-1.5">
-                    <Label htmlFor="cfg-seniority">Seniority</Label>
-                    <Input
-                        id="cfg-seniority"
-                        placeholder="c_suite, vp, director"
-                        {...register("query_config.seniority" as const)}
-                    />
-                    <p className="text-xs text-muted">
-                        Comma-separated seniority levels (Apollo values).
-                    </p>
-                </div>
-                <div className="flex flex-col gap-1.5">
-                    <Label htmlFor="cfg-first-name">First name</Label>
-                    <Input
-                        id="cfg-first-name"
-                        placeholder="(optional)"
-                        {...register("query_config.first_name" as const)}
-                    />
-                    <p className="text-xs text-muted">
-                        Optional — narrows results to a specific first name.
-                    </p>
-                </div>
-                <div className="flex flex-col gap-1.5">
-                    <Label htmlFor="cfg-last-name">Last name</Label>
-                    <Input
-                        id="cfg-last-name"
-                        placeholder="(optional)"
-                        {...register("query_config.last_name" as const)}
-                    />
-                    <p className="text-xs text-muted">
-                        Optional — narrows results to a specific last name.
-                    </p>
-                </div>
-                <div className="flex flex-col gap-1.5 sm:col-span-2">
-                    <Label htmlFor="cfg-limit-gl">Limit</Label>
-                    <Input
-                        id="cfg-limit-gl"
-                        type="number"
-                        placeholder="100"
-                        {...register("query_config.limit" as const)}
-                    />
-                    <p className="text-xs text-muted">
-                        Max contacts to fetch per run. Apollo charges per result, so
-                        keep this conservative.
-                    </p>
-                </div>
-            </div>
-        );
+        return <GenericLeadFields register={register} control={control} />;
     }
 
     return (
@@ -731,6 +678,257 @@ function QueryConfigFields({
                 />
             )}
         />
+    );
+}
+
+interface GenericLeadFieldsProps {
+    register: ReturnType<typeof useForm<FilterFormValues>>["register"];
+    control: ReturnType<typeof useForm<FilterFormValues>>["control"];
+}
+
+function GenericLeadFields({ register, control }: GenericLeadFieldsProps) {
+    return (
+        <div className="grid gap-3 sm:grid-cols-2">
+            <div className="flex flex-col gap-1.5 sm:col-span-2">
+                <Label htmlFor="cfg-titles">Job titles</Label>
+                <Input
+                    id="cfg-titles"
+                    placeholder="ceo, founder, head of growth"
+                    {...register("query_config.titles" as const)}
+                />
+                <p className="text-xs text-muted">
+                    Comma-separated job titles to match. Leave blank to skip
+                    title filtering.
+                </p>
+            </div>
+
+            <div className="flex flex-col gap-1.5 sm:col-span-2">
+                <Label>Industries</Label>
+                <Controller
+                    control={control}
+                    name="query_config.industries"
+                    render={({ field }) => (
+                        <MultiSelect
+                            options={INDUSTRIES}
+                            value={(field.value as string[]) ?? []}
+                            onChange={field.onChange}
+                            placeholder="Pick industries…"
+                            searchPlaceholder="Search industries…"
+                            aria-label="Industries"
+                        />
+                    )}
+                />
+                <p className="text-xs text-muted">
+                    Apollo's exact industry taxonomy. Type to filter the {INDUSTRIES.length}{" "}
+                    available values.
+                </p>
+            </div>
+
+            <div className="flex flex-col gap-1.5 sm:col-span-2">
+                <Label htmlFor="cfg-industry-keywords">Industry keywords</Label>
+                <Input
+                    id="cfg-industry-keywords"
+                    placeholder="b2b saas, devtools"
+                    {...register("query_config.industry_keywords" as const)}
+                />
+                <p className="text-xs text-muted">
+                    Free-text keywords matched against company descriptions
+                    (comma-separated).
+                </p>
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+                <Label>Seniority</Label>
+                <Controller
+                    control={control}
+                    name="query_config.seniority"
+                    render={({ field }) => (
+                        <MultiSelect
+                            options={SENIORITY_LEVELS}
+                            value={(field.value as string[]) ?? []}
+                            onChange={field.onChange}
+                            placeholder="Any seniority"
+                            aria-label="Seniority"
+                        />
+                    )}
+                />
+                <p className="text-xs text-muted">
+                    Management level of the contact.
+                </p>
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+                <Label>Departments</Label>
+                <Controller
+                    control={control}
+                    name="query_config.departments"
+                    render={({ field }) => (
+                        <MultiSelect
+                            options={DEPARTMENTS}
+                            value={(field.value as string[]) ?? []}
+                            onChange={field.onChange}
+                            placeholder="Any department"
+                            aria-label="Departments"
+                        />
+                    )}
+                />
+                <p className="text-xs text-muted">
+                    Functional area the contact works in.
+                </p>
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+                <Label>Person country</Label>
+                <Controller
+                    control={control}
+                    name="query_config.person_country"
+                    render={({ field }) => (
+                        <MultiSelect
+                            options={COUNTRIES}
+                            value={(field.value as string[]) ?? []}
+                            onChange={field.onChange}
+                            placeholder="Any country"
+                            searchPlaceholder="Search countries…"
+                            aria-label="Person country"
+                        />
+                    )}
+                />
+                <p className="text-xs text-muted">
+                    Where the person lives (full country name, e.g. "Greece").
+                </p>
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+                <Label>Company country</Label>
+                <Controller
+                    control={control}
+                    name="query_config.company_country"
+                    render={({ field }) => (
+                        <MultiSelect
+                            options={COUNTRIES}
+                            value={(field.value as string[]) ?? []}
+                            onChange={field.onChange}
+                            placeholder="Any country"
+                            searchPlaceholder="Search countries…"
+                            aria-label="Company country"
+                        />
+                    )}
+                />
+                <p className="text-xs text-muted">
+                    Where the company is headquartered.
+                </p>
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+                <Label>Company size</Label>
+                <Controller
+                    control={control}
+                    name="query_config.company_size"
+                    render={({ field }) => (
+                        <MultiSelect
+                            options={COMPANY_SIZES}
+                            value={(field.value as string[]) ?? []}
+                            onChange={field.onChange}
+                            placeholder="Any size"
+                            aria-label="Company size"
+                        />
+                    )}
+                />
+                <p className="text-xs text-muted">
+                    Employee count ranges (Apollo buckets).
+                </p>
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+                <Label>Revenue</Label>
+                <Controller
+                    control={control}
+                    name="query_config.revenue"
+                    render={({ field }) => (
+                        <MultiSelect
+                            options={REVENUE_OPTIONS}
+                            value={(field.value as string[]) ?? []}
+                            onChange={field.onChange}
+                            placeholder="Any revenue"
+                            aria-label="Revenue"
+                        />
+                    )}
+                />
+                <p className="text-xs text-muted">
+                    Annual revenue range of the company.
+                </p>
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+                <Label>Business model</Label>
+                <Controller
+                    control={control}
+                    name="query_config.business_model"
+                    render={({ field }) => (
+                        <MultiSelect
+                            options={BUSINESS_MODELS}
+                            value={(field.value as string[]) ?? []}
+                            onChange={field.onChange}
+                            placeholder="Any model"
+                            aria-label="Business model"
+                        />
+                    )}
+                />
+                <p className="text-xs text-muted">
+                    Product, services, or solutions company.
+                </p>
+            </div>
+
+            <div className="flex flex-col gap-1.5 sm:col-span-2">
+                <Label htmlFor="cfg-company-domains">Company domains</Label>
+                <Input
+                    id="cfg-company-domains"
+                    placeholder="acme.com, example.com"
+                    {...register("query_config.company_domains" as const)}
+                />
+                <p className="text-xs text-muted">
+                    Comma-separated domains to restrict results to (max 10).
+                </p>
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+                <Label htmlFor="cfg-first-name">First name</Label>
+                <Input
+                    id="cfg-first-name"
+                    placeholder="(optional)"
+                    {...register("query_config.first_name" as const)}
+                />
+                <p className="text-xs text-muted">
+                    Optional — narrows results to a specific first name.
+                </p>
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+                <Label htmlFor="cfg-last-name">Last name</Label>
+                <Input
+                    id="cfg-last-name"
+                    placeholder="(optional)"
+                    {...register("query_config.last_name" as const)}
+                />
+                <p className="text-xs text-muted">
+                    Optional — narrows results to a specific last name.
+                </p>
+            </div>
+
+            <div className="flex flex-col gap-1.5 sm:col-span-2">
+                <Label htmlFor="cfg-limit-gl">Limit</Label>
+                <Input
+                    id="cfg-limit-gl"
+                    type="number"
+                    placeholder="100"
+                    {...register("query_config.limit" as const)}
+                />
+                <p className="text-xs text-muted">
+                    Max contacts to fetch per run. Apollo charges per result, so
+                    keep this conservative.
+                </p>
+            </div>
+        </div>
     );
 }
 

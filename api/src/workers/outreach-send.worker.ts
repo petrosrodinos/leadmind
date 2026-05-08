@@ -1,6 +1,7 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Logger } from '@nestjs/common';
 import { Job } from 'bullmq';
+import { Channel, InteractionType, MsgStatus } from '@/generated/prisma';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { OUTREACH_SEND_QUEUE } from '@/core/queues/queues.constants';
 import { ResendMailService } from '@/integrations/notifications/resend/services/mail.service';
@@ -31,13 +32,13 @@ export class OutreachSendWorker extends WorkerHost {
             this.logger.warn(`Outreach message ${job.data.message_uuid} not found`);
             return;
         }
-        if (message.status !== 'PENDING') {
+        if (message.status !== MsgStatus.PENDING) {
             this.logger.warn(`Outreach message ${message.uuid} is ${message.status}, skipping`);
             return;
         }
 
         try {
-            if (message.channel === 'EMAIL') {
+            if (message.channel === Channel.EMAIL) {
                 if (!message.contact.lead.email) {
                     throw new Error('Lead has no email');
                 }
@@ -46,7 +47,7 @@ export class OutreachSendWorker extends WorkerHost {
                     subject: message.subject ?? 'Outreach message',
                     html: message.content,
                 });
-            } else if (message.channel === 'SMS') {
+            } else if (message.channel === Channel.SMS) {
                 if (!message.contact.lead.phone) {
                     throw new Error('Lead has no phone');
                 }
@@ -58,7 +59,7 @@ export class OutreachSendWorker extends WorkerHost {
                 await this.prisma.outreachMessage.update({
                     where: { uuid: message.uuid },
                     data: {
-                        status: 'FAILED',
+                        status: MsgStatus.FAILED,
                         metadata: { reason: 'LinkedIn DM not yet implemented' },
                     },
                 });
@@ -69,7 +70,7 @@ export class OutreachSendWorker extends WorkerHost {
                 this.prisma.outreachMessage.update({
                     where: { uuid: message.uuid },
                     data: {
-                        status: 'SENT',
+                        status: MsgStatus.SENT,
                         sent_at: new Date(),
                         metadata: null,
                     },
@@ -89,7 +90,7 @@ export class OutreachSendWorker extends WorkerHost {
             await this.prisma.outreachMessage.update({
                 where: { uuid: message.uuid },
                 data: {
-                    status: 'FAILED',
+                    status: MsgStatus.FAILED,
                     metadata: { error: error_message },
                 },
             });
@@ -97,10 +98,10 @@ export class OutreachSendWorker extends WorkerHost {
         }
     }
 
-    private toInteractionType(channel: 'EMAIL' | 'SMS' | 'LINKEDIN'): 'EMAIL' | 'CALL' {
-        if (channel === 'SMS') {
-            return 'CALL';
+    private toInteractionType(channel: Channel): InteractionType {
+        if (channel === Channel.SMS) {
+            return InteractionType.CALL;
         }
-        return 'EMAIL';
+        return InteractionType.EMAIL;
     }
 }

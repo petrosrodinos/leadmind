@@ -16,16 +16,25 @@ const googleMapsConfigSchema = z.object({
 });
 
 /**
- * UI-side schema: all comma-separated fields are kept as strings here and
- * split into string[] on submit (the Apify generic-lead-finder actor expects
- * arrays).
+ * UI-side schema for the Apify generic-lead-finder (Apollo) actor.
+ *
+ * Enum-constrained fields are stored as string[] (driven by MultiSelect
+ * dropdowns) — the actor rejects values that don't exactly match its
+ * allowed enums. Free-text fields stay as comma-separated strings and get
+ * split on submit.
  */
 const genericLeadConfigSchema = z.object({
     titles: z.string().optional(),
-    industries: z.string().optional(),
+    industries: z.array(z.string()).optional(),
     industry_keywords: z.string().optional(),
-    company_country: z.string().optional(),
-    seniority: z.string().optional(),
+    seniority: z.array(z.string()).optional(),
+    departments: z.array(z.string()).optional(),
+    company_size: z.array(z.string()).optional(),
+    revenue: z.array(z.string()).optional(),
+    person_country: z.array(z.string()).optional(),
+    company_country: z.array(z.string()).optional(),
+    business_model: z.array(z.string()).optional(),
+    company_domains: z.string().optional(),
     first_name: z.string().optional(),
     last_name: z.string().optional(),
     limit: z.coerce.number().int().positive().optional(),

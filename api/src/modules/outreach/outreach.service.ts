@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { Queue } from 'bullmq';
 import {
+    Channel,
     Contact,
     MsgStatus,
     OutreachMessage,
@@ -38,7 +39,7 @@ export class OutreachService {
                 channel: dto.channel,
                 subject: dto.subject,
                 content: dto.content,
-                status: 'PENDING',
+                status: MsgStatus.PENDING,
                 scheduled_at,
             },
         });
@@ -141,7 +142,7 @@ export class OutreachService {
                         contact_uuid: contact.uuid,
                         channel: step.channel,
                         content,
-                        status: 'PENDING',
+                        status: MsgStatus.PENDING,
                         scheduled_at,
                     },
                 });
@@ -208,7 +209,7 @@ export class OutreachService {
 
     private parseSequenceSteps(steps: Prisma.JsonValue): Array<{
         delayHours: number;
-        channel: 'EMAIL' | 'SMS' | 'LINKEDIN';
+        channel: Channel;
         template: string;
     }> {
         if (!Array.isArray(steps)) {
@@ -216,7 +217,7 @@ export class OutreachService {
         }
         return steps as Array<{
             delayHours: number;
-            channel: 'EMAIL' | 'SMS' | 'LINKEDIN';
+            channel: Channel;
             template: string;
         }>;
     }

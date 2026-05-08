@@ -15,9 +15,10 @@ export const signIn = async (
 
         const auth_response = response.data;
         return formatAuthUser(auth_response);
-
-    } catch (error) {
-        throw new Error("Failed to sign in. Please try again.");
+    } catch (error: any) {
+        throw new Error(
+            error?.response?.data?.message || "Failed to sign in. Please try again.",
+        );
     }
 };
 
@@ -30,8 +31,10 @@ export const signUp = async ({ email, password }: SignUpUser): Promise<LoggedInU
 
         const auth_response = response.data;
         return formatAuthUser(auth_response);
-    } catch (error) {
-        throw new Error("Failed to sign up. Please try again.");
+    } catch (error: any) {
+        throw new Error(
+            error?.response?.data?.message || "Failed to sign up. Please try again.",
+        );
     }
 };
 

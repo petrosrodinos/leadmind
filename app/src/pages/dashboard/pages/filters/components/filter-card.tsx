@@ -12,6 +12,7 @@ import cronstrue from "cronstrue";
 import { SOURCE_LABEL } from "@/features/leads/constants/source-options";
 import { Channel } from "@/features/contacts/interfaces/contact.interface";
 import { JobStatus, type Filter, type FilterJob } from "@/features/filters/interfaces/filter.interface";
+import { SourceType } from "@/features/leads/interfaces/lead.interface";
 import {
     useDeleteFilter,
     useFilterJobs,
@@ -60,7 +61,7 @@ export function FilterCard({ filter }: FilterCardProps) {
 
     const [confirmOpen, setConfirmOpen] = useState(false);
 
-    const isManual = filter.source_type === "MANUAL";
+    const isManual = filter.source_type === SourceType.MANUAL;
     const runBusy = runFilter.isPending || isJobActive;
     const runDisabled = runBusy || isManual || !filter.enabled;
 
@@ -156,10 +157,10 @@ export function FilterCard({ filter }: FilterCardProps) {
                 >
                     <Play className="size-3.5" />
                     <span className="hidden @[18rem]:inline">
-                        {isJobActive ? "Running…" : "Run Now"}
+                        {runBusy ? "Running…" : "Run Now"}
                     </span>
                     <span className="@[18rem]:hidden">
-                        {isJobActive ? "Running" : "Run"}
+                        {runBusy ? "Running" : "Run"}
                     </span>
                 </Button>
                 <Button
