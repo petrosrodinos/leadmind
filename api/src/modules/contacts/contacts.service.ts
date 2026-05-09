@@ -7,6 +7,7 @@ import {
 import { Queue } from 'bullmq';
 import {
     Contact,
+    EnrichmentSource,
     Interaction,
     InteractionType,
     LeadStatus,
@@ -19,24 +20,13 @@ import { ElasticsearchService } from '@/integrations/elasticsearch/elasticsearch
 import { AI_PROCESS_QUEUE } from '@/core/queues/queues.constants';
 import { AddNoteDto } from './dto/add-note.dto';
 import { CreateContactDto } from './dto/create-contact.dto';
+import { EnrichContactDto } from './dto/enrich-contact.dto';
 import { ListContactsDto } from './dto/list-contacts.dto';
 import { UpdateContactDto } from './dto/update-contact.dto';
 import { UpdateStatusDto } from './dto/update-status.dto';
 import { UpdateTagsDto } from './dto/update-tags.dto';
+import { CONTACT_PROFILE_UPDATE_KEYS } from './constants/contact-profile.constants';
 import { contactProfileFromLead } from './utils/contact-profile.utils';
-
-const CONTACT_PROFILE_UPDATE_KEYS = [
-    'name',
-    'email',
-    'phone',
-    'company',
-    'website',
-    'linkedin_url',
-    'title',
-    'location',
-    'industry',
-    'description',
-] as const satisfies readonly (keyof UpdateContactDto)[];
 
 @Injectable()
 export class ContactsService {
@@ -154,6 +144,7 @@ export class ContactsService {
             include: {
                 tags: true,
                 lead: true,
+                filter: true,
                 interactions: {
                     orderBy: { created_at: 'desc' },
                     take: 20,
@@ -331,6 +322,40 @@ export class ContactsService {
         const job = await this.aiProcessQueue.add(
             `contact-draft:${uuid}`,
             { contact_uuid: uuid, action: 'draft' as const },
+            { removeOnComplete: 100, removeOnFail: 100 },
+        );
+        return { jobId: String(job.id) };
+    }
+
+    async enrichContact(
+        user_uuid: string,
+        uuid: string,
+        dto: EnrichContactDto,
+    ): Promise<{ jobId: string }> {
+        await this.requireOwnedContact(user_uuid, uuid);
+        const row = await this.prisma.contact.findFirst({
+            where: { uuid, user_uuid },
+            include: { filter: true },
+        });
+        if (!row) {
+            throw new NotFoundException(`Contact ${uuid} not found`);
+        }
+        let enrichment_sources: EnrichmentSource[];
+        if (dto.sources !== undefined) {
+            enrichment_sources = dto.sources;
+        } else if (row.filter?.enrichment_sources?.length) {
+            enrichment_sources = row.filter.enrichment_sources;
+        } else {
+            enrichment_sources = [];
+        }
+        const job = await this.aiProcessQueue.add(
+            `contact-enrich:${uuid}`,
+            {
+                contact_uuid: uuid,
+                action: 'enrich' as const,
+                enrichment_sources,
+                force_enrichment: true,
+            },
             { removeOnComplete: 100, removeOnFail: 100 },
         );
         return { jobId: String(job.id) };

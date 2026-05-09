@@ -1,21 +1,50 @@
-export const HOMEPAGE_FETCH_TIMEOUT_MS = 10_000;
-export const MAX_HTML_BYTES = 10_000;
-export const MAX_TEXT_CHARS = 3_000;
+import type { Lead } from '@/generated/prisma';
+import { AiProviders, type AiProvider } from '@/integrations/ai/interfaces/ai.interface';
 
-export const ENRICH_PROMPT = (url: string, page_text: string): string => `
-You are analyzing a company website to produce a concise enrichment summary that helps salespeople quickly understand what this business does.
+export const MAX_WEBSITE_CONTEXT_CHARS = 3_000;
 
-Website URL: ${url}
+export const PERPLEXITY_LEAD_SYSTEM_PROMPT =
+    'You are a B2B sales research assistant with live web search. Ground answers in what you find online. Prefer recent, verifiable facts. If identity is ambiguous, say so. Plain prose only, no markdown, under 280 words.';
 
-Extracted page text (truncated):
-"""
-${page_text}
-"""
+export const CLAUDE_LEAD_SYSTEM_PROMPT =
+    'You are a B2B sales research assistant. Use only the CRM fields and website excerpt in the user message. Do not claim you browsed the live web. If identity is ambiguous, say so. Plain prose only, no markdown, under 280 words.';
 
-Return a short, factual summary in plain prose (no markdown). Cover, when present:
-- What the company does (product/service)
-- Industry / target market
-- Notable signals (size, location, recent news, tech stack)
+export function buildLeadAiResearchPrompt(lead: Lead, websiteExcerpt: string | null, provider: AiProvider): string {
+    const lines = [
+        lead.name?.trim() && `Name: ${lead.name.trim()}`,
+        lead.title?.trim() && `Title/role: ${lead.title.trim()}`,
+        lead.company?.trim() && `Company: ${lead.company.trim()}`,
+        lead.email?.trim() && `Email: ${lead.email.trim()}`,
+        lead.phone?.trim() && `Phone: ${lead.phone.trim()}`,
+        lead.linkedin_url?.trim() && `LinkedIn: ${lead.linkedin_url.trim()}`,
+        lead.website?.trim() && `Website: ${lead.website.trim()}`,
+        lead.location?.trim() && `Location: ${lead.location.trim()}`,
+        lead.industry?.trim() && `Industry: ${lead.industry.trim()}`,
+    ].filter(Boolean) as string[];
 
-Keep it under 200 words. If the text is uninformative, say so explicitly.
-`.trim();
+    const intro =
+        provider === AiProviders.perplexity
+            ? 'Search the web and research this lead for outbound sales.'
+            : 'Research this lead for outbound sales using only the CRM fields and website excerpt below (no live web browsing).';
+
+    let body = `${intro}\n\nCRM fields:\n${lines.join('\n')}`;
+
+    if (websiteExcerpt?.trim()) {
+        body += `\n\nWebsite text excerpt (may be partial):\n"""\n${websiteExcerpt.trim().slice(0, MAX_WEBSITE_CONTEXT_CHARS)}\n"""`;
+    }
+
+    body +=
+        '\n\nSummarize: who this person likely is, what their organization does, market/role signals, and concrete personalization hooks. If data is thin, say what is missing.';
+
+    return body.trim();
+}
+
+export function leadHasAiResearchSeed(lead: Lead): boolean {
+    return Boolean(
+        lead.name?.trim() ||
+            lead.company?.trim() ||
+            lead.email?.trim() ||
+            lead.linkedin_url?.trim() ||
+            lead.website?.trim(),
+    );
+}

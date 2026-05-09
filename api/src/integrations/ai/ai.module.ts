@@ -5,6 +5,6 @@ import { AiConfig } from './utils/ai.config';
 @Module({
     imports: [],
     providers: [AiService, AiConfig],
-    exports: [AiService],
+    exports: [AiService, AiConfig],
 })
 export class AiIntegrationModule { }

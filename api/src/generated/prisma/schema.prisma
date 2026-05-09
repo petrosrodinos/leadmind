@@ -36,18 +36,19 @@ model User {
 }
 
 model Filter {
-  id              Int        @id @default(autoincrement())
-  uuid            String     @unique @default(uuid())
-  user_uuid       String
-  name            String
-  source_type     SourceType
-  query_config    Json
-  enabled         Boolean    @default(true)
-  cron_schedule   String?
-  channels        Channel[]  @default([EMAIL])
-  ai_instructions String?
-  created_at      DateTime   @default(now())
-  updated_at      DateTime   @updatedAt
+  id                 Int                @id @default(autoincrement())
+  uuid               String             @unique @default(uuid())
+  user_uuid          String
+  name               String
+  source_type        SourceType
+  query_config       Json
+  enrichment_sources EnrichmentSource[] @default([])
+  enabled            Boolean            @default(true)
+  cron_schedule      String?
+  channels           Channel[]          @default([EMAIL])
+  ai_instructions    String?
+  created_at         DateTime           @default(now())
+  updated_at         DateTime           @updatedAt
 
   user      User        @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
   raw_leads RawLead[]
@@ -79,30 +80,52 @@ model RawLead {
 // Each Lead is created from a RawLead (`raw_lead_uuid`), which is the audit
 // record of what the scraper returned.
 model Lead {
-  id              Int        @id @default(autoincrement())
-  uuid            String     @unique @default(uuid())
-  raw_lead_uuid   String?    @unique
-  name            String?
-  email           String?
-  phone           String?
-  company         String?
-  website         String?
-  linkedin_url    String?
-  title           String?
-  location        String?
-  industry        String?
-  description     String?
-  source_type     SourceType
-  raw_data        Json?
-  enrichment_data Json?
-  created_at      DateTime   @default(now())
-  updated_at      DateTime   @updatedAt
+  id                 Int        @id @default(autoincrement())
+  uuid               String     @unique @default(uuid())
+  raw_lead_uuid      String?    @unique
+  name               String?
+  email              String?
+  phone              String?
+  company            String?
+  website            String?
+  linkedin_url       String?
+  title              String?
+  location           String?
+  industry           String?
+  description        String?
+  source_type        SourceType
+  raw_data           Json?
+  enrichment_summary String?    @db.Text
+  created_at         DateTime   @default(now())
+  updated_at         DateTime   @updatedAt
 
-  raw_lead RawLead?  @relation(fields: [raw_lead_uuid], references: [uuid], onDelete: SetNull)
-  contacts Contact[]
+  raw_lead    RawLead?         @relation(fields: [raw_lead_uuid], references: [uuid], onDelete: SetNull)
+  contacts    Contact[]
+  enrichments LeadEnrichment[]
 
   @@index([email])
   @@index([linkedin_url])
+}
+
+model LeadEnrichment {
+  id            Int              @id @default(autoincrement())
+  uuid          String           @unique @default(uuid())
+  lead_uuid     String
+  source        EnrichmentSource
+  source_url    String?
+  summary       String?          @db.Text
+  payload       Json?
+  cost_usd      Decimal?         @db.Decimal(12, 6)
+  input_tokens  Int?
+  output_tokens Int?
+  metadata      Json?
+  created_at    DateTime         @default(now())
+
+  lead Lead @relation(fields: [lead_uuid], references: [uuid], onDelete: Cascade)
+
+  @@index([lead_uuid])
+  @@index([lead_uuid, source])
+  @@map("lead_enrichments")
 }
 
 model Contact {
@@ -243,6 +266,13 @@ enum SourceType {
   WEBSITE_CRAWLER
   GEMI // greek business directory
   MANUAL
+}
+
+enum EnrichmentSource {
+  LINKEDIN
+  WEBSITE
+  GOOGLE_SEARCH
+  AI
 }
 
 enum Channel {

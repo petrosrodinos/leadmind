@@ -1,17 +1,36 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button, Chip, Input, Label, ListBox, Select, Tabs, TextArea } from "@heroui/react";
-import { ArrowLeft, Check, Mail, MessageCircle, Pencil, Plus, RefreshCcw, Send, Sparkles, Trash, X } from "lucide-react";
+import type { Key } from "@heroui/react";
+import {
+    ArrowLeft,
+    Check,
+    Globe,
+    Link as LinkIcon,
+    Mail,
+    MessageCircle,
+    Pencil,
+    Plus,
+    RefreshCcw,
+    Send,
+    Sparkles,
+    Trash,
+    X,
+} from "lucide-react";
 import { Channel, LeadStatus, MsgStatus, type OutreachMessage } from "@/features/contacts/interfaces/contact.interface";
-import { SOURCE_LABEL } from "@/features/leads/constants/source-options";
-import { useContact, useDeleteContact, useRedraftMessages, useRescoreContact, useUpdateContact, useUpdateContactNotes, useUpdateContactStatus, useUpdateContactTags } from "@/features/contacts/hooks/use-contacts";
+import {
+    ENRICHMENT_SOURCE_OPTIONS,
+    type EnrichmentSource,
+} from "@/features/filters/constants/enrichment-sources";
+import { SourceBadge } from "@/features/leads/components/source-badge";
+import { useContact, useDeleteContact, useEnrichContact, useRedraftMessages, useRescoreContact, useUpdateContact, useUpdateContactNotes, useUpdateContactStatus, useUpdateContactTags } from "@/features/contacts/hooks/use-contacts";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { Routes } from "@/routes/routes";
 import { useDeleteOutreachMessage, useSendOutreachMessage } from "@/features/outreach/hooks/use-outreach";
 import { ScoreBadge, StatusChip } from "@/pages/dashboard/pages/leads/components/badges";
 import { EditMessageModal } from "@/pages/dashboard/pages/leads/components/edit-message-modal";
 import { InteractionTimeline } from "@/pages/dashboard/pages/contacts/components/interaction-timeline";
-import { cn } from "@/lib/utils";
+import { OverviewUrlField } from "@/components/ui/overview-url-field";
 
 const STATUS_OPTIONS: Array<{ id: LeadStatus; label: string }> = [
   { id: LeadStatus.NEW, label: "New" },
@@ -22,9 +41,9 @@ const STATUS_OPTIONS: Array<{ id: LeadStatus; label: string }> = [
 
 const TABS = [
   { id: "overview", label: "Overview" },
-  { id: "timeline", label: "Timeline" },
   { id: "outreach", label: "Outreach" },
   { id: "crm", label: "CRM" },
+  { id: "timeline", label: "Timeline" },
 ] as const;
 
 const channelIcon = (channel: Channel) => {
@@ -154,11 +173,24 @@ function profileDraftFromContact(contact: NonNullable<ReturnType<typeof useConta
 
 function OverviewTab({ contact }: TabContactProps) {
   const updateProfile = useUpdateContact();
+  const enrichContactMut = useEnrichContact();
   const [draft, setDraft] = useState<ProfileDraft>(() => profileDraftFromContact(contact));
+
+  const defaultEnrichmentSources = useMemo(() => {
+    return contact.filter?.enrichment_sources ?? [];
+  }, [contact.uuid, contact.filter?.enrichment_sources]);
+
+  const [enrichmentSourceKeys, setEnrichmentSourceKeys] = useState<Key[]>(
+    () => defaultEnrichmentSources as Key[],
+  );
 
   useEffect(() => {
     setDraft(profileDraftFromContact(contact));
   }, [contact.uuid, contact.updated_at]);
+
+  useEffect(() => {
+    setEnrichmentSourceKeys(defaultEnrichmentSources as Key[]);
+  }, [defaultEnrichmentSources]);
 
   const dirty = useMemo(() => {
     const prev = profileDraftFromContact(contact);
@@ -199,49 +231,160 @@ function OverviewTab({ contact }: TabContactProps) {
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="pf-company">Company</Label>
-            <Input id="pf-company" value={draft.company} onChange={(e) => setField("company", e.target.value)} />
+            <Input
+              id="pf-company"
+              placeholder="Acme Inc."
+              value={draft.company}
+              onChange={(e) => setField("company", e.target.value)}
+            />
           </div>
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="pf-email">Email</Label>
-            <Input id="pf-email" type="email" value={draft.email} onChange={(e) => setField("email", e.target.value)} />
+            <Input
+              id="pf-email"
+              type="email"
+              placeholder="name@company.com"
+              value={draft.email}
+              onChange={(e) => setField("email", e.target.value)}
+            />
           </div>
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="pf-phone">Phone</Label>
-            <Input id="pf-phone" value={draft.phone} onChange={(e) => setField("phone", e.target.value)} />
+            <Input
+              id="pf-phone"
+              placeholder="+1 555 0100"
+              value={draft.phone}
+              onChange={(e) => setField("phone", e.target.value)}
+            />
           </div>
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="pf-title">Title</Label>
-            <Input id="pf-title" value={draft.title} onChange={(e) => setField("title", e.target.value)} />
+            <Input
+              id="pf-title"
+              placeholder="Head of Sales"
+              value={draft.title}
+              onChange={(e) => setField("title", e.target.value)}
+            />
           </div>
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="pf-location">Location</Label>
-            <Input id="pf-location" value={draft.location} onChange={(e) => setField("location", e.target.value)} />
+            <Input
+              id="pf-location"
+              placeholder="City, Country"
+              value={draft.location}
+              onChange={(e) => setField("location", e.target.value)}
+            />
           </div>
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="pf-industry">Industry</Label>
-            <Input id="pf-industry" value={draft.industry} onChange={(e) => setField("industry", e.target.value)} />
+            <Input
+              id="pf-industry"
+              placeholder="Software"
+              value={draft.industry}
+              onChange={(e) => setField("industry", e.target.value)}
+            />
           </div>
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="pf-website">Website</Label>
-            <Input id="pf-website" value={draft.website} onChange={(e) => setField("website", e.target.value)} />
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="pf-linkedin">LinkedIn</Label>
-            <Input id="pf-linkedin" value={draft.linkedin_url} onChange={(e) => setField("linkedin_url", e.target.value)} />
-          </div>
+          <OverviewUrlField
+            id="pf-website"
+            label="Website"
+            value={draft.website}
+            onChange={(e) => setField("website", e.target.value)}
+            placeholder="https://example.com"
+            Icon={Globe}
+            openAriaLabel="Open website in new tab"
+          />
+          <OverviewUrlField
+            id="pf-linkedin"
+            label="LinkedIn"
+            value={draft.linkedin_url}
+            onChange={(e) => setField("linkedin_url", e.target.value)}
+            placeholder="https://linkedin.com/in/…"
+            Icon={LinkIcon}
+            openAriaLabel="Open LinkedIn profile in new tab"
+          />
           <div className="flex flex-col gap-1.5 sm:col-span-2 lg:col-span-3">
             <Label htmlFor="pf-name">Name</Label>
-            <Input id="pf-name" value={draft.name} onChange={(e) => setField("name", e.target.value)} />
+            <Input
+              id="pf-name"
+              placeholder="Full name"
+              value={draft.name}
+              onChange={(e) => setField("name", e.target.value)}
+            />
           </div>
         </div>
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="pf-description">Description</Label>
-          <TextArea id="pf-description" rows={4} value={draft.description} onChange={(e) => setField("description", e.target.value)} />
+          <TextArea
+            id="pf-description"
+            rows={4}
+            placeholder="Short summary or notes about this contact…"
+            value={draft.description}
+            onChange={(e) => setField("description", e.target.value)}
+          />
         </div>
-        <Field label="Source" value={SOURCE_LABEL[contact.lead.source_type]} />
+        <div>
+          <p className="text-xs font-medium text-muted uppercase tracking-wide">Source</p>
+          <div className="mt-0.5">
+            <SourceBadge source={contact.lead.source_type} />
+          </div>
+        </div>
       </Section>
 
-      <Section title="Public enrichment summary">{contact.lead.enrichment_data && Object.keys(contact.lead.enrichment_data).length > 0 ? <pre className="text-xs text-foreground whitespace-pre-wrap break-words font-mono p-3 rounded-lg bg-surface-secondary border border-border">{JSON.stringify(contact.lead.enrichment_data, null, 2)}</pre> : <p className="text-sm text-muted italic">No enrichment available yet.</p>}</Section>
+      <Section
+        title="Public enrichment"
+        action={
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:flex-wrap">
+            <div className="flex flex-col gap-1.5 min-w-[220px]">
+              <Label className="text-xs text-muted">Sources</Label>
+              <Select
+                className="w-full"
+                placeholder="Sources"
+                selectionMode="multiple"
+                value={enrichmentSourceKeys}
+                onChange={(keys) => setEnrichmentSourceKeys(keys as Key[])}
+              >
+                <Select.Trigger>
+                  <Select.Value />
+                  <Select.Indicator />
+                </Select.Trigger>
+                <Select.Popover>
+                  <ListBox selectionMode="multiple">
+                    {ENRICHMENT_SOURCE_OPTIONS.map((opt) => (
+                      <ListBox.Item key={opt.id} id={opt.id} textValue={opt.label}>
+                        {opt.label}
+                        <ListBox.ItemIndicator />
+                      </ListBox.Item>
+                    ))}
+                  </ListBox>
+                </Select.Popover>
+              </Select>
+            </div>
+            <Button
+              size="sm"
+              variant="secondary"
+              isDisabled={enrichContactMut.isPending || enrichmentSourceKeys.length === 0}
+              isPending={enrichContactMut.isPending}
+              onPress={() =>
+                enrichContactMut.mutate({
+                  uuid: contact.uuid,
+                  sources: enrichmentSourceKeys.map(String) as EnrichmentSource[],
+                })
+              }
+            >
+              <Sparkles className="size-3.5" />
+              Run enrichment
+            </Button>
+          </div>
+        }
+      >
+        {contact.lead.enrichment_summary?.trim() ? (
+          <p className="text-sm text-foreground whitespace-pre-wrap break-words">
+            {contact.lead.enrichment_summary}
+          </p>
+        ) : (
+          <p className="text-sm text-muted italic">No enrichment available yet.</p>
+        )}
+      </Section>
     </div>
   );
 }
@@ -619,22 +762,5 @@ function Section({ title, action, children, emptyText }: { title: string; action
       </div>
       {empty && emptyText ? <p className="text-sm text-muted italic">{emptyText}</p> : children}
     </section>
-  );
-}
-
-function Field({ label, value, link = false }: { label: string; value: string | null | undefined; link?: boolean }) {
-  return (
-    <div>
-      <p className={cn("text-xs font-medium text-muted uppercase tracking-wide")}>{label}</p>
-      {!value ? (
-        <p className="text-sm text-muted italic mt-0.5">Not provided</p>
-      ) : link ? (
-        <a href={value} target="_blank" rel="noopener noreferrer" className="text-sm text-accent hover:underline mt-0.5 break-all">
-          {value}
-        </a>
-      ) : (
-        <p className="text-sm text-foreground mt-0.5 whitespace-pre-line break-words">{value}</p>
-      )}
-    </div>
   );
 }

@@ -1,6 +1,10 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import {
+    ApiProperty,
+    ApiPropertyOptional,
+} from '@nestjs/swagger';
 import {
     ArrayMinSize,
+    ArrayUnique,
     IsArray,
     IsBoolean,
     IsEnum,
@@ -9,7 +13,7 @@ import {
     IsString,
     MaxLength,
 } from 'class-validator';
-import { Channel, SourceType } from '@/generated/prisma';
+import { Channel, EnrichmentSource, SourceType } from '@/generated/prisma';
 import { IsCronExpression } from '../validators/is-cron-expression.validator';
 
 export class CreateFilterDto {
@@ -42,6 +46,13 @@ export class CreateFilterDto {
     @ArrayMinSize(1)
     @IsEnum(Channel, { each: true })
     channels: Channel[];
+
+    @ApiPropertyOptional({ enum: EnrichmentSource, isArray: true })
+    @IsOptional()
+    @IsArray()
+    @ArrayUnique()
+    @IsEnum(EnrichmentSource, { each: true })
+    enrichment_sources?: EnrichmentSource[];
 
     @ApiPropertyOptional({ maxLength: 2000 })
     @IsOptional()

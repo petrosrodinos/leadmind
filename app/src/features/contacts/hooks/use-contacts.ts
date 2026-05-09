@@ -3,6 +3,7 @@ import {
     createContact,
     createContactFromLead,
     deleteContact,
+    enrichContact,
     getContact,
     listContactInteractions,
     listContactMessages,
@@ -22,6 +23,7 @@ import type {
     PaginatedContacts,
     UpdateContactPayload,
 } from "../interfaces/contact.interface";
+import type { EnrichmentSource } from "@/features/filters/constants/enrichment-sources";
 import { toast } from "@/hooks/use-toast";
 
 export const contactsQueryKeys = {
@@ -180,7 +182,6 @@ export function useUpdateContactStatus() {
         },
         onSettled: (_data, _error, vars) => {
             qc.invalidateQueries({ queryKey: contactsQueryKeys.all });
-            qc.invalidateQueries({ queryKey: contactsQueryKeys.detail(vars.uuid) });
             qc.invalidateQueries({ queryKey: contactsQueryKeys.interactions(vars.uuid) });
         },
     });
@@ -213,9 +214,8 @@ export function useUpdateContactTags() {
                 variant: "error",
             });
         },
-        onSettled: (_data, _error, vars) => {
+        onSettled: () => {
             qc.invalidateQueries({ queryKey: contactsQueryKeys.all });
-            qc.invalidateQueries({ queryKey: contactsQueryKeys.detail(vars.uuid) });
         },
     });
 }
@@ -225,9 +225,8 @@ export function useUpdateContact() {
     return useMutation({
         mutationFn: (vars: { uuid: string; payload: UpdateContactPayload }) =>
             updateContact(vars.uuid, vars.payload),
-        onSuccess: (_data, vars) => {
+        onSuccess: () => {
             qc.invalidateQueries({ queryKey: contactsQueryKeys.all });
-            qc.invalidateQueries({ queryKey: contactsQueryKeys.detail(vars.uuid) });
             toast({ title: "Contact updated", duration: 1500 });
         },
         onError: (error: Error) => {
@@ -248,7 +247,6 @@ export function useUpdateContactNotes() {
             updateContactNotes(vars.uuid, vars.notes),
         onSuccess: (_data, vars) => {
             qc.invalidateQueries({ queryKey: contactsQueryKeys.all });
-            qc.invalidateQueries({ queryKey: contactsQueryKeys.detail(vars.uuid) });
             qc.invalidateQueries({ queryKey: contactsQueryKeys.interactions(vars.uuid) });
             toast({ title: "Notes saved", duration: 1500 });
         },
@@ -302,6 +300,30 @@ export function useRedraftMessages() {
         onError: (error: Error) => {
             toast({
                 title: "Could not enqueue redraft",
+                description: error.message,
+                duration: 3000,
+                variant: "error",
+            });
+        },
+    });
+}
+
+export function useEnrichContact() {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: (vars: { uuid: string; sources?: EnrichmentSource[] }) =>
+            enrichContact(vars.uuid, { sources: vars.sources }),
+        onSuccess: (_data, vars) => {
+            toast({
+                title: "Enrichment queued",
+                description: "We will refresh public enrichment data shortly.",
+                duration: 2500,
+            });
+            qc.invalidateQueries({ queryKey: contactsQueryKeys.detail(vars.uuid) });
+        },
+        onError: (error: Error) => {
+            toast({
+                title: "Could not queue enrichment",
                 description: error.message,
                 duration: 3000,
                 variant: "error",

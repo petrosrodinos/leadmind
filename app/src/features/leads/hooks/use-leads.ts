@@ -1,12 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { enrichLead, getLead, listLeads } from "../services/leads.service";
-import type { ListLeadsQuery } from "../interfaces/lead.interface";
+import { enrichLead, getLead, listLeadEnrichments, listLeads } from "../services/leads.service";
+import type { ListLeadEnrichmentsQuery, ListLeadsQuery } from "../interfaces/lead.interface";
 import { toast } from "@/hooks/use-toast";
 
 export const leadsQueryKeys = {
     all: ["leads"] as const,
     list: (query: ListLeadsQuery) => ["leads", "list", query] as const,
     detail: (uuid: string) => ["leads", "detail", uuid] as const,
+    enrichments: (uuid: string, query: ListLeadEnrichmentsQuery) =>
+        ["leads", "enrichments", uuid, query] as const,
 };
 
 export function useLeads(query: ListLeadsQuery) {
@@ -25,6 +27,17 @@ export function useLead(uuid: string | null | undefined) {
     });
 }
 
+export function useLeadEnrichments(
+    uuid: string | null | undefined,
+    query: ListLeadEnrichmentsQuery,
+) {
+    return useQuery({
+        queryKey: uuid ? leadsQueryKeys.enrichments(uuid, query) : ["leads", "enrichments", "none"],
+        queryFn: () => listLeadEnrichments(uuid as string, query),
+        enabled: !!uuid,
+    });
+}
+
 export function useEnrichLead() {
     const qc = useQueryClient();
     return useMutation({
@@ -36,6 +49,7 @@ export function useEnrichLead() {
                 duration: 2500,
             });
             qc.invalidateQueries({ queryKey: leadsQueryKeys.detail(uuid) });
+            qc.invalidateQueries({ queryKey: ["leads", "enrichments", uuid] });
         },
         onError: (error: Error) => {
             toast({

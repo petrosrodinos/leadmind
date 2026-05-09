@@ -10,6 +10,7 @@ export const Routes = {
     dashboard: {
         root: "/dashboard",
         leads_directory: "/dashboard/leads-directory",
+        leads_directory_detail: "/dashboard/leads-directory/:uuid",
         leads: "/dashboard/leads",
         contacts: "/dashboard/contacts",
         contacts_detail: "/dashboard/contacts/:uuid",

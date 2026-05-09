@@ -21,6 +21,10 @@ import type {
     Filter,
 } from "@/features/filters/interfaces/filter.interface";
 import {
+    ENRICHMENT_SOURCE_OPTIONS,
+    type EnrichmentSource,
+} from "@/features/filters/constants/enrichment-sources";
+import {
     FilterFormSchema,
     type FilterFormValues,
 } from "../../validation-schemas/filter";
@@ -92,6 +96,7 @@ export function FilterForm({
             name: values.name.trim(),
             source_type: values.source_type,
             query_config: cfg,
+            enrichment_sources: values.enrichment_sources,
             channels: values.channels,
             enabled: values.enabled,
             cron_schedule:
@@ -163,6 +168,49 @@ export function FilterForm({
                 errors={errors}
                 control={control}
             />
+
+            <div className="grid gap-1.5">
+                <Label>Enrichment sources</Label>
+                <Controller
+                    control={control}
+                    name="enrichment_sources"
+                    render={({ field }) => (
+                        <Select
+                            className="w-full"
+                            placeholder="Select enrichment sources"
+                            selectionMode="multiple"
+                            value={field.value as Key[]}
+                            onChange={(keys) =>
+                                field.onChange((keys as Key[]).map(String) as EnrichmentSource[])
+                            }
+                        >
+                            <Select.Trigger>
+                                <Select.Value />
+                                <Select.Indicator />
+                            </Select.Trigger>
+                            <Select.Popover>
+                                <ListBox selectionMode="multiple">
+                                    {ENRICHMENT_SOURCE_OPTIONS.map((opt) => (
+                                        <ListBox.Item
+                                            key={opt.id}
+                                            id={opt.id}
+                                            textValue={opt.label}
+                                        >
+                                            {opt.label}
+                                            <ListBox.ItemIndicator />
+                                        </ListBox.Item>
+                                    ))}
+                                </ListBox>
+                            </Select.Popover>
+                        </Select>
+                    )}
+                />
+                {errors.enrichment_sources && (
+                    <FieldError>
+                        {errors.enrichment_sources.message as string}
+                    </FieldError>
+                )}
+            </div>
 
             <div className="grid gap-1.5">
                 <Label>Channels</Label>

@@ -1,4 +1,5 @@
 import type { Lead, SourceType } from "@/features/leads/interfaces/lead.interface";
+import type { EnrichmentSource } from "@/features/filters/constants/enrichment-sources";
 
 export const LeadStatus = {
     NEW: "NEW",
@@ -81,6 +82,10 @@ export interface Contact {
     updated_at: string;
     tags: string[];
     lead: Lead;
+    filter?: {
+        uuid: string;
+        enrichment_sources: EnrichmentSource[];
+    } | null;
     outreach_messages?: OutreachMessage[];
     interactions?: Interaction[];
 }

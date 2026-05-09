@@ -1,5 +1,6 @@
 import type { Channel } from "@/features/contacts/interfaces/contact.interface";
 import type { SourceType } from "@/features/leads/interfaces/lead.interface";
+import type { EnrichmentSource } from "@/features/filters/constants/enrichment-sources";
 
 export const JobStatus = {
     PENDING: "PENDING",
@@ -50,6 +51,7 @@ export interface Filter {
     name: string;
     source_type: SourceType;
     query_config: QueryConfig;
+    enrichment_sources?: EnrichmentSource[];
     enabled: boolean;
     cron_schedule: string | null;
     channels: Channel[];
@@ -76,6 +78,7 @@ export interface CreateFilterPayload {
     name: string;
     source_type: SourceType;
     query_config: QueryConfig;
+    enrichment_sources?: EnrichmentSource[];
     enabled?: boolean;
     cron_schedule?: string;
     channels: Channel[];

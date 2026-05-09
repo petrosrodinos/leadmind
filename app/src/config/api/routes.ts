@@ -22,6 +22,7 @@ export const ApiRoutes = {
         prefix: "/leads",
         list: "/leads",
         get: (uuid: string) => `/leads/${uuid}`,
+        enrichments: (uuid: string) => `/leads/${uuid}/enrichments`,
         enrich: (uuid: string) => `/leads/${uuid}/enrich`,
     },
     contacts: {
@@ -37,6 +38,7 @@ export const ApiRoutes = {
         interactions: (uuid: string) => `/contacts/${uuid}/interactions`,
         score: (uuid: string) => `/contacts/${uuid}/score`,
         draft_messages: (uuid: string) => `/contacts/${uuid}/draft-messages`,
+        enrich: (uuid: string) => `/contacts/${uuid}/enrich`,
         messages: (uuid: string) => `/contacts/${uuid}/messages`,
         from_lead: (lead_uuid: string) => `/contacts/from-lead/${lead_uuid}`,
     },

@@ -7,6 +7,7 @@ import AuthLayout from "@/pages/auth/layout";
 import DashboardLayout from "@/pages/dashboard/layout";
 import DashboardHome from "@/pages/dashboard";
 import LeadsDirectoryPage from "@/pages/dashboard/pages/leads-directory";
+import LeadDirectoryDetailPage from "@/pages/dashboard/pages/leads-directory/pages/detail";
 import LeadsPage from "@/pages/dashboard/pages/leads";
 import FiltersPage from "@/pages/dashboard/pages/filters";
 import NewFilterPage from "@/pages/dashboard/pages/filters/pages/new";
@@ -45,6 +46,7 @@ export default function AppRoutes() {
       >
         <Route index element={<DashboardHome />} />
         <Route path="leads-directory" element={<LeadsDirectoryPage />} />
+        <Route path="leads-directory/:uuid" element={<LeadDirectoryDetailPage />} />
         <Route path="leads" element={<LeadsPage />} />
         <Route path="contacts" element={<ContactsPage />} />
         <Route path="contacts/:uuid" element={<ContactDetailPage />} />

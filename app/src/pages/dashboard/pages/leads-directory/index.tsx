@@ -1,14 +1,13 @@
 import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
     Button,
-    Drawer,
     Input,
     Label,
     ListBox,
     Pagination,
     Select,
     Table,
-    useOverlayState,
 } from "@heroui/react";
 import {
     createColumnHelper,
@@ -16,25 +15,24 @@ import {
     getCoreRowModel,
     useReactTable,
 } from "@tanstack/react-table";
-import { Check, Plus, Search, Sparkles } from "lucide-react";
+import { Check, Plus, Search } from "lucide-react";
 import type { Lead, SourceType } from "@/features/leads/interfaces/lead.interface";
-import { SOURCE_LABEL, SOURCE_OPTIONS } from "@/features/leads/constants/source-options";
+import { SOURCE_OPTIONS } from "@/features/leads/constants/source-options";
 import { SourceBadge } from "@/features/leads/components/source-badge";
-import { useEnrichLead, useLeads } from "@/features/leads/hooks/use-leads";
+import { useLeads } from "@/features/leads/hooks/use-leads";
 import { useAddLeadToCrm } from "@/features/contacts/hooks/use-contacts";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
+import { Routes } from "@/routes/routes";
 
 const PAGE_SIZE = 20;
 
 const columnHelper = createColumnHelper<Lead>();
 
 export default function LeadsDirectoryPage() {
+    const navigate = useNavigate();
     const [page, setPage] = useState(1);
     const [search, setSearch] = useState("");
     const [sourceType, setSourceType] = useState<SourceType | undefined>(undefined);
-    const [selected, setSelected] = useState<Lead | null>(null);
-
-    const drawerState = useOverlayState();
 
     const debouncedSearch = useDebouncedValue(search, 300);
 
@@ -50,7 +48,6 @@ export default function LeadsDirectoryPage() {
 
     const { data, isLoading, isFetching } = useLeads(query);
     const addToCrm = useAddLeadToCrm();
-    const enrich = useEnrichLead();
 
     const [adoptedUuids, setAdoptedUuids] = useState<Set<string>>(new Set());
 
@@ -91,37 +88,44 @@ export default function LeadsDirectoryPage() {
                     const lead = info.row.original;
                     const adopted = adoptedUuids.has(lead.uuid);
                     return (
-                        <Button
-                            size="sm"
-                            variant={adopted ? "tertiary" : "secondary"}
-                            isDisabled={adopted || addToCrm.isPending}
-                            onPress={() => {
-                                addToCrm.mutate(lead.uuid, {
-                                    onSuccess: () => {
-                                        setAdoptedUuids((prev) => new Set(prev).add(lead.uuid));
-                                    },
-                                    onError: (error: any) => {
-                                        if (error.status === 409) {
-                                            setAdoptedUuids((prev) =>
-                                                new Set(prev).add(lead.uuid),
-                                            );
-                                        }
-                                    },
-                                });
-                            }}
+                        <div
+                            className="flex justify-end"
+                            onClick={(e) => e.stopPropagation()}
+                            onKeyDown={(e) => e.stopPropagation()}
+                            role="presentation"
                         >
-                            {adopted ? (
-                                <>
-                                    <Check className="size-3.5" />
-                                    Added
-                                </>
-                            ) : (
-                                <>
-                                    <Plus className="size-3.5" />
-                                    Add to CRM
-                                </>
-                            )}
-                        </Button>
+                            <Button
+                                size="sm"
+                                variant={adopted ? "tertiary" : "secondary"}
+                                isDisabled={adopted || addToCrm.isPending}
+                                onPress={() => {
+                                    addToCrm.mutate(lead.uuid, {
+                                        onSuccess: () => {
+                                            setAdoptedUuids((prev) => new Set(prev).add(lead.uuid));
+                                        },
+                                        onError: (error: any) => {
+                                            if (error.status === 409) {
+                                                setAdoptedUuids((prev) =>
+                                                    new Set(prev).add(lead.uuid),
+                                                );
+                                            }
+                                        },
+                                    });
+                                }}
+                            >
+                                {adopted ? (
+                                    <>
+                                        <Check className="size-3.5" />
+                                        Added
+                                    </>
+                                ) : (
+                                    <>
+                                        <Plus className="size-3.5" />
+                                        Add to CRM
+                                    </>
+                                )}
+                            </Button>
+                        </div>
                     );
                 },
             }),
@@ -144,9 +148,8 @@ export default function LeadsDirectoryPage() {
     const start = total === 0 ? 0 : (page - 1) * PAGE_SIZE + 1;
     const end = Math.min(page * PAGE_SIZE, total);
 
-    const openLeadDrawer = (lead: Lead) => {
-        setSelected(lead);
-        drawerState.open();
+    const openLeadDetail = (lead: Lead) => {
+        navigate(Routes.dashboard.leads_directory_detail.replace(":uuid", lead.uuid));
     };
 
     return (
@@ -249,7 +252,7 @@ export default function LeadsDirectoryPage() {
                                         <Table.Row
                                             key={row.id}
                                             id={row.id}
-                                            onAction={() => openLeadDrawer(row.original)}
+                                            onAction={() => openLeadDetail(row.original)}
                                             className="cursor-pointer"
                                         >
                                             {row.getVisibleCells().map((cell) => (
@@ -301,159 +304,6 @@ export default function LeadsDirectoryPage() {
                     </Table.Footer>
                 </Table>
             </div>
-
-            <Drawer.Backdrop isOpen={drawerState.isOpen} onOpenChange={drawerState.setOpen}>
-                <Drawer.Content placement="right">
-                    <Drawer.Dialog className="sm:max-w-xl">
-                        <Drawer.CloseTrigger />
-                        <Drawer.Header>
-                            <Drawer.Heading>{selected?.name ?? "Lead"}</Drawer.Heading>
-                        </Drawer.Header>
-                        <Drawer.Body>
-                            {selected && (
-                                <div className="flex flex-col gap-5">
-                                    <Field label="Company" value={selected.company} />
-                                    <Field label="Email" value={selected.email} />
-                                    <Field label="Phone" value={selected.phone} />
-                                    <Field label="Title" value={selected.title} />
-                                    <Field label="Location" value={selected.location} />
-                                    <Field label="Industry" value={selected.industry} />
-                                    <Field label="Website" value={selected.website} link />
-                                    <Field label="LinkedIn" value={selected.linkedin_url} link />
-                                    <Field label="Description" value={selected.description} />
-                                    <Field
-                                        label="Source"
-                                        value={SOURCE_LABEL[selected.source_type]}
-                                    />
-                                    <EnrichmentBlock
-                                        enrichment={selected.enrichment_data}
-                                        onEnrich={() => enrich.mutate(selected.uuid)}
-                                        loading={enrich.isPending}
-                                    />
-                                </div>
-                            )}
-                        </Drawer.Body>
-                        <Drawer.Footer>
-                            <Button slot="close" variant="secondary">
-                                Close
-                            </Button>
-                            <Button
-                                isDisabled={
-                                    !selected ||
-                                    addToCrm.isPending ||
-                                    (selected && adoptedUuids.has(selected.uuid)) ||
-                                    false
-                                }
-                                onPress={() => {
-                                    if (!selected) return;
-                                    addToCrm.mutate(selected.uuid, {
-                                        onSuccess: () => {
-                                            setAdoptedUuids((prev) =>
-                                                new Set(prev).add(selected.uuid),
-                                            );
-                                        },
-                                        onError: (error: any) => {
-                                            if (error.status === 409) {
-                                                setAdoptedUuids((prev) =>
-                                                    new Set(prev).add(selected.uuid),
-                                                );
-                                            }
-                                        },
-                                    });
-                                }}
-                            >
-                                {selected && adoptedUuids.has(selected.uuid) ? (
-                                    <>
-                                        <Check className="size-4" />
-                                        Added
-                                    </>
-                                ) : (
-                                    <>
-                                        <Plus className="size-4" />
-                                        Add to my CRM
-                                    </>
-                                )}
-                            </Button>
-                        </Drawer.Footer>
-                    </Drawer.Dialog>
-                </Drawer.Content>
-            </Drawer.Backdrop>
-        </div>
-    );
-}
-
-function Field({
-    label,
-    value,
-    link = false,
-}: {
-    label: string;
-    value: string | null | undefined;
-    link?: boolean;
-}) {
-    if (!value) {
-        return (
-            <div>
-                <p className="text-xs font-medium text-muted uppercase tracking-wide">{label}</p>
-                <p className="text-sm text-muted italic mt-0.5">Not provided</p>
-            </div>
-        );
-    }
-    return (
-        <div>
-            <p className="text-xs font-medium text-muted uppercase tracking-wide">{label}</p>
-            {link ? (
-                <a
-                    href={value}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm text-accent hover:underline mt-0.5 break-all"
-                >
-                    {value}
-                </a>
-            ) : (
-                <p className="text-sm text-foreground mt-0.5 whitespace-pre-line">{value}</p>
-            )}
-        </div>
-    );
-}
-
-function EnrichmentBlock({
-    enrichment,
-    onEnrich,
-    loading,
-}: {
-    enrichment: Record<string, unknown> | null | undefined;
-    onEnrich: () => void;
-    loading: boolean;
-}) {
-    return (
-        <div className="rounded-lg border border-border bg-surface-secondary p-3">
-            <div className="flex items-center justify-between gap-2 mb-2">
-                <p className="text-xs font-medium text-muted uppercase tracking-wide">
-                    Public enrichment summary
-                </p>
-                <Button
-                    size="sm"
-                    variant="tertiary"
-                    isDisabled={loading}
-                    isPending={loading}
-                    onPress={onEnrich}
-                >
-                    <Sparkles className="size-3.5" />
-                    Enrich
-                </Button>
-            </div>
-            {enrichment && Object.keys(enrichment).length > 0 ? (
-                <pre className="text-xs text-foreground whitespace-pre-wrap break-words font-mono">
-                    {JSON.stringify(enrichment, null, 2)}
-                </pre>
-            ) : (
-                <p className="text-sm text-muted italic">
-                    No enrichment yet. Click <span className="font-medium">Enrich</span> to queue
-                    an AI summary of this lead's website.
-                </p>
-            )}
         </div>
     );
 }

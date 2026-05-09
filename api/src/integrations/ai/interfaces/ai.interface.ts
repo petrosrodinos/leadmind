@@ -58,6 +58,8 @@ export const AiProviders = {
     openai: 'openai',
     grok: 'grok',
     gemini: 'gemini',
+    perplexity: 'perplexity',
+    claude: 'claude',
 } as const;
 
 export const AiModels = {
@@ -77,8 +79,16 @@ export const AiModels = {
         geminiProVision: 'gemini-pro-vision',
         gemini15Pro: 'gemini-1.5-pro',
         gemini15Flash: 'gemini-1.5-flash',
-    }
-}
+    },
+    perplexity: {
+        sonar: 'sonar',
+        sonarPro: 'sonar-pro',
+    },
+    claude: {
+        sonnet35: 'claude-3-5-sonnet-20241022',
+        haiku35: 'claude-3-5-haiku-20241022',
+    },
+};
 
 export type AiProvider = typeof AiProviders[keyof typeof AiProviders];
 export type AiModel = string;

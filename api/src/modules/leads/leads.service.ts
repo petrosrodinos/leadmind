@@ -4,6 +4,8 @@ import { Queue } from 'bullmq';
 import { Prisma, Lead } from '@/generated/prisma';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { AI_PROCESS_QUEUE } from '@/core/queues/queues.constants';
+import { DEFAULT_ENRICHMENT_SOURCES } from './constants/enrichment.constants';
+import { ListLeadEnrichmentsDto } from './dto/list-lead-enrichments.dto';
 import { ListLeadsDto } from './dto/list-leads.dto';
 
 @Injectable()
@@ -63,11 +65,68 @@ export class LeadsService {
         return lead;
     }
 
+    async findEnrichmentsForLead(leadUuid: string, query: ListLeadEnrichmentsDto) {
+        await this.findOne(leadUuid);
+        const page = query.page ?? 1;
+        const limit = query.limit ?? 20;
+        const skip = (page - 1) * limit;
+        const search = query.search?.trim();
+
+        const where: Prisma.LeadEnrichmentWhereInput = {
+            lead_uuid: leadUuid,
+            ...(query.source && { source: query.source }),
+            ...(search
+                ? {
+                      OR: [
+                          { summary: { contains: search, mode: 'insensitive' } },
+                          { source_url: { contains: search, mode: 'insensitive' } },
+                      ],
+                  }
+                : {}),
+        };
+
+        const [rows, total] = await Promise.all([
+            this.prisma.leadEnrichment.findMany({
+                where,
+                orderBy: { created_at: 'desc' },
+                skip,
+                take: limit,
+            }),
+            this.prisma.leadEnrichment.count({ where }),
+        ]);
+
+        const data = rows.map((r) => ({
+            uuid: r.uuid,
+            lead_uuid: r.lead_uuid,
+            source: r.source,
+            source_url: r.source_url,
+            summary: r.summary,
+            payload: r.payload,
+            cost_usd: r.cost_usd != null ? Number(r.cost_usd) : null,
+            input_tokens: r.input_tokens,
+            output_tokens: r.output_tokens,
+            metadata: r.metadata,
+            created_at: r.created_at,
+        }));
+
+        return {
+            data,
+            total,
+            page,
+            limit,
+            totalPages: Math.ceil(total / limit),
+        };
+    }
+
     async triggerEnrich(uuid: string): Promise<{ jobId: string }> {
         await this.findOne(uuid);
         const job = await this.aiProcessQueue.add(
             `lead-enrich:${uuid}`,
-            { lead_uuid: uuid, action: 'enrich' as const },
+            {
+                lead_uuid: uuid,
+                enrichment_sources: DEFAULT_ENRICHMENT_SOURCES,
+                force_enrichment: true,
+            },
             { removeOnComplete: 100, removeOnFail: 100 },
         );
 

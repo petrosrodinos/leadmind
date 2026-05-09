@@ -1,5 +1,6 @@
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
+import type { EnrichmentSource } from "@/features/filters/constants/enrichment-sources";
 import type {
     Contact,
     CreateContactPayload,
@@ -129,6 +130,18 @@ export const triggerDraftMessages = async (uuid: string): Promise<{ jobId: strin
         return response.data;
     } catch (error: any) {
         throw new Error(error?.response?.data?.message || "Failed to enqueue redraft.");
+    }
+};
+
+export const enrichContact = async (
+    uuid: string,
+    payload: { sources?: EnrichmentSource[] } = {},
+): Promise<{ jobId: string }> => {
+    try {
+        const response = await axiosInstance.post(ApiRoutes.contacts.enrich(uuid), payload);
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error?.response?.data?.message || "Failed to queue enrichment.");
     }
 };
 

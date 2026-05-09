@@ -6,8 +6,9 @@ import {
     ApiResponse,
     ApiTags,
 } from '@nestjs/swagger';
-import { SourceType } from '@/generated/prisma';
+import { EnrichmentSource, SourceType } from '@/generated/prisma';
 import { JwtGuard } from '@/shared/guards/jwt.guard';
+import { ListLeadEnrichmentsDto } from './dto/list-lead-enrichments.dto';
 import { ListLeadsDto } from './dto/list-leads.dto';
 import { LeadsService } from './leads.service';
 
@@ -27,6 +28,18 @@ export class LeadsController {
     @ApiResponse({ status: 200, description: 'Paginated list of public leads' })
     findAll(@Query() query: ListLeadsDto) {
         return this.leadsService.findAll(query);
+    }
+
+    @Get(':uuid/enrichments')
+    @ApiOperation({ summary: 'List enrichment history for a lead (paginated, filterable)' })
+    @ApiQuery({ name: 'source', required: false, enum: EnrichmentSource })
+    @ApiQuery({ name: 'search', required: false, type: String })
+    @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
+    @ApiQuery({ name: 'limit', required: false, type: Number, example: 20 })
+    @ApiResponse({ status: 200, description: 'Paginated enrichment rows (newest first)' })
+    @ApiResponse({ status: 404, description: 'Lead not found' })
+    findEnrichments(@Param('uuid') uuid: string, @Query() query: ListLeadEnrichmentsDto) {
+        return this.leadsService.findEnrichmentsForLead(uuid, query);
     }
 
     @Get(':uuid')

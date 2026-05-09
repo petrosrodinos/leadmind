@@ -204,10 +204,7 @@ export class ElasticsearchService implements OnModuleInit {
     }
 
     private buildLeadMetadata(lead: Lead): string {
-        const enrichmentSummary =
-            lead.enrichment_data && typeof lead.enrichment_data === 'object' && 'summary' in lead.enrichment_data
-                ? String((lead.enrichment_data as { summary?: unknown }).summary ?? '')
-                : '';
+        const enrichmentSummary = lead.enrichment_summary?.trim() ?? '';
         return [
             lead.name && `Name: ${lead.name}`,
             lead.title && `Title: ${lead.title}`,
@@ -240,10 +237,7 @@ export class ElasticsearchService implements OnModuleInit {
     }
 
     private buildLeadEnrichmentBlock(lead: Lead): string {
-        const enrichmentSummary =
-            lead.enrichment_data && typeof lead.enrichment_data === 'object' && 'summary' in lead.enrichment_data
-                ? String((lead.enrichment_data as { summary?: unknown }).summary ?? '')
-                : '';
+        const enrichmentSummary = lead.enrichment_summary?.trim() ?? '';
         return enrichmentSummary ? `Summary: ${enrichmentSummary}` : '';
     }
 

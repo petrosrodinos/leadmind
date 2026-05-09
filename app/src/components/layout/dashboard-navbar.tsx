@@ -19,7 +19,11 @@ const pageTitles: Record<string, string> = {
 
 export default function DashboardNavbar({ onMenuClick }: DashboardNavbarProps) {
   const location = useLocation();
-  const currentTitle = pageTitles[location.pathname] ?? "Dashboard";
+  const currentTitle =
+    location.pathname.startsWith("/dashboard/leads-directory/") &&
+    location.pathname !== Routes.dashboard.leads_directory
+      ? "Lead details"
+      : pageTitles[location.pathname] ?? "Dashboard";
   const { theme, toggleTheme } = useThemeContext();
 
   return (

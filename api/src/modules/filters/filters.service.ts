@@ -41,6 +41,9 @@ export class FiltersService {
                 cron_schedule: dto.cron_schedule,
                 channels: dto.channels,
                 ai_instructions: dto.ai_instructions,
+                ...(dto.enrichment_sources !== undefined
+                    ? { enrichment_sources: dto.enrichment_sources }
+                    : {}),
             },
         });
 
@@ -85,6 +88,9 @@ export class FiltersService {
                 cron_schedule: dto.cron_schedule,
                 channels: dto.channels,
                 ai_instructions: dto.ai_instructions,
+                ...(dto.enrichment_sources !== undefined
+                    ? { enrichment_sources: dto.enrichment_sources }
+                    : {}),
             },
         });
 

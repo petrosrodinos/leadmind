@@ -34,6 +34,11 @@ export type RawLead = $Result.DefaultSelection<Prisma.$RawLeadPayload>
  */
 export type Lead = $Result.DefaultSelection<Prisma.$LeadPayload>
 /**
+ * Model LeadEnrichment
+ * 
+ */
+export type LeadEnrichment = $Result.DefaultSelection<Prisma.$LeadEnrichmentPayload>
+/**
  * Model Contact
  * 
  */
@@ -89,6 +94,16 @@ export const SourceType: {
 };
 
 export type SourceType = (typeof SourceType)[keyof typeof SourceType]
+
+
+export const EnrichmentSource: {
+  LINKEDIN: 'LINKEDIN',
+  WEBSITE: 'WEBSITE',
+  GOOGLE_SEARCH: 'GOOGLE_SEARCH',
+  AI: 'AI'
+};
+
+export type EnrichmentSource = (typeof EnrichmentSource)[keyof typeof EnrichmentSource]
 
 
 export const Channel: {
@@ -155,6 +170,10 @@ export const AuthRole: typeof $Enums.AuthRole
 export type SourceType = $Enums.SourceType
 
 export const SourceType: typeof $Enums.SourceType
+
+export type EnrichmentSource = $Enums.EnrichmentSource
+
+export const EnrichmentSource: typeof $Enums.EnrichmentSource
 
 export type Channel = $Enums.Channel
 
@@ -336,6 +355,16 @@ export class PrismaClient<
     * ```
     */
   get lead(): Prisma.LeadDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.leadEnrichment`: Exposes CRUD operations for the **LeadEnrichment** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more LeadEnrichments
+    * const leadEnrichments = await prisma.leadEnrichment.findMany()
+    * ```
+    */
+  get leadEnrichment(): Prisma.LeadEnrichmentDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.contact`: Exposes CRUD operations for the **Contact** model.
@@ -834,6 +863,7 @@ export namespace Prisma {
     Filter: 'Filter',
     RawLead: 'RawLead',
     Lead: 'Lead',
+    LeadEnrichment: 'LeadEnrichment',
     Contact: 'Contact',
     ContactTag: 'ContactTag',
     Interaction: 'Interaction',
@@ -855,7 +885,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "filter" | "rawLead" | "lead" | "contact" | "contactTag" | "interaction" | "outreachMessage" | "outreachSequence" | "filterJob"
+      modelProps: "user" | "filter" | "rawLead" | "lead" | "leadEnrichment" | "contact" | "contactTag" | "interaction" | "outreachMessage" | "outreachSequence" | "filterJob"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1152,6 +1182,80 @@ export namespace Prisma {
           count: {
             args: Prisma.LeadCountArgs<ExtArgs>
             result: $Utils.Optional<LeadCountAggregateOutputType> | number
+          }
+        }
+      }
+      LeadEnrichment: {
+        payload: Prisma.$LeadEnrichmentPayload<ExtArgs>
+        fields: Prisma.LeadEnrichmentFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.LeadEnrichmentFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeadEnrichmentPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.LeadEnrichmentFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeadEnrichmentPayload>
+          }
+          findFirst: {
+            args: Prisma.LeadEnrichmentFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeadEnrichmentPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.LeadEnrichmentFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeadEnrichmentPayload>
+          }
+          findMany: {
+            args: Prisma.LeadEnrichmentFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeadEnrichmentPayload>[]
+          }
+          create: {
+            args: Prisma.LeadEnrichmentCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeadEnrichmentPayload>
+          }
+          createMany: {
+            args: Prisma.LeadEnrichmentCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.LeadEnrichmentCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeadEnrichmentPayload>[]
+          }
+          delete: {
+            args: Prisma.LeadEnrichmentDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeadEnrichmentPayload>
+          }
+          update: {
+            args: Prisma.LeadEnrichmentUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeadEnrichmentPayload>
+          }
+          deleteMany: {
+            args: Prisma.LeadEnrichmentDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.LeadEnrichmentUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.LeadEnrichmentUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeadEnrichmentPayload>[]
+          }
+          upsert: {
+            args: Prisma.LeadEnrichmentUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeadEnrichmentPayload>
+          }
+          aggregate: {
+            args: Prisma.LeadEnrichmentAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateLeadEnrichment>
+          }
+          groupBy: {
+            args: Prisma.LeadEnrichmentGroupByArgs<ExtArgs>
+            result: $Utils.Optional<LeadEnrichmentGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.LeadEnrichmentCountArgs<ExtArgs>
+            result: $Utils.Optional<LeadEnrichmentCountAggregateOutputType> | number
           }
         }
       }
@@ -1711,6 +1815,7 @@ export namespace Prisma {
     filter?: FilterOmit
     rawLead?: RawLeadOmit
     lead?: LeadOmit
+    leadEnrichment?: LeadEnrichmentOmit
     contact?: ContactOmit
     contactTag?: ContactTagOmit
     interaction?: InteractionOmit
@@ -1914,10 +2019,12 @@ export namespace Prisma {
 
   export type LeadCountOutputType = {
     contacts: number
+    enrichments: number
   }
 
   export type LeadCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     contacts?: boolean | LeadCountOutputTypeCountContactsArgs
+    enrichments?: boolean | LeadCountOutputTypeCountEnrichmentsArgs
   }
 
   // Custom InputTypes
@@ -1936,6 +2043,13 @@ export namespace Prisma {
    */
   export type LeadCountOutputTypeCountContactsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ContactWhereInput
+  }
+
+  /**
+   * LeadCountOutputType without action
+   */
+  export type LeadCountOutputTypeCountEnrichmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LeadEnrichmentWhereInput
   }
 
 
@@ -3300,6 +3414,7 @@ export namespace Prisma {
     name: number
     source_type: number
     query_config: number
+    enrichment_sources: number
     enabled: number
     cron_schedule: number
     channels: number
@@ -3351,6 +3466,7 @@ export namespace Prisma {
     name?: true
     source_type?: true
     query_config?: true
+    enrichment_sources?: true
     enabled?: true
     cron_schedule?: true
     channels?: true
@@ -3453,6 +3569,7 @@ export namespace Prisma {
     name: string
     source_type: $Enums.SourceType
     query_config: JsonValue
+    enrichment_sources: $Enums.EnrichmentSource[]
     enabled: boolean
     cron_schedule: string | null
     channels: $Enums.Channel[]
@@ -3487,6 +3604,7 @@ export namespace Prisma {
     name?: boolean
     source_type?: boolean
     query_config?: boolean
+    enrichment_sources?: boolean
     enabled?: boolean
     cron_schedule?: boolean
     channels?: boolean
@@ -3507,6 +3625,7 @@ export namespace Prisma {
     name?: boolean
     source_type?: boolean
     query_config?: boolean
+    enrichment_sources?: boolean
     enabled?: boolean
     cron_schedule?: boolean
     channels?: boolean
@@ -3523,6 +3642,7 @@ export namespace Prisma {
     name?: boolean
     source_type?: boolean
     query_config?: boolean
+    enrichment_sources?: boolean
     enabled?: boolean
     cron_schedule?: boolean
     channels?: boolean
@@ -3539,6 +3659,7 @@ export namespace Prisma {
     name?: boolean
     source_type?: boolean
     query_config?: boolean
+    enrichment_sources?: boolean
     enabled?: boolean
     cron_schedule?: boolean
     channels?: boolean
@@ -3547,7 +3668,7 @@ export namespace Prisma {
     updated_at?: boolean
   }
 
-  export type FilterOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "name" | "source_type" | "query_config" | "enabled" | "cron_schedule" | "channels" | "ai_instructions" | "created_at" | "updated_at", ExtArgs["result"]["filter"]>
+  export type FilterOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "name" | "source_type" | "query_config" | "enrichment_sources" | "enabled" | "cron_schedule" | "channels" | "ai_instructions" | "created_at" | "updated_at", ExtArgs["result"]["filter"]>
   export type FilterInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     raw_leads?: boolean | Filter$raw_leadsArgs<ExtArgs>
@@ -3577,6 +3698,7 @@ export namespace Prisma {
       name: string
       source_type: $Enums.SourceType
       query_config: Prisma.JsonValue
+      enrichment_sources: $Enums.EnrichmentSource[]
       enabled: boolean
       cron_schedule: string | null
       channels: $Enums.Channel[]
@@ -4016,6 +4138,7 @@ export namespace Prisma {
     readonly name: FieldRef<"Filter", 'String'>
     readonly source_type: FieldRef<"Filter", 'SourceType'>
     readonly query_config: FieldRef<"Filter", 'Json'>
+    readonly enrichment_sources: FieldRef<"Filter", 'EnrichmentSource[]'>
     readonly enabled: FieldRef<"Filter", 'Boolean'>
     readonly cron_schedule: FieldRef<"Filter", 'String'>
     readonly channels: FieldRef<"Filter", 'Channel[]'>
@@ -5693,6 +5816,7 @@ export namespace Prisma {
     industry: string | null
     description: string | null
     source_type: $Enums.SourceType | null
+    enrichment_summary: string | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -5712,6 +5836,7 @@ export namespace Prisma {
     industry: string | null
     description: string | null
     source_type: $Enums.SourceType | null
+    enrichment_summary: string | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -5732,7 +5857,7 @@ export namespace Prisma {
     description: number
     source_type: number
     raw_data: number
-    enrichment_data: number
+    enrichment_summary: number
     created_at: number
     updated_at: number
     _all: number
@@ -5762,6 +5887,7 @@ export namespace Prisma {
     industry?: true
     description?: true
     source_type?: true
+    enrichment_summary?: true
     created_at?: true
     updated_at?: true
   }
@@ -5781,6 +5907,7 @@ export namespace Prisma {
     industry?: true
     description?: true
     source_type?: true
+    enrichment_summary?: true
     created_at?: true
     updated_at?: true
   }
@@ -5801,7 +5928,7 @@ export namespace Prisma {
     description?: true
     source_type?: true
     raw_data?: true
-    enrichment_data?: true
+    enrichment_summary?: true
     created_at?: true
     updated_at?: true
     _all?: true
@@ -5909,7 +6036,7 @@ export namespace Prisma {
     description: string | null
     source_type: $Enums.SourceType
     raw_data: JsonValue | null
-    enrichment_data: JsonValue | null
+    enrichment_summary: string | null
     created_at: Date
     updated_at: Date
     _count: LeadCountAggregateOutputType | null
@@ -5949,11 +6076,12 @@ export namespace Prisma {
     description?: boolean
     source_type?: boolean
     raw_data?: boolean
-    enrichment_data?: boolean
+    enrichment_summary?: boolean
     created_at?: boolean
     updated_at?: boolean
     raw_lead?: boolean | Lead$raw_leadArgs<ExtArgs>
     contacts?: boolean | Lead$contactsArgs<ExtArgs>
+    enrichments?: boolean | Lead$enrichmentsArgs<ExtArgs>
     _count?: boolean | LeadCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["lead"]>
 
@@ -5973,7 +6101,7 @@ export namespace Prisma {
     description?: boolean
     source_type?: boolean
     raw_data?: boolean
-    enrichment_data?: boolean
+    enrichment_summary?: boolean
     created_at?: boolean
     updated_at?: boolean
     raw_lead?: boolean | Lead$raw_leadArgs<ExtArgs>
@@ -5995,7 +6123,7 @@ export namespace Prisma {
     description?: boolean
     source_type?: boolean
     raw_data?: boolean
-    enrichment_data?: boolean
+    enrichment_summary?: boolean
     created_at?: boolean
     updated_at?: boolean
     raw_lead?: boolean | Lead$raw_leadArgs<ExtArgs>
@@ -6017,15 +6145,16 @@ export namespace Prisma {
     description?: boolean
     source_type?: boolean
     raw_data?: boolean
-    enrichment_data?: boolean
+    enrichment_summary?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type LeadOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "raw_lead_uuid" | "name" | "email" | "phone" | "company" | "website" | "linkedin_url" | "title" | "location" | "industry" | "description" | "source_type" | "raw_data" | "enrichment_data" | "created_at" | "updated_at", ExtArgs["result"]["lead"]>
+  export type LeadOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "raw_lead_uuid" | "name" | "email" | "phone" | "company" | "website" | "linkedin_url" | "title" | "location" | "industry" | "description" | "source_type" | "raw_data" | "enrichment_summary" | "created_at" | "updated_at", ExtArgs["result"]["lead"]>
   export type LeadInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     raw_lead?: boolean | Lead$raw_leadArgs<ExtArgs>
     contacts?: boolean | Lead$contactsArgs<ExtArgs>
+    enrichments?: boolean | Lead$enrichmentsArgs<ExtArgs>
     _count?: boolean | LeadCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type LeadIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6040,6 +6169,7 @@ export namespace Prisma {
     objects: {
       raw_lead: Prisma.$RawLeadPayload<ExtArgs> | null
       contacts: Prisma.$ContactPayload<ExtArgs>[]
+      enrichments: Prisma.$LeadEnrichmentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -6057,7 +6187,7 @@ export namespace Prisma {
       description: string | null
       source_type: $Enums.SourceType
       raw_data: Prisma.JsonValue | null
-      enrichment_data: Prisma.JsonValue | null
+      enrichment_summary: string | null
       created_at: Date
       updated_at: Date
     }, ExtArgs["result"]["lead"]>
@@ -6456,6 +6586,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     raw_lead<T extends Lead$raw_leadArgs<ExtArgs> = {}>(args?: Subset<T, Lead$raw_leadArgs<ExtArgs>>): Prisma__RawLeadClient<$Result.GetResult<Prisma.$RawLeadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     contacts<T extends Lead$contactsArgs<ExtArgs> = {}>(args?: Subset<T, Lead$contactsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    enrichments<T extends Lead$enrichmentsArgs<ExtArgs> = {}>(args?: Subset<T, Lead$enrichmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LeadEnrichmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6500,7 +6631,7 @@ export namespace Prisma {
     readonly description: FieldRef<"Lead", 'String'>
     readonly source_type: FieldRef<"Lead", 'SourceType'>
     readonly raw_data: FieldRef<"Lead", 'Json'>
-    readonly enrichment_data: FieldRef<"Lead", 'Json'>
+    readonly enrichment_summary: FieldRef<"Lead", 'String'>
     readonly created_at: FieldRef<"Lead", 'DateTime'>
     readonly updated_at: FieldRef<"Lead", 'DateTime'>
   }
@@ -6942,6 +7073,30 @@ export namespace Prisma {
   }
 
   /**
+   * Lead.enrichments
+   */
+  export type Lead$enrichmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LeadEnrichment
+     */
+    select?: LeadEnrichmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LeadEnrichment
+     */
+    omit?: LeadEnrichmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadEnrichmentInclude<ExtArgs> | null
+    where?: LeadEnrichmentWhereInput
+    orderBy?: LeadEnrichmentOrderByWithRelationInput | LeadEnrichmentOrderByWithRelationInput[]
+    cursor?: LeadEnrichmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: LeadEnrichmentScalarFieldEnum | LeadEnrichmentScalarFieldEnum[]
+  }
+
+  /**
    * Lead without action
    */
   export type LeadDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6957,6 +7112,1193 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: LeadInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model LeadEnrichment
+   */
+
+  export type AggregateLeadEnrichment = {
+    _count: LeadEnrichmentCountAggregateOutputType | null
+    _avg: LeadEnrichmentAvgAggregateOutputType | null
+    _sum: LeadEnrichmentSumAggregateOutputType | null
+    _min: LeadEnrichmentMinAggregateOutputType | null
+    _max: LeadEnrichmentMaxAggregateOutputType | null
+  }
+
+  export type LeadEnrichmentAvgAggregateOutputType = {
+    id: number | null
+    cost_usd: Decimal | null
+    input_tokens: number | null
+    output_tokens: number | null
+  }
+
+  export type LeadEnrichmentSumAggregateOutputType = {
+    id: number | null
+    cost_usd: Decimal | null
+    input_tokens: number | null
+    output_tokens: number | null
+  }
+
+  export type LeadEnrichmentMinAggregateOutputType = {
+    id: number | null
+    uuid: string | null
+    lead_uuid: string | null
+    source: $Enums.EnrichmentSource | null
+    source_url: string | null
+    summary: string | null
+    cost_usd: Decimal | null
+    input_tokens: number | null
+    output_tokens: number | null
+    created_at: Date | null
+  }
+
+  export type LeadEnrichmentMaxAggregateOutputType = {
+    id: number | null
+    uuid: string | null
+    lead_uuid: string | null
+    source: $Enums.EnrichmentSource | null
+    source_url: string | null
+    summary: string | null
+    cost_usd: Decimal | null
+    input_tokens: number | null
+    output_tokens: number | null
+    created_at: Date | null
+  }
+
+  export type LeadEnrichmentCountAggregateOutputType = {
+    id: number
+    uuid: number
+    lead_uuid: number
+    source: number
+    source_url: number
+    summary: number
+    payload: number
+    cost_usd: number
+    input_tokens: number
+    output_tokens: number
+    metadata: number
+    created_at: number
+    _all: number
+  }
+
+
+  export type LeadEnrichmentAvgAggregateInputType = {
+    id?: true
+    cost_usd?: true
+    input_tokens?: true
+    output_tokens?: true
+  }
+
+  export type LeadEnrichmentSumAggregateInputType = {
+    id?: true
+    cost_usd?: true
+    input_tokens?: true
+    output_tokens?: true
+  }
+
+  export type LeadEnrichmentMinAggregateInputType = {
+    id?: true
+    uuid?: true
+    lead_uuid?: true
+    source?: true
+    source_url?: true
+    summary?: true
+    cost_usd?: true
+    input_tokens?: true
+    output_tokens?: true
+    created_at?: true
+  }
+
+  export type LeadEnrichmentMaxAggregateInputType = {
+    id?: true
+    uuid?: true
+    lead_uuid?: true
+    source?: true
+    source_url?: true
+    summary?: true
+    cost_usd?: true
+    input_tokens?: true
+    output_tokens?: true
+    created_at?: true
+  }
+
+  export type LeadEnrichmentCountAggregateInputType = {
+    id?: true
+    uuid?: true
+    lead_uuid?: true
+    source?: true
+    source_url?: true
+    summary?: true
+    payload?: true
+    cost_usd?: true
+    input_tokens?: true
+    output_tokens?: true
+    metadata?: true
+    created_at?: true
+    _all?: true
+  }
+
+  export type LeadEnrichmentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which LeadEnrichment to aggregate.
+     */
+    where?: LeadEnrichmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LeadEnrichments to fetch.
+     */
+    orderBy?: LeadEnrichmentOrderByWithRelationInput | LeadEnrichmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: LeadEnrichmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LeadEnrichments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LeadEnrichments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned LeadEnrichments
+    **/
+    _count?: true | LeadEnrichmentCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: LeadEnrichmentAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: LeadEnrichmentSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: LeadEnrichmentMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: LeadEnrichmentMaxAggregateInputType
+  }
+
+  export type GetLeadEnrichmentAggregateType<T extends LeadEnrichmentAggregateArgs> = {
+        [P in keyof T & keyof AggregateLeadEnrichment]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateLeadEnrichment[P]>
+      : GetScalarType<T[P], AggregateLeadEnrichment[P]>
+  }
+
+
+
+
+  export type LeadEnrichmentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LeadEnrichmentWhereInput
+    orderBy?: LeadEnrichmentOrderByWithAggregationInput | LeadEnrichmentOrderByWithAggregationInput[]
+    by: LeadEnrichmentScalarFieldEnum[] | LeadEnrichmentScalarFieldEnum
+    having?: LeadEnrichmentScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: LeadEnrichmentCountAggregateInputType | true
+    _avg?: LeadEnrichmentAvgAggregateInputType
+    _sum?: LeadEnrichmentSumAggregateInputType
+    _min?: LeadEnrichmentMinAggregateInputType
+    _max?: LeadEnrichmentMaxAggregateInputType
+  }
+
+  export type LeadEnrichmentGroupByOutputType = {
+    id: number
+    uuid: string
+    lead_uuid: string
+    source: $Enums.EnrichmentSource
+    source_url: string | null
+    summary: string | null
+    payload: JsonValue | null
+    cost_usd: Decimal | null
+    input_tokens: number | null
+    output_tokens: number | null
+    metadata: JsonValue | null
+    created_at: Date
+    _count: LeadEnrichmentCountAggregateOutputType | null
+    _avg: LeadEnrichmentAvgAggregateOutputType | null
+    _sum: LeadEnrichmentSumAggregateOutputType | null
+    _min: LeadEnrichmentMinAggregateOutputType | null
+    _max: LeadEnrichmentMaxAggregateOutputType | null
+  }
+
+  type GetLeadEnrichmentGroupByPayload<T extends LeadEnrichmentGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<LeadEnrichmentGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof LeadEnrichmentGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], LeadEnrichmentGroupByOutputType[P]>
+            : GetScalarType<T[P], LeadEnrichmentGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type LeadEnrichmentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uuid?: boolean
+    lead_uuid?: boolean
+    source?: boolean
+    source_url?: boolean
+    summary?: boolean
+    payload?: boolean
+    cost_usd?: boolean
+    input_tokens?: boolean
+    output_tokens?: boolean
+    metadata?: boolean
+    created_at?: boolean
+    lead?: boolean | LeadDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["leadEnrichment"]>
+
+  export type LeadEnrichmentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uuid?: boolean
+    lead_uuid?: boolean
+    source?: boolean
+    source_url?: boolean
+    summary?: boolean
+    payload?: boolean
+    cost_usd?: boolean
+    input_tokens?: boolean
+    output_tokens?: boolean
+    metadata?: boolean
+    created_at?: boolean
+    lead?: boolean | LeadDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["leadEnrichment"]>
+
+  export type LeadEnrichmentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uuid?: boolean
+    lead_uuid?: boolean
+    source?: boolean
+    source_url?: boolean
+    summary?: boolean
+    payload?: boolean
+    cost_usd?: boolean
+    input_tokens?: boolean
+    output_tokens?: boolean
+    metadata?: boolean
+    created_at?: boolean
+    lead?: boolean | LeadDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["leadEnrichment"]>
+
+  export type LeadEnrichmentSelectScalar = {
+    id?: boolean
+    uuid?: boolean
+    lead_uuid?: boolean
+    source?: boolean
+    source_url?: boolean
+    summary?: boolean
+    payload?: boolean
+    cost_usd?: boolean
+    input_tokens?: boolean
+    output_tokens?: boolean
+    metadata?: boolean
+    created_at?: boolean
+  }
+
+  export type LeadEnrichmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "lead_uuid" | "source" | "source_url" | "summary" | "payload" | "cost_usd" | "input_tokens" | "output_tokens" | "metadata" | "created_at", ExtArgs["result"]["leadEnrichment"]>
+  export type LeadEnrichmentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    lead?: boolean | LeadDefaultArgs<ExtArgs>
+  }
+  export type LeadEnrichmentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    lead?: boolean | LeadDefaultArgs<ExtArgs>
+  }
+  export type LeadEnrichmentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    lead?: boolean | LeadDefaultArgs<ExtArgs>
+  }
+
+  export type $LeadEnrichmentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "LeadEnrichment"
+    objects: {
+      lead: Prisma.$LeadPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      uuid: string
+      lead_uuid: string
+      source: $Enums.EnrichmentSource
+      source_url: string | null
+      summary: string | null
+      payload: Prisma.JsonValue | null
+      cost_usd: Prisma.Decimal | null
+      input_tokens: number | null
+      output_tokens: number | null
+      metadata: Prisma.JsonValue | null
+      created_at: Date
+    }, ExtArgs["result"]["leadEnrichment"]>
+    composites: {}
+  }
+
+  type LeadEnrichmentGetPayload<S extends boolean | null | undefined | LeadEnrichmentDefaultArgs> = $Result.GetResult<Prisma.$LeadEnrichmentPayload, S>
+
+  type LeadEnrichmentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<LeadEnrichmentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: LeadEnrichmentCountAggregateInputType | true
+    }
+
+  export interface LeadEnrichmentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['LeadEnrichment'], meta: { name: 'LeadEnrichment' } }
+    /**
+     * Find zero or one LeadEnrichment that matches the filter.
+     * @param {LeadEnrichmentFindUniqueArgs} args - Arguments to find a LeadEnrichment
+     * @example
+     * // Get one LeadEnrichment
+     * const leadEnrichment = await prisma.leadEnrichment.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends LeadEnrichmentFindUniqueArgs>(args: SelectSubset<T, LeadEnrichmentFindUniqueArgs<ExtArgs>>): Prisma__LeadEnrichmentClient<$Result.GetResult<Prisma.$LeadEnrichmentPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one LeadEnrichment that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {LeadEnrichmentFindUniqueOrThrowArgs} args - Arguments to find a LeadEnrichment
+     * @example
+     * // Get one LeadEnrichment
+     * const leadEnrichment = await prisma.leadEnrichment.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends LeadEnrichmentFindUniqueOrThrowArgs>(args: SelectSubset<T, LeadEnrichmentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__LeadEnrichmentClient<$Result.GetResult<Prisma.$LeadEnrichmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first LeadEnrichment that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LeadEnrichmentFindFirstArgs} args - Arguments to find a LeadEnrichment
+     * @example
+     * // Get one LeadEnrichment
+     * const leadEnrichment = await prisma.leadEnrichment.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends LeadEnrichmentFindFirstArgs>(args?: SelectSubset<T, LeadEnrichmentFindFirstArgs<ExtArgs>>): Prisma__LeadEnrichmentClient<$Result.GetResult<Prisma.$LeadEnrichmentPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first LeadEnrichment that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LeadEnrichmentFindFirstOrThrowArgs} args - Arguments to find a LeadEnrichment
+     * @example
+     * // Get one LeadEnrichment
+     * const leadEnrichment = await prisma.leadEnrichment.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends LeadEnrichmentFindFirstOrThrowArgs>(args?: SelectSubset<T, LeadEnrichmentFindFirstOrThrowArgs<ExtArgs>>): Prisma__LeadEnrichmentClient<$Result.GetResult<Prisma.$LeadEnrichmentPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more LeadEnrichments that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LeadEnrichmentFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all LeadEnrichments
+     * const leadEnrichments = await prisma.leadEnrichment.findMany()
+     * 
+     * // Get first 10 LeadEnrichments
+     * const leadEnrichments = await prisma.leadEnrichment.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const leadEnrichmentWithIdOnly = await prisma.leadEnrichment.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends LeadEnrichmentFindManyArgs>(args?: SelectSubset<T, LeadEnrichmentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LeadEnrichmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a LeadEnrichment.
+     * @param {LeadEnrichmentCreateArgs} args - Arguments to create a LeadEnrichment.
+     * @example
+     * // Create one LeadEnrichment
+     * const LeadEnrichment = await prisma.leadEnrichment.create({
+     *   data: {
+     *     // ... data to create a LeadEnrichment
+     *   }
+     * })
+     * 
+     */
+    create<T extends LeadEnrichmentCreateArgs>(args: SelectSubset<T, LeadEnrichmentCreateArgs<ExtArgs>>): Prisma__LeadEnrichmentClient<$Result.GetResult<Prisma.$LeadEnrichmentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many LeadEnrichments.
+     * @param {LeadEnrichmentCreateManyArgs} args - Arguments to create many LeadEnrichments.
+     * @example
+     * // Create many LeadEnrichments
+     * const leadEnrichment = await prisma.leadEnrichment.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends LeadEnrichmentCreateManyArgs>(args?: SelectSubset<T, LeadEnrichmentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many LeadEnrichments and returns the data saved in the database.
+     * @param {LeadEnrichmentCreateManyAndReturnArgs} args - Arguments to create many LeadEnrichments.
+     * @example
+     * // Create many LeadEnrichments
+     * const leadEnrichment = await prisma.leadEnrichment.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many LeadEnrichments and only return the `id`
+     * const leadEnrichmentWithIdOnly = await prisma.leadEnrichment.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends LeadEnrichmentCreateManyAndReturnArgs>(args?: SelectSubset<T, LeadEnrichmentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LeadEnrichmentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a LeadEnrichment.
+     * @param {LeadEnrichmentDeleteArgs} args - Arguments to delete one LeadEnrichment.
+     * @example
+     * // Delete one LeadEnrichment
+     * const LeadEnrichment = await prisma.leadEnrichment.delete({
+     *   where: {
+     *     // ... filter to delete one LeadEnrichment
+     *   }
+     * })
+     * 
+     */
+    delete<T extends LeadEnrichmentDeleteArgs>(args: SelectSubset<T, LeadEnrichmentDeleteArgs<ExtArgs>>): Prisma__LeadEnrichmentClient<$Result.GetResult<Prisma.$LeadEnrichmentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one LeadEnrichment.
+     * @param {LeadEnrichmentUpdateArgs} args - Arguments to update one LeadEnrichment.
+     * @example
+     * // Update one LeadEnrichment
+     * const leadEnrichment = await prisma.leadEnrichment.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends LeadEnrichmentUpdateArgs>(args: SelectSubset<T, LeadEnrichmentUpdateArgs<ExtArgs>>): Prisma__LeadEnrichmentClient<$Result.GetResult<Prisma.$LeadEnrichmentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more LeadEnrichments.
+     * @param {LeadEnrichmentDeleteManyArgs} args - Arguments to filter LeadEnrichments to delete.
+     * @example
+     * // Delete a few LeadEnrichments
+     * const { count } = await prisma.leadEnrichment.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends LeadEnrichmentDeleteManyArgs>(args?: SelectSubset<T, LeadEnrichmentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more LeadEnrichments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LeadEnrichmentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many LeadEnrichments
+     * const leadEnrichment = await prisma.leadEnrichment.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends LeadEnrichmentUpdateManyArgs>(args: SelectSubset<T, LeadEnrichmentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more LeadEnrichments and returns the data updated in the database.
+     * @param {LeadEnrichmentUpdateManyAndReturnArgs} args - Arguments to update many LeadEnrichments.
+     * @example
+     * // Update many LeadEnrichments
+     * const leadEnrichment = await prisma.leadEnrichment.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more LeadEnrichments and only return the `id`
+     * const leadEnrichmentWithIdOnly = await prisma.leadEnrichment.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends LeadEnrichmentUpdateManyAndReturnArgs>(args: SelectSubset<T, LeadEnrichmentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LeadEnrichmentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one LeadEnrichment.
+     * @param {LeadEnrichmentUpsertArgs} args - Arguments to update or create a LeadEnrichment.
+     * @example
+     * // Update or create a LeadEnrichment
+     * const leadEnrichment = await prisma.leadEnrichment.upsert({
+     *   create: {
+     *     // ... data to create a LeadEnrichment
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the LeadEnrichment we want to update
+     *   }
+     * })
+     */
+    upsert<T extends LeadEnrichmentUpsertArgs>(args: SelectSubset<T, LeadEnrichmentUpsertArgs<ExtArgs>>): Prisma__LeadEnrichmentClient<$Result.GetResult<Prisma.$LeadEnrichmentPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of LeadEnrichments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LeadEnrichmentCountArgs} args - Arguments to filter LeadEnrichments to count.
+     * @example
+     * // Count the number of LeadEnrichments
+     * const count = await prisma.leadEnrichment.count({
+     *   where: {
+     *     // ... the filter for the LeadEnrichments we want to count
+     *   }
+     * })
+    **/
+    count<T extends LeadEnrichmentCountArgs>(
+      args?: Subset<T, LeadEnrichmentCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], LeadEnrichmentCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a LeadEnrichment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LeadEnrichmentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends LeadEnrichmentAggregateArgs>(args: Subset<T, LeadEnrichmentAggregateArgs>): Prisma.PrismaPromise<GetLeadEnrichmentAggregateType<T>>
+
+    /**
+     * Group by LeadEnrichment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LeadEnrichmentGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends LeadEnrichmentGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: LeadEnrichmentGroupByArgs['orderBy'] }
+        : { orderBy?: LeadEnrichmentGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, LeadEnrichmentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetLeadEnrichmentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the LeadEnrichment model
+   */
+  readonly fields: LeadEnrichmentFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for LeadEnrichment.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__LeadEnrichmentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    lead<T extends LeadDefaultArgs<ExtArgs> = {}>(args?: Subset<T, LeadDefaultArgs<ExtArgs>>): Prisma__LeadClient<$Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the LeadEnrichment model
+   */
+  interface LeadEnrichmentFieldRefs {
+    readonly id: FieldRef<"LeadEnrichment", 'Int'>
+    readonly uuid: FieldRef<"LeadEnrichment", 'String'>
+    readonly lead_uuid: FieldRef<"LeadEnrichment", 'String'>
+    readonly source: FieldRef<"LeadEnrichment", 'EnrichmentSource'>
+    readonly source_url: FieldRef<"LeadEnrichment", 'String'>
+    readonly summary: FieldRef<"LeadEnrichment", 'String'>
+    readonly payload: FieldRef<"LeadEnrichment", 'Json'>
+    readonly cost_usd: FieldRef<"LeadEnrichment", 'Decimal'>
+    readonly input_tokens: FieldRef<"LeadEnrichment", 'Int'>
+    readonly output_tokens: FieldRef<"LeadEnrichment", 'Int'>
+    readonly metadata: FieldRef<"LeadEnrichment", 'Json'>
+    readonly created_at: FieldRef<"LeadEnrichment", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * LeadEnrichment findUnique
+   */
+  export type LeadEnrichmentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LeadEnrichment
+     */
+    select?: LeadEnrichmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LeadEnrichment
+     */
+    omit?: LeadEnrichmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadEnrichmentInclude<ExtArgs> | null
+    /**
+     * Filter, which LeadEnrichment to fetch.
+     */
+    where: LeadEnrichmentWhereUniqueInput
+  }
+
+  /**
+   * LeadEnrichment findUniqueOrThrow
+   */
+  export type LeadEnrichmentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LeadEnrichment
+     */
+    select?: LeadEnrichmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LeadEnrichment
+     */
+    omit?: LeadEnrichmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadEnrichmentInclude<ExtArgs> | null
+    /**
+     * Filter, which LeadEnrichment to fetch.
+     */
+    where: LeadEnrichmentWhereUniqueInput
+  }
+
+  /**
+   * LeadEnrichment findFirst
+   */
+  export type LeadEnrichmentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LeadEnrichment
+     */
+    select?: LeadEnrichmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LeadEnrichment
+     */
+    omit?: LeadEnrichmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadEnrichmentInclude<ExtArgs> | null
+    /**
+     * Filter, which LeadEnrichment to fetch.
+     */
+    where?: LeadEnrichmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LeadEnrichments to fetch.
+     */
+    orderBy?: LeadEnrichmentOrderByWithRelationInput | LeadEnrichmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for LeadEnrichments.
+     */
+    cursor?: LeadEnrichmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LeadEnrichments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LeadEnrichments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of LeadEnrichments.
+     */
+    distinct?: LeadEnrichmentScalarFieldEnum | LeadEnrichmentScalarFieldEnum[]
+  }
+
+  /**
+   * LeadEnrichment findFirstOrThrow
+   */
+  export type LeadEnrichmentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LeadEnrichment
+     */
+    select?: LeadEnrichmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LeadEnrichment
+     */
+    omit?: LeadEnrichmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadEnrichmentInclude<ExtArgs> | null
+    /**
+     * Filter, which LeadEnrichment to fetch.
+     */
+    where?: LeadEnrichmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LeadEnrichments to fetch.
+     */
+    orderBy?: LeadEnrichmentOrderByWithRelationInput | LeadEnrichmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for LeadEnrichments.
+     */
+    cursor?: LeadEnrichmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LeadEnrichments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LeadEnrichments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of LeadEnrichments.
+     */
+    distinct?: LeadEnrichmentScalarFieldEnum | LeadEnrichmentScalarFieldEnum[]
+  }
+
+  /**
+   * LeadEnrichment findMany
+   */
+  export type LeadEnrichmentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LeadEnrichment
+     */
+    select?: LeadEnrichmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LeadEnrichment
+     */
+    omit?: LeadEnrichmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadEnrichmentInclude<ExtArgs> | null
+    /**
+     * Filter, which LeadEnrichments to fetch.
+     */
+    where?: LeadEnrichmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LeadEnrichments to fetch.
+     */
+    orderBy?: LeadEnrichmentOrderByWithRelationInput | LeadEnrichmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing LeadEnrichments.
+     */
+    cursor?: LeadEnrichmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LeadEnrichments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LeadEnrichments.
+     */
+    skip?: number
+    distinct?: LeadEnrichmentScalarFieldEnum | LeadEnrichmentScalarFieldEnum[]
+  }
+
+  /**
+   * LeadEnrichment create
+   */
+  export type LeadEnrichmentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LeadEnrichment
+     */
+    select?: LeadEnrichmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LeadEnrichment
+     */
+    omit?: LeadEnrichmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadEnrichmentInclude<ExtArgs> | null
+    /**
+     * The data needed to create a LeadEnrichment.
+     */
+    data: XOR<LeadEnrichmentCreateInput, LeadEnrichmentUncheckedCreateInput>
+  }
+
+  /**
+   * LeadEnrichment createMany
+   */
+  export type LeadEnrichmentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many LeadEnrichments.
+     */
+    data: LeadEnrichmentCreateManyInput | LeadEnrichmentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * LeadEnrichment createManyAndReturn
+   */
+  export type LeadEnrichmentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LeadEnrichment
+     */
+    select?: LeadEnrichmentSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the LeadEnrichment
+     */
+    omit?: LeadEnrichmentOmit<ExtArgs> | null
+    /**
+     * The data used to create many LeadEnrichments.
+     */
+    data: LeadEnrichmentCreateManyInput | LeadEnrichmentCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadEnrichmentIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * LeadEnrichment update
+   */
+  export type LeadEnrichmentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LeadEnrichment
+     */
+    select?: LeadEnrichmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LeadEnrichment
+     */
+    omit?: LeadEnrichmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadEnrichmentInclude<ExtArgs> | null
+    /**
+     * The data needed to update a LeadEnrichment.
+     */
+    data: XOR<LeadEnrichmentUpdateInput, LeadEnrichmentUncheckedUpdateInput>
+    /**
+     * Choose, which LeadEnrichment to update.
+     */
+    where: LeadEnrichmentWhereUniqueInput
+  }
+
+  /**
+   * LeadEnrichment updateMany
+   */
+  export type LeadEnrichmentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update LeadEnrichments.
+     */
+    data: XOR<LeadEnrichmentUpdateManyMutationInput, LeadEnrichmentUncheckedUpdateManyInput>
+    /**
+     * Filter which LeadEnrichments to update
+     */
+    where?: LeadEnrichmentWhereInput
+    /**
+     * Limit how many LeadEnrichments to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * LeadEnrichment updateManyAndReturn
+   */
+  export type LeadEnrichmentUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LeadEnrichment
+     */
+    select?: LeadEnrichmentSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the LeadEnrichment
+     */
+    omit?: LeadEnrichmentOmit<ExtArgs> | null
+    /**
+     * The data used to update LeadEnrichments.
+     */
+    data: XOR<LeadEnrichmentUpdateManyMutationInput, LeadEnrichmentUncheckedUpdateManyInput>
+    /**
+     * Filter which LeadEnrichments to update
+     */
+    where?: LeadEnrichmentWhereInput
+    /**
+     * Limit how many LeadEnrichments to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadEnrichmentIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * LeadEnrichment upsert
+   */
+  export type LeadEnrichmentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LeadEnrichment
+     */
+    select?: LeadEnrichmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LeadEnrichment
+     */
+    omit?: LeadEnrichmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadEnrichmentInclude<ExtArgs> | null
+    /**
+     * The filter to search for the LeadEnrichment to update in case it exists.
+     */
+    where: LeadEnrichmentWhereUniqueInput
+    /**
+     * In case the LeadEnrichment found by the `where` argument doesn't exist, create a new LeadEnrichment with this data.
+     */
+    create: XOR<LeadEnrichmentCreateInput, LeadEnrichmentUncheckedCreateInput>
+    /**
+     * In case the LeadEnrichment was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<LeadEnrichmentUpdateInput, LeadEnrichmentUncheckedUpdateInput>
+  }
+
+  /**
+   * LeadEnrichment delete
+   */
+  export type LeadEnrichmentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LeadEnrichment
+     */
+    select?: LeadEnrichmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LeadEnrichment
+     */
+    omit?: LeadEnrichmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadEnrichmentInclude<ExtArgs> | null
+    /**
+     * Filter which LeadEnrichment to delete.
+     */
+    where: LeadEnrichmentWhereUniqueInput
+  }
+
+  /**
+   * LeadEnrichment deleteMany
+   */
+  export type LeadEnrichmentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which LeadEnrichments to delete
+     */
+    where?: LeadEnrichmentWhereInput
+    /**
+     * Limit how many LeadEnrichments to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * LeadEnrichment without action
+   */
+  export type LeadEnrichmentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LeadEnrichment
+     */
+    select?: LeadEnrichmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LeadEnrichment
+     */
+    omit?: LeadEnrichmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadEnrichmentInclude<ExtArgs> | null
   }
 
 
@@ -14139,6 +15481,7 @@ export namespace Prisma {
     name: 'name',
     source_type: 'source_type',
     query_config: 'query_config',
+    enrichment_sources: 'enrichment_sources',
     enabled: 'enabled',
     cron_schedule: 'cron_schedule',
     channels: 'channels',
@@ -14180,12 +15523,30 @@ export namespace Prisma {
     description: 'description',
     source_type: 'source_type',
     raw_data: 'raw_data',
-    enrichment_data: 'enrichment_data',
+    enrichment_summary: 'enrichment_summary',
     created_at: 'created_at',
     updated_at: 'updated_at'
   };
 
   export type LeadScalarFieldEnum = (typeof LeadScalarFieldEnum)[keyof typeof LeadScalarFieldEnum]
+
+
+  export const LeadEnrichmentScalarFieldEnum: {
+    id: 'id',
+    uuid: 'uuid',
+    lead_uuid: 'lead_uuid',
+    source: 'source',
+    source_url: 'source_url',
+    summary: 'summary',
+    payload: 'payload',
+    cost_usd: 'cost_usd',
+    input_tokens: 'input_tokens',
+    output_tokens: 'output_tokens',
+    metadata: 'metadata',
+    created_at: 'created_at'
+  };
+
+  export type LeadEnrichmentScalarFieldEnum = (typeof LeadEnrichmentScalarFieldEnum)[keyof typeof LeadEnrichmentScalarFieldEnum]
 
 
   export const ContactScalarFieldEnum: {
@@ -14427,6 +15788,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'EnrichmentSource[]'
+   */
+  export type ListEnumEnrichmentSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EnrichmentSource[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'EnrichmentSource'
+   */
+  export type EnumEnrichmentSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EnrichmentSource'>
+    
+
+
+  /**
    * Reference to a field of type 'Boolean'
    */
   export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
@@ -14444,6 +15819,20 @@ export namespace Prisma {
    * Reference to a field of type 'Channel'
    */
   export type EnumChannelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Channel'>
+    
+
+
+  /**
+   * Reference to a field of type 'Decimal'
+   */
+  export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
+    
+
+
+  /**
+   * Reference to a field of type 'Decimal[]'
+   */
+  export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
     
 
 
@@ -14628,6 +16017,7 @@ export namespace Prisma {
     name?: StringFilter<"Filter"> | string
     source_type?: EnumSourceTypeFilter<"Filter"> | $Enums.SourceType
     query_config?: JsonFilter<"Filter">
+    enrichment_sources?: EnumEnrichmentSourceNullableListFilter<"Filter">
     enabled?: BoolFilter<"Filter"> | boolean
     cron_schedule?: StringNullableFilter<"Filter"> | string | null
     channels?: EnumChannelNullableListFilter<"Filter">
@@ -14647,6 +16037,7 @@ export namespace Prisma {
     name?: SortOrder
     source_type?: SortOrder
     query_config?: SortOrder
+    enrichment_sources?: SortOrder
     enabled?: SortOrder
     cron_schedule?: SortOrderInput | SortOrder
     channels?: SortOrder
@@ -14669,6 +16060,7 @@ export namespace Prisma {
     name?: StringFilter<"Filter"> | string
     source_type?: EnumSourceTypeFilter<"Filter"> | $Enums.SourceType
     query_config?: JsonFilter<"Filter">
+    enrichment_sources?: EnumEnrichmentSourceNullableListFilter<"Filter">
     enabled?: BoolFilter<"Filter"> | boolean
     cron_schedule?: StringNullableFilter<"Filter"> | string | null
     channels?: EnumChannelNullableListFilter<"Filter">
@@ -14688,6 +16080,7 @@ export namespace Prisma {
     name?: SortOrder
     source_type?: SortOrder
     query_config?: SortOrder
+    enrichment_sources?: SortOrder
     enabled?: SortOrder
     cron_schedule?: SortOrderInput | SortOrder
     channels?: SortOrder
@@ -14711,6 +16104,7 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"Filter"> | string
     source_type?: EnumSourceTypeWithAggregatesFilter<"Filter"> | $Enums.SourceType
     query_config?: JsonWithAggregatesFilter<"Filter">
+    enrichment_sources?: EnumEnrichmentSourceNullableListFilter<"Filter">
     enabled?: BoolWithAggregatesFilter<"Filter"> | boolean
     cron_schedule?: StringNullableWithAggregatesFilter<"Filter"> | string | null
     channels?: EnumChannelNullableListFilter<"Filter">
@@ -14813,11 +16207,12 @@ export namespace Prisma {
     description?: StringNullableFilter<"Lead"> | string | null
     source_type?: EnumSourceTypeFilter<"Lead"> | $Enums.SourceType
     raw_data?: JsonNullableFilter<"Lead">
-    enrichment_data?: JsonNullableFilter<"Lead">
+    enrichment_summary?: StringNullableFilter<"Lead"> | string | null
     created_at?: DateTimeFilter<"Lead"> | Date | string
     updated_at?: DateTimeFilter<"Lead"> | Date | string
     raw_lead?: XOR<RawLeadNullableScalarRelationFilter, RawLeadWhereInput> | null
     contacts?: ContactListRelationFilter
+    enrichments?: LeadEnrichmentListRelationFilter
   }
 
   export type LeadOrderByWithRelationInput = {
@@ -14836,11 +16231,12 @@ export namespace Prisma {
     description?: SortOrderInput | SortOrder
     source_type?: SortOrder
     raw_data?: SortOrderInput | SortOrder
-    enrichment_data?: SortOrderInput | SortOrder
+    enrichment_summary?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     raw_lead?: RawLeadOrderByWithRelationInput
     contacts?: ContactOrderByRelationAggregateInput
+    enrichments?: LeadEnrichmentOrderByRelationAggregateInput
   }
 
   export type LeadWhereUniqueInput = Prisma.AtLeast<{
@@ -14862,11 +16258,12 @@ export namespace Prisma {
     description?: StringNullableFilter<"Lead"> | string | null
     source_type?: EnumSourceTypeFilter<"Lead"> | $Enums.SourceType
     raw_data?: JsonNullableFilter<"Lead">
-    enrichment_data?: JsonNullableFilter<"Lead">
+    enrichment_summary?: StringNullableFilter<"Lead"> | string | null
     created_at?: DateTimeFilter<"Lead"> | Date | string
     updated_at?: DateTimeFilter<"Lead"> | Date | string
     raw_lead?: XOR<RawLeadNullableScalarRelationFilter, RawLeadWhereInput> | null
     contacts?: ContactListRelationFilter
+    enrichments?: LeadEnrichmentListRelationFilter
   }, "id" | "uuid" | "raw_lead_uuid">
 
   export type LeadOrderByWithAggregationInput = {
@@ -14885,7 +16282,7 @@ export namespace Prisma {
     description?: SortOrderInput | SortOrder
     source_type?: SortOrder
     raw_data?: SortOrderInput | SortOrder
-    enrichment_data?: SortOrderInput | SortOrder
+    enrichment_summary?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     _count?: LeadCountOrderByAggregateInput
@@ -14914,9 +16311,101 @@ export namespace Prisma {
     description?: StringNullableWithAggregatesFilter<"Lead"> | string | null
     source_type?: EnumSourceTypeWithAggregatesFilter<"Lead"> | $Enums.SourceType
     raw_data?: JsonNullableWithAggregatesFilter<"Lead">
-    enrichment_data?: JsonNullableWithAggregatesFilter<"Lead">
+    enrichment_summary?: StringNullableWithAggregatesFilter<"Lead"> | string | null
     created_at?: DateTimeWithAggregatesFilter<"Lead"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"Lead"> | Date | string
+  }
+
+  export type LeadEnrichmentWhereInput = {
+    AND?: LeadEnrichmentWhereInput | LeadEnrichmentWhereInput[]
+    OR?: LeadEnrichmentWhereInput[]
+    NOT?: LeadEnrichmentWhereInput | LeadEnrichmentWhereInput[]
+    id?: IntFilter<"LeadEnrichment"> | number
+    uuid?: StringFilter<"LeadEnrichment"> | string
+    lead_uuid?: StringFilter<"LeadEnrichment"> | string
+    source?: EnumEnrichmentSourceFilter<"LeadEnrichment"> | $Enums.EnrichmentSource
+    source_url?: StringNullableFilter<"LeadEnrichment"> | string | null
+    summary?: StringNullableFilter<"LeadEnrichment"> | string | null
+    payload?: JsonNullableFilter<"LeadEnrichment">
+    cost_usd?: DecimalNullableFilter<"LeadEnrichment"> | Decimal | DecimalJsLike | number | string | null
+    input_tokens?: IntNullableFilter<"LeadEnrichment"> | number | null
+    output_tokens?: IntNullableFilter<"LeadEnrichment"> | number | null
+    metadata?: JsonNullableFilter<"LeadEnrichment">
+    created_at?: DateTimeFilter<"LeadEnrichment"> | Date | string
+    lead?: XOR<LeadScalarRelationFilter, LeadWhereInput>
+  }
+
+  export type LeadEnrichmentOrderByWithRelationInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    lead_uuid?: SortOrder
+    source?: SortOrder
+    source_url?: SortOrderInput | SortOrder
+    summary?: SortOrderInput | SortOrder
+    payload?: SortOrderInput | SortOrder
+    cost_usd?: SortOrderInput | SortOrder
+    input_tokens?: SortOrderInput | SortOrder
+    output_tokens?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    lead?: LeadOrderByWithRelationInput
+  }
+
+  export type LeadEnrichmentWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    uuid?: string
+    AND?: LeadEnrichmentWhereInput | LeadEnrichmentWhereInput[]
+    OR?: LeadEnrichmentWhereInput[]
+    NOT?: LeadEnrichmentWhereInput | LeadEnrichmentWhereInput[]
+    lead_uuid?: StringFilter<"LeadEnrichment"> | string
+    source?: EnumEnrichmentSourceFilter<"LeadEnrichment"> | $Enums.EnrichmentSource
+    source_url?: StringNullableFilter<"LeadEnrichment"> | string | null
+    summary?: StringNullableFilter<"LeadEnrichment"> | string | null
+    payload?: JsonNullableFilter<"LeadEnrichment">
+    cost_usd?: DecimalNullableFilter<"LeadEnrichment"> | Decimal | DecimalJsLike | number | string | null
+    input_tokens?: IntNullableFilter<"LeadEnrichment"> | number | null
+    output_tokens?: IntNullableFilter<"LeadEnrichment"> | number | null
+    metadata?: JsonNullableFilter<"LeadEnrichment">
+    created_at?: DateTimeFilter<"LeadEnrichment"> | Date | string
+    lead?: XOR<LeadScalarRelationFilter, LeadWhereInput>
+  }, "id" | "uuid">
+
+  export type LeadEnrichmentOrderByWithAggregationInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    lead_uuid?: SortOrder
+    source?: SortOrder
+    source_url?: SortOrderInput | SortOrder
+    summary?: SortOrderInput | SortOrder
+    payload?: SortOrderInput | SortOrder
+    cost_usd?: SortOrderInput | SortOrder
+    input_tokens?: SortOrderInput | SortOrder
+    output_tokens?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    _count?: LeadEnrichmentCountOrderByAggregateInput
+    _avg?: LeadEnrichmentAvgOrderByAggregateInput
+    _max?: LeadEnrichmentMaxOrderByAggregateInput
+    _min?: LeadEnrichmentMinOrderByAggregateInput
+    _sum?: LeadEnrichmentSumOrderByAggregateInput
+  }
+
+  export type LeadEnrichmentScalarWhereWithAggregatesInput = {
+    AND?: LeadEnrichmentScalarWhereWithAggregatesInput | LeadEnrichmentScalarWhereWithAggregatesInput[]
+    OR?: LeadEnrichmentScalarWhereWithAggregatesInput[]
+    NOT?: LeadEnrichmentScalarWhereWithAggregatesInput | LeadEnrichmentScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"LeadEnrichment"> | number
+    uuid?: StringWithAggregatesFilter<"LeadEnrichment"> | string
+    lead_uuid?: StringWithAggregatesFilter<"LeadEnrichment"> | string
+    source?: EnumEnrichmentSourceWithAggregatesFilter<"LeadEnrichment"> | $Enums.EnrichmentSource
+    source_url?: StringNullableWithAggregatesFilter<"LeadEnrichment"> | string | null
+    summary?: StringNullableWithAggregatesFilter<"LeadEnrichment"> | string | null
+    payload?: JsonNullableWithAggregatesFilter<"LeadEnrichment">
+    cost_usd?: DecimalNullableWithAggregatesFilter<"LeadEnrichment"> | Decimal | DecimalJsLike | number | string | null
+    input_tokens?: IntNullableWithAggregatesFilter<"LeadEnrichment"> | number | null
+    output_tokens?: IntNullableWithAggregatesFilter<"LeadEnrichment"> | number | null
+    metadata?: JsonNullableWithAggregatesFilter<"LeadEnrichment">
+    created_at?: DateTimeWithAggregatesFilter<"LeadEnrichment"> | Date | string
   }
 
   export type ContactWhereInput = {
@@ -15558,6 +17047,7 @@ export namespace Prisma {
     name: string
     source_type: $Enums.SourceType
     query_config: JsonNullValueInput | InputJsonValue
+    enrichment_sources?: FilterCreateenrichment_sourcesInput | $Enums.EnrichmentSource[]
     enabled?: boolean
     cron_schedule?: string | null
     channels?: FilterCreatechannelsInput | $Enums.Channel[]
@@ -15577,6 +17067,7 @@ export namespace Prisma {
     name: string
     source_type: $Enums.SourceType
     query_config: JsonNullValueInput | InputJsonValue
+    enrichment_sources?: FilterCreateenrichment_sourcesInput | $Enums.EnrichmentSource[]
     enabled?: boolean
     cron_schedule?: string | null
     channels?: FilterCreatechannelsInput | $Enums.Channel[]
@@ -15593,6 +17084,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     source_type?: EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
     query_config?: JsonNullValueInput | InputJsonValue
+    enrichment_sources?: FilterUpdateenrichment_sourcesInput | $Enums.EnrichmentSource[]
     enabled?: BoolFieldUpdateOperationsInput | boolean
     cron_schedule?: NullableStringFieldUpdateOperationsInput | string | null
     channels?: FilterUpdatechannelsInput | $Enums.Channel[]
@@ -15612,6 +17104,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     source_type?: EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
     query_config?: JsonNullValueInput | InputJsonValue
+    enrichment_sources?: FilterUpdateenrichment_sourcesInput | $Enums.EnrichmentSource[]
     enabled?: BoolFieldUpdateOperationsInput | boolean
     cron_schedule?: NullableStringFieldUpdateOperationsInput | string | null
     channels?: FilterUpdatechannelsInput | $Enums.Channel[]
@@ -15630,6 +17123,7 @@ export namespace Prisma {
     name: string
     source_type: $Enums.SourceType
     query_config: JsonNullValueInput | InputJsonValue
+    enrichment_sources?: FilterCreateenrichment_sourcesInput | $Enums.EnrichmentSource[]
     enabled?: boolean
     cron_schedule?: string | null
     channels?: FilterCreatechannelsInput | $Enums.Channel[]
@@ -15643,6 +17137,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     source_type?: EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
     query_config?: JsonNullValueInput | InputJsonValue
+    enrichment_sources?: FilterUpdateenrichment_sourcesInput | $Enums.EnrichmentSource[]
     enabled?: BoolFieldUpdateOperationsInput | boolean
     cron_schedule?: NullableStringFieldUpdateOperationsInput | string | null
     channels?: FilterUpdatechannelsInput | $Enums.Channel[]
@@ -15658,6 +17153,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     source_type?: EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
     query_config?: JsonNullValueInput | InputJsonValue
+    enrichment_sources?: FilterUpdateenrichment_sourcesInput | $Enums.EnrichmentSource[]
     enabled?: BoolFieldUpdateOperationsInput | boolean
     cron_schedule?: NullableStringFieldUpdateOperationsInput | string | null
     channels?: FilterUpdatechannelsInput | $Enums.Channel[]
@@ -15757,11 +17253,12 @@ export namespace Prisma {
     description?: string | null
     source_type: $Enums.SourceType
     raw_data?: NullableJsonNullValueInput | InputJsonValue
-    enrichment_data?: NullableJsonNullValueInput | InputJsonValue
+    enrichment_summary?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     raw_lead?: RawLeadCreateNestedOneWithoutLeadInput
     contacts?: ContactCreateNestedManyWithoutLeadInput
+    enrichments?: LeadEnrichmentCreateNestedManyWithoutLeadInput
   }
 
   export type LeadUncheckedCreateInput = {
@@ -15780,10 +17277,11 @@ export namespace Prisma {
     description?: string | null
     source_type: $Enums.SourceType
     raw_data?: NullableJsonNullValueInput | InputJsonValue
-    enrichment_data?: NullableJsonNullValueInput | InputJsonValue
+    enrichment_summary?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     contacts?: ContactUncheckedCreateNestedManyWithoutLeadInput
+    enrichments?: LeadEnrichmentUncheckedCreateNestedManyWithoutLeadInput
   }
 
   export type LeadUpdateInput = {
@@ -15800,11 +17298,12 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     source_type?: EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
     raw_data?: NullableJsonNullValueInput | InputJsonValue
-    enrichment_data?: NullableJsonNullValueInput | InputJsonValue
+    enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     raw_lead?: RawLeadUpdateOneWithoutLeadNestedInput
     contacts?: ContactUpdateManyWithoutLeadNestedInput
+    enrichments?: LeadEnrichmentUpdateManyWithoutLeadNestedInput
   }
 
   export type LeadUncheckedUpdateInput = {
@@ -15823,10 +17322,11 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     source_type?: EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
     raw_data?: NullableJsonNullValueInput | InputJsonValue
-    enrichment_data?: NullableJsonNullValueInput | InputJsonValue
+    enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     contacts?: ContactUncheckedUpdateManyWithoutLeadNestedInput
+    enrichments?: LeadEnrichmentUncheckedUpdateManyWithoutLeadNestedInput
   }
 
   export type LeadCreateManyInput = {
@@ -15845,7 +17345,7 @@ export namespace Prisma {
     description?: string | null
     source_type: $Enums.SourceType
     raw_data?: NullableJsonNullValueInput | InputJsonValue
-    enrichment_data?: NullableJsonNullValueInput | InputJsonValue
+    enrichment_summary?: string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -15864,7 +17364,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     source_type?: EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
     raw_data?: NullableJsonNullValueInput | InputJsonValue
-    enrichment_data?: NullableJsonNullValueInput | InputJsonValue
+    enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -15885,9 +17385,110 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     source_type?: EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
     raw_data?: NullableJsonNullValueInput | InputJsonValue
-    enrichment_data?: NullableJsonNullValueInput | InputJsonValue
+    enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LeadEnrichmentCreateInput = {
+    uuid?: string
+    source: $Enums.EnrichmentSource
+    source_url?: string | null
+    summary?: string | null
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    cost_usd?: Decimal | DecimalJsLike | number | string | null
+    input_tokens?: number | null
+    output_tokens?: number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    lead: LeadCreateNestedOneWithoutEnrichmentsInput
+  }
+
+  export type LeadEnrichmentUncheckedCreateInput = {
+    id?: number
+    uuid?: string
+    lead_uuid: string
+    source: $Enums.EnrichmentSource
+    source_url?: string | null
+    summary?: string | null
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    cost_usd?: Decimal | DecimalJsLike | number | string | null
+    input_tokens?: number | null
+    output_tokens?: number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+  }
+
+  export type LeadEnrichmentUpdateInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    source?: EnumEnrichmentSourceFieldUpdateOperationsInput | $Enums.EnrichmentSource
+    source_url?: NullableStringFieldUpdateOperationsInput | string | null
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    input_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    output_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    lead?: LeadUpdateOneRequiredWithoutEnrichmentsNestedInput
+  }
+
+  export type LeadEnrichmentUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    lead_uuid?: StringFieldUpdateOperationsInput | string
+    source?: EnumEnrichmentSourceFieldUpdateOperationsInput | $Enums.EnrichmentSource
+    source_url?: NullableStringFieldUpdateOperationsInput | string | null
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    input_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    output_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LeadEnrichmentCreateManyInput = {
+    id?: number
+    uuid?: string
+    lead_uuid: string
+    source: $Enums.EnrichmentSource
+    source_url?: string | null
+    summary?: string | null
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    cost_usd?: Decimal | DecimalJsLike | number | string | null
+    input_tokens?: number | null
+    output_tokens?: number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+  }
+
+  export type LeadEnrichmentUpdateManyMutationInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    source?: EnumEnrichmentSourceFieldUpdateOperationsInput | $Enums.EnrichmentSource
+    source_url?: NullableStringFieldUpdateOperationsInput | string | null
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    input_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    output_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LeadEnrichmentUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    lead_uuid?: StringFieldUpdateOperationsInput | string
+    source?: EnumEnrichmentSourceFieldUpdateOperationsInput | $Enums.EnrichmentSource
+    source_url?: NullableStringFieldUpdateOperationsInput | string | null
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    input_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    output_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ContactCreateInput = {
@@ -16716,6 +18317,14 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
+  export type EnumEnrichmentSourceNullableListFilter<$PrismaModel = never> = {
+    equals?: $Enums.EnrichmentSource[] | ListEnumEnrichmentSourceFieldRefInput<$PrismaModel> | null
+    has?: $Enums.EnrichmentSource | EnumEnrichmentSourceFieldRefInput<$PrismaModel> | null
+    hasEvery?: $Enums.EnrichmentSource[] | ListEnumEnrichmentSourceFieldRefInput<$PrismaModel>
+    hasSome?: $Enums.EnrichmentSource[] | ListEnumEnrichmentSourceFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
+  }
+
   export type BoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
@@ -16761,6 +18370,7 @@ export namespace Prisma {
     name?: SortOrder
     source_type?: SortOrder
     query_config?: SortOrder
+    enrichment_sources?: SortOrder
     enabled?: SortOrder
     cron_schedule?: SortOrder
     channels?: SortOrder
@@ -16949,6 +18559,16 @@ export namespace Prisma {
     isNot?: RawLeadWhereInput | null
   }
 
+  export type LeadEnrichmentListRelationFilter = {
+    every?: LeadEnrichmentWhereInput
+    some?: LeadEnrichmentWhereInput
+    none?: LeadEnrichmentWhereInput
+  }
+
+  export type LeadEnrichmentOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type LeadCountOrderByAggregateInput = {
     id?: SortOrder
     uuid?: SortOrder
@@ -16965,7 +18585,7 @@ export namespace Prisma {
     description?: SortOrder
     source_type?: SortOrder
     raw_data?: SortOrder
-    enrichment_data?: SortOrder
+    enrichment_summary?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -16989,6 +18609,7 @@ export namespace Prisma {
     industry?: SortOrder
     description?: SortOrder
     source_type?: SortOrder
+    enrichment_summary?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -17008,6 +18629,7 @@ export namespace Prisma {
     industry?: SortOrder
     description?: SortOrder
     source_type?: SortOrder
+    enrichment_summary?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -17042,11 +18664,22 @@ export namespace Prisma {
     _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
-  export type EnumLeadStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.LeadStatus | EnumLeadStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.LeadStatus[] | ListEnumLeadStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.LeadStatus[] | ListEnumLeadStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumLeadStatusFilter<$PrismaModel> | $Enums.LeadStatus
+  export type EnumEnrichmentSourceFilter<$PrismaModel = never> = {
+    equals?: $Enums.EnrichmentSource | EnumEnrichmentSourceFieldRefInput<$PrismaModel>
+    in?: $Enums.EnrichmentSource[] | ListEnumEnrichmentSourceFieldRefInput<$PrismaModel>
+    notIn?: $Enums.EnrichmentSource[] | ListEnumEnrichmentSourceFieldRefInput<$PrismaModel>
+    not?: NestedEnumEnrichmentSourceFilter<$PrismaModel> | $Enums.EnrichmentSource
+  }
+
+  export type DecimalNullableFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
   }
 
   export type IntNullableFilter<$PrismaModel = never> = {
@@ -17063,6 +18696,110 @@ export namespace Prisma {
   export type LeadScalarRelationFilter = {
     is?: LeadWhereInput
     isNot?: LeadWhereInput
+  }
+
+  export type LeadEnrichmentCountOrderByAggregateInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    lead_uuid?: SortOrder
+    source?: SortOrder
+    source_url?: SortOrder
+    summary?: SortOrder
+    payload?: SortOrder
+    cost_usd?: SortOrder
+    input_tokens?: SortOrder
+    output_tokens?: SortOrder
+    metadata?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type LeadEnrichmentAvgOrderByAggregateInput = {
+    id?: SortOrder
+    cost_usd?: SortOrder
+    input_tokens?: SortOrder
+    output_tokens?: SortOrder
+  }
+
+  export type LeadEnrichmentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    lead_uuid?: SortOrder
+    source?: SortOrder
+    source_url?: SortOrder
+    summary?: SortOrder
+    cost_usd?: SortOrder
+    input_tokens?: SortOrder
+    output_tokens?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type LeadEnrichmentMinOrderByAggregateInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    lead_uuid?: SortOrder
+    source?: SortOrder
+    source_url?: SortOrder
+    summary?: SortOrder
+    cost_usd?: SortOrder
+    input_tokens?: SortOrder
+    output_tokens?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type LeadEnrichmentSumOrderByAggregateInput = {
+    id?: SortOrder
+    cost_usd?: SortOrder
+    input_tokens?: SortOrder
+    output_tokens?: SortOrder
+  }
+
+  export type EnumEnrichmentSourceWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.EnrichmentSource | EnumEnrichmentSourceFieldRefInput<$PrismaModel>
+    in?: $Enums.EnrichmentSource[] | ListEnumEnrichmentSourceFieldRefInput<$PrismaModel>
+    notIn?: $Enums.EnrichmentSource[] | ListEnumEnrichmentSourceFieldRefInput<$PrismaModel>
+    not?: NestedEnumEnrichmentSourceWithAggregatesFilter<$PrismaModel> | $Enums.EnrichmentSource
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumEnrichmentSourceFilter<$PrismaModel>
+    _max?: NestedEnumEnrichmentSourceFilter<$PrismaModel>
+  }
+
+  export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedDecimalNullableFilter<$PrismaModel>
+    _sum?: NestedDecimalNullableFilter<$PrismaModel>
+    _min?: NestedDecimalNullableFilter<$PrismaModel>
+    _max?: NestedDecimalNullableFilter<$PrismaModel>
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type EnumLeadStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.LeadStatus | EnumLeadStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.LeadStatus[] | ListEnumLeadStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LeadStatus[] | ListEnumLeadStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumLeadStatusFilter<$PrismaModel> | $Enums.LeadStatus
   }
 
   export type FilterNullableScalarRelationFilter = {
@@ -17172,22 +18909,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumLeadStatusFilter<$PrismaModel>
     _max?: NestedEnumLeadStatusFilter<$PrismaModel>
-  }
-
-  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type ContactScalarRelationFilter = {
@@ -17737,6 +19458,10 @@ export namespace Prisma {
     deleteMany?: InteractionScalarWhereInput | InteractionScalarWhereInput[]
   }
 
+  export type FilterCreateenrichment_sourcesInput = {
+    set: $Enums.EnrichmentSource[]
+  }
+
   export type FilterCreatechannelsInput = {
     set: $Enums.Channel[]
   }
@@ -17791,6 +19516,11 @@ export namespace Prisma {
 
   export type EnumSourceTypeFieldUpdateOperationsInput = {
     set?: $Enums.SourceType
+  }
+
+  export type FilterUpdateenrichment_sourcesInput = {
+    set?: $Enums.EnrichmentSource[]
+    push?: $Enums.EnrichmentSource | $Enums.EnrichmentSource[]
   }
 
   export type BoolFieldUpdateOperationsInput = {
@@ -17957,11 +19687,25 @@ export namespace Prisma {
     connect?: ContactWhereUniqueInput | ContactWhereUniqueInput[]
   }
 
+  export type LeadEnrichmentCreateNestedManyWithoutLeadInput = {
+    create?: XOR<LeadEnrichmentCreateWithoutLeadInput, LeadEnrichmentUncheckedCreateWithoutLeadInput> | LeadEnrichmentCreateWithoutLeadInput[] | LeadEnrichmentUncheckedCreateWithoutLeadInput[]
+    connectOrCreate?: LeadEnrichmentCreateOrConnectWithoutLeadInput | LeadEnrichmentCreateOrConnectWithoutLeadInput[]
+    createMany?: LeadEnrichmentCreateManyLeadInputEnvelope
+    connect?: LeadEnrichmentWhereUniqueInput | LeadEnrichmentWhereUniqueInput[]
+  }
+
   export type ContactUncheckedCreateNestedManyWithoutLeadInput = {
     create?: XOR<ContactCreateWithoutLeadInput, ContactUncheckedCreateWithoutLeadInput> | ContactCreateWithoutLeadInput[] | ContactUncheckedCreateWithoutLeadInput[]
     connectOrCreate?: ContactCreateOrConnectWithoutLeadInput | ContactCreateOrConnectWithoutLeadInput[]
     createMany?: ContactCreateManyLeadInputEnvelope
     connect?: ContactWhereUniqueInput | ContactWhereUniqueInput[]
+  }
+
+  export type LeadEnrichmentUncheckedCreateNestedManyWithoutLeadInput = {
+    create?: XOR<LeadEnrichmentCreateWithoutLeadInput, LeadEnrichmentUncheckedCreateWithoutLeadInput> | LeadEnrichmentCreateWithoutLeadInput[] | LeadEnrichmentUncheckedCreateWithoutLeadInput[]
+    connectOrCreate?: LeadEnrichmentCreateOrConnectWithoutLeadInput | LeadEnrichmentCreateOrConnectWithoutLeadInput[]
+    createMany?: LeadEnrichmentCreateManyLeadInputEnvelope
+    connect?: LeadEnrichmentWhereUniqueInput | LeadEnrichmentWhereUniqueInput[]
   }
 
   export type RawLeadUpdateOneWithoutLeadNestedInput = {
@@ -17988,6 +19732,20 @@ export namespace Prisma {
     deleteMany?: ContactScalarWhereInput | ContactScalarWhereInput[]
   }
 
+  export type LeadEnrichmentUpdateManyWithoutLeadNestedInput = {
+    create?: XOR<LeadEnrichmentCreateWithoutLeadInput, LeadEnrichmentUncheckedCreateWithoutLeadInput> | LeadEnrichmentCreateWithoutLeadInput[] | LeadEnrichmentUncheckedCreateWithoutLeadInput[]
+    connectOrCreate?: LeadEnrichmentCreateOrConnectWithoutLeadInput | LeadEnrichmentCreateOrConnectWithoutLeadInput[]
+    upsert?: LeadEnrichmentUpsertWithWhereUniqueWithoutLeadInput | LeadEnrichmentUpsertWithWhereUniqueWithoutLeadInput[]
+    createMany?: LeadEnrichmentCreateManyLeadInputEnvelope
+    set?: LeadEnrichmentWhereUniqueInput | LeadEnrichmentWhereUniqueInput[]
+    disconnect?: LeadEnrichmentWhereUniqueInput | LeadEnrichmentWhereUniqueInput[]
+    delete?: LeadEnrichmentWhereUniqueInput | LeadEnrichmentWhereUniqueInput[]
+    connect?: LeadEnrichmentWhereUniqueInput | LeadEnrichmentWhereUniqueInput[]
+    update?: LeadEnrichmentUpdateWithWhereUniqueWithoutLeadInput | LeadEnrichmentUpdateWithWhereUniqueWithoutLeadInput[]
+    updateMany?: LeadEnrichmentUpdateManyWithWhereWithoutLeadInput | LeadEnrichmentUpdateManyWithWhereWithoutLeadInput[]
+    deleteMany?: LeadEnrichmentScalarWhereInput | LeadEnrichmentScalarWhereInput[]
+  }
+
   export type ContactUncheckedUpdateManyWithoutLeadNestedInput = {
     create?: XOR<ContactCreateWithoutLeadInput, ContactUncheckedCreateWithoutLeadInput> | ContactCreateWithoutLeadInput[] | ContactUncheckedCreateWithoutLeadInput[]
     connectOrCreate?: ContactCreateOrConnectWithoutLeadInput | ContactCreateOrConnectWithoutLeadInput[]
@@ -18000,6 +19758,54 @@ export namespace Prisma {
     update?: ContactUpdateWithWhereUniqueWithoutLeadInput | ContactUpdateWithWhereUniqueWithoutLeadInput[]
     updateMany?: ContactUpdateManyWithWhereWithoutLeadInput | ContactUpdateManyWithWhereWithoutLeadInput[]
     deleteMany?: ContactScalarWhereInput | ContactScalarWhereInput[]
+  }
+
+  export type LeadEnrichmentUncheckedUpdateManyWithoutLeadNestedInput = {
+    create?: XOR<LeadEnrichmentCreateWithoutLeadInput, LeadEnrichmentUncheckedCreateWithoutLeadInput> | LeadEnrichmentCreateWithoutLeadInput[] | LeadEnrichmentUncheckedCreateWithoutLeadInput[]
+    connectOrCreate?: LeadEnrichmentCreateOrConnectWithoutLeadInput | LeadEnrichmentCreateOrConnectWithoutLeadInput[]
+    upsert?: LeadEnrichmentUpsertWithWhereUniqueWithoutLeadInput | LeadEnrichmentUpsertWithWhereUniqueWithoutLeadInput[]
+    createMany?: LeadEnrichmentCreateManyLeadInputEnvelope
+    set?: LeadEnrichmentWhereUniqueInput | LeadEnrichmentWhereUniqueInput[]
+    disconnect?: LeadEnrichmentWhereUniqueInput | LeadEnrichmentWhereUniqueInput[]
+    delete?: LeadEnrichmentWhereUniqueInput | LeadEnrichmentWhereUniqueInput[]
+    connect?: LeadEnrichmentWhereUniqueInput | LeadEnrichmentWhereUniqueInput[]
+    update?: LeadEnrichmentUpdateWithWhereUniqueWithoutLeadInput | LeadEnrichmentUpdateWithWhereUniqueWithoutLeadInput[]
+    updateMany?: LeadEnrichmentUpdateManyWithWhereWithoutLeadInput | LeadEnrichmentUpdateManyWithWhereWithoutLeadInput[]
+    deleteMany?: LeadEnrichmentScalarWhereInput | LeadEnrichmentScalarWhereInput[]
+  }
+
+  export type LeadCreateNestedOneWithoutEnrichmentsInput = {
+    create?: XOR<LeadCreateWithoutEnrichmentsInput, LeadUncheckedCreateWithoutEnrichmentsInput>
+    connectOrCreate?: LeadCreateOrConnectWithoutEnrichmentsInput
+    connect?: LeadWhereUniqueInput
+  }
+
+  export type EnumEnrichmentSourceFieldUpdateOperationsInput = {
+    set?: $Enums.EnrichmentSource
+  }
+
+  export type NullableDecimalFieldUpdateOperationsInput = {
+    set?: Decimal | DecimalJsLike | number | string | null
+    increment?: Decimal | DecimalJsLike | number | string
+    decrement?: Decimal | DecimalJsLike | number | string
+    multiply?: Decimal | DecimalJsLike | number | string
+    divide?: Decimal | DecimalJsLike | number | string
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type LeadUpdateOneRequiredWithoutEnrichmentsNestedInput = {
+    create?: XOR<LeadCreateWithoutEnrichmentsInput, LeadUncheckedCreateWithoutEnrichmentsInput>
+    connectOrCreate?: LeadCreateOrConnectWithoutEnrichmentsInput
+    upsert?: LeadUpsertWithoutEnrichmentsInput
+    connect?: LeadWhereUniqueInput
+    update?: XOR<XOR<LeadUpdateToOneWithWhereWithoutEnrichmentsInput, LeadUpdateWithoutEnrichmentsInput>, LeadUncheckedUpdateWithoutEnrichmentsInput>
   }
 
   export type UserCreateNestedOneWithoutContactsInput = {
@@ -18064,14 +19870,6 @@ export namespace Prisma {
 
   export type EnumLeadStatusFieldUpdateOperationsInput = {
     set?: $Enums.LeadStatus
-  }
-
-  export type NullableIntFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type UserUpdateOneRequiredWithoutContactsNestedInput = {
@@ -18556,21 +20354,48 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
-  export type NestedEnumLeadStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.LeadStatus | EnumLeadStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.LeadStatus[] | ListEnumLeadStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.LeadStatus[] | ListEnumLeadStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumLeadStatusFilter<$PrismaModel> | $Enums.LeadStatus
+  export type NestedEnumEnrichmentSourceFilter<$PrismaModel = never> = {
+    equals?: $Enums.EnrichmentSource | EnumEnrichmentSourceFieldRefInput<$PrismaModel>
+    in?: $Enums.EnrichmentSource[] | ListEnumEnrichmentSourceFieldRefInput<$PrismaModel>
+    notIn?: $Enums.EnrichmentSource[] | ListEnumEnrichmentSourceFieldRefInput<$PrismaModel>
+    not?: NestedEnumEnrichmentSourceFilter<$PrismaModel> | $Enums.EnrichmentSource
   }
 
-  export type NestedEnumLeadStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.LeadStatus | EnumLeadStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.LeadStatus[] | ListEnumLeadStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.LeadStatus[] | ListEnumLeadStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumLeadStatusWithAggregatesFilter<$PrismaModel> | $Enums.LeadStatus
+  export type NestedDecimalNullableFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+  }
+
+  export type NestedEnumEnrichmentSourceWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.EnrichmentSource | EnumEnrichmentSourceFieldRefInput<$PrismaModel>
+    in?: $Enums.EnrichmentSource[] | ListEnumEnrichmentSourceFieldRefInput<$PrismaModel>
+    notIn?: $Enums.EnrichmentSource[] | ListEnumEnrichmentSourceFieldRefInput<$PrismaModel>
+    not?: NestedEnumEnrichmentSourceWithAggregatesFilter<$PrismaModel> | $Enums.EnrichmentSource
     _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumLeadStatusFilter<$PrismaModel>
-    _max?: NestedEnumLeadStatusFilter<$PrismaModel>
+    _min?: NestedEnumEnrichmentSourceFilter<$PrismaModel>
+    _max?: NestedEnumEnrichmentSourceFilter<$PrismaModel>
+  }
+
+  export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedDecimalNullableFilter<$PrismaModel>
+    _sum?: NestedDecimalNullableFilter<$PrismaModel>
+    _min?: NestedDecimalNullableFilter<$PrismaModel>
+    _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -18598,6 +20423,23 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedEnumLeadStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.LeadStatus | EnumLeadStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.LeadStatus[] | ListEnumLeadStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LeadStatus[] | ListEnumLeadStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumLeadStatusFilter<$PrismaModel> | $Enums.LeadStatus
+  }
+
+  export type NestedEnumLeadStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.LeadStatus | EnumLeadStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.LeadStatus[] | ListEnumLeadStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LeadStatus[] | ListEnumLeadStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumLeadStatusWithAggregatesFilter<$PrismaModel> | $Enums.LeadStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumLeadStatusFilter<$PrismaModel>
+    _max?: NestedEnumLeadStatusFilter<$PrismaModel>
   }
 
   export type NestedEnumInteractionTypeFilter<$PrismaModel = never> = {
@@ -18690,6 +20532,7 @@ export namespace Prisma {
     name: string
     source_type: $Enums.SourceType
     query_config: JsonNullValueInput | InputJsonValue
+    enrichment_sources?: FilterCreateenrichment_sourcesInput | $Enums.EnrichmentSource[]
     enabled?: boolean
     cron_schedule?: string | null
     channels?: FilterCreatechannelsInput | $Enums.Channel[]
@@ -18707,6 +20550,7 @@ export namespace Prisma {
     name: string
     source_type: $Enums.SourceType
     query_config: JsonNullValueInput | InputJsonValue
+    enrichment_sources?: FilterCreateenrichment_sourcesInput | $Enums.EnrichmentSource[]
     enabled?: boolean
     cron_schedule?: string | null
     channels?: FilterCreatechannelsInput | $Enums.Channel[]
@@ -18910,6 +20754,7 @@ export namespace Prisma {
     name?: StringFilter<"Filter"> | string
     source_type?: EnumSourceTypeFilter<"Filter"> | $Enums.SourceType
     query_config?: JsonFilter<"Filter">
+    enrichment_sources?: EnumEnrichmentSourceNullableListFilter<"Filter">
     enabled?: BoolFilter<"Filter"> | boolean
     cron_schedule?: StringNullableFilter<"Filter"> | string | null
     channels?: EnumChannelNullableListFilter<"Filter">
@@ -19341,6 +21186,7 @@ export namespace Prisma {
     name: string
     source_type: $Enums.SourceType
     query_config: JsonNullValueInput | InputJsonValue
+    enrichment_sources?: FilterCreateenrichment_sourcesInput | $Enums.EnrichmentSource[]
     enabled?: boolean
     cron_schedule?: string | null
     channels?: FilterCreatechannelsInput | $Enums.Channel[]
@@ -19359,6 +21205,7 @@ export namespace Prisma {
     name: string
     source_type: $Enums.SourceType
     query_config: JsonNullValueInput | InputJsonValue
+    enrichment_sources?: FilterCreateenrichment_sourcesInput | $Enums.EnrichmentSource[]
     enabled?: boolean
     cron_schedule?: string | null
     channels?: FilterCreatechannelsInput | $Enums.Channel[]
@@ -19388,10 +21235,11 @@ export namespace Prisma {
     description?: string | null
     source_type: $Enums.SourceType
     raw_data?: NullableJsonNullValueInput | InputJsonValue
-    enrichment_data?: NullableJsonNullValueInput | InputJsonValue
+    enrichment_summary?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     contacts?: ContactCreateNestedManyWithoutLeadInput
+    enrichments?: LeadEnrichmentCreateNestedManyWithoutLeadInput
   }
 
   export type LeadUncheckedCreateWithoutRaw_leadInput = {
@@ -19409,10 +21257,11 @@ export namespace Prisma {
     description?: string | null
     source_type: $Enums.SourceType
     raw_data?: NullableJsonNullValueInput | InputJsonValue
-    enrichment_data?: NullableJsonNullValueInput | InputJsonValue
+    enrichment_summary?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     contacts?: ContactUncheckedCreateNestedManyWithoutLeadInput
+    enrichments?: LeadEnrichmentUncheckedCreateNestedManyWithoutLeadInput
   }
 
   export type LeadCreateOrConnectWithoutRaw_leadInput = {
@@ -19436,6 +21285,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     source_type?: EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
     query_config?: JsonNullValueInput | InputJsonValue
+    enrichment_sources?: FilterUpdateenrichment_sourcesInput | $Enums.EnrichmentSource[]
     enabled?: BoolFieldUpdateOperationsInput | boolean
     cron_schedule?: NullableStringFieldUpdateOperationsInput | string | null
     channels?: FilterUpdatechannelsInput | $Enums.Channel[]
@@ -19454,6 +21304,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     source_type?: EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
     query_config?: JsonNullValueInput | InputJsonValue
+    enrichment_sources?: FilterUpdateenrichment_sourcesInput | $Enums.EnrichmentSource[]
     enabled?: BoolFieldUpdateOperationsInput | boolean
     cron_schedule?: NullableStringFieldUpdateOperationsInput | string | null
     channels?: FilterUpdatechannelsInput | $Enums.Channel[]
@@ -19489,10 +21340,11 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     source_type?: EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
     raw_data?: NullableJsonNullValueInput | InputJsonValue
-    enrichment_data?: NullableJsonNullValueInput | InputJsonValue
+    enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     contacts?: ContactUpdateManyWithoutLeadNestedInput
+    enrichments?: LeadEnrichmentUpdateManyWithoutLeadNestedInput
   }
 
   export type LeadUncheckedUpdateWithoutRaw_leadInput = {
@@ -19510,10 +21362,11 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     source_type?: EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
     raw_data?: NullableJsonNullValueInput | InputJsonValue
-    enrichment_data?: NullableJsonNullValueInput | InputJsonValue
+    enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     contacts?: ContactUncheckedUpdateManyWithoutLeadNestedInput
+    enrichments?: LeadEnrichmentUncheckedUpdateManyWithoutLeadNestedInput
   }
 
   export type RawLeadCreateWithoutLeadInput = {
@@ -19601,6 +21454,43 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type LeadEnrichmentCreateWithoutLeadInput = {
+    uuid?: string
+    source: $Enums.EnrichmentSource
+    source_url?: string | null
+    summary?: string | null
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    cost_usd?: Decimal | DecimalJsLike | number | string | null
+    input_tokens?: number | null
+    output_tokens?: number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+  }
+
+  export type LeadEnrichmentUncheckedCreateWithoutLeadInput = {
+    id?: number
+    uuid?: string
+    source: $Enums.EnrichmentSource
+    source_url?: string | null
+    summary?: string | null
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    cost_usd?: Decimal | DecimalJsLike | number | string | null
+    input_tokens?: number | null
+    output_tokens?: number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+  }
+
+  export type LeadEnrichmentCreateOrConnectWithoutLeadInput = {
+    where: LeadEnrichmentWhereUniqueInput
+    create: XOR<LeadEnrichmentCreateWithoutLeadInput, LeadEnrichmentUncheckedCreateWithoutLeadInput>
+  }
+
+  export type LeadEnrichmentCreateManyLeadInputEnvelope = {
+    data: LeadEnrichmentCreateManyLeadInput | LeadEnrichmentCreateManyLeadInput[]
+    skipDuplicates?: boolean
+  }
+
   export type RawLeadUpsertWithoutLeadInput = {
     update: XOR<RawLeadUpdateWithoutLeadInput, RawLeadUncheckedUpdateWithoutLeadInput>
     create: XOR<RawLeadCreateWithoutLeadInput, RawLeadUncheckedCreateWithoutLeadInput>
@@ -19647,6 +21537,142 @@ export namespace Prisma {
   export type ContactUpdateManyWithWhereWithoutLeadInput = {
     where: ContactScalarWhereInput
     data: XOR<ContactUpdateManyMutationInput, ContactUncheckedUpdateManyWithoutLeadInput>
+  }
+
+  export type LeadEnrichmentUpsertWithWhereUniqueWithoutLeadInput = {
+    where: LeadEnrichmentWhereUniqueInput
+    update: XOR<LeadEnrichmentUpdateWithoutLeadInput, LeadEnrichmentUncheckedUpdateWithoutLeadInput>
+    create: XOR<LeadEnrichmentCreateWithoutLeadInput, LeadEnrichmentUncheckedCreateWithoutLeadInput>
+  }
+
+  export type LeadEnrichmentUpdateWithWhereUniqueWithoutLeadInput = {
+    where: LeadEnrichmentWhereUniqueInput
+    data: XOR<LeadEnrichmentUpdateWithoutLeadInput, LeadEnrichmentUncheckedUpdateWithoutLeadInput>
+  }
+
+  export type LeadEnrichmentUpdateManyWithWhereWithoutLeadInput = {
+    where: LeadEnrichmentScalarWhereInput
+    data: XOR<LeadEnrichmentUpdateManyMutationInput, LeadEnrichmentUncheckedUpdateManyWithoutLeadInput>
+  }
+
+  export type LeadEnrichmentScalarWhereInput = {
+    AND?: LeadEnrichmentScalarWhereInput | LeadEnrichmentScalarWhereInput[]
+    OR?: LeadEnrichmentScalarWhereInput[]
+    NOT?: LeadEnrichmentScalarWhereInput | LeadEnrichmentScalarWhereInput[]
+    id?: IntFilter<"LeadEnrichment"> | number
+    uuid?: StringFilter<"LeadEnrichment"> | string
+    lead_uuid?: StringFilter<"LeadEnrichment"> | string
+    source?: EnumEnrichmentSourceFilter<"LeadEnrichment"> | $Enums.EnrichmentSource
+    source_url?: StringNullableFilter<"LeadEnrichment"> | string | null
+    summary?: StringNullableFilter<"LeadEnrichment"> | string | null
+    payload?: JsonNullableFilter<"LeadEnrichment">
+    cost_usd?: DecimalNullableFilter<"LeadEnrichment"> | Decimal | DecimalJsLike | number | string | null
+    input_tokens?: IntNullableFilter<"LeadEnrichment"> | number | null
+    output_tokens?: IntNullableFilter<"LeadEnrichment"> | number | null
+    metadata?: JsonNullableFilter<"LeadEnrichment">
+    created_at?: DateTimeFilter<"LeadEnrichment"> | Date | string
+  }
+
+  export type LeadCreateWithoutEnrichmentsInput = {
+    uuid?: string
+    name?: string | null
+    email?: string | null
+    phone?: string | null
+    company?: string | null
+    website?: string | null
+    linkedin_url?: string | null
+    title?: string | null
+    location?: string | null
+    industry?: string | null
+    description?: string | null
+    source_type: $Enums.SourceType
+    raw_data?: NullableJsonNullValueInput | InputJsonValue
+    enrichment_summary?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    raw_lead?: RawLeadCreateNestedOneWithoutLeadInput
+    contacts?: ContactCreateNestedManyWithoutLeadInput
+  }
+
+  export type LeadUncheckedCreateWithoutEnrichmentsInput = {
+    id?: number
+    uuid?: string
+    raw_lead_uuid?: string | null
+    name?: string | null
+    email?: string | null
+    phone?: string | null
+    company?: string | null
+    website?: string | null
+    linkedin_url?: string | null
+    title?: string | null
+    location?: string | null
+    industry?: string | null
+    description?: string | null
+    source_type: $Enums.SourceType
+    raw_data?: NullableJsonNullValueInput | InputJsonValue
+    enrichment_summary?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    contacts?: ContactUncheckedCreateNestedManyWithoutLeadInput
+  }
+
+  export type LeadCreateOrConnectWithoutEnrichmentsInput = {
+    where: LeadWhereUniqueInput
+    create: XOR<LeadCreateWithoutEnrichmentsInput, LeadUncheckedCreateWithoutEnrichmentsInput>
+  }
+
+  export type LeadUpsertWithoutEnrichmentsInput = {
+    update: XOR<LeadUpdateWithoutEnrichmentsInput, LeadUncheckedUpdateWithoutEnrichmentsInput>
+    create: XOR<LeadCreateWithoutEnrichmentsInput, LeadUncheckedCreateWithoutEnrichmentsInput>
+    where?: LeadWhereInput
+  }
+
+  export type LeadUpdateToOneWithWhereWithoutEnrichmentsInput = {
+    where?: LeadWhereInput
+    data: XOR<LeadUpdateWithoutEnrichmentsInput, LeadUncheckedUpdateWithoutEnrichmentsInput>
+  }
+
+  export type LeadUpdateWithoutEnrichmentsInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    source_type?: EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
+    raw_data?: NullableJsonNullValueInput | InputJsonValue
+    enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    raw_lead?: RawLeadUpdateOneWithoutLeadNestedInput
+    contacts?: ContactUpdateManyWithoutLeadNestedInput
+  }
+
+  export type LeadUncheckedUpdateWithoutEnrichmentsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    raw_lead_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    source_type?: EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
+    raw_data?: NullableJsonNullValueInput | InputJsonValue
+    enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    contacts?: ContactUncheckedUpdateManyWithoutLeadNestedInput
   }
 
   export type UserCreateWithoutContactsInput = {
@@ -19697,10 +21723,11 @@ export namespace Prisma {
     description?: string | null
     source_type: $Enums.SourceType
     raw_data?: NullableJsonNullValueInput | InputJsonValue
-    enrichment_data?: NullableJsonNullValueInput | InputJsonValue
+    enrichment_summary?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     raw_lead?: RawLeadCreateNestedOneWithoutLeadInput
+    enrichments?: LeadEnrichmentCreateNestedManyWithoutLeadInput
   }
 
   export type LeadUncheckedCreateWithoutContactsInput = {
@@ -19719,9 +21746,10 @@ export namespace Prisma {
     description?: string | null
     source_type: $Enums.SourceType
     raw_data?: NullableJsonNullValueInput | InputJsonValue
-    enrichment_data?: NullableJsonNullValueInput | InputJsonValue
+    enrichment_summary?: string | null
     created_at?: Date | string
     updated_at?: Date | string
+    enrichments?: LeadEnrichmentUncheckedCreateNestedManyWithoutLeadInput
   }
 
   export type LeadCreateOrConnectWithoutContactsInput = {
@@ -19734,6 +21762,7 @@ export namespace Prisma {
     name: string
     source_type: $Enums.SourceType
     query_config: JsonNullValueInput | InputJsonValue
+    enrichment_sources?: FilterCreateenrichment_sourcesInput | $Enums.EnrichmentSource[]
     enabled?: boolean
     cron_schedule?: string | null
     channels?: FilterCreatechannelsInput | $Enums.Channel[]
@@ -19752,6 +21781,7 @@ export namespace Prisma {
     name: string
     source_type: $Enums.SourceType
     query_config: JsonNullValueInput | InputJsonValue
+    enrichment_sources?: FilterCreateenrichment_sourcesInput | $Enums.EnrichmentSource[]
     enabled?: boolean
     cron_schedule?: string | null
     channels?: FilterCreatechannelsInput | $Enums.Channel[]
@@ -19923,10 +21953,11 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     source_type?: EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
     raw_data?: NullableJsonNullValueInput | InputJsonValue
-    enrichment_data?: NullableJsonNullValueInput | InputJsonValue
+    enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     raw_lead?: RawLeadUpdateOneWithoutLeadNestedInput
+    enrichments?: LeadEnrichmentUpdateManyWithoutLeadNestedInput
   }
 
   export type LeadUncheckedUpdateWithoutContactsInput = {
@@ -19945,9 +21976,10 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     source_type?: EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
     raw_data?: NullableJsonNullValueInput | InputJsonValue
-    enrichment_data?: NullableJsonNullValueInput | InputJsonValue
+    enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    enrichments?: LeadEnrichmentUncheckedUpdateManyWithoutLeadNestedInput
   }
 
   export type FilterUpsertWithoutContactsInput = {
@@ -19966,6 +21998,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     source_type?: EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
     query_config?: JsonNullValueInput | InputJsonValue
+    enrichment_sources?: FilterUpdateenrichment_sourcesInput | $Enums.EnrichmentSource[]
     enabled?: BoolFieldUpdateOperationsInput | boolean
     cron_schedule?: NullableStringFieldUpdateOperationsInput | string | null
     channels?: FilterUpdatechannelsInput | $Enums.Channel[]
@@ -19984,6 +22017,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     source_type?: EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
     query_config?: JsonNullValueInput | InputJsonValue
+    enrichment_sources?: FilterUpdateenrichment_sourcesInput | $Enums.EnrichmentSource[]
     enabled?: BoolFieldUpdateOperationsInput | boolean
     cron_schedule?: NullableStringFieldUpdateOperationsInput | string | null
     channels?: FilterUpdatechannelsInput | $Enums.Channel[]
@@ -20621,6 +22655,7 @@ export namespace Prisma {
     name: string
     source_type: $Enums.SourceType
     query_config: JsonNullValueInput | InputJsonValue
+    enrichment_sources?: FilterCreateenrichment_sourcesInput | $Enums.EnrichmentSource[]
     enabled?: boolean
     cron_schedule?: string | null
     channels?: FilterCreatechannelsInput | $Enums.Channel[]
@@ -20639,6 +22674,7 @@ export namespace Prisma {
     name: string
     source_type: $Enums.SourceType
     query_config: JsonNullValueInput | InputJsonValue
+    enrichment_sources?: FilterCreateenrichment_sourcesInput | $Enums.EnrichmentSource[]
     enabled?: boolean
     cron_schedule?: string | null
     channels?: FilterCreatechannelsInput | $Enums.Channel[]
@@ -20670,6 +22706,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     source_type?: EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
     query_config?: JsonNullValueInput | InputJsonValue
+    enrichment_sources?: FilterUpdateenrichment_sourcesInput | $Enums.EnrichmentSource[]
     enabled?: BoolFieldUpdateOperationsInput | boolean
     cron_schedule?: NullableStringFieldUpdateOperationsInput | string | null
     channels?: FilterUpdatechannelsInput | $Enums.Channel[]
@@ -20688,6 +22725,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     source_type?: EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
     query_config?: JsonNullValueInput | InputJsonValue
+    enrichment_sources?: FilterUpdateenrichment_sourcesInput | $Enums.EnrichmentSource[]
     enabled?: BoolFieldUpdateOperationsInput | boolean
     cron_schedule?: NullableStringFieldUpdateOperationsInput | string | null
     channels?: FilterUpdatechannelsInput | $Enums.Channel[]
@@ -20704,6 +22742,7 @@ export namespace Prisma {
     name: string
     source_type: $Enums.SourceType
     query_config: JsonNullValueInput | InputJsonValue
+    enrichment_sources?: FilterCreateenrichment_sourcesInput | $Enums.EnrichmentSource[]
     enabled?: boolean
     cron_schedule?: string | null
     channels?: FilterCreatechannelsInput | $Enums.Channel[]
@@ -20774,6 +22813,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     source_type?: EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
     query_config?: JsonNullValueInput | InputJsonValue
+    enrichment_sources?: FilterUpdateenrichment_sourcesInput | $Enums.EnrichmentSource[]
     enabled?: BoolFieldUpdateOperationsInput | boolean
     cron_schedule?: NullableStringFieldUpdateOperationsInput | string | null
     channels?: FilterUpdatechannelsInput | $Enums.Channel[]
@@ -20791,6 +22831,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     source_type?: EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
     query_config?: JsonNullValueInput | InputJsonValue
+    enrichment_sources?: FilterUpdateenrichment_sourcesInput | $Enums.EnrichmentSource[]
     enabled?: BoolFieldUpdateOperationsInput | boolean
     cron_schedule?: NullableStringFieldUpdateOperationsInput | string | null
     channels?: FilterUpdatechannelsInput | $Enums.Channel[]
@@ -20808,6 +22849,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     source_type?: EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
     query_config?: JsonNullValueInput | InputJsonValue
+    enrichment_sources?: FilterUpdateenrichment_sourcesInput | $Enums.EnrichmentSource[]
     enabled?: BoolFieldUpdateOperationsInput | boolean
     cron_schedule?: NullableStringFieldUpdateOperationsInput | string | null
     channels?: FilterUpdatechannelsInput | $Enums.Channel[]
@@ -21200,6 +23242,20 @@ export namespace Prisma {
     updated_at?: Date | string
   }
 
+  export type LeadEnrichmentCreateManyLeadInput = {
+    id?: number
+    uuid?: string
+    source: $Enums.EnrichmentSource
+    source_url?: string | null
+    summary?: string | null
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    cost_usd?: Decimal | DecimalJsLike | number | string | null
+    input_tokens?: number | null
+    output_tokens?: number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+  }
+
   export type ContactUpdateWithoutLeadInput = {
     uuid?: StringFieldUpdateOperationsInput | string
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
@@ -21269,6 +23325,47 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LeadEnrichmentUpdateWithoutLeadInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    source?: EnumEnrichmentSourceFieldUpdateOperationsInput | $Enums.EnrichmentSource
+    source_url?: NullableStringFieldUpdateOperationsInput | string | null
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    input_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    output_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LeadEnrichmentUncheckedUpdateWithoutLeadInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    source?: EnumEnrichmentSourceFieldUpdateOperationsInput | $Enums.EnrichmentSource
+    source_url?: NullableStringFieldUpdateOperationsInput | string | null
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    input_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    output_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LeadEnrichmentUncheckedUpdateManyWithoutLeadInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    source?: EnumEnrichmentSourceFieldUpdateOperationsInput | $Enums.EnrichmentSource
+    source_url?: NullableStringFieldUpdateOperationsInput | string | null
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    input_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    output_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ContactTagCreateManyContactInput = {

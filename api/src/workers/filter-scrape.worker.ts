@@ -56,7 +56,10 @@ export class FilterScrapeWorker extends WorkerHost {
             for (const contact_uuid of new_contact_uuids) {
                 await this.aiProcessQueue.add(
                     `ai-process:${contact_uuid}`,
-                    { contact_uuid },
+                    {
+                        contact_uuid,
+                        enrichment_sources: filter.enrichment_sources,
+                    },
                     { removeOnComplete: 100, removeOnFail: 100 },
                 );
             }

@@ -1,9 +1,11 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Logger } from '@nestjs/common';
 import { Job } from 'bullmq';
+import { EnrichmentSource } from '@/generated/prisma';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
-import { LeadAiService } from '@/modules/leads/utils/lead-ai.service';
 import { ContactAiService } from '@/modules/contacts/services/contact-ai.service';
+import { DEFAULT_ENRICHMENT_SOURCES } from '@/modules/leads/constants/enrichment.constants';
+import { LeadEnrichmentOrchestrator } from '@/modules/leads/services/lead-enrichment.orchestrator';
 import { AI_PROCESS_QUEUE } from '@/core/queues/queues.constants';
 
 type AiProcessAction = 'enrich' | 'score' | 'draft';
@@ -11,11 +13,14 @@ type AiProcessAction = 'enrich' | 'score' | 'draft';
 interface ContactJobData {
     contact_uuid: string;
     action?: AiProcessAction;
+    enrichment_sources?: EnrichmentSource[];
+    force_enrichment?: boolean;
 }
 
 interface LeadJobData {
     lead_uuid: string;
-    action: 'enrich';
+    enrichment_sources?: EnrichmentSource[];
+    force_enrichment?: boolean;
 }
 
 type AiProcessJobData = ContactJobData | LeadJobData;
@@ -23,14 +28,27 @@ type AiProcessJobData = ContactJobData | LeadJobData;
 const isLeadJob = (data: AiProcessJobData): data is LeadJobData =>
     'lead_uuid' in data && data.lead_uuid != null;
 
+function resolveContactEnrichmentSources(
+    job: ContactJobData,
+    filter: { enrichment_sources: EnrichmentSource[] } | null | undefined,
+): EnrichmentSource[] {
+    if (Array.isArray(job.enrichment_sources)) {
+        return job.enrichment_sources;
+    }
+    if (filter?.enrichment_sources?.length) {
+        return filter.enrichment_sources;
+    }
+    return [];
+}
+
 @Processor(AI_PROCESS_QUEUE, { concurrency: 5 })
 export class AiProcessWorker extends WorkerHost {
     private readonly logger = new Logger(AiProcessWorker.name);
 
     constructor(
         private readonly prisma: PrismaService,
-        private readonly leadAiService: LeadAiService,
         private readonly contactAiService: ContactAiService,
+        private readonly leadEnrichmentOrchestrator: LeadEnrichmentOrchestrator,
     ) {
         super();
     }
@@ -49,8 +67,13 @@ export class AiProcessWorker extends WorkerHost {
             this.logger.warn(`Lead ${data.lead_uuid} not found — skipping enrichment`);
             return;
         }
+        const sources = data.enrichment_sources?.length
+            ? data.enrichment_sources
+            : DEFAULT_ENRICHMENT_SOURCES;
         try {
-            await this.leadAiService.enrichLead(lead);
+            await this.leadEnrichmentOrchestrator.run(data.lead_uuid, sources, {
+                force: data.force_enrichment ?? false,
+            });
         } catch (error) {
             this.logger.error(`Lead ${lead.uuid} enrichment failed: ${this.errMsg(error)}`);
         }
@@ -65,23 +88,23 @@ export class AiProcessWorker extends WorkerHost {
             this.logger.warn(`Contact ${data.contact_uuid} not found — skipping`);
             return;
         }
-        if (!contact.filter) {
-            this.logger.warn(`Contact ${contact.uuid} has no filter — skipping`);
-            return;
-        }
 
         const { lead, filter } = contact;
         const action = data.action;
+        const full_pipeline = action === undefined;
+        const sources = resolveContactEnrichmentSources(data, filter);
 
-        if (!action || action === 'enrich') {
+        if (full_pipeline || action === 'enrich') {
             try {
-                await this.leadAiService.enrichLead(lead);
+                await this.leadEnrichmentOrchestrator.run(lead.uuid, sources, {
+                    force: data.force_enrichment ?? false,
+                });
             } catch (error) {
                 this.logger.error(`Contact ${contact.uuid} enrich step failed: ${this.errMsg(error)}`);
             }
         }
 
-        if (!action || action === 'score') {
+        if ((full_pipeline || action === 'score') && filter) {
             try {
                 const fresh_lead = await this.prisma.lead.findUnique({ where: { uuid: lead.uuid } });
                 if (fresh_lead) {
@@ -90,9 +113,11 @@ export class AiProcessWorker extends WorkerHost {
             } catch (error) {
                 this.logger.error(`Contact ${contact.uuid} score step failed: ${this.errMsg(error)}`);
             }
+        } else if ((full_pipeline || action === 'score') && !filter) {
+            this.logger.warn(`Contact ${contact.uuid} has no filter — skipping score`);
         }
 
-        if (!action || action === 'draft') {
+        if ((full_pipeline || action === 'draft') && filter) {
             try {
                 const fresh_lead = await this.prisma.lead.findUnique({ where: { uuid: lead.uuid } });
                 if (fresh_lead) {
@@ -101,6 +126,8 @@ export class AiProcessWorker extends WorkerHost {
             } catch (error) {
                 this.logger.error(`Contact ${contact.uuid} draft step failed: ${this.errMsg(error)}`);
             }
+        } else if ((full_pipeline || action === 'draft') && !filter) {
+            this.logger.warn(`Contact ${contact.uuid} has no filter — skipping draft`);
         }
     }
 

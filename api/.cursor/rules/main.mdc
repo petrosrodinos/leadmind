@@ -50,13 +50,24 @@ modules/<feature-name>/
 │   ├── create-<feature-name>.dto.ts
 │   ├── update-<feature-name>.dto.ts
 │   └── <feature-name>-query.schema.ts   # Zod schema for query params
+├── schemas/
+│   └── <feature>-<purpose>.schema.ts      # Zod schemas for AI/structured output (not HTTP DTOs)
 ├── entities/
 │   └── <feature-name>.entity.ts         # Swagger response entity
 ├── interfaces/
 │   └── <feature-name>.interface.ts      # TypeScript response interfaces
+├── constants/
+│   └── <feature>-prompts.ts             # LLM prompt strings / builder functions (when used by services)
 └── utils/ (optional)
     └── <feature-name>.utils.ts
 ```
+
+### Feature module files (prompts & schemas)
+
+- **Never** put large multi-line LLM prompts, Zod response schemas, or prompt-building helpers inside `*.service.ts`. Keep services thin: orchestration, DB, and integration calls only.
+- Put prompt templates and `buildFooPrompt(...)` functions in `constants/<feature>-prompts.ts` (or `constants/<purpose>.ts` under the feature).
+- Put Zod schemas used for `generateObject` / structured AI output in `schemas/<feature>-<purpose>.schema.ts` and export inferred types from the same file.
+- Put reusable profile/context formatters (e.g. “format X for AI”) in `utils/<feature>-<purpose>.utils.ts`.
 
 ### Module Registration
 
@@ -93,6 +104,8 @@ Put internal infrastructure facades (mail, SMS, cache, storage, AI) in a dedicat
 | Config       | `<service>.config.ts`       | `service.config.ts`         |
 | Utils        | `<feature>.utils.ts`        | `feature.utils.ts`          |
 | Constants    | `<name>.constants.ts`       | `feature.constants.ts`      |
+| Prompts      | `<feature>-prompts.ts`      | `contact-ai-prompts.ts`     |
+| Schema (Zod) | `<feature>-<purpose>.schema.ts` | `contact-ai-score.schema.ts` |
 
 All files use `kebab-case`.
 
@@ -159,6 +172,7 @@ export class FeatureController {
 - Use `setImmediate(async () => { ... })` for fire-and-forget side effects (emails, notifications) — wrap in `try/catch` internally
 - Delete sensitive fields (e.g., passwords) before returning data to the controller
 - Services do not call `res` or `req` — they are HTTP-agnostic
+- Do not embed LLM prompt strings, Zod AI-response schemas, or prompt-builder functions in service files — use `constants/`, `schemas/`, and `utils/` under the feature module (see **Feature module files (prompts & schemas)** above)
 
 ```ts
 @Injectable()
@@ -400,6 +414,7 @@ const ConfigModule = ConfigModule.forRoot({
 | Do                                                   | Don't                                           |
 | ---------------------------------------------------- | ----------------------------------------------- |
 | Put all business logic in services                   | Put logic in controllers                        |
+| Keep LLM prompts/schemas out of service files        | Inline large prompts or Zod schemas in `*.service.ts` |
 | Use `PrismaService` directly in services             | Create repository classes around Prisma         |
 | Use `PartialType(CreateDto)` for update DTOs         | Redeclare properties in update DTOs             |
 | Use class-validator for body DTOs                    | Use class-validator for query params            |

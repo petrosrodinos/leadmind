@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { Channel } from "@/features/contacts/interfaces/contact.interface";
+import { EnrichmentSource } from "@/features/filters/constants/enrichment-sources";
 import { SourceType } from "@/features/leads/interfaces/lead.interface";
 
 const linkedinConfigSchema = z.object({
@@ -52,10 +53,13 @@ const channelSchema = z
     .array(z.enum([Channel.EMAIL, Channel.SMS, Channel.LINKEDIN]))
     .min(1, "Select at least one channel");
 
+const enrichmentSourcesSchema = z.array(z.nativeEnum(EnrichmentSource));
+
 const baseSchema = z.object({
     name: z.string().min(1, "Name is required").max(100),
     enabled: z.boolean(),
     cron_schedule: z.string().optional(),
+    enrichment_sources: enrichmentSourcesSchema,
     channels: channelSchema,
     ai_instructions: z.string().max(2000).optional(),
 });

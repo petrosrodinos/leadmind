@@ -1,4 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { ApifyClient } from '../apify.client';
+import { APIFY_ACTORS } from '../apify.constants';
 import { ApifyAdapter, ApifyRunInput, NormalizedLead } from '../interfaces/apify.interfaces';
 import {
     GoogleSearchOrganicResult,
@@ -13,8 +15,11 @@ const LINKEDIN_REGEX = /https?:\/\/(?:[a-z]{2,3}\.)?linkedin\.com\/(?:in|company
 export class GoogleSearchAdapter
     implements ApifyAdapter<GoogleSearchQueryConfig, GoogleSearchRawItem> {
 
+    constructor(private readonly apifyClient: ApifyClient) { }
+
     buildInput(query_config: GoogleSearchQueryConfig): ApifyRunInput {
-        const { queries, results_per_page, max_pages_per_query, country_code, language_code } = query_config;
+        const { queries, results_per_page, max_pages_per_query, country_code, language_code } =
+            query_config;
 
         const queries_string = Array.isArray(queries) ? queries.join('\n') : queries;
 
@@ -28,6 +33,11 @@ export class GoogleSearchAdapter
         if (language_code) input.languageCode = language_code;
 
         return input;
+    }
+
+    async fetchRawItems(query_config: GoogleSearchQueryConfig): Promise<GoogleSearchRawItem[]> {
+        const input = this.buildInput(query_config);
+        return this.apifyClient.runActor<GoogleSearchRawItem>(APIFY_ACTORS.GOOGLE_SEARCH, input);
     }
 
     normalize(raw_items: GoogleSearchRawItem[]): NormalizedLead[] {

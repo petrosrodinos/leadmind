@@ -120,6 +120,9 @@ export class WebsiteContentCrawlerAdapter
     /** Convenience: crawl a single URL with depth 0 / one page. */
     async crawlSinglePage(url: string, options: CrawlSinglePageOptions = {}): Promise<CrawledPage | null> {
         const pages = await this.crawlPages({
+            save_html: false,
+            save_markdown: true,
+            html_transformer: 'readableTextIfPossible',
             ...options,
             start_urls: [url],
             max_crawl_depth: 0,

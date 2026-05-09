@@ -138,6 +138,7 @@ exports.Prisma.FilterScalarFieldEnum = {
   name: 'name',
   source_type: 'source_type',
   query_config: 'query_config',
+  enrichment_sources: 'enrichment_sources',
   enabled: 'enabled',
   cron_schedule: 'cron_schedule',
   channels: 'channels',
@@ -173,9 +174,24 @@ exports.Prisma.LeadScalarFieldEnum = {
   description: 'description',
   source_type: 'source_type',
   raw_data: 'raw_data',
-  enrichment_data: 'enrichment_data',
+  enrichment_summary: 'enrichment_summary',
   created_at: 'created_at',
   updated_at: 'updated_at'
+};
+
+exports.Prisma.LeadEnrichmentScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  lead_uuid: 'lead_uuid',
+  source: 'source',
+  source_url: 'source_url',
+  summary: 'summary',
+  payload: 'payload',
+  cost_usd: 'cost_usd',
+  input_tokens: 'input_tokens',
+  output_tokens: 'output_tokens',
+  metadata: 'metadata',
+  created_at: 'created_at'
 };
 
 exports.Prisma.ContactScalarFieldEnum = {
@@ -307,6 +323,13 @@ exports.SourceType = exports.$Enums.SourceType = {
   MANUAL: 'MANUAL'
 };
 
+exports.EnrichmentSource = exports.$Enums.EnrichmentSource = {
+  LINKEDIN: 'LINKEDIN',
+  WEBSITE: 'WEBSITE',
+  GOOGLE_SEARCH: 'GOOGLE_SEARCH',
+  AI: 'AI'
+};
+
 exports.Channel = exports.$Enums.Channel = {
   EMAIL: 'EMAIL',
   SMS: 'SMS',
@@ -350,6 +373,7 @@ exports.Prisma.ModelName = {
   Filter: 'Filter',
   RawLead: 'RawLead',
   Lead: 'Lead',
+  LeadEnrichment: 'LeadEnrichment',
   Contact: 'Contact',
   ContactTag: 'ContactTag',
   Interaction: 'Interaction',

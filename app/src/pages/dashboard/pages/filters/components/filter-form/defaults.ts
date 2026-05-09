@@ -1,5 +1,6 @@
 import { Channel } from "@/features/contacts/interfaces/contact.interface";
 import { SourceType } from "@/features/leads/interfaces/lead.interface";
+import type { EnrichmentSource } from "@/features/filters/constants/enrichment-sources";
 import type { Filter } from "@/features/filters/interfaces/filter.interface";
 import type { FilterFormValues } from "../../validation-schemas/filter";
 import { asStringArray, joinCsv } from "./helpers";
@@ -18,6 +19,9 @@ export function buildDefaults(initial?: Filter): FilterFormValues {
     const enabled = initial?.enabled ?? true;
     const name = initial?.name ?? "";
     const cfg = (initial?.query_config ?? {}) as Record<string, any>;
+    const enrichment_sources = (
+        initial?.enrichment_sources?.length ? initial.enrichment_sources : []
+    ) as EnrichmentSource[];
 
     if (source_type === SourceType.LINKEDIN) {
         return {
@@ -40,6 +44,7 @@ export function buildDefaults(initial?: Filter): FilterFormValues {
             cron_schedule,
             channels,
             ai_instructions,
+            enrichment_sources,
         };
     }
     if (source_type === SourceType.GOOGLE_MAPS) {
@@ -55,6 +60,7 @@ export function buildDefaults(initial?: Filter): FilterFormValues {
             cron_schedule,
             channels,
             ai_instructions,
+            enrichment_sources,
         };
     }
     if (source_type === SourceType.GENERIC_LEAD) {
@@ -81,6 +87,7 @@ export function buildDefaults(initial?: Filter): FilterFormValues {
             cron_schedule,
             channels,
             ai_instructions,
+            enrichment_sources,
         };
     }
     const manualConfig: Record<string, string> = {};
@@ -96,5 +103,6 @@ export function buildDefaults(initial?: Filter): FilterFormValues {
         cron_schedule,
         channels,
         ai_instructions,
+        enrichment_sources,
     };
 }

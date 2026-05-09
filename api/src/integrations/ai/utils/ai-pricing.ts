@@ -20,4 +20,14 @@ export const AiPricing = {
         [AiModels.gemini.geminiPro]: { input: 0.000008, output: 0.00002 },
         [AiModels.gemini.geminiProVision]: { input: 0.000008, output: 0.00002 },
     },
+
+    [AiProviders.perplexity]: {
+        [AiModels.perplexity.sonar]: { input: 0.000001, output: 0.000001 },
+        [AiModels.perplexity.sonarPro]: { input: 0.000003, output: 0.000015 },
+    },
+
+    [AiProviders.claude]: {
+        [AiModels.claude.sonnet35]: { input: 0.000003, output: 0.000015 },
+        [AiModels.claude.haiku35]: { input: 8e-7, output: 0.000004 },
+    },
 } as const;
