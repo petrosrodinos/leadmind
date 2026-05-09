@@ -7,6 +7,11 @@ import { Routes } from "@/routes/routes";
 import type { LoggedInUser } from "@/features/user/interfaces/user.interface";
 import { toast } from "@/hooks/use-toast";
 
+function errMessage(err: unknown): string {
+    if (err instanceof Error) return err.message;
+    if (typeof err === "string") return err;
+    return "An unexpected error occurred";
+}
 
 export function useSignin() {
     const { login } = useAuthStore((state) => state);
@@ -26,10 +31,10 @@ export function useSignin() {
             });
             navigate(Routes.dashboard.root);
         },
-        onError: (error: any) => {
+        onError: (error: unknown) => {
             toast({
                 title: "Could not sign in",
-                description: error?.message || "An unexpected error occurred",
+                description: errMessage(error),
                 duration: 3000,
                 variant: "error",
             });
@@ -56,10 +61,10 @@ export function useSignup() {
             });
             navigate(Routes.dashboard.root);
         },
-        onError: (error) => {
+        onError: (error: unknown) => {
             toast({
                 title: "Could not sign up",
-                description: error.message,
+                description: errMessage(error),
                 duration: 3000,
                 variant: "error",
             });
@@ -94,10 +99,10 @@ export function useAdminLoginToAccount() {
                 isLoggedIn: true,
             });
         },
-        onError: (error: any) => {
+        onError: (error: unknown) => {
             toast({
                 title: "Could not admin login to account",
-                description: error.message,
+                description: errMessage(error),
                 duration: 3000,
                 variant: "error",
             });
