@@ -67,6 +67,16 @@ export interface Contact {
     status: LeadStatus;
     score: number | null;
     notes: string | null;
+    name: string | null;
+    email: string | null;
+    phone: string | null;
+    company: string | null;
+    website: string | null;
+    linkedin_url: string | null;
+    title: string | null;
+    location: string | null;
+    industry: string | null;
+    description: string | null;
     created_at: string;
     updated_at: string;
     tags: string[];
@@ -108,6 +118,23 @@ export interface CreateContactPayload {
     website?: string;
     title?: string;
     location?: string;
+    linkedin_url?: string;
+    industry?: string;
+    description?: string;
     tags?: string[];
+    notes?: string;
+}
+
+export interface UpdateContactPayload {
+    name?: string;
+    email?: string;
+    phone?: string;
+    company?: string;
+    website?: string;
+    title?: string;
+    location?: string;
+    linkedin_url?: string;
+    industry?: string;
+    description?: string;
     notes?: string;
 }

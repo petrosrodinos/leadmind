@@ -9,6 +9,7 @@ import {
     listContacts,
     triggerContactScore,
     triggerDraftMessages,
+    updateContact,
     updateContactNotes,
     updateContactStatus,
     updateContactTags,
@@ -19,6 +20,7 @@ import type {
     LeadStatus,
     ListContactsQuery,
     PaginatedContacts,
+    UpdateContactPayload,
 } from "../interfaces/contact.interface";
 import { toast } from "@/hooks/use-toast";
 
@@ -218,12 +220,34 @@ export function useUpdateContactTags() {
     });
 }
 
+export function useUpdateContact() {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: (vars: { uuid: string; payload: UpdateContactPayload }) =>
+            updateContact(vars.uuid, vars.payload),
+        onSuccess: (_data, vars) => {
+            qc.invalidateQueries({ queryKey: contactsQueryKeys.all });
+            qc.invalidateQueries({ queryKey: contactsQueryKeys.detail(vars.uuid) });
+            toast({ title: "Contact updated", duration: 1500 });
+        },
+        onError: (error: Error) => {
+            toast({
+                title: "Could not update contact",
+                description: error.message,
+                duration: 3000,
+                variant: "error",
+            });
+        },
+    });
+}
+
 export function useUpdateContactNotes() {
     const qc = useQueryClient();
     return useMutation({
         mutationFn: (vars: { uuid: string; notes: string }) =>
             updateContactNotes(vars.uuid, vars.notes),
         onSuccess: (_data, vars) => {
+            qc.invalidateQueries({ queryKey: contactsQueryKeys.all });
             qc.invalidateQueries({ queryKey: contactsQueryKeys.detail(vars.uuid) });
             qc.invalidateQueries({ queryKey: contactsQueryKeys.interactions(vars.uuid) });
             toast({ title: "Notes saved", duration: 1500 });

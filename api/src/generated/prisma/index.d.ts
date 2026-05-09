@@ -6991,6 +6991,16 @@ export namespace Prisma {
     status: $Enums.LeadStatus | null
     score: number | null
     notes: string | null
+    name: string | null
+    email: string | null
+    phone: string | null
+    company: string | null
+    website: string | null
+    linkedin_url: string | null
+    title: string | null
+    location: string | null
+    industry: string | null
+    description: string | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -7004,6 +7014,16 @@ export namespace Prisma {
     status: $Enums.LeadStatus | null
     score: number | null
     notes: string | null
+    name: string | null
+    email: string | null
+    phone: string | null
+    company: string | null
+    website: string | null
+    linkedin_url: string | null
+    title: string | null
+    location: string | null
+    industry: string | null
+    description: string | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -7017,6 +7037,16 @@ export namespace Prisma {
     status: number
     score: number
     notes: number
+    name: number
+    email: number
+    phone: number
+    company: number
+    website: number
+    linkedin_url: number
+    title: number
+    location: number
+    industry: number
+    description: number
     created_at: number
     updated_at: number
     _all: number
@@ -7042,6 +7072,16 @@ export namespace Prisma {
     status?: true
     score?: true
     notes?: true
+    name?: true
+    email?: true
+    phone?: true
+    company?: true
+    website?: true
+    linkedin_url?: true
+    title?: true
+    location?: true
+    industry?: true
+    description?: true
     created_at?: true
     updated_at?: true
   }
@@ -7055,6 +7095,16 @@ export namespace Prisma {
     status?: true
     score?: true
     notes?: true
+    name?: true
+    email?: true
+    phone?: true
+    company?: true
+    website?: true
+    linkedin_url?: true
+    title?: true
+    location?: true
+    industry?: true
+    description?: true
     created_at?: true
     updated_at?: true
   }
@@ -7068,6 +7118,16 @@ export namespace Prisma {
     status?: true
     score?: true
     notes?: true
+    name?: true
+    email?: true
+    phone?: true
+    company?: true
+    website?: true
+    linkedin_url?: true
+    title?: true
+    location?: true
+    industry?: true
+    description?: true
     created_at?: true
     updated_at?: true
     _all?: true
@@ -7168,6 +7228,16 @@ export namespace Prisma {
     status: $Enums.LeadStatus
     score: number | null
     notes: string | null
+    name: string | null
+    email: string | null
+    phone: string | null
+    company: string | null
+    website: string | null
+    linkedin_url: string | null
+    title: string | null
+    location: string | null
+    industry: string | null
+    description: string | null
     created_at: Date
     updated_at: Date
     _count: ContactCountAggregateOutputType | null
@@ -7200,6 +7270,16 @@ export namespace Prisma {
     status?: boolean
     score?: boolean
     notes?: boolean
+    name?: boolean
+    email?: boolean
+    phone?: boolean
+    company?: boolean
+    website?: boolean
+    linkedin_url?: boolean
+    title?: boolean
+    location?: boolean
+    industry?: boolean
+    description?: boolean
     created_at?: boolean
     updated_at?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -7220,6 +7300,16 @@ export namespace Prisma {
     status?: boolean
     score?: boolean
     notes?: boolean
+    name?: boolean
+    email?: boolean
+    phone?: boolean
+    company?: boolean
+    website?: boolean
+    linkedin_url?: boolean
+    title?: boolean
+    location?: boolean
+    industry?: boolean
+    description?: boolean
     created_at?: boolean
     updated_at?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -7236,6 +7326,16 @@ export namespace Prisma {
     status?: boolean
     score?: boolean
     notes?: boolean
+    name?: boolean
+    email?: boolean
+    phone?: boolean
+    company?: boolean
+    website?: boolean
+    linkedin_url?: boolean
+    title?: boolean
+    location?: boolean
+    industry?: boolean
+    description?: boolean
     created_at?: boolean
     updated_at?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -7252,11 +7352,21 @@ export namespace Prisma {
     status?: boolean
     score?: boolean
     notes?: boolean
+    name?: boolean
+    email?: boolean
+    phone?: boolean
+    company?: boolean
+    website?: boolean
+    linkedin_url?: boolean
+    title?: boolean
+    location?: boolean
+    industry?: boolean
+    description?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type ContactOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "lead_uuid" | "filter_uuid" | "status" | "score" | "notes" | "created_at" | "updated_at", ExtArgs["result"]["contact"]>
+  export type ContactOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "lead_uuid" | "filter_uuid" | "status" | "score" | "notes" | "name" | "email" | "phone" | "company" | "website" | "linkedin_url" | "title" | "location" | "industry" | "description" | "created_at" | "updated_at", ExtArgs["result"]["contact"]>
   export type ContactInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     lead?: boolean | LeadDefaultArgs<ExtArgs>
@@ -7296,6 +7406,16 @@ export namespace Prisma {
       status: $Enums.LeadStatus
       score: number | null
       notes: string | null
+      name: string | null
+      email: string | null
+      phone: string | null
+      company: string | null
+      website: string | null
+      linkedin_url: string | null
+      title: string | null
+      location: string | null
+      industry: string | null
+      description: string | null
       created_at: Date
       updated_at: Date
     }, ExtArgs["result"]["contact"]>
@@ -7735,6 +7855,16 @@ export namespace Prisma {
     readonly status: FieldRef<"Contact", 'LeadStatus'>
     readonly score: FieldRef<"Contact", 'Int'>
     readonly notes: FieldRef<"Contact", 'String'>
+    readonly name: FieldRef<"Contact", 'String'>
+    readonly email: FieldRef<"Contact", 'String'>
+    readonly phone: FieldRef<"Contact", 'String'>
+    readonly company: FieldRef<"Contact", 'String'>
+    readonly website: FieldRef<"Contact", 'String'>
+    readonly linkedin_url: FieldRef<"Contact", 'String'>
+    readonly title: FieldRef<"Contact", 'String'>
+    readonly location: FieldRef<"Contact", 'String'>
+    readonly industry: FieldRef<"Contact", 'String'>
+    readonly description: FieldRef<"Contact", 'String'>
     readonly created_at: FieldRef<"Contact", 'DateTime'>
     readonly updated_at: FieldRef<"Contact", 'DateTime'>
   }
@@ -14067,6 +14197,16 @@ export namespace Prisma {
     status: 'status',
     score: 'score',
     notes: 'notes',
+    name: 'name',
+    email: 'email',
+    phone: 'phone',
+    company: 'company',
+    website: 'website',
+    linkedin_url: 'linkedin_url',
+    title: 'title',
+    location: 'location',
+    industry: 'industry',
+    description: 'description',
     created_at: 'created_at',
     updated_at: 'updated_at'
   };
@@ -14791,6 +14931,16 @@ export namespace Prisma {
     status?: EnumLeadStatusFilter<"Contact"> | $Enums.LeadStatus
     score?: IntNullableFilter<"Contact"> | number | null
     notes?: StringNullableFilter<"Contact"> | string | null
+    name?: StringNullableFilter<"Contact"> | string | null
+    email?: StringNullableFilter<"Contact"> | string | null
+    phone?: StringNullableFilter<"Contact"> | string | null
+    company?: StringNullableFilter<"Contact"> | string | null
+    website?: StringNullableFilter<"Contact"> | string | null
+    linkedin_url?: StringNullableFilter<"Contact"> | string | null
+    title?: StringNullableFilter<"Contact"> | string | null
+    location?: StringNullableFilter<"Contact"> | string | null
+    industry?: StringNullableFilter<"Contact"> | string | null
+    description?: StringNullableFilter<"Contact"> | string | null
     created_at?: DateTimeFilter<"Contact"> | Date | string
     updated_at?: DateTimeFilter<"Contact"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -14810,6 +14960,16 @@ export namespace Prisma {
     status?: SortOrder
     score?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
+    name?: SortOrderInput | SortOrder
+    email?: SortOrderInput | SortOrder
+    phone?: SortOrderInput | SortOrder
+    company?: SortOrderInput | SortOrder
+    website?: SortOrderInput | SortOrder
+    linkedin_url?: SortOrderInput | SortOrder
+    title?: SortOrderInput | SortOrder
+    location?: SortOrderInput | SortOrder
+    industry?: SortOrderInput | SortOrder
+    description?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     user?: UserOrderByWithRelationInput
@@ -14833,6 +14993,16 @@ export namespace Prisma {
     status?: EnumLeadStatusFilter<"Contact"> | $Enums.LeadStatus
     score?: IntNullableFilter<"Contact"> | number | null
     notes?: StringNullableFilter<"Contact"> | string | null
+    name?: StringNullableFilter<"Contact"> | string | null
+    email?: StringNullableFilter<"Contact"> | string | null
+    phone?: StringNullableFilter<"Contact"> | string | null
+    company?: StringNullableFilter<"Contact"> | string | null
+    website?: StringNullableFilter<"Contact"> | string | null
+    linkedin_url?: StringNullableFilter<"Contact"> | string | null
+    title?: StringNullableFilter<"Contact"> | string | null
+    location?: StringNullableFilter<"Contact"> | string | null
+    industry?: StringNullableFilter<"Contact"> | string | null
+    description?: StringNullableFilter<"Contact"> | string | null
     created_at?: DateTimeFilter<"Contact"> | Date | string
     updated_at?: DateTimeFilter<"Contact"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -14852,6 +15022,16 @@ export namespace Prisma {
     status?: SortOrder
     score?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
+    name?: SortOrderInput | SortOrder
+    email?: SortOrderInput | SortOrder
+    phone?: SortOrderInput | SortOrder
+    company?: SortOrderInput | SortOrder
+    website?: SortOrderInput | SortOrder
+    linkedin_url?: SortOrderInput | SortOrder
+    title?: SortOrderInput | SortOrder
+    location?: SortOrderInput | SortOrder
+    industry?: SortOrderInput | SortOrder
+    description?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     _count?: ContactCountOrderByAggregateInput
@@ -14873,6 +15053,16 @@ export namespace Prisma {
     status?: EnumLeadStatusWithAggregatesFilter<"Contact"> | $Enums.LeadStatus
     score?: IntNullableWithAggregatesFilter<"Contact"> | number | null
     notes?: StringNullableWithAggregatesFilter<"Contact"> | string | null
+    name?: StringNullableWithAggregatesFilter<"Contact"> | string | null
+    email?: StringNullableWithAggregatesFilter<"Contact"> | string | null
+    phone?: StringNullableWithAggregatesFilter<"Contact"> | string | null
+    company?: StringNullableWithAggregatesFilter<"Contact"> | string | null
+    website?: StringNullableWithAggregatesFilter<"Contact"> | string | null
+    linkedin_url?: StringNullableWithAggregatesFilter<"Contact"> | string | null
+    title?: StringNullableWithAggregatesFilter<"Contact"> | string | null
+    location?: StringNullableWithAggregatesFilter<"Contact"> | string | null
+    industry?: StringNullableWithAggregatesFilter<"Contact"> | string | null
+    description?: StringNullableWithAggregatesFilter<"Contact"> | string | null
     created_at?: DateTimeWithAggregatesFilter<"Contact"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"Contact"> | Date | string
   }
@@ -15705,6 +15895,16 @@ export namespace Prisma {
     status?: $Enums.LeadStatus
     score?: number | null
     notes?: string | null
+    name?: string | null
+    email?: string | null
+    phone?: string | null
+    company?: string | null
+    website?: string | null
+    linkedin_url?: string | null
+    title?: string | null
+    location?: string | null
+    industry?: string | null
+    description?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutContactsInput
@@ -15724,6 +15924,16 @@ export namespace Prisma {
     status?: $Enums.LeadStatus
     score?: number | null
     notes?: string | null
+    name?: string | null
+    email?: string | null
+    phone?: string | null
+    company?: string | null
+    website?: string | null
+    linkedin_url?: string | null
+    title?: string | null
+    location?: string | null
+    industry?: string | null
+    description?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     tags?: ContactTagUncheckedCreateNestedManyWithoutContactInput
@@ -15736,6 +15946,16 @@ export namespace Prisma {
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
     score?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutContactsNestedInput
@@ -15755,6 +15975,16 @@ export namespace Prisma {
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
     score?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     tags?: ContactTagUncheckedUpdateManyWithoutContactNestedInput
@@ -15771,6 +16001,16 @@ export namespace Prisma {
     status?: $Enums.LeadStatus
     score?: number | null
     notes?: string | null
+    name?: string | null
+    email?: string | null
+    phone?: string | null
+    company?: string | null
+    website?: string | null
+    linkedin_url?: string | null
+    title?: string | null
+    location?: string | null
+    industry?: string | null
+    description?: string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -15780,6 +16020,16 @@ export namespace Prisma {
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
     score?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -15793,6 +16043,16 @@ export namespace Prisma {
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
     score?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -16834,6 +17094,16 @@ export namespace Prisma {
     status?: SortOrder
     score?: SortOrder
     notes?: SortOrder
+    name?: SortOrder
+    email?: SortOrder
+    phone?: SortOrder
+    company?: SortOrder
+    website?: SortOrder
+    linkedin_url?: SortOrder
+    title?: SortOrder
+    location?: SortOrder
+    industry?: SortOrder
+    description?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -16852,6 +17122,16 @@ export namespace Prisma {
     status?: SortOrder
     score?: SortOrder
     notes?: SortOrder
+    name?: SortOrder
+    email?: SortOrder
+    phone?: SortOrder
+    company?: SortOrder
+    website?: SortOrder
+    linkedin_url?: SortOrder
+    title?: SortOrder
+    location?: SortOrder
+    industry?: SortOrder
+    description?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -16865,6 +17145,16 @@ export namespace Prisma {
     status?: SortOrder
     score?: SortOrder
     notes?: SortOrder
+    name?: SortOrder
+    email?: SortOrder
+    phone?: SortOrder
+    company?: SortOrder
+    website?: SortOrder
+    linkedin_url?: SortOrder
+    title?: SortOrder
+    location?: SortOrder
+    industry?: SortOrder
+    description?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -18443,6 +18733,16 @@ export namespace Prisma {
     status?: $Enums.LeadStatus
     score?: number | null
     notes?: string | null
+    name?: string | null
+    email?: string | null
+    phone?: string | null
+    company?: string | null
+    website?: string | null
+    linkedin_url?: string | null
+    title?: string | null
+    location?: string | null
+    industry?: string | null
+    description?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     lead: LeadCreateNestedOneWithoutContactsInput
@@ -18460,6 +18760,16 @@ export namespace Prisma {
     status?: $Enums.LeadStatus
     score?: number | null
     notes?: string | null
+    name?: string | null
+    email?: string | null
+    phone?: string | null
+    company?: string | null
+    website?: string | null
+    linkedin_url?: string | null
+    title?: string | null
+    location?: string | null
+    industry?: string | null
+    description?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     tags?: ContactTagUncheckedCreateNestedManyWithoutContactInput
@@ -18636,6 +18946,16 @@ export namespace Prisma {
     status?: EnumLeadStatusFilter<"Contact"> | $Enums.LeadStatus
     score?: IntNullableFilter<"Contact"> | number | null
     notes?: StringNullableFilter<"Contact"> | string | null
+    name?: StringNullableFilter<"Contact"> | string | null
+    email?: StringNullableFilter<"Contact"> | string | null
+    phone?: StringNullableFilter<"Contact"> | string | null
+    company?: StringNullableFilter<"Contact"> | string | null
+    website?: StringNullableFilter<"Contact"> | string | null
+    linkedin_url?: StringNullableFilter<"Contact"> | string | null
+    title?: StringNullableFilter<"Contact"> | string | null
+    location?: StringNullableFilter<"Contact"> | string | null
+    industry?: StringNullableFilter<"Contact"> | string | null
+    description?: StringNullableFilter<"Contact"> | string | null
     created_at?: DateTimeFilter<"Contact"> | Date | string
     updated_at?: DateTimeFilter<"Contact"> | Date | string
   }
@@ -18805,6 +19125,16 @@ export namespace Prisma {
     status?: $Enums.LeadStatus
     score?: number | null
     notes?: string | null
+    name?: string | null
+    email?: string | null
+    phone?: string | null
+    company?: string | null
+    website?: string | null
+    linkedin_url?: string | null
+    title?: string | null
+    location?: string | null
+    industry?: string | null
+    description?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutContactsInput
@@ -18822,6 +19152,16 @@ export namespace Prisma {
     status?: $Enums.LeadStatus
     score?: number | null
     notes?: string | null
+    name?: string | null
+    email?: string | null
+    phone?: string | null
+    company?: string | null
+    website?: string | null
+    linkedin_url?: string | null
+    title?: string | null
+    location?: string | null
+    industry?: string | null
+    description?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     tags?: ContactTagUncheckedCreateNestedManyWithoutContactInput
@@ -19207,6 +19547,16 @@ export namespace Prisma {
     status?: $Enums.LeadStatus
     score?: number | null
     notes?: string | null
+    name?: string | null
+    email?: string | null
+    phone?: string | null
+    company?: string | null
+    website?: string | null
+    linkedin_url?: string | null
+    title?: string | null
+    location?: string | null
+    industry?: string | null
+    description?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutContactsInput
@@ -19224,6 +19574,16 @@ export namespace Prisma {
     status?: $Enums.LeadStatus
     score?: number | null
     notes?: string | null
+    name?: string | null
+    email?: string | null
+    phone?: string | null
+    company?: string | null
+    website?: string | null
+    linkedin_url?: string | null
+    title?: string | null
+    location?: string | null
+    industry?: string | null
+    description?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     tags?: ContactTagUncheckedCreateNestedManyWithoutContactInput
@@ -19697,6 +20057,16 @@ export namespace Prisma {
     status?: $Enums.LeadStatus
     score?: number | null
     notes?: string | null
+    name?: string | null
+    email?: string | null
+    phone?: string | null
+    company?: string | null
+    website?: string | null
+    linkedin_url?: string | null
+    title?: string | null
+    location?: string | null
+    industry?: string | null
+    description?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutContactsInput
@@ -19715,6 +20085,16 @@ export namespace Prisma {
     status?: $Enums.LeadStatus
     score?: number | null
     notes?: string | null
+    name?: string | null
+    email?: string | null
+    phone?: string | null
+    company?: string | null
+    website?: string | null
+    linkedin_url?: string | null
+    title?: string | null
+    location?: string | null
+    industry?: string | null
+    description?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     interactions?: InteractionUncheckedCreateNestedManyWithoutContactInput
@@ -19742,6 +20122,16 @@ export namespace Prisma {
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
     score?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutContactsNestedInput
@@ -19760,6 +20150,16 @@ export namespace Prisma {
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
     score?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     interactions?: InteractionUncheckedUpdateManyWithoutContactNestedInput
@@ -19771,6 +20171,16 @@ export namespace Prisma {
     status?: $Enums.LeadStatus
     score?: number | null
     notes?: string | null
+    name?: string | null
+    email?: string | null
+    phone?: string | null
+    company?: string | null
+    website?: string | null
+    linkedin_url?: string | null
+    title?: string | null
+    location?: string | null
+    industry?: string | null
+    description?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutContactsInput
@@ -19789,6 +20199,16 @@ export namespace Prisma {
     status?: $Enums.LeadStatus
     score?: number | null
     notes?: string | null
+    name?: string | null
+    email?: string | null
+    phone?: string | null
+    company?: string | null
+    website?: string | null
+    linkedin_url?: string | null
+    title?: string | null
+    location?: string | null
+    industry?: string | null
+    description?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     tags?: ContactTagUncheckedCreateNestedManyWithoutContactInput
@@ -19850,6 +20270,16 @@ export namespace Prisma {
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
     score?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutContactsNestedInput
@@ -19868,6 +20298,16 @@ export namespace Prisma {
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
     score?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     tags?: ContactTagUncheckedUpdateManyWithoutContactNestedInput
@@ -19953,6 +20393,16 @@ export namespace Prisma {
     status?: $Enums.LeadStatus
     score?: number | null
     notes?: string | null
+    name?: string | null
+    email?: string | null
+    phone?: string | null
+    company?: string | null
+    website?: string | null
+    linkedin_url?: string | null
+    title?: string | null
+    location?: string | null
+    industry?: string | null
+    description?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutContactsInput
@@ -19971,6 +20421,16 @@ export namespace Prisma {
     status?: $Enums.LeadStatus
     score?: number | null
     notes?: string | null
+    name?: string | null
+    email?: string | null
+    phone?: string | null
+    company?: string | null
+    website?: string | null
+    linkedin_url?: string | null
+    title?: string | null
+    location?: string | null
+    industry?: string | null
+    description?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     tags?: ContactTagUncheckedCreateNestedManyWithoutContactInput
@@ -20038,6 +20498,16 @@ export namespace Prisma {
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
     score?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutContactsNestedInput
@@ -20056,6 +20526,16 @@ export namespace Prisma {
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
     score?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     tags?: ContactTagUncheckedUpdateManyWithoutContactNestedInput
@@ -20240,6 +20720,16 @@ export namespace Prisma {
     status?: $Enums.LeadStatus
     score?: number | null
     notes?: string | null
+    name?: string | null
+    email?: string | null
+    phone?: string | null
+    company?: string | null
+    website?: string | null
+    linkedin_url?: string | null
+    title?: string | null
+    location?: string | null
+    industry?: string | null
+    description?: string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -20331,6 +20821,16 @@ export namespace Prisma {
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
     score?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     lead?: LeadUpdateOneRequiredWithoutContactsNestedInput
@@ -20348,6 +20848,16 @@ export namespace Prisma {
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
     score?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     tags?: ContactTagUncheckedUpdateManyWithoutContactNestedInput
@@ -20363,6 +20873,16 @@ export namespace Prisma {
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
     score?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -20487,6 +21007,16 @@ export namespace Prisma {
     status?: $Enums.LeadStatus
     score?: number | null
     notes?: string | null
+    name?: string | null
+    email?: string | null
+    phone?: string | null
+    company?: string | null
+    website?: string | null
+    linkedin_url?: string | null
+    title?: string | null
+    location?: string | null
+    industry?: string | null
+    description?: string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -20541,6 +21071,16 @@ export namespace Prisma {
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
     score?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutContactsNestedInput
@@ -20558,6 +21098,16 @@ export namespace Prisma {
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
     score?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     tags?: ContactTagUncheckedUpdateManyWithoutContactNestedInput
@@ -20573,6 +21123,16 @@ export namespace Prisma {
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
     score?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -20626,6 +21186,16 @@ export namespace Prisma {
     status?: $Enums.LeadStatus
     score?: number | null
     notes?: string | null
+    name?: string | null
+    email?: string | null
+    phone?: string | null
+    company?: string | null
+    website?: string | null
+    linkedin_url?: string | null
+    title?: string | null
+    location?: string | null
+    industry?: string | null
+    description?: string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -20635,6 +21205,16 @@ export namespace Prisma {
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
     score?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutContactsNestedInput
@@ -20652,6 +21232,16 @@ export namespace Prisma {
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
     score?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     tags?: ContactTagUncheckedUpdateManyWithoutContactNestedInput
@@ -20667,6 +21257,16 @@ export namespace Prisma {
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
     score?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }

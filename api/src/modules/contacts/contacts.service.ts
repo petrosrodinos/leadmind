@@ -23,6 +23,20 @@ import { ListContactsDto } from './dto/list-contacts.dto';
 import { UpdateContactDto } from './dto/update-contact.dto';
 import { UpdateStatusDto } from './dto/update-status.dto';
 import { UpdateTagsDto } from './dto/update-tags.dto';
+import { contactProfileFromLead } from './utils/contact-profile.utils';
+
+const CONTACT_PROFILE_UPDATE_KEYS = [
+    'name',
+    'email',
+    'phone',
+    'company',
+    'website',
+    'linkedin_url',
+    'title',
+    'location',
+    'industry',
+    'description',
+] as const satisfies readonly (keyof UpdateContactDto)[];
 
 @Injectable()
 export class ContactsService {
@@ -43,8 +57,13 @@ export class ContactsService {
                 website: dto.website,
                 title: dto.title,
                 location: dto.location,
+                linkedin_url: dto.linkedin_url,
+                industry: dto.industry,
+                description: dto.description,
             },
         });
+
+        const profile = contactProfileFromLead(lead);
 
         const contact = await this.prisma.contact.create({
             data: {
@@ -52,6 +71,7 @@ export class ContactsService {
                 lead_uuid: lead.uuid,
                 status: LeadStatus.NEW,
                 notes: dto.notes,
+                ...profile,
                 ...(dto.tags && dto.tags.length > 0
                     ? {
                         tags: {
@@ -94,13 +114,11 @@ export class ContactsService {
                 ? { tags: { some: { tag: { in: query.tags } } } }
                 : {}),
             ...(query.search && {
-                lead: {
-                    OR: [
-                        { name: { contains: query.search, mode: 'insensitive' } },
-                        { email: { contains: query.search, mode: 'insensitive' } },
-                        { company: { contains: query.search, mode: 'insensitive' } },
-                    ],
-                },
+                OR: [
+                    { name: { contains: query.search, mode: 'insensitive' } },
+                    { email: { contains: query.search, mode: 'insensitive' } },
+                    { company: { contains: query.search, mode: 'insensitive' } },
+                ],
             }),
         };
 
@@ -154,12 +172,23 @@ export class ContactsService {
         };
     }
 
-    async update(user_uuid: string, uuid: string, dto: UpdateContactDto): Promise<Contact> {
+    async update(user_uuid: string, uuid: string, dto: UpdateContactDto) {
         await this.requireOwnedContact(user_uuid, uuid);
-        return this.prisma.contact.update({
+        const data: Prisma.ContactUpdateInput = {};
+        if (dto.notes !== undefined) {
+            data.notes = dto.notes;
+        }
+        for (const key of CONTACT_PROFILE_UPDATE_KEYS) {
+            if (dto[key] !== undefined) {
+                data[key] = dto[key] as never;
+            }
+        }
+        await this.prisma.contact.update({
             where: { uuid },
-            data: { notes: dto.notes },
+            data,
         });
+        await this.reindexContact(uuid);
+        return this.findOne(user_uuid, uuid);
     }
 
     async remove(user_uuid: string, uuid: string): Promise<{ uuid: string }> {
@@ -268,6 +297,7 @@ export class ContactsService {
                     user_uuid,
                     lead_uuid,
                     status: LeadStatus.NEW,
+                    ...contactProfileFromLead(lead),
                 },
             });
             await this.reindexContact(contact.uuid);

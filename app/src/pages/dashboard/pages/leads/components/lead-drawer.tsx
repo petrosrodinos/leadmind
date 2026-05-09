@@ -50,7 +50,7 @@ export function LeadDrawer({ contactUuid, isOpen, onOpenChange }: LeadDrawerProp
                             {isLoading && !contact ? (
                                 <span className="inline-block h-6 w-40 rounded-md bg-surface-secondary animate-pulse align-middle" />
                             ) : (
-                                contact?.lead.name ?? "Contact"
+                                contact?.name ?? "Contact"
                             )}
                         </Drawer.Heading>
                     </Drawer.Header>
@@ -78,18 +78,18 @@ export function LeadDrawer({ contactUuid, isOpen, onOpenChange }: LeadDrawerProp
                                 </div>
 
                                 {/* Lead facts */}
-                                <Section title="Lead">
+                                <Section title="Contact">
                                     <div className="grid gap-3 grid-cols-1 sm:grid-cols-2">
-                                        <Field label="Company" value={contact.lead.company} />
-                                        <Field label="Email" value={contact.lead.email} />
-                                        <Field label="Phone" value={contact.lead.phone} />
-                                        <Field label="Title" value={contact.lead.title} />
-                                        <Field label="Location" value={contact.lead.location} />
-                                        <Field label="Industry" value={contact.lead.industry} />
-                                        <Field label="Website" value={contact.lead.website} link />
+                                        <Field label="Company" value={contact.company} />
+                                        <Field label="Email" value={contact.email} />
+                                        <Field label="Phone" value={contact.phone} />
+                                        <Field label="Title" value={contact.title} />
+                                        <Field label="Location" value={contact.location} />
+                                        <Field label="Industry" value={contact.industry} />
+                                        <Field label="Website" value={contact.website} link />
                                         <Field
                                             label="LinkedIn"
-                                            value={contact.lead.linkedin_url}
+                                            value={contact.linkedin_url}
                                             link
                                         />
                                         <Field
@@ -99,7 +99,7 @@ export function LeadDrawer({ contactUuid, isOpen, onOpenChange }: LeadDrawerProp
                                     </div>
                                     <Field
                                         label="Description"
-                                        value={contact.lead.description}
+                                        value={contact.description}
                                     />
                                 </Section>
 

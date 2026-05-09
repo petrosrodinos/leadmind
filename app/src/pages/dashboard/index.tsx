@@ -449,13 +449,13 @@ function TopContactsCard({
                                 to={Routes.dashboard.contacts_detail.replace(":uuid", c.uuid)}
                                 className="flex items-center gap-3 py-3 hover:bg-surface-secondary/40 -mx-2 px-2 rounded-md transition-colors"
                             >
-                                <Avatar name={c.lead.name} />
+                                <Avatar name={c.name} />
                                 <div className="min-w-0 flex-1">
                                     <p className="text-sm font-medium text-foreground truncate">
-                                        {c.lead.name ?? "Unnamed"}
+                                        {c.name ?? "Unnamed"}
                                     </p>
                                     <p className="text-xs text-muted truncate">
-                                        {c.lead.company ?? c.lead.email ?? "—"}
+                                        {c.company ?? c.email ?? "—"}
                                     </p>
                                 </div>
                                 <div className="hidden sm:block">
@@ -525,7 +525,7 @@ function PendingDraftsCard({
                                 >
                                     <div className="min-w-0 flex-1">
                                         <p className="text-sm font-medium text-foreground truncate">
-                                            {contact.lead.name ?? "Unnamed"}
+                                            {contact.name ?? "Unnamed"}
                                         </p>
                                         <p className="text-xs text-muted truncate">
                                             {drafts.length} draft

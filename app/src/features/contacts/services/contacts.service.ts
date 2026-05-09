@@ -7,6 +7,7 @@ import type {
     ListContactsQuery,
     OutreachMessage,
     PaginatedContacts,
+    UpdateContactPayload,
 } from "../interfaces/contact.interface";
 import type { LeadStatus } from "../interfaces/contact.interface";
 
@@ -94,16 +95,23 @@ export const updateContactTags = async (
     }
 };
 
+export const updateContact = async (
+    uuid: string,
+    payload: UpdateContactPayload,
+): Promise<Contact> => {
+    try {
+        const response = await axiosInstance.put(ApiRoutes.contacts.update(uuid), payload);
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error?.response?.data?.message || "Failed to update contact.");
+    }
+};
+
 export const updateContactNotes = async (
     uuid: string,
     notes: string,
 ): Promise<Contact> => {
-    try {
-        const response = await axiosInstance.put(ApiRoutes.contacts.update(uuid), { notes });
-        return response.data;
-    } catch (error: any) {
-        throw new Error(error?.response?.data?.message || "Failed to save notes.");
-    }
+    return updateContact(uuid, { notes });
 };
 
 export const triggerContactScore = async (uuid: string): Promise<{ jobId: string }> => {

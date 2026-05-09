@@ -222,9 +222,9 @@ export class OutreachService {
         }>;
     }
 
-    private renderTemplate(template: string, contact: Contact & { lead: { name: string | null; company: string | null } }) {
+    private renderTemplate(template: string, contact: Contact) {
         return template
-            .replaceAll('{{name}}', contact.lead.name ?? '')
-            .replaceAll('{{company}}', contact.lead.company ?? '');
+            .replaceAll('{{name}}', contact.name ?? '')
+            .replaceAll('{{company}}', contact.company ?? '');
     }
 }

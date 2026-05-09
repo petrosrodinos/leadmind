@@ -137,11 +137,11 @@ export function PipelineView({ contacts, isLoading, onCardClick }: PipelineViewP
                                                         <div className="flex items-start justify-between gap-2">
                                                             <div className="min-w-0 flex-1">
                                                                 <p className="text-sm font-medium text-foreground truncate">
-                                                                    {contact.lead.name ?? "Unnamed"}
+                                                                    {contact.name ?? "Unnamed"}
                                                                 </p>
-                                                                {contact.lead.company && (
+                                                                {contact.company && (
                                                                     <p className="text-xs text-muted truncate">
-                                                                        {contact.lead.company}
+                                                                        {contact.company}
                                                                     </p>
                                                                 )}
                                                             </div>

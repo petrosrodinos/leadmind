@@ -78,7 +78,7 @@ export function ContactsTable({
 
     const columns = useMemo(
         () => [
-            columnHelper.accessor((row) => row.lead.name, {
+            columnHelper.accessor((row) => row.name, {
                 id: "name",
                 header: "Name",
                 cell: (info) => (
@@ -87,17 +87,17 @@ export function ContactsTable({
                     </span>
                 ),
             }),
-            columnHelper.accessor((row) => row.lead.company, {
+            columnHelper.accessor((row) => row.company, {
                 id: "company",
                 header: "Company",
                 cell: (info) => info.getValue() ?? "—",
             }),
-            columnHelper.accessor((row) => row.lead.email, {
+            columnHelper.accessor((row) => row.email, {
                 id: "email",
                 header: "Email",
                 cell: (info) => info.getValue() ?? "—",
             }),
-            columnHelper.accessor((row) => row.lead.phone, {
+            columnHelper.accessor((row) => row.phone, {
                 id: "phone",
                 header: "Phone",
                 cell: (info) => info.getValue() ?? "—",
@@ -195,7 +195,7 @@ export function ContactsTable({
                             className="text-danger"
                             isDisabled={deleteContact.isPending}
                             onPress={() => setDeleteTarget(info.row.original)}
-                            aria-label={`Delete ${info.row.original.lead.name ?? "contact"}`}
+                            aria-label={`Delete ${info.row.original.name ?? "contact"}`}
                         >
                             <Trash className="size-3.5" />
                         </Button>
@@ -305,7 +305,7 @@ export function ContactsTable({
                                     >
                                         <Table.Cell className="pr-0">
                                             <Checkbox
-                                                aria-label={`Select ${row.original.lead.name ?? "contact"}`}
+                                                aria-label={`Select ${row.original.name ?? "contact"}`}
                                                 slot="selection"
                                             >
                                                 <Checkbox.Control>
@@ -367,7 +367,7 @@ export function ContactsTable({
                 onOpenChange={(open) => {
                     if (!open) setDeleteTarget(null);
                 }}
-                title={`Delete contact "${deleteTarget?.lead.name ?? "this contact"}"?`}
+                title={`Delete contact "${deleteTarget?.name ?? "this contact"}"?`}
                 description="This removes the contact from your CRM. The underlying lead record stays in the public directory."
                 confirmLabel="Delete"
                 cancelLabel="Cancel"

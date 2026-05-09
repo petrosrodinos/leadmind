@@ -105,20 +105,27 @@ model Lead {
   @@index([linkedin_url])
 }
 
-// Contact = the user's connection to a Lead. Owns per-user state:
-// status, AI score, notes. AI-drafted outreach is stored on OutreachMessage
-// (one per filter.channel), not on Contact.
 model Contact {
-  id          Int        @id @default(autoincrement())
-  uuid        String     @unique @default(uuid())
-  user_uuid   String
-  lead_uuid   String
-  filter_uuid String?
-  status      LeadStatus @default(NEW)
-  score       Int?
-  notes       String?
-  created_at  DateTime   @default(now())
-  updated_at  DateTime   @updatedAt
+  id           Int        @id @default(autoincrement())
+  uuid         String     @unique @default(uuid())
+  user_uuid    String
+  lead_uuid    String
+  filter_uuid  String?
+  status       LeadStatus @default(NEW)
+  score        Int?
+  notes        String?
+  name         String?
+  email        String?
+  phone        String?
+  company      String?
+  website      String?
+  linkedin_url String?
+  title        String?
+  location     String?
+  industry     String?
+  description  String?
+  created_at   DateTime   @default(now())
+  updated_at   DateTime   @updatedAt
 
   user              User              @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
   lead              Lead              @relation(fields: [lead_uuid], references: [uuid], onDelete: Cascade)
@@ -131,6 +138,7 @@ model Contact {
   @@index([user_uuid])
   @@index([status])
   @@index([lead_uuid])
+  @@index([email])
 }
 
 model ContactTag {

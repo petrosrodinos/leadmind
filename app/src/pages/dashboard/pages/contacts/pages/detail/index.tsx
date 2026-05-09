@@ -35,6 +35,7 @@ import {
     useDeleteContact,
     useRedraftMessages,
     useRescoreContact,
+    useUpdateContact,
     useUpdateContactNotes,
     useUpdateContactStatus,
     useUpdateContactTags,
@@ -110,15 +111,15 @@ export default function ContactDetailPage() {
                     ) : (
                         <>
                             <h1 className="text-xl font-semibold text-foreground truncate">
-                                {contact?.lead.name ?? "Contact not found"}
+                                {contact?.name ?? "Contact not found"}
                             </h1>
                             {contact && (
                                 <div className="flex items-center gap-2 flex-wrap mt-1">
                                     <StatusChip status={contact.status} />
                                     <ScoreBadge score={contact.score} />
-                                    {contact.lead.company && (
+                                    {contact.company && (
                                         <span className="text-sm text-muted truncate">
-                                            {contact.lead.company}
+                                            {contact.company}
                                         </span>
                                     )}
                                 </div>
@@ -183,7 +184,7 @@ export default function ContactDetailPage() {
                 <ConfirmDialog
                     isOpen={confirmDeleteOpen}
                     onOpenChange={setConfirmDeleteOpen}
-                    title={`Delete contact "${contact.lead.name ?? "this contact"}"?`}
+                    title={`Delete contact "${contact.name ?? "this contact"}"?`}
                     description="This removes the contact from your CRM. The underlying lead record stays in the public directory."
                     confirmLabel="Delete"
                     cancelLabel="Cancel"
@@ -200,29 +201,177 @@ interface TabContactProps {
     contact: NonNullable<ReturnType<typeof useContact>["data"]>;
 }
 
+interface ProfileDraft {
+    name: string;
+    email: string;
+    phone: string;
+    company: string;
+    website: string;
+    title: string;
+    location: string;
+    linkedin_url: string;
+    industry: string;
+    description: string;
+}
+
+function profileDraftFromContact(
+    contact: NonNullable<ReturnType<typeof useContact>["data"]>,
+): ProfileDraft {
+    return {
+        name: contact.name ?? "",
+        email: contact.email ?? "",
+        phone: contact.phone ?? "",
+        company: contact.company ?? "",
+        website: contact.website ?? "",
+        title: contact.title ?? "",
+        location: contact.location ?? "",
+        linkedin_url: contact.linkedin_url ?? "",
+        industry: contact.industry ?? "",
+        description: contact.description ?? "",
+    };
+}
+
 function OverviewTab({ contact }: TabContactProps) {
+    const updateProfile = useUpdateContact();
+    const [draft, setDraft] = useState<ProfileDraft>(() => profileDraftFromContact(contact));
+
+    useEffect(() => {
+        setDraft(profileDraftFromContact(contact));
+    }, [contact.uuid, contact.updated_at]);
+
+    const dirty = useMemo(() => {
+        const prev = profileDraftFromContact(contact);
+        return (Object.keys(prev) as (keyof ProfileDraft)[]).some(
+            (k) => draft[k].trim() !== prev[k].trim(),
+        );
+    }, [contact, draft]);
+
+    const setField = <K extends keyof ProfileDraft>(key: K, value: ProfileDraft[K]) =>
+        setDraft((p) => ({ ...p, [key]: value }));
+
+    const handleSave = () => {
+        const t = (s: string) => s.trim();
+        updateProfile.mutate({
+            uuid: contact.uuid,
+            payload: {
+                name: t(draft.name) || undefined,
+                email: t(draft.email) || undefined,
+                phone: t(draft.phone) || undefined,
+                company: t(draft.company) || undefined,
+                website: t(draft.website) || undefined,
+                title: t(draft.title) || undefined,
+                location: t(draft.location) || undefined,
+                linkedin_url: t(draft.linkedin_url) || undefined,
+                industry: t(draft.industry) || undefined,
+                description: t(draft.description) || undefined,
+            },
+        });
+    };
+
     return (
         <div className="flex flex-col gap-6">
-            <Section title="Lead">
+            <Section
+                title="Contact"
+                action={
+                    <Button
+                        size="sm"
+                        variant="secondary"
+                        isDisabled={!dirty || updateProfile.isPending}
+                        isPending={updateProfile.isPending}
+                        onPress={handleSave}
+                    >
+                        Save changes
+                    </Button>
+                }
+            >
                 <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                    <Field label="Company" value={contact.lead.company} />
-                    <Field label="Email" value={contact.lead.email} />
-                    <Field label="Phone" value={contact.lead.phone} />
-                    <Field label="Title" value={contact.lead.title} />
-                    <Field label="Location" value={contact.lead.location} />
-                    <Field label="Industry" value={contact.lead.industry} />
-                    <Field label="Website" value={contact.lead.website} link />
-                    <Field
-                        label="LinkedIn"
-                        value={contact.lead.linkedin_url}
-                        link
-                    />
-                    <Field
-                        label="Source"
-                        value={SOURCE_LABEL[contact.lead.source_type]}
+                    <div className="flex flex-col gap-1.5">
+                        <Label htmlFor="pf-company">Company</Label>
+                        <Input
+                            id="pf-company"
+                            value={draft.company}
+                            onChange={(e) => setField("company", e.target.value)}
+                        />
+                    </div>
+                    <div className="flex flex-col gap-1.5">
+                        <Label htmlFor="pf-email">Email</Label>
+                        <Input
+                            id="pf-email"
+                            type="email"
+                            value={draft.email}
+                            onChange={(e) => setField("email", e.target.value)}
+                        />
+                    </div>
+                    <div className="flex flex-col gap-1.5">
+                        <Label htmlFor="pf-phone">Phone</Label>
+                        <Input
+                            id="pf-phone"
+                            value={draft.phone}
+                            onChange={(e) => setField("phone", e.target.value)}
+                        />
+                    </div>
+                    <div className="flex flex-col gap-1.5">
+                        <Label htmlFor="pf-title">Title</Label>
+                        <Input
+                            id="pf-title"
+                            value={draft.title}
+                            onChange={(e) => setField("title", e.target.value)}
+                        />
+                    </div>
+                    <div className="flex flex-col gap-1.5">
+                        <Label htmlFor="pf-location">Location</Label>
+                        <Input
+                            id="pf-location"
+                            value={draft.location}
+                            onChange={(e) => setField("location", e.target.value)}
+                        />
+                    </div>
+                    <div className="flex flex-col gap-1.5">
+                        <Label htmlFor="pf-industry">Industry</Label>
+                        <Input
+                            id="pf-industry"
+                            value={draft.industry}
+                            onChange={(e) => setField("industry", e.target.value)}
+                        />
+                    </div>
+                    <div className="flex flex-col gap-1.5">
+                        <Label htmlFor="pf-website">Website</Label>
+                        <Input
+                            id="pf-website"
+                            value={draft.website}
+                            onChange={(e) => setField("website", e.target.value)}
+                        />
+                    </div>
+                    <div className="flex flex-col gap-1.5">
+                        <Label htmlFor="pf-linkedin">LinkedIn</Label>
+                        <Input
+                            id="pf-linkedin"
+                            value={draft.linkedin_url}
+                            onChange={(e) => setField("linkedin_url", e.target.value)}
+                        />
+                    </div>
+                    <div className="flex flex-col gap-1.5 sm:col-span-2 lg:col-span-3">
+                        <Label htmlFor="pf-name">Name</Label>
+                        <Input
+                            id="pf-name"
+                            value={draft.name}
+                            onChange={(e) => setField("name", e.target.value)}
+                        />
+                    </div>
+                </div>
+                <div className="flex flex-col gap-1.5">
+                    <Label htmlFor="pf-description">Description</Label>
+                    <TextArea
+                        id="pf-description"
+                        rows={4}
+                        value={draft.description}
+                        onChange={(e) => setField("description", e.target.value)}
                     />
                 </div>
-                <Field label="Description" value={contact.lead.description} />
+                <Field
+                    label="Source"
+                    value={SOURCE_LABEL[contact.lead.source_type]}
+                />
             </Section>
 
             <Section title="Public enrichment summary">

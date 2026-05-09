@@ -65,7 +65,7 @@ export class ContactsController {
     }
 
     @Put(':uuid')
-    @ApiOperation({ summary: 'Update contact notes' })
+    @ApiOperation({ summary: 'Update contact profile fields and notes' })
     update(
         @CurrentUser('uuid') user_uuid: string,
         @Param('uuid') uuid: string,

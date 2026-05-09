@@ -52,6 +52,24 @@ export class CreateContactDto {
     @MaxLength(200)
     location?: string;
 
+    @ApiPropertyOptional()
+    @IsOptional()
+    @IsUrl({ require_protocol: false })
+    @MaxLength(500)
+    linkedin_url?: string;
+
+    @ApiPropertyOptional({ maxLength: 200 })
+    @IsOptional()
+    @IsString()
+    @MaxLength(200)
+    industry?: string;
+
+    @ApiPropertyOptional({ maxLength: 5000 })
+    @IsOptional()
+    @IsString()
+    @MaxLength(5000)
+    description?: string;
+
     @ApiPropertyOptional({ type: [String] })
     @IsOptional()
     @IsArray()

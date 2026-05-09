@@ -39,20 +39,20 @@ export class OutreachSendWorker extends WorkerHost {
 
         try {
             if (message.channel === Channel.EMAIL) {
-                if (!message.contact.lead.email) {
-                    throw new Error('Lead has no email');
+                if (!message.contact.email) {
+                    throw new Error('Contact has no email');
                 }
                 await this.resendMailService.sendEmail({
-                    to: message.contact.lead.email,
+                    to: message.contact.email,
                     subject: message.subject ?? 'Outreach message',
                     html: message.content,
                 });
             } else if (message.channel === Channel.SMS) {
-                if (!message.contact.lead.phone) {
-                    throw new Error('Lead has no phone');
+                if (!message.contact.phone) {
+                    throw new Error('Contact has no phone');
                 }
                 await this.twillioSmsService.sendSms({
-                    to: message.contact.lead.phone,
+                    to: message.contact.phone,
                     body: message.content,
                 });
             } else {

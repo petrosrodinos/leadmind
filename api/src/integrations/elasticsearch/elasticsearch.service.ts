@@ -102,13 +102,13 @@ export class ElasticsearchService implements OnModuleInit {
                     status: contact.status,
                     score: contact.score,
                     tags,
-                    name: contact.lead.name,
-                    email: contact.lead.email,
-                    company: contact.lead.company,
-                    title: contact.lead.title,
-                    industry: contact.lead.industry,
-                    location: contact.lead.location,
-                    description: contact.lead.description,
+                    name: contact.name,
+                    email: contact.email,
+                    company: contact.company,
+                    title: contact.title,
+                    industry: contact.industry,
+                    location: contact.location,
+                    description: contact.description,
                     metadata,
                     embedding,
                     created_at: contact.created_at,
@@ -222,6 +222,31 @@ export class ElasticsearchService implements OnModuleInit {
             .join('\n');
     }
 
+    private buildContactIdentityBlock(contact: Contact): string {
+        return [
+            contact.name && `Name: ${contact.name}`,
+            contact.title && `Title: ${contact.title}`,
+            contact.company && `Company: ${contact.company}`,
+            contact.industry && `Industry: ${contact.industry}`,
+            contact.location && `Location: ${contact.location}`,
+            contact.website && `Website: ${contact.website}`,
+            contact.email && `Email: ${contact.email}`,
+            contact.phone && `Phone: ${contact.phone}`,
+            contact.linkedin_url && `LinkedIn: ${contact.linkedin_url}`,
+            contact.description && `Description: ${contact.description}`,
+        ]
+            .filter(Boolean)
+            .join('\n');
+    }
+
+    private buildLeadEnrichmentBlock(lead: Lead): string {
+        const enrichmentSummary =
+            lead.enrichment_data && typeof lead.enrichment_data === 'object' && 'summary' in lead.enrichment_data
+                ? String((lead.enrichment_data as { summary?: unknown }).summary ?? '')
+                : '';
+        return enrichmentSummary ? `Summary: ${enrichmentSummary}` : '';
+    }
+
     private buildContactMetadata(
         contact: Contact & { lead: Lead },
         tags: string[],
@@ -231,7 +256,8 @@ export class ElasticsearchService implements OnModuleInit {
             contact.score != null && `Score: ${contact.score}`,
             tags.length > 0 && `Tags: ${tags.join(', ')}`,
             contact.notes && `Notes: ${contact.notes}`,
-            this.buildLeadMetadata(contact.lead),
+            this.buildContactIdentityBlock(contact),
+            this.buildLeadEnrichmentBlock(contact.lead),
         ];
         return parts.filter(Boolean).join('\n');
     }

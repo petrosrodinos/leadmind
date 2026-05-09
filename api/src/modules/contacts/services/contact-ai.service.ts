@@ -13,29 +13,30 @@ const SCORE_SCHEMA = z.object({
 
 type ScoreResult = z.infer<typeof SCORE_SCHEMA>;
 
-const formatLead = (lead: Lead): string => {
+const formatContactForAi = (contact: Contact, lead: Lead): string => {
     const enrichment_summary =
         lead.enrichment_data && typeof lead.enrichment_data === 'object' && 'summary' in lead.enrichment_data
             ? String((lead.enrichment_data as { summary?: unknown }).summary ?? '')
             : '';
 
     return [
-        `Name: ${lead.name ?? 'N/A'}`,
-        `Title: ${lead.title ?? 'N/A'}`,
-        `Company: ${lead.company ?? 'N/A'}`,
-        `Industry: ${lead.industry ?? 'N/A'}`,
-        `Location: ${lead.location ?? 'N/A'}`,
-        `Website: ${lead.website ?? 'N/A'}`,
-        `Email: ${lead.email ?? 'N/A'}`,
-        `LinkedIn: ${lead.linkedin_url ?? 'N/A'}`,
-        `Description: ${lead.description ?? 'N/A'}`,
+        `Name: ${contact.name ?? 'N/A'}`,
+        `Title: ${contact.title ?? 'N/A'}`,
+        `Company: ${contact.company ?? 'N/A'}`,
+        `Industry: ${contact.industry ?? 'N/A'}`,
+        `Location: ${contact.location ?? 'N/A'}`,
+        `Website: ${contact.website ?? 'N/A'}`,
+        `Email: ${contact.email ?? 'N/A'}`,
+        `Phone: ${contact.phone ?? 'N/A'}`,
+        `LinkedIn: ${contact.linkedin_url ?? 'N/A'}`,
+        `Description: ${contact.description ?? 'N/A'}`,
         enrichment_summary ? `Website summary: ${enrichment_summary}` : '',
     ]
         .filter(Boolean)
         .join('\n');
 };
 
-const SCORE_PROMPT = (lead: Lead, ai_instructions: string): string => `
+const SCORE_PROMPT = (contact: Contact, lead: Lead, ai_instructions: string): string => `
 You are scoring a sales lead from 1 (poor fit) to 10 (excellent fit) for a user with these targeting criteria:
 
 USER TARGETING CRITERIA:
@@ -45,7 +46,7 @@ ${ai_instructions}
 
 LEAD PROFILE:
 """
-${formatLead(lead)}
+${formatContactForAi(contact, lead)}
 """
 
 Return:
@@ -53,7 +54,7 @@ Return:
 - reasoning: 1-2 sentences explaining the rating, referencing the targeting criteria
 `.trim();
 
-const EMAIL_PROMPT = (lead: Lead, ai_instructions: string): string => `
+const EMAIL_PROMPT = (contact: Contact, lead: Lead, ai_instructions: string): string => `
 You are drafting a cold outreach EMAIL for the lead below, using the user's outreach instructions.
 
 USER OUTREACH INSTRUCTIONS:
@@ -63,7 +64,7 @@ ${ai_instructions}
 
 LEAD PROFILE:
 """
-${formatLead(lead)}
+${formatContactForAi(contact, lead)}
 """
 
 Output format (no markdown, no commentary):
@@ -72,7 +73,7 @@ Subject: <subject line, under 80 chars>
 <body in plain prose, 80-150 words, formal-but-warm tone, ending with a clear soft CTA>
 `.trim();
 
-const SMS_PROMPT = (lead: Lead, ai_instructions: string): string => `
+const SMS_PROMPT = (contact: Contact, lead: Lead, ai_instructions: string): string => `
 Draft a cold outreach SMS for this lead. Hard limit: 160 characters. No greeting fluff. Friendly, direct, with a single soft CTA.
 
 USER OUTREACH INSTRUCTIONS:
@@ -82,13 +83,13 @@ ${ai_instructions}
 
 LEAD PROFILE:
 """
-${formatLead(lead)}
+${formatContactForAi(contact, lead)}
 """
 
 Output: only the SMS body. No subject. No quotes. No commentary.
 `.trim();
 
-const LINKEDIN_PROMPT = (lead: Lead, ai_instructions: string): string => `
+const LINKEDIN_PROMPT = (contact: Contact, lead: Lead, ai_instructions: string): string => `
 Draft a LinkedIn outreach DM for this lead. Conversational, peer-to-peer tone. 60-120 words. No subject. End with a low-pressure CTA.
 
 USER OUTREACH INSTRUCTIONS:
@@ -98,7 +99,7 @@ ${ai_instructions}
 
 LEAD PROFILE:
 """
-${formatLead(lead)}
+${formatContactForAi(contact, lead)}
 """
 
 Output: only the DM body. No commentary.
@@ -114,10 +115,6 @@ export class ContactAiService {
         private readonly elasticsearchService: ElasticsearchService,
     ) { }
 
-    /**
-     * Score a Contact 1-10 against the parent filter's `ai_instructions`.
-     * Idempotent: returns the existing score if already set.
-     */
     async scoreContact(contact: Contact, lead: Lead, filter: Filter): Promise<number> {
         if (contact.score != null) {
             return contact.score;
@@ -132,7 +129,7 @@ export class ContactAiService {
             provider: AiProviders.openai,
             model: AiModels.openai.gpt4oMini,
             schema: SCORE_SCHEMA,
-            prompt: SCORE_PROMPT(lead, filter.ai_instructions),
+            prompt: SCORE_PROMPT(contact, lead, filter.ai_instructions),
             system: 'You are a sales-qualification assistant scoring leads against targeting criteria.',
         });
 
@@ -156,12 +153,6 @@ export class ContactAiService {
         return response.score;
     }
 
-    /**
-     * Draft one OutreachMessage per channel listed on the parent filter.
-     * - No-op when filter.ai_instructions is empty or filter.channels is empty.
-     * - Skips channels that already have a PENDING message for this contact (preserves user edits).
-     * Returns the newly created rows only.
-     */
     async draftOutreachMessages(
         contact: Contact,
         lead: Lead,
@@ -189,7 +180,7 @@ export class ContactAiService {
             }
 
             try {
-                const draft = await this.draftForChannel(channel, lead, filter.ai_instructions);
+                const draft = await this.draftForChannel(channel, contact, lead, filter.ai_instructions);
 
                 const message = await this.prisma.outreachMessage.create({
                     data: {
@@ -216,10 +207,11 @@ export class ContactAiService {
 
     private async draftForChannel(
         channel: Channel,
+        contact: Contact,
         lead: Lead,
         ai_instructions: string,
     ): Promise<{ subject: string | null; content: string }> {
-        const prompt = this.promptForChannel(channel, lead, ai_instructions);
+        const prompt = this.promptForChannel(channel, contact, lead, ai_instructions);
 
         const { response } = await this.aiService.generateText({
             provider: AiProviders.openai,
@@ -234,14 +226,19 @@ export class ContactAiService {
         return { subject: null, content: response.trim() };
     }
 
-    private promptForChannel(channel: Channel, lead: Lead, ai_instructions: string): string {
+    private promptForChannel(
+        channel: Channel,
+        contact: Contact,
+        lead: Lead,
+        ai_instructions: string,
+    ): string {
         switch (channel) {
             case Channel.EMAIL:
-                return EMAIL_PROMPT(lead, ai_instructions);
+                return EMAIL_PROMPT(contact, lead, ai_instructions);
             case Channel.SMS:
-                return SMS_PROMPT(lead, ai_instructions);
+                return SMS_PROMPT(contact, lead, ai_instructions);
             case Channel.LINKEDIN:
-                return LINKEDIN_PROMPT(lead, ai_instructions);
+                return LINKEDIN_PROMPT(contact, lead, ai_instructions);
             default:
                 throw new Error(`Unsupported channel: ${channel}`);
         }

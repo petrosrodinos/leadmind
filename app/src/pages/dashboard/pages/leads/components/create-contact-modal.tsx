@@ -27,6 +27,9 @@ const emptyForm = (): CreateContactPayload => ({
     website: "",
     title: "",
     location: "",
+    linkedin_url: "",
+    industry: "",
+    description: "",
     tags: [],
     notes: "",
 });
@@ -83,6 +86,9 @@ export function CreateContactModal({ isOpen, onOpenChange }: CreateContactModalP
             "website",
             "title",
             "location",
+            "linkedin_url",
+            "industry",
+            "description",
             "notes",
         ] as const) {
             const v = form[k]?.trim();
@@ -184,6 +190,34 @@ export function CreateContactModal({ isOpen, onOpenChange }: CreateContactModalP
                                         placeholder="Athens, Greece"
                                         value={form.location ?? ""}
                                         onChange={(e) => set("location", e.target.value)}
+                                    />
+                                </div>
+                                <div className="flex flex-col gap-1.5">
+                                    <Label htmlFor="cl-linkedin">LinkedIn URL</Label>
+                                    <Input
+                                        id="cl-linkedin"
+                                        placeholder="https://linkedin.com/in/..."
+                                        value={form.linkedin_url ?? ""}
+                                        onChange={(e) => set("linkedin_url", e.target.value)}
+                                    />
+                                </div>
+                                <div className="flex flex-col gap-1.5">
+                                    <Label htmlFor="cl-industry">Industry</Label>
+                                    <Input
+                                        id="cl-industry"
+                                        placeholder="Software"
+                                        value={form.industry ?? ""}
+                                        onChange={(e) => set("industry", e.target.value)}
+                                    />
+                                </div>
+                                <div className="flex flex-col gap-1.5 sm:col-span-2">
+                                    <Label htmlFor="cl-description">Description</Label>
+                                    <TextArea
+                                        id="cl-description"
+                                        rows={3}
+                                        placeholder="Short summary…"
+                                        value={form.description ?? ""}
+                                        onChange={(e) => set("description", e.target.value)}
                                     />
                                 </div>
 

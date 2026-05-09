@@ -187,6 +187,16 @@ exports.Prisma.ContactScalarFieldEnum = {
   status: 'status',
   score: 'score',
   notes: 'notes',
+  name: 'name',
+  email: 'email',
+  phone: 'phone',
+  company: 'company',
+  website: 'website',
+  linkedin_url: 'linkedin_url',
+  title: 'title',
+  location: 'location',
+  industry: 'industry',
+  description: 'description',
   created_at: 'created_at',
   updated_at: 'updated_at'
 };

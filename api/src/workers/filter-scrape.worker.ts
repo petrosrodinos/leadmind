@@ -6,6 +6,7 @@ import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { ApifyService } from '@/integrations/apify/apify.service';
 import { ElasticsearchService } from '@/integrations/elasticsearch/elasticsearch.service';
 import { NormalizedLead } from '@/integrations/apify/interfaces/apify.interfaces';
+import { contactProfileFromLead } from '@/modules/contacts/utils/contact-profile.utils';
 import { AI_PROCESS_QUEUE, FILTER_SCRAPE_QUEUE } from '@/core/queues/queues.constants';
 
 interface FilterScrapeJobData {
@@ -147,6 +148,7 @@ export class FilterScrapeWorker extends WorkerHost {
                         user_uuid: filter.user_uuid,
                         lead_uuid: lead.uuid,
                         filter_uuid: filter.uuid,
+                        ...contactProfileFromLead(lead),
                     },
                 });
                 await this.elasticsearchService.indexContact({ ...contact, lead, tags: [] });
