@@ -9,18 +9,15 @@ export default function DashboardLayout() {
 
   return (
     <div className="flex h-screen bg-background overflow-hidden">
-      {/* Desktop sidebar */}
       <Sidebar />
 
-      {/* Main content area */}
-      <div className="flex flex-col flex-1 overflow-hidden">
+      <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
         <DashboardNavbar onMenuClick={drawerState.open} />
-        <main className="flex-1 overflow-y-auto p-6">
+        <main className="min-h-0 flex-1 overflow-y-auto p-6">
           <Outlet />
         </main>
       </div>
 
-      {/* Mobile drawer */}
       <Drawer state={drawerState}>
         <Drawer.Backdrop isDismissable />
         <Drawer.Content placement="left">

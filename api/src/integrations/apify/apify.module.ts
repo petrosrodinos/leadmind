@@ -7,6 +7,7 @@ import { GoogleMapsAdapter } from './google-maps/google-maps.adapter';
 import { GoogleSearchAdapter } from './google-search/google-search.adapter';
 import { GenericLeadFinderAdapter } from './generic-lead-finder/generic-lead-finder.adapter';
 import { WebsiteContentCrawlerAdapter } from './website-content-crawler/website-content-crawler.adapter';
+import { LinkedInCompanyAdapter } from './linkedin-company/linkedin-company.adapter';
 
 @Module({
     imports: [ConfigModule],
@@ -17,8 +18,9 @@ import { WebsiteContentCrawlerAdapter } from './website-content-crawler/website-
         GoogleSearchAdapter,
         GenericLeadFinderAdapter,
         WebsiteContentCrawlerAdapter,
+        LinkedInCompanyAdapter,
         ApifyService,
     ],
-    exports: [ApifyService, WebsiteContentCrawlerAdapter],
+    exports: [ApifyService, WebsiteContentCrawlerAdapter, LinkedInCompanyAdapter],
 })
 export class ApifyModule { }

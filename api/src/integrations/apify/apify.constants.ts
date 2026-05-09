@@ -12,6 +12,7 @@ export const APIFY_ACTORS = {
     GOOGLE_SEARCH: 'apify/google-search-scraper',
     GENERIC_LEAD: 'braveleads/leads-finder-linkedin-apollo-leads-generator',
     WEBSITE_CONTENT_CRAWLER: 'apify/website-content-crawler',
+    LINKEDIN_COMPANY: 'scraper-engine/linkedin-company-about-scraper',
 } as const;
 
 export type ApifyActorKey = keyof typeof APIFY_ACTORS;
