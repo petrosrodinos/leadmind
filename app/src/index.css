@@ -1,6 +1,20 @@
 @import "tailwindcss";
 @import "@heroui/styles";
 
+html,
+body {
+  height: 100%;
+}
+
+body {
+  overflow: hidden;
+}
+
+#root {
+  height: 100%;
+  min-height: 0;
+}
+
 /* ─── Base / legacy custom properties ────────────────────────────────────────
    Dark values as defaults. Theme blocks below come AFTER in the cascade
    so they correctly override these per-theme.
