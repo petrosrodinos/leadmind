@@ -4,9 +4,15 @@ import { SourceType } from "@/features/leads/interfaces/lead.interface";
 
 const linkedinConfigSchema = z.object({
     keywords: z.string().min(1, "Keywords are required"),
-    location: z.string().optional(),
-    industry: z.string().optional(),
+    seniority: z.array(z.string()).optional(),
+    departments: z.array(z.string()).optional(),
+    location: z.array(z.string()).optional(),
+    company_location: z.array(z.string()).optional(),
+    companyIndustries: z.array(z.string()).optional(),
+    company_size: z.array(z.string()).optional(),
+    company_revenue: z.array(z.string()).optional(),
     limit: z.coerce.number().int().positive().optional(),
+    only_with_email: z.boolean().optional(),
 });
 
 const googleMapsConfigSchema = z.object({

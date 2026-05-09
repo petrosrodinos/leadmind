@@ -19,9 +19,15 @@ export type JobTrigger = (typeof JobTrigger)[keyof typeof JobTrigger];
 
 export interface LinkedInQueryConfig {
     keywords: string;
-    location?: string;
-    industry?: string;
+    seniority?: string[];
+    departments?: string[];
+    location?: string[];
+    company_location?: string[];
+    companyIndustries?: string[];
+    company_size?: string[];
+    company_revenue?: string[];
     limit?: number;
+    only_with_email?: boolean;
 }
 
 export interface GoogleMapsQueryConfig {

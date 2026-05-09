@@ -14,6 +14,7 @@ import {
 } from "@/features/filters/hooks/use-filters";
 import { Routes } from "@/routes/routes";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { FilterRunLeadingVisual } from "@/pages/dashboard/pages/filters/components/filter-run-controls";
 
 const TABS: Array<{ id: string; label: string }> = [
     { id: "contacts", label: "Contacts" },
@@ -43,6 +44,8 @@ export default function FilterDetailPage() {
         TABS.find((t) => location.pathname.endsWith(`/${t.id}`))?.id ?? "contacts";
 
     const isManual = filter?.source_type === SourceType.MANUAL;
+    const runStarting = runFilter.isPending && !isJobActive;
+    const runJobRunning = isJobActive;
     const runBusy = runFilter.isPending || isJobActive;
 
     const runDisabled = !filter || runBusy || isManual || !filter.enabled;
@@ -129,10 +132,26 @@ export default function FilterDetailPage() {
                                     <Dropdown.Item
                                         id="run"
                                         isDisabled={runDisabled}
-                                        textValue="Run now"
+                                        textValue={
+                                            runBusy
+                                                ? runStarting
+                                                    ? "Starting filter run"
+                                                    : "Filter run in progress"
+                                                : "Run now"
+                                        }
                                     >
-                                        <Play className="size-4" />
-                                        {runBusy ? "Running…" : "Run now"}
+                                        <span className="flex items-center gap-2">
+                                            <FilterRunLeadingVisual
+                                                isStarting={runStarting}
+                                                isJobRunning={runJobRunning}
+                                                iconClassName="size-4"
+                                            />
+                                            {runBusy
+                                                ? runStarting
+                                                    ? "Starting…"
+                                                    : "Running…"
+                                                : "Run now"}
+                                        </span>
                                     </Dropdown.Item>
                                     <Dropdown.Item
                                         id="toggle"

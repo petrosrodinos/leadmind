@@ -1,10 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ApifyAdapter, ApifyRunInput, NormalizedLead } from '../interfaces/apify.interfaces';
+import { LINKEDIN_APIFY_LOCATION_VALUES } from './contact-location-allowed.generated';
 import { LinkedInLeadsQueryConfig, LinkedInLeadsRawItem } from './linkedin-leads.interfaces';
 
 @Injectable()
 export class LinkedInLeadsAdapter
     implements ApifyAdapter<LinkedInLeadsQueryConfig, LinkedInLeadsRawItem> {
+
+    private readonly logger = new Logger(LinkedInLeadsAdapter.name);
+
+    private readonly apifyLocationCanonByLower = new Map<string, string>(
+        LINKEDIN_APIFY_LOCATION_VALUES.map((v) => [v.toLowerCase(), v]),
+    );
 
     buildInput(query_config: LinkedInLeadsQueryConfig): ApifyRunInput {
         const {
@@ -12,9 +19,10 @@ export class LinkedInLeadsAdapter
             seniority,
             departments,
             location,
-            industries,
+            companyIndustries,
             company_size,
             company_location,
+            company_revenue,
             limit,
             only_with_email,
         } = query_config;
@@ -25,15 +33,77 @@ export class LinkedInLeadsAdapter
             allEmails: only_with_email ?? true,
         };
 
-        if (keywords?.length) input.contactJobTitle = keywords.slice(0, 3);
-        if (seniority?.length) input.contactSeniority = seniority;
-        if (departments?.length) input.departments = departments;
-        if (location?.length) input.contactLocation = location;
-        if (industries?.length) input.industries = industries;
-        if (company_size?.length) input.companySize = company_size;
-        if (company_location?.length) input.companyLocation = company_location;
+        const titleKeywords = this.normalizeKeywords(keywords);
+        if (titleKeywords.length) input.contactJobTitle = titleKeywords.slice(0, 3);
+
+        const seniorityList = this.normalizeStringArray(seniority);
+        if (seniorityList.length) input.contactSeniority = seniorityList;
+
+        const departmentList = this.normalizeStringArray(departments);
+        if (departmentList.length) input.departments = departmentList;
+
+        const locationList = this.normalizeStringArray(location);
+        const contactLocations = this.filterToApifyLocations(locationList);
+        if (contactLocations.length) input.contactLocation = contactLocations;
+        else if (locationList.length) {
+            this.logger.warn(
+                `LinkedIn Apify actor rejected stored location(s) (not in its enum); running without contactLocation: ${locationList.join('; ')}`,
+            );
+        }
+
+        const companyIndustryList = this.normalizeStringArray(companyIndustries);
+        if (companyIndustryList.length) input.companyIndustries = companyIndustryList;
+
+        const companyRevenueList = this.normalizeStringArray(company_revenue);
+        if (companyRevenueList.length) input.companyRevenue = companyRevenueList;
+
+        const companySizeList = this.normalizeStringArray(company_size);
+        if (companySizeList.length) input.companySize = companySizeList;
+
+        const companyLocationList = this.normalizeStringArray(company_location);
+        const companyLocations = this.filterToApifyLocations(companyLocationList);
+        if (companyLocations.length) input.companyLocation = companyLocations;
+        else if (companyLocationList.length) {
+            this.logger.warn(
+                `LinkedIn Apify actor rejected stored company location(s) (not in its enum); running without companyLocation: ${companyLocationList.join('; ')}`,
+            );
+        }
 
         return input;
+    }
+
+    private filterToApifyLocations(parts: string[]): string[] {
+        const seen = new Set<string>();
+        const out: string[] = [];
+        for (const raw of parts) {
+            const t = raw.trim();
+            if (!t) continue;
+            const canon = this.apifyLocationCanonByLower.get(t.toLowerCase());
+            if (canon && !seen.has(canon)) {
+                seen.add(canon);
+                out.push(canon);
+            }
+        }
+        return out;
+    }
+
+    private normalizeKeywords(value: unknown): string[] {
+        if (typeof value !== 'string') return [];
+        const t = value.trim();
+        if (!t) return [];
+        return t.split(',').flatMap((part) => {
+            const s = part.trim();
+            return s ? [s] : [];
+        });
+    }
+
+    private normalizeStringArray(value: unknown): string[] {
+        if (value == null) return [];
+        if (!Array.isArray(value)) return [];
+        return value
+            .filter((x): x is string => typeof x === 'string')
+            .map((s) => s.trim())
+            .filter(Boolean);
     }
 
     normalize(raw_items: LinkedInLeadsRawItem[]): NormalizedLead[] {

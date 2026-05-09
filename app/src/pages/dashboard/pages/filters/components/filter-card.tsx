@@ -5,7 +5,6 @@ import {
     Calendar,
     History as HistoryIcon,
     Pencil,
-    Play,
     Trash,
 } from "lucide-react";
 import cronstrue from "cronstrue";
@@ -21,6 +20,7 @@ import {
 } from "@/features/filters/hooks/use-filters";
 import { Routes } from "@/routes/routes";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { FilterRunButton } from "@/pages/dashboard/pages/filters/components/filter-run-controls";
 
 const CHANNEL_LABEL: Record<Channel, string> = {
     [Channel.EMAIL]: "Email",
@@ -62,8 +62,8 @@ export function FilterCard({ filter }: FilterCardProps) {
     const [confirmOpen, setConfirmOpen] = useState(false);
 
     const isManual = filter.source_type === SourceType.MANUAL;
-    const runBusy = runFilter.isPending || isJobActive;
-    const runDisabled = runBusy || isManual || !filter.enabled;
+    const isStarting = runFilter.isPending && !isJobActive;
+    const isJobRunning = isJobActive;
 
     const handleToggle = (next: boolean) => {
         updateFilter.mutate({ uuid: filter.uuid, payload: { enabled: next } });
@@ -144,23 +144,13 @@ export function FilterCard({ filter }: FilterCardProps) {
                 onClick={stopBubble}
                 className="flex flex-wrap items-center gap-2 mt-auto pt-1"
             >
-                <Button
-                    size="sm"
-                    isDisabled={runDisabled}
-                    isPending={runBusy}
+                <FilterRunButton
                     onPress={() => runFilter.mutate(filter.uuid)}
-                    aria-label={
-                        isManual ? "Manual filters cannot be run" : "Run filter now"
-                    }
-                >
-                    <Play className="size-3.5" />
-                    <span className="hidden @[18rem]:inline">
-                        {runBusy ? "Running…" : "Run Now"}
-                    </span>
-                    <span className="@[18rem]:hidden">
-                        {runBusy ? "Running" : "Run"}
-                    </span>
-                </Button>
+                    isStarting={isStarting}
+                    isJobRunning={isJobRunning}
+                    isManual={isManual}
+                    filterEnabled={filter.enabled}
+                />
                 <Button
                     size="sm"
                     variant="secondary"

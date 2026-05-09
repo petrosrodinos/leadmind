@@ -202,13 +202,15 @@ export class FiltersService {
         }
 
         switch (source_type) {
-            case SourceType.LINKEDIN:
-                if (!query_config.keywords) {
+            case SourceType.LINKEDIN: {
+                const kw = query_config.keywords;
+                if (typeof kw !== 'string' || !kw.trim()) {
                     throw new BadRequestException(
-                        `${SourceType.LINKEDIN} filter requires query_config.keywords`,
+                        `${SourceType.LINKEDIN} filter requires query_config.keywords (non-empty string)`,
                     );
                 }
                 return;
+            }
             case SourceType.GOOGLE_MAPS:
                 if (!query_config.query) {
                     throw new BadRequestException(

@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "generate:linkedin-apify-enums": "node ../scripts/generate-linkedin-apify-enums.cjs"
   },
   "dependencies": {
     "@googlemaps/js-api-loader": "^2.0.2",

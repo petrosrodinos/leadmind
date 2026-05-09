@@ -1,11 +1,12 @@
 export interface LinkedInLeadsQueryConfig {
-    keywords?: string[];
+    keywords?: string;
     seniority?: string[];
     departments?: string[];
     location?: string[];
-    industries?: string[];
+    companyIndustries?: string[];
     company_size?: string[];
     company_location?: string[];
+    company_revenue?: string[];
     limit?: number;
     only_with_email?: boolean;
 }
