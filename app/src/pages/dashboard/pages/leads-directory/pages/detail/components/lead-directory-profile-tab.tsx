@@ -1,7 +1,8 @@
 import type { ComponentType, ReactNode } from "react";
 import type { Lead } from "@/features/leads/interfaces/lead.interface";
+import { EnrichmentSnapshotPanel } from "@/components/ui/enrichment-snapshot-panel";
 import { SourceBadge } from "@/components/ui/source-badge";
-import { AtSign, Briefcase, Building2, CalendarClock, ExternalLink, Globe, MapPin, Sparkles, Tag } from "lucide-react";
+import { AtSign, Briefcase, Building2, CalendarClock, ExternalLink, Globe, MapPin, Tag } from "lucide-react";
 
 function initialsFromName(name: string | null): string {
   if (!name?.trim()) return "?";
@@ -74,7 +75,6 @@ function Row({ label, children }: { label: string; children: ReactNode }) {
 }
 
 export function LeadDirectoryProfileTab({ lead }: { lead: Lead }) {
-  const summaryPreview = lead.enrichment_summary?.trim();
   const websiteHref = lead.website?.trim() ? normalizeUrl(lead.website.trim()) : undefined;
   const linkedinHref = lead.linkedin_url?.trim() || undefined;
 
@@ -132,15 +132,7 @@ export function LeadDirectoryProfileTab({ lead }: { lead: Lead }) {
             </div>
           )}
         </div>
-        {summaryPreview ? (
-          <div className="relative mt-6 rounded-xl border border-accent/20 bg-accent/[0.06] px-4 py-3 sm:px-5">
-            <p className="mb-1.5 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-accent">
-              <Sparkles className="size-3.5" strokeWidth={2} />
-              Enrichment snapshot
-            </p>
-            <p className="text-sm leading-relaxed text-foreground/90 whitespace-pre-wrap break-words line-clamp-4">{summaryPreview}</p>
-          </div>
-        ) : null}
+        <EnrichmentSnapshotPanel summary={lead.enrichment_summary} className="relative mt-6" hideWhenEmpty />
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">

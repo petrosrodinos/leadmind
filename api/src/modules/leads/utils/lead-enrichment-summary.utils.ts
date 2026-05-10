@@ -80,7 +80,7 @@ export async function recomputeLeadEnrichmentSummary(
         }
         const trimmed = row.summary?.trim();
         const text = trimmed || fallbackBlockText(src, row.payload);
-        parts.push(`${src}: ${text}`);
+        parts.push(text);
     }
     let body = parts.join('\n\n');
     if (body.length > MAX_ENRICHMENT_SUMMARY_LENGTH) {

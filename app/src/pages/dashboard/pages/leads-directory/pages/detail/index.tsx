@@ -10,6 +10,7 @@ import { useAddLeadToCrm } from "@/features/contacts/hooks/use-contacts";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { Routes } from "@/routes/routes";
 import { EnrichmentActionPopover } from "@/components/ui/enrichment-action-popover";
+import { EnrichmentSnapshotPanel } from "@/components/ui/enrichment-snapshot-panel";
 import { LeadDirectoryProfileTab } from "./components/lead-directory-profile-tab";
 
 const ENRICHMENT_PAGE_SIZE = 10;
@@ -156,13 +157,11 @@ function EnrichmentTabContent({ leadUuid, lead }: { leadUuid: string; lead: Lead
   const end = Math.min(page * ENRICHMENT_PAGE_SIZE, total);
   const hasFilters = Boolean(sourceFilter || debouncedSearch.trim());
 
-  const summary = lead.enrichment_summary?.trim();
-
   return (
     <div className="space-y-6">
       <div className="rounded-lg border border-border bg-surface-secondary p-4">
         <p className="text-xs font-medium text-muted uppercase tracking-wide mb-2">Combined summary</p>
-        {summary ? <p className="text-sm text-foreground whitespace-pre-wrap break-words">{summary}</p> : <p className="text-sm text-muted italic">No enrichment summary yet.</p>}
+        <EnrichmentSnapshotPanel variant="scrollOnly" summary={lead.enrichment_summary} />
       </div>
 
       <div>

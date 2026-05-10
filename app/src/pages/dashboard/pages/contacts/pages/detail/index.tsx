@@ -13,6 +13,7 @@ import { EditMessageModal } from "@/pages/dashboard/pages/leads/components/edit-
 import { InteractionTimeline } from "@/pages/dashboard/pages/contacts/components/interaction-timeline";
 import { OverviewUrlField } from "@/components/ui/overview-url-field";
 import { EnrichmentActionPopover } from "@/components/ui/enrichment-action-popover";
+import { EnrichmentSnapshotPanel } from "@/components/ui/enrichment-snapshot-panel";
 
 const STATUS_OPTIONS: Array<{ id: LeadStatus; label: string }> = [
   { id: LeadStatus.NEW, label: "New" },
@@ -242,9 +243,12 @@ function OverviewTab({ contact }: TabContactProps) {
         </div>
       </Section>
 
-      <Section title="Public enrichment" action={<EnrichmentActionPopover mode="contact" initialSources={contact.filter?.enrichment_sources} isPending={enrichContactMut.isPending} onEnrich={(sources) => enrichContactMut.mutate({ uuid: contact.uuid, sources })} />}>
-        {contact.lead.enrichment_summary?.trim() ? <p className="text-sm text-foreground whitespace-pre-wrap break-words">{contact.lead.enrichment_summary}</p> : <p className="text-sm text-muted italic">No enrichment available yet.</p>}
-      </Section>
+      <EnrichmentSnapshotPanel
+        className="max-w-5xl"
+        summary={contact.lead.enrichment_summary}
+        emptyLabel="No enrichment available yet."
+        action={<EnrichmentActionPopover mode="contact" initialSources={contact.filter?.enrichment_sources} isPending={enrichContactMut.isPending} onEnrich={(sources) => enrichContactMut.mutate({ uuid: contact.uuid, sources })} />}
+      />
     </div>
   );
 }

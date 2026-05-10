@@ -1,0 +1,76 @@
+---
+alwaysApply: true
+description: 'Development-only refactor and migration rules prioritizing clean architecture, modernization, and simplification over backward compatibility or legacy preservation.'
+---
+
+# Refactor / Migration Rules
+
+## Environment Assumptions
+
+- This is a development environment only.
+- There are no production users.
+- There is no real customer or business-critical data.
+- Breaking changes are allowed.
+
+## Backward Compatibility
+
+Do NOT prioritize backward compatibility unless explicitly requested.
+
+You may:
+
+- remove deprecated code
+- rename APIs, variables, services, tables, and components
+- redesign schemas and architecture
+- delete obsolete abstractions
+- replace legacy implementations entirely
+- simplify flows even if interfaces change
+
+Do NOT add:
+
+- compatibility layers
+- fallback logic for old behavior
+- transitional adapters
+- legacy feature flags
+- dual implementations
+- temporary migration wrappers
+- defensive preservation of outdated patterns
+
+## Refactor Philosophy
+
+Prioritize:
+
+1. Clean architecture
+2. Maintainability
+3. Simplicity
+4. Type safety
+5. Consistency
+6. Developer experience
+7. Performance
+
+Prefer:
+
+- replacing instead of patching
+- consolidating duplicated logic
+- removing dead code
+- flattening unnecessary abstractions
+- modern framework best practices
+- explicit and readable code over overengineering
+
+## Implementation Guidelines
+
+- Keep implementations simple and opinionated.
+- Avoid premature optimization.
+- Avoid excessive abstraction unless it provides clear value.
+- Reduce complexity whenever possible.
+- Use modern patterns supported by the current stack.
+- Refactor aggressively if the existing structure is poor.
+- Do not preserve bad architecture for historical reasons.
+
+## Output Expectations
+
+When making changes:
+
+- explain major architectural decisions briefly
+- identify deleted/replaced legacy parts
+- keep the final implementation cohesive
+- avoid partial refactors that leave mixed paradigms behind
