@@ -30,9 +30,15 @@ export const InteractionType = {
     NOTE: "NOTE",
     CALL: "CALL",
     EMAIL: "EMAIL",
+    STATUS_CHANGE: "STATUS_CHANGE",
 } as const;
 
 export type InteractionType = (typeof InteractionType)[keyof typeof InteractionType];
+
+export interface InteractionStatusChange {
+    from: LeadStatus;
+    to: LeadStatus;
+}
 
 export interface OutreachMessage {
     uuid: string;
@@ -56,6 +62,7 @@ export interface Interaction {
     type: InteractionType;
     content: string | null;
     metadata: Record<string, unknown> | null;
+    status_change: InteractionStatusChange | null;
     created_at: string;
     updated_at: string;
 }

@@ -4,25 +4,28 @@ import { ArrowRight, Mail, Phone, StickyNote } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import {
     InteractionType,
+    LeadStatus,
     type Interaction,
+    type InteractionStatusChange,
 } from "@/features/contacts/interfaces/contact.interface";
 import { useContactInteractions } from "@/features/contacts/hooks/use-contacts";
+import { StatusChip } from "@/pages/dashboard/pages/leads/components/badges";
 import { cn } from "@/lib/utils";
 
 const ICONS = {
     [InteractionType.EMAIL]: Mail,
     [InteractionType.CALL]: Phone,
     [InteractionType.NOTE]: StickyNote,
+    [InteractionType.STATUS_CHANGE]: ArrowRight,
 } as const;
 
 const ICON_TONE: Record<InteractionType, string> = {
     [InteractionType.EMAIL]: "text-accent bg-accent/15 border-accent/30",
     [InteractionType.CALL]: "text-fuchsia-600 bg-fuchsia-500/15 border-fuchsia-500/30",
     [InteractionType.NOTE]: "text-muted bg-surface-secondary border-border",
+    [InteractionType.STATUS_CHANGE]:
+        "text-warning bg-warning-soft/40 border-warning/30",
 };
-
-const STATUS_CHANGE_ICON_TONE =
-    "text-warning bg-warning-soft/40 border-warning/30";
 
 const BADGE_COLOR: Record<
     InteractionType,
@@ -31,18 +34,28 @@ const BADGE_COLOR: Record<
     [InteractionType.EMAIL]: "success",
     [InteractionType.CALL]: "warning",
     [InteractionType.NOTE]: "default",
+    [InteractionType.STATUS_CHANGE]: "warning",
 };
 
 const BADGE_LABEL: Record<InteractionType, string> = {
     [InteractionType.EMAIL]: "Email",
     [InteractionType.CALL]: "Call",
     [InteractionType.NOTE]: "Note",
+    [InteractionType.STATUS_CHANGE]: "Status change",
 };
 
-const isStatusChangeNote = (interaction: Interaction): boolean =>
-    interaction.type === InteractionType.NOTE &&
-    typeof interaction.content === "string" &&
-    interaction.content.startsWith("Status changed from");
+function isLeadStatus(v: unknown): v is LeadStatus {
+    return typeof v === "string" && (Object.values(LeadStatus) as string[]).includes(v);
+}
+
+function parseStatusChange(raw: Interaction["status_change"]): InteractionStatusChange | null {
+    if (!raw || typeof raw !== "object") return null;
+    const o = raw as Record<string, unknown>;
+    const from = o.from;
+    const to = o.to;
+    if (!isLeadStatus(from) || !isLeadStatus(to)) return null;
+    return { from, to };
+}
 
 interface InteractionTimelineProps {
     contactUuid: string;
@@ -83,14 +96,14 @@ export function InteractionTimeline({ contactUuid }: InteractionTimelineProps) {
     return (
         <ol className="flex flex-col">
             {sorted.map((interaction, idx) => {
-                const isStatusChange = isStatusChangeNote(interaction);
-                const Icon = isStatusChange
-                    ? ArrowRight
-                    : ICONS[interaction.type] ?? StickyNote;
-                const iconTone = isStatusChange
-                    ? STATUS_CHANGE_ICON_TONE
-                    : ICON_TONE[interaction.type] ?? ICON_TONE[InteractionType.NOTE];
+                const Icon = ICONS[interaction.type] ?? StickyNote;
+                const iconTone = ICON_TONE[interaction.type] ?? ICON_TONE[InteractionType.NOTE];
                 const isLast = idx === sorted.length - 1;
+                const pair =
+                    interaction.type === InteractionType.STATUS_CHANGE
+                        ? parseStatusChange(interaction.status_change)
+                        : null;
+
                 return (
                     <li key={interaction.uuid} className="flex gap-3">
                         <div className="relative flex flex-col items-center shrink-0 w-8">
@@ -102,9 +115,7 @@ export function InteractionTimeline({ contactUuid }: InteractionTimelineProps) {
                             >
                                 <Icon className="size-4" />
                             </span>
-                            {!isLast && (
-                                <span className="flex-1 w-px bg-border my-1" />
-                            )}
+                            {!isLast && <span className="flex-1 w-px bg-border my-1" />}
                         </div>
                         <div
                             className={cn(
@@ -113,21 +124,15 @@ export function InteractionTimeline({ contactUuid }: InteractionTimelineProps) {
                             )}
                         >
                             <div className="flex items-center gap-2 flex-wrap">
-                                {isStatusChange ? (
-                                    <Chip size="sm" variant="soft" color="warning">
-                                        <Chip.Label>Status change</Chip.Label>
-                                    </Chip>
-                                ) : (
-                                    <Chip
-                                        size="sm"
-                                        variant="soft"
-                                        color={BADGE_COLOR[interaction.type] ?? "default"}
-                                    >
-                                        <Chip.Label>
-                                            {BADGE_LABEL[interaction.type] ?? interaction.type}
-                                        </Chip.Label>
-                                    </Chip>
-                                )}
+                                <Chip
+                                    size="sm"
+                                    variant="soft"
+                                    color={BADGE_COLOR[interaction.type] ?? "default"}
+                                >
+                                    <Chip.Label>
+                                        {BADGE_LABEL[interaction.type] ?? interaction.type}
+                                    </Chip.Label>
+                                </Chip>
                                 <span
                                     className="text-xs text-muted"
                                     title={new Date(interaction.created_at).toLocaleString()}
@@ -137,11 +142,29 @@ export function InteractionTimeline({ contactUuid }: InteractionTimelineProps) {
                                     })}
                                 </span>
                             </div>
-                            {interaction.content && (
+                            {interaction.type === InteractionType.STATUS_CHANGE ? (
+                                <>
+                                    {pair ? (
+                                        <div className="flex flex-wrap items-center gap-2 mt-2">
+                                            <StatusChip status={pair.from} />
+                                            <ArrowRight
+                                                className="size-4 text-muted shrink-0"
+                                                aria-hidden
+                                            />
+                                            <StatusChip status={pair.to} />
+                                        </div>
+                                    ) : null}
+                                    {interaction.content?.trim() ? (
+                                        <p className="text-sm text-foreground whitespace-pre-line break-words mt-2">
+                                            {interaction.content}
+                                        </p>
+                                    ) : null}
+                                </>
+                            ) : interaction.content?.trim() ? (
                                 <p className="text-sm text-foreground whitespace-pre-line break-words mt-1">
                                     {interaction.content}
                                 </p>
-                            )}
+                            ) : null}
                         </div>
                     </li>
                 );

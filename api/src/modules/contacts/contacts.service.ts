@@ -200,6 +200,8 @@ export class ContactsService {
             return existing;
         }
 
+        const noteTrimmed = dto.note?.trim();
+
         const [updated] = await this.prisma.$transaction([
             this.prisma.contact.update({
                 where: { uuid },
@@ -209,8 +211,12 @@ export class ContactsService {
                 data: {
                     contact_uuid: uuid,
                     user_uuid,
-                    type: InteractionType.NOTE,
-                    content: `Status changed from ${existing.status} to ${dto.status}`,
+                    type: InteractionType.STATUS_CHANGE,
+                    content: noteTrimmed ?? null,
+                    status_change: {
+                        from: existing.status,
+                        to: dto.status,
+                    },
                 },
             }),
         ]);

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Button, Chip, Input, Label, ListBox, Select, Tabs, TextArea } from "@heroui/react";
+import { Button, Chip, Input, Label, ListBox, Modal, Select, Tabs, TextArea } from "@heroui/react";
 import { ArrowLeft, Check, Globe, Link as LinkIcon, Mail, MessageCircle, Pencil, Plus, RefreshCcw, Send, Sparkles, Trash, X } from "lucide-react";
 import { Channel, LeadStatus, MsgStatus, type OutreachMessage } from "@/features/contacts/interfaces/contact.interface";
 import { SourceBadge } from "@/components/ui/source-badge";
@@ -26,7 +26,6 @@ const TABS = [
   { id: "overview", label: "Overview" },
   { id: "outreach", label: "Outreach" },
   { id: "crm", label: "CRM" },
-  { id: "timeline", label: "Timeline" },
 ] as const;
 
 const channelIcon = (channel: Channel) => {
@@ -108,8 +107,6 @@ export default function ContactDetailPage() {
           </div>
         ) : activeTab === "overview" ? (
           <OverviewTab contact={contact} />
-        ) : activeTab === "timeline" ? (
-          <TimelineTab contact={contact} />
         ) : activeTab === "outreach" ? (
           <OutreachTab contact={contact} />
         ) : (
@@ -253,14 +250,6 @@ function OverviewTab({ contact }: TabContactProps) {
   );
 }
 
-function TimelineTab({ contact }: TabContactProps) {
-  return (
-    <Section title="Activity">
-      <InteractionTimeline contactUuid={contact.uuid} />
-    </Section>
-  );
-}
-
 function OutreachTab({ contact }: TabContactProps) {
   const redraft = useRedraftMessages();
   const sendMessage = useSendOutreachMessage();
@@ -386,6 +375,9 @@ function CrmTab({ contact }: TabContactProps) {
   const rescore = useRescoreContact();
 
   const [notes, setNotes] = useState(contact.notes ?? "");
+  const [statusModalOpen, setStatusModalOpen] = useState(false);
+  const [pendingStatus, setPendingStatus] = useState<LeadStatus | null>(null);
+  const [statusNote, setStatusNote] = useState("");
 
   useEffect(() => {
     setNotes(contact.notes ?? "");
@@ -395,8 +387,83 @@ function CrmTab({ contact }: TabContactProps) {
 
   const handleTagsChange = (next: string[]) => updateTags.mutate({ uuid: contact.uuid, tags: next });
 
+  const pendingStatusLabel = pendingStatus ? (STATUS_OPTIONS.find((o) => o.id === pendingStatus)?.label ?? pendingStatus) : "";
+
   return (
     <div className="flex flex-col gap-6">
+      <Modal.Backdrop
+        isOpen={statusModalOpen}
+        onOpenChange={(open) => {
+          setStatusModalOpen(open);
+          if (!open) {
+            setPendingStatus(null);
+            setStatusNote("");
+          }
+        }}
+      >
+        <Modal.Container>
+          <Modal.Dialog className="sm:max-w-md">
+            <Modal.CloseTrigger />
+            <Modal.Header>
+              <Modal.Heading>Change status</Modal.Heading>
+            </Modal.Header>
+            <Modal.Body className="p-6 space-y-4">
+              <p className="text-sm text-foreground">
+                Set status to <span className="font-medium">{pendingStatusLabel}</span>. This is recorded on the contact timeline.
+              </p>
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="status-change-note">Note (optional)</Label>
+                <TextArea
+                  id="status-change-note"
+                  rows={4}
+                  placeholder="Context for this change…"
+                  value={statusNote}
+                  onChange={(e) => setStatusNote(e.target.value)}
+                />
+              </div>
+            </Modal.Body>
+            <Modal.Footer className="gap-2 justify-end">
+              <Button
+                size="sm"
+                variant="tertiary"
+                onPress={() => {
+                  setStatusModalOpen(false);
+                  setPendingStatus(null);
+                  setStatusNote("");
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                size="sm"
+                variant="secondary"
+                isDisabled={!pendingStatus}
+                isPending={updateStatus.isPending}
+                onPress={() => {
+                  if (!pendingStatus) return;
+                  updateStatus.mutate(
+                    {
+                      uuid: contact.uuid,
+                      status: pendingStatus,
+                      note: statusNote.trim() || undefined,
+                    },
+                    {
+                      onSuccess: () => {
+                        setStatusModalOpen(false);
+                        setPendingStatus(null);
+                        setStatusNote("");
+                      },
+                    },
+                  );
+                }}
+              >
+                Save status
+              </Button>
+            </Modal.Footer>
+          </Modal.Dialog>
+        </Modal.Container>
+      </Modal.Backdrop>
+
       <Section
         title="CRM state"
         action={
@@ -412,12 +479,13 @@ function CrmTab({ contact }: TabContactProps) {
             <Select
               className="w-full"
               value={contact.status}
-              onChange={(v) =>
-                updateStatus.mutate({
-                  uuid: contact.uuid,
-                  status: v as LeadStatus,
-                })
-              }
+              onChange={(v) => {
+                const next = v as LeadStatus;
+                if (next === contact.status) return;
+                setPendingStatus(next);
+                setStatusNote("");
+                setStatusModalOpen(true);
+              }}
             >
               <Select.Trigger>
                 <Select.Value />
@@ -448,8 +516,14 @@ function CrmTab({ contact }: TabContactProps) {
 
       <Section title="Notes">
         <div className="flex flex-col gap-2">
-          <Label htmlFor="contact-notes">Notes</Label>
-          <TextArea id="contact-notes" aria-label="Notes" rows={6} value={notes} onChange={(e) => setNotes(e.target.value)} />
+          <TextArea
+            id="contact-notes"
+            aria-label="CRM notes"
+            placeholder="Internal notes about this contact — next steps, context, call outcomes…"
+            rows={6}
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+          />
           <div className="flex justify-end">
             <Button
               size="sm"
@@ -467,6 +541,10 @@ function CrmTab({ contact }: TabContactProps) {
             </Button>
           </div>
         </div>
+      </Section>
+
+      <Section title="Activity">
+        <InteractionTimeline contactUuid={contact.uuid} />
       </Section>
     </div>
   );

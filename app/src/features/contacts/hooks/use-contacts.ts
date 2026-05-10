@@ -143,8 +143,11 @@ export function useAddLeadToCrm() {
 export function useUpdateContactStatus() {
     const qc = useQueryClient();
     return useMutation({
-        mutationFn: (vars: { uuid: string; status: LeadStatus }) =>
-            updateContactStatus(vars.uuid, vars.status),
+        mutationFn: (vars: { uuid: string; status: LeadStatus; note?: string }) =>
+            updateContactStatus(vars.uuid, {
+                status: vars.status,
+                note: vars.note,
+            }),
         onMutate: async (vars) => {
             await qc.cancelQueries({ queryKey: contactsQueryKeys.all });
             const lists = qc.getQueriesData<PaginatedContacts>({ queryKey: ["contacts", "list"] });

@@ -232,6 +232,7 @@ exports.Prisma.InteractionScalarFieldEnum = {
   type: 'type',
   content: 'content',
   metadata: 'metadata',
+  status_change: 'status_change',
   created_at: 'created_at',
   updated_at: 'updated_at'
 };
@@ -347,7 +348,8 @@ exports.LeadStatus = exports.$Enums.LeadStatus = {
 exports.InteractionType = exports.$Enums.InteractionType = {
   NOTE: 'NOTE',
   CALL: 'CALL',
-  EMAIL: 'EMAIL'
+  EMAIL: 'EMAIL',
+  STATUS_CHANGE: 'STATUS_CHANGE'
 };
 
 exports.MsgStatus = exports.$Enums.MsgStatus = {

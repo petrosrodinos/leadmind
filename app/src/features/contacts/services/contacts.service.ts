@@ -70,12 +70,15 @@ export const createContactFromLead = async (lead_uuid: string): Promise<Contact>
 
 export const updateContactStatus = async (
     uuid: string,
-    status: LeadStatus,
+    payload: { status: LeadStatus; note?: string },
 ): Promise<Contact> => {
     try {
-        const response = await axiosInstance.put(ApiRoutes.contacts.update_status(uuid), {
-            status,
-        });
+        const body: { status: LeadStatus; note?: string } = { status: payload.status };
+        const trimmed = payload.note?.trim();
+        if (trimmed) {
+            body.note = trimmed;
+        }
+        const response = await axiosInstance.put(ApiRoutes.contacts.update_status(uuid), body);
         return response.data;
     } catch (error: any) {
         throw new Error(error?.response?.data?.message || "Failed to update status.");

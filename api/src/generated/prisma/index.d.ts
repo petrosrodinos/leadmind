@@ -156,7 +156,8 @@ export type MsgStatus = (typeof MsgStatus)[keyof typeof MsgStatus]
 export const InteractionType: {
   NOTE: 'NOTE',
   CALL: 'CALL',
-  EMAIL: 'EMAIL'
+  EMAIL: 'EMAIL',
+  STATUS_CHANGE: 'STATUS_CHANGE'
 };
 
 export type InteractionType = (typeof InteractionType)[keyof typeof InteractionType]
@@ -10843,6 +10844,7 @@ export namespace Prisma {
     type: number
     content: number
     metadata: number
+    status_change: number
     created_at: number
     updated_at: number
     _all: number
@@ -10887,6 +10889,7 @@ export namespace Prisma {
     type?: true
     content?: true
     metadata?: true
+    status_change?: true
     created_at?: true
     updated_at?: true
     _all?: true
@@ -10986,6 +10989,7 @@ export namespace Prisma {
     type: $Enums.InteractionType
     content: string | null
     metadata: JsonValue | null
+    status_change: JsonValue | null
     created_at: Date
     updated_at: Date
     _count: InteractionCountAggregateOutputType | null
@@ -11017,6 +11021,7 @@ export namespace Prisma {
     type?: boolean
     content?: boolean
     metadata?: boolean
+    status_change?: boolean
     created_at?: boolean
     updated_at?: boolean
     contact?: boolean | ContactDefaultArgs<ExtArgs>
@@ -11031,6 +11036,7 @@ export namespace Prisma {
     type?: boolean
     content?: boolean
     metadata?: boolean
+    status_change?: boolean
     created_at?: boolean
     updated_at?: boolean
     contact?: boolean | ContactDefaultArgs<ExtArgs>
@@ -11045,6 +11051,7 @@ export namespace Prisma {
     type?: boolean
     content?: boolean
     metadata?: boolean
+    status_change?: boolean
     created_at?: boolean
     updated_at?: boolean
     contact?: boolean | ContactDefaultArgs<ExtArgs>
@@ -11059,11 +11066,12 @@ export namespace Prisma {
     type?: boolean
     content?: boolean
     metadata?: boolean
+    status_change?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type InteractionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "contact_uuid" | "user_uuid" | "type" | "content" | "metadata" | "created_at" | "updated_at", ExtArgs["result"]["interaction"]>
+  export type InteractionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "contact_uuid" | "user_uuid" | "type" | "content" | "metadata" | "status_change" | "created_at" | "updated_at", ExtArgs["result"]["interaction"]>
   export type InteractionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     contact?: boolean | ContactDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -11091,6 +11099,7 @@ export namespace Prisma {
       type: $Enums.InteractionType
       content: string | null
       metadata: Prisma.JsonValue | null
+      status_change: Prisma.JsonValue | null
       created_at: Date
       updated_at: Date
     }, ExtArgs["result"]["interaction"]>
@@ -11525,6 +11534,7 @@ export namespace Prisma {
     readonly type: FieldRef<"Interaction", 'InteractionType'>
     readonly content: FieldRef<"Interaction", 'String'>
     readonly metadata: FieldRef<"Interaction", 'Json'>
+    readonly status_change: FieldRef<"Interaction", 'Json'>
     readonly created_at: FieldRef<"Interaction", 'DateTime'>
     readonly updated_at: FieldRef<"Interaction", 'DateTime'>
   }
@@ -15593,6 +15603,7 @@ export namespace Prisma {
     type: 'type',
     content: 'content',
     metadata: 'metadata',
+    status_change: 'status_change',
     created_at: 'created_at',
     updated_at: 'updated_at'
   };
@@ -16620,6 +16631,7 @@ export namespace Prisma {
     type?: EnumInteractionTypeFilter<"Interaction"> | $Enums.InteractionType
     content?: StringNullableFilter<"Interaction"> | string | null
     metadata?: JsonNullableFilter<"Interaction">
+    status_change?: JsonNullableFilter<"Interaction">
     created_at?: DateTimeFilter<"Interaction"> | Date | string
     updated_at?: DateTimeFilter<"Interaction"> | Date | string
     contact?: XOR<ContactScalarRelationFilter, ContactWhereInput>
@@ -16634,6 +16646,7 @@ export namespace Prisma {
     type?: SortOrder
     content?: SortOrderInput | SortOrder
     metadata?: SortOrderInput | SortOrder
+    status_change?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     contact?: ContactOrderByWithRelationInput
@@ -16651,6 +16664,7 @@ export namespace Prisma {
     type?: EnumInteractionTypeFilter<"Interaction"> | $Enums.InteractionType
     content?: StringNullableFilter<"Interaction"> | string | null
     metadata?: JsonNullableFilter<"Interaction">
+    status_change?: JsonNullableFilter<"Interaction">
     created_at?: DateTimeFilter<"Interaction"> | Date | string
     updated_at?: DateTimeFilter<"Interaction"> | Date | string
     contact?: XOR<ContactScalarRelationFilter, ContactWhereInput>
@@ -16665,6 +16679,7 @@ export namespace Prisma {
     type?: SortOrder
     content?: SortOrderInput | SortOrder
     metadata?: SortOrderInput | SortOrder
+    status_change?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     _count?: InteractionCountOrderByAggregateInput
@@ -16685,6 +16700,7 @@ export namespace Prisma {
     type?: EnumInteractionTypeWithAggregatesFilter<"Interaction"> | $Enums.InteractionType
     content?: StringNullableWithAggregatesFilter<"Interaction"> | string | null
     metadata?: JsonNullableWithAggregatesFilter<"Interaction">
+    status_change?: JsonNullableWithAggregatesFilter<"Interaction">
     created_at?: DateTimeWithAggregatesFilter<"Interaction"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"Interaction"> | Date | string
   }
@@ -17708,6 +17724,7 @@ export namespace Prisma {
     type: $Enums.InteractionType
     content?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    status_change?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     contact: ContactCreateNestedOneWithoutInteractionsInput
@@ -17722,6 +17739,7 @@ export namespace Prisma {
     type: $Enums.InteractionType
     content?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    status_change?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -17731,6 +17749,7 @@ export namespace Prisma {
     type?: EnumInteractionTypeFieldUpdateOperationsInput | $Enums.InteractionType
     content?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    status_change?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     contact?: ContactUpdateOneRequiredWithoutInteractionsNestedInput
@@ -17745,6 +17764,7 @@ export namespace Prisma {
     type?: EnumInteractionTypeFieldUpdateOperationsInput | $Enums.InteractionType
     content?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    status_change?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -17757,6 +17777,7 @@ export namespace Prisma {
     type: $Enums.InteractionType
     content?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    status_change?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -17766,6 +17787,7 @@ export namespace Prisma {
     type?: EnumInteractionTypeFieldUpdateOperationsInput | $Enums.InteractionType
     content?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    status_change?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -17778,6 +17800,7 @@ export namespace Prisma {
     type?: EnumInteractionTypeFieldUpdateOperationsInput | $Enums.InteractionType
     content?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    status_change?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -18965,6 +18988,7 @@ export namespace Prisma {
     type?: SortOrder
     content?: SortOrder
     metadata?: SortOrder
+    status_change?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -20702,6 +20726,7 @@ export namespace Prisma {
     type: $Enums.InteractionType
     content?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    status_change?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     contact: ContactCreateNestedOneWithoutInteractionsInput
@@ -20714,6 +20739,7 @@ export namespace Prisma {
     type: $Enums.InteractionType
     content?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    status_change?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -20896,6 +20922,7 @@ export namespace Prisma {
     type?: EnumInteractionTypeFilter<"Interaction"> | $Enums.InteractionType
     content?: StringNullableFilter<"Interaction"> | string | null
     metadata?: JsonNullableFilter<"Interaction">
+    status_change?: JsonNullableFilter<"Interaction">
     created_at?: DateTimeFilter<"Interaction"> | Date | string
     updated_at?: DateTimeFilter<"Interaction"> | Date | string
   }
@@ -21823,6 +21850,7 @@ export namespace Prisma {
     type: $Enums.InteractionType
     content?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    status_change?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutInteractionsInput
@@ -21835,6 +21863,7 @@ export namespace Prisma {
     type: $Enums.InteractionType
     content?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    status_change?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -22804,6 +22833,7 @@ export namespace Prisma {
     type: $Enums.InteractionType
     content?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    status_change?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -23004,6 +23034,7 @@ export namespace Prisma {
     type?: EnumInteractionTypeFieldUpdateOperationsInput | $Enums.InteractionType
     content?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    status_change?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     contact?: ContactUpdateOneRequiredWithoutInteractionsNestedInput
@@ -23016,6 +23047,7 @@ export namespace Prisma {
     type?: EnumInteractionTypeFieldUpdateOperationsInput | $Enums.InteractionType
     content?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    status_change?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -23027,6 +23059,7 @@ export namespace Prisma {
     type?: EnumInteractionTypeFieldUpdateOperationsInput | $Enums.InteractionType
     content?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    status_change?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -23381,6 +23414,7 @@ export namespace Prisma {
     type: $Enums.InteractionType
     content?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    status_change?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -23422,6 +23456,7 @@ export namespace Prisma {
     type?: EnumInteractionTypeFieldUpdateOperationsInput | $Enums.InteractionType
     content?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    status_change?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutInteractionsNestedInput
@@ -23434,6 +23469,7 @@ export namespace Prisma {
     type?: EnumInteractionTypeFieldUpdateOperationsInput | $Enums.InteractionType
     content?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    status_change?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -23445,6 +23481,7 @@ export namespace Prisma {
     type?: EnumInteractionTypeFieldUpdateOperationsInput | $Enums.InteractionType
     content?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    status_change?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
