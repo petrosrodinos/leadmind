@@ -55,7 +55,8 @@ export interface Filter {
     enabled: boolean;
     cron_schedule: string | null;
     channels: Channel[];
-    ai_instructions: string | null;
+    scoring_instructions: string | null;
+    outreach_instructions: string | null;
     created_at: string;
     updated_at: string;
 }
@@ -82,7 +83,8 @@ export interface CreateFilterPayload {
     enabled?: boolean;
     cron_schedule?: string;
     channels: Channel[];
-    ai_instructions?: string;
+    scoring_instructions?: string;
+    outreach_instructions?: string;
 }
 
 export type UpdateFilterPayload = Partial<CreateFilterPayload>;

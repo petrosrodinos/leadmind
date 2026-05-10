@@ -40,7 +40,8 @@ export class FiltersService {
                 enabled: dto.enabled ?? true,
                 cron_schedule: dto.cron_schedule,
                 channels: dto.channels,
-                ai_instructions: dto.ai_instructions,
+                scoring_instructions: dto.scoring_instructions,
+                outreach_instructions: dto.outreach_instructions,
                 ...(dto.enrichment_sources !== undefined
                     ? { enrichment_sources: dto.enrichment_sources }
                     : {}),
@@ -87,7 +88,8 @@ export class FiltersService {
                 enabled: dto.enabled,
                 cron_schedule: dto.cron_schedule,
                 channels: dto.channels,
-                ai_instructions: dto.ai_instructions,
+                scoring_instructions: dto.scoring_instructions,
+                outreach_instructions: dto.outreach_instructions,
                 ...(dto.enrichment_sources !== undefined
                     ? { enrichment_sources: dto.enrichment_sources }
                     : {}),

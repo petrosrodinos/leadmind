@@ -28,8 +28,8 @@ export class ContactAiService {
             return contact.score;
         }
 
-        if (!filter.ai_instructions) {
-            this.logger.warn(`Contact ${contact.uuid}: filter has no ai_instructions, skipping score`);
+        if (!filter.scoring_instructions) {
+            this.logger.warn(`Contact ${contact.uuid}: filter has no scoring_instructions, skipping score`);
             return 0;
         }
 
@@ -37,7 +37,7 @@ export class ContactAiService {
             provider: AiProviders.openai,
             model: AiModels.openai.gpt4oMini,
             schema: CONTACT_AI_SCORE_SCHEMA,
-            prompt: buildScorePrompt(contact, lead, filter.ai_instructions),
+            prompt: buildScorePrompt(contact, lead, filter.scoring_instructions),
             system: AiScoringSystemPrompt,
         });
 
@@ -66,7 +66,7 @@ export class ContactAiService {
         lead: Lead,
         filter: Filter,
     ): Promise<OutreachMessage[]> {
-        if (!filter.ai_instructions || filter.channels.length === 0) {
+        if (!filter.outreach_instructions || filter.channels.length === 0) {
             return [];
         }
 
@@ -88,7 +88,7 @@ export class ContactAiService {
             }
 
             try {
-                const draft = await this.draftForChannel(channel, contact, lead, filter.ai_instructions);
+                const draft = await this.draftForChannel(channel, contact, lead, filter.outreach_instructions);
 
                 const message = await this.prisma.outreachMessage.create({
                     data: {
@@ -115,9 +115,9 @@ export class ContactAiService {
         channel: Channel,
         contact: Contact,
         lead: Lead,
-        ai_instructions: string,
+        outreach_instructions: string,
     ): Promise<{ subject: string | null; content: string }> {
-        const prompt = this.promptForChannel(channel, contact, lead, ai_instructions);
+        const prompt = this.promptForChannel(channel, contact, lead, outreach_instructions);
 
         const { response } = await this.aiService.generateText({
             provider: AiProviders.openai,
@@ -136,15 +136,15 @@ export class ContactAiService {
         channel: Channel,
         contact: Contact,
         lead: Lead,
-        ai_instructions: string,
+        outreach_instructions: string,
     ): string {
         switch (channel) {
             case Channel.EMAIL:
-                return buildEmailPrompt(contact, lead, ai_instructions);
+                return buildEmailPrompt(contact, lead, outreach_instructions);
             case Channel.SMS:
-                return buildSmsPrompt(contact, lead, ai_instructions);
+                return buildSmsPrompt(contact, lead, outreach_instructions);
             case Channel.LINKEDIN:
-                return buildLinkedInPrompt(contact, lead, ai_instructions);
+                return buildLinkedInPrompt(contact, lead, outreach_instructions);
             default:
                 throw new Error(`Unsupported channel: ${channel}`);
         }

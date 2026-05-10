@@ -268,9 +268,9 @@ function ensureContactCanRescore(contact: Contact): void {
     if (!contact.filter) {
         throw new Error("This contact has no filter. Assign a filter before rescoring.");
     }
-    const ai = contact.filter.ai_instructions;
+    const ai = contact.filter.scoring_instructions;
     if (ai == null || !ai.trim()) {
-        throw new Error("Add AI instructions on the filter before rescoring.");
+        throw new Error("Add scoring instructions on the filter before rescoring.");
     }
 }
 

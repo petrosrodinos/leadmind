@@ -142,7 +142,8 @@ exports.Prisma.FilterScalarFieldEnum = {
   enabled: 'enabled',
   cron_schedule: 'cron_schedule',
   channels: 'channels',
-  ai_instructions: 'ai_instructions',
+  scoring_instructions: 'scoring_instructions',
+  outreach_instructions: 'outreach_instructions',
   created_at: 'created_at',
   updated_at: 'updated_at'
 };

@@ -58,5 +58,11 @@ export class CreateFilterDto {
     @IsOptional()
     @IsString()
     @MaxLength(2000)
-    ai_instructions?: string;
+    scoring_instructions?: string;
+
+    @ApiPropertyOptional({ maxLength: 2000 })
+    @IsOptional()
+    @IsString()
+    @MaxLength(2000)
+    outreach_instructions?: string;
 }

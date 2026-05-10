@@ -1,13 +1,13 @@
 import { Contact, Lead } from '@/generated/prisma';
 import { formatContactForAi } from '../utils/contact-ai-profile.utils';
 
-export function buildScorePrompt(contact: Contact, lead: Lead, ai_instructions: string): string {
+export function buildScorePrompt(contact: Contact, lead: Lead, scoring_instructions: string): string {
     return `
 You are scoring a sales lead from 1 (poor fit) to 10 (excellent fit) for a user with these targeting criteria:
 
-USER TARGETING CRITERIA:
+USER SCORING / TARGETING CRITERIA:
 """
-${ai_instructions}
+${scoring_instructions}
 """
 
 LEAD PROFILE:
@@ -21,13 +21,15 @@ Return:
 `.trim();
 }
 
-export function buildEmailPrompt(contact: Contact, lead: Lead, ai_instructions: string): string {
+export function buildEmailPrompt(contact: Contact, lead: Lead, outreach_instructions: string): string {
     return `
-You are drafting a cold outreach EMAIL for the lead below, using the user's outreach instructions.
+You are drafting a cold outreach EMAIL for the lead below.
+
+TARGET CHANNEL: EMAIL — produce a normal email with a subject line and body. Do not write SMS or LinkedIn DM style.
 
 USER OUTREACH INSTRUCTIONS:
 """
-${ai_instructions}
+${outreach_instructions}
 """
 
 LEAD PROFILE:
@@ -42,13 +44,15 @@ Subject: <subject line, under 80 chars>
 `.trim();
 }
 
-export function buildSmsPrompt(contact: Contact, lead: Lead, ai_instructions: string): string {
+export function buildSmsPrompt(contact: Contact, lead: Lead, outreach_instructions: string): string {
     return `
-Draft a cold outreach SMS for this lead. Hard limit: 160 characters. No greeting fluff. Friendly, direct, with a single soft CTA.
+Draft a cold outreach SMS for this lead.
+
+TARGET CHANNEL: SMS — single text message only. Hard limit: 160 characters. No emailSubject lines. No LinkedIn fluff.
 
 USER OUTREACH INSTRUCTIONS:
 """
-${ai_instructions}
+${outreach_instructions}
 """
 
 LEAD PROFILE:
@@ -60,13 +64,15 @@ Output: only the SMS body. No subject. No quotes. No commentary.
 `.trim();
 }
 
-export function buildLinkedInPrompt(contact: Contact, lead: Lead, ai_instructions: string): string {
+export function buildLinkedInPrompt(contact: Contact, lead: Lead, outreach_instructions: string): string {
     return `
-Draft a LinkedIn outreach DM for this lead. Conversational, peer-to-peer tone. 60-120 words. No subject. End with a low-pressure CTA.
+Draft a LinkedIn outreach DM for this lead.
+
+TARGET CHANNEL: LINKEDIN — short connection/conversation DM (not an email, not SMS).
 
 USER OUTREACH INSTRUCTIONS:
 """
-${ai_instructions}
+${outreach_instructions}
 """
 
 LEAD PROFILE:

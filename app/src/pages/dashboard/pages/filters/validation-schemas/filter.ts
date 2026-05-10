@@ -61,7 +61,8 @@ const baseSchema = z.object({
     cron_schedule: z.string().optional(),
     enrichment_sources: enrichmentSourcesSchema,
     channels: channelSchema,
-    ai_instructions: z.string().max(2000).optional(),
+    scoring_instructions: z.string().max(2000).optional(),
+    outreach_instructions: z.string().max(2000).optional(),
 });
 
 export const FilterFormSchema = z.discriminatedUnion("source_type", [

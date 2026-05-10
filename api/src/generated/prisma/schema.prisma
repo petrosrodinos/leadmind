@@ -36,19 +36,20 @@ model User {
 }
 
 model Filter {
-  id                 Int                @id @default(autoincrement())
-  uuid               String             @unique @default(uuid())
-  user_uuid          String
-  name               String
-  source_type        SourceType
-  query_config       Json
-  enrichment_sources EnrichmentSource[] @default([])
-  enabled            Boolean            @default(true)
-  cron_schedule      String?
-  channels           Channel[]          @default([EMAIL])
-  ai_instructions    String?
-  created_at         DateTime           @default(now())
-  updated_at         DateTime           @updatedAt
+  id                    Int                @id @default(autoincrement())
+  uuid                  String             @unique @default(uuid())
+  user_uuid             String
+  name                  String
+  source_type           SourceType
+  query_config          Json
+  enrichment_sources    EnrichmentSource[] @default([])
+  enabled               Boolean            @default(true)
+  cron_schedule         String?
+  channels              Channel[]          @default([EMAIL])
+  scoring_instructions  String?
+  outreach_instructions String?
+  created_at            DateTime           @default(now())
+  updated_at            DateTime           @updatedAt
 
   user      User        @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
   raw_leads RawLead[]

@@ -5,6 +5,7 @@ import type { Contact } from "@/features/contacts/interfaces/contact.interface";
 import { MsgStatus, type OutreachMessage } from "@/features/contacts/interfaces/contact.interface";
 import { useRedraftMessages } from "@/features/contacts/hooks/use-contacts";
 import { useDeleteOutreachMessage, useSendOutreachMessage } from "@/features/outreach/hooks/use-outreach";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { EditMessageModal } from "@/pages/dashboard/pages/leads/components/edit-message-modal";
 import { Section } from "./section";
 import { channelIcon } from "../utils/channel-icon";
@@ -19,6 +20,7 @@ export function OutreachTab({ contact }: OutreachTabProps) {
   const deleteMessage = useDeleteOutreachMessage();
 
   const [editingMessage, setEditingMessage] = useState<OutreachMessage | null>(null);
+  const [draftPendingDelete, setDraftPendingDelete] = useState<OutreachMessage | null>(null);
 
   const { drafts, sentHistory } = useMemo(() => {
     const messages = contact.outreach_messages ?? [];
@@ -76,18 +78,7 @@ export function OutreachTab({ contact }: OutreachTabProps) {
                     >
                       <Send className="size-3.5" />
                     </Button>
-                    <Button
-                      size="sm"
-                      variant="tertiary"
-                      isDisabled={deleteMessage.isPending}
-                      onPress={() =>
-                        deleteMessage.mutate({
-                          uuid: m.uuid,
-                          contact_uuid: contact.uuid,
-                        })
-                      }
-                      aria-label="Delete draft"
-                    >
+                    <Button size="sm" variant="tertiary" isDisabled={deleteMessage.isPending} onPress={() => setDraftPendingDelete(m)} aria-label="Delete draft">
                       <Trash className="size-3.5" />
                     </Button>
                   </div>
@@ -126,6 +117,35 @@ export function OutreachTab({ contact }: OutreachTabProps) {
           if (!open) setEditingMessage(null);
         }}
         contact_uuid={contact.uuid}
+      />
+
+      <ConfirmDialog
+        isOpen={draftPendingDelete !== null}
+        onOpenChange={(open) => {
+          if (!open) setDraftPendingDelete(null);
+        }}
+        title="Delete this draft?"
+        description={
+          draftPendingDelete
+            ? `This removes the pending ${draftPendingDelete.channel} draft. You can generate a new one with Redraft messages.`
+            : undefined
+        }
+        confirmLabel="Delete"
+        cancelLabel="Cancel"
+        variant="danger"
+        isPending={deleteMessage.isPending}
+        onConfirm={async () => {
+          if (!draftPendingDelete) return;
+          try {
+            await deleteMessage.mutateAsync({
+              uuid: draftPendingDelete.uuid,
+              contact_uuid: contact.uuid,
+            });
+            setDraftPendingDelete(null);
+          } catch {
+            return;
+          }
+        }}
       />
     </div>
   );

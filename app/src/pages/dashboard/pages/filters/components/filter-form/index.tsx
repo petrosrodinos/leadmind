@@ -103,7 +103,8 @@ export function FilterForm({
                 values.source_type === SourceType.MANUAL
                     ? undefined
                     : values.cron_schedule?.trim() || undefined,
-            ai_instructions: values.ai_instructions?.trim() || undefined,
+            scoring_instructions: values.scoring_instructions?.trim() || undefined,
+            outreach_instructions: values.outreach_instructions?.trim() || undefined,
         };
         await onSubmit(payload);
     };
@@ -248,22 +249,39 @@ export function FilterForm({
                         </Select>
                     )}
                 />
+                <p className="text-xs text-muted">
+                    Each selected channel gets its own AI draft (email, SMS, or LinkedIn style). Pick every channel you plan to reach this segment on.
+                </p>
                 {errors.channels && (
                     <FieldError>{errors.channels.message as string}</FieldError>
                 )}
             </div>
 
-            <div className="flex flex-col gap-1.5">
-                <Label htmlFor="filter-ai">AI Instructions (optional)</Label>
-                <TextArea
-                    id="filter-ai"
-                    rows={4}
-                    placeholder="Tell the AI how to score & draft outreach for these leads…"
-                    {...register("ai_instructions")}
-                />
-                {errors.ai_instructions && (
-                    <FieldError>{errors.ai_instructions.message as string}</FieldError>
-                )}
+            <div className="grid gap-4 md:grid-cols-2">
+                <div className="flex flex-col gap-1.5">
+                    <Label htmlFor="filter-scoring">Scoring instructions (optional)</Label>
+                    <TextArea
+                        id="filter-scoring"
+                        rows={4}
+                        placeholder="Criteria for scoring leads 1–10…"
+                        {...register("scoring_instructions")}
+                    />
+                    {errors.scoring_instructions && (
+                        <FieldError>{errors.scoring_instructions.message as string}</FieldError>
+                    )}
+                </div>
+                <div className="flex flex-col gap-1.5">
+                    <Label htmlFor="filter-outreach">Outreach instructions (optional)</Label>
+                    <TextArea
+                        id="filter-outreach"
+                        rows={4}
+                        placeholder="Goals and tone for drafts — one draft per selected channel…"
+                        {...register("outreach_instructions")}
+                    />
+                    {errors.outreach_instructions && (
+                        <FieldError>{errors.outreach_instructions.message as string}</FieldError>
+                    )}
+                </div>
             </div>
 
             {sourceType !== SourceType.MANUAL && (

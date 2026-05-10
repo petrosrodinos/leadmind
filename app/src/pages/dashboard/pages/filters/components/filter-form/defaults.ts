@@ -15,7 +15,8 @@ export function buildDefaults(initial?: Filter): FilterFormValues {
         ? initial.channels
         : [Channel.EMAIL]) as Channel[];
     const cron_schedule = initial?.cron_schedule ?? "";
-    const ai_instructions = initial?.ai_instructions ?? "";
+    const scoring_instructions = initial?.scoring_instructions ?? "";
+    const outreach_instructions = initial?.outreach_instructions ?? "";
     const enabled = initial?.enabled ?? true;
     const name = initial?.name ?? "";
     const cfg = (initial?.query_config ?? {}) as Record<string, any>;
@@ -43,7 +44,8 @@ export function buildDefaults(initial?: Filter): FilterFormValues {
             enabled,
             cron_schedule,
             channels,
-            ai_instructions,
+            scoring_instructions,
+            outreach_instructions,
             enrichment_sources,
         };
     }
@@ -59,7 +61,8 @@ export function buildDefaults(initial?: Filter): FilterFormValues {
             enabled,
             cron_schedule,
             channels,
-            ai_instructions,
+            scoring_instructions,
+            outreach_instructions,
             enrichment_sources,
         };
     }
@@ -86,7 +89,8 @@ export function buildDefaults(initial?: Filter): FilterFormValues {
             enabled,
             cron_schedule,
             channels,
-            ai_instructions,
+            scoring_instructions,
+            outreach_instructions,
             enrichment_sources,
         };
     }
@@ -102,7 +106,8 @@ export function buildDefaults(initial?: Filter): FilterFormValues {
         enabled,
         cron_schedule,
         channels,
-        ai_instructions,
+        scoring_instructions,
+        outreach_instructions,
         enrichment_sources,
     };
 }

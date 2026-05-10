@@ -3390,7 +3390,8 @@ export namespace Prisma {
     source_type: $Enums.SourceType | null
     enabled: boolean | null
     cron_schedule: string | null
-    ai_instructions: string | null
+    scoring_instructions: string | null
+    outreach_instructions: string | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -3403,7 +3404,8 @@ export namespace Prisma {
     source_type: $Enums.SourceType | null
     enabled: boolean | null
     cron_schedule: string | null
-    ai_instructions: string | null
+    scoring_instructions: string | null
+    outreach_instructions: string | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -3419,7 +3421,8 @@ export namespace Prisma {
     enabled: number
     cron_schedule: number
     channels: number
-    ai_instructions: number
+    scoring_instructions: number
+    outreach_instructions: number
     created_at: number
     updated_at: number
     _all: number
@@ -3442,7 +3445,8 @@ export namespace Prisma {
     source_type?: true
     enabled?: true
     cron_schedule?: true
-    ai_instructions?: true
+    scoring_instructions?: true
+    outreach_instructions?: true
     created_at?: true
     updated_at?: true
   }
@@ -3455,7 +3459,8 @@ export namespace Prisma {
     source_type?: true
     enabled?: true
     cron_schedule?: true
-    ai_instructions?: true
+    scoring_instructions?: true
+    outreach_instructions?: true
     created_at?: true
     updated_at?: true
   }
@@ -3471,7 +3476,8 @@ export namespace Prisma {
     enabled?: true
     cron_schedule?: true
     channels?: true
-    ai_instructions?: true
+    scoring_instructions?: true
+    outreach_instructions?: true
     created_at?: true
     updated_at?: true
     _all?: true
@@ -3574,7 +3580,8 @@ export namespace Prisma {
     enabled: boolean
     cron_schedule: string | null
     channels: $Enums.Channel[]
-    ai_instructions: string | null
+    scoring_instructions: string | null
+    outreach_instructions: string | null
     created_at: Date
     updated_at: Date
     _count: FilterCountAggregateOutputType | null
@@ -3609,7 +3616,8 @@ export namespace Prisma {
     enabled?: boolean
     cron_schedule?: boolean
     channels?: boolean
-    ai_instructions?: boolean
+    scoring_instructions?: boolean
+    outreach_instructions?: boolean
     created_at?: boolean
     updated_at?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -3630,7 +3638,8 @@ export namespace Prisma {
     enabled?: boolean
     cron_schedule?: boolean
     channels?: boolean
-    ai_instructions?: boolean
+    scoring_instructions?: boolean
+    outreach_instructions?: boolean
     created_at?: boolean
     updated_at?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -3647,7 +3656,8 @@ export namespace Prisma {
     enabled?: boolean
     cron_schedule?: boolean
     channels?: boolean
-    ai_instructions?: boolean
+    scoring_instructions?: boolean
+    outreach_instructions?: boolean
     created_at?: boolean
     updated_at?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -3664,12 +3674,13 @@ export namespace Prisma {
     enabled?: boolean
     cron_schedule?: boolean
     channels?: boolean
-    ai_instructions?: boolean
+    scoring_instructions?: boolean
+    outreach_instructions?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type FilterOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "name" | "source_type" | "query_config" | "enrichment_sources" | "enabled" | "cron_schedule" | "channels" | "ai_instructions" | "created_at" | "updated_at", ExtArgs["result"]["filter"]>
+  export type FilterOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "name" | "source_type" | "query_config" | "enrichment_sources" | "enabled" | "cron_schedule" | "channels" | "scoring_instructions" | "outreach_instructions" | "created_at" | "updated_at", ExtArgs["result"]["filter"]>
   export type FilterInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     raw_leads?: boolean | Filter$raw_leadsArgs<ExtArgs>
@@ -3703,7 +3714,8 @@ export namespace Prisma {
       enabled: boolean
       cron_schedule: string | null
       channels: $Enums.Channel[]
-      ai_instructions: string | null
+      scoring_instructions: string | null
+      outreach_instructions: string | null
       created_at: Date
       updated_at: Date
     }, ExtArgs["result"]["filter"]>
@@ -4143,7 +4155,8 @@ export namespace Prisma {
     readonly enabled: FieldRef<"Filter", 'Boolean'>
     readonly cron_schedule: FieldRef<"Filter", 'String'>
     readonly channels: FieldRef<"Filter", 'Channel[]'>
-    readonly ai_instructions: FieldRef<"Filter", 'String'>
+    readonly scoring_instructions: FieldRef<"Filter", 'String'>
+    readonly outreach_instructions: FieldRef<"Filter", 'String'>
     readonly created_at: FieldRef<"Filter", 'DateTime'>
     readonly updated_at: FieldRef<"Filter", 'DateTime'>
   }
@@ -15495,7 +15508,8 @@ export namespace Prisma {
     enabled: 'enabled',
     cron_schedule: 'cron_schedule',
     channels: 'channels',
-    ai_instructions: 'ai_instructions',
+    scoring_instructions: 'scoring_instructions',
+    outreach_instructions: 'outreach_instructions',
     created_at: 'created_at',
     updated_at: 'updated_at'
   };
@@ -16032,7 +16046,8 @@ export namespace Prisma {
     enabled?: BoolFilter<"Filter"> | boolean
     cron_schedule?: StringNullableFilter<"Filter"> | string | null
     channels?: EnumChannelNullableListFilter<"Filter">
-    ai_instructions?: StringNullableFilter<"Filter"> | string | null
+    scoring_instructions?: StringNullableFilter<"Filter"> | string | null
+    outreach_instructions?: StringNullableFilter<"Filter"> | string | null
     created_at?: DateTimeFilter<"Filter"> | Date | string
     updated_at?: DateTimeFilter<"Filter"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -16052,7 +16067,8 @@ export namespace Prisma {
     enabled?: SortOrder
     cron_schedule?: SortOrderInput | SortOrder
     channels?: SortOrder
-    ai_instructions?: SortOrderInput | SortOrder
+    scoring_instructions?: SortOrderInput | SortOrder
+    outreach_instructions?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     user?: UserOrderByWithRelationInput
@@ -16075,7 +16091,8 @@ export namespace Prisma {
     enabled?: BoolFilter<"Filter"> | boolean
     cron_schedule?: StringNullableFilter<"Filter"> | string | null
     channels?: EnumChannelNullableListFilter<"Filter">
-    ai_instructions?: StringNullableFilter<"Filter"> | string | null
+    scoring_instructions?: StringNullableFilter<"Filter"> | string | null
+    outreach_instructions?: StringNullableFilter<"Filter"> | string | null
     created_at?: DateTimeFilter<"Filter"> | Date | string
     updated_at?: DateTimeFilter<"Filter"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -16095,7 +16112,8 @@ export namespace Prisma {
     enabled?: SortOrder
     cron_schedule?: SortOrderInput | SortOrder
     channels?: SortOrder
-    ai_instructions?: SortOrderInput | SortOrder
+    scoring_instructions?: SortOrderInput | SortOrder
+    outreach_instructions?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     _count?: FilterCountOrderByAggregateInput
@@ -16119,7 +16137,8 @@ export namespace Prisma {
     enabled?: BoolWithAggregatesFilter<"Filter"> | boolean
     cron_schedule?: StringNullableWithAggregatesFilter<"Filter"> | string | null
     channels?: EnumChannelNullableListFilter<"Filter">
-    ai_instructions?: StringNullableWithAggregatesFilter<"Filter"> | string | null
+    scoring_instructions?: StringNullableWithAggregatesFilter<"Filter"> | string | null
+    outreach_instructions?: StringNullableWithAggregatesFilter<"Filter"> | string | null
     created_at?: DateTimeWithAggregatesFilter<"Filter"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"Filter"> | Date | string
   }
@@ -17067,7 +17086,8 @@ export namespace Prisma {
     enabled?: boolean
     cron_schedule?: string | null
     channels?: FilterCreatechannelsInput | $Enums.Channel[]
-    ai_instructions?: string | null
+    scoring_instructions?: string | null
+    outreach_instructions?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutFiltersInput
@@ -17087,7 +17107,8 @@ export namespace Prisma {
     enabled?: boolean
     cron_schedule?: string | null
     channels?: FilterCreatechannelsInput | $Enums.Channel[]
-    ai_instructions?: string | null
+    scoring_instructions?: string | null
+    outreach_instructions?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     raw_leads?: RawLeadUncheckedCreateNestedManyWithoutFilterInput
@@ -17104,7 +17125,8 @@ export namespace Prisma {
     enabled?: BoolFieldUpdateOperationsInput | boolean
     cron_schedule?: NullableStringFieldUpdateOperationsInput | string | null
     channels?: FilterUpdatechannelsInput | $Enums.Channel[]
-    ai_instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    scoring_instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    outreach_instructions?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutFiltersNestedInput
@@ -17124,7 +17146,8 @@ export namespace Prisma {
     enabled?: BoolFieldUpdateOperationsInput | boolean
     cron_schedule?: NullableStringFieldUpdateOperationsInput | string | null
     channels?: FilterUpdatechannelsInput | $Enums.Channel[]
-    ai_instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    scoring_instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    outreach_instructions?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     raw_leads?: RawLeadUncheckedUpdateManyWithoutFilterNestedInput
@@ -17143,7 +17166,8 @@ export namespace Prisma {
     enabled?: boolean
     cron_schedule?: string | null
     channels?: FilterCreatechannelsInput | $Enums.Channel[]
-    ai_instructions?: string | null
+    scoring_instructions?: string | null
+    outreach_instructions?: string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -17157,7 +17181,8 @@ export namespace Prisma {
     enabled?: BoolFieldUpdateOperationsInput | boolean
     cron_schedule?: NullableStringFieldUpdateOperationsInput | string | null
     channels?: FilterUpdatechannelsInput | $Enums.Channel[]
-    ai_instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    scoring_instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    outreach_instructions?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -17173,7 +17198,8 @@ export namespace Prisma {
     enabled?: BoolFieldUpdateOperationsInput | boolean
     cron_schedule?: NullableStringFieldUpdateOperationsInput | string | null
     channels?: FilterUpdatechannelsInput | $Enums.Channel[]
-    ai_instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    scoring_instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    outreach_instructions?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -18397,7 +18423,8 @@ export namespace Prisma {
     enabled?: SortOrder
     cron_schedule?: SortOrder
     channels?: SortOrder
-    ai_instructions?: SortOrder
+    scoring_instructions?: SortOrder
+    outreach_instructions?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -18414,7 +18441,8 @@ export namespace Prisma {
     source_type?: SortOrder
     enabled?: SortOrder
     cron_schedule?: SortOrder
-    ai_instructions?: SortOrder
+    scoring_instructions?: SortOrder
+    outreach_instructions?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -18427,7 +18455,8 @@ export namespace Prisma {
     source_type?: SortOrder
     enabled?: SortOrder
     cron_schedule?: SortOrder
-    ai_instructions?: SortOrder
+    scoring_instructions?: SortOrder
+    outreach_instructions?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -20560,7 +20589,8 @@ export namespace Prisma {
     enabled?: boolean
     cron_schedule?: string | null
     channels?: FilterCreatechannelsInput | $Enums.Channel[]
-    ai_instructions?: string | null
+    scoring_instructions?: string | null
+    outreach_instructions?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     raw_leads?: RawLeadCreateNestedManyWithoutFilterInput
@@ -20578,7 +20608,8 @@ export namespace Prisma {
     enabled?: boolean
     cron_schedule?: string | null
     channels?: FilterCreatechannelsInput | $Enums.Channel[]
-    ai_instructions?: string | null
+    scoring_instructions?: string | null
+    outreach_instructions?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     raw_leads?: RawLeadUncheckedCreateNestedManyWithoutFilterInput
@@ -20784,7 +20815,8 @@ export namespace Prisma {
     enabled?: BoolFilter<"Filter"> | boolean
     cron_schedule?: StringNullableFilter<"Filter"> | string | null
     channels?: EnumChannelNullableListFilter<"Filter">
-    ai_instructions?: StringNullableFilter<"Filter"> | string | null
+    scoring_instructions?: StringNullableFilter<"Filter"> | string | null
+    outreach_instructions?: StringNullableFilter<"Filter"> | string | null
     created_at?: DateTimeFilter<"Filter"> | Date | string
     updated_at?: DateTimeFilter<"Filter"> | Date | string
   }
@@ -21217,7 +21249,8 @@ export namespace Prisma {
     enabled?: boolean
     cron_schedule?: string | null
     channels?: FilterCreatechannelsInput | $Enums.Channel[]
-    ai_instructions?: string | null
+    scoring_instructions?: string | null
+    outreach_instructions?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutFiltersInput
@@ -21236,7 +21269,8 @@ export namespace Prisma {
     enabled?: boolean
     cron_schedule?: string | null
     channels?: FilterCreatechannelsInput | $Enums.Channel[]
-    ai_instructions?: string | null
+    scoring_instructions?: string | null
+    outreach_instructions?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     contacts?: ContactUncheckedCreateNestedManyWithoutFilterInput
@@ -21316,7 +21350,8 @@ export namespace Prisma {
     enabled?: BoolFieldUpdateOperationsInput | boolean
     cron_schedule?: NullableStringFieldUpdateOperationsInput | string | null
     channels?: FilterUpdatechannelsInput | $Enums.Channel[]
-    ai_instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    scoring_instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    outreach_instructions?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutFiltersNestedInput
@@ -21335,7 +21370,8 @@ export namespace Prisma {
     enabled?: BoolFieldUpdateOperationsInput | boolean
     cron_schedule?: NullableStringFieldUpdateOperationsInput | string | null
     channels?: FilterUpdatechannelsInput | $Enums.Channel[]
-    ai_instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    scoring_instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    outreach_instructions?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     contacts?: ContactUncheckedUpdateManyWithoutFilterNestedInput
@@ -21793,7 +21829,8 @@ export namespace Prisma {
     enabled?: boolean
     cron_schedule?: string | null
     channels?: FilterCreatechannelsInput | $Enums.Channel[]
-    ai_instructions?: string | null
+    scoring_instructions?: string | null
+    outreach_instructions?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutFiltersInput
@@ -21812,7 +21849,8 @@ export namespace Prisma {
     enabled?: boolean
     cron_schedule?: string | null
     channels?: FilterCreatechannelsInput | $Enums.Channel[]
-    ai_instructions?: string | null
+    scoring_instructions?: string | null
+    outreach_instructions?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     raw_leads?: RawLeadUncheckedCreateNestedManyWithoutFilterInput
@@ -22031,7 +22069,8 @@ export namespace Prisma {
     enabled?: BoolFieldUpdateOperationsInput | boolean
     cron_schedule?: NullableStringFieldUpdateOperationsInput | string | null
     channels?: FilterUpdatechannelsInput | $Enums.Channel[]
-    ai_instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    scoring_instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    outreach_instructions?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutFiltersNestedInput
@@ -22050,7 +22089,8 @@ export namespace Prisma {
     enabled?: BoolFieldUpdateOperationsInput | boolean
     cron_schedule?: NullableStringFieldUpdateOperationsInput | string | null
     channels?: FilterUpdatechannelsInput | $Enums.Channel[]
-    ai_instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    scoring_instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    outreach_instructions?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     raw_leads?: RawLeadUncheckedUpdateManyWithoutFilterNestedInput
@@ -22688,7 +22728,8 @@ export namespace Prisma {
     enabled?: boolean
     cron_schedule?: string | null
     channels?: FilterCreatechannelsInput | $Enums.Channel[]
-    ai_instructions?: string | null
+    scoring_instructions?: string | null
+    outreach_instructions?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutFiltersInput
@@ -22707,7 +22748,8 @@ export namespace Prisma {
     enabled?: boolean
     cron_schedule?: string | null
     channels?: FilterCreatechannelsInput | $Enums.Channel[]
-    ai_instructions?: string | null
+    scoring_instructions?: string | null
+    outreach_instructions?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     raw_leads?: RawLeadUncheckedCreateNestedManyWithoutFilterInput
@@ -22739,7 +22781,8 @@ export namespace Prisma {
     enabled?: BoolFieldUpdateOperationsInput | boolean
     cron_schedule?: NullableStringFieldUpdateOperationsInput | string | null
     channels?: FilterUpdatechannelsInput | $Enums.Channel[]
-    ai_instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    scoring_instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    outreach_instructions?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutFiltersNestedInput
@@ -22758,7 +22801,8 @@ export namespace Prisma {
     enabled?: BoolFieldUpdateOperationsInput | boolean
     cron_schedule?: NullableStringFieldUpdateOperationsInput | string | null
     channels?: FilterUpdatechannelsInput | $Enums.Channel[]
-    ai_instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    scoring_instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    outreach_instructions?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     raw_leads?: RawLeadUncheckedUpdateManyWithoutFilterNestedInput
@@ -22775,7 +22819,8 @@ export namespace Prisma {
     enabled?: boolean
     cron_schedule?: string | null
     channels?: FilterCreatechannelsInput | $Enums.Channel[]
-    ai_instructions?: string | null
+    scoring_instructions?: string | null
+    outreach_instructions?: string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -22847,7 +22892,8 @@ export namespace Prisma {
     enabled?: BoolFieldUpdateOperationsInput | boolean
     cron_schedule?: NullableStringFieldUpdateOperationsInput | string | null
     channels?: FilterUpdatechannelsInput | $Enums.Channel[]
-    ai_instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    scoring_instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    outreach_instructions?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     raw_leads?: RawLeadUpdateManyWithoutFilterNestedInput
@@ -22865,7 +22911,8 @@ export namespace Prisma {
     enabled?: BoolFieldUpdateOperationsInput | boolean
     cron_schedule?: NullableStringFieldUpdateOperationsInput | string | null
     channels?: FilterUpdatechannelsInput | $Enums.Channel[]
-    ai_instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    scoring_instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    outreach_instructions?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     raw_leads?: RawLeadUncheckedUpdateManyWithoutFilterNestedInput
@@ -22883,7 +22930,8 @@ export namespace Prisma {
     enabled?: BoolFieldUpdateOperationsInput | boolean
     cron_schedule?: NullableStringFieldUpdateOperationsInput | string | null
     channels?: FilterUpdatechannelsInput | $Enums.Channel[]
-    ai_instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    scoring_instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    outreach_instructions?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
