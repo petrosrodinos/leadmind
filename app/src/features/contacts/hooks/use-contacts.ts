@@ -264,17 +264,30 @@ export function useUpdateContactNotes() {
     });
 }
 
+function ensureContactCanRescore(contact: Contact): void {
+    if (!contact.filter) {
+        throw new Error("This contact has no filter. Assign a filter before rescoring.");
+    }
+    const ai = contact.filter.ai_instructions;
+    if (ai == null || !ai.trim()) {
+        throw new Error("Add AI instructions on the filter before rescoring.");
+    }
+}
+
 export function useRescoreContact() {
     const qc = useQueryClient();
     return useMutation({
-        mutationFn: (uuid: string) => triggerContactScore(uuid),
-        onSuccess: (_data, uuid) => {
+        mutationFn: (contact: Contact) => {
+            ensureContactCanRescore(contact);
+            return triggerContactScore(contact.uuid);
+        },
+        onSuccess: (_data, contact) => {
             toast({
                 title: "Rescore queued",
                 description: "We'll refresh the AI score shortly.",
                 duration: 2500,
             });
-            qc.invalidateQueries({ queryKey: contactsQueryKeys.detail(uuid) });
+            qc.invalidateQueries({ queryKey: contactsQueryKeys.detail(contact.uuid) });
         },
         onError: (error: Error) => {
             toast({

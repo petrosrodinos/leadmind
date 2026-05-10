@@ -1,45 +1,14 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Logger } from '@nestjs/common';
 import { Job } from 'bullmq';
-import { EnrichmentSource } from '@/generated/prisma';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { ContactAiService } from '@/modules/contacts/services/contact-ai.service';
 import { DEFAULT_ENRICHMENT_SOURCES } from '@/modules/leads/constants/enrichment.constants';
 import { LeadEnrichmentOrchestrator } from '@/modules/leads/services/lead-enrichment.orchestrator';
 import { AI_PROCESS_QUEUE } from '@/core/queues/queues.constants';
-
-type AiProcessAction = 'enrich' | 'score' | 'draft';
-
-interface ContactJobData {
-    contact_uuid: string;
-    action?: AiProcessAction;
-    enrichment_sources?: EnrichmentSource[];
-    force_enrichment?: boolean;
-}
-
-interface LeadJobData {
-    lead_uuid: string;
-    enrichment_sources?: EnrichmentSource[];
-    force_enrichment?: boolean;
-}
-
-type AiProcessJobData = ContactJobData | LeadJobData;
-
-const isLeadJob = (data: AiProcessJobData): data is LeadJobData =>
-    'lead_uuid' in data && data.lead_uuid != null;
-
-function resolveContactEnrichmentSources(
-    job: ContactJobData,
-    filter: { enrichment_sources: EnrichmentSource[] } | null | undefined,
-): EnrichmentSource[] {
-    if (Array.isArray(job.enrichment_sources)) {
-        return job.enrichment_sources;
-    }
-    if (filter?.enrichment_sources?.length) {
-        return filter.enrichment_sources;
-    }
-    return [];
-}
+import { AiProcessJobData, LeadJobData } from './interfaces/workers.interfaces';
+import { ContactJobData } from './interfaces/workers.interfaces';
+import { isLeadJob, resolveContactEnrichmentSources } from './utils/workers.utils';
 
 @Processor(AI_PROCESS_QUEUE, { concurrency: 5 })
 export class AiProcessWorker extends WorkerHost {

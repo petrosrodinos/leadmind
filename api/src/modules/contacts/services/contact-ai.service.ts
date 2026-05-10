@@ -5,6 +5,7 @@ import { AiService } from '@/integrations/ai/services/ai.service';
 import { AiModels, AiProviders } from '@/integrations/ai/interfaces/ai.interface';
 import { ElasticsearchService } from '@/integrations/elasticsearch/elasticsearch.service';
 import {
+    AiScoringSystemPrompt,
     buildEmailPrompt,
     buildLinkedInPrompt,
     buildScorePrompt,
@@ -20,7 +21,7 @@ export class ContactAiService {
         private readonly prisma: PrismaService,
         private readonly aiService: AiService,
         private readonly elasticsearchService: ElasticsearchService,
-    ) {}
+    ) { }
 
     async scoreContact(contact: Contact, lead: Lead, filter: Filter): Promise<number> {
         if (contact.score != null) {
@@ -37,7 +38,7 @@ export class ContactAiService {
             model: AiModels.openai.gpt4oMini,
             schema: CONTACT_AI_SCORE_SCHEMA,
             prompt: buildScorePrompt(contact, lead, filter.ai_instructions),
-            system: 'You are a sales-qualification assistant scoring leads against targeting criteria.',
+            system: AiScoringSystemPrompt,
         });
 
         await this.prisma.contact.update({

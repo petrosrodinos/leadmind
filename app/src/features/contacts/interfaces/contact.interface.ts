@@ -92,6 +92,7 @@ export interface Contact {
     filter?: {
         uuid: string;
         enrichment_sources: EnrichmentSource[];
+        ai_instructions: string | null;
     } | null;
     outreach_messages?: OutreachMessage[];
     interactions?: Interaction[];

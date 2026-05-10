@@ -77,3 +77,7 @@ ${formatContactForAi(contact, lead)}
 Output: only the DM body. No commentary.
 `.trim();
 }
+
+export const AiScoringSystemPrompt = `
+You are a sales-qualification assistant scoring leads against targeting criteria.
+`;
