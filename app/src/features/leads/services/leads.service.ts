@@ -1,5 +1,6 @@
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
+import type { EnrichmentSource } from "@/features/filters/constants/enrichment-sources";
 import type {
     Lead,
     ListLeadEnrichmentsQuery,
@@ -38,9 +39,12 @@ export const listLeadEnrichments = async (
     }
 };
 
-export const enrichLead = async (uuid: string): Promise<{ jobId: string }> => {
+export const enrichLead = async (
+    uuid: string,
+    payload: { sources?: EnrichmentSource[] } = {},
+): Promise<{ jobId: string }> => {
     try {
-        const response = await axiosInstance.post(ApiRoutes.leads.enrich(uuid));
+        const response = await axiosInstance.post(ApiRoutes.leads.enrich(uuid), payload);
         return response.data;
     } catch (error: any) {
         throw new Error(error?.response?.data?.message || "Failed to enqueue enrichment.");

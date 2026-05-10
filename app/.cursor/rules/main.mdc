@@ -53,9 +53,12 @@ features/<feature-name>/
 │   └── <feature-name>.interfaces.ts  # TypeScript interfaces + DTO types + const enums
 ├── services/
 │   └── <feature-name>.services.ts    # Plain async functions wrapping axiosInstance
+├── constants/                         # (optional) domain constants and label maps
 └── validation-schemas/               # (optional — only if feature has forms)
     └── <feature-name>.schema.ts      # Zod schemas + inferred types
 ```
+
+**Never** add `components/`, `ui/`, or any `.tsx` files under `features/<feature-name>/`. Features are the data and domain layer only. UI belongs in `src/components/` for shared primitives, or under `src/pages/<section>/components/` (and nested route folders) for route-scoped UI such as `src/pages/dashboard/components/` for dashboard-wide widgets.
 
 ### Page Structure
 
@@ -72,7 +75,8 @@ pages/<section>/
 ```
 
 **Do:** Put all data-fetching logic in `features/`. Pages only import from features.  
-**Don't:** Put API calls or Zod schemas directly inside page components or hooks.
+**Don't:** Put API calls or Zod schemas directly inside page components or hooks.  
+**Don't:** Put React components (`.tsx`) or UI folders inside `features/` — only hooks, services, interfaces, constants, and validation schemas belong there.
 
 ---
 
@@ -217,6 +221,7 @@ When adding a new route, **always add it to `routes.ts` first**, then reference 
 | Add new paths to `routes.ts` before using them               | Write path literals in `<Link>`, `navigate()`, etc.  |
 | Define all API paths in a central `ApiRoutes` object         | Hardcode API path strings in service files           |
 | Put API calls in `features/<name>/services/`                 | Call `axiosInstance` from components or hooks        |
+| Keep `features/` free of `.tsx` and UI folders               | Add components under `features/<name>/components/`  |
 | Use TanStack Query for all server state                      | Use `useState` + `useEffect` for data fetching       |
 | Call `toast()` in every mutation's `onSuccess` and `onError` | Leave mutations silent                               |
 | Use `zodResolver` with React Hook Form                       | Write manual form validation logic                   |

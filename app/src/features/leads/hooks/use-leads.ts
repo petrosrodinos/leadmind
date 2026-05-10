@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import type { EnrichmentSource } from "@/features/filters/constants/enrichment-sources";
 import { enrichLead, getLead, listLeadEnrichments, listLeads } from "../services/leads.service";
 import type { ListLeadEnrichmentsQuery, ListLeadsQuery } from "../interfaces/lead.interface";
 import { toast } from "@/hooks/use-toast";
@@ -41,15 +42,16 @@ export function useLeadEnrichments(
 export function useEnrichLead() {
     const qc = useQueryClient();
     return useMutation({
-        mutationFn: (uuid: string) => enrichLead(uuid),
-        onSuccess: (_, uuid) => {
+        mutationFn: (vars: { uuid: string; sources?: EnrichmentSource[] }) =>
+            enrichLead(vars.uuid, { sources: vars.sources }),
+        onSuccess: (_data, vars) => {
             toast({
                 title: "Enrichment queued",
                 description: "We'll refresh the lead's public summary shortly.",
                 duration: 2500,
             });
-            qc.invalidateQueries({ queryKey: leadsQueryKeys.detail(uuid) });
-            qc.invalidateQueries({ queryKey: ["leads", "enrichments", uuid] });
+            qc.invalidateQueries({ queryKey: leadsQueryKeys.detail(vars.uuid) });
+            qc.invalidateQueries({ queryKey: ["leads", "enrichments", vars.uuid] });
         },
         onError: (error: Error) => {
             toast({

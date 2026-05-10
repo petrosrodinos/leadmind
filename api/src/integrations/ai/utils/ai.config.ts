@@ -26,8 +26,8 @@ export class AiConfig {
         { provider: AiProviders.gemini, model: AiModels.gemini.gemini15Pro },
         { provider: AiProviders.perplexity, model: AiModels.perplexity.sonar },
         { provider: AiProviders.perplexity, model: AiModels.perplexity.sonarPro },
-        { provider: AiProviders.claude, model: AiModels.claude.sonnet35 },
-        { provider: AiProviders.claude, model: AiModels.claude.haiku35 },
+        { provider: AiProviders.claude, model: AiModels.claude.sonnet },
+        { provider: AiProviders.claude, model: AiModels.claude.haiku },
     ];
 
     resolveLeadEnrichmentAiProvider(): AiProvider {

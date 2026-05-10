@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
 import {
     ApiBearerAuth,
     ApiOperation,
@@ -8,6 +8,7 @@ import {
 } from '@nestjs/swagger';
 import { EnrichmentSource, SourceType } from '@/generated/prisma';
 import { JwtGuard } from '@/shared/guards/jwt.guard';
+import { EnrichLeadDto } from './dto/enrich-lead.dto';
 import { ListLeadEnrichmentsDto } from './dto/list-lead-enrichments.dto';
 import { ListLeadsDto } from './dto/list-leads.dto';
 import { LeadsService } from './leads.service';
@@ -54,7 +55,7 @@ export class LeadsController {
     @ApiOperation({ summary: 'Enqueue AI enrichment for a lead' })
     @ApiResponse({ status: 201, description: 'Enrichment job enqueued' })
     @ApiResponse({ status: 404, description: 'Lead not found' })
-    triggerEnrich(@Param('uuid') uuid: string) {
-        return this.leadsService.triggerEnrich(uuid);
+    triggerEnrich(@Param('uuid') uuid: string, @Body() dto: EnrichLeadDto) {
+        return this.leadsService.triggerEnrich(uuid, dto);
     }
 }

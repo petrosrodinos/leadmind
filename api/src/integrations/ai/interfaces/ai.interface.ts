@@ -85,8 +85,8 @@ export const AiModels = {
         sonarPro: 'sonar-pro',
     },
     claude: {
-        sonnet35: 'claude-3-5-sonnet-20241022',
-        haiku35: 'claude-3-5-haiku-20241022',
+        sonnet: 'claude-sonnet-4-6',
+        haiku: 'claude-haiku-4-5',
     },
 };
 

@@ -8,7 +8,7 @@ export const DEFAULT_LEAD_ENRICHMENT_AI_PROVIDER: LeadEnrichmentAiProvider = AiP
 
 export const LEAD_ENRICHMENT_AI_MODEL: Record<LeadEnrichmentAiProvider, string> = {
     [AiProviders.perplexity]: AiModels.perplexity.sonarPro,
-    [AiProviders.claude]: AiModels.claude.sonnet35,
+    [AiProviders.claude]: AiModels.claude.sonnet,
 };
 
 export function isLeadEnrichmentAiProvider(value: string | undefined): value is LeadEnrichmentAiProvider {

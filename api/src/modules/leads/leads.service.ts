@@ -1,10 +1,11 @@
 import { InjectQueue } from '@nestjs/bullmq';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Queue } from 'bullmq';
-import { Prisma, Lead } from '@/generated/prisma';
+import { EnrichmentSource, Prisma, Lead } from '@/generated/prisma';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { AI_PROCESS_QUEUE } from '@/core/queues/queues.constants';
 import { DEFAULT_ENRICHMENT_SOURCES } from './constants/enrichment.constants';
+import { EnrichLeadDto } from './dto/enrich-lead.dto';
 import { ListLeadEnrichmentsDto } from './dto/list-lead-enrichments.dto';
 import { ListLeadsDto } from './dto/list-leads.dto';
 
@@ -118,13 +119,15 @@ export class LeadsService {
         };
     }
 
-    async triggerEnrich(uuid: string): Promise<{ jobId: string }> {
+    async triggerEnrich(uuid: string, dto: EnrichLeadDto): Promise<{ jobId: string }> {
         await this.findOne(uuid);
+        const enrichment_sources: EnrichmentSource[] =
+            dto.sources?.length ? dto.sources : DEFAULT_ENRICHMENT_SOURCES;
         const job = await this.aiProcessQueue.add(
             `lead-enrich:${uuid}`,
             {
                 lead_uuid: uuid,
-                enrichment_sources: DEFAULT_ENRICHMENT_SOURCES,
+                enrichment_sources,
                 force_enrichment: true,
             },
             { removeOnComplete: 100, removeOnFail: 100 },

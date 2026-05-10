@@ -18,5 +18,5 @@ export const ENRICHMENT_SOURCE_OPTIONS: Array<{ id: EnrichmentSource; label: str
     { id: EnrichmentSource.LINKEDIN, label: "LinkedIn" },
     { id: EnrichmentSource.WEBSITE, label: "Website crawl" },
     { id: EnrichmentSource.GOOGLE_SEARCH, label: "Google Search" },
-    { id: EnrichmentSource.AI, label: "AI summary" },
+    { id: EnrichmentSource.AI, label: "AI search" },
 ];

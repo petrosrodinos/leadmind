@@ -27,7 +27,7 @@ export const AiPricing = {
     },
 
     [AiProviders.claude]: {
-        [AiModels.claude.sonnet35]: { input: 0.000003, output: 0.000015 },
-        [AiModels.claude.haiku35]: { input: 8e-7, output: 0.000004 },
+        [AiModels.claude.sonnet]: { input: 0.000003, output: 0.000015 },
+        [AiModels.claude.haiku]: { input: 0.000001, output: 0.000005 },
     },
 } as const;
