@@ -23,7 +23,7 @@ import type {
 import {
     ENRICHMENT_SOURCE_OPTIONS,
     type EnrichmentSource,
-} from "@/features/filters/constants/enrichment-sources";
+} from "@/features/lead-enrichment/constants/enrichment-sources";
 import {
     FilterFormSchema,
     type FilterFormValues,

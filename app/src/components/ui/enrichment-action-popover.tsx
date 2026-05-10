@@ -1,21 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { Button, Popover } from "@heroui/react";
-import {
-    Briefcase,
-    Check,
-    Globe,
-    Search,
-    Sparkles,
-    X,
-    type LucideIcon,
-} from "lucide-react";
+import { Check, Sparkles, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
     DEFAULT_ENRICHMENT_SOURCES,
+    ENRICHMENT_SOURCE_ICON,
     ENRICHMENT_SOURCE_OPTIONS,
     EnrichmentSource as EnrichmentSourceEnum,
     type EnrichmentSource,
-} from "@/features/filters/constants/enrichment-sources";
+} from "@/features/lead-enrichment/constants/enrichment-sources";
 
 export type EnrichmentActionMode = "contact" | "lead";
 
@@ -29,28 +22,21 @@ export interface EnrichmentActionPopoverProps {
     triggerVariant?: "primary" | "secondary" | "tertiary";
 }
 
-const SOURCE_META: Record<
-    EnrichmentSource,
-    { icon: LucideIcon; hint: string; iconWrap: string }
-> = {
+const SOURCE_META: Record<EnrichmentSource, { hint: string; iconWrap: string }> = {
     [EnrichmentSourceEnum.LINKEDIN]: {
-        icon: Briefcase,
         hint: "Profile & org",
         iconWrap: "bg-sky-500/15 text-sky-300 ring-1 ring-sky-400/25",
     },
     [EnrichmentSourceEnum.WEBSITE]: {
-        icon: Globe,
         hint: "Site content",
         iconWrap: "bg-emerald-500/12 text-emerald-300 ring-1 ring-emerald-400/20",
     },
     [EnrichmentSourceEnum.GOOGLE_SEARCH]: {
-        icon: Search,
         hint: "Web discovery",
         iconWrap:
             "bg-orange-500/28 text-orange-50 ring-1 ring-orange-300/50 shadow-[inset_0_0_0_1px_oklch(1_0_0/0.08)]",
     },
     [EnrichmentSourceEnum.AI]: {
-        icon: Sparkles,
         hint: "AI summary",
         iconWrap: "bg-accent/18 text-accent ring-1 ring-accent/35",
     },
@@ -150,7 +136,7 @@ export function EnrichmentActionPopover({
                     <div className="px-2.5 py-2 space-y-1">
                         {ENRICHMENT_SOURCE_OPTIONS.map((opt) => {
                             const meta = SOURCE_META[opt.id];
-                            const Icon = meta.icon;
+                            const Icon = ENRICHMENT_SOURCE_ICON[opt.id];
                             const isOn = selected.includes(opt.id);
                             return (
                                 <div

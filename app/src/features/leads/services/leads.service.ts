@@ -1,13 +1,6 @@
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
-import type { EnrichmentSource } from "@/features/filters/constants/enrichment-sources";
-import type {
-    Lead,
-    ListLeadEnrichmentsQuery,
-    ListLeadsQuery,
-    PaginatedLeadEnrichments,
-    PaginatedLeads,
-} from "../interfaces/lead.interface";
+import type { Lead, ListLeadsQuery, PaginatedLeads } from "../interfaces/lead.interface";
 
 export const listLeads = async (query: ListLeadsQuery = {}): Promise<PaginatedLeads> => {
     try {
@@ -24,29 +17,5 @@ export const getLead = async (uuid: string): Promise<Lead> => {
         return response.data;
     } catch (error: any) {
         throw new Error(error?.response?.data?.message || "Failed to load lead.");
-    }
-};
-
-export const listLeadEnrichments = async (
-    uuid: string,
-    query: ListLeadEnrichmentsQuery = {},
-): Promise<PaginatedLeadEnrichments> => {
-    try {
-        const response = await axiosInstance.get(ApiRoutes.leads.enrichments(uuid), { params: query });
-        return response.data;
-    } catch (error: any) {
-        throw new Error(error?.response?.data?.message || "Failed to load enrichments.");
-    }
-};
-
-export const enrichLead = async (
-    uuid: string,
-    payload: { sources?: EnrichmentSource[] } = {},
-): Promise<{ jobId: string }> => {
-    try {
-        const response = await axiosInstance.post(ApiRoutes.leads.enrich(uuid), payload);
-        return response.data;
-    } catch (error: any) {
-        throw new Error(error?.response?.data?.message || "Failed to enqueue enrichment.");
     }
 };

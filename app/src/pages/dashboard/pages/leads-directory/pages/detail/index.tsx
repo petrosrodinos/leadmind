@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Button, Chip, Input, Label, ListBox, Pagination, Select, Tabs } from "@heroui/react";
+import { Button, Input, Label, ListBox, Pagination, Select, Tabs } from "@heroui/react";
 import { ArrowLeft, Check, Plus, Search } from "lucide-react";
-import type { Lead, LeadEnrichment } from "@/features/leads/interfaces/lead.interface";
+import type { Lead } from "@/features/leads/interfaces/lead.interface";
+import { EnrichmentSourceBadge } from "@/components/ui/enrichment-source-badge";
 import { SourceBadge } from "@/components/ui/source-badge";
-import { ENRICHMENT_SOURCE_OPTIONS, type EnrichmentSource } from "@/features/filters/constants/enrichment-sources";
-import { useEnrichLead, useLead, useLeadEnrichments } from "@/features/leads/hooks/use-leads";
+import { ENRICHMENT_SOURCE_OPTIONS, type EnrichmentSource } from "@/features/lead-enrichment/constants/enrichment-sources";
+import { useEnrichLead, useLeadEnrichments } from "@/features/lead-enrichment/hooks/use-lead-enrichment";
+import { useLead } from "@/features/leads/hooks/use-leads";
 import { useAddLeadToCrm } from "@/features/contacts/hooks/use-contacts";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { Routes } from "@/routes/routes";
@@ -19,10 +21,6 @@ const TABS = [
   { id: "profile", label: "Profile" },
   { id: "enrichment", label: "Enrichment" },
 ] as const;
-
-function enrichmentSourceLabel(source: LeadEnrichment["source"]): string {
-  return ENRICHMENT_SOURCE_OPTIONS.find((o) => o.id === source)?.label ?? source;
-}
 
 export default function LeadDirectoryDetailPage() {
   const { uuid } = useParams<{ uuid: string }>();
@@ -159,10 +157,7 @@ function EnrichmentTabContent({ leadUuid, lead }: { leadUuid: string; lead: Lead
 
   return (
     <div className="space-y-6">
-      <div className="rounded-lg border border-border bg-surface-secondary p-4">
-        <p className="text-xs font-medium text-muted uppercase tracking-wide mb-2">Combined summary</p>
-        <EnrichmentSnapshotPanel variant="scrollOnly" summary={lead.enrichment_summary} />
-      </div>
+      <EnrichmentSnapshotPanel className="max-w-5xl" summary={lead.enrichment_summary} />
 
       <div>
         <p className="text-sm font-medium text-foreground mb-3">History</p>
@@ -216,9 +211,7 @@ function EnrichmentTabContent({ leadUuid, lead }: { leadUuid: string; lead: Lead
               {enrichments.map((row) => (
                 <li key={row.uuid} className="rounded-lg border border-border bg-surface p-4 space-y-3">
                   <div className="flex flex-wrap items-center gap-2 justify-between">
-                    <Chip size="sm" variant="soft">
-                      <Chip.Label>{enrichmentSourceLabel(row.source)}</Chip.Label>
-                    </Chip>
+                    <EnrichmentSourceBadge source={row.source} className="shrink-0" />
                     <span className="text-xs text-muted">{new Date(row.created_at).toLocaleString()}</span>
                   </div>
                   {row.source_url ? (

@@ -1,6 +1,6 @@
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
-import type { EnrichmentSource } from "@/features/filters/constants/enrichment-sources";
+import type { EnrichmentSource } from "@/features/lead-enrichment/constants/enrichment-sources";
 import type {
     Contact,
     CreateContactPayload,

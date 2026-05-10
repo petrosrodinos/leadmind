@@ -1,6 +1,6 @@
 import { Channel } from "@/features/contacts/interfaces/contact.interface";
 import { SourceType } from "@/features/leads/interfaces/lead.interface";
-import type { EnrichmentSource } from "@/features/filters/constants/enrichment-sources";
+import type { EnrichmentSource } from "@/features/lead-enrichment/constants/enrichment-sources";
 import type { Filter } from "@/features/filters/interfaces/filter.interface";
 import type { FilterFormValues } from "../../validation-schemas/filter";
 import { asStringArray, joinCsv } from "./helpers";

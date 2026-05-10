@@ -23,7 +23,7 @@ import type {
     PaginatedContacts,
     UpdateContactPayload,
 } from "../interfaces/contact.interface";
-import type { EnrichmentSource } from "@/features/filters/constants/enrichment-sources";
+import type { EnrichmentSource } from "@/features/lead-enrichment/constants/enrichment-sources";
 import { toast } from "@/hooks/use-toast";
 
 export const contactsQueryKeys = {

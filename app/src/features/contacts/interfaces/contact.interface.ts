@@ -1,5 +1,5 @@
 import type { Lead, SourceType } from "@/features/leads/interfaces/lead.interface";
-import type { EnrichmentSource } from "@/features/filters/constants/enrichment-sources";
+import type { EnrichmentSource } from "@/features/lead-enrichment/constants/enrichment-sources";
 
 export const LeadStatus = {
     NEW: "NEW",

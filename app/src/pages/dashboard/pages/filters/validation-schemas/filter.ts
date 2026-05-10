@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { Channel } from "@/features/contacts/interfaces/contact.interface";
-import { EnrichmentSource } from "@/features/filters/constants/enrichment-sources";
+import { EnrichmentSource } from "@/features/lead-enrichment/constants/enrichment-sources";
 import { SourceType } from "@/features/leads/interfaces/lead.interface";
 
 const linkedinConfigSchema = z.object({

@@ -1,6 +1,6 @@
 import type { Channel } from "@/features/contacts/interfaces/contact.interface";
 import type { SourceType } from "@/features/leads/interfaces/lead.interface";
-import type { EnrichmentSource } from "@/features/filters/constants/enrichment-sources";
+import type { EnrichmentSource } from "@/features/lead-enrichment/constants/enrichment-sources";
 
 export const JobStatus = {
     PENDING: "PENDING",
