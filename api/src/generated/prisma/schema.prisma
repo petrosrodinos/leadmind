@@ -28,6 +28,7 @@ model User {
   outreach_messages  OutreachMessage[]
   outreach_sequences OutreachSequence[]
   interactions       Interaction[]
+  sender_profiles    SenderProfile[]
 
   @@index([email])
   @@index([phone])
@@ -251,6 +252,34 @@ model FilterJob {
 
   @@index([filter_uuid])
   @@index([status])
+}
+
+model SenderProfile {
+  id           Int      @id @default(autoincrement())
+  uuid         String   @unique @default(uuid())
+  user_uuid    String
+  name         String
+  company_name String?
+  title        String?
+  first_name   String?
+  last_name    String?
+  email        String?
+  phone        String?
+  website      String?
+  address      String?
+  city         String?
+  country      String?
+  logo_url     String?
+  sender_id    String?
+  signature    String?  @db.Text
+  is_default   Boolean  @default(false)
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  user User @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
+
+  @@index([user_uuid])
+  @@map("sender_profiles")
 }
 
 enum AuthRole {

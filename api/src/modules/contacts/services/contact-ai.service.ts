@@ -12,6 +12,7 @@ import {
     buildSmsPrompt,
 } from '../constants/contact-ai-prompts';
 import { CONTACT_AI_SCORE_SCHEMA, type ContactAiScoreResult } from '../schemas/contact-ai-score.schema';
+import { sanitizeEmailHtml } from '@/shared/utils/sanitize-html.util';
 
 @Injectable()
 export class ContactAiService {
@@ -90,13 +91,16 @@ export class ContactAiService {
             try {
                 const draft = await this.draftForChannel(channel, contact, lead, filter.outreach_instructions);
 
+                const content =
+                    channel === Channel.EMAIL ? sanitizeEmailHtml(draft.content) : draft.content;
+
                 const message = await this.prisma.outreachMessage.create({
                     data: {
                         user_uuid: contact.user_uuid,
                         contact_uuid: contact.uuid,
                         channel,
                         subject: draft.subject ?? null,
-                        content: draft.content,
+                        content,
                         status: MsgStatus.PENDING,
                     },
                 });
@@ -151,11 +155,11 @@ export class ContactAiService {
     }
 
     private parseEmailDraft(raw: string): { subject: string | null; content: string } {
-        const match = raw.match(/^\s*Subject:\s*(.+)$/im);
+        const match = raw.match(/^\s*(?:<[^>]+>\s*)*Subject:\s*(.+?)(?:<\/[^>]+>)?\s*$/im);
         if (!match) {
             return { subject: null, content: raw.trim() };
         }
-        const subject = match[1].trim();
+        const subject = match[1].replace(/<[^>]*>/g, '').trim();
         const body = raw.replace(match[0], '').trim();
         return { subject, content: body };
     }

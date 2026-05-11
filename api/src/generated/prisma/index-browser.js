@@ -279,6 +279,29 @@ exports.Prisma.FilterJobScalarFieldEnum = {
   updated_at: 'updated_at'
 };
 
+exports.Prisma.SenderProfileScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  user_uuid: 'user_uuid',
+  name: 'name',
+  company_name: 'company_name',
+  title: 'title',
+  first_name: 'first_name',
+  last_name: 'last_name',
+  email: 'email',
+  phone: 'phone',
+  website: 'website',
+  address: 'address',
+  city: 'city',
+  country: 'country',
+  logo_url: 'logo_url',
+  sender_id: 'sender_id',
+  signature: 'signature',
+  is_default: 'is_default',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -382,7 +405,8 @@ exports.Prisma.ModelName = {
   Interaction: 'Interaction',
   OutreachMessage: 'OutreachMessage',
   OutreachSequence: 'OutreachSequence',
-  FilterJob: 'FilterJob'
+  FilterJob: 'FilterJob',
+  SenderProfile: 'SenderProfile'
 };
 
 /**

@@ -15,6 +15,7 @@ import { BullBoardModule } from './core/queues/bull-board.module';
 import { FiltersModule } from './modules/filters/filters.module';
 import { LeadsModule } from './modules/leads/leads.module';
 import { ContactsModule } from './modules/contacts/contacts.module';
+import { SenderProfilesModule } from './modules/sender-profiles/sender-profiles.module';
 import { OutreachModule } from './modules/outreach/outreach.module';
 import { SearchModule } from './modules/search/search.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
@@ -37,6 +38,7 @@ import { WorkersModule } from './workers/workers.module';
     FiltersModule,
     LeadsModule,
     ContactsModule,
+    SenderProfilesModule,
     OutreachModule,
     SearchModule,
     DashboardModule,

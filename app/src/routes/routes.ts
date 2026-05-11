@@ -23,5 +23,6 @@ export const Routes = {
         map: "/dashboard/map",
         analytics: "/dashboard/analytics",
         settings: "/dashboard/settings",
+        sender_profiles: "/dashboard/sender-profiles",
     },
 };

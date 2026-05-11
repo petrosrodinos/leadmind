@@ -25,7 +25,7 @@ export function buildEmailPrompt(contact: Contact, lead: Lead, outreach_instruct
     return `
 You are drafting a cold outreach EMAIL for the lead below.
 
-TARGET CHANNEL: EMAIL — produce a normal email with a subject line and body. Do not write SMS or LinkedIn DM style.
+TARGET CHANNEL: EMAIL — produce a normal email with a subject line and an HTML body. Do not write SMS or LinkedIn DM style.
 
 USER OUTREACH INSTRUCTIONS:
 """
@@ -37,10 +37,18 @@ LEAD PROFILE:
 ${formatContactForAi(contact, lead)}
 """
 
-Output format (no markdown, no commentary):
+Output format (no markdown, no commentary, no code fences):
 Subject: <subject line, under 80 chars>
 
-<body in plain prose, 80-150 words, formal-but-warm tone, ending with a clear soft CTA>
+<HTML body, 80-150 words, formal-but-warm tone, ending with a clear soft CTA>
+
+HTML BODY RULES — STRICT:
+- Use ONLY these tags: <p>, <br>, <strong>, <em>, <u>, <ul>, <ol>, <li>, <a href="...">, <h1>, <h2>, <h3>.
+- Wrap each paragraph in <p>...</p>. Use <br> only for intentional intra-paragraph line breaks.
+- Do NOT include inline styles, class, id, data-* attributes, or any on* event handlers.
+- Do NOT include <script>, <iframe>, <img>, <style>, <html>, <body>, <head>, or <meta>.
+- Anchor hrefs must use http, https, or mailto schemes only.
+- Do NOT wrap the output in <html>/<body> or in a markdown code block.
 `.trim();
 }
 

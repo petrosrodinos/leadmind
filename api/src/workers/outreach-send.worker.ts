@@ -6,6 +6,7 @@ import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { OUTREACH_SEND_QUEUE } from '@/core/queues/queues.constants';
 import { ResendMailService } from '@/integrations/notifications/resend/services/mail.service';
 import { TwillioSmsService } from '@/integrations/notifications/twillio/services/sms.service';
+import { sanitizeEmailHtml } from '@/shared/utils/sanitize-html.util';
 
 interface OutreachSendJobData {
     message_uuid: string;
@@ -45,7 +46,7 @@ export class OutreachSendWorker extends WorkerHost {
                 await this.resendMailService.sendEmail({
                     to: message.contact.email,
                     subject: message.subject ?? 'Outreach message',
-                    html: message.content,
+                    html: sanitizeEmailHtml(message.content),
                 });
             } else if (message.channel === Channel.SMS) {
                 if (!message.contact.phone) {

@@ -68,6 +68,11 @@ export type OutreachSequence = $Result.DefaultSelection<Prisma.$OutreachSequence
  * 
  */
 export type FilterJob = $Result.DefaultSelection<Prisma.$FilterJobPayload>
+/**
+ * Model SenderProfile
+ * 
+ */
+export type SenderProfile = $Result.DefaultSelection<Prisma.$SenderProfilePayload>
 
 /**
  * Enums
@@ -426,6 +431,16 @@ export class PrismaClient<
     * ```
     */
   get filterJob(): Prisma.FilterJobDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.senderProfile`: Exposes CRUD operations for the **SenderProfile** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SenderProfiles
+    * const senderProfiles = await prisma.senderProfile.findMany()
+    * ```
+    */
+  get senderProfile(): Prisma.SenderProfileDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -870,7 +885,8 @@ export namespace Prisma {
     Interaction: 'Interaction',
     OutreachMessage: 'OutreachMessage',
     OutreachSequence: 'OutreachSequence',
-    FilterJob: 'FilterJob'
+    FilterJob: 'FilterJob',
+    SenderProfile: 'SenderProfile'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -886,7 +902,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "filter" | "rawLead" | "lead" | "leadEnrichment" | "contact" | "contactTag" | "interaction" | "outreachMessage" | "outreachSequence" | "filterJob"
+      modelProps: "user" | "filter" | "rawLead" | "lead" | "leadEnrichment" | "contact" | "contactTag" | "interaction" | "outreachMessage" | "outreachSequence" | "filterJob" | "senderProfile"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1704,6 +1720,80 @@ export namespace Prisma {
           }
         }
       }
+      SenderProfile: {
+        payload: Prisma.$SenderProfilePayload<ExtArgs>
+        fields: Prisma.SenderProfileFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SenderProfileFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SenderProfilePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SenderProfileFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SenderProfilePayload>
+          }
+          findFirst: {
+            args: Prisma.SenderProfileFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SenderProfilePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SenderProfileFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SenderProfilePayload>
+          }
+          findMany: {
+            args: Prisma.SenderProfileFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SenderProfilePayload>[]
+          }
+          create: {
+            args: Prisma.SenderProfileCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SenderProfilePayload>
+          }
+          createMany: {
+            args: Prisma.SenderProfileCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SenderProfileCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SenderProfilePayload>[]
+          }
+          delete: {
+            args: Prisma.SenderProfileDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SenderProfilePayload>
+          }
+          update: {
+            args: Prisma.SenderProfileUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SenderProfilePayload>
+          }
+          deleteMany: {
+            args: Prisma.SenderProfileDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SenderProfileUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SenderProfileUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SenderProfilePayload>[]
+          }
+          upsert: {
+            args: Prisma.SenderProfileUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SenderProfilePayload>
+          }
+          aggregate: {
+            args: Prisma.SenderProfileAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSenderProfile>
+          }
+          groupBy: {
+            args: Prisma.SenderProfileGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SenderProfileGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SenderProfileCountArgs<ExtArgs>
+            result: $Utils.Optional<SenderProfileCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1823,6 +1913,7 @@ export namespace Prisma {
     outreachMessage?: OutreachMessageOmit
     outreachSequence?: OutreachSequenceOmit
     filterJob?: FilterJobOmit
+    senderProfile?: SenderProfileOmit
   }
 
   /* Types for Logging */
@@ -1908,6 +1999,7 @@ export namespace Prisma {
     outreach_messages: number
     outreach_sequences: number
     interactions: number
+    sender_profiles: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1916,6 +2008,7 @@ export namespace Prisma {
     outreach_messages?: boolean | UserCountOutputTypeCountOutreach_messagesArgs
     outreach_sequences?: boolean | UserCountOutputTypeCountOutreach_sequencesArgs
     interactions?: boolean | UserCountOutputTypeCountInteractionsArgs
+    sender_profiles?: boolean | UserCountOutputTypeCountSender_profilesArgs
   }
 
   // Custom InputTypes
@@ -1962,6 +2055,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountInteractionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: InteractionWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountSender_profilesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SenderProfileWhereInput
   }
 
 
@@ -2334,6 +2434,7 @@ export namespace Prisma {
     outreach_messages?: boolean | User$outreach_messagesArgs<ExtArgs>
     outreach_sequences?: boolean | User$outreach_sequencesArgs<ExtArgs>
     interactions?: boolean | User$interactionsArgs<ExtArgs>
+    sender_profiles?: boolean | User$sender_profilesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -2377,6 +2478,7 @@ export namespace Prisma {
     outreach_messages?: boolean | User$outreach_messagesArgs<ExtArgs>
     outreach_sequences?: boolean | User$outreach_sequencesArgs<ExtArgs>
     interactions?: boolean | User$interactionsArgs<ExtArgs>
+    sender_profiles?: boolean | User$sender_profilesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -2390,6 +2492,7 @@ export namespace Prisma {
       outreach_messages: Prisma.$OutreachMessagePayload<ExtArgs>[]
       outreach_sequences: Prisma.$OutreachSequencePayload<ExtArgs>[]
       interactions: Prisma.$InteractionPayload<ExtArgs>[]
+      sender_profiles: Prisma.$SenderProfilePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -2799,6 +2902,7 @@ export namespace Prisma {
     outreach_messages<T extends User$outreach_messagesArgs<ExtArgs> = {}>(args?: Subset<T, User$outreach_messagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OutreachMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     outreach_sequences<T extends User$outreach_sequencesArgs<ExtArgs> = {}>(args?: Subset<T, User$outreach_sequencesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OutreachSequencePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     interactions<T extends User$interactionsArgs<ExtArgs> = {}>(args?: Subset<T, User$interactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InteractionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    sender_profiles<T extends User$sender_profilesArgs<ExtArgs> = {}>(args?: Subset<T, User$sender_profilesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SenderProfilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3341,6 +3445,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: InteractionScalarFieldEnum | InteractionScalarFieldEnum[]
+  }
+
+  /**
+   * User.sender_profiles
+   */
+  export type User$sender_profilesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SenderProfile
+     */
+    select?: SenderProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SenderProfile
+     */
+    omit?: SenderProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SenderProfileInclude<ExtArgs> | null
+    where?: SenderProfileWhereInput
+    orderBy?: SenderProfileOrderByWithRelationInput | SenderProfileOrderByWithRelationInput[]
+    cursor?: SenderProfileWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SenderProfileScalarFieldEnum | SenderProfileScalarFieldEnum[]
   }
 
   /**
@@ -15470,6 +15598,1293 @@ export namespace Prisma {
 
 
   /**
+   * Model SenderProfile
+   */
+
+  export type AggregateSenderProfile = {
+    _count: SenderProfileCountAggregateOutputType | null
+    _avg: SenderProfileAvgAggregateOutputType | null
+    _sum: SenderProfileSumAggregateOutputType | null
+    _min: SenderProfileMinAggregateOutputType | null
+    _max: SenderProfileMaxAggregateOutputType | null
+  }
+
+  export type SenderProfileAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type SenderProfileSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type SenderProfileMinAggregateOutputType = {
+    id: number | null
+    uuid: string | null
+    user_uuid: string | null
+    name: string | null
+    company_name: string | null
+    title: string | null
+    first_name: string | null
+    last_name: string | null
+    email: string | null
+    phone: string | null
+    website: string | null
+    address: string | null
+    city: string | null
+    country: string | null
+    logo_url: string | null
+    sender_id: string | null
+    signature: string | null
+    is_default: boolean | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type SenderProfileMaxAggregateOutputType = {
+    id: number | null
+    uuid: string | null
+    user_uuid: string | null
+    name: string | null
+    company_name: string | null
+    title: string | null
+    first_name: string | null
+    last_name: string | null
+    email: string | null
+    phone: string | null
+    website: string | null
+    address: string | null
+    city: string | null
+    country: string | null
+    logo_url: string | null
+    sender_id: string | null
+    signature: string | null
+    is_default: boolean | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type SenderProfileCountAggregateOutputType = {
+    id: number
+    uuid: number
+    user_uuid: number
+    name: number
+    company_name: number
+    title: number
+    first_name: number
+    last_name: number
+    email: number
+    phone: number
+    website: number
+    address: number
+    city: number
+    country: number
+    logo_url: number
+    sender_id: number
+    signature: number
+    is_default: number
+    created_at: number
+    updated_at: number
+    _all: number
+  }
+
+
+  export type SenderProfileAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type SenderProfileSumAggregateInputType = {
+    id?: true
+  }
+
+  export type SenderProfileMinAggregateInputType = {
+    id?: true
+    uuid?: true
+    user_uuid?: true
+    name?: true
+    company_name?: true
+    title?: true
+    first_name?: true
+    last_name?: true
+    email?: true
+    phone?: true
+    website?: true
+    address?: true
+    city?: true
+    country?: true
+    logo_url?: true
+    sender_id?: true
+    signature?: true
+    is_default?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type SenderProfileMaxAggregateInputType = {
+    id?: true
+    uuid?: true
+    user_uuid?: true
+    name?: true
+    company_name?: true
+    title?: true
+    first_name?: true
+    last_name?: true
+    email?: true
+    phone?: true
+    website?: true
+    address?: true
+    city?: true
+    country?: true
+    logo_url?: true
+    sender_id?: true
+    signature?: true
+    is_default?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type SenderProfileCountAggregateInputType = {
+    id?: true
+    uuid?: true
+    user_uuid?: true
+    name?: true
+    company_name?: true
+    title?: true
+    first_name?: true
+    last_name?: true
+    email?: true
+    phone?: true
+    website?: true
+    address?: true
+    city?: true
+    country?: true
+    logo_url?: true
+    sender_id?: true
+    signature?: true
+    is_default?: true
+    created_at?: true
+    updated_at?: true
+    _all?: true
+  }
+
+  export type SenderProfileAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SenderProfile to aggregate.
+     */
+    where?: SenderProfileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SenderProfiles to fetch.
+     */
+    orderBy?: SenderProfileOrderByWithRelationInput | SenderProfileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SenderProfileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SenderProfiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SenderProfiles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SenderProfiles
+    **/
+    _count?: true | SenderProfileCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: SenderProfileAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: SenderProfileSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SenderProfileMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SenderProfileMaxAggregateInputType
+  }
+
+  export type GetSenderProfileAggregateType<T extends SenderProfileAggregateArgs> = {
+        [P in keyof T & keyof AggregateSenderProfile]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSenderProfile[P]>
+      : GetScalarType<T[P], AggregateSenderProfile[P]>
+  }
+
+
+
+
+  export type SenderProfileGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SenderProfileWhereInput
+    orderBy?: SenderProfileOrderByWithAggregationInput | SenderProfileOrderByWithAggregationInput[]
+    by: SenderProfileScalarFieldEnum[] | SenderProfileScalarFieldEnum
+    having?: SenderProfileScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SenderProfileCountAggregateInputType | true
+    _avg?: SenderProfileAvgAggregateInputType
+    _sum?: SenderProfileSumAggregateInputType
+    _min?: SenderProfileMinAggregateInputType
+    _max?: SenderProfileMaxAggregateInputType
+  }
+
+  export type SenderProfileGroupByOutputType = {
+    id: number
+    uuid: string
+    user_uuid: string
+    name: string
+    company_name: string | null
+    title: string | null
+    first_name: string | null
+    last_name: string | null
+    email: string | null
+    phone: string | null
+    website: string | null
+    address: string | null
+    city: string | null
+    country: string | null
+    logo_url: string | null
+    sender_id: string | null
+    signature: string | null
+    is_default: boolean
+    created_at: Date
+    updated_at: Date
+    _count: SenderProfileCountAggregateOutputType | null
+    _avg: SenderProfileAvgAggregateOutputType | null
+    _sum: SenderProfileSumAggregateOutputType | null
+    _min: SenderProfileMinAggregateOutputType | null
+    _max: SenderProfileMaxAggregateOutputType | null
+  }
+
+  type GetSenderProfileGroupByPayload<T extends SenderProfileGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SenderProfileGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SenderProfileGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SenderProfileGroupByOutputType[P]>
+            : GetScalarType<T[P], SenderProfileGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SenderProfileSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uuid?: boolean
+    user_uuid?: boolean
+    name?: boolean
+    company_name?: boolean
+    title?: boolean
+    first_name?: boolean
+    last_name?: boolean
+    email?: boolean
+    phone?: boolean
+    website?: boolean
+    address?: boolean
+    city?: boolean
+    country?: boolean
+    logo_url?: boolean
+    sender_id?: boolean
+    signature?: boolean
+    is_default?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["senderProfile"]>
+
+  export type SenderProfileSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uuid?: boolean
+    user_uuid?: boolean
+    name?: boolean
+    company_name?: boolean
+    title?: boolean
+    first_name?: boolean
+    last_name?: boolean
+    email?: boolean
+    phone?: boolean
+    website?: boolean
+    address?: boolean
+    city?: boolean
+    country?: boolean
+    logo_url?: boolean
+    sender_id?: boolean
+    signature?: boolean
+    is_default?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["senderProfile"]>
+
+  export type SenderProfileSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uuid?: boolean
+    user_uuid?: boolean
+    name?: boolean
+    company_name?: boolean
+    title?: boolean
+    first_name?: boolean
+    last_name?: boolean
+    email?: boolean
+    phone?: boolean
+    website?: boolean
+    address?: boolean
+    city?: boolean
+    country?: boolean
+    logo_url?: boolean
+    sender_id?: boolean
+    signature?: boolean
+    is_default?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["senderProfile"]>
+
+  export type SenderProfileSelectScalar = {
+    id?: boolean
+    uuid?: boolean
+    user_uuid?: boolean
+    name?: boolean
+    company_name?: boolean
+    title?: boolean
+    first_name?: boolean
+    last_name?: boolean
+    email?: boolean
+    phone?: boolean
+    website?: boolean
+    address?: boolean
+    city?: boolean
+    country?: boolean
+    logo_url?: boolean
+    sender_id?: boolean
+    signature?: boolean
+    is_default?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }
+
+  export type SenderProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "name" | "company_name" | "title" | "first_name" | "last_name" | "email" | "phone" | "website" | "address" | "city" | "country" | "logo_url" | "sender_id" | "signature" | "is_default" | "created_at" | "updated_at", ExtArgs["result"]["senderProfile"]>
+  export type SenderProfileInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type SenderProfileIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type SenderProfileIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $SenderProfilePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SenderProfile"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      uuid: string
+      user_uuid: string
+      name: string
+      company_name: string | null
+      title: string | null
+      first_name: string | null
+      last_name: string | null
+      email: string | null
+      phone: string | null
+      website: string | null
+      address: string | null
+      city: string | null
+      country: string | null
+      logo_url: string | null
+      sender_id: string | null
+      signature: string | null
+      is_default: boolean
+      created_at: Date
+      updated_at: Date
+    }, ExtArgs["result"]["senderProfile"]>
+    composites: {}
+  }
+
+  type SenderProfileGetPayload<S extends boolean | null | undefined | SenderProfileDefaultArgs> = $Result.GetResult<Prisma.$SenderProfilePayload, S>
+
+  type SenderProfileCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SenderProfileFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SenderProfileCountAggregateInputType | true
+    }
+
+  export interface SenderProfileDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SenderProfile'], meta: { name: 'SenderProfile' } }
+    /**
+     * Find zero or one SenderProfile that matches the filter.
+     * @param {SenderProfileFindUniqueArgs} args - Arguments to find a SenderProfile
+     * @example
+     * // Get one SenderProfile
+     * const senderProfile = await prisma.senderProfile.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SenderProfileFindUniqueArgs>(args: SelectSubset<T, SenderProfileFindUniqueArgs<ExtArgs>>): Prisma__SenderProfileClient<$Result.GetResult<Prisma.$SenderProfilePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SenderProfile that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SenderProfileFindUniqueOrThrowArgs} args - Arguments to find a SenderProfile
+     * @example
+     * // Get one SenderProfile
+     * const senderProfile = await prisma.senderProfile.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SenderProfileFindUniqueOrThrowArgs>(args: SelectSubset<T, SenderProfileFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SenderProfileClient<$Result.GetResult<Prisma.$SenderProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SenderProfile that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SenderProfileFindFirstArgs} args - Arguments to find a SenderProfile
+     * @example
+     * // Get one SenderProfile
+     * const senderProfile = await prisma.senderProfile.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SenderProfileFindFirstArgs>(args?: SelectSubset<T, SenderProfileFindFirstArgs<ExtArgs>>): Prisma__SenderProfileClient<$Result.GetResult<Prisma.$SenderProfilePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SenderProfile that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SenderProfileFindFirstOrThrowArgs} args - Arguments to find a SenderProfile
+     * @example
+     * // Get one SenderProfile
+     * const senderProfile = await prisma.senderProfile.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SenderProfileFindFirstOrThrowArgs>(args?: SelectSubset<T, SenderProfileFindFirstOrThrowArgs<ExtArgs>>): Prisma__SenderProfileClient<$Result.GetResult<Prisma.$SenderProfilePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SenderProfiles that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SenderProfileFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SenderProfiles
+     * const senderProfiles = await prisma.senderProfile.findMany()
+     * 
+     * // Get first 10 SenderProfiles
+     * const senderProfiles = await prisma.senderProfile.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const senderProfileWithIdOnly = await prisma.senderProfile.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SenderProfileFindManyArgs>(args?: SelectSubset<T, SenderProfileFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SenderProfilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SenderProfile.
+     * @param {SenderProfileCreateArgs} args - Arguments to create a SenderProfile.
+     * @example
+     * // Create one SenderProfile
+     * const SenderProfile = await prisma.senderProfile.create({
+     *   data: {
+     *     // ... data to create a SenderProfile
+     *   }
+     * })
+     * 
+     */
+    create<T extends SenderProfileCreateArgs>(args: SelectSubset<T, SenderProfileCreateArgs<ExtArgs>>): Prisma__SenderProfileClient<$Result.GetResult<Prisma.$SenderProfilePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SenderProfiles.
+     * @param {SenderProfileCreateManyArgs} args - Arguments to create many SenderProfiles.
+     * @example
+     * // Create many SenderProfiles
+     * const senderProfile = await prisma.senderProfile.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SenderProfileCreateManyArgs>(args?: SelectSubset<T, SenderProfileCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SenderProfiles and returns the data saved in the database.
+     * @param {SenderProfileCreateManyAndReturnArgs} args - Arguments to create many SenderProfiles.
+     * @example
+     * // Create many SenderProfiles
+     * const senderProfile = await prisma.senderProfile.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SenderProfiles and only return the `id`
+     * const senderProfileWithIdOnly = await prisma.senderProfile.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SenderProfileCreateManyAndReturnArgs>(args?: SelectSubset<T, SenderProfileCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SenderProfilePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a SenderProfile.
+     * @param {SenderProfileDeleteArgs} args - Arguments to delete one SenderProfile.
+     * @example
+     * // Delete one SenderProfile
+     * const SenderProfile = await prisma.senderProfile.delete({
+     *   where: {
+     *     // ... filter to delete one SenderProfile
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SenderProfileDeleteArgs>(args: SelectSubset<T, SenderProfileDeleteArgs<ExtArgs>>): Prisma__SenderProfileClient<$Result.GetResult<Prisma.$SenderProfilePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SenderProfile.
+     * @param {SenderProfileUpdateArgs} args - Arguments to update one SenderProfile.
+     * @example
+     * // Update one SenderProfile
+     * const senderProfile = await prisma.senderProfile.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SenderProfileUpdateArgs>(args: SelectSubset<T, SenderProfileUpdateArgs<ExtArgs>>): Prisma__SenderProfileClient<$Result.GetResult<Prisma.$SenderProfilePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SenderProfiles.
+     * @param {SenderProfileDeleteManyArgs} args - Arguments to filter SenderProfiles to delete.
+     * @example
+     * // Delete a few SenderProfiles
+     * const { count } = await prisma.senderProfile.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SenderProfileDeleteManyArgs>(args?: SelectSubset<T, SenderProfileDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SenderProfiles.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SenderProfileUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SenderProfiles
+     * const senderProfile = await prisma.senderProfile.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SenderProfileUpdateManyArgs>(args: SelectSubset<T, SenderProfileUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SenderProfiles and returns the data updated in the database.
+     * @param {SenderProfileUpdateManyAndReturnArgs} args - Arguments to update many SenderProfiles.
+     * @example
+     * // Update many SenderProfiles
+     * const senderProfile = await prisma.senderProfile.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more SenderProfiles and only return the `id`
+     * const senderProfileWithIdOnly = await prisma.senderProfile.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SenderProfileUpdateManyAndReturnArgs>(args: SelectSubset<T, SenderProfileUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SenderProfilePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one SenderProfile.
+     * @param {SenderProfileUpsertArgs} args - Arguments to update or create a SenderProfile.
+     * @example
+     * // Update or create a SenderProfile
+     * const senderProfile = await prisma.senderProfile.upsert({
+     *   create: {
+     *     // ... data to create a SenderProfile
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SenderProfile we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SenderProfileUpsertArgs>(args: SelectSubset<T, SenderProfileUpsertArgs<ExtArgs>>): Prisma__SenderProfileClient<$Result.GetResult<Prisma.$SenderProfilePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of SenderProfiles.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SenderProfileCountArgs} args - Arguments to filter SenderProfiles to count.
+     * @example
+     * // Count the number of SenderProfiles
+     * const count = await prisma.senderProfile.count({
+     *   where: {
+     *     // ... the filter for the SenderProfiles we want to count
+     *   }
+     * })
+    **/
+    count<T extends SenderProfileCountArgs>(
+      args?: Subset<T, SenderProfileCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SenderProfileCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SenderProfile.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SenderProfileAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SenderProfileAggregateArgs>(args: Subset<T, SenderProfileAggregateArgs>): Prisma.PrismaPromise<GetSenderProfileAggregateType<T>>
+
+    /**
+     * Group by SenderProfile.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SenderProfileGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SenderProfileGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SenderProfileGroupByArgs['orderBy'] }
+        : { orderBy?: SenderProfileGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SenderProfileGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSenderProfileGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SenderProfile model
+   */
+  readonly fields: SenderProfileFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SenderProfile.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SenderProfileClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SenderProfile model
+   */
+  interface SenderProfileFieldRefs {
+    readonly id: FieldRef<"SenderProfile", 'Int'>
+    readonly uuid: FieldRef<"SenderProfile", 'String'>
+    readonly user_uuid: FieldRef<"SenderProfile", 'String'>
+    readonly name: FieldRef<"SenderProfile", 'String'>
+    readonly company_name: FieldRef<"SenderProfile", 'String'>
+    readonly title: FieldRef<"SenderProfile", 'String'>
+    readonly first_name: FieldRef<"SenderProfile", 'String'>
+    readonly last_name: FieldRef<"SenderProfile", 'String'>
+    readonly email: FieldRef<"SenderProfile", 'String'>
+    readonly phone: FieldRef<"SenderProfile", 'String'>
+    readonly website: FieldRef<"SenderProfile", 'String'>
+    readonly address: FieldRef<"SenderProfile", 'String'>
+    readonly city: FieldRef<"SenderProfile", 'String'>
+    readonly country: FieldRef<"SenderProfile", 'String'>
+    readonly logo_url: FieldRef<"SenderProfile", 'String'>
+    readonly sender_id: FieldRef<"SenderProfile", 'String'>
+    readonly signature: FieldRef<"SenderProfile", 'String'>
+    readonly is_default: FieldRef<"SenderProfile", 'Boolean'>
+    readonly created_at: FieldRef<"SenderProfile", 'DateTime'>
+    readonly updated_at: FieldRef<"SenderProfile", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SenderProfile findUnique
+   */
+  export type SenderProfileFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SenderProfile
+     */
+    select?: SenderProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SenderProfile
+     */
+    omit?: SenderProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SenderProfileInclude<ExtArgs> | null
+    /**
+     * Filter, which SenderProfile to fetch.
+     */
+    where: SenderProfileWhereUniqueInput
+  }
+
+  /**
+   * SenderProfile findUniqueOrThrow
+   */
+  export type SenderProfileFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SenderProfile
+     */
+    select?: SenderProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SenderProfile
+     */
+    omit?: SenderProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SenderProfileInclude<ExtArgs> | null
+    /**
+     * Filter, which SenderProfile to fetch.
+     */
+    where: SenderProfileWhereUniqueInput
+  }
+
+  /**
+   * SenderProfile findFirst
+   */
+  export type SenderProfileFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SenderProfile
+     */
+    select?: SenderProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SenderProfile
+     */
+    omit?: SenderProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SenderProfileInclude<ExtArgs> | null
+    /**
+     * Filter, which SenderProfile to fetch.
+     */
+    where?: SenderProfileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SenderProfiles to fetch.
+     */
+    orderBy?: SenderProfileOrderByWithRelationInput | SenderProfileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SenderProfiles.
+     */
+    cursor?: SenderProfileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SenderProfiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SenderProfiles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SenderProfiles.
+     */
+    distinct?: SenderProfileScalarFieldEnum | SenderProfileScalarFieldEnum[]
+  }
+
+  /**
+   * SenderProfile findFirstOrThrow
+   */
+  export type SenderProfileFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SenderProfile
+     */
+    select?: SenderProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SenderProfile
+     */
+    omit?: SenderProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SenderProfileInclude<ExtArgs> | null
+    /**
+     * Filter, which SenderProfile to fetch.
+     */
+    where?: SenderProfileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SenderProfiles to fetch.
+     */
+    orderBy?: SenderProfileOrderByWithRelationInput | SenderProfileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SenderProfiles.
+     */
+    cursor?: SenderProfileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SenderProfiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SenderProfiles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SenderProfiles.
+     */
+    distinct?: SenderProfileScalarFieldEnum | SenderProfileScalarFieldEnum[]
+  }
+
+  /**
+   * SenderProfile findMany
+   */
+  export type SenderProfileFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SenderProfile
+     */
+    select?: SenderProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SenderProfile
+     */
+    omit?: SenderProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SenderProfileInclude<ExtArgs> | null
+    /**
+     * Filter, which SenderProfiles to fetch.
+     */
+    where?: SenderProfileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SenderProfiles to fetch.
+     */
+    orderBy?: SenderProfileOrderByWithRelationInput | SenderProfileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SenderProfiles.
+     */
+    cursor?: SenderProfileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SenderProfiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SenderProfiles.
+     */
+    skip?: number
+    distinct?: SenderProfileScalarFieldEnum | SenderProfileScalarFieldEnum[]
+  }
+
+  /**
+   * SenderProfile create
+   */
+  export type SenderProfileCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SenderProfile
+     */
+    select?: SenderProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SenderProfile
+     */
+    omit?: SenderProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SenderProfileInclude<ExtArgs> | null
+    /**
+     * The data needed to create a SenderProfile.
+     */
+    data: XOR<SenderProfileCreateInput, SenderProfileUncheckedCreateInput>
+  }
+
+  /**
+   * SenderProfile createMany
+   */
+  export type SenderProfileCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SenderProfiles.
+     */
+    data: SenderProfileCreateManyInput | SenderProfileCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SenderProfile createManyAndReturn
+   */
+  export type SenderProfileCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SenderProfile
+     */
+    select?: SenderProfileSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SenderProfile
+     */
+    omit?: SenderProfileOmit<ExtArgs> | null
+    /**
+     * The data used to create many SenderProfiles.
+     */
+    data: SenderProfileCreateManyInput | SenderProfileCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SenderProfileIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SenderProfile update
+   */
+  export type SenderProfileUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SenderProfile
+     */
+    select?: SenderProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SenderProfile
+     */
+    omit?: SenderProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SenderProfileInclude<ExtArgs> | null
+    /**
+     * The data needed to update a SenderProfile.
+     */
+    data: XOR<SenderProfileUpdateInput, SenderProfileUncheckedUpdateInput>
+    /**
+     * Choose, which SenderProfile to update.
+     */
+    where: SenderProfileWhereUniqueInput
+  }
+
+  /**
+   * SenderProfile updateMany
+   */
+  export type SenderProfileUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SenderProfiles.
+     */
+    data: XOR<SenderProfileUpdateManyMutationInput, SenderProfileUncheckedUpdateManyInput>
+    /**
+     * Filter which SenderProfiles to update
+     */
+    where?: SenderProfileWhereInput
+    /**
+     * Limit how many SenderProfiles to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SenderProfile updateManyAndReturn
+   */
+  export type SenderProfileUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SenderProfile
+     */
+    select?: SenderProfileSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SenderProfile
+     */
+    omit?: SenderProfileOmit<ExtArgs> | null
+    /**
+     * The data used to update SenderProfiles.
+     */
+    data: XOR<SenderProfileUpdateManyMutationInput, SenderProfileUncheckedUpdateManyInput>
+    /**
+     * Filter which SenderProfiles to update
+     */
+    where?: SenderProfileWhereInput
+    /**
+     * Limit how many SenderProfiles to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SenderProfileIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SenderProfile upsert
+   */
+  export type SenderProfileUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SenderProfile
+     */
+    select?: SenderProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SenderProfile
+     */
+    omit?: SenderProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SenderProfileInclude<ExtArgs> | null
+    /**
+     * The filter to search for the SenderProfile to update in case it exists.
+     */
+    where: SenderProfileWhereUniqueInput
+    /**
+     * In case the SenderProfile found by the `where` argument doesn't exist, create a new SenderProfile with this data.
+     */
+    create: XOR<SenderProfileCreateInput, SenderProfileUncheckedCreateInput>
+    /**
+     * In case the SenderProfile was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SenderProfileUpdateInput, SenderProfileUncheckedUpdateInput>
+  }
+
+  /**
+   * SenderProfile delete
+   */
+  export type SenderProfileDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SenderProfile
+     */
+    select?: SenderProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SenderProfile
+     */
+    omit?: SenderProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SenderProfileInclude<ExtArgs> | null
+    /**
+     * Filter which SenderProfile to delete.
+     */
+    where: SenderProfileWhereUniqueInput
+  }
+
+  /**
+   * SenderProfile deleteMany
+   */
+  export type SenderProfileDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SenderProfiles to delete
+     */
+    where?: SenderProfileWhereInput
+    /**
+     * Limit how many SenderProfiles to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SenderProfile without action
+   */
+  export type SenderProfileDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SenderProfile
+     */
+    select?: SenderProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SenderProfile
+     */
+    omit?: SenderProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SenderProfileInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -15673,6 +17088,32 @@ export namespace Prisma {
   };
 
   export type FilterJobScalarFieldEnum = (typeof FilterJobScalarFieldEnum)[keyof typeof FilterJobScalarFieldEnum]
+
+
+  export const SenderProfileScalarFieldEnum: {
+    id: 'id',
+    uuid: 'uuid',
+    user_uuid: 'user_uuid',
+    name: 'name',
+    company_name: 'company_name',
+    title: 'title',
+    first_name: 'first_name',
+    last_name: 'last_name',
+    email: 'email',
+    phone: 'phone',
+    website: 'website',
+    address: 'address',
+    city: 'city',
+    country: 'country',
+    logo_url: 'logo_url',
+    sender_id: 'sender_id',
+    signature: 'signature',
+    is_default: 'is_default',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
+  };
+
+  export type SenderProfileScalarFieldEnum = (typeof SenderProfileScalarFieldEnum)[keyof typeof SenderProfileScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -15965,6 +17406,7 @@ export namespace Prisma {
     outreach_messages?: OutreachMessageListRelationFilter
     outreach_sequences?: OutreachSequenceListRelationFilter
     interactions?: InteractionListRelationFilter
+    sender_profiles?: SenderProfileListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -15981,6 +17423,7 @@ export namespace Prisma {
     outreach_messages?: OutreachMessageOrderByRelationAggregateInput
     outreach_sequences?: OutreachSequenceOrderByRelationAggregateInput
     interactions?: InteractionOrderByRelationAggregateInput
+    sender_profiles?: SenderProfileOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -16000,6 +17443,7 @@ export namespace Prisma {
     outreach_messages?: OutreachMessageListRelationFilter
     outreach_sequences?: OutreachSequenceListRelationFilter
     interactions?: InteractionListRelationFilter
+    sender_profiles?: SenderProfileListRelationFilter
   }, "id" | "uuid" | "email" | "phone">
 
   export type UserOrderByWithAggregationInput = {
@@ -16983,6 +18427,138 @@ export namespace Prisma {
     updated_at?: DateTimeWithAggregatesFilter<"FilterJob"> | Date | string
   }
 
+  export type SenderProfileWhereInput = {
+    AND?: SenderProfileWhereInput | SenderProfileWhereInput[]
+    OR?: SenderProfileWhereInput[]
+    NOT?: SenderProfileWhereInput | SenderProfileWhereInput[]
+    id?: IntFilter<"SenderProfile"> | number
+    uuid?: StringFilter<"SenderProfile"> | string
+    user_uuid?: StringFilter<"SenderProfile"> | string
+    name?: StringFilter<"SenderProfile"> | string
+    company_name?: StringNullableFilter<"SenderProfile"> | string | null
+    title?: StringNullableFilter<"SenderProfile"> | string | null
+    first_name?: StringNullableFilter<"SenderProfile"> | string | null
+    last_name?: StringNullableFilter<"SenderProfile"> | string | null
+    email?: StringNullableFilter<"SenderProfile"> | string | null
+    phone?: StringNullableFilter<"SenderProfile"> | string | null
+    website?: StringNullableFilter<"SenderProfile"> | string | null
+    address?: StringNullableFilter<"SenderProfile"> | string | null
+    city?: StringNullableFilter<"SenderProfile"> | string | null
+    country?: StringNullableFilter<"SenderProfile"> | string | null
+    logo_url?: StringNullableFilter<"SenderProfile"> | string | null
+    sender_id?: StringNullableFilter<"SenderProfile"> | string | null
+    signature?: StringNullableFilter<"SenderProfile"> | string | null
+    is_default?: BoolFilter<"SenderProfile"> | boolean
+    created_at?: DateTimeFilter<"SenderProfile"> | Date | string
+    updated_at?: DateTimeFilter<"SenderProfile"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type SenderProfileOrderByWithRelationInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    user_uuid?: SortOrder
+    name?: SortOrder
+    company_name?: SortOrderInput | SortOrder
+    title?: SortOrderInput | SortOrder
+    first_name?: SortOrderInput | SortOrder
+    last_name?: SortOrderInput | SortOrder
+    email?: SortOrderInput | SortOrder
+    phone?: SortOrderInput | SortOrder
+    website?: SortOrderInput | SortOrder
+    address?: SortOrderInput | SortOrder
+    city?: SortOrderInput | SortOrder
+    country?: SortOrderInput | SortOrder
+    logo_url?: SortOrderInput | SortOrder
+    sender_id?: SortOrderInput | SortOrder
+    signature?: SortOrderInput | SortOrder
+    is_default?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type SenderProfileWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    uuid?: string
+    AND?: SenderProfileWhereInput | SenderProfileWhereInput[]
+    OR?: SenderProfileWhereInput[]
+    NOT?: SenderProfileWhereInput | SenderProfileWhereInput[]
+    user_uuid?: StringFilter<"SenderProfile"> | string
+    name?: StringFilter<"SenderProfile"> | string
+    company_name?: StringNullableFilter<"SenderProfile"> | string | null
+    title?: StringNullableFilter<"SenderProfile"> | string | null
+    first_name?: StringNullableFilter<"SenderProfile"> | string | null
+    last_name?: StringNullableFilter<"SenderProfile"> | string | null
+    email?: StringNullableFilter<"SenderProfile"> | string | null
+    phone?: StringNullableFilter<"SenderProfile"> | string | null
+    website?: StringNullableFilter<"SenderProfile"> | string | null
+    address?: StringNullableFilter<"SenderProfile"> | string | null
+    city?: StringNullableFilter<"SenderProfile"> | string | null
+    country?: StringNullableFilter<"SenderProfile"> | string | null
+    logo_url?: StringNullableFilter<"SenderProfile"> | string | null
+    sender_id?: StringNullableFilter<"SenderProfile"> | string | null
+    signature?: StringNullableFilter<"SenderProfile"> | string | null
+    is_default?: BoolFilter<"SenderProfile"> | boolean
+    created_at?: DateTimeFilter<"SenderProfile"> | Date | string
+    updated_at?: DateTimeFilter<"SenderProfile"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "uuid">
+
+  export type SenderProfileOrderByWithAggregationInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    user_uuid?: SortOrder
+    name?: SortOrder
+    company_name?: SortOrderInput | SortOrder
+    title?: SortOrderInput | SortOrder
+    first_name?: SortOrderInput | SortOrder
+    last_name?: SortOrderInput | SortOrder
+    email?: SortOrderInput | SortOrder
+    phone?: SortOrderInput | SortOrder
+    website?: SortOrderInput | SortOrder
+    address?: SortOrderInput | SortOrder
+    city?: SortOrderInput | SortOrder
+    country?: SortOrderInput | SortOrder
+    logo_url?: SortOrderInput | SortOrder
+    sender_id?: SortOrderInput | SortOrder
+    signature?: SortOrderInput | SortOrder
+    is_default?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    _count?: SenderProfileCountOrderByAggregateInput
+    _avg?: SenderProfileAvgOrderByAggregateInput
+    _max?: SenderProfileMaxOrderByAggregateInput
+    _min?: SenderProfileMinOrderByAggregateInput
+    _sum?: SenderProfileSumOrderByAggregateInput
+  }
+
+  export type SenderProfileScalarWhereWithAggregatesInput = {
+    AND?: SenderProfileScalarWhereWithAggregatesInput | SenderProfileScalarWhereWithAggregatesInput[]
+    OR?: SenderProfileScalarWhereWithAggregatesInput[]
+    NOT?: SenderProfileScalarWhereWithAggregatesInput | SenderProfileScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"SenderProfile"> | number
+    uuid?: StringWithAggregatesFilter<"SenderProfile"> | string
+    user_uuid?: StringWithAggregatesFilter<"SenderProfile"> | string
+    name?: StringWithAggregatesFilter<"SenderProfile"> | string
+    company_name?: StringNullableWithAggregatesFilter<"SenderProfile"> | string | null
+    title?: StringNullableWithAggregatesFilter<"SenderProfile"> | string | null
+    first_name?: StringNullableWithAggregatesFilter<"SenderProfile"> | string | null
+    last_name?: StringNullableWithAggregatesFilter<"SenderProfile"> | string | null
+    email?: StringNullableWithAggregatesFilter<"SenderProfile"> | string | null
+    phone?: StringNullableWithAggregatesFilter<"SenderProfile"> | string | null
+    website?: StringNullableWithAggregatesFilter<"SenderProfile"> | string | null
+    address?: StringNullableWithAggregatesFilter<"SenderProfile"> | string | null
+    city?: StringNullableWithAggregatesFilter<"SenderProfile"> | string | null
+    country?: StringNullableWithAggregatesFilter<"SenderProfile"> | string | null
+    logo_url?: StringNullableWithAggregatesFilter<"SenderProfile"> | string | null
+    sender_id?: StringNullableWithAggregatesFilter<"SenderProfile"> | string | null
+    signature?: StringNullableWithAggregatesFilter<"SenderProfile"> | string | null
+    is_default?: BoolWithAggregatesFilter<"SenderProfile"> | boolean
+    created_at?: DateTimeWithAggregatesFilter<"SenderProfile"> | Date | string
+    updated_at?: DateTimeWithAggregatesFilter<"SenderProfile"> | Date | string
+  }
+
   export type UserCreateInput = {
     uuid?: string
     email: string
@@ -16996,6 +18572,7 @@ export namespace Prisma {
     outreach_messages?: OutreachMessageCreateNestedManyWithoutUserInput
     outreach_sequences?: OutreachSequenceCreateNestedManyWithoutUserInput
     interactions?: InteractionCreateNestedManyWithoutUserInput
+    sender_profiles?: SenderProfileCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -17012,6 +18589,7 @@ export namespace Prisma {
     outreach_messages?: OutreachMessageUncheckedCreateNestedManyWithoutUserInput
     outreach_sequences?: OutreachSequenceUncheckedCreateNestedManyWithoutUserInput
     interactions?: InteractionUncheckedCreateNestedManyWithoutUserInput
+    sender_profiles?: SenderProfileUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -17027,6 +18605,7 @@ export namespace Prisma {
     outreach_messages?: OutreachMessageUpdateManyWithoutUserNestedInput
     outreach_sequences?: OutreachSequenceUpdateManyWithoutUserNestedInput
     interactions?: InteractionUpdateManyWithoutUserNestedInput
+    sender_profiles?: SenderProfileUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -17043,6 +18622,7 @@ export namespace Prisma {
     outreach_messages?: OutreachMessageUncheckedUpdateManyWithoutUserNestedInput
     outreach_sequences?: OutreachSequenceUncheckedUpdateManyWithoutUserNestedInput
     interactions?: InteractionUncheckedUpdateManyWithoutUserNestedInput
+    sender_profiles?: SenderProfileUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -18105,6 +19685,163 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type SenderProfileCreateInput = {
+    uuid?: string
+    name: string
+    company_name?: string | null
+    title?: string | null
+    first_name?: string | null
+    last_name?: string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    address?: string | null
+    city?: string | null
+    country?: string | null
+    logo_url?: string | null
+    sender_id?: string | null
+    signature?: string | null
+    is_default?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    user: UserCreateNestedOneWithoutSender_profilesInput
+  }
+
+  export type SenderProfileUncheckedCreateInput = {
+    id?: number
+    uuid?: string
+    user_uuid: string
+    name: string
+    company_name?: string | null
+    title?: string | null
+    first_name?: string | null
+    last_name?: string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    address?: string | null
+    city?: string | null
+    country?: string | null
+    logo_url?: string | null
+    sender_id?: string | null
+    signature?: string | null
+    is_default?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type SenderProfileUpdateInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    company_name?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
+    sender_id?: NullableStringFieldUpdateOperationsInput | string | null
+    signature?: NullableStringFieldUpdateOperationsInput | string | null
+    is_default?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutSender_profilesNestedInput
+  }
+
+  export type SenderProfileUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    company_name?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
+    sender_id?: NullableStringFieldUpdateOperationsInput | string | null
+    signature?: NullableStringFieldUpdateOperationsInput | string | null
+    is_default?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SenderProfileCreateManyInput = {
+    id?: number
+    uuid?: string
+    user_uuid: string
+    name: string
+    company_name?: string | null
+    title?: string | null
+    first_name?: string | null
+    last_name?: string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    address?: string | null
+    city?: string | null
+    country?: string | null
+    logo_url?: string | null
+    sender_id?: string | null
+    signature?: string | null
+    is_default?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type SenderProfileUpdateManyMutationInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    company_name?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
+    sender_id?: NullableStringFieldUpdateOperationsInput | string | null
+    signature?: NullableStringFieldUpdateOperationsInput | string | null
+    is_default?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SenderProfileUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    company_name?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
+    sender_id?: NullableStringFieldUpdateOperationsInput | string | null
+    signature?: NullableStringFieldUpdateOperationsInput | string | null
+    is_default?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -18194,6 +19931,12 @@ export namespace Prisma {
     none?: InteractionWhereInput
   }
 
+  export type SenderProfileListRelationFilter = {
+    every?: SenderProfileWhereInput
+    some?: SenderProfileWhereInput
+    none?: SenderProfileWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -18216,6 +19959,10 @@ export namespace Prisma {
   }
 
   export type InteractionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SenderProfileOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -19277,6 +21024,83 @@ export namespace Prisma {
     _max?: NestedEnumJobTriggerFilter<$PrismaModel>
   }
 
+  export type SenderProfileCountOrderByAggregateInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    user_uuid?: SortOrder
+    name?: SortOrder
+    company_name?: SortOrder
+    title?: SortOrder
+    first_name?: SortOrder
+    last_name?: SortOrder
+    email?: SortOrder
+    phone?: SortOrder
+    website?: SortOrder
+    address?: SortOrder
+    city?: SortOrder
+    country?: SortOrder
+    logo_url?: SortOrder
+    sender_id?: SortOrder
+    signature?: SortOrder
+    is_default?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type SenderProfileAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type SenderProfileMaxOrderByAggregateInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    user_uuid?: SortOrder
+    name?: SortOrder
+    company_name?: SortOrder
+    title?: SortOrder
+    first_name?: SortOrder
+    last_name?: SortOrder
+    email?: SortOrder
+    phone?: SortOrder
+    website?: SortOrder
+    address?: SortOrder
+    city?: SortOrder
+    country?: SortOrder
+    logo_url?: SortOrder
+    sender_id?: SortOrder
+    signature?: SortOrder
+    is_default?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type SenderProfileMinOrderByAggregateInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    user_uuid?: SortOrder
+    name?: SortOrder
+    company_name?: SortOrder
+    title?: SortOrder
+    first_name?: SortOrder
+    last_name?: SortOrder
+    email?: SortOrder
+    phone?: SortOrder
+    website?: SortOrder
+    address?: SortOrder
+    city?: SortOrder
+    country?: SortOrder
+    logo_url?: SortOrder
+    sender_id?: SortOrder
+    signature?: SortOrder
+    is_default?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type SenderProfileSumOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
   export type FilterCreateNestedManyWithoutUserInput = {
     create?: XOR<FilterCreateWithoutUserInput, FilterUncheckedCreateWithoutUserInput> | FilterCreateWithoutUserInput[] | FilterUncheckedCreateWithoutUserInput[]
     connectOrCreate?: FilterCreateOrConnectWithoutUserInput | FilterCreateOrConnectWithoutUserInput[]
@@ -19312,6 +21136,13 @@ export namespace Prisma {
     connect?: InteractionWhereUniqueInput | InteractionWhereUniqueInput[]
   }
 
+  export type SenderProfileCreateNestedManyWithoutUserInput = {
+    create?: XOR<SenderProfileCreateWithoutUserInput, SenderProfileUncheckedCreateWithoutUserInput> | SenderProfileCreateWithoutUserInput[] | SenderProfileUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SenderProfileCreateOrConnectWithoutUserInput | SenderProfileCreateOrConnectWithoutUserInput[]
+    createMany?: SenderProfileCreateManyUserInputEnvelope
+    connect?: SenderProfileWhereUniqueInput | SenderProfileWhereUniqueInput[]
+  }
+
   export type FilterUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<FilterCreateWithoutUserInput, FilterUncheckedCreateWithoutUserInput> | FilterCreateWithoutUserInput[] | FilterUncheckedCreateWithoutUserInput[]
     connectOrCreate?: FilterCreateOrConnectWithoutUserInput | FilterCreateOrConnectWithoutUserInput[]
@@ -19345,6 +21176,13 @@ export namespace Prisma {
     connectOrCreate?: InteractionCreateOrConnectWithoutUserInput | InteractionCreateOrConnectWithoutUserInput[]
     createMany?: InteractionCreateManyUserInputEnvelope
     connect?: InteractionWhereUniqueInput | InteractionWhereUniqueInput[]
+  }
+
+  export type SenderProfileUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<SenderProfileCreateWithoutUserInput, SenderProfileUncheckedCreateWithoutUserInput> | SenderProfileCreateWithoutUserInput[] | SenderProfileUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SenderProfileCreateOrConnectWithoutUserInput | SenderProfileCreateOrConnectWithoutUserInput[]
+    createMany?: SenderProfileCreateManyUserInputEnvelope
+    connect?: SenderProfileWhereUniqueInput | SenderProfileWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -19433,6 +21271,20 @@ export namespace Prisma {
     deleteMany?: InteractionScalarWhereInput | InteractionScalarWhereInput[]
   }
 
+  export type SenderProfileUpdateManyWithoutUserNestedInput = {
+    create?: XOR<SenderProfileCreateWithoutUserInput, SenderProfileUncheckedCreateWithoutUserInput> | SenderProfileCreateWithoutUserInput[] | SenderProfileUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SenderProfileCreateOrConnectWithoutUserInput | SenderProfileCreateOrConnectWithoutUserInput[]
+    upsert?: SenderProfileUpsertWithWhereUniqueWithoutUserInput | SenderProfileUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: SenderProfileCreateManyUserInputEnvelope
+    set?: SenderProfileWhereUniqueInput | SenderProfileWhereUniqueInput[]
+    disconnect?: SenderProfileWhereUniqueInput | SenderProfileWhereUniqueInput[]
+    delete?: SenderProfileWhereUniqueInput | SenderProfileWhereUniqueInput[]
+    connect?: SenderProfileWhereUniqueInput | SenderProfileWhereUniqueInput[]
+    update?: SenderProfileUpdateWithWhereUniqueWithoutUserInput | SenderProfileUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: SenderProfileUpdateManyWithWhereWithoutUserInput | SenderProfileUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: SenderProfileScalarWhereInput | SenderProfileScalarWhereInput[]
+  }
+
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -19509,6 +21361,20 @@ export namespace Prisma {
     update?: InteractionUpdateWithWhereUniqueWithoutUserInput | InteractionUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: InteractionUpdateManyWithWhereWithoutUserInput | InteractionUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: InteractionScalarWhereInput | InteractionScalarWhereInput[]
+  }
+
+  export type SenderProfileUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<SenderProfileCreateWithoutUserInput, SenderProfileUncheckedCreateWithoutUserInput> | SenderProfileCreateWithoutUserInput[] | SenderProfileUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SenderProfileCreateOrConnectWithoutUserInput | SenderProfileCreateOrConnectWithoutUserInput[]
+    upsert?: SenderProfileUpsertWithWhereUniqueWithoutUserInput | SenderProfileUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: SenderProfileCreateManyUserInputEnvelope
+    set?: SenderProfileWhereUniqueInput | SenderProfileWhereUniqueInput[]
+    disconnect?: SenderProfileWhereUniqueInput | SenderProfileWhereUniqueInput[]
+    delete?: SenderProfileWhereUniqueInput | SenderProfileWhereUniqueInput[]
+    connect?: SenderProfileWhereUniqueInput | SenderProfileWhereUniqueInput[]
+    update?: SenderProfileUpdateWithWhereUniqueWithoutUserInput | SenderProfileUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: SenderProfileUpdateManyWithWhereWithoutUserInput | SenderProfileUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: SenderProfileScalarWhereInput | SenderProfileScalarWhereInput[]
   }
 
   export type FilterCreateenrichment_sourcesInput = {
@@ -20153,6 +22019,20 @@ export namespace Prisma {
     update?: XOR<XOR<FilterUpdateToOneWithWhereWithoutJobsInput, FilterUpdateWithoutJobsInput>, FilterUncheckedUpdateWithoutJobsInput>
   }
 
+  export type UserCreateNestedOneWithoutSender_profilesInput = {
+    create?: XOR<UserCreateWithoutSender_profilesInput, UserUncheckedCreateWithoutSender_profilesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSender_profilesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutSender_profilesNestedInput = {
+    create?: XOR<UserCreateWithoutSender_profilesInput, UserUncheckedCreateWithoutSender_profilesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSender_profilesInput
+    upsert?: UserUpsertWithoutSender_profilesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSender_profilesInput, UserUpdateWithoutSender_profilesInput>, UserUncheckedUpdateWithoutSender_profilesInput>
+  }
+
   export type NestedIntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -20785,6 +22665,59 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type SenderProfileCreateWithoutUserInput = {
+    uuid?: string
+    name: string
+    company_name?: string | null
+    title?: string | null
+    first_name?: string | null
+    last_name?: string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    address?: string | null
+    city?: string | null
+    country?: string | null
+    logo_url?: string | null
+    sender_id?: string | null
+    signature?: string | null
+    is_default?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type SenderProfileUncheckedCreateWithoutUserInput = {
+    id?: number
+    uuid?: string
+    name: string
+    company_name?: string | null
+    title?: string | null
+    first_name?: string | null
+    last_name?: string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    address?: string | null
+    city?: string | null
+    country?: string | null
+    logo_url?: string | null
+    sender_id?: string | null
+    signature?: string | null
+    is_default?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type SenderProfileCreateOrConnectWithoutUserInput = {
+    where: SenderProfileWhereUniqueInput
+    create: XOR<SenderProfileCreateWithoutUserInput, SenderProfileUncheckedCreateWithoutUserInput>
+  }
+
+  export type SenderProfileCreateManyUserInputEnvelope = {
+    data: SenderProfileCreateManyUserInput | SenderProfileCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type FilterUpsertWithWhereUniqueWithoutUserInput = {
     where: FilterWhereUniqueInput
     update: XOR<FilterUpdateWithoutUserInput, FilterUncheckedUpdateWithoutUserInput>
@@ -20959,6 +22892,48 @@ export namespace Prisma {
     updated_at?: DateTimeFilter<"Interaction"> | Date | string
   }
 
+  export type SenderProfileUpsertWithWhereUniqueWithoutUserInput = {
+    where: SenderProfileWhereUniqueInput
+    update: XOR<SenderProfileUpdateWithoutUserInput, SenderProfileUncheckedUpdateWithoutUserInput>
+    create: XOR<SenderProfileCreateWithoutUserInput, SenderProfileUncheckedCreateWithoutUserInput>
+  }
+
+  export type SenderProfileUpdateWithWhereUniqueWithoutUserInput = {
+    where: SenderProfileWhereUniqueInput
+    data: XOR<SenderProfileUpdateWithoutUserInput, SenderProfileUncheckedUpdateWithoutUserInput>
+  }
+
+  export type SenderProfileUpdateManyWithWhereWithoutUserInput = {
+    where: SenderProfileScalarWhereInput
+    data: XOR<SenderProfileUpdateManyMutationInput, SenderProfileUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type SenderProfileScalarWhereInput = {
+    AND?: SenderProfileScalarWhereInput | SenderProfileScalarWhereInput[]
+    OR?: SenderProfileScalarWhereInput[]
+    NOT?: SenderProfileScalarWhereInput | SenderProfileScalarWhereInput[]
+    id?: IntFilter<"SenderProfile"> | number
+    uuid?: StringFilter<"SenderProfile"> | string
+    user_uuid?: StringFilter<"SenderProfile"> | string
+    name?: StringFilter<"SenderProfile"> | string
+    company_name?: StringNullableFilter<"SenderProfile"> | string | null
+    title?: StringNullableFilter<"SenderProfile"> | string | null
+    first_name?: StringNullableFilter<"SenderProfile"> | string | null
+    last_name?: StringNullableFilter<"SenderProfile"> | string | null
+    email?: StringNullableFilter<"SenderProfile"> | string | null
+    phone?: StringNullableFilter<"SenderProfile"> | string | null
+    website?: StringNullableFilter<"SenderProfile"> | string | null
+    address?: StringNullableFilter<"SenderProfile"> | string | null
+    city?: StringNullableFilter<"SenderProfile"> | string | null
+    country?: StringNullableFilter<"SenderProfile"> | string | null
+    logo_url?: StringNullableFilter<"SenderProfile"> | string | null
+    sender_id?: StringNullableFilter<"SenderProfile"> | string | null
+    signature?: StringNullableFilter<"SenderProfile"> | string | null
+    is_default?: BoolFilter<"SenderProfile"> | boolean
+    created_at?: DateTimeFilter<"SenderProfile"> | Date | string
+    updated_at?: DateTimeFilter<"SenderProfile"> | Date | string
+  }
+
   export type UserCreateWithoutFiltersInput = {
     uuid?: string
     email: string
@@ -20971,6 +22946,7 @@ export namespace Prisma {
     outreach_messages?: OutreachMessageCreateNestedManyWithoutUserInput
     outreach_sequences?: OutreachSequenceCreateNestedManyWithoutUserInput
     interactions?: InteractionCreateNestedManyWithoutUserInput
+    sender_profiles?: SenderProfileCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutFiltersInput = {
@@ -20986,6 +22962,7 @@ export namespace Prisma {
     outreach_messages?: OutreachMessageUncheckedCreateNestedManyWithoutUserInput
     outreach_sequences?: OutreachSequenceUncheckedCreateNestedManyWithoutUserInput
     interactions?: InteractionUncheckedCreateNestedManyWithoutUserInput
+    sender_profiles?: SenderProfileUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutFiltersInput = {
@@ -21143,6 +23120,7 @@ export namespace Prisma {
     outreach_messages?: OutreachMessageUpdateManyWithoutUserNestedInput
     outreach_sequences?: OutreachSequenceUpdateManyWithoutUserNestedInput
     interactions?: InteractionUpdateManyWithoutUserNestedInput
+    sender_profiles?: SenderProfileUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFiltersInput = {
@@ -21158,6 +23136,7 @@ export namespace Prisma {
     outreach_messages?: OutreachMessageUncheckedUpdateManyWithoutUserNestedInput
     outreach_sequences?: OutreachSequenceUncheckedUpdateManyWithoutUserNestedInput
     interactions?: InteractionUncheckedUpdateManyWithoutUserNestedInput
+    sender_profiles?: SenderProfileUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type RawLeadUpsertWithWhereUniqueWithoutFilterInput = {
@@ -21750,6 +23729,7 @@ export namespace Prisma {
     outreach_messages?: OutreachMessageCreateNestedManyWithoutUserInput
     outreach_sequences?: OutreachSequenceCreateNestedManyWithoutUserInput
     interactions?: InteractionCreateNestedManyWithoutUserInput
+    sender_profiles?: SenderProfileCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutContactsInput = {
@@ -21765,6 +23745,7 @@ export namespace Prisma {
     outreach_messages?: OutreachMessageUncheckedCreateNestedManyWithoutUserInput
     outreach_sequences?: OutreachSequenceUncheckedCreateNestedManyWithoutUserInput
     interactions?: InteractionUncheckedCreateNestedManyWithoutUserInput
+    sender_profiles?: SenderProfileUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutContactsInput = {
@@ -21978,6 +23959,7 @@ export namespace Prisma {
     outreach_messages?: OutreachMessageUpdateManyWithoutUserNestedInput
     outreach_sequences?: OutreachSequenceUpdateManyWithoutUserNestedInput
     interactions?: InteractionUpdateManyWithoutUserNestedInput
+    sender_profiles?: SenderProfileUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutContactsInput = {
@@ -21993,6 +23975,7 @@ export namespace Prisma {
     outreach_messages?: OutreachMessageUncheckedUpdateManyWithoutUserNestedInput
     outreach_sequences?: OutreachSequenceUncheckedUpdateManyWithoutUserNestedInput
     interactions?: InteractionUncheckedUpdateManyWithoutUserNestedInput
+    sender_profiles?: SenderProfileUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type LeadUpsertWithoutContactsInput = {
@@ -22335,6 +24318,7 @@ export namespace Prisma {
     contacts?: ContactCreateNestedManyWithoutUserInput
     outreach_messages?: OutreachMessageCreateNestedManyWithoutUserInput
     outreach_sequences?: OutreachSequenceCreateNestedManyWithoutUserInput
+    sender_profiles?: SenderProfileCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutInteractionsInput = {
@@ -22350,6 +24334,7 @@ export namespace Prisma {
     contacts?: ContactUncheckedCreateNestedManyWithoutUserInput
     outreach_messages?: OutreachMessageUncheckedCreateNestedManyWithoutUserInput
     outreach_sequences?: OutreachSequenceUncheckedCreateNestedManyWithoutUserInput
+    sender_profiles?: SenderProfileUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutInteractionsInput = {
@@ -22440,6 +24425,7 @@ export namespace Prisma {
     contacts?: ContactUpdateManyWithoutUserNestedInput
     outreach_messages?: OutreachMessageUpdateManyWithoutUserNestedInput
     outreach_sequences?: OutreachSequenceUpdateManyWithoutUserNestedInput
+    sender_profiles?: SenderProfileUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutInteractionsInput = {
@@ -22455,6 +24441,7 @@ export namespace Prisma {
     contacts?: ContactUncheckedUpdateManyWithoutUserNestedInput
     outreach_messages?: OutreachMessageUncheckedUpdateManyWithoutUserNestedInput
     outreach_sequences?: OutreachSequenceUncheckedUpdateManyWithoutUserNestedInput
+    sender_profiles?: SenderProfileUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutOutreach_messagesInput = {
@@ -22469,6 +24456,7 @@ export namespace Prisma {
     contacts?: ContactCreateNestedManyWithoutUserInput
     outreach_sequences?: OutreachSequenceCreateNestedManyWithoutUserInput
     interactions?: InteractionCreateNestedManyWithoutUserInput
+    sender_profiles?: SenderProfileCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOutreach_messagesInput = {
@@ -22484,6 +24472,7 @@ export namespace Prisma {
     contacts?: ContactUncheckedCreateNestedManyWithoutUserInput
     outreach_sequences?: OutreachSequenceUncheckedCreateNestedManyWithoutUserInput
     interactions?: InteractionUncheckedCreateNestedManyWithoutUserInput
+    sender_profiles?: SenderProfileUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOutreach_messagesInput = {
@@ -22568,6 +24557,7 @@ export namespace Prisma {
     contacts?: ContactUpdateManyWithoutUserNestedInput
     outreach_sequences?: OutreachSequenceUpdateManyWithoutUserNestedInput
     interactions?: InteractionUpdateManyWithoutUserNestedInput
+    sender_profiles?: SenderProfileUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOutreach_messagesInput = {
@@ -22583,6 +24573,7 @@ export namespace Prisma {
     contacts?: ContactUncheckedUpdateManyWithoutUserNestedInput
     outreach_sequences?: OutreachSequenceUncheckedUpdateManyWithoutUserNestedInput
     interactions?: InteractionUncheckedUpdateManyWithoutUserNestedInput
+    sender_profiles?: SenderProfileUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ContactUpsertWithoutOutreach_messagesInput = {
@@ -22657,6 +24648,7 @@ export namespace Prisma {
     contacts?: ContactCreateNestedManyWithoutUserInput
     outreach_messages?: OutreachMessageCreateNestedManyWithoutUserInput
     interactions?: InteractionCreateNestedManyWithoutUserInput
+    sender_profiles?: SenderProfileCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOutreach_sequencesInput = {
@@ -22672,6 +24664,7 @@ export namespace Prisma {
     contacts?: ContactUncheckedCreateNestedManyWithoutUserInput
     outreach_messages?: OutreachMessageUncheckedCreateNestedManyWithoutUserInput
     interactions?: InteractionUncheckedCreateNestedManyWithoutUserInput
+    sender_profiles?: SenderProfileUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOutreach_sequencesInput = {
@@ -22702,6 +24695,7 @@ export namespace Prisma {
     contacts?: ContactUpdateManyWithoutUserNestedInput
     outreach_messages?: OutreachMessageUpdateManyWithoutUserNestedInput
     interactions?: InteractionUpdateManyWithoutUserNestedInput
+    sender_profiles?: SenderProfileUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOutreach_sequencesInput = {
@@ -22717,6 +24711,7 @@ export namespace Prisma {
     contacts?: ContactUncheckedUpdateManyWithoutUserNestedInput
     outreach_messages?: OutreachMessageUncheckedUpdateManyWithoutUserNestedInput
     interactions?: InteractionUncheckedUpdateManyWithoutUserNestedInput
+    sender_profiles?: SenderProfileUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type FilterCreateWithoutJobsInput = {
@@ -22809,6 +24804,84 @@ export namespace Prisma {
     contacts?: ContactUncheckedUpdateManyWithoutFilterNestedInput
   }
 
+  export type UserCreateWithoutSender_profilesInput = {
+    uuid?: string
+    email: string
+    phone?: string | null
+    password: string
+    role?: $Enums.AuthRole
+    created_at?: Date | string
+    updated_at?: Date | string
+    filters?: FilterCreateNestedManyWithoutUserInput
+    contacts?: ContactCreateNestedManyWithoutUserInput
+    outreach_messages?: OutreachMessageCreateNestedManyWithoutUserInput
+    outreach_sequences?: OutreachSequenceCreateNestedManyWithoutUserInput
+    interactions?: InteractionCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutSender_profilesInput = {
+    id?: number
+    uuid?: string
+    email: string
+    phone?: string | null
+    password: string
+    role?: $Enums.AuthRole
+    created_at?: Date | string
+    updated_at?: Date | string
+    filters?: FilterUncheckedCreateNestedManyWithoutUserInput
+    contacts?: ContactUncheckedCreateNestedManyWithoutUserInput
+    outreach_messages?: OutreachMessageUncheckedCreateNestedManyWithoutUserInput
+    outreach_sequences?: OutreachSequenceUncheckedCreateNestedManyWithoutUserInput
+    interactions?: InteractionUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutSender_profilesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutSender_profilesInput, UserUncheckedCreateWithoutSender_profilesInput>
+  }
+
+  export type UserUpsertWithoutSender_profilesInput = {
+    update: XOR<UserUpdateWithoutSender_profilesInput, UserUncheckedUpdateWithoutSender_profilesInput>
+    create: XOR<UserCreateWithoutSender_profilesInput, UserUncheckedCreateWithoutSender_profilesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutSender_profilesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutSender_profilesInput, UserUncheckedUpdateWithoutSender_profilesInput>
+  }
+
+  export type UserUpdateWithoutSender_profilesInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    filters?: FilterUpdateManyWithoutUserNestedInput
+    contacts?: ContactUpdateManyWithoutUserNestedInput
+    outreach_messages?: OutreachMessageUpdateManyWithoutUserNestedInput
+    outreach_sequences?: OutreachSequenceUpdateManyWithoutUserNestedInput
+    interactions?: InteractionUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutSender_profilesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    filters?: FilterUncheckedUpdateManyWithoutUserNestedInput
+    contacts?: ContactUncheckedUpdateManyWithoutUserNestedInput
+    outreach_messages?: OutreachMessageUncheckedUpdateManyWithoutUserNestedInput
+    outreach_sequences?: OutreachSequenceUncheckedUpdateManyWithoutUserNestedInput
+    interactions?: InteractionUncheckedUpdateManyWithoutUserNestedInput
+  }
+
   export type FilterCreateManyUserInput = {
     id?: number
     uuid?: string
@@ -22879,6 +24952,28 @@ export namespace Prisma {
     content?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     status_change?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type SenderProfileCreateManyUserInput = {
+    id?: number
+    uuid?: string
+    name: string
+    company_name?: string | null
+    title?: string | null
+    first_name?: string | null
+    last_name?: string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    address?: string | null
+    city?: string | null
+    country?: string | null
+    logo_url?: string | null
+    sender_id?: string | null
+    signature?: string | null
+    is_default?: boolean
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -23108,6 +25203,71 @@ export namespace Prisma {
     content?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     status_change?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SenderProfileUpdateWithoutUserInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    company_name?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
+    sender_id?: NullableStringFieldUpdateOperationsInput | string | null
+    signature?: NullableStringFieldUpdateOperationsInput | string | null
+    is_default?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SenderProfileUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    company_name?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
+    sender_id?: NullableStringFieldUpdateOperationsInput | string | null
+    signature?: NullableStringFieldUpdateOperationsInput | string | null
+    is_default?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SenderProfileUncheckedUpdateManyWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    company_name?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
+    sender_id?: NullableStringFieldUpdateOperationsInput | string | null
+    signature?: NullableStringFieldUpdateOperationsInput | string | null
+    is_default?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }

@@ -7,6 +7,7 @@ import { useRedraftMessages } from "@/features/contacts/hooks/use-contacts";
 import { useDeleteOutreachMessage, useSendOutreachMessage } from "@/features/outreach/hooks/use-outreach";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { EditMessageModal } from "@/pages/dashboard/pages/leads/components/edit-message-modal";
+import { MessageBodyPreview } from "./message-body-preview";
 import { Section } from "./section";
 import { channelIcon } from "../utils/channel-icon";
 
@@ -83,7 +84,7 @@ export function OutreachTab({ contact }: OutreachTabProps) {
                     </Button>
                   </div>
                 </div>
-                <p className="text-sm text-muted whitespace-pre-line">{m.content}</p>
+                <MessageBodyPreview channel={m.channel} content={m.content} />
               </div>
             );
           })}
@@ -104,7 +105,7 @@ export function OutreachTab({ contact }: OutreachTabProps) {
                 {m.subject && <span className="text-sm font-medium text-foreground truncate">{m.subject}</span>}
                 <span className="ml-auto text-xs text-muted whitespace-nowrap">{m.sent_at ? new Date(m.sent_at).toLocaleString() : "—"}</span>
               </div>
-              <p className="text-sm text-muted whitespace-pre-line">{m.content}</p>
+              <MessageBodyPreview channel={m.channel} content={m.content} />
             </div>
           ))}
         </div>

@@ -1,4 +1,4 @@
-const EmailAddress = "info@appointmy.com"
+const EmailAddress = "info@logiqdev.com"
 
 export const EmailConfig = {
     email_addresses: {

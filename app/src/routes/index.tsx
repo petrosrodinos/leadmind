@@ -17,6 +17,7 @@ import EditFilterPage from "@/pages/dashboard/pages/filters/pages/edit";
 import FilterJobsPage from "@/pages/dashboard/pages/filters/pages/jobs";
 import ContactsPage from "@/pages/dashboard/pages/contacts";
 import ContactDetailPage from "@/pages/dashboard/pages/contacts/pages/detail";
+import SenderProfilesPage from "@/pages/dashboard/pages/sender-profiles";
 
 export default function AppRoutes() {
   return (
@@ -50,6 +51,7 @@ export default function AppRoutes() {
         <Route path="leads" element={<LeadsPage />} />
         <Route path="contacts" element={<ContactsPage />} />
         <Route path="contacts/:uuid" element={<ContactDetailPage />} />
+        <Route path="sender-profiles" element={<SenderProfilesPage />} />
         <Route path="filters" element={<FiltersPage />} />
         <Route path="filters/new" element={<NewFilterPage />} />
         <Route path="filters/:uuid" element={<FilterDetailPage />}>

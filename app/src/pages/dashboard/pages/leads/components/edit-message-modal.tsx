@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button, Input, Label, Modal, TextArea, TextField } from "@heroui/react";
 import { Send, Save } from "lucide-react";
 import {
@@ -9,6 +9,7 @@ import {
     useSendOutreachMessage,
     useUpdateOutreachMessage,
 } from "@/features/outreach/hooks/use-outreach";
+import { RichTextEditor } from "@/components/ui/rich-text-editor";
 
 interface EditMessageModalProps {
     message: OutreachMessage | null;
@@ -23,20 +24,37 @@ export function EditMessageModal({
     onOpenChange,
     contact_uuid,
 }: EditMessageModalProps) {
-    const [subject, setSubject] = useState("");
-    const [content, setContent] = useState("");
+    return (
+        <Modal.Backdrop isOpen={isOpen} onOpenChange={onOpenChange}>
+            <Modal.Container>
+                <Modal.Dialog className="sm:max-w-2xl">
+                    <Modal.CloseTrigger />
+                    {message ? (
+                        <MessageForm
+                            key={message.uuid}
+                            message={message}
+                            contact_uuid={contact_uuid}
+                            onClose={() => onOpenChange(false)}
+                        />
+                    ) : null}
+                </Modal.Dialog>
+            </Modal.Container>
+        </Modal.Backdrop>
+    );
+}
+
+interface MessageFormProps {
+    message: OutreachMessage;
+    contact_uuid?: string;
+    onClose: () => void;
+}
+
+function MessageForm({ message, contact_uuid, onClose }: MessageFormProps) {
+    const [subject, setSubject] = useState(message.subject ?? "");
+    const [content, setContent] = useState(message.content ?? "");
 
     const update = useUpdateOutreachMessage();
     const send = useSendOutreachMessage();
-
-    useEffect(() => {
-        if (message) {
-            setSubject(message.subject ?? "");
-            setContent(message.content ?? "");
-        }
-    }, [message]);
-
-    if (!message) return null;
 
     const isEmail = message.channel === Channel.EMAIL;
     const dirty =
@@ -66,65 +84,68 @@ export function EditMessageModal({
             });
         }
         await send.mutateAsync({ uuid: message.uuid, contact_uuid });
-        onOpenChange(false);
+        onClose();
     };
 
     return (
-        <Modal.Backdrop isOpen={isOpen} onOpenChange={onOpenChange}>
-            <Modal.Container>
-                <Modal.Dialog className="sm:max-w-2xl">
-                    <Modal.CloseTrigger />
-                    <Modal.Header>
-                        <Modal.Heading>Edit {message.channel.toLowerCase()} draft</Modal.Heading>
-                    </Modal.Header>
-                    <Modal.Body className="p-6">
-                        <div className="flex flex-col gap-4">
-                            {isEmail && (
-                                <TextField className="w-full" name="subject">
-                                    <Label>Subject</Label>
-                                    <Input
-                                        placeholder="Email subject"
-                                        value={subject}
-                                        onChange={(e) => setSubject(e.target.value)}
-                                    />
-                                </TextField>
-                            )}
-                            <div className="flex flex-col gap-1.5">
-                                <Label htmlFor="message-content">Message</Label>
-                                <TextArea
-                                    id="message-content"
-                                    aria-label="Message content"
-                                    rows={10}
-                                    value={content}
-                                    onChange={(e) => setContent(e.target.value)}
-                                />
-                            </div>
-                        </div>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button slot="close" variant="secondary">
-                            Cancel
-                        </Button>
-                        <Button
-                            variant="tertiary"
-                            isDisabled={!dirty || update.isPending}
-                            isPending={update.isPending}
-                            onPress={handleSave}
-                        >
-                            <Save className="size-4" />
-                            Save draft
-                        </Button>
-                        <Button
-                            isDisabled={send.isPending || update.isPending}
-                            isPending={send.isPending}
-                            onPress={handleSend}
-                        >
-                            <Send className="size-4" />
-                            Send
-                        </Button>
-                    </Modal.Footer>
-                </Modal.Dialog>
-            </Modal.Container>
-        </Modal.Backdrop>
+        <>
+            <Modal.Header>
+                <Modal.Heading>Edit {message.channel.toLowerCase()} draft</Modal.Heading>
+            </Modal.Header>
+            <Modal.Body className="p-6">
+                <div className="flex flex-col gap-4">
+                    {isEmail && (
+                        <TextField className="w-full" name="subject">
+                            <Label>Subject</Label>
+                            <Input
+                                placeholder="Email subject"
+                                value={subject}
+                                onChange={(e) => setSubject(e.target.value)}
+                            />
+                        </TextField>
+                    )}
+                    <div className="flex flex-col gap-1.5">
+                        <Label htmlFor="message-content">Message</Label>
+                        {isEmail ? (
+                            <RichTextEditor
+                                aria-label="Message content"
+                                value={content}
+                                onChange={setContent}
+                            />
+                        ) : (
+                            <TextArea
+                                id="message-content"
+                                aria-label="Message content"
+                                rows={10}
+                                value={content}
+                                onChange={(e) => setContent(e.target.value)}
+                            />
+                        )}
+                    </div>
+                </div>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button slot="close" variant="secondary">
+                    Cancel
+                </Button>
+                <Button
+                    variant="tertiary"
+                    isDisabled={!dirty || update.isPending}
+                    isPending={update.isPending}
+                    onPress={handleSave}
+                >
+                    <Save className="size-4" />
+                    Save draft
+                </Button>
+                <Button
+                    isDisabled={send.isPending || update.isPending}
+                    isPending={send.isPending}
+                    onPress={handleSend}
+                >
+                    <Send className="size-4" />
+                    Send
+                </Button>
+            </Modal.Footer>
+        </>
     );
 }

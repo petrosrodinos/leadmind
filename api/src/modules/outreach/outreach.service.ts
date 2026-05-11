@@ -1,5 +1,6 @@
 import { InjectQueue } from '@nestjs/bullmq';
 import {
+    BadRequestException,
     ConflictException,
     ForbiddenException,
     Injectable,
@@ -16,6 +17,7 @@ import {
 } from '@/generated/prisma';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { OUTREACH_SEND_QUEUE } from '@/core/queues/queues.constants';
+import { isEmailHtmlEmpty, sanitizeEmailHtml } from '@/shared/utils/sanitize-html.util';
 import { AssignSequenceDto } from './dto/assign-sequence.dto';
 import { CreateSequenceDto } from './dto/create-sequence.dto';
 import { ListMessagesDto } from './dto/list-messages.dto';
@@ -55,11 +57,20 @@ export class OutreachService {
         const message = await this.requireOwnedMessage(user_uuid, message_uuid);
         this.ensurePending(message);
 
+        let content = dto.content;
+        if (content != null && message.channel === Channel.EMAIL) {
+            const sanitized = sanitizeEmailHtml(content);
+            if (isEmailHtmlEmpty(sanitized)) {
+                throw new BadRequestException('Email body cannot be empty');
+            }
+            content = sanitized;
+        }
+
         return this.prisma.outreachMessage.update({
             where: { uuid: message_uuid },
             data: {
                 subject: dto.subject,
-                content: dto.content,
+                content,
             },
         });
     }

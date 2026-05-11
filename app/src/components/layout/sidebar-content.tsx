@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { LayoutDashboard, Users, MapPin, BarChart3, Settings, Globe, Filter } from "lucide-react";
+import { LayoutDashboard, Users, Globe, Filter, IdCard } from "lucide-react";
 import { Routes } from "@/routes/routes";
 
 interface SidebarContentProps {
@@ -9,12 +9,10 @@ interface SidebarContentProps {
 
 const navItems = [
   { label: "Dashboard", icon: LayoutDashboard, href: Routes.dashboard.root, end: true },
+  { label: "Filters", icon: Filter, href: Routes.dashboard.filters, end: false },
   { label: "Contacts", icon: Users, href: Routes.dashboard.contacts, end: false },
   { label: "Leads Directory", icon: Globe, href: Routes.dashboard.leads_directory, end: false },
-  { label: "Filters", icon: Filter, href: Routes.dashboard.filters, end: false },
-  { label: "Map Search", icon: MapPin, href: Routes.dashboard.map, end: false },
-  { label: "Analytics", icon: BarChart3, href: Routes.dashboard.analytics, end: false },
-  { label: "Settings", icon: Settings, href: Routes.dashboard.settings, end: false },
+  { label: "Sender Profiles", icon: IdCard, href: Routes.dashboard.sender_profiles, end: false },
 ];
 
 const activeClass = "bg-accent/15 text-accent font-medium";
