@@ -23,6 +23,7 @@ export class SenderProfilesService {
             city: dto.city,
             country: dto.country,
             logo_url: dto.logo_url,
+            booking_url: dto.booking_url,
             sender_id: dto.sender_id,
             signature: dto.signature,
             is_default: dto.is_default ?? false,
@@ -53,6 +54,17 @@ export class SenderProfilesService {
         return this.requireOwnedProfile(user_uuid, uuid);
     }
 
+    async findDefault(user_uuid: string): Promise<SenderProfile | null> {
+        const defaultProfile = await this.prisma.senderProfile.findFirst({
+            where: { user_uuid, is_default: true },
+        });
+        if (defaultProfile) return defaultProfile;
+        return this.prisma.senderProfile.findFirst({
+            where: { user_uuid },
+            orderBy: { created_at: 'desc' },
+        });
+    }
+
     async update(
         user_uuid: string,
         uuid: string,
@@ -74,6 +86,7 @@ export class SenderProfilesService {
             'city',
             'country',
             'logo_url',
+            'booking_url',
             'sender_id',
             'signature',
             'is_default',

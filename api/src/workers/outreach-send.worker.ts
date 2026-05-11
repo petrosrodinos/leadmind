@@ -7,6 +7,7 @@ import { OUTREACH_SEND_QUEUE } from '@/core/queues/queues.constants';
 import { ResendMailService } from '@/integrations/notifications/resend/services/mail.service';
 import { TwillioSmsService } from '@/integrations/notifications/twillio/services/sms.service';
 import { sanitizeEmailHtml } from '@/shared/utils/sanitize-html.util';
+import { OutreachRenderService } from '@/modules/outreach/services/outreach-render.service';
 
 interface OutreachSendJobData {
     message_uuid: string;
@@ -20,6 +21,7 @@ export class OutreachSendWorker extends WorkerHost {
         private readonly prisma: PrismaService,
         private readonly resendMailService: ResendMailService,
         private readonly twillioSmsService: TwillioSmsService,
+        private readonly outreachRenderService: OutreachRenderService,
     ) {
         super();
     }
@@ -39,14 +41,19 @@ export class OutreachSendWorker extends WorkerHost {
         }
 
         try {
+            const rendered = await this.outreachRenderService.renderForUser(message.user_uuid, {
+                subject: message.subject,
+                content: message.content,
+            });
+
             if (message.channel === Channel.EMAIL) {
                 if (!message.contact.email) {
                     throw new Error('Contact has no email');
                 }
                 await this.resendMailService.sendEmail({
                     to: message.contact.email,
-                    subject: message.subject ?? 'Outreach message',
-                    html: sanitizeEmailHtml(message.content),
+                    subject: rendered.subject ?? 'Outreach message',
+                    html: sanitizeEmailHtml(rendered.content),
                 });
             } else if (message.channel === Channel.SMS) {
                 if (!message.contact.phone) {
@@ -54,7 +61,7 @@ export class OutreachSendWorker extends WorkerHost {
                 }
                 await this.twillioSmsService.sendSms({
                     to: message.contact.phone,
-                    body: message.content,
+                    body: rendered.content,
                 });
             } else {
                 await this.prisma.outreachMessage.update({
@@ -81,7 +88,7 @@ export class OutreachSendWorker extends WorkerHost {
                         contact_uuid: message.contact_uuid,
                         user_uuid: message.user_uuid,
                         type: this.toInteractionType(message.channel),
-                        content: message.content,
+                        content: rendered.content,
                         metadata: { outreach_message_uuid: message.uuid, channel: message.channel },
                     },
                 }),

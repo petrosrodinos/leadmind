@@ -82,6 +82,15 @@ export class CreateSenderProfileDto {
     logo_url?: string;
 
     @ApiPropertyOptional({
+        maxLength: 500,
+        description: 'Public booking / call scheduling URL (e.g. Calendly link) shown to recipients.',
+    })
+    @IsOptional()
+    @IsUrl({ require_protocol: false })
+    @MaxLength(500)
+    booking_url?: string;
+
+    @ApiPropertyOptional({
         maxLength: 11,
         description: 'SMS alphanumeric sender ID — letters, digits and spaces, up to 11 chars.',
     })

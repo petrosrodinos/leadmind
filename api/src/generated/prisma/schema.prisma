@@ -270,6 +270,7 @@ model SenderProfile {
   city         String?
   country      String?
   logo_url     String?
+  booking_url  String?
   sender_id    String?
   signature    String?  @db.Text
   is_default   Boolean  @default(false)

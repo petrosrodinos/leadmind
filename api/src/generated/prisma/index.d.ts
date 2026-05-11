@@ -15633,6 +15633,7 @@ export namespace Prisma {
     city: string | null
     country: string | null
     logo_url: string | null
+    booking_url: string | null
     sender_id: string | null
     signature: string | null
     is_default: boolean | null
@@ -15656,6 +15657,7 @@ export namespace Prisma {
     city: string | null
     country: string | null
     logo_url: string | null
+    booking_url: string | null
     sender_id: string | null
     signature: string | null
     is_default: boolean | null
@@ -15679,6 +15681,7 @@ export namespace Prisma {
     city: number
     country: number
     logo_url: number
+    booking_url: number
     sender_id: number
     signature: number
     is_default: number
@@ -15712,6 +15715,7 @@ export namespace Prisma {
     city?: true
     country?: true
     logo_url?: true
+    booking_url?: true
     sender_id?: true
     signature?: true
     is_default?: true
@@ -15735,6 +15739,7 @@ export namespace Prisma {
     city?: true
     country?: true
     logo_url?: true
+    booking_url?: true
     sender_id?: true
     signature?: true
     is_default?: true
@@ -15758,6 +15763,7 @@ export namespace Prisma {
     city?: true
     country?: true
     logo_url?: true
+    booking_url?: true
     sender_id?: true
     signature?: true
     is_default?: true
@@ -15868,6 +15874,7 @@ export namespace Prisma {
     city: string | null
     country: string | null
     logo_url: string | null
+    booking_url: string | null
     sender_id: string | null
     signature: string | null
     is_default: boolean
@@ -15910,6 +15917,7 @@ export namespace Prisma {
     city?: boolean
     country?: boolean
     logo_url?: boolean
+    booking_url?: boolean
     sender_id?: boolean
     signature?: boolean
     is_default?: boolean
@@ -15934,6 +15942,7 @@ export namespace Prisma {
     city?: boolean
     country?: boolean
     logo_url?: boolean
+    booking_url?: boolean
     sender_id?: boolean
     signature?: boolean
     is_default?: boolean
@@ -15958,6 +15967,7 @@ export namespace Prisma {
     city?: boolean
     country?: boolean
     logo_url?: boolean
+    booking_url?: boolean
     sender_id?: boolean
     signature?: boolean
     is_default?: boolean
@@ -15982,6 +15992,7 @@ export namespace Prisma {
     city?: boolean
     country?: boolean
     logo_url?: boolean
+    booking_url?: boolean
     sender_id?: boolean
     signature?: boolean
     is_default?: boolean
@@ -15989,7 +16000,7 @@ export namespace Prisma {
     updated_at?: boolean
   }
 
-  export type SenderProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "name" | "company_name" | "title" | "first_name" | "last_name" | "email" | "phone" | "website" | "address" | "city" | "country" | "logo_url" | "sender_id" | "signature" | "is_default" | "created_at" | "updated_at", ExtArgs["result"]["senderProfile"]>
+  export type SenderProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "name" | "company_name" | "title" | "first_name" | "last_name" | "email" | "phone" | "website" | "address" | "city" | "country" | "logo_url" | "booking_url" | "sender_id" | "signature" | "is_default" | "created_at" | "updated_at", ExtArgs["result"]["senderProfile"]>
   export type SenderProfileInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -16021,6 +16032,7 @@ export namespace Prisma {
       city: string | null
       country: string | null
       logo_url: string | null
+      booking_url: string | null
       sender_id: string | null
       signature: string | null
       is_default: boolean
@@ -16465,6 +16477,7 @@ export namespace Prisma {
     readonly city: FieldRef<"SenderProfile", 'String'>
     readonly country: FieldRef<"SenderProfile", 'String'>
     readonly logo_url: FieldRef<"SenderProfile", 'String'>
+    readonly booking_url: FieldRef<"SenderProfile", 'String'>
     readonly sender_id: FieldRef<"SenderProfile", 'String'>
     readonly signature: FieldRef<"SenderProfile", 'String'>
     readonly is_default: FieldRef<"SenderProfile", 'Boolean'>
@@ -17106,6 +17119,7 @@ export namespace Prisma {
     city: 'city',
     country: 'country',
     logo_url: 'logo_url',
+    booking_url: 'booking_url',
     sender_id: 'sender_id',
     signature: 'signature',
     is_default: 'is_default',
@@ -18446,6 +18460,7 @@ export namespace Prisma {
     city?: StringNullableFilter<"SenderProfile"> | string | null
     country?: StringNullableFilter<"SenderProfile"> | string | null
     logo_url?: StringNullableFilter<"SenderProfile"> | string | null
+    booking_url?: StringNullableFilter<"SenderProfile"> | string | null
     sender_id?: StringNullableFilter<"SenderProfile"> | string | null
     signature?: StringNullableFilter<"SenderProfile"> | string | null
     is_default?: BoolFilter<"SenderProfile"> | boolean
@@ -18470,6 +18485,7 @@ export namespace Prisma {
     city?: SortOrderInput | SortOrder
     country?: SortOrderInput | SortOrder
     logo_url?: SortOrderInput | SortOrder
+    booking_url?: SortOrderInput | SortOrder
     sender_id?: SortOrderInput | SortOrder
     signature?: SortOrderInput | SortOrder
     is_default?: SortOrder
@@ -18497,6 +18513,7 @@ export namespace Prisma {
     city?: StringNullableFilter<"SenderProfile"> | string | null
     country?: StringNullableFilter<"SenderProfile"> | string | null
     logo_url?: StringNullableFilter<"SenderProfile"> | string | null
+    booking_url?: StringNullableFilter<"SenderProfile"> | string | null
     sender_id?: StringNullableFilter<"SenderProfile"> | string | null
     signature?: StringNullableFilter<"SenderProfile"> | string | null
     is_default?: BoolFilter<"SenderProfile"> | boolean
@@ -18521,6 +18538,7 @@ export namespace Prisma {
     city?: SortOrderInput | SortOrder
     country?: SortOrderInput | SortOrder
     logo_url?: SortOrderInput | SortOrder
+    booking_url?: SortOrderInput | SortOrder
     sender_id?: SortOrderInput | SortOrder
     signature?: SortOrderInput | SortOrder
     is_default?: SortOrder
@@ -18552,6 +18570,7 @@ export namespace Prisma {
     city?: StringNullableWithAggregatesFilter<"SenderProfile"> | string | null
     country?: StringNullableWithAggregatesFilter<"SenderProfile"> | string | null
     logo_url?: StringNullableWithAggregatesFilter<"SenderProfile"> | string | null
+    booking_url?: StringNullableWithAggregatesFilter<"SenderProfile"> | string | null
     sender_id?: StringNullableWithAggregatesFilter<"SenderProfile"> | string | null
     signature?: StringNullableWithAggregatesFilter<"SenderProfile"> | string | null
     is_default?: BoolWithAggregatesFilter<"SenderProfile"> | boolean
@@ -19699,6 +19718,7 @@ export namespace Prisma {
     city?: string | null
     country?: string | null
     logo_url?: string | null
+    booking_url?: string | null
     sender_id?: string | null
     signature?: string | null
     is_default?: boolean
@@ -19723,6 +19743,7 @@ export namespace Prisma {
     city?: string | null
     country?: string | null
     logo_url?: string | null
+    booking_url?: string | null
     sender_id?: string | null
     signature?: string | null
     is_default?: boolean
@@ -19744,6 +19765,7 @@ export namespace Prisma {
     city?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     logo_url?: NullableStringFieldUpdateOperationsInput | string | null
+    booking_url?: NullableStringFieldUpdateOperationsInput | string | null
     sender_id?: NullableStringFieldUpdateOperationsInput | string | null
     signature?: NullableStringFieldUpdateOperationsInput | string | null
     is_default?: BoolFieldUpdateOperationsInput | boolean
@@ -19768,6 +19790,7 @@ export namespace Prisma {
     city?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     logo_url?: NullableStringFieldUpdateOperationsInput | string | null
+    booking_url?: NullableStringFieldUpdateOperationsInput | string | null
     sender_id?: NullableStringFieldUpdateOperationsInput | string | null
     signature?: NullableStringFieldUpdateOperationsInput | string | null
     is_default?: BoolFieldUpdateOperationsInput | boolean
@@ -19791,6 +19814,7 @@ export namespace Prisma {
     city?: string | null
     country?: string | null
     logo_url?: string | null
+    booking_url?: string | null
     sender_id?: string | null
     signature?: string | null
     is_default?: boolean
@@ -19812,6 +19836,7 @@ export namespace Prisma {
     city?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     logo_url?: NullableStringFieldUpdateOperationsInput | string | null
+    booking_url?: NullableStringFieldUpdateOperationsInput | string | null
     sender_id?: NullableStringFieldUpdateOperationsInput | string | null
     signature?: NullableStringFieldUpdateOperationsInput | string | null
     is_default?: BoolFieldUpdateOperationsInput | boolean
@@ -19835,6 +19860,7 @@ export namespace Prisma {
     city?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     logo_url?: NullableStringFieldUpdateOperationsInput | string | null
+    booking_url?: NullableStringFieldUpdateOperationsInput | string | null
     sender_id?: NullableStringFieldUpdateOperationsInput | string | null
     signature?: NullableStringFieldUpdateOperationsInput | string | null
     is_default?: BoolFieldUpdateOperationsInput | boolean
@@ -21040,6 +21066,7 @@ export namespace Prisma {
     city?: SortOrder
     country?: SortOrder
     logo_url?: SortOrder
+    booking_url?: SortOrder
     sender_id?: SortOrder
     signature?: SortOrder
     is_default?: SortOrder
@@ -21067,6 +21094,7 @@ export namespace Prisma {
     city?: SortOrder
     country?: SortOrder
     logo_url?: SortOrder
+    booking_url?: SortOrder
     sender_id?: SortOrder
     signature?: SortOrder
     is_default?: SortOrder
@@ -21090,6 +21118,7 @@ export namespace Prisma {
     city?: SortOrder
     country?: SortOrder
     logo_url?: SortOrder
+    booking_url?: SortOrder
     sender_id?: SortOrder
     signature?: SortOrder
     is_default?: SortOrder
@@ -22679,6 +22708,7 @@ export namespace Prisma {
     city?: string | null
     country?: string | null
     logo_url?: string | null
+    booking_url?: string | null
     sender_id?: string | null
     signature?: string | null
     is_default?: boolean
@@ -22701,6 +22731,7 @@ export namespace Prisma {
     city?: string | null
     country?: string | null
     logo_url?: string | null
+    booking_url?: string | null
     sender_id?: string | null
     signature?: string | null
     is_default?: boolean
@@ -22927,6 +22958,7 @@ export namespace Prisma {
     city?: StringNullableFilter<"SenderProfile"> | string | null
     country?: StringNullableFilter<"SenderProfile"> | string | null
     logo_url?: StringNullableFilter<"SenderProfile"> | string | null
+    booking_url?: StringNullableFilter<"SenderProfile"> | string | null
     sender_id?: StringNullableFilter<"SenderProfile"> | string | null
     signature?: StringNullableFilter<"SenderProfile"> | string | null
     is_default?: BoolFilter<"SenderProfile"> | boolean
@@ -24971,6 +25003,7 @@ export namespace Prisma {
     city?: string | null
     country?: string | null
     logo_url?: string | null
+    booking_url?: string | null
     sender_id?: string | null
     signature?: string | null
     is_default?: boolean
@@ -25221,6 +25254,7 @@ export namespace Prisma {
     city?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     logo_url?: NullableStringFieldUpdateOperationsInput | string | null
+    booking_url?: NullableStringFieldUpdateOperationsInput | string | null
     sender_id?: NullableStringFieldUpdateOperationsInput | string | null
     signature?: NullableStringFieldUpdateOperationsInput | string | null
     is_default?: BoolFieldUpdateOperationsInput | boolean
@@ -25243,6 +25277,7 @@ export namespace Prisma {
     city?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     logo_url?: NullableStringFieldUpdateOperationsInput | string | null
+    booking_url?: NullableStringFieldUpdateOperationsInput | string | null
     sender_id?: NullableStringFieldUpdateOperationsInput | string | null
     signature?: NullableStringFieldUpdateOperationsInput | string | null
     is_default?: BoolFieldUpdateOperationsInput | boolean
@@ -25265,6 +25300,7 @@ export namespace Prisma {
     city?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     logo_url?: NullableStringFieldUpdateOperationsInput | string | null
+    booking_url?: NullableStringFieldUpdateOperationsInput | string | null
     sender_id?: NullableStringFieldUpdateOperationsInput | string | null
     signature?: NullableStringFieldUpdateOperationsInput | string | null
     is_default?: BoolFieldUpdateOperationsInput | boolean

@@ -13,6 +13,7 @@ export interface SenderProfile {
     city: string | null;
     country: string | null;
     logo_url: string | null;
+    booking_url: string | null;
     sender_id: string | null;
     signature: string | null;
     is_default: boolean;
@@ -33,6 +34,7 @@ export interface CreateSenderProfilePayload {
     city?: string;
     country?: string;
     logo_url?: string;
+    booking_url?: string;
     sender_id?: string;
     signature?: string;
     is_default?: boolean;

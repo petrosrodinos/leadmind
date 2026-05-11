@@ -295,6 +295,7 @@ exports.Prisma.SenderProfileScalarFieldEnum = {
   city: 'city',
   country: 'country',
   logo_url: 'logo_url',
+  booking_url: 'booking_url',
   sender_id: 'sender_id',
   signature: 'signature',
   is_default: 'is_default',

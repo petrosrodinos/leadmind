@@ -41,6 +41,7 @@ const emptyForm = (): FormState => ({
     city: "",
     country: "",
     logo_url: "",
+    booking_url: "",
     sender_id: "",
     signature: "",
     is_default: false,
@@ -59,6 +60,7 @@ const fromProfile = (p: SenderProfile): FormState => ({
     city: p.city ?? "",
     country: p.country ?? "",
     logo_url: p.logo_url ?? "",
+    booking_url: p.booking_url ?? "",
     sender_id: p.sender_id ?? "",
     signature: p.signature ?? "",
     is_default: p.is_default,
@@ -111,6 +113,7 @@ export function SenderProfileFormModal({
             "city",
             "country",
             "logo_url",
+            "booking_url",
             "sender_id",
             "signature",
         ];
@@ -277,6 +280,21 @@ export function SenderProfileFormModal({
                                             value={form.website}
                                             onChange={(e) => set("website", e.target.value)}
                                         />
+                                    </div>
+                                    <div className="flex flex-col gap-1.5 sm:col-span-2">
+                                        <Label htmlFor="sp-booking">Booking URL</Label>
+                                        <Input
+                                            id="sp-booking"
+                                            placeholder="https://cal.com/jane/intro"
+                                            value={form.booking_url}
+                                            onChange={(e) =>
+                                                set("booking_url", e.target.value)
+                                            }
+                                        />
+                                        <p className="text-xs text-muted">
+                                            Calendly / Cal.com / similar link used by the AI as the
+                                            "book a call" CTA in outreach.
+                                        </p>
                                     </div>
                                 </div>
                             </section>

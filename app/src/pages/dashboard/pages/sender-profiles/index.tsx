@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button, Chip } from "@heroui/react";
 import {
     Building2,
+    CalendarClock,
     Hash,
     Mail,
     MapPin,
@@ -165,6 +166,21 @@ function ProfileCard({ profile, onEdit, onDelete }: ProfileCardProps) {
                     <Row icon={Mail} value={profile.email} />
                 )}
                 {profile.phone && <Row icon={Phone} value={profile.phone} />}
+                {profile.booking_url && (
+                    <Row
+                        icon={CalendarClock}
+                        value={
+                            <a
+                                href={profile.booking_url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="truncate hover:underline"
+                            >
+                                {profile.booking_url}
+                            </a>
+                        }
+                    />
+                )}
                 {locationLine && <Row icon={MapPin} value={locationLine} />}
                 {profile.sender_id && (
                     <Row
