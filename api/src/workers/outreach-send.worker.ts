@@ -45,37 +45,18 @@ export class OutreachSendWorker extends WorkerHost {
             const { provider_message_id } = await this.messageSendService.deliverOutreachMessage(message);
 
             await this.prisma.$transaction([
-                this.prisma.outreachMessage.update({
-                    where: { uuid: message.uuid },
-                    data: {
-                        status: MsgStatus.SENT,
-                        sent_at: new Date(),
-                        provider_message_id,
-                        metadata: null,
-                    },
+                this.messageSendService.messageSentOperation(message.uuid, provider_message_id),
+                this.messageSendService.interactionCreateOperation({
+                    contact_uuid: message.contact_uuid,
+                    user_uuid: message.user_uuid,
+                    type: this.toInteractionType(message.channel),
+                    outreach_message_uuid: message.uuid,
                 }),
-                this.prisma.interaction.create({
-                    data: {
-                        contact_uuid: message.contact_uuid,
-                        user_uuid: message.user_uuid,
-                        type: this.toInteractionType(message.channel),
-                        outreach_message_uuid: message.uuid,
-                    },
-                }),
-                this.prisma.contact.update({
-                    where: { uuid: message.contact_uuid },
-                    data: { last_interaction_at: new Date() },
-                }),
+                this.messageSendService.contactInteractedOperation(message.contact_uuid),
             ]);
         } catch (error) {
             const error_message = error instanceof Error ? error.message : 'Unknown error';
-            await this.prisma.outreachMessage.update({
-                where: { uuid: message.uuid },
-                data: {
-                    status: MsgStatus.FAILED,
-                    metadata: { error: error_message },
-                },
-            });
+            await this.messageSendService.messageFailedOperation(message.uuid, error_message);
             this.logger.error(`Failed sending outreach message ${message.uuid}: ${error_message}`);
         }
     }

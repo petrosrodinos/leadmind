@@ -103,7 +103,7 @@ export function OutreachTab({ contact, highlightUuid, onHighlightConsumed }: Out
                   </div>
                   <div className="flex items-center gap-1 shrink-0 ml-auto">
                     <Button size="sm" variant="tertiary" onPress={() => setEditingMessage(m)} aria-label="Edit draft">
-                      <Pencil className="size-3.5" />
+                      <Pencil className="size-3.5 text-blue-400" />
                     </Button>
                     <Button
                       size="sm"
@@ -112,10 +112,10 @@ export function OutreachTab({ contact, highlightUuid, onHighlightConsumed }: Out
                       onPress={() => setDraftPendingSend(m)}
                       aria-label="Send draft"
                     >
-                      <Send className="size-3.5" />
+                      <Send className="size-3.5 text-emerald-400" />
                     </Button>
                     <Button size="sm" variant="tertiary" isDisabled={deleteMessage.isPending} onPress={() => setDraftPendingDelete(m)} aria-label="Delete draft">
-                      <Trash className="size-3.5" />
+                      <Trash className="size-3.5 text-red-400" />
                     </Button>
                   </div>
                 </div>

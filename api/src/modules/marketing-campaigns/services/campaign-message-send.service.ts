@@ -115,15 +115,7 @@ export class CampaignMessageSendService {
             });
 
             await this.prisma.$transaction([
-                this.prisma.outreachMessage.update({
-                    where: { uuid: message.uuid },
-                    data: {
-                        status: MsgStatus.SENT,
-                        sent_at: new Date(),
-                        provider_message_id,
-                        metadata: null,
-                    },
-                }),
+                this.messageSendService.messageSentOperation(message.uuid, provider_message_id),
                 this.prisma.marketingCampaignContact.update({
                     where: { uuid: mcc.uuid },
                     data: {
@@ -132,25 +124,24 @@ export class CampaignMessageSendService {
                         error_message: null,
                     },
                 }),
-                this.prisma.interaction.create({
-                    data: {
-                        contact_uuid: mcc.contact_uuid,
-                        user_uuid: mcc.campaign.user_uuid,
-                        campaign_uuid: mcc.campaign_uuid,
-                        outreach_message_uuid: message.uuid,
-                        type:
-                            mcc.channel === Channel.EMAIL
-                                ? InteractionType.CAMPAIGN_EMAIL_SENT
-                                : InteractionType.CAMPAIGN_SMS_SENT,
-                    },
+                this.messageSendService.interactionCreateOperation({
+                    contact_uuid: mcc.contact_uuid,
+                    user_uuid: mcc.campaign.user_uuid,
+                    campaign_uuid: mcc.campaign_uuid,
+                    outreach_message_uuid: message.uuid,
+                    type:
+                        mcc.channel === Channel.EMAIL
+                            ? InteractionType.CAMPAIGN_EMAIL_SENT
+                            : InteractionType.CAMPAIGN_SMS_SENT,
                 }),
-                this.prisma.contact.update({
-                    where: { uuid: mcc.contact_uuid },
-                    data: { last_interaction_at: new Date() },
-                }),
+                this.messageSendService.contactInteractedOperation(mcc.contact_uuid),
                 this.prisma.marketingCampaign.update({
                     where: { uuid: mcc.campaign_uuid },
-                    data: { sent_count: { increment: 1 } },
+                    data: {
+                        sent_count: { increment: 1 },
+                        delivered_count: { increment: 1 },
+                        queued_count: { decrement: 1 },
+                    },
                 }),
             ]);
 
@@ -159,13 +150,7 @@ export class CampaignMessageSendService {
         } catch (error) {
             const error_message = error instanceof Error ? error.message : 'Unknown error';
             await this.prisma.$transaction([
-                this.prisma.outreachMessage.update({
-                    where: { uuid: message.uuid },
-                    data: {
-                        status: MsgStatus.FAILED,
-                        metadata: { error: error_message },
-                    },
-                }),
+                this.messageSendService.messageFailedOperation(message.uuid, error_message),
                 this.prisma.marketingCampaignContact.update({
                     where: { uuid: mcc.uuid },
                     data: {
@@ -173,22 +158,23 @@ export class CampaignMessageSendService {
                         error_message,
                     },
                 }),
-                this.prisma.interaction.create({
-                    data: {
-                        contact_uuid: mcc.contact_uuid,
-                        user_uuid: mcc.campaign.user_uuid,
-                        campaign_uuid: mcc.campaign_uuid,
-                        outreach_message_uuid: message.uuid,
-                        type:
-                            mcc.channel === Channel.EMAIL
-                                ? InteractionType.EMAIL_FAILED
-                                : InteractionType.SMS_FAILED,
-                        metadata: { error: error_message } as Prisma.InputJsonValue,
-                    },
+                this.messageSendService.interactionCreateOperation({
+                    contact_uuid: mcc.contact_uuid,
+                    user_uuid: mcc.campaign.user_uuid,
+                    campaign_uuid: mcc.campaign_uuid,
+                    outreach_message_uuid: message.uuid,
+                    type:
+                        mcc.channel === Channel.EMAIL
+                            ? InteractionType.EMAIL_FAILED
+                            : InteractionType.SMS_FAILED,
+                    metadata: { error: error_message } as Prisma.InputJsonValue,
                 }),
                 this.prisma.marketingCampaign.update({
                     where: { uuid: mcc.campaign_uuid },
-                    data: { failed_count: { increment: 1 } },
+                    data: {
+                        failed_count: { increment: 1 },
+                        queued_count: { decrement: 1 },
+                    },
                 }),
             ]);
             await this.checkCompletion(mcc.campaign_uuid);
@@ -217,8 +203,8 @@ export class CampaignMessageSendService {
                 where: { uuid: campaign_uuid },
                 data:
                     reason === 'unsubscribed'
-                        ? { unsubscribed_count: { increment: 1 } }
-                        : { skipped_count: { increment: 1 } },
+                        ? { unsubscribed_count: { increment: 1 }, queued_count: { decrement: 1 } }
+                        : { skipped_count: { increment: 1 }, queued_count: { decrement: 1 } },
             }),
         ]);
         await this.checkCompletion(campaign_uuid);

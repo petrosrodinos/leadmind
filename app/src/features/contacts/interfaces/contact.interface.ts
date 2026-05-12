@@ -189,8 +189,11 @@ export interface CreateMessagePayload {
 export interface AiDraftMessagePayload {
     contact_uuid: string;
     channel: Channel;
-    prompt: string;
+    action?: string;
+    prompt?: string;
     language?: string;
+    current_subject?: string;
+    current_content?: string;
 }
 
 export interface AiDraftMessageResult {

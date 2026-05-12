@@ -12,6 +12,7 @@ import {
     buildScorePrompt,
     buildSmsPrompt,
 } from '../constants/contact-ai-prompts';
+import { generateWithCampaignPrompt, parseEmailDraft } from '@/shared/utils/outreach-ai-generate.util';
 import { CONTACT_AI_SCORE_SCHEMA, type ContactAiScoreResult } from '../schemas/contact-ai-score.schema';
 import { sanitizeEmailHtml } from '@/shared/utils/sanitize-html.util';
 
@@ -140,12 +141,23 @@ export class ContactAiService {
         }
 
         const sender_business_description = await this.resolveSenderBusinessDescription(user_uuid);
+        const action = dto.action ?? 'generate';
+
+        if (action !== 'generate') {
+            return generateWithCampaignPrompt(this.aiService, dto.channel, action, {
+                sender_business_description,
+                user_prompt: dto.prompt,
+                current_subject: dto.current_subject,
+                current_content: dto.current_content,
+                language: dto.language,
+            });
+        }
 
         const draft = await this.draftForChannel(
             dto.channel,
             contact,
             contact.lead,
-            dto.prompt,
+            dto.prompt ?? '',
             dto.language,
             sender_business_description,
         );
@@ -194,7 +206,7 @@ export class ContactAiService {
         });
 
         if (channel === Channel.EMAIL) {
-            return this.parseEmailDraft(response);
+            return parseEmailDraft(response);
         }
         return { subject: null, content: response.trim() };
     }
@@ -219,13 +231,4 @@ export class ContactAiService {
         }
     }
 
-    private parseEmailDraft(raw: string): { subject: string | null; content: string } {
-        const match = raw.match(/^\s*(?:<[^>]+>\s*)*Subject:\s*(.+?)(?:<\/[^>]+>)?\s*$/im);
-        if (!match) {
-            return { subject: null, content: raw.trim() };
-        }
-        const subject = match[1].replace(/<[^>]*>/g, '').trim();
-        const body = raw.replace(match[0], '').trim();
-        return { subject, content: body };
-    }
 }

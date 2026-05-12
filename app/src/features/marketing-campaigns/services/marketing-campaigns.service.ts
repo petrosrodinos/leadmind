@@ -147,6 +147,28 @@ export async function cancelCampaign(uuid: string): Promise<MarketingCampaign> {
     }
 }
 
+export async function duplicateCampaign(uuid: string): Promise<MarketingCampaign> {
+    try {
+        const response = await axiosInstance.post(
+            ApiRoutes.marketing_campaigns.duplicate(uuid),
+        );
+        return response.data;
+    } catch (error: any) {
+        unwrap(error, "Failed to duplicate campaign.");
+    }
+}
+
+export async function rerunCampaign(uuid: string): Promise<MarketingCampaign> {
+    try {
+        const response = await axiosInstance.post(
+            ApiRoutes.marketing_campaigns.rerun(uuid),
+        );
+        return response.data;
+    } catch (error: any) {
+        unwrap(error, "Failed to re-run campaign.");
+    }
+}
+
 export async function generateCampaignMessage(
     uuid: string,
     payload: GenerateCampaignMessagePayload,

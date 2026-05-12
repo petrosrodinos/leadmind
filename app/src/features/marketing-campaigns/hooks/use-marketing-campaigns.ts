@@ -3,11 +3,13 @@ import {
     cancelCampaign,
     createCampaign,
     deleteCampaign,
+    duplicateCampaign,
     generateCampaignMessage,
     getCampaign,
     listCampaignContacts,
     listCampaigns,
     previewCampaignContacts,
+    rerunCampaign,
     scheduleCampaign,
     startCampaign,
     updateCampaign,
@@ -196,6 +198,45 @@ export function useCancelCampaign() {
         onError: (error: Error) => {
             toast({
                 title: "Could not cancel campaign",
+                description: error.message,
+                duration: 3000,
+                variant: "error",
+            });
+        },
+    });
+}
+
+export function useDuplicateCampaign() {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: (uuid: string) => duplicateCampaign(uuid),
+        onSuccess: () => {
+            qc.invalidateQueries({ queryKey: campaignsQueryKeys.all });
+            toast({ title: "Campaign duplicated", duration: 1500 });
+        },
+        onError: (error: Error) => {
+            toast({
+                title: "Could not duplicate campaign",
+                description: error.message,
+                duration: 3000,
+                variant: "error",
+            });
+        },
+    });
+}
+
+export function useRerunCampaign() {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: (uuid: string) => rerunCampaign(uuid),
+        onSuccess: (_data, uuid) => {
+            qc.invalidateQueries({ queryKey: campaignsQueryKeys.detail(uuid) });
+            qc.invalidateQueries({ queryKey: campaignsQueryKeys.all });
+            toast({ title: "Campaign queued for re-run", duration: 2500 });
+        },
+        onError: (error: Error) => {
+            toast({
+                title: "Could not re-run campaign",
                 description: error.message,
                 duration: 3000,
                 variant: "error",

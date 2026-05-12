@@ -118,10 +118,10 @@ export class MarketingCampaignDispatchWorker extends WorkerHost {
             const chunk = mccs.slice(i, i + CHUNK_SIZE);
             await this.messageSendQueue.addBulk(
                 chunk.map((mcc) => ({
-                    name: `send:${mcc.uuid}`,
+                    name: `send-${mcc.uuid}`,
                     data: { campaign_uuid, mcc_uuid: mcc.uuid },
                     opts: {
-                        jobId: `mcc:${mcc.uuid}`,
+                        jobId: `mcc-${mcc.uuid}`,
                         attempts: 5,
                         backoff: { type: 'exponential', delay: 60_000 },
                         removeOnComplete: 1000,

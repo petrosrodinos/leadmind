@@ -114,6 +114,24 @@ export class MarketingCampaignsController {
         return this.service.schedule(user_uuid, uuid, dto);
     }
 
+    @Post(':uuid/duplicate')
+    @ApiOperation({ summary: 'Duplicate a campaign as a new DRAFT' })
+    duplicate(
+        @CurrentUser('uuid') user_uuid: string,
+        @Param('uuid', ParseUUIDPipe) uuid: string,
+    ) {
+        return this.service.duplicate(user_uuid, uuid);
+    }
+
+    @Post(':uuid/rerun')
+    @ApiOperation({ summary: 'Re-run a completed, cancelled, or failed campaign from scratch' })
+    rerun(
+        @CurrentUser('uuid') user_uuid: string,
+        @Param('uuid', ParseUUIDPipe) uuid: string,
+    ) {
+        return this.service.rerun(user_uuid, uuid);
+    }
+
     @Post(':uuid/cancel')
     @ApiOperation({ summary: 'Cancel a sending or scheduled campaign' })
     cancel(

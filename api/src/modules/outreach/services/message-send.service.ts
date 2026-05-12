@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import * as crypto from 'crypto';
-import { Channel, Contact, OutreachMessage } from '@/generated/prisma';
+import { Channel, Contact, InteractionType, MsgStatus, OutreachMessage, Prisma } from '@/generated/prisma';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { ResendMailService } from '@/integrations/notifications/resend/services/mail.service';
 import { TwillioSmsService } from '@/integrations/notifications/twillio/services/sms.service';
@@ -68,6 +68,38 @@ export class MessageSendService {
         }
 
         throw new Error(`Channel ${message.channel} not implemented`);
+    }
+
+    messageSentOperation(message_uuid: string, provider_message_id: string | null) {
+        return this.prisma.outreachMessage.update({
+            where: { uuid: message_uuid },
+            data: { status: MsgStatus.SENT, sent_at: new Date(), provider_message_id, metadata: null },
+        });
+    }
+
+    messageFailedOperation(message_uuid: string, error_message: string) {
+        return this.prisma.outreachMessage.update({
+            where: { uuid: message_uuid },
+            data: { status: MsgStatus.FAILED, metadata: { error: error_message } },
+        });
+    }
+
+    contactInteractedOperation(contact_uuid: string) {
+        return this.prisma.contact.update({
+            where: { uuid: contact_uuid },
+            data: { last_interaction_at: new Date() },
+        });
+    }
+
+    interactionCreateOperation(data: {
+        contact_uuid: string;
+        user_uuid: string;
+        type: InteractionType;
+        outreach_message_uuid?: string;
+        campaign_uuid?: string;
+        metadata?: Prisma.InputJsonValue;
+    }) {
+        return this.prisma.interaction.create({ data });
     }
 
     async getOrCreateUnsubscribeToken(contact_uuid: string): Promise<string> {

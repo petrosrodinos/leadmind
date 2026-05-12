@@ -77,7 +77,7 @@ export class MarketingCampaignsService {
     ): Promise<MarketingCampaign> {
         const existing = await this.requireOwned(user_uuid, uuid);
         if (existing.status !== CampaignStatus.DRAFT) {
-            throw new ConflictException('Only DRAFT campaigns can be edited');
+            return existing;
         }
 
         const channels = dto.channels ?? existing.channels;
@@ -262,10 +262,10 @@ export class MarketingCampaignsService {
 
         const delay = scheduled ? Math.max(0, scheduled.getTime() - now.getTime()) : 0;
         await this.dispatchQueue.add(
-            `dispatch:${uuid}`,
+            `dispatch-${uuid}`,
             { campaign_uuid: uuid },
             {
-                jobId: `dispatch:${uuid}`,
+                jobId: `dispatch-${uuid}`,
                 delay,
                 attempts: 3,
                 backoff: { type: 'exponential', delay: 30_000 },
@@ -292,6 +292,66 @@ export class MarketingCampaignsService {
             where: { uuid },
             data: { scheduled_at: new Date(dto.scheduled_at) },
         });
+        return this.start(user_uuid, uuid);
+    }
+
+    async duplicate(user_uuid: string, uuid: string): Promise<MarketingCampaign> {
+        const campaign = await this.requireOwned(user_uuid, uuid);
+        return this.prisma.marketingCampaign.create({
+            data: {
+                user_uuid,
+                name: `Copy of ${campaign.name}`,
+                description: campaign.description,
+                channels: campaign.channels,
+                email_subject: campaign.email_subject,
+                email_content: campaign.email_content,
+                sms_content: campaign.sms_content,
+                sender_profile_uuid: campaign.sender_profile_uuid,
+                filters_snapshot: campaign.filters_snapshot ?? Prisma.JsonNull,
+            },
+        });
+    }
+
+    async rerun(user_uuid: string, uuid: string): Promise<MarketingCampaign> {
+        const campaign = await this.requireOwned(user_uuid, uuid);
+        const rerunnableStatuses = [
+            CampaignStatus.COMPLETED,
+            CampaignStatus.CANCELLED,
+            CampaignStatus.FAILED,
+        ];
+        if (!rerunnableStatuses.includes(campaign.status as any)) {
+            throw new ConflictException(
+                `Only COMPLETED, CANCELLED, or FAILED campaigns can be re-run (is ${campaign.status})`,
+            );
+        }
+
+        await this.removePendingJobsForCampaign(uuid);
+
+        await this.prisma.marketingCampaignContact.deleteMany({ where: { campaign_uuid: uuid } });
+
+        await this.prisma.marketingCampaign.update({
+            where: { uuid },
+            data: {
+                status: CampaignStatus.DRAFT,
+                started_at: null,
+                completed_at: null,
+                cancelled_at: null,
+                scheduled_at: null,
+                selected_contact_count: 0,
+                total_messages: 0,
+                queued_count: 0,
+                sent_count: 0,
+                failed_count: 0,
+                skipped_count: 0,
+                delivered_count: 0,
+                opened_count: 0,
+                clicked_count: 0,
+                replied_count: 0,
+                bounced_count: 0,
+                unsubscribed_count: 0,
+            },
+        });
+
         return this.start(user_uuid, uuid);
     }
 
@@ -425,7 +485,7 @@ export class MarketingCampaignsService {
     private async removePendingJobsForCampaign(campaign_uuid: string): Promise<void> {
         // Remove the dispatch job if it hasn't fired yet
         try {
-            const dispatchJob = await this.dispatchQueue.getJob(`dispatch:${campaign_uuid}`);
+            const dispatchJob = await this.dispatchQueue.getJob(`dispatch-${campaign_uuid}`);
             if (dispatchJob) {
                 await dispatchJob.remove();
             }

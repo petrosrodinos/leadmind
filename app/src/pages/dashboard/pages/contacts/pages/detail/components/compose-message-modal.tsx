@@ -14,7 +14,9 @@ import { isEmailHtmlEmpty } from "@/lib/sanitize-html";
 import {
     MessageComposer,
     type MessageComposerValue,
+    type AiGenerateArgs,
 } from "@/features/messaging/components/message-composer";
+import { DEFAULT_CAMPAIGN_ACTIONS } from "@/features/messaging/constants/ai-actions";
 
 interface ComposeMessageModalProps {
     isOpen: boolean;
@@ -78,16 +80,15 @@ function ComposeForm({ contact_uuid, onClose }: ComposeFormProps) {
         ? isEmailHtmlEmpty(value.emailContent)
         : value.smsContent.trim().length === 0;
 
-    const handleAi = async (args: {
-        channel: Channel;
-        prompt: string;
-        language: string;
-    }) => {
+    const handleAi = async (args: AiGenerateArgs) => {
         const result = await aiDraft.mutateAsync({
             contact_uuid,
             channel: args.channel,
+            action: args.action,
             prompt: args.prompt,
             language: args.language,
+            current_subject: args.currentSubject,
+            current_content: args.currentContent,
         });
         return { subject: result.subject, content: result.content };
     };
@@ -140,6 +141,7 @@ function ComposeForm({ contact_uuid, onClose }: ComposeFormProps) {
                         value={value}
                         onChange={(patch) => setValue((v) => ({ ...v, ...patch }))}
                         onAiGenerate={handleAi}
+                        aiActions={DEFAULT_CAMPAIGN_ACTIONS}
                         isAiPending={aiDraft.isPending}
                         disabled={isPending}
                     />

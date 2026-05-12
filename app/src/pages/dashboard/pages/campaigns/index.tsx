@@ -5,35 +5,21 @@ import {
     Megaphone,
     Plus,
     Search,
-    Trash2,
 } from "lucide-react";
 import {
     useCampaigns,
-    useDeleteCampaign,
 } from "@/features/marketing-campaigns/hooks/use-marketing-campaigns";
 import type {
     MarketingCampaign,
 } from "@/features/marketing-campaigns/interfaces/campaign.interface";
 import { Routes } from "@/routes/routes";
-import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { CampaignStatusBadge } from "./components/campaign-status-badge";
+import { CampaignActionsDropdown } from "./components/campaign-actions-dropdown";
 
 export default function CampaignsPage() {
     const navigate = useNavigate();
     const [search, setSearch] = useState("");
     const { data, isLoading } = useCampaigns({ search: search || undefined, limit: 50 });
-    const [toDelete, setToDelete] = useState<MarketingCampaign | null>(null);
-    const deleteMutation = useDeleteCampaign();
-
-    const handleDelete = async () => {
-        if (!toDelete) return;
-        try {
-            await deleteMutation.mutateAsync(toDelete.uuid);
-            setToDelete(null);
-        } catch {
-            // toast surfaced
-        }
-    };
 
     return (
         <div className="space-y-6">
@@ -71,40 +57,16 @@ export default function CampaignsPage() {
                 <ul className="grid gap-3">
                     {data.data.map((c) => (
                         <li key={c.uuid}>
-                            <CampaignRow campaign={c} onDelete={() => setToDelete(c)} />
+                            <CampaignRow campaign={c} />
                         </li>
                     ))}
                 </ul>
             )}
-
-            <ConfirmDialog
-                isOpen={!!toDelete}
-                onOpenChange={(open) => !open && setToDelete(null)}
-                title="Delete campaign?"
-                description={
-                    toDelete ? (
-                        <>
-                            This will permanently remove{" "}
-                            <span className="font-medium text-foreground">{toDelete.name}</span>.
-                        </>
-                    ) : null
-                }
-                confirmLabel="Delete"
-                variant="danger"
-                isPending={deleteMutation.isPending}
-                onConfirm={handleDelete}
-            />
         </div>
     );
 }
 
-function CampaignRow({
-    campaign,
-    onDelete,
-}: {
-    campaign: MarketingCampaign;
-    onDelete: () => void;
-}) {
+function CampaignRow({ campaign }: { campaign: MarketingCampaign }) {
     const href =
         campaign.status === "DRAFT"
             ? `/dashboard/campaigns/${campaign.uuid}/edit`
@@ -139,9 +101,7 @@ function CampaignRow({
                     </p>
                 </div>
             </Link>
-            <Button size="sm" variant="ghost" onPress={onDelete} aria-label="Delete">
-                <Trash2 className="size-3.5" />
-            </Button>
+            <CampaignActionsDropdown campaign={campaign} />
         </article>
     );
 }

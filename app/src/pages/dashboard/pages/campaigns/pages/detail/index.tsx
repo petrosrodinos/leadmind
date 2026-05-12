@@ -1,24 +1,20 @@
-import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { Button } from "@heroui/react";
-import { ChevronLeft, Loader2, X } from "lucide-react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { ChevronLeft, Loader2 } from "lucide-react";
 import {
     useCampaign,
     useCampaignContacts,
-    useCancelCampaign,
 } from "@/features/marketing-campaigns/hooks/use-marketing-campaigns";
 import { Routes } from "@/routes/routes";
-import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { CampaignStatusBadge } from "../../components/campaign-status-badge";
 import { StatsCards } from "../../components/stats-cards";
 import { RecipientsTable } from "../../components/recipients-table";
+import { CampaignActionsDropdown } from "../../components/campaign-actions-dropdown";
 
 export default function CampaignDetailPage() {
     const { uuid } = useParams<{ uuid: string }>();
+    const navigate = useNavigate();
     const { data: campaign, isLoading } = useCampaign(uuid);
     const { data: contactsPage } = useCampaignContacts(uuid, { limit: 100 });
-    const cancelMutation = useCancelCampaign();
-    const [confirmCancel, setConfirmCancel] = useState(false);
 
     if (isLoading || !campaign) {
         return (
@@ -28,8 +24,6 @@ export default function CampaignDetailPage() {
             </div>
         );
     }
-
-    const canCancel = campaign.status === "SENDING" || campaign.status === "SCHEDULED";
 
     return (
         <div className="space-y-6">
@@ -56,12 +50,10 @@ export default function CampaignDetailPage() {
                             ` · cancelled ${new Date(campaign.cancelled_at).toLocaleString()}`}
                     </p>
                 </div>
-                {canCancel && (
-                    <Button variant="secondary" onPress={() => setConfirmCancel(true)}>
-                        <X className="size-4" />
-                        Cancel campaign
-                    </Button>
-                )}
+                <CampaignActionsDropdown
+                    campaign={campaign}
+                    onDeleted={() => navigate(Routes.dashboard.campaigns)}
+                />
             </header>
 
             <StatsCards campaign={campaign} />
@@ -75,24 +67,6 @@ export default function CampaignDetailPage() {
                     </p>
                 )}
             </section>
-
-            <ConfirmDialog
-                isOpen={confirmCancel}
-                onOpenChange={setConfirmCancel}
-                title="Cancel this campaign?"
-                description="In-flight sends will short-circuit and pending recipients will be marked skipped. This cannot be undone."
-                confirmLabel="Cancel campaign"
-                variant="danger"
-                isPending={cancelMutation.isPending}
-                onConfirm={async () => {
-                    try {
-                        await cancelMutation.mutateAsync(campaign.uuid);
-                        setConfirmCancel(false);
-                    } catch {
-                        // toast surfaced
-                    }
-                }}
-            />
         </div>
     );
 }
