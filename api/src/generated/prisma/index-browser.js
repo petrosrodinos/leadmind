@@ -234,6 +234,7 @@ exports.Prisma.InteractionScalarFieldEnum = {
   content: 'content',
   metadata: 'metadata',
   status_change: 'status_change',
+  outreach_message_uuid: 'outreach_message_uuid',
   created_at: 'created_at',
   updated_at: 'updated_at'
 };

@@ -15,12 +15,18 @@ export default function ContactDetailPage() {
 
   const [activeTab, setActiveTab] = useState<string>("overview");
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [highlightOutreachUuid, setHighlightOutreachUuid] = useState<string | null>(null);
 
   const handleConfirmDelete = async () => {
     if (!contact) return;
     await deleteContact.mutateAsync(contact.uuid);
     setConfirmDeleteOpen(false);
     navigate(Routes.dashboard.contacts);
+  };
+
+  const navigateToOutreach = (outreachUuid: string) => {
+    setHighlightOutreachUuid(outreachUuid);
+    setActiveTab("outreach");
   };
 
   return (
@@ -47,9 +53,13 @@ export default function ContactDetailPage() {
         ) : activeTab === "overview" ? (
           <OverviewTab key={`${contact.uuid}-${contact.updated_at}`} contact={contact} />
         ) : activeTab === "outreach" ? (
-          <OutreachTab contact={contact} />
+          <OutreachTab
+            contact={contact}
+            highlightUuid={highlightOutreachUuid}
+            onHighlightConsumed={() => setHighlightOutreachUuid(null)}
+          />
         ) : (
-          <CrmTab contact={contact} />
+          <CrmTab contact={contact} onNavigateToOutreach={navigateToOutreach} />
         )}
       </div>
 

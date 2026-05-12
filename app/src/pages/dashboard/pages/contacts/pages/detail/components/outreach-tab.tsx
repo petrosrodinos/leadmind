@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Button, Chip } from "@heroui/react";
 import { Pencil, Plus, RefreshCcw, Send, Trash } from "lucide-react";
 import type { Contact } from "@/features/contacts/interfaces/contact.interface";
@@ -7,6 +7,7 @@ import { useRedraftMessages } from "@/features/contacts/hooks/use-contacts";
 import { useDeleteOutreachMessage, useSendOutreachMessage } from "@/features/outreach/hooks/use-outreach";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { EditMessageModal } from "@/pages/dashboard/pages/leads/components/edit-message-modal";
+import { cn } from "@/lib/utils";
 import { ComposeMessageModal } from "./compose-message-modal";
 import { MessageBodyPreview } from "./message-body-preview";
 import { Section } from "./section";
@@ -14,9 +15,11 @@ import { channelIcon } from "../utils/channel-icon";
 
 interface OutreachTabProps {
   contact: Contact;
+  highlightUuid?: string | null;
+  onHighlightConsumed?: () => void;
 }
 
-export function OutreachTab({ contact }: OutreachTabProps) {
+export function OutreachTab({ contact, highlightUuid, onHighlightConsumed }: OutreachTabProps) {
   const redraft = useRedraftMessages();
   const sendMessage = useSendOutreachMessage();
   const deleteMessage = useDeleteOutreachMessage();
@@ -24,6 +27,27 @@ export function OutreachTab({ contact }: OutreachTabProps) {
   const [editingMessage, setEditingMessage] = useState<OutreachMessage | null>(null);
   const [draftPendingDelete, setDraftPendingDelete] = useState<OutreachMessage | null>(null);
   const [composeOpen, setComposeOpen] = useState(false);
+  const [ringedUuid, setRingedUuid] = useState<string | null>(null);
+  const cardRefs = useRef(new Map<string, HTMLDivElement>());
+
+  useEffect(() => {
+    if (!highlightUuid) return;
+    const el = cardRefs.current.get(highlightUuid);
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
+    setRingedUuid(highlightUuid);
+    const fadeT = window.setTimeout(() => setRingedUuid(null), 1500);
+    const clearT = window.setTimeout(() => onHighlightConsumed?.(), 1600);
+    return () => {
+      window.clearTimeout(fadeT);
+      window.clearTimeout(clearT);
+    };
+  }, [highlightUuid, onHighlightConsumed]);
+
+  const setCardRef = (uuid: string) => (el: HTMLDivElement | null) => {
+    if (el) cardRefs.current.set(uuid, el);
+    else cardRefs.current.delete(uuid);
+  };
 
   const { drafts, sentHistory } = useMemo(() => {
     const messages = contact.outreach_messages ?? [];
@@ -60,7 +84,14 @@ export function OutreachTab({ contact }: OutreachTabProps) {
           {drafts.map((m) => {
             const Icon = channelIcon(m.channel);
             return (
-              <div key={m.uuid} className="rounded-lg border border-border bg-surface-secondary p-3 flex flex-col gap-2">
+              <div
+                key={m.uuid}
+                ref={setCardRef(m.uuid)}
+                className={cn(
+                  "rounded-lg border border-border bg-surface-secondary p-3 flex flex-col gap-2 transition-shadow",
+                  ringedUuid === m.uuid && "ring-2 ring-accent ring-offset-1 ring-offset-background",
+                )}
+              >
                 <div className="flex items-center justify-between gap-2 flex-wrap">
                   <div className="flex items-center gap-2 min-w-0">
                     <Icon className="size-4 text-muted shrink-0" />
@@ -102,7 +133,14 @@ export function OutreachTab({ contact }: OutreachTabProps) {
       <Section title={`Sent history (${sentHistory.length})`} emptyText="No messages have been sent yet.">
         <div className="flex flex-col gap-2">
           {sentHistory.map((m) => (
-            <div key={m.uuid} className="rounded-lg border border-border p-3 flex flex-col gap-1">
+            <div
+              key={m.uuid}
+              ref={setCardRef(m.uuid)}
+              className={cn(
+                "rounded-lg border border-border p-3 flex flex-col gap-1 transition-shadow",
+                ringedUuid === m.uuid && "ring-2 ring-accent ring-offset-1 ring-offset-background",
+              )}
+            >
               <div className="flex items-center gap-2 flex-wrap">
                 <Chip size="sm" color={m.status === MsgStatus.SENT ? "success" : "danger"} variant="soft">
                   <Chip.Label>{m.status}</Chip.Label>

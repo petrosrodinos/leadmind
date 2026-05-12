@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Chip } from "@heroui/react";
-import { ArrowRight, Mail, Phone, StickyNote } from "lucide-react";
+import { ArrowRight, ExternalLink, Mail, Phone, StickyNote } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import {
     InteractionType,
@@ -59,9 +59,10 @@ function parseStatusChange(raw: Interaction["status_change"]): InteractionStatus
 
 interface InteractionTimelineProps {
     contactUuid: string;
+    onNavigateToOutreach?: (outreachUuid: string) => void;
 }
 
-export function InteractionTimeline({ contactUuid }: InteractionTimelineProps) {
+export function InteractionTimeline({ contactUuid, onNavigateToOutreach }: InteractionTimelineProps) {
     const { data: interactions, isLoading } = useContactInteractions(contactUuid);
 
     const sorted = useMemo(() => {
@@ -160,6 +161,18 @@ export function InteractionTimeline({ contactUuid }: InteractionTimelineProps) {
                                         </p>
                                     ) : null}
                                 </>
+                            ) : interaction.outreach_message ? (
+                                <button
+                                    type="button"
+                                    onClick={() => onNavigateToOutreach?.(interaction.outreach_message!.uuid)}
+                                    className="group mt-1 inline-flex items-center gap-1.5 text-left text-sm font-medium text-foreground hover:text-accent transition-colors"
+                                    title="Open in Outreach tab"
+                                >
+                                    <span className="truncate">
+                                        {interaction.outreach_message.subject?.trim() || "(no subject)"}
+                                    </span>
+                                    <ExternalLink className="size-3.5 text-muted group-hover:text-accent shrink-0" />
+                                </button>
                             ) : interaction.content?.trim() ? (
                                 <p className="text-sm text-foreground whitespace-pre-line break-words mt-1">
                                     {interaction.content}

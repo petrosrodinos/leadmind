@@ -159,6 +159,17 @@ export class ContactsService {
                 interactions: {
                     orderBy: { created_at: 'desc' },
                     take: 20,
+                    include: {
+                        outreach_message: {
+                            select: {
+                                uuid: true,
+                                subject: true,
+                                channel: true,
+                                status: true,
+                                sent_at: true,
+                            },
+                        },
+                    },
                 },
                 outreach_messages: {
                     orderBy: { created_at: 'desc' },
@@ -287,11 +298,22 @@ export class ContactsService {
         });
     }
 
-    async getInteractions(user_uuid: string, uuid: string): Promise<Interaction[]> {
+    async getInteractions(user_uuid: string, uuid: string) {
         await this.requireOwnedContact(user_uuid, uuid);
         return this.prisma.interaction.findMany({
             where: { contact_uuid: uuid },
             orderBy: { created_at: 'desc' },
+            include: {
+                outreach_message: {
+                    select: {
+                        uuid: true,
+                        subject: true,
+                        channel: true,
+                        status: true,
+                        sent_at: true,
+                    },
+                },
+            },
         });
     }
 

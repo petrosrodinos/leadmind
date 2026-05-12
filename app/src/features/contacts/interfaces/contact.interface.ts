@@ -55,6 +55,14 @@ export interface OutreachMessage {
     updated_at: string;
 }
 
+export interface InteractionOutreachRef {
+    uuid: string;
+    subject: string | null;
+    channel: Channel;
+    status: MsgStatus;
+    sent_at: string | null;
+}
+
 export interface Interaction {
     uuid: string;
     contact_uuid: string;
@@ -63,6 +71,8 @@ export interface Interaction {
     content: string | null;
     metadata: Record<string, unknown> | null;
     status_change: InteractionStatusChange | null;
+    outreach_message_uuid: string | null;
+    outreach_message: InteractionOutreachRef | null;
     created_at: string;
     updated_at: string;
 }

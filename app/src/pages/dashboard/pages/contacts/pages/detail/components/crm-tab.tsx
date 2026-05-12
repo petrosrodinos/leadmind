@@ -12,9 +12,10 @@ import { TagEditor } from "./tag-editor";
 
 interface CrmTabProps {
   contact: Contact;
+  onNavigateToOutreach?: (outreachUuid: string) => void;
 }
 
-export function CrmTab({ contact }: CrmTabProps) {
+export function CrmTab({ contact, onNavigateToOutreach }: CrmTabProps) {
   const updateStatus = useUpdateContactStatus();
   const updateNotes = useUpdateContactNotes();
   const updateTags = useUpdateContactTags();
@@ -157,7 +158,7 @@ export function CrmTab({ contact }: CrmTabProps) {
       </Section>
 
       <Section title="Activity">
-        <InteractionTimeline contactUuid={contact.uuid} />
+        <InteractionTimeline contactUuid={contact.uuid} onNavigateToOutreach={onNavigateToOutreach} />
       </Section>
     </div>
   );

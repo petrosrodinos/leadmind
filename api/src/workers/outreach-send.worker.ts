@@ -88,8 +88,7 @@ export class OutreachSendWorker extends WorkerHost {
                         contact_uuid: message.contact_uuid,
                         user_uuid: message.user_uuid,
                         type: this.toInteractionType(message.channel),
-                        content: rendered.content,
-                        metadata: { outreach_message_uuid: message.uuid, channel: message.channel },
+                        outreach_message_uuid: message.uuid,
                     },
                 }),
             ]);

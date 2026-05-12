@@ -179,19 +179,21 @@ model ContactTag {
 }
 
 model Interaction {
-  id            Int             @id @default(autoincrement())
-  uuid          String          @unique @default(uuid())
-  contact_uuid  String
-  user_uuid     String
-  type          InteractionType
-  content       String?
-  metadata      Json?
-  status_change Json?
-  created_at    DateTime        @default(now())
-  updated_at    DateTime        @updatedAt
+  id                    Int             @id @default(autoincrement())
+  uuid                  String          @unique @default(uuid())
+  contact_uuid          String
+  user_uuid             String
+  type                  InteractionType
+  content               String?
+  metadata              Json?
+  status_change         Json?
+  outreach_message_uuid String?         @unique
+  created_at            DateTime        @default(now())
+  updated_at            DateTime        @updatedAt
 
-  contact Contact @relation(fields: [contact_uuid], references: [uuid], onDelete: Cascade)
-  user    User    @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
+  contact          Contact          @relation(fields: [contact_uuid], references: [uuid], onDelete: Cascade)
+  user             User             @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
+  outreach_message OutreachMessage? @relation(fields: [outreach_message_uuid], references: [uuid], onDelete: SetNull)
 
   @@index([contact_uuid])
   @@index([user_uuid])
@@ -212,8 +214,9 @@ model OutreachMessage {
   created_at   DateTime  @default(now())
   updated_at   DateTime  @updatedAt
 
-  user    User    @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
-  contact Contact @relation(fields: [contact_uuid], references: [uuid], onDelete: Cascade)
+  user        User         @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
+  contact     Contact      @relation(fields: [contact_uuid], references: [uuid], onDelete: Cascade)
+  interaction Interaction?
 
   @@index([user_uuid])
   @@index([contact_uuid])
