@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Input, Label, ListBox, Pagination, Select, Table } from "@heroui/react";
+import { Button, Input, Label, ListBox, Select, Table } from "@heroui/react";
+import { TablePagination } from "@/components/ui/table-pagination";
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { Check, Plus, Search } from "lucide-react";
 import type { Lead, SourceType } from "@/features/leads/interfaces/lead.interface";
@@ -121,8 +122,6 @@ export default function LeadsDirectoryPage() {
 
   const total = data?.total ?? 0;
   const totalPages = data?.totalPages ?? 1;
-  const start = total === 0 ? 0 : (page - 1) * PAGE_SIZE + 1;
-  const end = Math.min(page * PAGE_SIZE, total);
 
   const openLeadDetail = (lead: Lead) => {
     navigate(Routes.dashboard.leads_directory_detail.replace(":uuid", lead.uuid));
@@ -216,29 +215,7 @@ export default function LeadsDirectoryPage() {
             </Table.Content>
           </Table.ScrollContainer>
           <Table.Footer>
-            <Pagination size="sm">
-              <Pagination.Summary>
-                {start} to {end} of {total} results
-                {isFetching && !isLoading ? " · refreshing…" : ""}
-              </Pagination.Summary>
-              <Pagination.Content>
-                <Pagination.Item>
-                  <Pagination.Previous isDisabled={page <= 1} onPress={() => setPage((p) => Math.max(1, p - 1))}>
-                    <Pagination.PreviousIcon />
-                    Prev
-                  </Pagination.Previous>
-                </Pagination.Item>
-                <Pagination.Item>
-                  <Pagination.Link isActive>{page}</Pagination.Link>
-                </Pagination.Item>
-                <Pagination.Item>
-                  <Pagination.Next isDisabled={page >= totalPages} onPress={() => setPage((p) => Math.min(totalPages, p + 1))}>
-                    Next
-                    <Pagination.NextIcon />
-                  </Pagination.Next>
-                </Pagination.Item>
-              </Pagination.Content>
-            </Pagination>
+            <TablePagination page={page} totalPages={totalPages} total={total} pageSize={PAGE_SIZE} onPageChange={setPage} isFetching={isFetching} isLoading={isLoading} label="results" />
           </Table.Footer>
         </Table>
       </div>

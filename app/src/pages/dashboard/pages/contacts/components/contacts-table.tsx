@@ -5,10 +5,10 @@ import {
     Checkbox,
     Chip,
     ListBox,
-    Pagination,
     Select,
     Table,
 } from "@heroui/react";
+import { TablePagination } from "@/components/ui/table-pagination";
 import { Trash } from "lucide-react";
 import {
     createColumnHelper,
@@ -215,9 +215,6 @@ export function ContactsTable({
         pageCount: totalPages,
     });
 
-    const start = total === 0 ? 0 : (page - 1) * pageSize + 1;
-    const end = Math.min(page * pageSize, total);
-
     const handleSelectionChange = (keys: Selection) => {
         if (keys === "all") {
             onSelectionChange(new Set(contacts.map((c) => c.uuid)));
@@ -328,37 +325,7 @@ export function ContactsTable({
                     </Table.Content>
                 </Table.ScrollContainer>
                 <Table.Footer>
-                    <Pagination size="sm">
-                        <Pagination.Summary>
-                            {start} to {end} of {total} contacts
-                            {isFetching && !isLoading ? " · refreshing…" : ""}
-                        </Pagination.Summary>
-                        <Pagination.Content>
-                            <Pagination.Item>
-                                <Pagination.Previous
-                                    isDisabled={page <= 1}
-                                    onPress={() => onPageChange(Math.max(1, page - 1))}
-                                >
-                                    <Pagination.PreviousIcon />
-                                    Prev
-                                </Pagination.Previous>
-                            </Pagination.Item>
-                            <Pagination.Item>
-                                <Pagination.Link isActive>{page}</Pagination.Link>
-                            </Pagination.Item>
-                            <Pagination.Item>
-                                <Pagination.Next
-                                    isDisabled={page >= totalPages}
-                                    onPress={() =>
-                                        onPageChange(Math.min(totalPages, page + 1))
-                                    }
-                                >
-                                    Next
-                                    <Pagination.NextIcon />
-                                </Pagination.Next>
-                            </Pagination.Item>
-                        </Pagination.Content>
-                    </Pagination>
+                    <TablePagination page={page} totalPages={totalPages} total={total} pageSize={pageSize} onPageChange={onPageChange} isFetching={isFetching} isLoading={isLoading} label="contacts" />
                 </Table.Footer>
             </Table>
 

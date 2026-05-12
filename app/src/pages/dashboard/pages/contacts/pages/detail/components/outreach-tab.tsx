@@ -26,6 +26,7 @@ export function OutreachTab({ contact, highlightUuid, onHighlightConsumed }: Out
 
   const [editingMessage, setEditingMessage] = useState<OutreachMessage | null>(null);
   const [draftPendingDelete, setDraftPendingDelete] = useState<OutreachMessage | null>(null);
+  const [draftPendingSend, setDraftPendingSend] = useState<OutreachMessage | null>(null);
   const [composeOpen, setComposeOpen] = useState(false);
   const [ringedUuid, setRingedUuid] = useState<string | null>(null);
   const cardRefs = useRef(new Map<string, HTMLDivElement>());
@@ -108,12 +109,7 @@ export function OutreachTab({ contact, highlightUuid, onHighlightConsumed }: Out
                       size="sm"
                       variant="tertiary"
                       isDisabled={sendMessage.isPending}
-                      onPress={() =>
-                        sendMessage.mutate({
-                          uuid: m.uuid,
-                          contact_uuid: contact.uuid,
-                        })
-                      }
+                      onPress={() => setDraftPendingSend(m)}
                       aria-label="Send draft"
                     >
                       <Send className="size-3.5" />
@@ -190,6 +186,35 @@ export function OutreachTab({ contact, highlightUuid, onHighlightConsumed }: Out
         isOpen={composeOpen}
         onOpenChange={setComposeOpen}
         contact_uuid={contact.uuid}
+      />
+
+      <ConfirmDialog
+        isOpen={draftPendingSend !== null}
+        onOpenChange={(open) => {
+          if (!open) setDraftPendingSend(null);
+        }}
+        title="Send this message?"
+        description={
+          draftPendingSend
+            ? `This will queue the ${draftPendingSend.channel} message for delivery to ${contact.name ?? "this contact"}. You won't be able to edit it after sending.`
+            : undefined
+        }
+        confirmLabel="Send"
+        cancelLabel="Cancel"
+        variant="default"
+        isPending={sendMessage.isPending}
+        onConfirm={async () => {
+          if (!draftPendingSend) return;
+          try {
+            await sendMessage.mutateAsync({
+              uuid: draftPendingSend.uuid,
+              contact_uuid: contact.uuid,
+            });
+            setDraftPendingSend(null);
+          } catch {
+            return;
+          }
+        }}
       />
 
       <ConfirmDialog
