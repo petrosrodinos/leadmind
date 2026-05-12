@@ -73,6 +73,16 @@ export type FilterJob = $Result.DefaultSelection<Prisma.$FilterJobPayload>
  * 
  */
 export type SenderProfile = $Result.DefaultSelection<Prisma.$SenderProfilePayload>
+/**
+ * Model MarketingCampaign
+ * 
+ */
+export type MarketingCampaign = $Result.DefaultSelection<Prisma.$MarketingCampaignPayload>
+/**
+ * Model MarketingCampaignContact
+ * 
+ */
+export type MarketingCampaignContact = $Result.DefaultSelection<Prisma.$MarketingCampaignContactPayload>
 
 /**
  * Enums
@@ -151,21 +161,78 @@ export type JobTrigger = (typeof JobTrigger)[keyof typeof JobTrigger]
 
 export const MsgStatus: {
   PENDING: 'PENDING',
+  QUEUED: 'QUEUED',
   SENT: 'SENT',
-  FAILED: 'FAILED'
+  FAILED: 'FAILED',
+  DELIVERED: 'DELIVERED',
+  OPENED: 'OPENED',
+  CLICKED: 'CLICKED',
+  REPLIED: 'REPLIED',
+  BOUNCED: 'BOUNCED',
+  UNSUBSCRIBED: 'UNSUBSCRIBED',
+  SKIPPED: 'SKIPPED'
 };
 
 export type MsgStatus = (typeof MsgStatus)[keyof typeof MsgStatus]
+
+
+export const MsgDirection: {
+  OUTBOUND: 'OUTBOUND',
+  INBOUND: 'INBOUND'
+};
+
+export type MsgDirection = (typeof MsgDirection)[keyof typeof MsgDirection]
 
 
 export const InteractionType: {
   NOTE: 'NOTE',
   CALL: 'CALL',
   EMAIL: 'EMAIL',
-  STATUS_CHANGE: 'STATUS_CHANGE'
+  MEETING: 'MEETING',
+  STATUS_CHANGE: 'STATUS_CHANGE',
+  CAMPAIGN_EMAIL_SENT: 'CAMPAIGN_EMAIL_SENT',
+  CAMPAIGN_SMS_SENT: 'CAMPAIGN_SMS_SENT',
+  EMAIL_DELIVERED: 'EMAIL_DELIVERED',
+  SMS_DELIVERED: 'SMS_DELIVERED',
+  EMAIL_OPENED: 'EMAIL_OPENED',
+  LINK_CLICKED: 'LINK_CLICKED',
+  REPLY_RECEIVED: 'REPLY_RECEIVED',
+  EMAIL_BOUNCED: 'EMAIL_BOUNCED',
+  EMAIL_FAILED: 'EMAIL_FAILED',
+  SMS_FAILED: 'SMS_FAILED',
+  UNSUBSCRIBED: 'UNSUBSCRIBED'
 };
 
 export type InteractionType = (typeof InteractionType)[keyof typeof InteractionType]
+
+
+export const CampaignStatus: {
+  DRAFT: 'DRAFT',
+  SCHEDULED: 'SCHEDULED',
+  SENDING: 'SENDING',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED',
+  FAILED: 'FAILED'
+};
+
+export type CampaignStatus = (typeof CampaignStatus)[keyof typeof CampaignStatus]
+
+
+export const CampaignContactStatus: {
+  PENDING: 'PENDING',
+  QUEUED: 'QUEUED',
+  SENT: 'SENT',
+  FAILED: 'FAILED',
+  SKIPPED: 'SKIPPED',
+  DELIVERED: 'DELIVERED',
+  OPENED: 'OPENED',
+  CLICKED: 'CLICKED',
+  REPLIED: 'REPLIED',
+  BOUNCED: 'BOUNCED',
+  UNSUBSCRIBED: 'UNSUBSCRIBED'
+};
+
+export type CampaignContactStatus = (typeof CampaignContactStatus)[keyof typeof CampaignContactStatus]
 
 }
 
@@ -201,9 +268,21 @@ export type MsgStatus = $Enums.MsgStatus
 
 export const MsgStatus: typeof $Enums.MsgStatus
 
+export type MsgDirection = $Enums.MsgDirection
+
+export const MsgDirection: typeof $Enums.MsgDirection
+
 export type InteractionType = $Enums.InteractionType
 
 export const InteractionType: typeof $Enums.InteractionType
+
+export type CampaignStatus = $Enums.CampaignStatus
+
+export const CampaignStatus: typeof $Enums.CampaignStatus
+
+export type CampaignContactStatus = $Enums.CampaignContactStatus
+
+export const CampaignContactStatus: typeof $Enums.CampaignContactStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -441,6 +520,26 @@ export class PrismaClient<
     * ```
     */
   get senderProfile(): Prisma.SenderProfileDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.marketingCampaign`: Exposes CRUD operations for the **MarketingCampaign** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more MarketingCampaigns
+    * const marketingCampaigns = await prisma.marketingCampaign.findMany()
+    * ```
+    */
+  get marketingCampaign(): Prisma.MarketingCampaignDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.marketingCampaignContact`: Exposes CRUD operations for the **MarketingCampaignContact** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more MarketingCampaignContacts
+    * const marketingCampaignContacts = await prisma.marketingCampaignContact.findMany()
+    * ```
+    */
+  get marketingCampaignContact(): Prisma.MarketingCampaignContactDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -886,7 +985,9 @@ export namespace Prisma {
     OutreachMessage: 'OutreachMessage',
     OutreachSequence: 'OutreachSequence',
     FilterJob: 'FilterJob',
-    SenderProfile: 'SenderProfile'
+    SenderProfile: 'SenderProfile',
+    MarketingCampaign: 'MarketingCampaign',
+    MarketingCampaignContact: 'MarketingCampaignContact'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -902,7 +1003,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "filter" | "rawLead" | "lead" | "leadEnrichment" | "contact" | "contactTag" | "interaction" | "outreachMessage" | "outreachSequence" | "filterJob" | "senderProfile"
+      modelProps: "user" | "filter" | "rawLead" | "lead" | "leadEnrichment" | "contact" | "contactTag" | "interaction" | "outreachMessage" | "outreachSequence" | "filterJob" | "senderProfile" | "marketingCampaign" | "marketingCampaignContact"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1794,6 +1895,154 @@ export namespace Prisma {
           }
         }
       }
+      MarketingCampaign: {
+        payload: Prisma.$MarketingCampaignPayload<ExtArgs>
+        fields: Prisma.MarketingCampaignFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.MarketingCampaignFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketingCampaignPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.MarketingCampaignFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketingCampaignPayload>
+          }
+          findFirst: {
+            args: Prisma.MarketingCampaignFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketingCampaignPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.MarketingCampaignFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketingCampaignPayload>
+          }
+          findMany: {
+            args: Prisma.MarketingCampaignFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketingCampaignPayload>[]
+          }
+          create: {
+            args: Prisma.MarketingCampaignCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketingCampaignPayload>
+          }
+          createMany: {
+            args: Prisma.MarketingCampaignCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.MarketingCampaignCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketingCampaignPayload>[]
+          }
+          delete: {
+            args: Prisma.MarketingCampaignDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketingCampaignPayload>
+          }
+          update: {
+            args: Prisma.MarketingCampaignUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketingCampaignPayload>
+          }
+          deleteMany: {
+            args: Prisma.MarketingCampaignDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.MarketingCampaignUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.MarketingCampaignUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketingCampaignPayload>[]
+          }
+          upsert: {
+            args: Prisma.MarketingCampaignUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketingCampaignPayload>
+          }
+          aggregate: {
+            args: Prisma.MarketingCampaignAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateMarketingCampaign>
+          }
+          groupBy: {
+            args: Prisma.MarketingCampaignGroupByArgs<ExtArgs>
+            result: $Utils.Optional<MarketingCampaignGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.MarketingCampaignCountArgs<ExtArgs>
+            result: $Utils.Optional<MarketingCampaignCountAggregateOutputType> | number
+          }
+        }
+      }
+      MarketingCampaignContact: {
+        payload: Prisma.$MarketingCampaignContactPayload<ExtArgs>
+        fields: Prisma.MarketingCampaignContactFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.MarketingCampaignContactFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketingCampaignContactPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.MarketingCampaignContactFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketingCampaignContactPayload>
+          }
+          findFirst: {
+            args: Prisma.MarketingCampaignContactFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketingCampaignContactPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.MarketingCampaignContactFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketingCampaignContactPayload>
+          }
+          findMany: {
+            args: Prisma.MarketingCampaignContactFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketingCampaignContactPayload>[]
+          }
+          create: {
+            args: Prisma.MarketingCampaignContactCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketingCampaignContactPayload>
+          }
+          createMany: {
+            args: Prisma.MarketingCampaignContactCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.MarketingCampaignContactCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketingCampaignContactPayload>[]
+          }
+          delete: {
+            args: Prisma.MarketingCampaignContactDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketingCampaignContactPayload>
+          }
+          update: {
+            args: Prisma.MarketingCampaignContactUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketingCampaignContactPayload>
+          }
+          deleteMany: {
+            args: Prisma.MarketingCampaignContactDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.MarketingCampaignContactUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.MarketingCampaignContactUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketingCampaignContactPayload>[]
+          }
+          upsert: {
+            args: Prisma.MarketingCampaignContactUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketingCampaignContactPayload>
+          }
+          aggregate: {
+            args: Prisma.MarketingCampaignContactAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateMarketingCampaignContact>
+          }
+          groupBy: {
+            args: Prisma.MarketingCampaignContactGroupByArgs<ExtArgs>
+            result: $Utils.Optional<MarketingCampaignContactGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.MarketingCampaignContactCountArgs<ExtArgs>
+            result: $Utils.Optional<MarketingCampaignContactCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1914,6 +2163,8 @@ export namespace Prisma {
     outreachSequence?: OutreachSequenceOmit
     filterJob?: FilterJobOmit
     senderProfile?: SenderProfileOmit
+    marketingCampaign?: MarketingCampaignOmit
+    marketingCampaignContact?: MarketingCampaignContactOmit
   }
 
   /* Types for Logging */
@@ -2000,6 +2251,7 @@ export namespace Prisma {
     outreach_sequences: number
     interactions: number
     sender_profiles: number
+    marketing_campaigns: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2009,6 +2261,7 @@ export namespace Prisma {
     outreach_sequences?: boolean | UserCountOutputTypeCountOutreach_sequencesArgs
     interactions?: boolean | UserCountOutputTypeCountInteractionsArgs
     sender_profiles?: boolean | UserCountOutputTypeCountSender_profilesArgs
+    marketing_campaigns?: boolean | UserCountOutputTypeCountMarketing_campaignsArgs
   }
 
   // Custom InputTypes
@@ -2062,6 +2315,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountSender_profilesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: SenderProfileWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountMarketing_campaignsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MarketingCampaignWhereInput
   }
 
 
@@ -2162,12 +2422,14 @@ export namespace Prisma {
     tags: number
     interactions: number
     outreach_messages: number
+    campaign_contacts: number
   }
 
   export type ContactCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     tags?: boolean | ContactCountOutputTypeCountTagsArgs
     interactions?: boolean | ContactCountOutputTypeCountInteractionsArgs
     outreach_messages?: boolean | ContactCountOutputTypeCountOutreach_messagesArgs
+    campaign_contacts?: boolean | ContactCountOutputTypeCountCampaign_contactsArgs
   }
 
   // Custom InputTypes
@@ -2200,6 +2462,93 @@ export namespace Prisma {
    */
   export type ContactCountOutputTypeCountOutreach_messagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: OutreachMessageWhereInput
+  }
+
+  /**
+   * ContactCountOutputType without action
+   */
+  export type ContactCountOutputTypeCountCampaign_contactsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MarketingCampaignContactWhereInput
+  }
+
+
+  /**
+   * Count Type SenderProfileCountOutputType
+   */
+
+  export type SenderProfileCountOutputType = {
+    marketing_campaigns: number
+  }
+
+  export type SenderProfileCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    marketing_campaigns?: boolean | SenderProfileCountOutputTypeCountMarketing_campaignsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * SenderProfileCountOutputType without action
+   */
+  export type SenderProfileCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SenderProfileCountOutputType
+     */
+    select?: SenderProfileCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * SenderProfileCountOutputType without action
+   */
+  export type SenderProfileCountOutputTypeCountMarketing_campaignsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MarketingCampaignWhereInput
+  }
+
+
+  /**
+   * Count Type MarketingCampaignCountOutputType
+   */
+
+  export type MarketingCampaignCountOutputType = {
+    campaign_contacts: number
+    outreach_messages: number
+    interactions: number
+  }
+
+  export type MarketingCampaignCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    campaign_contacts?: boolean | MarketingCampaignCountOutputTypeCountCampaign_contactsArgs
+    outreach_messages?: boolean | MarketingCampaignCountOutputTypeCountOutreach_messagesArgs
+    interactions?: boolean | MarketingCampaignCountOutputTypeCountInteractionsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * MarketingCampaignCountOutputType without action
+   */
+  export type MarketingCampaignCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketingCampaignCountOutputType
+     */
+    select?: MarketingCampaignCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * MarketingCampaignCountOutputType without action
+   */
+  export type MarketingCampaignCountOutputTypeCountCampaign_contactsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MarketingCampaignContactWhereInput
+  }
+
+  /**
+   * MarketingCampaignCountOutputType without action
+   */
+  export type MarketingCampaignCountOutputTypeCountOutreach_messagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OutreachMessageWhereInput
+  }
+
+  /**
+   * MarketingCampaignCountOutputType without action
+   */
+  export type MarketingCampaignCountOutputTypeCountInteractionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InteractionWhereInput
   }
 
 
@@ -2435,6 +2784,7 @@ export namespace Prisma {
     outreach_sequences?: boolean | User$outreach_sequencesArgs<ExtArgs>
     interactions?: boolean | User$interactionsArgs<ExtArgs>
     sender_profiles?: boolean | User$sender_profilesArgs<ExtArgs>
+    marketing_campaigns?: boolean | User$marketing_campaignsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -2479,6 +2829,7 @@ export namespace Prisma {
     outreach_sequences?: boolean | User$outreach_sequencesArgs<ExtArgs>
     interactions?: boolean | User$interactionsArgs<ExtArgs>
     sender_profiles?: boolean | User$sender_profilesArgs<ExtArgs>
+    marketing_campaigns?: boolean | User$marketing_campaignsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -2493,6 +2844,7 @@ export namespace Prisma {
       outreach_sequences: Prisma.$OutreachSequencePayload<ExtArgs>[]
       interactions: Prisma.$InteractionPayload<ExtArgs>[]
       sender_profiles: Prisma.$SenderProfilePayload<ExtArgs>[]
+      marketing_campaigns: Prisma.$MarketingCampaignPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -2903,6 +3255,7 @@ export namespace Prisma {
     outreach_sequences<T extends User$outreach_sequencesArgs<ExtArgs> = {}>(args?: Subset<T, User$outreach_sequencesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OutreachSequencePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     interactions<T extends User$interactionsArgs<ExtArgs> = {}>(args?: Subset<T, User$interactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InteractionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     sender_profiles<T extends User$sender_profilesArgs<ExtArgs> = {}>(args?: Subset<T, User$sender_profilesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SenderProfilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    marketing_campaigns<T extends User$marketing_campaignsArgs<ExtArgs> = {}>(args?: Subset<T, User$marketing_campaignsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketingCampaignPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3469,6 +3822,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: SenderProfileScalarFieldEnum | SenderProfileScalarFieldEnum[]
+  }
+
+  /**
+   * User.marketing_campaigns
+   */
+  export type User$marketing_campaignsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketingCampaign
+     */
+    select?: MarketingCampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketingCampaign
+     */
+    omit?: MarketingCampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketingCampaignInclude<ExtArgs> | null
+    where?: MarketingCampaignWhereInput
+    orderBy?: MarketingCampaignOrderByWithRelationInput | MarketingCampaignOrderByWithRelationInput[]
+    cursor?: MarketingCampaignWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MarketingCampaignScalarFieldEnum | MarketingCampaignScalarFieldEnum[]
   }
 
   /**
@@ -8485,6 +8862,9 @@ export namespace Prisma {
     location: string | null
     industry: string | null
     description: string | null
+    unsubscribed_at: Date | null
+    unsubscribe_token: string | null
+    last_interaction_at: Date | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -8508,6 +8888,9 @@ export namespace Prisma {
     location: string | null
     industry: string | null
     description: string | null
+    unsubscribed_at: Date | null
+    unsubscribe_token: string | null
+    last_interaction_at: Date | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -8531,6 +8914,9 @@ export namespace Prisma {
     location: number
     industry: number
     description: number
+    unsubscribed_at: number
+    unsubscribe_token: number
+    last_interaction_at: number
     created_at: number
     updated_at: number
     _all: number
@@ -8566,6 +8952,9 @@ export namespace Prisma {
     location?: true
     industry?: true
     description?: true
+    unsubscribed_at?: true
+    unsubscribe_token?: true
+    last_interaction_at?: true
     created_at?: true
     updated_at?: true
   }
@@ -8589,6 +8978,9 @@ export namespace Prisma {
     location?: true
     industry?: true
     description?: true
+    unsubscribed_at?: true
+    unsubscribe_token?: true
+    last_interaction_at?: true
     created_at?: true
     updated_at?: true
   }
@@ -8612,6 +9004,9 @@ export namespace Prisma {
     location?: true
     industry?: true
     description?: true
+    unsubscribed_at?: true
+    unsubscribe_token?: true
+    last_interaction_at?: true
     created_at?: true
     updated_at?: true
     _all?: true
@@ -8722,6 +9117,9 @@ export namespace Prisma {
     location: string | null
     industry: string | null
     description: string | null
+    unsubscribed_at: Date | null
+    unsubscribe_token: string | null
+    last_interaction_at: Date | null
     created_at: Date
     updated_at: Date
     _count: ContactCountAggregateOutputType | null
@@ -8764,6 +9162,9 @@ export namespace Prisma {
     location?: boolean
     industry?: boolean
     description?: boolean
+    unsubscribed_at?: boolean
+    unsubscribe_token?: boolean
+    last_interaction_at?: boolean
     created_at?: boolean
     updated_at?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -8772,6 +9173,7 @@ export namespace Prisma {
     tags?: boolean | Contact$tagsArgs<ExtArgs>
     interactions?: boolean | Contact$interactionsArgs<ExtArgs>
     outreach_messages?: boolean | Contact$outreach_messagesArgs<ExtArgs>
+    campaign_contacts?: boolean | Contact$campaign_contactsArgs<ExtArgs>
     _count?: boolean | ContactCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["contact"]>
 
@@ -8794,6 +9196,9 @@ export namespace Prisma {
     location?: boolean
     industry?: boolean
     description?: boolean
+    unsubscribed_at?: boolean
+    unsubscribe_token?: boolean
+    last_interaction_at?: boolean
     created_at?: boolean
     updated_at?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -8820,6 +9225,9 @@ export namespace Prisma {
     location?: boolean
     industry?: boolean
     description?: boolean
+    unsubscribed_at?: boolean
+    unsubscribe_token?: boolean
+    last_interaction_at?: boolean
     created_at?: boolean
     updated_at?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -8846,11 +9254,14 @@ export namespace Prisma {
     location?: boolean
     industry?: boolean
     description?: boolean
+    unsubscribed_at?: boolean
+    unsubscribe_token?: boolean
+    last_interaction_at?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type ContactOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "lead_uuid" | "filter_uuid" | "status" | "score" | "notes" | "name" | "email" | "phone" | "company" | "website" | "linkedin_url" | "title" | "location" | "industry" | "description" | "created_at" | "updated_at", ExtArgs["result"]["contact"]>
+  export type ContactOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "lead_uuid" | "filter_uuid" | "status" | "score" | "notes" | "name" | "email" | "phone" | "company" | "website" | "linkedin_url" | "title" | "location" | "industry" | "description" | "unsubscribed_at" | "unsubscribe_token" | "last_interaction_at" | "created_at" | "updated_at", ExtArgs["result"]["contact"]>
   export type ContactInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     lead?: boolean | LeadDefaultArgs<ExtArgs>
@@ -8858,6 +9269,7 @@ export namespace Prisma {
     tags?: boolean | Contact$tagsArgs<ExtArgs>
     interactions?: boolean | Contact$interactionsArgs<ExtArgs>
     outreach_messages?: boolean | Contact$outreach_messagesArgs<ExtArgs>
+    campaign_contacts?: boolean | Contact$campaign_contactsArgs<ExtArgs>
     _count?: boolean | ContactCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ContactIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8880,6 +9292,7 @@ export namespace Prisma {
       tags: Prisma.$ContactTagPayload<ExtArgs>[]
       interactions: Prisma.$InteractionPayload<ExtArgs>[]
       outreach_messages: Prisma.$OutreachMessagePayload<ExtArgs>[]
+      campaign_contacts: Prisma.$MarketingCampaignContactPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -8900,6 +9313,9 @@ export namespace Prisma {
       location: string | null
       industry: string | null
       description: string | null
+      unsubscribed_at: Date | null
+      unsubscribe_token: string | null
+      last_interaction_at: Date | null
       created_at: Date
       updated_at: Date
     }, ExtArgs["result"]["contact"]>
@@ -9302,6 +9718,7 @@ export namespace Prisma {
     tags<T extends Contact$tagsArgs<ExtArgs> = {}>(args?: Subset<T, Contact$tagsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactTagPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     interactions<T extends Contact$interactionsArgs<ExtArgs> = {}>(args?: Subset<T, Contact$interactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InteractionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     outreach_messages<T extends Contact$outreach_messagesArgs<ExtArgs> = {}>(args?: Subset<T, Contact$outreach_messagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OutreachMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    campaign_contacts<T extends Contact$campaign_contactsArgs<ExtArgs> = {}>(args?: Subset<T, Contact$campaign_contactsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketingCampaignContactPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9349,6 +9766,9 @@ export namespace Prisma {
     readonly location: FieldRef<"Contact", 'String'>
     readonly industry: FieldRef<"Contact", 'String'>
     readonly description: FieldRef<"Contact", 'String'>
+    readonly unsubscribed_at: FieldRef<"Contact", 'DateTime'>
+    readonly unsubscribe_token: FieldRef<"Contact", 'String'>
+    readonly last_interaction_at: FieldRef<"Contact", 'DateTime'>
     readonly created_at: FieldRef<"Contact", 'DateTime'>
     readonly updated_at: FieldRef<"Contact", 'DateTime'>
   }
@@ -9835,6 +10255,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: OutreachMessageScalarFieldEnum | OutreachMessageScalarFieldEnum[]
+  }
+
+  /**
+   * Contact.campaign_contacts
+   */
+  export type Contact$campaign_contactsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketingCampaignContact
+     */
+    select?: MarketingCampaignContactSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketingCampaignContact
+     */
+    omit?: MarketingCampaignContactOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketingCampaignContactInclude<ExtArgs> | null
+    where?: MarketingCampaignContactWhereInput
+    orderBy?: MarketingCampaignContactOrderByWithRelationInput | MarketingCampaignContactOrderByWithRelationInput[]
+    cursor?: MarketingCampaignContactWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MarketingCampaignContactScalarFieldEnum | MarketingCampaignContactScalarFieldEnum[]
   }
 
   /**
@@ -10960,6 +11404,7 @@ export namespace Prisma {
     uuid: string | null
     contact_uuid: string | null
     user_uuid: string | null
+    campaign_uuid: string | null
     type: $Enums.InteractionType | null
     content: string | null
     outreach_message_uuid: string | null
@@ -10972,6 +11417,7 @@ export namespace Prisma {
     uuid: string | null
     contact_uuid: string | null
     user_uuid: string | null
+    campaign_uuid: string | null
     type: $Enums.InteractionType | null
     content: string | null
     outreach_message_uuid: string | null
@@ -10984,6 +11430,7 @@ export namespace Prisma {
     uuid: number
     contact_uuid: number
     user_uuid: number
+    campaign_uuid: number
     type: number
     content: number
     metadata: number
@@ -11008,6 +11455,7 @@ export namespace Prisma {
     uuid?: true
     contact_uuid?: true
     user_uuid?: true
+    campaign_uuid?: true
     type?: true
     content?: true
     outreach_message_uuid?: true
@@ -11020,6 +11468,7 @@ export namespace Prisma {
     uuid?: true
     contact_uuid?: true
     user_uuid?: true
+    campaign_uuid?: true
     type?: true
     content?: true
     outreach_message_uuid?: true
@@ -11032,6 +11481,7 @@ export namespace Prisma {
     uuid?: true
     contact_uuid?: true
     user_uuid?: true
+    campaign_uuid?: true
     type?: true
     content?: true
     metadata?: true
@@ -11133,6 +11583,7 @@ export namespace Prisma {
     uuid: string
     contact_uuid: string
     user_uuid: string
+    campaign_uuid: string | null
     type: $Enums.InteractionType
     content: string | null
     metadata: JsonValue | null
@@ -11166,6 +11617,7 @@ export namespace Prisma {
     uuid?: boolean
     contact_uuid?: boolean
     user_uuid?: boolean
+    campaign_uuid?: boolean
     type?: boolean
     content?: boolean
     metadata?: boolean
@@ -11176,6 +11628,7 @@ export namespace Prisma {
     contact?: boolean | ContactDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
     outreach_message?: boolean | Interaction$outreach_messageArgs<ExtArgs>
+    campaign?: boolean | Interaction$campaignArgs<ExtArgs>
   }, ExtArgs["result"]["interaction"]>
 
   export type InteractionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -11183,6 +11636,7 @@ export namespace Prisma {
     uuid?: boolean
     contact_uuid?: boolean
     user_uuid?: boolean
+    campaign_uuid?: boolean
     type?: boolean
     content?: boolean
     metadata?: boolean
@@ -11193,6 +11647,7 @@ export namespace Prisma {
     contact?: boolean | ContactDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
     outreach_message?: boolean | Interaction$outreach_messageArgs<ExtArgs>
+    campaign?: boolean | Interaction$campaignArgs<ExtArgs>
   }, ExtArgs["result"]["interaction"]>
 
   export type InteractionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -11200,6 +11655,7 @@ export namespace Prisma {
     uuid?: boolean
     contact_uuid?: boolean
     user_uuid?: boolean
+    campaign_uuid?: boolean
     type?: boolean
     content?: boolean
     metadata?: boolean
@@ -11210,6 +11666,7 @@ export namespace Prisma {
     contact?: boolean | ContactDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
     outreach_message?: boolean | Interaction$outreach_messageArgs<ExtArgs>
+    campaign?: boolean | Interaction$campaignArgs<ExtArgs>
   }, ExtArgs["result"]["interaction"]>
 
   export type InteractionSelectScalar = {
@@ -11217,6 +11674,7 @@ export namespace Prisma {
     uuid?: boolean
     contact_uuid?: boolean
     user_uuid?: boolean
+    campaign_uuid?: boolean
     type?: boolean
     content?: boolean
     metadata?: boolean
@@ -11226,21 +11684,24 @@ export namespace Prisma {
     updated_at?: boolean
   }
 
-  export type InteractionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "contact_uuid" | "user_uuid" | "type" | "content" | "metadata" | "status_change" | "outreach_message_uuid" | "created_at" | "updated_at", ExtArgs["result"]["interaction"]>
+  export type InteractionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "contact_uuid" | "user_uuid" | "campaign_uuid" | "type" | "content" | "metadata" | "status_change" | "outreach_message_uuid" | "created_at" | "updated_at", ExtArgs["result"]["interaction"]>
   export type InteractionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     contact?: boolean | ContactDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
     outreach_message?: boolean | Interaction$outreach_messageArgs<ExtArgs>
+    campaign?: boolean | Interaction$campaignArgs<ExtArgs>
   }
   export type InteractionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     contact?: boolean | ContactDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
     outreach_message?: boolean | Interaction$outreach_messageArgs<ExtArgs>
+    campaign?: boolean | Interaction$campaignArgs<ExtArgs>
   }
   export type InteractionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     contact?: boolean | ContactDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
     outreach_message?: boolean | Interaction$outreach_messageArgs<ExtArgs>
+    campaign?: boolean | Interaction$campaignArgs<ExtArgs>
   }
 
   export type $InteractionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -11249,12 +11710,14 @@ export namespace Prisma {
       contact: Prisma.$ContactPayload<ExtArgs>
       user: Prisma.$UserPayload<ExtArgs>
       outreach_message: Prisma.$OutreachMessagePayload<ExtArgs> | null
+      campaign: Prisma.$MarketingCampaignPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
       uuid: string
       contact_uuid: string
       user_uuid: string
+      campaign_uuid: string | null
       type: $Enums.InteractionType
       content: string | null
       metadata: Prisma.JsonValue | null
@@ -11659,6 +12122,7 @@ export namespace Prisma {
     contact<T extends ContactDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ContactDefaultArgs<ExtArgs>>): Prisma__ContactClient<$Result.GetResult<Prisma.$ContactPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     outreach_message<T extends Interaction$outreach_messageArgs<ExtArgs> = {}>(args?: Subset<T, Interaction$outreach_messageArgs<ExtArgs>>): Prisma__OutreachMessageClient<$Result.GetResult<Prisma.$OutreachMessagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    campaign<T extends Interaction$campaignArgs<ExtArgs> = {}>(args?: Subset<T, Interaction$campaignArgs<ExtArgs>>): Prisma__MarketingCampaignClient<$Result.GetResult<Prisma.$MarketingCampaignPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -11692,6 +12156,7 @@ export namespace Prisma {
     readonly uuid: FieldRef<"Interaction", 'String'>
     readonly contact_uuid: FieldRef<"Interaction", 'String'>
     readonly user_uuid: FieldRef<"Interaction", 'String'>
+    readonly campaign_uuid: FieldRef<"Interaction", 'String'>
     readonly type: FieldRef<"Interaction", 'InteractionType'>
     readonly content: FieldRef<"Interaction", 'String'>
     readonly metadata: FieldRef<"Interaction", 'Json'>
@@ -12114,6 +12579,25 @@ export namespace Prisma {
   }
 
   /**
+   * Interaction.campaign
+   */
+  export type Interaction$campaignArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketingCampaign
+     */
+    select?: MarketingCampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketingCampaign
+     */
+    omit?: MarketingCampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketingCampaignInclude<ExtArgs> | null
+    where?: MarketingCampaignWhereInput
+  }
+
+  /**
    * Interaction without action
    */
   export type InteractionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -12157,12 +12641,20 @@ export namespace Prisma {
     uuid: string | null
     user_uuid: string | null
     contact_uuid: string | null
+    campaign_uuid: string | null
     channel: $Enums.Channel | null
+    direction: $Enums.MsgDirection | null
     subject: string | null
     content: string | null
     status: $Enums.MsgStatus | null
+    provider_message_id: string | null
+    idempotency_key: string | null
     scheduled_at: Date | null
     sent_at: Date | null
+    delivered_at: Date | null
+    opened_at: Date | null
+    clicked_at: Date | null
+    replied_at: Date | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -12172,12 +12664,20 @@ export namespace Prisma {
     uuid: string | null
     user_uuid: string | null
     contact_uuid: string | null
+    campaign_uuid: string | null
     channel: $Enums.Channel | null
+    direction: $Enums.MsgDirection | null
     subject: string | null
     content: string | null
     status: $Enums.MsgStatus | null
+    provider_message_id: string | null
+    idempotency_key: string | null
     scheduled_at: Date | null
     sent_at: Date | null
+    delivered_at: Date | null
+    opened_at: Date | null
+    clicked_at: Date | null
+    replied_at: Date | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -12187,12 +12687,20 @@ export namespace Prisma {
     uuid: number
     user_uuid: number
     contact_uuid: number
+    campaign_uuid: number
     channel: number
+    direction: number
     subject: number
     content: number
     status: number
+    provider_message_id: number
+    idempotency_key: number
     scheduled_at: number
     sent_at: number
+    delivered_at: number
+    opened_at: number
+    clicked_at: number
+    replied_at: number
     metadata: number
     created_at: number
     updated_at: number
@@ -12213,12 +12721,20 @@ export namespace Prisma {
     uuid?: true
     user_uuid?: true
     contact_uuid?: true
+    campaign_uuid?: true
     channel?: true
+    direction?: true
     subject?: true
     content?: true
     status?: true
+    provider_message_id?: true
+    idempotency_key?: true
     scheduled_at?: true
     sent_at?: true
+    delivered_at?: true
+    opened_at?: true
+    clicked_at?: true
+    replied_at?: true
     created_at?: true
     updated_at?: true
   }
@@ -12228,12 +12744,20 @@ export namespace Prisma {
     uuid?: true
     user_uuid?: true
     contact_uuid?: true
+    campaign_uuid?: true
     channel?: true
+    direction?: true
     subject?: true
     content?: true
     status?: true
+    provider_message_id?: true
+    idempotency_key?: true
     scheduled_at?: true
     sent_at?: true
+    delivered_at?: true
+    opened_at?: true
+    clicked_at?: true
+    replied_at?: true
     created_at?: true
     updated_at?: true
   }
@@ -12243,12 +12767,20 @@ export namespace Prisma {
     uuid?: true
     user_uuid?: true
     contact_uuid?: true
+    campaign_uuid?: true
     channel?: true
+    direction?: true
     subject?: true
     content?: true
     status?: true
+    provider_message_id?: true
+    idempotency_key?: true
     scheduled_at?: true
     sent_at?: true
+    delivered_at?: true
+    opened_at?: true
+    clicked_at?: true
+    replied_at?: true
     metadata?: true
     created_at?: true
     updated_at?: true
@@ -12346,12 +12878,20 @@ export namespace Prisma {
     uuid: string
     user_uuid: string
     contact_uuid: string
+    campaign_uuid: string | null
     channel: $Enums.Channel
+    direction: $Enums.MsgDirection
     subject: string | null
     content: string
     status: $Enums.MsgStatus
+    provider_message_id: string | null
+    idempotency_key: string | null
     scheduled_at: Date | null
     sent_at: Date | null
+    delivered_at: Date | null
+    opened_at: Date | null
+    clicked_at: Date | null
+    replied_at: Date | null
     metadata: JsonValue | null
     created_at: Date
     updated_at: Date
@@ -12381,17 +12921,26 @@ export namespace Prisma {
     uuid?: boolean
     user_uuid?: boolean
     contact_uuid?: boolean
+    campaign_uuid?: boolean
     channel?: boolean
+    direction?: boolean
     subject?: boolean
     content?: boolean
     status?: boolean
+    provider_message_id?: boolean
+    idempotency_key?: boolean
     scheduled_at?: boolean
     sent_at?: boolean
+    delivered_at?: boolean
+    opened_at?: boolean
+    clicked_at?: boolean
+    replied_at?: boolean
     metadata?: boolean
     created_at?: boolean
     updated_at?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     contact?: boolean | ContactDefaultArgs<ExtArgs>
+    campaign?: boolean | OutreachMessage$campaignArgs<ExtArgs>
     interaction?: boolean | OutreachMessage$interactionArgs<ExtArgs>
   }, ExtArgs["result"]["outreachMessage"]>
 
@@ -12400,17 +12949,26 @@ export namespace Prisma {
     uuid?: boolean
     user_uuid?: boolean
     contact_uuid?: boolean
+    campaign_uuid?: boolean
     channel?: boolean
+    direction?: boolean
     subject?: boolean
     content?: boolean
     status?: boolean
+    provider_message_id?: boolean
+    idempotency_key?: boolean
     scheduled_at?: boolean
     sent_at?: boolean
+    delivered_at?: boolean
+    opened_at?: boolean
+    clicked_at?: boolean
+    replied_at?: boolean
     metadata?: boolean
     created_at?: boolean
     updated_at?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     contact?: boolean | ContactDefaultArgs<ExtArgs>
+    campaign?: boolean | OutreachMessage$campaignArgs<ExtArgs>
   }, ExtArgs["result"]["outreachMessage"]>
 
   export type OutreachMessageSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -12418,17 +12976,26 @@ export namespace Prisma {
     uuid?: boolean
     user_uuid?: boolean
     contact_uuid?: boolean
+    campaign_uuid?: boolean
     channel?: boolean
+    direction?: boolean
     subject?: boolean
     content?: boolean
     status?: boolean
+    provider_message_id?: boolean
+    idempotency_key?: boolean
     scheduled_at?: boolean
     sent_at?: boolean
+    delivered_at?: boolean
+    opened_at?: boolean
+    clicked_at?: boolean
+    replied_at?: boolean
     metadata?: boolean
     created_at?: boolean
     updated_at?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     contact?: boolean | ContactDefaultArgs<ExtArgs>
+    campaign?: boolean | OutreachMessage$campaignArgs<ExtArgs>
   }, ExtArgs["result"]["outreachMessage"]>
 
   export type OutreachMessageSelectScalar = {
@@ -12436,30 +13003,41 @@ export namespace Prisma {
     uuid?: boolean
     user_uuid?: boolean
     contact_uuid?: boolean
+    campaign_uuid?: boolean
     channel?: boolean
+    direction?: boolean
     subject?: boolean
     content?: boolean
     status?: boolean
+    provider_message_id?: boolean
+    idempotency_key?: boolean
     scheduled_at?: boolean
     sent_at?: boolean
+    delivered_at?: boolean
+    opened_at?: boolean
+    clicked_at?: boolean
+    replied_at?: boolean
     metadata?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type OutreachMessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "contact_uuid" | "channel" | "subject" | "content" | "status" | "scheduled_at" | "sent_at" | "metadata" | "created_at" | "updated_at", ExtArgs["result"]["outreachMessage"]>
+  export type OutreachMessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "contact_uuid" | "campaign_uuid" | "channel" | "direction" | "subject" | "content" | "status" | "provider_message_id" | "idempotency_key" | "scheduled_at" | "sent_at" | "delivered_at" | "opened_at" | "clicked_at" | "replied_at" | "metadata" | "created_at" | "updated_at", ExtArgs["result"]["outreachMessage"]>
   export type OutreachMessageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     contact?: boolean | ContactDefaultArgs<ExtArgs>
+    campaign?: boolean | OutreachMessage$campaignArgs<ExtArgs>
     interaction?: boolean | OutreachMessage$interactionArgs<ExtArgs>
   }
   export type OutreachMessageIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     contact?: boolean | ContactDefaultArgs<ExtArgs>
+    campaign?: boolean | OutreachMessage$campaignArgs<ExtArgs>
   }
   export type OutreachMessageIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     contact?: boolean | ContactDefaultArgs<ExtArgs>
+    campaign?: boolean | OutreachMessage$campaignArgs<ExtArgs>
   }
 
   export type $OutreachMessagePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -12467,6 +13045,7 @@ export namespace Prisma {
     objects: {
       user: Prisma.$UserPayload<ExtArgs>
       contact: Prisma.$ContactPayload<ExtArgs>
+      campaign: Prisma.$MarketingCampaignPayload<ExtArgs> | null
       interaction: Prisma.$InteractionPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -12474,12 +13053,20 @@ export namespace Prisma {
       uuid: string
       user_uuid: string
       contact_uuid: string
+      campaign_uuid: string | null
       channel: $Enums.Channel
+      direction: $Enums.MsgDirection
       subject: string | null
       content: string
       status: $Enums.MsgStatus
+      provider_message_id: string | null
+      idempotency_key: string | null
       scheduled_at: Date | null
       sent_at: Date | null
+      delivered_at: Date | null
+      opened_at: Date | null
+      clicked_at: Date | null
+      replied_at: Date | null
       metadata: Prisma.JsonValue | null
       created_at: Date
       updated_at: Date
@@ -12879,6 +13466,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     contact<T extends ContactDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ContactDefaultArgs<ExtArgs>>): Prisma__ContactClient<$Result.GetResult<Prisma.$ContactPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    campaign<T extends OutreachMessage$campaignArgs<ExtArgs> = {}>(args?: Subset<T, OutreachMessage$campaignArgs<ExtArgs>>): Prisma__MarketingCampaignClient<$Result.GetResult<Prisma.$MarketingCampaignPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     interaction<T extends OutreachMessage$interactionArgs<ExtArgs> = {}>(args?: Subset<T, OutreachMessage$interactionArgs<ExtArgs>>): Prisma__InteractionClient<$Result.GetResult<Prisma.$InteractionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -12913,12 +13501,20 @@ export namespace Prisma {
     readonly uuid: FieldRef<"OutreachMessage", 'String'>
     readonly user_uuid: FieldRef<"OutreachMessage", 'String'>
     readonly contact_uuid: FieldRef<"OutreachMessage", 'String'>
+    readonly campaign_uuid: FieldRef<"OutreachMessage", 'String'>
     readonly channel: FieldRef<"OutreachMessage", 'Channel'>
+    readonly direction: FieldRef<"OutreachMessage", 'MsgDirection'>
     readonly subject: FieldRef<"OutreachMessage", 'String'>
     readonly content: FieldRef<"OutreachMessage", 'String'>
     readonly status: FieldRef<"OutreachMessage", 'MsgStatus'>
+    readonly provider_message_id: FieldRef<"OutreachMessage", 'String'>
+    readonly idempotency_key: FieldRef<"OutreachMessage", 'String'>
     readonly scheduled_at: FieldRef<"OutreachMessage", 'DateTime'>
     readonly sent_at: FieldRef<"OutreachMessage", 'DateTime'>
+    readonly delivered_at: FieldRef<"OutreachMessage", 'DateTime'>
+    readonly opened_at: FieldRef<"OutreachMessage", 'DateTime'>
+    readonly clicked_at: FieldRef<"OutreachMessage", 'DateTime'>
+    readonly replied_at: FieldRef<"OutreachMessage", 'DateTime'>
     readonly metadata: FieldRef<"OutreachMessage", 'Json'>
     readonly created_at: FieldRef<"OutreachMessage", 'DateTime'>
     readonly updated_at: FieldRef<"OutreachMessage", 'DateTime'>
@@ -13315,6 +13911,25 @@ export namespace Prisma {
      * Limit how many OutreachMessages to delete.
      */
     limit?: number
+  }
+
+  /**
+   * OutreachMessage.campaign
+   */
+  export type OutreachMessage$campaignArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketingCampaign
+     */
+    select?: MarketingCampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketingCampaign
+     */
+    omit?: MarketingCampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketingCampaignInclude<ExtArgs> | null
+    where?: MarketingCampaignWhereInput
   }
 
   /**
@@ -15987,6 +16602,8 @@ export namespace Prisma {
     created_at?: boolean
     updated_at?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
+    marketing_campaigns?: boolean | SenderProfile$marketing_campaignsArgs<ExtArgs>
+    _count?: boolean | SenderProfileCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["senderProfile"]>
 
   export type SenderProfileSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -16066,6 +16683,8 @@ export namespace Prisma {
   export type SenderProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "name" | "company_name" | "title" | "first_name" | "last_name" | "email" | "phone" | "website" | "address" | "city" | "country" | "logo_url" | "booking_url" | "sender_id" | "signature" | "is_default" | "created_at" | "updated_at", ExtArgs["result"]["senderProfile"]>
   export type SenderProfileInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
+    marketing_campaigns?: boolean | SenderProfile$marketing_campaignsArgs<ExtArgs>
+    _count?: boolean | SenderProfileCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type SenderProfileIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -16078,6 +16697,7 @@ export namespace Prisma {
     name: "SenderProfile"
     objects: {
       user: Prisma.$UserPayload<ExtArgs>
+      marketing_campaigns: Prisma.$MarketingCampaignPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -16496,6 +17116,7 @@ export namespace Prisma {
   export interface Prisma__SenderProfileClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    marketing_campaigns<T extends SenderProfile$marketing_campaignsArgs<ExtArgs> = {}>(args?: Subset<T, SenderProfile$marketing_campaignsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketingCampaignPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -16942,6 +17563,30 @@ export namespace Prisma {
   }
 
   /**
+   * SenderProfile.marketing_campaigns
+   */
+  export type SenderProfile$marketing_campaignsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketingCampaign
+     */
+    select?: MarketingCampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketingCampaign
+     */
+    omit?: MarketingCampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketingCampaignInclude<ExtArgs> | null
+    where?: MarketingCampaignWhereInput
+    orderBy?: MarketingCampaignOrderByWithRelationInput | MarketingCampaignOrderByWithRelationInput[]
+    cursor?: MarketingCampaignWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MarketingCampaignScalarFieldEnum | MarketingCampaignScalarFieldEnum[]
+  }
+
+  /**
    * SenderProfile without action
    */
   export type SenderProfileDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -16957,6 +17602,2754 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: SenderProfileInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model MarketingCampaign
+   */
+
+  export type AggregateMarketingCampaign = {
+    _count: MarketingCampaignCountAggregateOutputType | null
+    _avg: MarketingCampaignAvgAggregateOutputType | null
+    _sum: MarketingCampaignSumAggregateOutputType | null
+    _min: MarketingCampaignMinAggregateOutputType | null
+    _max: MarketingCampaignMaxAggregateOutputType | null
+  }
+
+  export type MarketingCampaignAvgAggregateOutputType = {
+    id: number | null
+    selected_contact_count: number | null
+    total_messages: number | null
+    queued_count: number | null
+    sent_count: number | null
+    failed_count: number | null
+    skipped_count: number | null
+    delivered_count: number | null
+    opened_count: number | null
+    clicked_count: number | null
+    replied_count: number | null
+    bounced_count: number | null
+    unsubscribed_count: number | null
+  }
+
+  export type MarketingCampaignSumAggregateOutputType = {
+    id: number | null
+    selected_contact_count: number | null
+    total_messages: number | null
+    queued_count: number | null
+    sent_count: number | null
+    failed_count: number | null
+    skipped_count: number | null
+    delivered_count: number | null
+    opened_count: number | null
+    clicked_count: number | null
+    replied_count: number | null
+    bounced_count: number | null
+    unsubscribed_count: number | null
+  }
+
+  export type MarketingCampaignMinAggregateOutputType = {
+    id: number | null
+    uuid: string | null
+    user_uuid: string | null
+    name: string | null
+    description: string | null
+    status: $Enums.CampaignStatus | null
+    email_subject: string | null
+    email_content: string | null
+    sms_content: string | null
+    sender_profile_uuid: string | null
+    scheduled_at: Date | null
+    started_at: Date | null
+    completed_at: Date | null
+    cancelled_at: Date | null
+    selected_contact_count: number | null
+    total_messages: number | null
+    queued_count: number | null
+    sent_count: number | null
+    failed_count: number | null
+    skipped_count: number | null
+    delivered_count: number | null
+    opened_count: number | null
+    clicked_count: number | null
+    replied_count: number | null
+    bounced_count: number | null
+    unsubscribed_count: number | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type MarketingCampaignMaxAggregateOutputType = {
+    id: number | null
+    uuid: string | null
+    user_uuid: string | null
+    name: string | null
+    description: string | null
+    status: $Enums.CampaignStatus | null
+    email_subject: string | null
+    email_content: string | null
+    sms_content: string | null
+    sender_profile_uuid: string | null
+    scheduled_at: Date | null
+    started_at: Date | null
+    completed_at: Date | null
+    cancelled_at: Date | null
+    selected_contact_count: number | null
+    total_messages: number | null
+    queued_count: number | null
+    sent_count: number | null
+    failed_count: number | null
+    skipped_count: number | null
+    delivered_count: number | null
+    opened_count: number | null
+    clicked_count: number | null
+    replied_count: number | null
+    bounced_count: number | null
+    unsubscribed_count: number | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type MarketingCampaignCountAggregateOutputType = {
+    id: number
+    uuid: number
+    user_uuid: number
+    name: number
+    description: number
+    status: number
+    channels: number
+    filters_snapshot: number
+    email_subject: number
+    email_content: number
+    sms_content: number
+    sender_profile_uuid: number
+    scheduled_at: number
+    started_at: number
+    completed_at: number
+    cancelled_at: number
+    selected_contact_count: number
+    total_messages: number
+    queued_count: number
+    sent_count: number
+    failed_count: number
+    skipped_count: number
+    delivered_count: number
+    opened_count: number
+    clicked_count: number
+    replied_count: number
+    bounced_count: number
+    unsubscribed_count: number
+    created_at: number
+    updated_at: number
+    _all: number
+  }
+
+
+  export type MarketingCampaignAvgAggregateInputType = {
+    id?: true
+    selected_contact_count?: true
+    total_messages?: true
+    queued_count?: true
+    sent_count?: true
+    failed_count?: true
+    skipped_count?: true
+    delivered_count?: true
+    opened_count?: true
+    clicked_count?: true
+    replied_count?: true
+    bounced_count?: true
+    unsubscribed_count?: true
+  }
+
+  export type MarketingCampaignSumAggregateInputType = {
+    id?: true
+    selected_contact_count?: true
+    total_messages?: true
+    queued_count?: true
+    sent_count?: true
+    failed_count?: true
+    skipped_count?: true
+    delivered_count?: true
+    opened_count?: true
+    clicked_count?: true
+    replied_count?: true
+    bounced_count?: true
+    unsubscribed_count?: true
+  }
+
+  export type MarketingCampaignMinAggregateInputType = {
+    id?: true
+    uuid?: true
+    user_uuid?: true
+    name?: true
+    description?: true
+    status?: true
+    email_subject?: true
+    email_content?: true
+    sms_content?: true
+    sender_profile_uuid?: true
+    scheduled_at?: true
+    started_at?: true
+    completed_at?: true
+    cancelled_at?: true
+    selected_contact_count?: true
+    total_messages?: true
+    queued_count?: true
+    sent_count?: true
+    failed_count?: true
+    skipped_count?: true
+    delivered_count?: true
+    opened_count?: true
+    clicked_count?: true
+    replied_count?: true
+    bounced_count?: true
+    unsubscribed_count?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type MarketingCampaignMaxAggregateInputType = {
+    id?: true
+    uuid?: true
+    user_uuid?: true
+    name?: true
+    description?: true
+    status?: true
+    email_subject?: true
+    email_content?: true
+    sms_content?: true
+    sender_profile_uuid?: true
+    scheduled_at?: true
+    started_at?: true
+    completed_at?: true
+    cancelled_at?: true
+    selected_contact_count?: true
+    total_messages?: true
+    queued_count?: true
+    sent_count?: true
+    failed_count?: true
+    skipped_count?: true
+    delivered_count?: true
+    opened_count?: true
+    clicked_count?: true
+    replied_count?: true
+    bounced_count?: true
+    unsubscribed_count?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type MarketingCampaignCountAggregateInputType = {
+    id?: true
+    uuid?: true
+    user_uuid?: true
+    name?: true
+    description?: true
+    status?: true
+    channels?: true
+    filters_snapshot?: true
+    email_subject?: true
+    email_content?: true
+    sms_content?: true
+    sender_profile_uuid?: true
+    scheduled_at?: true
+    started_at?: true
+    completed_at?: true
+    cancelled_at?: true
+    selected_contact_count?: true
+    total_messages?: true
+    queued_count?: true
+    sent_count?: true
+    failed_count?: true
+    skipped_count?: true
+    delivered_count?: true
+    opened_count?: true
+    clicked_count?: true
+    replied_count?: true
+    bounced_count?: true
+    unsubscribed_count?: true
+    created_at?: true
+    updated_at?: true
+    _all?: true
+  }
+
+  export type MarketingCampaignAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MarketingCampaign to aggregate.
+     */
+    where?: MarketingCampaignWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MarketingCampaigns to fetch.
+     */
+    orderBy?: MarketingCampaignOrderByWithRelationInput | MarketingCampaignOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: MarketingCampaignWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MarketingCampaigns from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MarketingCampaigns.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned MarketingCampaigns
+    **/
+    _count?: true | MarketingCampaignCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: MarketingCampaignAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: MarketingCampaignSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: MarketingCampaignMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: MarketingCampaignMaxAggregateInputType
+  }
+
+  export type GetMarketingCampaignAggregateType<T extends MarketingCampaignAggregateArgs> = {
+        [P in keyof T & keyof AggregateMarketingCampaign]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateMarketingCampaign[P]>
+      : GetScalarType<T[P], AggregateMarketingCampaign[P]>
+  }
+
+
+
+
+  export type MarketingCampaignGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MarketingCampaignWhereInput
+    orderBy?: MarketingCampaignOrderByWithAggregationInput | MarketingCampaignOrderByWithAggregationInput[]
+    by: MarketingCampaignScalarFieldEnum[] | MarketingCampaignScalarFieldEnum
+    having?: MarketingCampaignScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: MarketingCampaignCountAggregateInputType | true
+    _avg?: MarketingCampaignAvgAggregateInputType
+    _sum?: MarketingCampaignSumAggregateInputType
+    _min?: MarketingCampaignMinAggregateInputType
+    _max?: MarketingCampaignMaxAggregateInputType
+  }
+
+  export type MarketingCampaignGroupByOutputType = {
+    id: number
+    uuid: string
+    user_uuid: string
+    name: string
+    description: string | null
+    status: $Enums.CampaignStatus
+    channels: $Enums.Channel[]
+    filters_snapshot: JsonValue | null
+    email_subject: string | null
+    email_content: string | null
+    sms_content: string | null
+    sender_profile_uuid: string | null
+    scheduled_at: Date | null
+    started_at: Date | null
+    completed_at: Date | null
+    cancelled_at: Date | null
+    selected_contact_count: number
+    total_messages: number
+    queued_count: number
+    sent_count: number
+    failed_count: number
+    skipped_count: number
+    delivered_count: number
+    opened_count: number
+    clicked_count: number
+    replied_count: number
+    bounced_count: number
+    unsubscribed_count: number
+    created_at: Date
+    updated_at: Date
+    _count: MarketingCampaignCountAggregateOutputType | null
+    _avg: MarketingCampaignAvgAggregateOutputType | null
+    _sum: MarketingCampaignSumAggregateOutputType | null
+    _min: MarketingCampaignMinAggregateOutputType | null
+    _max: MarketingCampaignMaxAggregateOutputType | null
+  }
+
+  type GetMarketingCampaignGroupByPayload<T extends MarketingCampaignGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<MarketingCampaignGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof MarketingCampaignGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], MarketingCampaignGroupByOutputType[P]>
+            : GetScalarType<T[P], MarketingCampaignGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type MarketingCampaignSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uuid?: boolean
+    user_uuid?: boolean
+    name?: boolean
+    description?: boolean
+    status?: boolean
+    channels?: boolean
+    filters_snapshot?: boolean
+    email_subject?: boolean
+    email_content?: boolean
+    sms_content?: boolean
+    sender_profile_uuid?: boolean
+    scheduled_at?: boolean
+    started_at?: boolean
+    completed_at?: boolean
+    cancelled_at?: boolean
+    selected_contact_count?: boolean
+    total_messages?: boolean
+    queued_count?: boolean
+    sent_count?: boolean
+    failed_count?: boolean
+    skipped_count?: boolean
+    delivered_count?: boolean
+    opened_count?: boolean
+    clicked_count?: boolean
+    replied_count?: boolean
+    bounced_count?: boolean
+    unsubscribed_count?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    sender_profile?: boolean | MarketingCampaign$sender_profileArgs<ExtArgs>
+    campaign_contacts?: boolean | MarketingCampaign$campaign_contactsArgs<ExtArgs>
+    outreach_messages?: boolean | MarketingCampaign$outreach_messagesArgs<ExtArgs>
+    interactions?: boolean | MarketingCampaign$interactionsArgs<ExtArgs>
+    _count?: boolean | MarketingCampaignCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["marketingCampaign"]>
+
+  export type MarketingCampaignSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uuid?: boolean
+    user_uuid?: boolean
+    name?: boolean
+    description?: boolean
+    status?: boolean
+    channels?: boolean
+    filters_snapshot?: boolean
+    email_subject?: boolean
+    email_content?: boolean
+    sms_content?: boolean
+    sender_profile_uuid?: boolean
+    scheduled_at?: boolean
+    started_at?: boolean
+    completed_at?: boolean
+    cancelled_at?: boolean
+    selected_contact_count?: boolean
+    total_messages?: boolean
+    queued_count?: boolean
+    sent_count?: boolean
+    failed_count?: boolean
+    skipped_count?: boolean
+    delivered_count?: boolean
+    opened_count?: boolean
+    clicked_count?: boolean
+    replied_count?: boolean
+    bounced_count?: boolean
+    unsubscribed_count?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    sender_profile?: boolean | MarketingCampaign$sender_profileArgs<ExtArgs>
+  }, ExtArgs["result"]["marketingCampaign"]>
+
+  export type MarketingCampaignSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uuid?: boolean
+    user_uuid?: boolean
+    name?: boolean
+    description?: boolean
+    status?: boolean
+    channels?: boolean
+    filters_snapshot?: boolean
+    email_subject?: boolean
+    email_content?: boolean
+    sms_content?: boolean
+    sender_profile_uuid?: boolean
+    scheduled_at?: boolean
+    started_at?: boolean
+    completed_at?: boolean
+    cancelled_at?: boolean
+    selected_contact_count?: boolean
+    total_messages?: boolean
+    queued_count?: boolean
+    sent_count?: boolean
+    failed_count?: boolean
+    skipped_count?: boolean
+    delivered_count?: boolean
+    opened_count?: boolean
+    clicked_count?: boolean
+    replied_count?: boolean
+    bounced_count?: boolean
+    unsubscribed_count?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    sender_profile?: boolean | MarketingCampaign$sender_profileArgs<ExtArgs>
+  }, ExtArgs["result"]["marketingCampaign"]>
+
+  export type MarketingCampaignSelectScalar = {
+    id?: boolean
+    uuid?: boolean
+    user_uuid?: boolean
+    name?: boolean
+    description?: boolean
+    status?: boolean
+    channels?: boolean
+    filters_snapshot?: boolean
+    email_subject?: boolean
+    email_content?: boolean
+    sms_content?: boolean
+    sender_profile_uuid?: boolean
+    scheduled_at?: boolean
+    started_at?: boolean
+    completed_at?: boolean
+    cancelled_at?: boolean
+    selected_contact_count?: boolean
+    total_messages?: boolean
+    queued_count?: boolean
+    sent_count?: boolean
+    failed_count?: boolean
+    skipped_count?: boolean
+    delivered_count?: boolean
+    opened_count?: boolean
+    clicked_count?: boolean
+    replied_count?: boolean
+    bounced_count?: boolean
+    unsubscribed_count?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }
+
+  export type MarketingCampaignOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "name" | "description" | "status" | "channels" | "filters_snapshot" | "email_subject" | "email_content" | "sms_content" | "sender_profile_uuid" | "scheduled_at" | "started_at" | "completed_at" | "cancelled_at" | "selected_contact_count" | "total_messages" | "queued_count" | "sent_count" | "failed_count" | "skipped_count" | "delivered_count" | "opened_count" | "clicked_count" | "replied_count" | "bounced_count" | "unsubscribed_count" | "created_at" | "updated_at", ExtArgs["result"]["marketingCampaign"]>
+  export type MarketingCampaignInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    sender_profile?: boolean | MarketingCampaign$sender_profileArgs<ExtArgs>
+    campaign_contacts?: boolean | MarketingCampaign$campaign_contactsArgs<ExtArgs>
+    outreach_messages?: boolean | MarketingCampaign$outreach_messagesArgs<ExtArgs>
+    interactions?: boolean | MarketingCampaign$interactionsArgs<ExtArgs>
+    _count?: boolean | MarketingCampaignCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type MarketingCampaignIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    sender_profile?: boolean | MarketingCampaign$sender_profileArgs<ExtArgs>
+  }
+  export type MarketingCampaignIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    sender_profile?: boolean | MarketingCampaign$sender_profileArgs<ExtArgs>
+  }
+
+  export type $MarketingCampaignPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "MarketingCampaign"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      sender_profile: Prisma.$SenderProfilePayload<ExtArgs> | null
+      campaign_contacts: Prisma.$MarketingCampaignContactPayload<ExtArgs>[]
+      outreach_messages: Prisma.$OutreachMessagePayload<ExtArgs>[]
+      interactions: Prisma.$InteractionPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      uuid: string
+      user_uuid: string
+      name: string
+      description: string | null
+      status: $Enums.CampaignStatus
+      channels: $Enums.Channel[]
+      filters_snapshot: Prisma.JsonValue | null
+      email_subject: string | null
+      email_content: string | null
+      sms_content: string | null
+      sender_profile_uuid: string | null
+      scheduled_at: Date | null
+      started_at: Date | null
+      completed_at: Date | null
+      cancelled_at: Date | null
+      selected_contact_count: number
+      total_messages: number
+      queued_count: number
+      sent_count: number
+      failed_count: number
+      skipped_count: number
+      delivered_count: number
+      opened_count: number
+      clicked_count: number
+      replied_count: number
+      bounced_count: number
+      unsubscribed_count: number
+      created_at: Date
+      updated_at: Date
+    }, ExtArgs["result"]["marketingCampaign"]>
+    composites: {}
+  }
+
+  type MarketingCampaignGetPayload<S extends boolean | null | undefined | MarketingCampaignDefaultArgs> = $Result.GetResult<Prisma.$MarketingCampaignPayload, S>
+
+  type MarketingCampaignCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<MarketingCampaignFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: MarketingCampaignCountAggregateInputType | true
+    }
+
+  export interface MarketingCampaignDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['MarketingCampaign'], meta: { name: 'MarketingCampaign' } }
+    /**
+     * Find zero or one MarketingCampaign that matches the filter.
+     * @param {MarketingCampaignFindUniqueArgs} args - Arguments to find a MarketingCampaign
+     * @example
+     * // Get one MarketingCampaign
+     * const marketingCampaign = await prisma.marketingCampaign.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends MarketingCampaignFindUniqueArgs>(args: SelectSubset<T, MarketingCampaignFindUniqueArgs<ExtArgs>>): Prisma__MarketingCampaignClient<$Result.GetResult<Prisma.$MarketingCampaignPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one MarketingCampaign that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {MarketingCampaignFindUniqueOrThrowArgs} args - Arguments to find a MarketingCampaign
+     * @example
+     * // Get one MarketingCampaign
+     * const marketingCampaign = await prisma.marketingCampaign.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends MarketingCampaignFindUniqueOrThrowArgs>(args: SelectSubset<T, MarketingCampaignFindUniqueOrThrowArgs<ExtArgs>>): Prisma__MarketingCampaignClient<$Result.GetResult<Prisma.$MarketingCampaignPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first MarketingCampaign that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketingCampaignFindFirstArgs} args - Arguments to find a MarketingCampaign
+     * @example
+     * // Get one MarketingCampaign
+     * const marketingCampaign = await prisma.marketingCampaign.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends MarketingCampaignFindFirstArgs>(args?: SelectSubset<T, MarketingCampaignFindFirstArgs<ExtArgs>>): Prisma__MarketingCampaignClient<$Result.GetResult<Prisma.$MarketingCampaignPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first MarketingCampaign that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketingCampaignFindFirstOrThrowArgs} args - Arguments to find a MarketingCampaign
+     * @example
+     * // Get one MarketingCampaign
+     * const marketingCampaign = await prisma.marketingCampaign.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends MarketingCampaignFindFirstOrThrowArgs>(args?: SelectSubset<T, MarketingCampaignFindFirstOrThrowArgs<ExtArgs>>): Prisma__MarketingCampaignClient<$Result.GetResult<Prisma.$MarketingCampaignPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more MarketingCampaigns that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketingCampaignFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all MarketingCampaigns
+     * const marketingCampaigns = await prisma.marketingCampaign.findMany()
+     * 
+     * // Get first 10 MarketingCampaigns
+     * const marketingCampaigns = await prisma.marketingCampaign.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const marketingCampaignWithIdOnly = await prisma.marketingCampaign.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends MarketingCampaignFindManyArgs>(args?: SelectSubset<T, MarketingCampaignFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketingCampaignPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a MarketingCampaign.
+     * @param {MarketingCampaignCreateArgs} args - Arguments to create a MarketingCampaign.
+     * @example
+     * // Create one MarketingCampaign
+     * const MarketingCampaign = await prisma.marketingCampaign.create({
+     *   data: {
+     *     // ... data to create a MarketingCampaign
+     *   }
+     * })
+     * 
+     */
+    create<T extends MarketingCampaignCreateArgs>(args: SelectSubset<T, MarketingCampaignCreateArgs<ExtArgs>>): Prisma__MarketingCampaignClient<$Result.GetResult<Prisma.$MarketingCampaignPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many MarketingCampaigns.
+     * @param {MarketingCampaignCreateManyArgs} args - Arguments to create many MarketingCampaigns.
+     * @example
+     * // Create many MarketingCampaigns
+     * const marketingCampaign = await prisma.marketingCampaign.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends MarketingCampaignCreateManyArgs>(args?: SelectSubset<T, MarketingCampaignCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many MarketingCampaigns and returns the data saved in the database.
+     * @param {MarketingCampaignCreateManyAndReturnArgs} args - Arguments to create many MarketingCampaigns.
+     * @example
+     * // Create many MarketingCampaigns
+     * const marketingCampaign = await prisma.marketingCampaign.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many MarketingCampaigns and only return the `id`
+     * const marketingCampaignWithIdOnly = await prisma.marketingCampaign.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends MarketingCampaignCreateManyAndReturnArgs>(args?: SelectSubset<T, MarketingCampaignCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketingCampaignPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a MarketingCampaign.
+     * @param {MarketingCampaignDeleteArgs} args - Arguments to delete one MarketingCampaign.
+     * @example
+     * // Delete one MarketingCampaign
+     * const MarketingCampaign = await prisma.marketingCampaign.delete({
+     *   where: {
+     *     // ... filter to delete one MarketingCampaign
+     *   }
+     * })
+     * 
+     */
+    delete<T extends MarketingCampaignDeleteArgs>(args: SelectSubset<T, MarketingCampaignDeleteArgs<ExtArgs>>): Prisma__MarketingCampaignClient<$Result.GetResult<Prisma.$MarketingCampaignPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one MarketingCampaign.
+     * @param {MarketingCampaignUpdateArgs} args - Arguments to update one MarketingCampaign.
+     * @example
+     * // Update one MarketingCampaign
+     * const marketingCampaign = await prisma.marketingCampaign.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends MarketingCampaignUpdateArgs>(args: SelectSubset<T, MarketingCampaignUpdateArgs<ExtArgs>>): Prisma__MarketingCampaignClient<$Result.GetResult<Prisma.$MarketingCampaignPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more MarketingCampaigns.
+     * @param {MarketingCampaignDeleteManyArgs} args - Arguments to filter MarketingCampaigns to delete.
+     * @example
+     * // Delete a few MarketingCampaigns
+     * const { count } = await prisma.marketingCampaign.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends MarketingCampaignDeleteManyArgs>(args?: SelectSubset<T, MarketingCampaignDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MarketingCampaigns.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketingCampaignUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many MarketingCampaigns
+     * const marketingCampaign = await prisma.marketingCampaign.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends MarketingCampaignUpdateManyArgs>(args: SelectSubset<T, MarketingCampaignUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MarketingCampaigns and returns the data updated in the database.
+     * @param {MarketingCampaignUpdateManyAndReturnArgs} args - Arguments to update many MarketingCampaigns.
+     * @example
+     * // Update many MarketingCampaigns
+     * const marketingCampaign = await prisma.marketingCampaign.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more MarketingCampaigns and only return the `id`
+     * const marketingCampaignWithIdOnly = await prisma.marketingCampaign.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends MarketingCampaignUpdateManyAndReturnArgs>(args: SelectSubset<T, MarketingCampaignUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketingCampaignPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one MarketingCampaign.
+     * @param {MarketingCampaignUpsertArgs} args - Arguments to update or create a MarketingCampaign.
+     * @example
+     * // Update or create a MarketingCampaign
+     * const marketingCampaign = await prisma.marketingCampaign.upsert({
+     *   create: {
+     *     // ... data to create a MarketingCampaign
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the MarketingCampaign we want to update
+     *   }
+     * })
+     */
+    upsert<T extends MarketingCampaignUpsertArgs>(args: SelectSubset<T, MarketingCampaignUpsertArgs<ExtArgs>>): Prisma__MarketingCampaignClient<$Result.GetResult<Prisma.$MarketingCampaignPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of MarketingCampaigns.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketingCampaignCountArgs} args - Arguments to filter MarketingCampaigns to count.
+     * @example
+     * // Count the number of MarketingCampaigns
+     * const count = await prisma.marketingCampaign.count({
+     *   where: {
+     *     // ... the filter for the MarketingCampaigns we want to count
+     *   }
+     * })
+    **/
+    count<T extends MarketingCampaignCountArgs>(
+      args?: Subset<T, MarketingCampaignCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], MarketingCampaignCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a MarketingCampaign.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketingCampaignAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends MarketingCampaignAggregateArgs>(args: Subset<T, MarketingCampaignAggregateArgs>): Prisma.PrismaPromise<GetMarketingCampaignAggregateType<T>>
+
+    /**
+     * Group by MarketingCampaign.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketingCampaignGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends MarketingCampaignGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: MarketingCampaignGroupByArgs['orderBy'] }
+        : { orderBy?: MarketingCampaignGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, MarketingCampaignGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMarketingCampaignGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the MarketingCampaign model
+   */
+  readonly fields: MarketingCampaignFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for MarketingCampaign.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__MarketingCampaignClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    sender_profile<T extends MarketingCampaign$sender_profileArgs<ExtArgs> = {}>(args?: Subset<T, MarketingCampaign$sender_profileArgs<ExtArgs>>): Prisma__SenderProfileClient<$Result.GetResult<Prisma.$SenderProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    campaign_contacts<T extends MarketingCampaign$campaign_contactsArgs<ExtArgs> = {}>(args?: Subset<T, MarketingCampaign$campaign_contactsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketingCampaignContactPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    outreach_messages<T extends MarketingCampaign$outreach_messagesArgs<ExtArgs> = {}>(args?: Subset<T, MarketingCampaign$outreach_messagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OutreachMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    interactions<T extends MarketingCampaign$interactionsArgs<ExtArgs> = {}>(args?: Subset<T, MarketingCampaign$interactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InteractionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the MarketingCampaign model
+   */
+  interface MarketingCampaignFieldRefs {
+    readonly id: FieldRef<"MarketingCampaign", 'Int'>
+    readonly uuid: FieldRef<"MarketingCampaign", 'String'>
+    readonly user_uuid: FieldRef<"MarketingCampaign", 'String'>
+    readonly name: FieldRef<"MarketingCampaign", 'String'>
+    readonly description: FieldRef<"MarketingCampaign", 'String'>
+    readonly status: FieldRef<"MarketingCampaign", 'CampaignStatus'>
+    readonly channels: FieldRef<"MarketingCampaign", 'Channel[]'>
+    readonly filters_snapshot: FieldRef<"MarketingCampaign", 'Json'>
+    readonly email_subject: FieldRef<"MarketingCampaign", 'String'>
+    readonly email_content: FieldRef<"MarketingCampaign", 'String'>
+    readonly sms_content: FieldRef<"MarketingCampaign", 'String'>
+    readonly sender_profile_uuid: FieldRef<"MarketingCampaign", 'String'>
+    readonly scheduled_at: FieldRef<"MarketingCampaign", 'DateTime'>
+    readonly started_at: FieldRef<"MarketingCampaign", 'DateTime'>
+    readonly completed_at: FieldRef<"MarketingCampaign", 'DateTime'>
+    readonly cancelled_at: FieldRef<"MarketingCampaign", 'DateTime'>
+    readonly selected_contact_count: FieldRef<"MarketingCampaign", 'Int'>
+    readonly total_messages: FieldRef<"MarketingCampaign", 'Int'>
+    readonly queued_count: FieldRef<"MarketingCampaign", 'Int'>
+    readonly sent_count: FieldRef<"MarketingCampaign", 'Int'>
+    readonly failed_count: FieldRef<"MarketingCampaign", 'Int'>
+    readonly skipped_count: FieldRef<"MarketingCampaign", 'Int'>
+    readonly delivered_count: FieldRef<"MarketingCampaign", 'Int'>
+    readonly opened_count: FieldRef<"MarketingCampaign", 'Int'>
+    readonly clicked_count: FieldRef<"MarketingCampaign", 'Int'>
+    readonly replied_count: FieldRef<"MarketingCampaign", 'Int'>
+    readonly bounced_count: FieldRef<"MarketingCampaign", 'Int'>
+    readonly unsubscribed_count: FieldRef<"MarketingCampaign", 'Int'>
+    readonly created_at: FieldRef<"MarketingCampaign", 'DateTime'>
+    readonly updated_at: FieldRef<"MarketingCampaign", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * MarketingCampaign findUnique
+   */
+  export type MarketingCampaignFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketingCampaign
+     */
+    select?: MarketingCampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketingCampaign
+     */
+    omit?: MarketingCampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketingCampaignInclude<ExtArgs> | null
+    /**
+     * Filter, which MarketingCampaign to fetch.
+     */
+    where: MarketingCampaignWhereUniqueInput
+  }
+
+  /**
+   * MarketingCampaign findUniqueOrThrow
+   */
+  export type MarketingCampaignFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketingCampaign
+     */
+    select?: MarketingCampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketingCampaign
+     */
+    omit?: MarketingCampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketingCampaignInclude<ExtArgs> | null
+    /**
+     * Filter, which MarketingCampaign to fetch.
+     */
+    where: MarketingCampaignWhereUniqueInput
+  }
+
+  /**
+   * MarketingCampaign findFirst
+   */
+  export type MarketingCampaignFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketingCampaign
+     */
+    select?: MarketingCampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketingCampaign
+     */
+    omit?: MarketingCampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketingCampaignInclude<ExtArgs> | null
+    /**
+     * Filter, which MarketingCampaign to fetch.
+     */
+    where?: MarketingCampaignWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MarketingCampaigns to fetch.
+     */
+    orderBy?: MarketingCampaignOrderByWithRelationInput | MarketingCampaignOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MarketingCampaigns.
+     */
+    cursor?: MarketingCampaignWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MarketingCampaigns from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MarketingCampaigns.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MarketingCampaigns.
+     */
+    distinct?: MarketingCampaignScalarFieldEnum | MarketingCampaignScalarFieldEnum[]
+  }
+
+  /**
+   * MarketingCampaign findFirstOrThrow
+   */
+  export type MarketingCampaignFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketingCampaign
+     */
+    select?: MarketingCampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketingCampaign
+     */
+    omit?: MarketingCampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketingCampaignInclude<ExtArgs> | null
+    /**
+     * Filter, which MarketingCampaign to fetch.
+     */
+    where?: MarketingCampaignWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MarketingCampaigns to fetch.
+     */
+    orderBy?: MarketingCampaignOrderByWithRelationInput | MarketingCampaignOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MarketingCampaigns.
+     */
+    cursor?: MarketingCampaignWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MarketingCampaigns from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MarketingCampaigns.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MarketingCampaigns.
+     */
+    distinct?: MarketingCampaignScalarFieldEnum | MarketingCampaignScalarFieldEnum[]
+  }
+
+  /**
+   * MarketingCampaign findMany
+   */
+  export type MarketingCampaignFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketingCampaign
+     */
+    select?: MarketingCampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketingCampaign
+     */
+    omit?: MarketingCampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketingCampaignInclude<ExtArgs> | null
+    /**
+     * Filter, which MarketingCampaigns to fetch.
+     */
+    where?: MarketingCampaignWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MarketingCampaigns to fetch.
+     */
+    orderBy?: MarketingCampaignOrderByWithRelationInput | MarketingCampaignOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing MarketingCampaigns.
+     */
+    cursor?: MarketingCampaignWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MarketingCampaigns from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MarketingCampaigns.
+     */
+    skip?: number
+    distinct?: MarketingCampaignScalarFieldEnum | MarketingCampaignScalarFieldEnum[]
+  }
+
+  /**
+   * MarketingCampaign create
+   */
+  export type MarketingCampaignCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketingCampaign
+     */
+    select?: MarketingCampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketingCampaign
+     */
+    omit?: MarketingCampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketingCampaignInclude<ExtArgs> | null
+    /**
+     * The data needed to create a MarketingCampaign.
+     */
+    data: XOR<MarketingCampaignCreateInput, MarketingCampaignUncheckedCreateInput>
+  }
+
+  /**
+   * MarketingCampaign createMany
+   */
+  export type MarketingCampaignCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many MarketingCampaigns.
+     */
+    data: MarketingCampaignCreateManyInput | MarketingCampaignCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * MarketingCampaign createManyAndReturn
+   */
+  export type MarketingCampaignCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketingCampaign
+     */
+    select?: MarketingCampaignSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketingCampaign
+     */
+    omit?: MarketingCampaignOmit<ExtArgs> | null
+    /**
+     * The data used to create many MarketingCampaigns.
+     */
+    data: MarketingCampaignCreateManyInput | MarketingCampaignCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketingCampaignIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * MarketingCampaign update
+   */
+  export type MarketingCampaignUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketingCampaign
+     */
+    select?: MarketingCampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketingCampaign
+     */
+    omit?: MarketingCampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketingCampaignInclude<ExtArgs> | null
+    /**
+     * The data needed to update a MarketingCampaign.
+     */
+    data: XOR<MarketingCampaignUpdateInput, MarketingCampaignUncheckedUpdateInput>
+    /**
+     * Choose, which MarketingCampaign to update.
+     */
+    where: MarketingCampaignWhereUniqueInput
+  }
+
+  /**
+   * MarketingCampaign updateMany
+   */
+  export type MarketingCampaignUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update MarketingCampaigns.
+     */
+    data: XOR<MarketingCampaignUpdateManyMutationInput, MarketingCampaignUncheckedUpdateManyInput>
+    /**
+     * Filter which MarketingCampaigns to update
+     */
+    where?: MarketingCampaignWhereInput
+    /**
+     * Limit how many MarketingCampaigns to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * MarketingCampaign updateManyAndReturn
+   */
+  export type MarketingCampaignUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketingCampaign
+     */
+    select?: MarketingCampaignSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketingCampaign
+     */
+    omit?: MarketingCampaignOmit<ExtArgs> | null
+    /**
+     * The data used to update MarketingCampaigns.
+     */
+    data: XOR<MarketingCampaignUpdateManyMutationInput, MarketingCampaignUncheckedUpdateManyInput>
+    /**
+     * Filter which MarketingCampaigns to update
+     */
+    where?: MarketingCampaignWhereInput
+    /**
+     * Limit how many MarketingCampaigns to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketingCampaignIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * MarketingCampaign upsert
+   */
+  export type MarketingCampaignUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketingCampaign
+     */
+    select?: MarketingCampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketingCampaign
+     */
+    omit?: MarketingCampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketingCampaignInclude<ExtArgs> | null
+    /**
+     * The filter to search for the MarketingCampaign to update in case it exists.
+     */
+    where: MarketingCampaignWhereUniqueInput
+    /**
+     * In case the MarketingCampaign found by the `where` argument doesn't exist, create a new MarketingCampaign with this data.
+     */
+    create: XOR<MarketingCampaignCreateInput, MarketingCampaignUncheckedCreateInput>
+    /**
+     * In case the MarketingCampaign was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<MarketingCampaignUpdateInput, MarketingCampaignUncheckedUpdateInput>
+  }
+
+  /**
+   * MarketingCampaign delete
+   */
+  export type MarketingCampaignDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketingCampaign
+     */
+    select?: MarketingCampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketingCampaign
+     */
+    omit?: MarketingCampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketingCampaignInclude<ExtArgs> | null
+    /**
+     * Filter which MarketingCampaign to delete.
+     */
+    where: MarketingCampaignWhereUniqueInput
+  }
+
+  /**
+   * MarketingCampaign deleteMany
+   */
+  export type MarketingCampaignDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MarketingCampaigns to delete
+     */
+    where?: MarketingCampaignWhereInput
+    /**
+     * Limit how many MarketingCampaigns to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * MarketingCampaign.sender_profile
+   */
+  export type MarketingCampaign$sender_profileArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SenderProfile
+     */
+    select?: SenderProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SenderProfile
+     */
+    omit?: SenderProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SenderProfileInclude<ExtArgs> | null
+    where?: SenderProfileWhereInput
+  }
+
+  /**
+   * MarketingCampaign.campaign_contacts
+   */
+  export type MarketingCampaign$campaign_contactsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketingCampaignContact
+     */
+    select?: MarketingCampaignContactSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketingCampaignContact
+     */
+    omit?: MarketingCampaignContactOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketingCampaignContactInclude<ExtArgs> | null
+    where?: MarketingCampaignContactWhereInput
+    orderBy?: MarketingCampaignContactOrderByWithRelationInput | MarketingCampaignContactOrderByWithRelationInput[]
+    cursor?: MarketingCampaignContactWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MarketingCampaignContactScalarFieldEnum | MarketingCampaignContactScalarFieldEnum[]
+  }
+
+  /**
+   * MarketingCampaign.outreach_messages
+   */
+  export type MarketingCampaign$outreach_messagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OutreachMessage
+     */
+    select?: OutreachMessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OutreachMessage
+     */
+    omit?: OutreachMessageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OutreachMessageInclude<ExtArgs> | null
+    where?: OutreachMessageWhereInput
+    orderBy?: OutreachMessageOrderByWithRelationInput | OutreachMessageOrderByWithRelationInput[]
+    cursor?: OutreachMessageWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OutreachMessageScalarFieldEnum | OutreachMessageScalarFieldEnum[]
+  }
+
+  /**
+   * MarketingCampaign.interactions
+   */
+  export type MarketingCampaign$interactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Interaction
+     */
+    select?: InteractionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Interaction
+     */
+    omit?: InteractionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InteractionInclude<ExtArgs> | null
+    where?: InteractionWhereInput
+    orderBy?: InteractionOrderByWithRelationInput | InteractionOrderByWithRelationInput[]
+    cursor?: InteractionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: InteractionScalarFieldEnum | InteractionScalarFieldEnum[]
+  }
+
+  /**
+   * MarketingCampaign without action
+   */
+  export type MarketingCampaignDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketingCampaign
+     */
+    select?: MarketingCampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketingCampaign
+     */
+    omit?: MarketingCampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketingCampaignInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model MarketingCampaignContact
+   */
+
+  export type AggregateMarketingCampaignContact = {
+    _count: MarketingCampaignContactCountAggregateOutputType | null
+    _avg: MarketingCampaignContactAvgAggregateOutputType | null
+    _sum: MarketingCampaignContactSumAggregateOutputType | null
+    _min: MarketingCampaignContactMinAggregateOutputType | null
+    _max: MarketingCampaignContactMaxAggregateOutputType | null
+  }
+
+  export type MarketingCampaignContactAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type MarketingCampaignContactSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type MarketingCampaignContactMinAggregateOutputType = {
+    id: number | null
+    uuid: string | null
+    campaign_uuid: string | null
+    contact_uuid: string | null
+    channel: $Enums.Channel | null
+    status: $Enums.CampaignContactStatus | null
+    error_message: string | null
+    sent_at: Date | null
+    delivered_at: Date | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type MarketingCampaignContactMaxAggregateOutputType = {
+    id: number | null
+    uuid: string | null
+    campaign_uuid: string | null
+    contact_uuid: string | null
+    channel: $Enums.Channel | null
+    status: $Enums.CampaignContactStatus | null
+    error_message: string | null
+    sent_at: Date | null
+    delivered_at: Date | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type MarketingCampaignContactCountAggregateOutputType = {
+    id: number
+    uuid: number
+    campaign_uuid: number
+    contact_uuid: number
+    channel: number
+    status: number
+    error_message: number
+    sent_at: number
+    delivered_at: number
+    created_at: number
+    updated_at: number
+    _all: number
+  }
+
+
+  export type MarketingCampaignContactAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type MarketingCampaignContactSumAggregateInputType = {
+    id?: true
+  }
+
+  export type MarketingCampaignContactMinAggregateInputType = {
+    id?: true
+    uuid?: true
+    campaign_uuid?: true
+    contact_uuid?: true
+    channel?: true
+    status?: true
+    error_message?: true
+    sent_at?: true
+    delivered_at?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type MarketingCampaignContactMaxAggregateInputType = {
+    id?: true
+    uuid?: true
+    campaign_uuid?: true
+    contact_uuid?: true
+    channel?: true
+    status?: true
+    error_message?: true
+    sent_at?: true
+    delivered_at?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type MarketingCampaignContactCountAggregateInputType = {
+    id?: true
+    uuid?: true
+    campaign_uuid?: true
+    contact_uuid?: true
+    channel?: true
+    status?: true
+    error_message?: true
+    sent_at?: true
+    delivered_at?: true
+    created_at?: true
+    updated_at?: true
+    _all?: true
+  }
+
+  export type MarketingCampaignContactAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MarketingCampaignContact to aggregate.
+     */
+    where?: MarketingCampaignContactWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MarketingCampaignContacts to fetch.
+     */
+    orderBy?: MarketingCampaignContactOrderByWithRelationInput | MarketingCampaignContactOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: MarketingCampaignContactWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MarketingCampaignContacts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MarketingCampaignContacts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned MarketingCampaignContacts
+    **/
+    _count?: true | MarketingCampaignContactCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: MarketingCampaignContactAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: MarketingCampaignContactSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: MarketingCampaignContactMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: MarketingCampaignContactMaxAggregateInputType
+  }
+
+  export type GetMarketingCampaignContactAggregateType<T extends MarketingCampaignContactAggregateArgs> = {
+        [P in keyof T & keyof AggregateMarketingCampaignContact]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateMarketingCampaignContact[P]>
+      : GetScalarType<T[P], AggregateMarketingCampaignContact[P]>
+  }
+
+
+
+
+  export type MarketingCampaignContactGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MarketingCampaignContactWhereInput
+    orderBy?: MarketingCampaignContactOrderByWithAggregationInput | MarketingCampaignContactOrderByWithAggregationInput[]
+    by: MarketingCampaignContactScalarFieldEnum[] | MarketingCampaignContactScalarFieldEnum
+    having?: MarketingCampaignContactScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: MarketingCampaignContactCountAggregateInputType | true
+    _avg?: MarketingCampaignContactAvgAggregateInputType
+    _sum?: MarketingCampaignContactSumAggregateInputType
+    _min?: MarketingCampaignContactMinAggregateInputType
+    _max?: MarketingCampaignContactMaxAggregateInputType
+  }
+
+  export type MarketingCampaignContactGroupByOutputType = {
+    id: number
+    uuid: string
+    campaign_uuid: string
+    contact_uuid: string
+    channel: $Enums.Channel
+    status: $Enums.CampaignContactStatus
+    error_message: string | null
+    sent_at: Date | null
+    delivered_at: Date | null
+    created_at: Date
+    updated_at: Date
+    _count: MarketingCampaignContactCountAggregateOutputType | null
+    _avg: MarketingCampaignContactAvgAggregateOutputType | null
+    _sum: MarketingCampaignContactSumAggregateOutputType | null
+    _min: MarketingCampaignContactMinAggregateOutputType | null
+    _max: MarketingCampaignContactMaxAggregateOutputType | null
+  }
+
+  type GetMarketingCampaignContactGroupByPayload<T extends MarketingCampaignContactGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<MarketingCampaignContactGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof MarketingCampaignContactGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], MarketingCampaignContactGroupByOutputType[P]>
+            : GetScalarType<T[P], MarketingCampaignContactGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type MarketingCampaignContactSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uuid?: boolean
+    campaign_uuid?: boolean
+    contact_uuid?: boolean
+    channel?: boolean
+    status?: boolean
+    error_message?: boolean
+    sent_at?: boolean
+    delivered_at?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    campaign?: boolean | MarketingCampaignDefaultArgs<ExtArgs>
+    contact?: boolean | ContactDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["marketingCampaignContact"]>
+
+  export type MarketingCampaignContactSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uuid?: boolean
+    campaign_uuid?: boolean
+    contact_uuid?: boolean
+    channel?: boolean
+    status?: boolean
+    error_message?: boolean
+    sent_at?: boolean
+    delivered_at?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    campaign?: boolean | MarketingCampaignDefaultArgs<ExtArgs>
+    contact?: boolean | ContactDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["marketingCampaignContact"]>
+
+  export type MarketingCampaignContactSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uuid?: boolean
+    campaign_uuid?: boolean
+    contact_uuid?: boolean
+    channel?: boolean
+    status?: boolean
+    error_message?: boolean
+    sent_at?: boolean
+    delivered_at?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    campaign?: boolean | MarketingCampaignDefaultArgs<ExtArgs>
+    contact?: boolean | ContactDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["marketingCampaignContact"]>
+
+  export type MarketingCampaignContactSelectScalar = {
+    id?: boolean
+    uuid?: boolean
+    campaign_uuid?: boolean
+    contact_uuid?: boolean
+    channel?: boolean
+    status?: boolean
+    error_message?: boolean
+    sent_at?: boolean
+    delivered_at?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }
+
+  export type MarketingCampaignContactOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "campaign_uuid" | "contact_uuid" | "channel" | "status" | "error_message" | "sent_at" | "delivered_at" | "created_at" | "updated_at", ExtArgs["result"]["marketingCampaignContact"]>
+  export type MarketingCampaignContactInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    campaign?: boolean | MarketingCampaignDefaultArgs<ExtArgs>
+    contact?: boolean | ContactDefaultArgs<ExtArgs>
+  }
+  export type MarketingCampaignContactIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    campaign?: boolean | MarketingCampaignDefaultArgs<ExtArgs>
+    contact?: boolean | ContactDefaultArgs<ExtArgs>
+  }
+  export type MarketingCampaignContactIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    campaign?: boolean | MarketingCampaignDefaultArgs<ExtArgs>
+    contact?: boolean | ContactDefaultArgs<ExtArgs>
+  }
+
+  export type $MarketingCampaignContactPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "MarketingCampaignContact"
+    objects: {
+      campaign: Prisma.$MarketingCampaignPayload<ExtArgs>
+      contact: Prisma.$ContactPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      uuid: string
+      campaign_uuid: string
+      contact_uuid: string
+      channel: $Enums.Channel
+      status: $Enums.CampaignContactStatus
+      error_message: string | null
+      sent_at: Date | null
+      delivered_at: Date | null
+      created_at: Date
+      updated_at: Date
+    }, ExtArgs["result"]["marketingCampaignContact"]>
+    composites: {}
+  }
+
+  type MarketingCampaignContactGetPayload<S extends boolean | null | undefined | MarketingCampaignContactDefaultArgs> = $Result.GetResult<Prisma.$MarketingCampaignContactPayload, S>
+
+  type MarketingCampaignContactCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<MarketingCampaignContactFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: MarketingCampaignContactCountAggregateInputType | true
+    }
+
+  export interface MarketingCampaignContactDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['MarketingCampaignContact'], meta: { name: 'MarketingCampaignContact' } }
+    /**
+     * Find zero or one MarketingCampaignContact that matches the filter.
+     * @param {MarketingCampaignContactFindUniqueArgs} args - Arguments to find a MarketingCampaignContact
+     * @example
+     * // Get one MarketingCampaignContact
+     * const marketingCampaignContact = await prisma.marketingCampaignContact.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends MarketingCampaignContactFindUniqueArgs>(args: SelectSubset<T, MarketingCampaignContactFindUniqueArgs<ExtArgs>>): Prisma__MarketingCampaignContactClient<$Result.GetResult<Prisma.$MarketingCampaignContactPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one MarketingCampaignContact that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {MarketingCampaignContactFindUniqueOrThrowArgs} args - Arguments to find a MarketingCampaignContact
+     * @example
+     * // Get one MarketingCampaignContact
+     * const marketingCampaignContact = await prisma.marketingCampaignContact.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends MarketingCampaignContactFindUniqueOrThrowArgs>(args: SelectSubset<T, MarketingCampaignContactFindUniqueOrThrowArgs<ExtArgs>>): Prisma__MarketingCampaignContactClient<$Result.GetResult<Prisma.$MarketingCampaignContactPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first MarketingCampaignContact that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketingCampaignContactFindFirstArgs} args - Arguments to find a MarketingCampaignContact
+     * @example
+     * // Get one MarketingCampaignContact
+     * const marketingCampaignContact = await prisma.marketingCampaignContact.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends MarketingCampaignContactFindFirstArgs>(args?: SelectSubset<T, MarketingCampaignContactFindFirstArgs<ExtArgs>>): Prisma__MarketingCampaignContactClient<$Result.GetResult<Prisma.$MarketingCampaignContactPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first MarketingCampaignContact that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketingCampaignContactFindFirstOrThrowArgs} args - Arguments to find a MarketingCampaignContact
+     * @example
+     * // Get one MarketingCampaignContact
+     * const marketingCampaignContact = await prisma.marketingCampaignContact.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends MarketingCampaignContactFindFirstOrThrowArgs>(args?: SelectSubset<T, MarketingCampaignContactFindFirstOrThrowArgs<ExtArgs>>): Prisma__MarketingCampaignContactClient<$Result.GetResult<Prisma.$MarketingCampaignContactPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more MarketingCampaignContacts that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketingCampaignContactFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all MarketingCampaignContacts
+     * const marketingCampaignContacts = await prisma.marketingCampaignContact.findMany()
+     * 
+     * // Get first 10 MarketingCampaignContacts
+     * const marketingCampaignContacts = await prisma.marketingCampaignContact.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const marketingCampaignContactWithIdOnly = await prisma.marketingCampaignContact.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends MarketingCampaignContactFindManyArgs>(args?: SelectSubset<T, MarketingCampaignContactFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketingCampaignContactPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a MarketingCampaignContact.
+     * @param {MarketingCampaignContactCreateArgs} args - Arguments to create a MarketingCampaignContact.
+     * @example
+     * // Create one MarketingCampaignContact
+     * const MarketingCampaignContact = await prisma.marketingCampaignContact.create({
+     *   data: {
+     *     // ... data to create a MarketingCampaignContact
+     *   }
+     * })
+     * 
+     */
+    create<T extends MarketingCampaignContactCreateArgs>(args: SelectSubset<T, MarketingCampaignContactCreateArgs<ExtArgs>>): Prisma__MarketingCampaignContactClient<$Result.GetResult<Prisma.$MarketingCampaignContactPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many MarketingCampaignContacts.
+     * @param {MarketingCampaignContactCreateManyArgs} args - Arguments to create many MarketingCampaignContacts.
+     * @example
+     * // Create many MarketingCampaignContacts
+     * const marketingCampaignContact = await prisma.marketingCampaignContact.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends MarketingCampaignContactCreateManyArgs>(args?: SelectSubset<T, MarketingCampaignContactCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many MarketingCampaignContacts and returns the data saved in the database.
+     * @param {MarketingCampaignContactCreateManyAndReturnArgs} args - Arguments to create many MarketingCampaignContacts.
+     * @example
+     * // Create many MarketingCampaignContacts
+     * const marketingCampaignContact = await prisma.marketingCampaignContact.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many MarketingCampaignContacts and only return the `id`
+     * const marketingCampaignContactWithIdOnly = await prisma.marketingCampaignContact.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends MarketingCampaignContactCreateManyAndReturnArgs>(args?: SelectSubset<T, MarketingCampaignContactCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketingCampaignContactPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a MarketingCampaignContact.
+     * @param {MarketingCampaignContactDeleteArgs} args - Arguments to delete one MarketingCampaignContact.
+     * @example
+     * // Delete one MarketingCampaignContact
+     * const MarketingCampaignContact = await prisma.marketingCampaignContact.delete({
+     *   where: {
+     *     // ... filter to delete one MarketingCampaignContact
+     *   }
+     * })
+     * 
+     */
+    delete<T extends MarketingCampaignContactDeleteArgs>(args: SelectSubset<T, MarketingCampaignContactDeleteArgs<ExtArgs>>): Prisma__MarketingCampaignContactClient<$Result.GetResult<Prisma.$MarketingCampaignContactPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one MarketingCampaignContact.
+     * @param {MarketingCampaignContactUpdateArgs} args - Arguments to update one MarketingCampaignContact.
+     * @example
+     * // Update one MarketingCampaignContact
+     * const marketingCampaignContact = await prisma.marketingCampaignContact.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends MarketingCampaignContactUpdateArgs>(args: SelectSubset<T, MarketingCampaignContactUpdateArgs<ExtArgs>>): Prisma__MarketingCampaignContactClient<$Result.GetResult<Prisma.$MarketingCampaignContactPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more MarketingCampaignContacts.
+     * @param {MarketingCampaignContactDeleteManyArgs} args - Arguments to filter MarketingCampaignContacts to delete.
+     * @example
+     * // Delete a few MarketingCampaignContacts
+     * const { count } = await prisma.marketingCampaignContact.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends MarketingCampaignContactDeleteManyArgs>(args?: SelectSubset<T, MarketingCampaignContactDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MarketingCampaignContacts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketingCampaignContactUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many MarketingCampaignContacts
+     * const marketingCampaignContact = await prisma.marketingCampaignContact.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends MarketingCampaignContactUpdateManyArgs>(args: SelectSubset<T, MarketingCampaignContactUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MarketingCampaignContacts and returns the data updated in the database.
+     * @param {MarketingCampaignContactUpdateManyAndReturnArgs} args - Arguments to update many MarketingCampaignContacts.
+     * @example
+     * // Update many MarketingCampaignContacts
+     * const marketingCampaignContact = await prisma.marketingCampaignContact.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more MarketingCampaignContacts and only return the `id`
+     * const marketingCampaignContactWithIdOnly = await prisma.marketingCampaignContact.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends MarketingCampaignContactUpdateManyAndReturnArgs>(args: SelectSubset<T, MarketingCampaignContactUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketingCampaignContactPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one MarketingCampaignContact.
+     * @param {MarketingCampaignContactUpsertArgs} args - Arguments to update or create a MarketingCampaignContact.
+     * @example
+     * // Update or create a MarketingCampaignContact
+     * const marketingCampaignContact = await prisma.marketingCampaignContact.upsert({
+     *   create: {
+     *     // ... data to create a MarketingCampaignContact
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the MarketingCampaignContact we want to update
+     *   }
+     * })
+     */
+    upsert<T extends MarketingCampaignContactUpsertArgs>(args: SelectSubset<T, MarketingCampaignContactUpsertArgs<ExtArgs>>): Prisma__MarketingCampaignContactClient<$Result.GetResult<Prisma.$MarketingCampaignContactPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of MarketingCampaignContacts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketingCampaignContactCountArgs} args - Arguments to filter MarketingCampaignContacts to count.
+     * @example
+     * // Count the number of MarketingCampaignContacts
+     * const count = await prisma.marketingCampaignContact.count({
+     *   where: {
+     *     // ... the filter for the MarketingCampaignContacts we want to count
+     *   }
+     * })
+    **/
+    count<T extends MarketingCampaignContactCountArgs>(
+      args?: Subset<T, MarketingCampaignContactCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], MarketingCampaignContactCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a MarketingCampaignContact.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketingCampaignContactAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends MarketingCampaignContactAggregateArgs>(args: Subset<T, MarketingCampaignContactAggregateArgs>): Prisma.PrismaPromise<GetMarketingCampaignContactAggregateType<T>>
+
+    /**
+     * Group by MarketingCampaignContact.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketingCampaignContactGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends MarketingCampaignContactGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: MarketingCampaignContactGroupByArgs['orderBy'] }
+        : { orderBy?: MarketingCampaignContactGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, MarketingCampaignContactGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMarketingCampaignContactGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the MarketingCampaignContact model
+   */
+  readonly fields: MarketingCampaignContactFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for MarketingCampaignContact.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__MarketingCampaignContactClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    campaign<T extends MarketingCampaignDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MarketingCampaignDefaultArgs<ExtArgs>>): Prisma__MarketingCampaignClient<$Result.GetResult<Prisma.$MarketingCampaignPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    contact<T extends ContactDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ContactDefaultArgs<ExtArgs>>): Prisma__ContactClient<$Result.GetResult<Prisma.$ContactPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the MarketingCampaignContact model
+   */
+  interface MarketingCampaignContactFieldRefs {
+    readonly id: FieldRef<"MarketingCampaignContact", 'Int'>
+    readonly uuid: FieldRef<"MarketingCampaignContact", 'String'>
+    readonly campaign_uuid: FieldRef<"MarketingCampaignContact", 'String'>
+    readonly contact_uuid: FieldRef<"MarketingCampaignContact", 'String'>
+    readonly channel: FieldRef<"MarketingCampaignContact", 'Channel'>
+    readonly status: FieldRef<"MarketingCampaignContact", 'CampaignContactStatus'>
+    readonly error_message: FieldRef<"MarketingCampaignContact", 'String'>
+    readonly sent_at: FieldRef<"MarketingCampaignContact", 'DateTime'>
+    readonly delivered_at: FieldRef<"MarketingCampaignContact", 'DateTime'>
+    readonly created_at: FieldRef<"MarketingCampaignContact", 'DateTime'>
+    readonly updated_at: FieldRef<"MarketingCampaignContact", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * MarketingCampaignContact findUnique
+   */
+  export type MarketingCampaignContactFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketingCampaignContact
+     */
+    select?: MarketingCampaignContactSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketingCampaignContact
+     */
+    omit?: MarketingCampaignContactOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketingCampaignContactInclude<ExtArgs> | null
+    /**
+     * Filter, which MarketingCampaignContact to fetch.
+     */
+    where: MarketingCampaignContactWhereUniqueInput
+  }
+
+  /**
+   * MarketingCampaignContact findUniqueOrThrow
+   */
+  export type MarketingCampaignContactFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketingCampaignContact
+     */
+    select?: MarketingCampaignContactSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketingCampaignContact
+     */
+    omit?: MarketingCampaignContactOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketingCampaignContactInclude<ExtArgs> | null
+    /**
+     * Filter, which MarketingCampaignContact to fetch.
+     */
+    where: MarketingCampaignContactWhereUniqueInput
+  }
+
+  /**
+   * MarketingCampaignContact findFirst
+   */
+  export type MarketingCampaignContactFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketingCampaignContact
+     */
+    select?: MarketingCampaignContactSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketingCampaignContact
+     */
+    omit?: MarketingCampaignContactOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketingCampaignContactInclude<ExtArgs> | null
+    /**
+     * Filter, which MarketingCampaignContact to fetch.
+     */
+    where?: MarketingCampaignContactWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MarketingCampaignContacts to fetch.
+     */
+    orderBy?: MarketingCampaignContactOrderByWithRelationInput | MarketingCampaignContactOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MarketingCampaignContacts.
+     */
+    cursor?: MarketingCampaignContactWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MarketingCampaignContacts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MarketingCampaignContacts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MarketingCampaignContacts.
+     */
+    distinct?: MarketingCampaignContactScalarFieldEnum | MarketingCampaignContactScalarFieldEnum[]
+  }
+
+  /**
+   * MarketingCampaignContact findFirstOrThrow
+   */
+  export type MarketingCampaignContactFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketingCampaignContact
+     */
+    select?: MarketingCampaignContactSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketingCampaignContact
+     */
+    omit?: MarketingCampaignContactOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketingCampaignContactInclude<ExtArgs> | null
+    /**
+     * Filter, which MarketingCampaignContact to fetch.
+     */
+    where?: MarketingCampaignContactWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MarketingCampaignContacts to fetch.
+     */
+    orderBy?: MarketingCampaignContactOrderByWithRelationInput | MarketingCampaignContactOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MarketingCampaignContacts.
+     */
+    cursor?: MarketingCampaignContactWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MarketingCampaignContacts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MarketingCampaignContacts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MarketingCampaignContacts.
+     */
+    distinct?: MarketingCampaignContactScalarFieldEnum | MarketingCampaignContactScalarFieldEnum[]
+  }
+
+  /**
+   * MarketingCampaignContact findMany
+   */
+  export type MarketingCampaignContactFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketingCampaignContact
+     */
+    select?: MarketingCampaignContactSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketingCampaignContact
+     */
+    omit?: MarketingCampaignContactOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketingCampaignContactInclude<ExtArgs> | null
+    /**
+     * Filter, which MarketingCampaignContacts to fetch.
+     */
+    where?: MarketingCampaignContactWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MarketingCampaignContacts to fetch.
+     */
+    orderBy?: MarketingCampaignContactOrderByWithRelationInput | MarketingCampaignContactOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing MarketingCampaignContacts.
+     */
+    cursor?: MarketingCampaignContactWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MarketingCampaignContacts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MarketingCampaignContacts.
+     */
+    skip?: number
+    distinct?: MarketingCampaignContactScalarFieldEnum | MarketingCampaignContactScalarFieldEnum[]
+  }
+
+  /**
+   * MarketingCampaignContact create
+   */
+  export type MarketingCampaignContactCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketingCampaignContact
+     */
+    select?: MarketingCampaignContactSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketingCampaignContact
+     */
+    omit?: MarketingCampaignContactOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketingCampaignContactInclude<ExtArgs> | null
+    /**
+     * The data needed to create a MarketingCampaignContact.
+     */
+    data: XOR<MarketingCampaignContactCreateInput, MarketingCampaignContactUncheckedCreateInput>
+  }
+
+  /**
+   * MarketingCampaignContact createMany
+   */
+  export type MarketingCampaignContactCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many MarketingCampaignContacts.
+     */
+    data: MarketingCampaignContactCreateManyInput | MarketingCampaignContactCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * MarketingCampaignContact createManyAndReturn
+   */
+  export type MarketingCampaignContactCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketingCampaignContact
+     */
+    select?: MarketingCampaignContactSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketingCampaignContact
+     */
+    omit?: MarketingCampaignContactOmit<ExtArgs> | null
+    /**
+     * The data used to create many MarketingCampaignContacts.
+     */
+    data: MarketingCampaignContactCreateManyInput | MarketingCampaignContactCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketingCampaignContactIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * MarketingCampaignContact update
+   */
+  export type MarketingCampaignContactUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketingCampaignContact
+     */
+    select?: MarketingCampaignContactSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketingCampaignContact
+     */
+    omit?: MarketingCampaignContactOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketingCampaignContactInclude<ExtArgs> | null
+    /**
+     * The data needed to update a MarketingCampaignContact.
+     */
+    data: XOR<MarketingCampaignContactUpdateInput, MarketingCampaignContactUncheckedUpdateInput>
+    /**
+     * Choose, which MarketingCampaignContact to update.
+     */
+    where: MarketingCampaignContactWhereUniqueInput
+  }
+
+  /**
+   * MarketingCampaignContact updateMany
+   */
+  export type MarketingCampaignContactUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update MarketingCampaignContacts.
+     */
+    data: XOR<MarketingCampaignContactUpdateManyMutationInput, MarketingCampaignContactUncheckedUpdateManyInput>
+    /**
+     * Filter which MarketingCampaignContacts to update
+     */
+    where?: MarketingCampaignContactWhereInput
+    /**
+     * Limit how many MarketingCampaignContacts to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * MarketingCampaignContact updateManyAndReturn
+   */
+  export type MarketingCampaignContactUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketingCampaignContact
+     */
+    select?: MarketingCampaignContactSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketingCampaignContact
+     */
+    omit?: MarketingCampaignContactOmit<ExtArgs> | null
+    /**
+     * The data used to update MarketingCampaignContacts.
+     */
+    data: XOR<MarketingCampaignContactUpdateManyMutationInput, MarketingCampaignContactUncheckedUpdateManyInput>
+    /**
+     * Filter which MarketingCampaignContacts to update
+     */
+    where?: MarketingCampaignContactWhereInput
+    /**
+     * Limit how many MarketingCampaignContacts to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketingCampaignContactIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * MarketingCampaignContact upsert
+   */
+  export type MarketingCampaignContactUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketingCampaignContact
+     */
+    select?: MarketingCampaignContactSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketingCampaignContact
+     */
+    omit?: MarketingCampaignContactOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketingCampaignContactInclude<ExtArgs> | null
+    /**
+     * The filter to search for the MarketingCampaignContact to update in case it exists.
+     */
+    where: MarketingCampaignContactWhereUniqueInput
+    /**
+     * In case the MarketingCampaignContact found by the `where` argument doesn't exist, create a new MarketingCampaignContact with this data.
+     */
+    create: XOR<MarketingCampaignContactCreateInput, MarketingCampaignContactUncheckedCreateInput>
+    /**
+     * In case the MarketingCampaignContact was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<MarketingCampaignContactUpdateInput, MarketingCampaignContactUncheckedUpdateInput>
+  }
+
+  /**
+   * MarketingCampaignContact delete
+   */
+  export type MarketingCampaignContactDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketingCampaignContact
+     */
+    select?: MarketingCampaignContactSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketingCampaignContact
+     */
+    omit?: MarketingCampaignContactOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketingCampaignContactInclude<ExtArgs> | null
+    /**
+     * Filter which MarketingCampaignContact to delete.
+     */
+    where: MarketingCampaignContactWhereUniqueInput
+  }
+
+  /**
+   * MarketingCampaignContact deleteMany
+   */
+  export type MarketingCampaignContactDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MarketingCampaignContacts to delete
+     */
+    where?: MarketingCampaignContactWhereInput
+    /**
+     * Limit how many MarketingCampaignContacts to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * MarketingCampaignContact without action
+   */
+  export type MarketingCampaignContactDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketingCampaignContact
+     */
+    select?: MarketingCampaignContactSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketingCampaignContact
+     */
+    omit?: MarketingCampaignContactOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketingCampaignContactInclude<ExtArgs> | null
   }
 
 
@@ -17083,6 +20476,9 @@ export namespace Prisma {
     location: 'location',
     industry: 'industry',
     description: 'description',
+    unsubscribed_at: 'unsubscribed_at',
+    unsubscribe_token: 'unsubscribe_token',
+    last_interaction_at: 'last_interaction_at',
     created_at: 'created_at',
     updated_at: 'updated_at'
   };
@@ -17105,6 +20501,7 @@ export namespace Prisma {
     uuid: 'uuid',
     contact_uuid: 'contact_uuid',
     user_uuid: 'user_uuid',
+    campaign_uuid: 'campaign_uuid',
     type: 'type',
     content: 'content',
     metadata: 'metadata',
@@ -17122,12 +20519,20 @@ export namespace Prisma {
     uuid: 'uuid',
     user_uuid: 'user_uuid',
     contact_uuid: 'contact_uuid',
+    campaign_uuid: 'campaign_uuid',
     channel: 'channel',
+    direction: 'direction',
     subject: 'subject',
     content: 'content',
     status: 'status',
+    provider_message_id: 'provider_message_id',
+    idempotency_key: 'idempotency_key',
     scheduled_at: 'scheduled_at',
     sent_at: 'sent_at',
+    delivered_at: 'delivered_at',
+    opened_at: 'opened_at',
+    clicked_at: 'clicked_at',
+    replied_at: 'replied_at',
     metadata: 'metadata',
     created_at: 'created_at',
     updated_at: 'updated_at'
@@ -17192,6 +20597,59 @@ export namespace Prisma {
   };
 
   export type SenderProfileScalarFieldEnum = (typeof SenderProfileScalarFieldEnum)[keyof typeof SenderProfileScalarFieldEnum]
+
+
+  export const MarketingCampaignScalarFieldEnum: {
+    id: 'id',
+    uuid: 'uuid',
+    user_uuid: 'user_uuid',
+    name: 'name',
+    description: 'description',
+    status: 'status',
+    channels: 'channels',
+    filters_snapshot: 'filters_snapshot',
+    email_subject: 'email_subject',
+    email_content: 'email_content',
+    sms_content: 'sms_content',
+    sender_profile_uuid: 'sender_profile_uuid',
+    scheduled_at: 'scheduled_at',
+    started_at: 'started_at',
+    completed_at: 'completed_at',
+    cancelled_at: 'cancelled_at',
+    selected_contact_count: 'selected_contact_count',
+    total_messages: 'total_messages',
+    queued_count: 'queued_count',
+    sent_count: 'sent_count',
+    failed_count: 'failed_count',
+    skipped_count: 'skipped_count',
+    delivered_count: 'delivered_count',
+    opened_count: 'opened_count',
+    clicked_count: 'clicked_count',
+    replied_count: 'replied_count',
+    bounced_count: 'bounced_count',
+    unsubscribed_count: 'unsubscribed_count',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
+  };
+
+  export type MarketingCampaignScalarFieldEnum = (typeof MarketingCampaignScalarFieldEnum)[keyof typeof MarketingCampaignScalarFieldEnum]
+
+
+  export const MarketingCampaignContactScalarFieldEnum: {
+    id: 'id',
+    uuid: 'uuid',
+    campaign_uuid: 'campaign_uuid',
+    contact_uuid: 'contact_uuid',
+    channel: 'channel',
+    status: 'status',
+    error_message: 'error_message',
+    sent_at: 'sent_at',
+    delivered_at: 'delivered_at',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
+  };
+
+  export type MarketingCampaignContactScalarFieldEnum = (typeof MarketingCampaignContactScalarFieldEnum)[keyof typeof MarketingCampaignContactScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -17409,6 +20867,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'MsgDirection'
+   */
+  export type EnumMsgDirectionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MsgDirection'>
+    
+
+
+  /**
+   * Reference to a field of type 'MsgDirection[]'
+   */
+  export type ListEnumMsgDirectionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MsgDirection[]'>
+    
+
+
+  /**
    * Reference to a field of type 'MsgStatus'
    */
   export type EnumMsgStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MsgStatus'>
@@ -17451,6 +20923,34 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'CampaignStatus'
+   */
+  export type EnumCampaignStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CampaignStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'CampaignStatus[]'
+   */
+  export type ListEnumCampaignStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CampaignStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'CampaignContactStatus'
+   */
+  export type EnumCampaignContactStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CampaignContactStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'CampaignContactStatus[]'
+   */
+  export type ListEnumCampaignContactStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CampaignContactStatus[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -17485,6 +20985,7 @@ export namespace Prisma {
     outreach_sequences?: OutreachSequenceListRelationFilter
     interactions?: InteractionListRelationFilter
     sender_profiles?: SenderProfileListRelationFilter
+    marketing_campaigns?: MarketingCampaignListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -17502,6 +21003,7 @@ export namespace Prisma {
     outreach_sequences?: OutreachSequenceOrderByRelationAggregateInput
     interactions?: InteractionOrderByRelationAggregateInput
     sender_profiles?: SenderProfileOrderByRelationAggregateInput
+    marketing_campaigns?: MarketingCampaignOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -17522,6 +21024,7 @@ export namespace Prisma {
     outreach_sequences?: OutreachSequenceListRelationFilter
     interactions?: InteractionListRelationFilter
     sender_profiles?: SenderProfileListRelationFilter
+    marketing_campaigns?: MarketingCampaignListRelationFilter
   }, "id" | "uuid" | "email" | "phone">
 
   export type UserOrderByWithAggregationInput = {
@@ -17982,6 +21485,9 @@ export namespace Prisma {
     location?: StringNullableFilter<"Contact"> | string | null
     industry?: StringNullableFilter<"Contact"> | string | null
     description?: StringNullableFilter<"Contact"> | string | null
+    unsubscribed_at?: DateTimeNullableFilter<"Contact"> | Date | string | null
+    unsubscribe_token?: StringNullableFilter<"Contact"> | string | null
+    last_interaction_at?: DateTimeNullableFilter<"Contact"> | Date | string | null
     created_at?: DateTimeFilter<"Contact"> | Date | string
     updated_at?: DateTimeFilter<"Contact"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -17990,6 +21496,7 @@ export namespace Prisma {
     tags?: ContactTagListRelationFilter
     interactions?: InteractionListRelationFilter
     outreach_messages?: OutreachMessageListRelationFilter
+    campaign_contacts?: MarketingCampaignContactListRelationFilter
   }
 
   export type ContactOrderByWithRelationInput = {
@@ -18011,6 +21518,9 @@ export namespace Prisma {
     location?: SortOrderInput | SortOrder
     industry?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
+    unsubscribed_at?: SortOrderInput | SortOrder
+    unsubscribe_token?: SortOrderInput | SortOrder
+    last_interaction_at?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     user?: UserOrderByWithRelationInput
@@ -18019,11 +21529,13 @@ export namespace Prisma {
     tags?: ContactTagOrderByRelationAggregateInput
     interactions?: InteractionOrderByRelationAggregateInput
     outreach_messages?: OutreachMessageOrderByRelationAggregateInput
+    campaign_contacts?: MarketingCampaignContactOrderByRelationAggregateInput
   }
 
   export type ContactWhereUniqueInput = Prisma.AtLeast<{
     id?: number
     uuid?: string
+    unsubscribe_token?: string
     user_uuid_lead_uuid?: ContactUser_uuidLead_uuidCompoundUniqueInput
     AND?: ContactWhereInput | ContactWhereInput[]
     OR?: ContactWhereInput[]
@@ -18044,6 +21556,8 @@ export namespace Prisma {
     location?: StringNullableFilter<"Contact"> | string | null
     industry?: StringNullableFilter<"Contact"> | string | null
     description?: StringNullableFilter<"Contact"> | string | null
+    unsubscribed_at?: DateTimeNullableFilter<"Contact"> | Date | string | null
+    last_interaction_at?: DateTimeNullableFilter<"Contact"> | Date | string | null
     created_at?: DateTimeFilter<"Contact"> | Date | string
     updated_at?: DateTimeFilter<"Contact"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -18052,7 +21566,8 @@ export namespace Prisma {
     tags?: ContactTagListRelationFilter
     interactions?: InteractionListRelationFilter
     outreach_messages?: OutreachMessageListRelationFilter
-  }, "id" | "uuid" | "user_uuid_lead_uuid">
+    campaign_contacts?: MarketingCampaignContactListRelationFilter
+  }, "id" | "uuid" | "unsubscribe_token" | "user_uuid_lead_uuid">
 
   export type ContactOrderByWithAggregationInput = {
     id?: SortOrder
@@ -18073,6 +21588,9 @@ export namespace Prisma {
     location?: SortOrderInput | SortOrder
     industry?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
+    unsubscribed_at?: SortOrderInput | SortOrder
+    unsubscribe_token?: SortOrderInput | SortOrder
+    last_interaction_at?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     _count?: ContactCountOrderByAggregateInput
@@ -18104,6 +21622,9 @@ export namespace Prisma {
     location?: StringNullableWithAggregatesFilter<"Contact"> | string | null
     industry?: StringNullableWithAggregatesFilter<"Contact"> | string | null
     description?: StringNullableWithAggregatesFilter<"Contact"> | string | null
+    unsubscribed_at?: DateTimeNullableWithAggregatesFilter<"Contact"> | Date | string | null
+    unsubscribe_token?: StringNullableWithAggregatesFilter<"Contact"> | string | null
+    last_interaction_at?: DateTimeNullableWithAggregatesFilter<"Contact"> | Date | string | null
     created_at?: DateTimeWithAggregatesFilter<"Contact"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"Contact"> | Date | string
   }
@@ -18169,6 +21690,7 @@ export namespace Prisma {
     uuid?: StringFilter<"Interaction"> | string
     contact_uuid?: StringFilter<"Interaction"> | string
     user_uuid?: StringFilter<"Interaction"> | string
+    campaign_uuid?: StringNullableFilter<"Interaction"> | string | null
     type?: EnumInteractionTypeFilter<"Interaction"> | $Enums.InteractionType
     content?: StringNullableFilter<"Interaction"> | string | null
     metadata?: JsonNullableFilter<"Interaction">
@@ -18179,6 +21701,7 @@ export namespace Prisma {
     contact?: XOR<ContactScalarRelationFilter, ContactWhereInput>
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     outreach_message?: XOR<OutreachMessageNullableScalarRelationFilter, OutreachMessageWhereInput> | null
+    campaign?: XOR<MarketingCampaignNullableScalarRelationFilter, MarketingCampaignWhereInput> | null
   }
 
   export type InteractionOrderByWithRelationInput = {
@@ -18186,6 +21709,7 @@ export namespace Prisma {
     uuid?: SortOrder
     contact_uuid?: SortOrder
     user_uuid?: SortOrder
+    campaign_uuid?: SortOrderInput | SortOrder
     type?: SortOrder
     content?: SortOrderInput | SortOrder
     metadata?: SortOrderInput | SortOrder
@@ -18196,6 +21720,7 @@ export namespace Prisma {
     contact?: ContactOrderByWithRelationInput
     user?: UserOrderByWithRelationInput
     outreach_message?: OutreachMessageOrderByWithRelationInput
+    campaign?: MarketingCampaignOrderByWithRelationInput
   }
 
   export type InteractionWhereUniqueInput = Prisma.AtLeast<{
@@ -18207,6 +21732,7 @@ export namespace Prisma {
     NOT?: InteractionWhereInput | InteractionWhereInput[]
     contact_uuid?: StringFilter<"Interaction"> | string
     user_uuid?: StringFilter<"Interaction"> | string
+    campaign_uuid?: StringNullableFilter<"Interaction"> | string | null
     type?: EnumInteractionTypeFilter<"Interaction"> | $Enums.InteractionType
     content?: StringNullableFilter<"Interaction"> | string | null
     metadata?: JsonNullableFilter<"Interaction">
@@ -18216,6 +21742,7 @@ export namespace Prisma {
     contact?: XOR<ContactScalarRelationFilter, ContactWhereInput>
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     outreach_message?: XOR<OutreachMessageNullableScalarRelationFilter, OutreachMessageWhereInput> | null
+    campaign?: XOR<MarketingCampaignNullableScalarRelationFilter, MarketingCampaignWhereInput> | null
   }, "id" | "uuid" | "outreach_message_uuid">
 
   export type InteractionOrderByWithAggregationInput = {
@@ -18223,6 +21750,7 @@ export namespace Prisma {
     uuid?: SortOrder
     contact_uuid?: SortOrder
     user_uuid?: SortOrder
+    campaign_uuid?: SortOrderInput | SortOrder
     type?: SortOrder
     content?: SortOrderInput | SortOrder
     metadata?: SortOrderInput | SortOrder
@@ -18245,6 +21773,7 @@ export namespace Prisma {
     uuid?: StringWithAggregatesFilter<"Interaction"> | string
     contact_uuid?: StringWithAggregatesFilter<"Interaction"> | string
     user_uuid?: StringWithAggregatesFilter<"Interaction"> | string
+    campaign_uuid?: StringNullableWithAggregatesFilter<"Interaction"> | string | null
     type?: EnumInteractionTypeWithAggregatesFilter<"Interaction"> | $Enums.InteractionType
     content?: StringNullableWithAggregatesFilter<"Interaction"> | string | null
     metadata?: JsonNullableWithAggregatesFilter<"Interaction">
@@ -18262,17 +21791,26 @@ export namespace Prisma {
     uuid?: StringFilter<"OutreachMessage"> | string
     user_uuid?: StringFilter<"OutreachMessage"> | string
     contact_uuid?: StringFilter<"OutreachMessage"> | string
+    campaign_uuid?: StringNullableFilter<"OutreachMessage"> | string | null
     channel?: EnumChannelFilter<"OutreachMessage"> | $Enums.Channel
+    direction?: EnumMsgDirectionFilter<"OutreachMessage"> | $Enums.MsgDirection
     subject?: StringNullableFilter<"OutreachMessage"> | string | null
     content?: StringFilter<"OutreachMessage"> | string
     status?: EnumMsgStatusFilter<"OutreachMessage"> | $Enums.MsgStatus
+    provider_message_id?: StringNullableFilter<"OutreachMessage"> | string | null
+    idempotency_key?: StringNullableFilter<"OutreachMessage"> | string | null
     scheduled_at?: DateTimeNullableFilter<"OutreachMessage"> | Date | string | null
     sent_at?: DateTimeNullableFilter<"OutreachMessage"> | Date | string | null
+    delivered_at?: DateTimeNullableFilter<"OutreachMessage"> | Date | string | null
+    opened_at?: DateTimeNullableFilter<"OutreachMessage"> | Date | string | null
+    clicked_at?: DateTimeNullableFilter<"OutreachMessage"> | Date | string | null
+    replied_at?: DateTimeNullableFilter<"OutreachMessage"> | Date | string | null
     metadata?: JsonNullableFilter<"OutreachMessage">
     created_at?: DateTimeFilter<"OutreachMessage"> | Date | string
     updated_at?: DateTimeFilter<"OutreachMessage"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     contact?: XOR<ContactScalarRelationFilter, ContactWhereInput>
+    campaign?: XOR<MarketingCampaignNullableScalarRelationFilter, MarketingCampaignWhereInput> | null
     interaction?: XOR<InteractionNullableScalarRelationFilter, InteractionWhereInput> | null
   }
 
@@ -18281,53 +21819,79 @@ export namespace Prisma {
     uuid?: SortOrder
     user_uuid?: SortOrder
     contact_uuid?: SortOrder
+    campaign_uuid?: SortOrderInput | SortOrder
     channel?: SortOrder
+    direction?: SortOrder
     subject?: SortOrderInput | SortOrder
     content?: SortOrder
     status?: SortOrder
+    provider_message_id?: SortOrderInput | SortOrder
+    idempotency_key?: SortOrderInput | SortOrder
     scheduled_at?: SortOrderInput | SortOrder
     sent_at?: SortOrderInput | SortOrder
+    delivered_at?: SortOrderInput | SortOrder
+    opened_at?: SortOrderInput | SortOrder
+    clicked_at?: SortOrderInput | SortOrder
+    replied_at?: SortOrderInput | SortOrder
     metadata?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     user?: UserOrderByWithRelationInput
     contact?: ContactOrderByWithRelationInput
+    campaign?: MarketingCampaignOrderByWithRelationInput
     interaction?: InteractionOrderByWithRelationInput
   }
 
   export type OutreachMessageWhereUniqueInput = Prisma.AtLeast<{
     id?: number
     uuid?: string
+    idempotency_key?: string
     AND?: OutreachMessageWhereInput | OutreachMessageWhereInput[]
     OR?: OutreachMessageWhereInput[]
     NOT?: OutreachMessageWhereInput | OutreachMessageWhereInput[]
     user_uuid?: StringFilter<"OutreachMessage"> | string
     contact_uuid?: StringFilter<"OutreachMessage"> | string
+    campaign_uuid?: StringNullableFilter<"OutreachMessage"> | string | null
     channel?: EnumChannelFilter<"OutreachMessage"> | $Enums.Channel
+    direction?: EnumMsgDirectionFilter<"OutreachMessage"> | $Enums.MsgDirection
     subject?: StringNullableFilter<"OutreachMessage"> | string | null
     content?: StringFilter<"OutreachMessage"> | string
     status?: EnumMsgStatusFilter<"OutreachMessage"> | $Enums.MsgStatus
+    provider_message_id?: StringNullableFilter<"OutreachMessage"> | string | null
     scheduled_at?: DateTimeNullableFilter<"OutreachMessage"> | Date | string | null
     sent_at?: DateTimeNullableFilter<"OutreachMessage"> | Date | string | null
+    delivered_at?: DateTimeNullableFilter<"OutreachMessage"> | Date | string | null
+    opened_at?: DateTimeNullableFilter<"OutreachMessage"> | Date | string | null
+    clicked_at?: DateTimeNullableFilter<"OutreachMessage"> | Date | string | null
+    replied_at?: DateTimeNullableFilter<"OutreachMessage"> | Date | string | null
     metadata?: JsonNullableFilter<"OutreachMessage">
     created_at?: DateTimeFilter<"OutreachMessage"> | Date | string
     updated_at?: DateTimeFilter<"OutreachMessage"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     contact?: XOR<ContactScalarRelationFilter, ContactWhereInput>
+    campaign?: XOR<MarketingCampaignNullableScalarRelationFilter, MarketingCampaignWhereInput> | null
     interaction?: XOR<InteractionNullableScalarRelationFilter, InteractionWhereInput> | null
-  }, "id" | "uuid">
+  }, "id" | "uuid" | "idempotency_key">
 
   export type OutreachMessageOrderByWithAggregationInput = {
     id?: SortOrder
     uuid?: SortOrder
     user_uuid?: SortOrder
     contact_uuid?: SortOrder
+    campaign_uuid?: SortOrderInput | SortOrder
     channel?: SortOrder
+    direction?: SortOrder
     subject?: SortOrderInput | SortOrder
     content?: SortOrder
     status?: SortOrder
+    provider_message_id?: SortOrderInput | SortOrder
+    idempotency_key?: SortOrderInput | SortOrder
     scheduled_at?: SortOrderInput | SortOrder
     sent_at?: SortOrderInput | SortOrder
+    delivered_at?: SortOrderInput | SortOrder
+    opened_at?: SortOrderInput | SortOrder
+    clicked_at?: SortOrderInput | SortOrder
+    replied_at?: SortOrderInput | SortOrder
     metadata?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -18346,12 +21910,20 @@ export namespace Prisma {
     uuid?: StringWithAggregatesFilter<"OutreachMessage"> | string
     user_uuid?: StringWithAggregatesFilter<"OutreachMessage"> | string
     contact_uuid?: StringWithAggregatesFilter<"OutreachMessage"> | string
+    campaign_uuid?: StringNullableWithAggregatesFilter<"OutreachMessage"> | string | null
     channel?: EnumChannelWithAggregatesFilter<"OutreachMessage"> | $Enums.Channel
+    direction?: EnumMsgDirectionWithAggregatesFilter<"OutreachMessage"> | $Enums.MsgDirection
     subject?: StringNullableWithAggregatesFilter<"OutreachMessage"> | string | null
     content?: StringWithAggregatesFilter<"OutreachMessage"> | string
     status?: EnumMsgStatusWithAggregatesFilter<"OutreachMessage"> | $Enums.MsgStatus
+    provider_message_id?: StringNullableWithAggregatesFilter<"OutreachMessage"> | string | null
+    idempotency_key?: StringNullableWithAggregatesFilter<"OutreachMessage"> | string | null
     scheduled_at?: DateTimeNullableWithAggregatesFilter<"OutreachMessage"> | Date | string | null
     sent_at?: DateTimeNullableWithAggregatesFilter<"OutreachMessage"> | Date | string | null
+    delivered_at?: DateTimeNullableWithAggregatesFilter<"OutreachMessage"> | Date | string | null
+    opened_at?: DateTimeNullableWithAggregatesFilter<"OutreachMessage"> | Date | string | null
+    clicked_at?: DateTimeNullableWithAggregatesFilter<"OutreachMessage"> | Date | string | null
+    replied_at?: DateTimeNullableWithAggregatesFilter<"OutreachMessage"> | Date | string | null
     metadata?: JsonNullableWithAggregatesFilter<"OutreachMessage">
     created_at?: DateTimeWithAggregatesFilter<"OutreachMessage"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"OutreachMessage"> | Date | string
@@ -18542,6 +22114,7 @@ export namespace Prisma {
     created_at?: DateTimeFilter<"SenderProfile"> | Date | string
     updated_at?: DateTimeFilter<"SenderProfile"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    marketing_campaigns?: MarketingCampaignListRelationFilter
   }
 
   export type SenderProfileOrderByWithRelationInput = {
@@ -18567,6 +22140,7 @@ export namespace Prisma {
     created_at?: SortOrder
     updated_at?: SortOrder
     user?: UserOrderByWithRelationInput
+    marketing_campaigns?: MarketingCampaignOrderByRelationAggregateInput
   }
 
   export type SenderProfileWhereUniqueInput = Prisma.AtLeast<{
@@ -18595,6 +22169,7 @@ export namespace Prisma {
     created_at?: DateTimeFilter<"SenderProfile"> | Date | string
     updated_at?: DateTimeFilter<"SenderProfile"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    marketing_campaigns?: MarketingCampaignListRelationFilter
   }, "id" | "uuid">
 
   export type SenderProfileOrderByWithAggregationInput = {
@@ -18653,6 +22228,291 @@ export namespace Prisma {
     updated_at?: DateTimeWithAggregatesFilter<"SenderProfile"> | Date | string
   }
 
+  export type MarketingCampaignWhereInput = {
+    AND?: MarketingCampaignWhereInput | MarketingCampaignWhereInput[]
+    OR?: MarketingCampaignWhereInput[]
+    NOT?: MarketingCampaignWhereInput | MarketingCampaignWhereInput[]
+    id?: IntFilter<"MarketingCampaign"> | number
+    uuid?: StringFilter<"MarketingCampaign"> | string
+    user_uuid?: StringFilter<"MarketingCampaign"> | string
+    name?: StringFilter<"MarketingCampaign"> | string
+    description?: StringNullableFilter<"MarketingCampaign"> | string | null
+    status?: EnumCampaignStatusFilter<"MarketingCampaign"> | $Enums.CampaignStatus
+    channels?: EnumChannelNullableListFilter<"MarketingCampaign">
+    filters_snapshot?: JsonNullableFilter<"MarketingCampaign">
+    email_subject?: StringNullableFilter<"MarketingCampaign"> | string | null
+    email_content?: StringNullableFilter<"MarketingCampaign"> | string | null
+    sms_content?: StringNullableFilter<"MarketingCampaign"> | string | null
+    sender_profile_uuid?: StringNullableFilter<"MarketingCampaign"> | string | null
+    scheduled_at?: DateTimeNullableFilter<"MarketingCampaign"> | Date | string | null
+    started_at?: DateTimeNullableFilter<"MarketingCampaign"> | Date | string | null
+    completed_at?: DateTimeNullableFilter<"MarketingCampaign"> | Date | string | null
+    cancelled_at?: DateTimeNullableFilter<"MarketingCampaign"> | Date | string | null
+    selected_contact_count?: IntFilter<"MarketingCampaign"> | number
+    total_messages?: IntFilter<"MarketingCampaign"> | number
+    queued_count?: IntFilter<"MarketingCampaign"> | number
+    sent_count?: IntFilter<"MarketingCampaign"> | number
+    failed_count?: IntFilter<"MarketingCampaign"> | number
+    skipped_count?: IntFilter<"MarketingCampaign"> | number
+    delivered_count?: IntFilter<"MarketingCampaign"> | number
+    opened_count?: IntFilter<"MarketingCampaign"> | number
+    clicked_count?: IntFilter<"MarketingCampaign"> | number
+    replied_count?: IntFilter<"MarketingCampaign"> | number
+    bounced_count?: IntFilter<"MarketingCampaign"> | number
+    unsubscribed_count?: IntFilter<"MarketingCampaign"> | number
+    created_at?: DateTimeFilter<"MarketingCampaign"> | Date | string
+    updated_at?: DateTimeFilter<"MarketingCampaign"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    sender_profile?: XOR<SenderProfileNullableScalarRelationFilter, SenderProfileWhereInput> | null
+    campaign_contacts?: MarketingCampaignContactListRelationFilter
+    outreach_messages?: OutreachMessageListRelationFilter
+    interactions?: InteractionListRelationFilter
+  }
+
+  export type MarketingCampaignOrderByWithRelationInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    user_uuid?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    status?: SortOrder
+    channels?: SortOrder
+    filters_snapshot?: SortOrderInput | SortOrder
+    email_subject?: SortOrderInput | SortOrder
+    email_content?: SortOrderInput | SortOrder
+    sms_content?: SortOrderInput | SortOrder
+    sender_profile_uuid?: SortOrderInput | SortOrder
+    scheduled_at?: SortOrderInput | SortOrder
+    started_at?: SortOrderInput | SortOrder
+    completed_at?: SortOrderInput | SortOrder
+    cancelled_at?: SortOrderInput | SortOrder
+    selected_contact_count?: SortOrder
+    total_messages?: SortOrder
+    queued_count?: SortOrder
+    sent_count?: SortOrder
+    failed_count?: SortOrder
+    skipped_count?: SortOrder
+    delivered_count?: SortOrder
+    opened_count?: SortOrder
+    clicked_count?: SortOrder
+    replied_count?: SortOrder
+    bounced_count?: SortOrder
+    unsubscribed_count?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    user?: UserOrderByWithRelationInput
+    sender_profile?: SenderProfileOrderByWithRelationInput
+    campaign_contacts?: MarketingCampaignContactOrderByRelationAggregateInput
+    outreach_messages?: OutreachMessageOrderByRelationAggregateInput
+    interactions?: InteractionOrderByRelationAggregateInput
+  }
+
+  export type MarketingCampaignWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    uuid?: string
+    AND?: MarketingCampaignWhereInput | MarketingCampaignWhereInput[]
+    OR?: MarketingCampaignWhereInput[]
+    NOT?: MarketingCampaignWhereInput | MarketingCampaignWhereInput[]
+    user_uuid?: StringFilter<"MarketingCampaign"> | string
+    name?: StringFilter<"MarketingCampaign"> | string
+    description?: StringNullableFilter<"MarketingCampaign"> | string | null
+    status?: EnumCampaignStatusFilter<"MarketingCampaign"> | $Enums.CampaignStatus
+    channels?: EnumChannelNullableListFilter<"MarketingCampaign">
+    filters_snapshot?: JsonNullableFilter<"MarketingCampaign">
+    email_subject?: StringNullableFilter<"MarketingCampaign"> | string | null
+    email_content?: StringNullableFilter<"MarketingCampaign"> | string | null
+    sms_content?: StringNullableFilter<"MarketingCampaign"> | string | null
+    sender_profile_uuid?: StringNullableFilter<"MarketingCampaign"> | string | null
+    scheduled_at?: DateTimeNullableFilter<"MarketingCampaign"> | Date | string | null
+    started_at?: DateTimeNullableFilter<"MarketingCampaign"> | Date | string | null
+    completed_at?: DateTimeNullableFilter<"MarketingCampaign"> | Date | string | null
+    cancelled_at?: DateTimeNullableFilter<"MarketingCampaign"> | Date | string | null
+    selected_contact_count?: IntFilter<"MarketingCampaign"> | number
+    total_messages?: IntFilter<"MarketingCampaign"> | number
+    queued_count?: IntFilter<"MarketingCampaign"> | number
+    sent_count?: IntFilter<"MarketingCampaign"> | number
+    failed_count?: IntFilter<"MarketingCampaign"> | number
+    skipped_count?: IntFilter<"MarketingCampaign"> | number
+    delivered_count?: IntFilter<"MarketingCampaign"> | number
+    opened_count?: IntFilter<"MarketingCampaign"> | number
+    clicked_count?: IntFilter<"MarketingCampaign"> | number
+    replied_count?: IntFilter<"MarketingCampaign"> | number
+    bounced_count?: IntFilter<"MarketingCampaign"> | number
+    unsubscribed_count?: IntFilter<"MarketingCampaign"> | number
+    created_at?: DateTimeFilter<"MarketingCampaign"> | Date | string
+    updated_at?: DateTimeFilter<"MarketingCampaign"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    sender_profile?: XOR<SenderProfileNullableScalarRelationFilter, SenderProfileWhereInput> | null
+    campaign_contacts?: MarketingCampaignContactListRelationFilter
+    outreach_messages?: OutreachMessageListRelationFilter
+    interactions?: InteractionListRelationFilter
+  }, "id" | "uuid">
+
+  export type MarketingCampaignOrderByWithAggregationInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    user_uuid?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    status?: SortOrder
+    channels?: SortOrder
+    filters_snapshot?: SortOrderInput | SortOrder
+    email_subject?: SortOrderInput | SortOrder
+    email_content?: SortOrderInput | SortOrder
+    sms_content?: SortOrderInput | SortOrder
+    sender_profile_uuid?: SortOrderInput | SortOrder
+    scheduled_at?: SortOrderInput | SortOrder
+    started_at?: SortOrderInput | SortOrder
+    completed_at?: SortOrderInput | SortOrder
+    cancelled_at?: SortOrderInput | SortOrder
+    selected_contact_count?: SortOrder
+    total_messages?: SortOrder
+    queued_count?: SortOrder
+    sent_count?: SortOrder
+    failed_count?: SortOrder
+    skipped_count?: SortOrder
+    delivered_count?: SortOrder
+    opened_count?: SortOrder
+    clicked_count?: SortOrder
+    replied_count?: SortOrder
+    bounced_count?: SortOrder
+    unsubscribed_count?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    _count?: MarketingCampaignCountOrderByAggregateInput
+    _avg?: MarketingCampaignAvgOrderByAggregateInput
+    _max?: MarketingCampaignMaxOrderByAggregateInput
+    _min?: MarketingCampaignMinOrderByAggregateInput
+    _sum?: MarketingCampaignSumOrderByAggregateInput
+  }
+
+  export type MarketingCampaignScalarWhereWithAggregatesInput = {
+    AND?: MarketingCampaignScalarWhereWithAggregatesInput | MarketingCampaignScalarWhereWithAggregatesInput[]
+    OR?: MarketingCampaignScalarWhereWithAggregatesInput[]
+    NOT?: MarketingCampaignScalarWhereWithAggregatesInput | MarketingCampaignScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"MarketingCampaign"> | number
+    uuid?: StringWithAggregatesFilter<"MarketingCampaign"> | string
+    user_uuid?: StringWithAggregatesFilter<"MarketingCampaign"> | string
+    name?: StringWithAggregatesFilter<"MarketingCampaign"> | string
+    description?: StringNullableWithAggregatesFilter<"MarketingCampaign"> | string | null
+    status?: EnumCampaignStatusWithAggregatesFilter<"MarketingCampaign"> | $Enums.CampaignStatus
+    channels?: EnumChannelNullableListFilter<"MarketingCampaign">
+    filters_snapshot?: JsonNullableWithAggregatesFilter<"MarketingCampaign">
+    email_subject?: StringNullableWithAggregatesFilter<"MarketingCampaign"> | string | null
+    email_content?: StringNullableWithAggregatesFilter<"MarketingCampaign"> | string | null
+    sms_content?: StringNullableWithAggregatesFilter<"MarketingCampaign"> | string | null
+    sender_profile_uuid?: StringNullableWithAggregatesFilter<"MarketingCampaign"> | string | null
+    scheduled_at?: DateTimeNullableWithAggregatesFilter<"MarketingCampaign"> | Date | string | null
+    started_at?: DateTimeNullableWithAggregatesFilter<"MarketingCampaign"> | Date | string | null
+    completed_at?: DateTimeNullableWithAggregatesFilter<"MarketingCampaign"> | Date | string | null
+    cancelled_at?: DateTimeNullableWithAggregatesFilter<"MarketingCampaign"> | Date | string | null
+    selected_contact_count?: IntWithAggregatesFilter<"MarketingCampaign"> | number
+    total_messages?: IntWithAggregatesFilter<"MarketingCampaign"> | number
+    queued_count?: IntWithAggregatesFilter<"MarketingCampaign"> | number
+    sent_count?: IntWithAggregatesFilter<"MarketingCampaign"> | number
+    failed_count?: IntWithAggregatesFilter<"MarketingCampaign"> | number
+    skipped_count?: IntWithAggregatesFilter<"MarketingCampaign"> | number
+    delivered_count?: IntWithAggregatesFilter<"MarketingCampaign"> | number
+    opened_count?: IntWithAggregatesFilter<"MarketingCampaign"> | number
+    clicked_count?: IntWithAggregatesFilter<"MarketingCampaign"> | number
+    replied_count?: IntWithAggregatesFilter<"MarketingCampaign"> | number
+    bounced_count?: IntWithAggregatesFilter<"MarketingCampaign"> | number
+    unsubscribed_count?: IntWithAggregatesFilter<"MarketingCampaign"> | number
+    created_at?: DateTimeWithAggregatesFilter<"MarketingCampaign"> | Date | string
+    updated_at?: DateTimeWithAggregatesFilter<"MarketingCampaign"> | Date | string
+  }
+
+  export type MarketingCampaignContactWhereInput = {
+    AND?: MarketingCampaignContactWhereInput | MarketingCampaignContactWhereInput[]
+    OR?: MarketingCampaignContactWhereInput[]
+    NOT?: MarketingCampaignContactWhereInput | MarketingCampaignContactWhereInput[]
+    id?: IntFilter<"MarketingCampaignContact"> | number
+    uuid?: StringFilter<"MarketingCampaignContact"> | string
+    campaign_uuid?: StringFilter<"MarketingCampaignContact"> | string
+    contact_uuid?: StringFilter<"MarketingCampaignContact"> | string
+    channel?: EnumChannelFilter<"MarketingCampaignContact"> | $Enums.Channel
+    status?: EnumCampaignContactStatusFilter<"MarketingCampaignContact"> | $Enums.CampaignContactStatus
+    error_message?: StringNullableFilter<"MarketingCampaignContact"> | string | null
+    sent_at?: DateTimeNullableFilter<"MarketingCampaignContact"> | Date | string | null
+    delivered_at?: DateTimeNullableFilter<"MarketingCampaignContact"> | Date | string | null
+    created_at?: DateTimeFilter<"MarketingCampaignContact"> | Date | string
+    updated_at?: DateTimeFilter<"MarketingCampaignContact"> | Date | string
+    campaign?: XOR<MarketingCampaignScalarRelationFilter, MarketingCampaignWhereInput>
+    contact?: XOR<ContactScalarRelationFilter, ContactWhereInput>
+  }
+
+  export type MarketingCampaignContactOrderByWithRelationInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    campaign_uuid?: SortOrder
+    contact_uuid?: SortOrder
+    channel?: SortOrder
+    status?: SortOrder
+    error_message?: SortOrderInput | SortOrder
+    sent_at?: SortOrderInput | SortOrder
+    delivered_at?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    campaign?: MarketingCampaignOrderByWithRelationInput
+    contact?: ContactOrderByWithRelationInput
+  }
+
+  export type MarketingCampaignContactWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    uuid?: string
+    campaign_uuid_contact_uuid_channel?: MarketingCampaignContactCampaign_uuidContact_uuidChannelCompoundUniqueInput
+    AND?: MarketingCampaignContactWhereInput | MarketingCampaignContactWhereInput[]
+    OR?: MarketingCampaignContactWhereInput[]
+    NOT?: MarketingCampaignContactWhereInput | MarketingCampaignContactWhereInput[]
+    campaign_uuid?: StringFilter<"MarketingCampaignContact"> | string
+    contact_uuid?: StringFilter<"MarketingCampaignContact"> | string
+    channel?: EnumChannelFilter<"MarketingCampaignContact"> | $Enums.Channel
+    status?: EnumCampaignContactStatusFilter<"MarketingCampaignContact"> | $Enums.CampaignContactStatus
+    error_message?: StringNullableFilter<"MarketingCampaignContact"> | string | null
+    sent_at?: DateTimeNullableFilter<"MarketingCampaignContact"> | Date | string | null
+    delivered_at?: DateTimeNullableFilter<"MarketingCampaignContact"> | Date | string | null
+    created_at?: DateTimeFilter<"MarketingCampaignContact"> | Date | string
+    updated_at?: DateTimeFilter<"MarketingCampaignContact"> | Date | string
+    campaign?: XOR<MarketingCampaignScalarRelationFilter, MarketingCampaignWhereInput>
+    contact?: XOR<ContactScalarRelationFilter, ContactWhereInput>
+  }, "id" | "uuid" | "campaign_uuid_contact_uuid_channel">
+
+  export type MarketingCampaignContactOrderByWithAggregationInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    campaign_uuid?: SortOrder
+    contact_uuid?: SortOrder
+    channel?: SortOrder
+    status?: SortOrder
+    error_message?: SortOrderInput | SortOrder
+    sent_at?: SortOrderInput | SortOrder
+    delivered_at?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    _count?: MarketingCampaignContactCountOrderByAggregateInput
+    _avg?: MarketingCampaignContactAvgOrderByAggregateInput
+    _max?: MarketingCampaignContactMaxOrderByAggregateInput
+    _min?: MarketingCampaignContactMinOrderByAggregateInput
+    _sum?: MarketingCampaignContactSumOrderByAggregateInput
+  }
+
+  export type MarketingCampaignContactScalarWhereWithAggregatesInput = {
+    AND?: MarketingCampaignContactScalarWhereWithAggregatesInput | MarketingCampaignContactScalarWhereWithAggregatesInput[]
+    OR?: MarketingCampaignContactScalarWhereWithAggregatesInput[]
+    NOT?: MarketingCampaignContactScalarWhereWithAggregatesInput | MarketingCampaignContactScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"MarketingCampaignContact"> | number
+    uuid?: StringWithAggregatesFilter<"MarketingCampaignContact"> | string
+    campaign_uuid?: StringWithAggregatesFilter<"MarketingCampaignContact"> | string
+    contact_uuid?: StringWithAggregatesFilter<"MarketingCampaignContact"> | string
+    channel?: EnumChannelWithAggregatesFilter<"MarketingCampaignContact"> | $Enums.Channel
+    status?: EnumCampaignContactStatusWithAggregatesFilter<"MarketingCampaignContact"> | $Enums.CampaignContactStatus
+    error_message?: StringNullableWithAggregatesFilter<"MarketingCampaignContact"> | string | null
+    sent_at?: DateTimeNullableWithAggregatesFilter<"MarketingCampaignContact"> | Date | string | null
+    delivered_at?: DateTimeNullableWithAggregatesFilter<"MarketingCampaignContact"> | Date | string | null
+    created_at?: DateTimeWithAggregatesFilter<"MarketingCampaignContact"> | Date | string
+    updated_at?: DateTimeWithAggregatesFilter<"MarketingCampaignContact"> | Date | string
+  }
+
   export type UserCreateInput = {
     uuid?: string
     email: string
@@ -18667,6 +22527,7 @@ export namespace Prisma {
     outreach_sequences?: OutreachSequenceCreateNestedManyWithoutUserInput
     interactions?: InteractionCreateNestedManyWithoutUserInput
     sender_profiles?: SenderProfileCreateNestedManyWithoutUserInput
+    marketing_campaigns?: MarketingCampaignCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -18684,6 +22545,7 @@ export namespace Prisma {
     outreach_sequences?: OutreachSequenceUncheckedCreateNestedManyWithoutUserInput
     interactions?: InteractionUncheckedCreateNestedManyWithoutUserInput
     sender_profiles?: SenderProfileUncheckedCreateNestedManyWithoutUserInput
+    marketing_campaigns?: MarketingCampaignUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -18700,6 +22562,7 @@ export namespace Prisma {
     outreach_sequences?: OutreachSequenceUpdateManyWithoutUserNestedInput
     interactions?: InteractionUpdateManyWithoutUserNestedInput
     sender_profiles?: SenderProfileUpdateManyWithoutUserNestedInput
+    marketing_campaigns?: MarketingCampaignUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -18717,6 +22580,7 @@ export namespace Prisma {
     outreach_sequences?: OutreachSequenceUncheckedUpdateManyWithoutUserNestedInput
     interactions?: InteractionUncheckedUpdateManyWithoutUserNestedInput
     sender_profiles?: SenderProfileUncheckedUpdateManyWithoutUserNestedInput
+    marketing_campaigns?: MarketingCampaignUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -19222,6 +23086,9 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    unsubscribed_at?: Date | string | null
+    unsubscribe_token?: string | null
+    last_interaction_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutContactsInput
@@ -19230,6 +23097,7 @@ export namespace Prisma {
     tags?: ContactTagCreateNestedManyWithoutContactInput
     interactions?: InteractionCreateNestedManyWithoutContactInput
     outreach_messages?: OutreachMessageCreateNestedManyWithoutContactInput
+    campaign_contacts?: MarketingCampaignContactCreateNestedManyWithoutContactInput
   }
 
   export type ContactUncheckedCreateInput = {
@@ -19251,11 +23119,15 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    unsubscribed_at?: Date | string | null
+    unsubscribe_token?: string | null
+    last_interaction_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
     tags?: ContactTagUncheckedCreateNestedManyWithoutContactInput
     interactions?: InteractionUncheckedCreateNestedManyWithoutContactInput
     outreach_messages?: OutreachMessageUncheckedCreateNestedManyWithoutContactInput
+    campaign_contacts?: MarketingCampaignContactUncheckedCreateNestedManyWithoutContactInput
   }
 
   export type ContactUpdateInput = {
@@ -19273,6 +23145,9 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
+    last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutContactsNestedInput
@@ -19281,6 +23156,7 @@ export namespace Prisma {
     tags?: ContactTagUpdateManyWithoutContactNestedInput
     interactions?: InteractionUpdateManyWithoutContactNestedInput
     outreach_messages?: OutreachMessageUpdateManyWithoutContactNestedInput
+    campaign_contacts?: MarketingCampaignContactUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateInput = {
@@ -19302,11 +23178,15 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
+    last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     tags?: ContactTagUncheckedUpdateManyWithoutContactNestedInput
     interactions?: InteractionUncheckedUpdateManyWithoutContactNestedInput
     outreach_messages?: OutreachMessageUncheckedUpdateManyWithoutContactNestedInput
+    campaign_contacts?: MarketingCampaignContactUncheckedUpdateManyWithoutContactNestedInput
   }
 
   export type ContactCreateManyInput = {
@@ -19328,6 +23208,9 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    unsubscribed_at?: Date | string | null
+    unsubscribe_token?: string | null
+    last_interaction_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -19347,6 +23230,9 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
+    last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -19370,6 +23256,9 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
+    last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -19430,6 +23319,7 @@ export namespace Prisma {
     contact: ContactCreateNestedOneWithoutInteractionsInput
     user: UserCreateNestedOneWithoutInteractionsInput
     outreach_message?: OutreachMessageCreateNestedOneWithoutInteractionInput
+    campaign?: MarketingCampaignCreateNestedOneWithoutInteractionsInput
   }
 
   export type InteractionUncheckedCreateInput = {
@@ -19437,6 +23327,7 @@ export namespace Prisma {
     uuid?: string
     contact_uuid: string
     user_uuid: string
+    campaign_uuid?: string | null
     type: $Enums.InteractionType
     content?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
@@ -19457,6 +23348,7 @@ export namespace Prisma {
     contact?: ContactUpdateOneRequiredWithoutInteractionsNestedInput
     user?: UserUpdateOneRequiredWithoutInteractionsNestedInput
     outreach_message?: OutreachMessageUpdateOneWithoutInteractionNestedInput
+    campaign?: MarketingCampaignUpdateOneWithoutInteractionsNestedInput
   }
 
   export type InteractionUncheckedUpdateInput = {
@@ -19464,6 +23356,7 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     contact_uuid?: StringFieldUpdateOperationsInput | string
     user_uuid?: StringFieldUpdateOperationsInput | string
+    campaign_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumInteractionTypeFieldUpdateOperationsInput | $Enums.InteractionType
     content?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
@@ -19478,6 +23371,7 @@ export namespace Prisma {
     uuid?: string
     contact_uuid: string
     user_uuid: string
+    campaign_uuid?: string | null
     type: $Enums.InteractionType
     content?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
@@ -19502,6 +23396,7 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     contact_uuid?: StringFieldUpdateOperationsInput | string
     user_uuid?: StringFieldUpdateOperationsInput | string
+    campaign_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumInteractionTypeFieldUpdateOperationsInput | $Enums.InteractionType
     content?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
@@ -19514,16 +23409,24 @@ export namespace Prisma {
   export type OutreachMessageCreateInput = {
     uuid?: string
     channel: $Enums.Channel
+    direction?: $Enums.MsgDirection
     subject?: string | null
     content: string
     status?: $Enums.MsgStatus
+    provider_message_id?: string | null
+    idempotency_key?: string | null
     scheduled_at?: Date | string | null
     sent_at?: Date | string | null
+    delivered_at?: Date | string | null
+    opened_at?: Date | string | null
+    clicked_at?: Date | string | null
+    replied_at?: Date | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutOutreach_messagesInput
     contact: ContactCreateNestedOneWithoutOutreach_messagesInput
+    campaign?: MarketingCampaignCreateNestedOneWithoutOutreach_messagesInput
     interaction?: InteractionCreateNestedOneWithoutOutreach_messageInput
   }
 
@@ -19532,12 +23435,20 @@ export namespace Prisma {
     uuid?: string
     user_uuid: string
     contact_uuid: string
+    campaign_uuid?: string | null
     channel: $Enums.Channel
+    direction?: $Enums.MsgDirection
     subject?: string | null
     content: string
     status?: $Enums.MsgStatus
+    provider_message_id?: string | null
+    idempotency_key?: string | null
     scheduled_at?: Date | string | null
     sent_at?: Date | string | null
+    delivered_at?: Date | string | null
+    opened_at?: Date | string | null
+    clicked_at?: Date | string | null
+    replied_at?: Date | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
@@ -19547,16 +23458,24 @@ export namespace Prisma {
   export type OutreachMessageUpdateInput = {
     uuid?: StringFieldUpdateOperationsInput | string
     channel?: EnumChannelFieldUpdateOperationsInput | $Enums.Channel
+    direction?: EnumMsgDirectionFieldUpdateOperationsInput | $Enums.MsgDirection
     subject?: NullableStringFieldUpdateOperationsInput | string | null
     content?: StringFieldUpdateOperationsInput | string
     status?: EnumMsgStatusFieldUpdateOperationsInput | $Enums.MsgStatus
+    provider_message_id?: NullableStringFieldUpdateOperationsInput | string | null
+    idempotency_key?: NullableStringFieldUpdateOperationsInput | string | null
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    opened_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    clicked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    replied_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutOutreach_messagesNestedInput
     contact?: ContactUpdateOneRequiredWithoutOutreach_messagesNestedInput
+    campaign?: MarketingCampaignUpdateOneWithoutOutreach_messagesNestedInput
     interaction?: InteractionUpdateOneWithoutOutreach_messageNestedInput
   }
 
@@ -19565,12 +23484,20 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     user_uuid?: StringFieldUpdateOperationsInput | string
     contact_uuid?: StringFieldUpdateOperationsInput | string
+    campaign_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     channel?: EnumChannelFieldUpdateOperationsInput | $Enums.Channel
+    direction?: EnumMsgDirectionFieldUpdateOperationsInput | $Enums.MsgDirection
     subject?: NullableStringFieldUpdateOperationsInput | string | null
     content?: StringFieldUpdateOperationsInput | string
     status?: EnumMsgStatusFieldUpdateOperationsInput | $Enums.MsgStatus
+    provider_message_id?: NullableStringFieldUpdateOperationsInput | string | null
+    idempotency_key?: NullableStringFieldUpdateOperationsInput | string | null
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    opened_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    clicked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    replied_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19582,12 +23509,20 @@ export namespace Prisma {
     uuid?: string
     user_uuid: string
     contact_uuid: string
+    campaign_uuid?: string | null
     channel: $Enums.Channel
+    direction?: $Enums.MsgDirection
     subject?: string | null
     content: string
     status?: $Enums.MsgStatus
+    provider_message_id?: string | null
+    idempotency_key?: string | null
     scheduled_at?: Date | string | null
     sent_at?: Date | string | null
+    delivered_at?: Date | string | null
+    opened_at?: Date | string | null
+    clicked_at?: Date | string | null
+    replied_at?: Date | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
@@ -19596,11 +23531,18 @@ export namespace Prisma {
   export type OutreachMessageUpdateManyMutationInput = {
     uuid?: StringFieldUpdateOperationsInput | string
     channel?: EnumChannelFieldUpdateOperationsInput | $Enums.Channel
+    direction?: EnumMsgDirectionFieldUpdateOperationsInput | $Enums.MsgDirection
     subject?: NullableStringFieldUpdateOperationsInput | string | null
     content?: StringFieldUpdateOperationsInput | string
     status?: EnumMsgStatusFieldUpdateOperationsInput | $Enums.MsgStatus
+    provider_message_id?: NullableStringFieldUpdateOperationsInput | string | null
+    idempotency_key?: NullableStringFieldUpdateOperationsInput | string | null
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    opened_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    clicked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    replied_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19611,12 +23553,20 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     user_uuid?: StringFieldUpdateOperationsInput | string
     contact_uuid?: StringFieldUpdateOperationsInput | string
+    campaign_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     channel?: EnumChannelFieldUpdateOperationsInput | $Enums.Channel
+    direction?: EnumMsgDirectionFieldUpdateOperationsInput | $Enums.MsgDirection
     subject?: NullableStringFieldUpdateOperationsInput | string | null
     content?: StringFieldUpdateOperationsInput | string
     status?: EnumMsgStatusFieldUpdateOperationsInput | $Enums.MsgStatus
+    provider_message_id?: NullableStringFieldUpdateOperationsInput | string | null
+    idempotency_key?: NullableStringFieldUpdateOperationsInput | string | null
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    opened_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    clicked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    replied_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19810,6 +23760,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutSender_profilesInput
+    marketing_campaigns?: MarketingCampaignCreateNestedManyWithoutSender_profileInput
   }
 
   export type SenderProfileUncheckedCreateInput = {
@@ -19834,6 +23785,7 @@ export namespace Prisma {
     is_default?: boolean
     created_at?: Date | string
     updated_at?: Date | string
+    marketing_campaigns?: MarketingCampaignUncheckedCreateNestedManyWithoutSender_profileInput
   }
 
   export type SenderProfileUpdateInput = {
@@ -19857,6 +23809,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutSender_profilesNestedInput
+    marketing_campaigns?: MarketingCampaignUpdateManyWithoutSender_profileNestedInput
   }
 
   export type SenderProfileUncheckedUpdateInput = {
@@ -19881,6 +23834,7 @@ export namespace Prisma {
     is_default?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    marketing_campaigns?: MarketingCampaignUncheckedUpdateManyWithoutSender_profileNestedInput
   }
 
   export type SenderProfileCreateManyInput = {
@@ -19949,6 +23903,337 @@ export namespace Prisma {
     sender_id?: NullableStringFieldUpdateOperationsInput | string | null
     signature?: NullableStringFieldUpdateOperationsInput | string | null
     is_default?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MarketingCampaignCreateInput = {
+    uuid?: string
+    name: string
+    description?: string | null
+    status?: $Enums.CampaignStatus
+    channels?: MarketingCampaignCreatechannelsInput | $Enums.Channel[]
+    filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    email_subject?: string | null
+    email_content?: string | null
+    sms_content?: string | null
+    scheduled_at?: Date | string | null
+    started_at?: Date | string | null
+    completed_at?: Date | string | null
+    cancelled_at?: Date | string | null
+    selected_contact_count?: number
+    total_messages?: number
+    queued_count?: number
+    sent_count?: number
+    failed_count?: number
+    skipped_count?: number
+    delivered_count?: number
+    opened_count?: number
+    clicked_count?: number
+    replied_count?: number
+    bounced_count?: number
+    unsubscribed_count?: number
+    created_at?: Date | string
+    updated_at?: Date | string
+    user: UserCreateNestedOneWithoutMarketing_campaignsInput
+    sender_profile?: SenderProfileCreateNestedOneWithoutMarketing_campaignsInput
+    campaign_contacts?: MarketingCampaignContactCreateNestedManyWithoutCampaignInput
+    outreach_messages?: OutreachMessageCreateNestedManyWithoutCampaignInput
+    interactions?: InteractionCreateNestedManyWithoutCampaignInput
+  }
+
+  export type MarketingCampaignUncheckedCreateInput = {
+    id?: number
+    uuid?: string
+    user_uuid: string
+    name: string
+    description?: string | null
+    status?: $Enums.CampaignStatus
+    channels?: MarketingCampaignCreatechannelsInput | $Enums.Channel[]
+    filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    email_subject?: string | null
+    email_content?: string | null
+    sms_content?: string | null
+    sender_profile_uuid?: string | null
+    scheduled_at?: Date | string | null
+    started_at?: Date | string | null
+    completed_at?: Date | string | null
+    cancelled_at?: Date | string | null
+    selected_contact_count?: number
+    total_messages?: number
+    queued_count?: number
+    sent_count?: number
+    failed_count?: number
+    skipped_count?: number
+    delivered_count?: number
+    opened_count?: number
+    clicked_count?: number
+    replied_count?: number
+    bounced_count?: number
+    unsubscribed_count?: number
+    created_at?: Date | string
+    updated_at?: Date | string
+    campaign_contacts?: MarketingCampaignContactUncheckedCreateNestedManyWithoutCampaignInput
+    outreach_messages?: OutreachMessageUncheckedCreateNestedManyWithoutCampaignInput
+    interactions?: InteractionUncheckedCreateNestedManyWithoutCampaignInput
+  }
+
+  export type MarketingCampaignUpdateInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCampaignStatusFieldUpdateOperationsInput | $Enums.CampaignStatus
+    channels?: MarketingCampaignUpdatechannelsInput | $Enums.Channel[]
+    filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    email_subject?: NullableStringFieldUpdateOperationsInput | string | null
+    email_content?: NullableStringFieldUpdateOperationsInput | string | null
+    sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    selected_contact_count?: IntFieldUpdateOperationsInput | number
+    total_messages?: IntFieldUpdateOperationsInput | number
+    queued_count?: IntFieldUpdateOperationsInput | number
+    sent_count?: IntFieldUpdateOperationsInput | number
+    failed_count?: IntFieldUpdateOperationsInput | number
+    skipped_count?: IntFieldUpdateOperationsInput | number
+    delivered_count?: IntFieldUpdateOperationsInput | number
+    opened_count?: IntFieldUpdateOperationsInput | number
+    clicked_count?: IntFieldUpdateOperationsInput | number
+    replied_count?: IntFieldUpdateOperationsInput | number
+    bounced_count?: IntFieldUpdateOperationsInput | number
+    unsubscribed_count?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutMarketing_campaignsNestedInput
+    sender_profile?: SenderProfileUpdateOneWithoutMarketing_campaignsNestedInput
+    campaign_contacts?: MarketingCampaignContactUpdateManyWithoutCampaignNestedInput
+    outreach_messages?: OutreachMessageUpdateManyWithoutCampaignNestedInput
+    interactions?: InteractionUpdateManyWithoutCampaignNestedInput
+  }
+
+  export type MarketingCampaignUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCampaignStatusFieldUpdateOperationsInput | $Enums.CampaignStatus
+    channels?: MarketingCampaignUpdatechannelsInput | $Enums.Channel[]
+    filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    email_subject?: NullableStringFieldUpdateOperationsInput | string | null
+    email_content?: NullableStringFieldUpdateOperationsInput | string | null
+    sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    sender_profile_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    selected_contact_count?: IntFieldUpdateOperationsInput | number
+    total_messages?: IntFieldUpdateOperationsInput | number
+    queued_count?: IntFieldUpdateOperationsInput | number
+    sent_count?: IntFieldUpdateOperationsInput | number
+    failed_count?: IntFieldUpdateOperationsInput | number
+    skipped_count?: IntFieldUpdateOperationsInput | number
+    delivered_count?: IntFieldUpdateOperationsInput | number
+    opened_count?: IntFieldUpdateOperationsInput | number
+    clicked_count?: IntFieldUpdateOperationsInput | number
+    replied_count?: IntFieldUpdateOperationsInput | number
+    bounced_count?: IntFieldUpdateOperationsInput | number
+    unsubscribed_count?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    campaign_contacts?: MarketingCampaignContactUncheckedUpdateManyWithoutCampaignNestedInput
+    outreach_messages?: OutreachMessageUncheckedUpdateManyWithoutCampaignNestedInput
+    interactions?: InteractionUncheckedUpdateManyWithoutCampaignNestedInput
+  }
+
+  export type MarketingCampaignCreateManyInput = {
+    id?: number
+    uuid?: string
+    user_uuid: string
+    name: string
+    description?: string | null
+    status?: $Enums.CampaignStatus
+    channels?: MarketingCampaignCreatechannelsInput | $Enums.Channel[]
+    filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    email_subject?: string | null
+    email_content?: string | null
+    sms_content?: string | null
+    sender_profile_uuid?: string | null
+    scheduled_at?: Date | string | null
+    started_at?: Date | string | null
+    completed_at?: Date | string | null
+    cancelled_at?: Date | string | null
+    selected_contact_count?: number
+    total_messages?: number
+    queued_count?: number
+    sent_count?: number
+    failed_count?: number
+    skipped_count?: number
+    delivered_count?: number
+    opened_count?: number
+    clicked_count?: number
+    replied_count?: number
+    bounced_count?: number
+    unsubscribed_count?: number
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type MarketingCampaignUpdateManyMutationInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCampaignStatusFieldUpdateOperationsInput | $Enums.CampaignStatus
+    channels?: MarketingCampaignUpdatechannelsInput | $Enums.Channel[]
+    filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    email_subject?: NullableStringFieldUpdateOperationsInput | string | null
+    email_content?: NullableStringFieldUpdateOperationsInput | string | null
+    sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    selected_contact_count?: IntFieldUpdateOperationsInput | number
+    total_messages?: IntFieldUpdateOperationsInput | number
+    queued_count?: IntFieldUpdateOperationsInput | number
+    sent_count?: IntFieldUpdateOperationsInput | number
+    failed_count?: IntFieldUpdateOperationsInput | number
+    skipped_count?: IntFieldUpdateOperationsInput | number
+    delivered_count?: IntFieldUpdateOperationsInput | number
+    opened_count?: IntFieldUpdateOperationsInput | number
+    clicked_count?: IntFieldUpdateOperationsInput | number
+    replied_count?: IntFieldUpdateOperationsInput | number
+    bounced_count?: IntFieldUpdateOperationsInput | number
+    unsubscribed_count?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MarketingCampaignUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCampaignStatusFieldUpdateOperationsInput | $Enums.CampaignStatus
+    channels?: MarketingCampaignUpdatechannelsInput | $Enums.Channel[]
+    filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    email_subject?: NullableStringFieldUpdateOperationsInput | string | null
+    email_content?: NullableStringFieldUpdateOperationsInput | string | null
+    sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    sender_profile_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    selected_contact_count?: IntFieldUpdateOperationsInput | number
+    total_messages?: IntFieldUpdateOperationsInput | number
+    queued_count?: IntFieldUpdateOperationsInput | number
+    sent_count?: IntFieldUpdateOperationsInput | number
+    failed_count?: IntFieldUpdateOperationsInput | number
+    skipped_count?: IntFieldUpdateOperationsInput | number
+    delivered_count?: IntFieldUpdateOperationsInput | number
+    opened_count?: IntFieldUpdateOperationsInput | number
+    clicked_count?: IntFieldUpdateOperationsInput | number
+    replied_count?: IntFieldUpdateOperationsInput | number
+    bounced_count?: IntFieldUpdateOperationsInput | number
+    unsubscribed_count?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MarketingCampaignContactCreateInput = {
+    uuid?: string
+    channel: $Enums.Channel
+    status?: $Enums.CampaignContactStatus
+    error_message?: string | null
+    sent_at?: Date | string | null
+    delivered_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    campaign: MarketingCampaignCreateNestedOneWithoutCampaign_contactsInput
+    contact: ContactCreateNestedOneWithoutCampaign_contactsInput
+  }
+
+  export type MarketingCampaignContactUncheckedCreateInput = {
+    id?: number
+    uuid?: string
+    campaign_uuid: string
+    contact_uuid: string
+    channel: $Enums.Channel
+    status?: $Enums.CampaignContactStatus
+    error_message?: string | null
+    sent_at?: Date | string | null
+    delivered_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type MarketingCampaignContactUpdateInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    channel?: EnumChannelFieldUpdateOperationsInput | $Enums.Channel
+    status?: EnumCampaignContactStatusFieldUpdateOperationsInput | $Enums.CampaignContactStatus
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+    sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    campaign?: MarketingCampaignUpdateOneRequiredWithoutCampaign_contactsNestedInput
+    contact?: ContactUpdateOneRequiredWithoutCampaign_contactsNestedInput
+  }
+
+  export type MarketingCampaignContactUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    campaign_uuid?: StringFieldUpdateOperationsInput | string
+    contact_uuid?: StringFieldUpdateOperationsInput | string
+    channel?: EnumChannelFieldUpdateOperationsInput | $Enums.Channel
+    status?: EnumCampaignContactStatusFieldUpdateOperationsInput | $Enums.CampaignContactStatus
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+    sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MarketingCampaignContactCreateManyInput = {
+    id?: number
+    uuid?: string
+    campaign_uuid: string
+    contact_uuid: string
+    channel: $Enums.Channel
+    status?: $Enums.CampaignContactStatus
+    error_message?: string | null
+    sent_at?: Date | string | null
+    delivered_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type MarketingCampaignContactUpdateManyMutationInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    channel?: EnumChannelFieldUpdateOperationsInput | $Enums.Channel
+    status?: EnumCampaignContactStatusFieldUpdateOperationsInput | $Enums.CampaignContactStatus
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+    sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MarketingCampaignContactUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    campaign_uuid?: StringFieldUpdateOperationsInput | string
+    contact_uuid?: StringFieldUpdateOperationsInput | string
+    channel?: EnumChannelFieldUpdateOperationsInput | $Enums.Channel
+    status?: EnumCampaignContactStatusFieldUpdateOperationsInput | $Enums.CampaignContactStatus
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+    sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -20048,6 +24333,12 @@ export namespace Prisma {
     none?: SenderProfileWhereInput
   }
 
+  export type MarketingCampaignListRelationFilter = {
+    every?: MarketingCampaignWhereInput
+    some?: MarketingCampaignWhereInput
+    none?: MarketingCampaignWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -20074,6 +24365,10 @@ export namespace Prisma {
   }
 
   export type SenderProfileOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type MarketingCampaignOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -20723,7 +25018,17 @@ export namespace Prisma {
     none?: ContactTagWhereInput
   }
 
+  export type MarketingCampaignContactListRelationFilter = {
+    every?: MarketingCampaignContactWhereInput
+    some?: MarketingCampaignContactWhereInput
+    none?: MarketingCampaignContactWhereInput
+  }
+
   export type ContactTagOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type MarketingCampaignContactOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -20751,6 +25056,9 @@ export namespace Prisma {
     location?: SortOrder
     industry?: SortOrder
     description?: SortOrder
+    unsubscribed_at?: SortOrder
+    unsubscribe_token?: SortOrder
+    last_interaction_at?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -20779,6 +25087,9 @@ export namespace Prisma {
     location?: SortOrder
     industry?: SortOrder
     description?: SortOrder
+    unsubscribed_at?: SortOrder
+    unsubscribe_token?: SortOrder
+    last_interaction_at?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -20802,6 +25113,9 @@ export namespace Prisma {
     location?: SortOrder
     industry?: SortOrder
     description?: SortOrder
+    unsubscribed_at?: SortOrder
+    unsubscribe_token?: SortOrder
+    last_interaction_at?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -20872,11 +25186,17 @@ export namespace Prisma {
     isNot?: OutreachMessageWhereInput | null
   }
 
+  export type MarketingCampaignNullableScalarRelationFilter = {
+    is?: MarketingCampaignWhereInput | null
+    isNot?: MarketingCampaignWhereInput | null
+  }
+
   export type InteractionCountOrderByAggregateInput = {
     id?: SortOrder
     uuid?: SortOrder
     contact_uuid?: SortOrder
     user_uuid?: SortOrder
+    campaign_uuid?: SortOrder
     type?: SortOrder
     content?: SortOrder
     metadata?: SortOrder
@@ -20895,6 +25215,7 @@ export namespace Prisma {
     uuid?: SortOrder
     contact_uuid?: SortOrder
     user_uuid?: SortOrder
+    campaign_uuid?: SortOrder
     type?: SortOrder
     content?: SortOrder
     outreach_message_uuid?: SortOrder
@@ -20907,6 +25228,7 @@ export namespace Prisma {
     uuid?: SortOrder
     contact_uuid?: SortOrder
     user_uuid?: SortOrder
+    campaign_uuid?: SortOrder
     type?: SortOrder
     content?: SortOrder
     outreach_message_uuid?: SortOrder
@@ -20935,6 +25257,13 @@ export namespace Prisma {
     not?: NestedEnumChannelFilter<$PrismaModel> | $Enums.Channel
   }
 
+  export type EnumMsgDirectionFilter<$PrismaModel = never> = {
+    equals?: $Enums.MsgDirection | EnumMsgDirectionFieldRefInput<$PrismaModel>
+    in?: $Enums.MsgDirection[] | ListEnumMsgDirectionFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MsgDirection[] | ListEnumMsgDirectionFieldRefInput<$PrismaModel>
+    not?: NestedEnumMsgDirectionFilter<$PrismaModel> | $Enums.MsgDirection
+  }
+
   export type EnumMsgStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.MsgStatus | EnumMsgStatusFieldRefInput<$PrismaModel>
     in?: $Enums.MsgStatus[] | ListEnumMsgStatusFieldRefInput<$PrismaModel>
@@ -20952,12 +25281,20 @@ export namespace Prisma {
     uuid?: SortOrder
     user_uuid?: SortOrder
     contact_uuid?: SortOrder
+    campaign_uuid?: SortOrder
     channel?: SortOrder
+    direction?: SortOrder
     subject?: SortOrder
     content?: SortOrder
     status?: SortOrder
+    provider_message_id?: SortOrder
+    idempotency_key?: SortOrder
     scheduled_at?: SortOrder
     sent_at?: SortOrder
+    delivered_at?: SortOrder
+    opened_at?: SortOrder
+    clicked_at?: SortOrder
+    replied_at?: SortOrder
     metadata?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -20972,12 +25309,20 @@ export namespace Prisma {
     uuid?: SortOrder
     user_uuid?: SortOrder
     contact_uuid?: SortOrder
+    campaign_uuid?: SortOrder
     channel?: SortOrder
+    direction?: SortOrder
     subject?: SortOrder
     content?: SortOrder
     status?: SortOrder
+    provider_message_id?: SortOrder
+    idempotency_key?: SortOrder
     scheduled_at?: SortOrder
     sent_at?: SortOrder
+    delivered_at?: SortOrder
+    opened_at?: SortOrder
+    clicked_at?: SortOrder
+    replied_at?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -20987,12 +25332,20 @@ export namespace Prisma {
     uuid?: SortOrder
     user_uuid?: SortOrder
     contact_uuid?: SortOrder
+    campaign_uuid?: SortOrder
     channel?: SortOrder
+    direction?: SortOrder
     subject?: SortOrder
     content?: SortOrder
     status?: SortOrder
+    provider_message_id?: SortOrder
+    idempotency_key?: SortOrder
     scheduled_at?: SortOrder
     sent_at?: SortOrder
+    delivered_at?: SortOrder
+    opened_at?: SortOrder
+    clicked_at?: SortOrder
+    replied_at?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -21009,6 +25362,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumChannelFilter<$PrismaModel>
     _max?: NestedEnumChannelFilter<$PrismaModel>
+  }
+
+  export type EnumMsgDirectionWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.MsgDirection | EnumMsgDirectionFieldRefInput<$PrismaModel>
+    in?: $Enums.MsgDirection[] | ListEnumMsgDirectionFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MsgDirection[] | ListEnumMsgDirectionFieldRefInput<$PrismaModel>
+    not?: NestedEnumMsgDirectionWithAggregatesFilter<$PrismaModel> | $Enums.MsgDirection
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumMsgDirectionFilter<$PrismaModel>
+    _max?: NestedEnumMsgDirectionFilter<$PrismaModel>
   }
 
   export type EnumMsgStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -21228,6 +25591,233 @@ export namespace Prisma {
     id?: SortOrder
   }
 
+  export type EnumCampaignStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.CampaignStatus | EnumCampaignStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CampaignStatus[] | ListEnumCampaignStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CampaignStatus[] | ListEnumCampaignStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumCampaignStatusFilter<$PrismaModel> | $Enums.CampaignStatus
+  }
+
+  export type SenderProfileNullableScalarRelationFilter = {
+    is?: SenderProfileWhereInput | null
+    isNot?: SenderProfileWhereInput | null
+  }
+
+  export type MarketingCampaignCountOrderByAggregateInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    user_uuid?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    status?: SortOrder
+    channels?: SortOrder
+    filters_snapshot?: SortOrder
+    email_subject?: SortOrder
+    email_content?: SortOrder
+    sms_content?: SortOrder
+    sender_profile_uuid?: SortOrder
+    scheduled_at?: SortOrder
+    started_at?: SortOrder
+    completed_at?: SortOrder
+    cancelled_at?: SortOrder
+    selected_contact_count?: SortOrder
+    total_messages?: SortOrder
+    queued_count?: SortOrder
+    sent_count?: SortOrder
+    failed_count?: SortOrder
+    skipped_count?: SortOrder
+    delivered_count?: SortOrder
+    opened_count?: SortOrder
+    clicked_count?: SortOrder
+    replied_count?: SortOrder
+    bounced_count?: SortOrder
+    unsubscribed_count?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type MarketingCampaignAvgOrderByAggregateInput = {
+    id?: SortOrder
+    selected_contact_count?: SortOrder
+    total_messages?: SortOrder
+    queued_count?: SortOrder
+    sent_count?: SortOrder
+    failed_count?: SortOrder
+    skipped_count?: SortOrder
+    delivered_count?: SortOrder
+    opened_count?: SortOrder
+    clicked_count?: SortOrder
+    replied_count?: SortOrder
+    bounced_count?: SortOrder
+    unsubscribed_count?: SortOrder
+  }
+
+  export type MarketingCampaignMaxOrderByAggregateInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    user_uuid?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    status?: SortOrder
+    email_subject?: SortOrder
+    email_content?: SortOrder
+    sms_content?: SortOrder
+    sender_profile_uuid?: SortOrder
+    scheduled_at?: SortOrder
+    started_at?: SortOrder
+    completed_at?: SortOrder
+    cancelled_at?: SortOrder
+    selected_contact_count?: SortOrder
+    total_messages?: SortOrder
+    queued_count?: SortOrder
+    sent_count?: SortOrder
+    failed_count?: SortOrder
+    skipped_count?: SortOrder
+    delivered_count?: SortOrder
+    opened_count?: SortOrder
+    clicked_count?: SortOrder
+    replied_count?: SortOrder
+    bounced_count?: SortOrder
+    unsubscribed_count?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type MarketingCampaignMinOrderByAggregateInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    user_uuid?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    status?: SortOrder
+    email_subject?: SortOrder
+    email_content?: SortOrder
+    sms_content?: SortOrder
+    sender_profile_uuid?: SortOrder
+    scheduled_at?: SortOrder
+    started_at?: SortOrder
+    completed_at?: SortOrder
+    cancelled_at?: SortOrder
+    selected_contact_count?: SortOrder
+    total_messages?: SortOrder
+    queued_count?: SortOrder
+    sent_count?: SortOrder
+    failed_count?: SortOrder
+    skipped_count?: SortOrder
+    delivered_count?: SortOrder
+    opened_count?: SortOrder
+    clicked_count?: SortOrder
+    replied_count?: SortOrder
+    bounced_count?: SortOrder
+    unsubscribed_count?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type MarketingCampaignSumOrderByAggregateInput = {
+    id?: SortOrder
+    selected_contact_count?: SortOrder
+    total_messages?: SortOrder
+    queued_count?: SortOrder
+    sent_count?: SortOrder
+    failed_count?: SortOrder
+    skipped_count?: SortOrder
+    delivered_count?: SortOrder
+    opened_count?: SortOrder
+    clicked_count?: SortOrder
+    replied_count?: SortOrder
+    bounced_count?: SortOrder
+    unsubscribed_count?: SortOrder
+  }
+
+  export type EnumCampaignStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CampaignStatus | EnumCampaignStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CampaignStatus[] | ListEnumCampaignStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CampaignStatus[] | ListEnumCampaignStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumCampaignStatusWithAggregatesFilter<$PrismaModel> | $Enums.CampaignStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCampaignStatusFilter<$PrismaModel>
+    _max?: NestedEnumCampaignStatusFilter<$PrismaModel>
+  }
+
+  export type EnumCampaignContactStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.CampaignContactStatus | EnumCampaignContactStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CampaignContactStatus[] | ListEnumCampaignContactStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CampaignContactStatus[] | ListEnumCampaignContactStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumCampaignContactStatusFilter<$PrismaModel> | $Enums.CampaignContactStatus
+  }
+
+  export type MarketingCampaignScalarRelationFilter = {
+    is?: MarketingCampaignWhereInput
+    isNot?: MarketingCampaignWhereInput
+  }
+
+  export type MarketingCampaignContactCampaign_uuidContact_uuidChannelCompoundUniqueInput = {
+    campaign_uuid: string
+    contact_uuid: string
+    channel: $Enums.Channel
+  }
+
+  export type MarketingCampaignContactCountOrderByAggregateInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    campaign_uuid?: SortOrder
+    contact_uuid?: SortOrder
+    channel?: SortOrder
+    status?: SortOrder
+    error_message?: SortOrder
+    sent_at?: SortOrder
+    delivered_at?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type MarketingCampaignContactAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type MarketingCampaignContactMaxOrderByAggregateInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    campaign_uuid?: SortOrder
+    contact_uuid?: SortOrder
+    channel?: SortOrder
+    status?: SortOrder
+    error_message?: SortOrder
+    sent_at?: SortOrder
+    delivered_at?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type MarketingCampaignContactMinOrderByAggregateInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    campaign_uuid?: SortOrder
+    contact_uuid?: SortOrder
+    channel?: SortOrder
+    status?: SortOrder
+    error_message?: SortOrder
+    sent_at?: SortOrder
+    delivered_at?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type MarketingCampaignContactSumOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type EnumCampaignContactStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CampaignContactStatus | EnumCampaignContactStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CampaignContactStatus[] | ListEnumCampaignContactStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CampaignContactStatus[] | ListEnumCampaignContactStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumCampaignContactStatusWithAggregatesFilter<$PrismaModel> | $Enums.CampaignContactStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCampaignContactStatusFilter<$PrismaModel>
+    _max?: NestedEnumCampaignContactStatusFilter<$PrismaModel>
+  }
+
   export type FilterCreateNestedManyWithoutUserInput = {
     create?: XOR<FilterCreateWithoutUserInput, FilterUncheckedCreateWithoutUserInput> | FilterCreateWithoutUserInput[] | FilterUncheckedCreateWithoutUserInput[]
     connectOrCreate?: FilterCreateOrConnectWithoutUserInput | FilterCreateOrConnectWithoutUserInput[]
@@ -21270,6 +25860,13 @@ export namespace Prisma {
     connect?: SenderProfileWhereUniqueInput | SenderProfileWhereUniqueInput[]
   }
 
+  export type MarketingCampaignCreateNestedManyWithoutUserInput = {
+    create?: XOR<MarketingCampaignCreateWithoutUserInput, MarketingCampaignUncheckedCreateWithoutUserInput> | MarketingCampaignCreateWithoutUserInput[] | MarketingCampaignUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: MarketingCampaignCreateOrConnectWithoutUserInput | MarketingCampaignCreateOrConnectWithoutUserInput[]
+    createMany?: MarketingCampaignCreateManyUserInputEnvelope
+    connect?: MarketingCampaignWhereUniqueInput | MarketingCampaignWhereUniqueInput[]
+  }
+
   export type FilterUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<FilterCreateWithoutUserInput, FilterUncheckedCreateWithoutUserInput> | FilterCreateWithoutUserInput[] | FilterUncheckedCreateWithoutUserInput[]
     connectOrCreate?: FilterCreateOrConnectWithoutUserInput | FilterCreateOrConnectWithoutUserInput[]
@@ -21310,6 +25907,13 @@ export namespace Prisma {
     connectOrCreate?: SenderProfileCreateOrConnectWithoutUserInput | SenderProfileCreateOrConnectWithoutUserInput[]
     createMany?: SenderProfileCreateManyUserInputEnvelope
     connect?: SenderProfileWhereUniqueInput | SenderProfileWhereUniqueInput[]
+  }
+
+  export type MarketingCampaignUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<MarketingCampaignCreateWithoutUserInput, MarketingCampaignUncheckedCreateWithoutUserInput> | MarketingCampaignCreateWithoutUserInput[] | MarketingCampaignUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: MarketingCampaignCreateOrConnectWithoutUserInput | MarketingCampaignCreateOrConnectWithoutUserInput[]
+    createMany?: MarketingCampaignCreateManyUserInputEnvelope
+    connect?: MarketingCampaignWhereUniqueInput | MarketingCampaignWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -21412,6 +26016,20 @@ export namespace Prisma {
     deleteMany?: SenderProfileScalarWhereInput | SenderProfileScalarWhereInput[]
   }
 
+  export type MarketingCampaignUpdateManyWithoutUserNestedInput = {
+    create?: XOR<MarketingCampaignCreateWithoutUserInput, MarketingCampaignUncheckedCreateWithoutUserInput> | MarketingCampaignCreateWithoutUserInput[] | MarketingCampaignUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: MarketingCampaignCreateOrConnectWithoutUserInput | MarketingCampaignCreateOrConnectWithoutUserInput[]
+    upsert?: MarketingCampaignUpsertWithWhereUniqueWithoutUserInput | MarketingCampaignUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: MarketingCampaignCreateManyUserInputEnvelope
+    set?: MarketingCampaignWhereUniqueInput | MarketingCampaignWhereUniqueInput[]
+    disconnect?: MarketingCampaignWhereUniqueInput | MarketingCampaignWhereUniqueInput[]
+    delete?: MarketingCampaignWhereUniqueInput | MarketingCampaignWhereUniqueInput[]
+    connect?: MarketingCampaignWhereUniqueInput | MarketingCampaignWhereUniqueInput[]
+    update?: MarketingCampaignUpdateWithWhereUniqueWithoutUserInput | MarketingCampaignUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: MarketingCampaignUpdateManyWithWhereWithoutUserInput | MarketingCampaignUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: MarketingCampaignScalarWhereInput | MarketingCampaignScalarWhereInput[]
+  }
+
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -21502,6 +26120,20 @@ export namespace Prisma {
     update?: SenderProfileUpdateWithWhereUniqueWithoutUserInput | SenderProfileUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: SenderProfileUpdateManyWithWhereWithoutUserInput | SenderProfileUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: SenderProfileScalarWhereInput | SenderProfileScalarWhereInput[]
+  }
+
+  export type MarketingCampaignUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<MarketingCampaignCreateWithoutUserInput, MarketingCampaignUncheckedCreateWithoutUserInput> | MarketingCampaignCreateWithoutUserInput[] | MarketingCampaignUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: MarketingCampaignCreateOrConnectWithoutUserInput | MarketingCampaignCreateOrConnectWithoutUserInput[]
+    upsert?: MarketingCampaignUpsertWithWhereUniqueWithoutUserInput | MarketingCampaignUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: MarketingCampaignCreateManyUserInputEnvelope
+    set?: MarketingCampaignWhereUniqueInput | MarketingCampaignWhereUniqueInput[]
+    disconnect?: MarketingCampaignWhereUniqueInput | MarketingCampaignWhereUniqueInput[]
+    delete?: MarketingCampaignWhereUniqueInput | MarketingCampaignWhereUniqueInput[]
+    connect?: MarketingCampaignWhereUniqueInput | MarketingCampaignWhereUniqueInput[]
+    update?: MarketingCampaignUpdateWithWhereUniqueWithoutUserInput | MarketingCampaignUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: MarketingCampaignUpdateManyWithWhereWithoutUserInput | MarketingCampaignUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: MarketingCampaignScalarWhereInput | MarketingCampaignScalarWhereInput[]
   }
 
   export type FilterCreateenrichment_sourcesInput = {
@@ -21893,6 +26525,13 @@ export namespace Prisma {
     connect?: OutreachMessageWhereUniqueInput | OutreachMessageWhereUniqueInput[]
   }
 
+  export type MarketingCampaignContactCreateNestedManyWithoutContactInput = {
+    create?: XOR<MarketingCampaignContactCreateWithoutContactInput, MarketingCampaignContactUncheckedCreateWithoutContactInput> | MarketingCampaignContactCreateWithoutContactInput[] | MarketingCampaignContactUncheckedCreateWithoutContactInput[]
+    connectOrCreate?: MarketingCampaignContactCreateOrConnectWithoutContactInput | MarketingCampaignContactCreateOrConnectWithoutContactInput[]
+    createMany?: MarketingCampaignContactCreateManyContactInputEnvelope
+    connect?: MarketingCampaignContactWhereUniqueInput | MarketingCampaignContactWhereUniqueInput[]
+  }
+
   export type ContactTagUncheckedCreateNestedManyWithoutContactInput = {
     create?: XOR<ContactTagCreateWithoutContactInput, ContactTagUncheckedCreateWithoutContactInput> | ContactTagCreateWithoutContactInput[] | ContactTagUncheckedCreateWithoutContactInput[]
     connectOrCreate?: ContactTagCreateOrConnectWithoutContactInput | ContactTagCreateOrConnectWithoutContactInput[]
@@ -21912,6 +26551,13 @@ export namespace Prisma {
     connectOrCreate?: OutreachMessageCreateOrConnectWithoutContactInput | OutreachMessageCreateOrConnectWithoutContactInput[]
     createMany?: OutreachMessageCreateManyContactInputEnvelope
     connect?: OutreachMessageWhereUniqueInput | OutreachMessageWhereUniqueInput[]
+  }
+
+  export type MarketingCampaignContactUncheckedCreateNestedManyWithoutContactInput = {
+    create?: XOR<MarketingCampaignContactCreateWithoutContactInput, MarketingCampaignContactUncheckedCreateWithoutContactInput> | MarketingCampaignContactCreateWithoutContactInput[] | MarketingCampaignContactUncheckedCreateWithoutContactInput[]
+    connectOrCreate?: MarketingCampaignContactCreateOrConnectWithoutContactInput | MarketingCampaignContactCreateOrConnectWithoutContactInput[]
+    createMany?: MarketingCampaignContactCreateManyContactInputEnvelope
+    connect?: MarketingCampaignContactWhereUniqueInput | MarketingCampaignContactWhereUniqueInput[]
   }
 
   export type EnumLeadStatusFieldUpdateOperationsInput = {
@@ -21986,6 +26632,20 @@ export namespace Prisma {
     deleteMany?: OutreachMessageScalarWhereInput | OutreachMessageScalarWhereInput[]
   }
 
+  export type MarketingCampaignContactUpdateManyWithoutContactNestedInput = {
+    create?: XOR<MarketingCampaignContactCreateWithoutContactInput, MarketingCampaignContactUncheckedCreateWithoutContactInput> | MarketingCampaignContactCreateWithoutContactInput[] | MarketingCampaignContactUncheckedCreateWithoutContactInput[]
+    connectOrCreate?: MarketingCampaignContactCreateOrConnectWithoutContactInput | MarketingCampaignContactCreateOrConnectWithoutContactInput[]
+    upsert?: MarketingCampaignContactUpsertWithWhereUniqueWithoutContactInput | MarketingCampaignContactUpsertWithWhereUniqueWithoutContactInput[]
+    createMany?: MarketingCampaignContactCreateManyContactInputEnvelope
+    set?: MarketingCampaignContactWhereUniqueInput | MarketingCampaignContactWhereUniqueInput[]
+    disconnect?: MarketingCampaignContactWhereUniqueInput | MarketingCampaignContactWhereUniqueInput[]
+    delete?: MarketingCampaignContactWhereUniqueInput | MarketingCampaignContactWhereUniqueInput[]
+    connect?: MarketingCampaignContactWhereUniqueInput | MarketingCampaignContactWhereUniqueInput[]
+    update?: MarketingCampaignContactUpdateWithWhereUniqueWithoutContactInput | MarketingCampaignContactUpdateWithWhereUniqueWithoutContactInput[]
+    updateMany?: MarketingCampaignContactUpdateManyWithWhereWithoutContactInput | MarketingCampaignContactUpdateManyWithWhereWithoutContactInput[]
+    deleteMany?: MarketingCampaignContactScalarWhereInput | MarketingCampaignContactScalarWhereInput[]
+  }
+
   export type ContactTagUncheckedUpdateManyWithoutContactNestedInput = {
     create?: XOR<ContactTagCreateWithoutContactInput, ContactTagUncheckedCreateWithoutContactInput> | ContactTagCreateWithoutContactInput[] | ContactTagUncheckedCreateWithoutContactInput[]
     connectOrCreate?: ContactTagCreateOrConnectWithoutContactInput | ContactTagCreateOrConnectWithoutContactInput[]
@@ -22028,6 +26688,20 @@ export namespace Prisma {
     deleteMany?: OutreachMessageScalarWhereInput | OutreachMessageScalarWhereInput[]
   }
 
+  export type MarketingCampaignContactUncheckedUpdateManyWithoutContactNestedInput = {
+    create?: XOR<MarketingCampaignContactCreateWithoutContactInput, MarketingCampaignContactUncheckedCreateWithoutContactInput> | MarketingCampaignContactCreateWithoutContactInput[] | MarketingCampaignContactUncheckedCreateWithoutContactInput[]
+    connectOrCreate?: MarketingCampaignContactCreateOrConnectWithoutContactInput | MarketingCampaignContactCreateOrConnectWithoutContactInput[]
+    upsert?: MarketingCampaignContactUpsertWithWhereUniqueWithoutContactInput | MarketingCampaignContactUpsertWithWhereUniqueWithoutContactInput[]
+    createMany?: MarketingCampaignContactCreateManyContactInputEnvelope
+    set?: MarketingCampaignContactWhereUniqueInput | MarketingCampaignContactWhereUniqueInput[]
+    disconnect?: MarketingCampaignContactWhereUniqueInput | MarketingCampaignContactWhereUniqueInput[]
+    delete?: MarketingCampaignContactWhereUniqueInput | MarketingCampaignContactWhereUniqueInput[]
+    connect?: MarketingCampaignContactWhereUniqueInput | MarketingCampaignContactWhereUniqueInput[]
+    update?: MarketingCampaignContactUpdateWithWhereUniqueWithoutContactInput | MarketingCampaignContactUpdateWithWhereUniqueWithoutContactInput[]
+    updateMany?: MarketingCampaignContactUpdateManyWithWhereWithoutContactInput | MarketingCampaignContactUpdateManyWithWhereWithoutContactInput[]
+    deleteMany?: MarketingCampaignContactScalarWhereInput | MarketingCampaignContactScalarWhereInput[]
+  }
+
   export type ContactCreateNestedOneWithoutTagsInput = {
     create?: XOR<ContactCreateWithoutTagsInput, ContactUncheckedCreateWithoutTagsInput>
     connectOrCreate?: ContactCreateOrConnectWithoutTagsInput
@@ -22060,6 +26734,12 @@ export namespace Prisma {
     connect?: OutreachMessageWhereUniqueInput
   }
 
+  export type MarketingCampaignCreateNestedOneWithoutInteractionsInput = {
+    create?: XOR<MarketingCampaignCreateWithoutInteractionsInput, MarketingCampaignUncheckedCreateWithoutInteractionsInput>
+    connectOrCreate?: MarketingCampaignCreateOrConnectWithoutInteractionsInput
+    connect?: MarketingCampaignWhereUniqueInput
+  }
+
   export type EnumInteractionTypeFieldUpdateOperationsInput = {
     set?: $Enums.InteractionType
   }
@@ -22090,6 +26770,16 @@ export namespace Prisma {
     update?: XOR<XOR<OutreachMessageUpdateToOneWithWhereWithoutInteractionInput, OutreachMessageUpdateWithoutInteractionInput>, OutreachMessageUncheckedUpdateWithoutInteractionInput>
   }
 
+  export type MarketingCampaignUpdateOneWithoutInteractionsNestedInput = {
+    create?: XOR<MarketingCampaignCreateWithoutInteractionsInput, MarketingCampaignUncheckedCreateWithoutInteractionsInput>
+    connectOrCreate?: MarketingCampaignCreateOrConnectWithoutInteractionsInput
+    upsert?: MarketingCampaignUpsertWithoutInteractionsInput
+    disconnect?: MarketingCampaignWhereInput | boolean
+    delete?: MarketingCampaignWhereInput | boolean
+    connect?: MarketingCampaignWhereUniqueInput
+    update?: XOR<XOR<MarketingCampaignUpdateToOneWithWhereWithoutInteractionsInput, MarketingCampaignUpdateWithoutInteractionsInput>, MarketingCampaignUncheckedUpdateWithoutInteractionsInput>
+  }
+
   export type UserCreateNestedOneWithoutOutreach_messagesInput = {
     create?: XOR<UserCreateWithoutOutreach_messagesInput, UserUncheckedCreateWithoutOutreach_messagesInput>
     connectOrCreate?: UserCreateOrConnectWithoutOutreach_messagesInput
@@ -22100,6 +26790,12 @@ export namespace Prisma {
     create?: XOR<ContactCreateWithoutOutreach_messagesInput, ContactUncheckedCreateWithoutOutreach_messagesInput>
     connectOrCreate?: ContactCreateOrConnectWithoutOutreach_messagesInput
     connect?: ContactWhereUniqueInput
+  }
+
+  export type MarketingCampaignCreateNestedOneWithoutOutreach_messagesInput = {
+    create?: XOR<MarketingCampaignCreateWithoutOutreach_messagesInput, MarketingCampaignUncheckedCreateWithoutOutreach_messagesInput>
+    connectOrCreate?: MarketingCampaignCreateOrConnectWithoutOutreach_messagesInput
+    connect?: MarketingCampaignWhereUniqueInput
   }
 
   export type InteractionCreateNestedOneWithoutOutreach_messageInput = {
@@ -22116,6 +26812,10 @@ export namespace Prisma {
 
   export type EnumChannelFieldUpdateOperationsInput = {
     set?: $Enums.Channel
+  }
+
+  export type EnumMsgDirectionFieldUpdateOperationsInput = {
+    set?: $Enums.MsgDirection
   }
 
   export type EnumMsgStatusFieldUpdateOperationsInput = {
@@ -22136,6 +26836,16 @@ export namespace Prisma {
     upsert?: ContactUpsertWithoutOutreach_messagesInput
     connect?: ContactWhereUniqueInput
     update?: XOR<XOR<ContactUpdateToOneWithWhereWithoutOutreach_messagesInput, ContactUpdateWithoutOutreach_messagesInput>, ContactUncheckedUpdateWithoutOutreach_messagesInput>
+  }
+
+  export type MarketingCampaignUpdateOneWithoutOutreach_messagesNestedInput = {
+    create?: XOR<MarketingCampaignCreateWithoutOutreach_messagesInput, MarketingCampaignUncheckedCreateWithoutOutreach_messagesInput>
+    connectOrCreate?: MarketingCampaignCreateOrConnectWithoutOutreach_messagesInput
+    upsert?: MarketingCampaignUpsertWithoutOutreach_messagesInput
+    disconnect?: MarketingCampaignWhereInput | boolean
+    delete?: MarketingCampaignWhereInput | boolean
+    connect?: MarketingCampaignWhereUniqueInput
+    update?: XOR<XOR<MarketingCampaignUpdateToOneWithWhereWithoutOutreach_messagesInput, MarketingCampaignUpdateWithoutOutreach_messagesInput>, MarketingCampaignUncheckedUpdateWithoutOutreach_messagesInput>
   }
 
   export type InteractionUpdateOneWithoutOutreach_messageNestedInput = {
@@ -22200,12 +26910,255 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
+  export type MarketingCampaignCreateNestedManyWithoutSender_profileInput = {
+    create?: XOR<MarketingCampaignCreateWithoutSender_profileInput, MarketingCampaignUncheckedCreateWithoutSender_profileInput> | MarketingCampaignCreateWithoutSender_profileInput[] | MarketingCampaignUncheckedCreateWithoutSender_profileInput[]
+    connectOrCreate?: MarketingCampaignCreateOrConnectWithoutSender_profileInput | MarketingCampaignCreateOrConnectWithoutSender_profileInput[]
+    createMany?: MarketingCampaignCreateManySender_profileInputEnvelope
+    connect?: MarketingCampaignWhereUniqueInput | MarketingCampaignWhereUniqueInput[]
+  }
+
+  export type MarketingCampaignUncheckedCreateNestedManyWithoutSender_profileInput = {
+    create?: XOR<MarketingCampaignCreateWithoutSender_profileInput, MarketingCampaignUncheckedCreateWithoutSender_profileInput> | MarketingCampaignCreateWithoutSender_profileInput[] | MarketingCampaignUncheckedCreateWithoutSender_profileInput[]
+    connectOrCreate?: MarketingCampaignCreateOrConnectWithoutSender_profileInput | MarketingCampaignCreateOrConnectWithoutSender_profileInput[]
+    createMany?: MarketingCampaignCreateManySender_profileInputEnvelope
+    connect?: MarketingCampaignWhereUniqueInput | MarketingCampaignWhereUniqueInput[]
+  }
+
   export type UserUpdateOneRequiredWithoutSender_profilesNestedInput = {
     create?: XOR<UserCreateWithoutSender_profilesInput, UserUncheckedCreateWithoutSender_profilesInput>
     connectOrCreate?: UserCreateOrConnectWithoutSender_profilesInput
     upsert?: UserUpsertWithoutSender_profilesInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSender_profilesInput, UserUpdateWithoutSender_profilesInput>, UserUncheckedUpdateWithoutSender_profilesInput>
+  }
+
+  export type MarketingCampaignUpdateManyWithoutSender_profileNestedInput = {
+    create?: XOR<MarketingCampaignCreateWithoutSender_profileInput, MarketingCampaignUncheckedCreateWithoutSender_profileInput> | MarketingCampaignCreateWithoutSender_profileInput[] | MarketingCampaignUncheckedCreateWithoutSender_profileInput[]
+    connectOrCreate?: MarketingCampaignCreateOrConnectWithoutSender_profileInput | MarketingCampaignCreateOrConnectWithoutSender_profileInput[]
+    upsert?: MarketingCampaignUpsertWithWhereUniqueWithoutSender_profileInput | MarketingCampaignUpsertWithWhereUniqueWithoutSender_profileInput[]
+    createMany?: MarketingCampaignCreateManySender_profileInputEnvelope
+    set?: MarketingCampaignWhereUniqueInput | MarketingCampaignWhereUniqueInput[]
+    disconnect?: MarketingCampaignWhereUniqueInput | MarketingCampaignWhereUniqueInput[]
+    delete?: MarketingCampaignWhereUniqueInput | MarketingCampaignWhereUniqueInput[]
+    connect?: MarketingCampaignWhereUniqueInput | MarketingCampaignWhereUniqueInput[]
+    update?: MarketingCampaignUpdateWithWhereUniqueWithoutSender_profileInput | MarketingCampaignUpdateWithWhereUniqueWithoutSender_profileInput[]
+    updateMany?: MarketingCampaignUpdateManyWithWhereWithoutSender_profileInput | MarketingCampaignUpdateManyWithWhereWithoutSender_profileInput[]
+    deleteMany?: MarketingCampaignScalarWhereInput | MarketingCampaignScalarWhereInput[]
+  }
+
+  export type MarketingCampaignUncheckedUpdateManyWithoutSender_profileNestedInput = {
+    create?: XOR<MarketingCampaignCreateWithoutSender_profileInput, MarketingCampaignUncheckedCreateWithoutSender_profileInput> | MarketingCampaignCreateWithoutSender_profileInput[] | MarketingCampaignUncheckedCreateWithoutSender_profileInput[]
+    connectOrCreate?: MarketingCampaignCreateOrConnectWithoutSender_profileInput | MarketingCampaignCreateOrConnectWithoutSender_profileInput[]
+    upsert?: MarketingCampaignUpsertWithWhereUniqueWithoutSender_profileInput | MarketingCampaignUpsertWithWhereUniqueWithoutSender_profileInput[]
+    createMany?: MarketingCampaignCreateManySender_profileInputEnvelope
+    set?: MarketingCampaignWhereUniqueInput | MarketingCampaignWhereUniqueInput[]
+    disconnect?: MarketingCampaignWhereUniqueInput | MarketingCampaignWhereUniqueInput[]
+    delete?: MarketingCampaignWhereUniqueInput | MarketingCampaignWhereUniqueInput[]
+    connect?: MarketingCampaignWhereUniqueInput | MarketingCampaignWhereUniqueInput[]
+    update?: MarketingCampaignUpdateWithWhereUniqueWithoutSender_profileInput | MarketingCampaignUpdateWithWhereUniqueWithoutSender_profileInput[]
+    updateMany?: MarketingCampaignUpdateManyWithWhereWithoutSender_profileInput | MarketingCampaignUpdateManyWithWhereWithoutSender_profileInput[]
+    deleteMany?: MarketingCampaignScalarWhereInput | MarketingCampaignScalarWhereInput[]
+  }
+
+  export type MarketingCampaignCreatechannelsInput = {
+    set: $Enums.Channel[]
+  }
+
+  export type UserCreateNestedOneWithoutMarketing_campaignsInput = {
+    create?: XOR<UserCreateWithoutMarketing_campaignsInput, UserUncheckedCreateWithoutMarketing_campaignsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutMarketing_campaignsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type SenderProfileCreateNestedOneWithoutMarketing_campaignsInput = {
+    create?: XOR<SenderProfileCreateWithoutMarketing_campaignsInput, SenderProfileUncheckedCreateWithoutMarketing_campaignsInput>
+    connectOrCreate?: SenderProfileCreateOrConnectWithoutMarketing_campaignsInput
+    connect?: SenderProfileWhereUniqueInput
+  }
+
+  export type MarketingCampaignContactCreateNestedManyWithoutCampaignInput = {
+    create?: XOR<MarketingCampaignContactCreateWithoutCampaignInput, MarketingCampaignContactUncheckedCreateWithoutCampaignInput> | MarketingCampaignContactCreateWithoutCampaignInput[] | MarketingCampaignContactUncheckedCreateWithoutCampaignInput[]
+    connectOrCreate?: MarketingCampaignContactCreateOrConnectWithoutCampaignInput | MarketingCampaignContactCreateOrConnectWithoutCampaignInput[]
+    createMany?: MarketingCampaignContactCreateManyCampaignInputEnvelope
+    connect?: MarketingCampaignContactWhereUniqueInput | MarketingCampaignContactWhereUniqueInput[]
+  }
+
+  export type OutreachMessageCreateNestedManyWithoutCampaignInput = {
+    create?: XOR<OutreachMessageCreateWithoutCampaignInput, OutreachMessageUncheckedCreateWithoutCampaignInput> | OutreachMessageCreateWithoutCampaignInput[] | OutreachMessageUncheckedCreateWithoutCampaignInput[]
+    connectOrCreate?: OutreachMessageCreateOrConnectWithoutCampaignInput | OutreachMessageCreateOrConnectWithoutCampaignInput[]
+    createMany?: OutreachMessageCreateManyCampaignInputEnvelope
+    connect?: OutreachMessageWhereUniqueInput | OutreachMessageWhereUniqueInput[]
+  }
+
+  export type InteractionCreateNestedManyWithoutCampaignInput = {
+    create?: XOR<InteractionCreateWithoutCampaignInput, InteractionUncheckedCreateWithoutCampaignInput> | InteractionCreateWithoutCampaignInput[] | InteractionUncheckedCreateWithoutCampaignInput[]
+    connectOrCreate?: InteractionCreateOrConnectWithoutCampaignInput | InteractionCreateOrConnectWithoutCampaignInput[]
+    createMany?: InteractionCreateManyCampaignInputEnvelope
+    connect?: InteractionWhereUniqueInput | InteractionWhereUniqueInput[]
+  }
+
+  export type MarketingCampaignContactUncheckedCreateNestedManyWithoutCampaignInput = {
+    create?: XOR<MarketingCampaignContactCreateWithoutCampaignInput, MarketingCampaignContactUncheckedCreateWithoutCampaignInput> | MarketingCampaignContactCreateWithoutCampaignInput[] | MarketingCampaignContactUncheckedCreateWithoutCampaignInput[]
+    connectOrCreate?: MarketingCampaignContactCreateOrConnectWithoutCampaignInput | MarketingCampaignContactCreateOrConnectWithoutCampaignInput[]
+    createMany?: MarketingCampaignContactCreateManyCampaignInputEnvelope
+    connect?: MarketingCampaignContactWhereUniqueInput | MarketingCampaignContactWhereUniqueInput[]
+  }
+
+  export type OutreachMessageUncheckedCreateNestedManyWithoutCampaignInput = {
+    create?: XOR<OutreachMessageCreateWithoutCampaignInput, OutreachMessageUncheckedCreateWithoutCampaignInput> | OutreachMessageCreateWithoutCampaignInput[] | OutreachMessageUncheckedCreateWithoutCampaignInput[]
+    connectOrCreate?: OutreachMessageCreateOrConnectWithoutCampaignInput | OutreachMessageCreateOrConnectWithoutCampaignInput[]
+    createMany?: OutreachMessageCreateManyCampaignInputEnvelope
+    connect?: OutreachMessageWhereUniqueInput | OutreachMessageWhereUniqueInput[]
+  }
+
+  export type InteractionUncheckedCreateNestedManyWithoutCampaignInput = {
+    create?: XOR<InteractionCreateWithoutCampaignInput, InteractionUncheckedCreateWithoutCampaignInput> | InteractionCreateWithoutCampaignInput[] | InteractionUncheckedCreateWithoutCampaignInput[]
+    connectOrCreate?: InteractionCreateOrConnectWithoutCampaignInput | InteractionCreateOrConnectWithoutCampaignInput[]
+    createMany?: InteractionCreateManyCampaignInputEnvelope
+    connect?: InteractionWhereUniqueInput | InteractionWhereUniqueInput[]
+  }
+
+  export type EnumCampaignStatusFieldUpdateOperationsInput = {
+    set?: $Enums.CampaignStatus
+  }
+
+  export type MarketingCampaignUpdatechannelsInput = {
+    set?: $Enums.Channel[]
+    push?: $Enums.Channel | $Enums.Channel[]
+  }
+
+  export type UserUpdateOneRequiredWithoutMarketing_campaignsNestedInput = {
+    create?: XOR<UserCreateWithoutMarketing_campaignsInput, UserUncheckedCreateWithoutMarketing_campaignsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutMarketing_campaignsInput
+    upsert?: UserUpsertWithoutMarketing_campaignsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutMarketing_campaignsInput, UserUpdateWithoutMarketing_campaignsInput>, UserUncheckedUpdateWithoutMarketing_campaignsInput>
+  }
+
+  export type SenderProfileUpdateOneWithoutMarketing_campaignsNestedInput = {
+    create?: XOR<SenderProfileCreateWithoutMarketing_campaignsInput, SenderProfileUncheckedCreateWithoutMarketing_campaignsInput>
+    connectOrCreate?: SenderProfileCreateOrConnectWithoutMarketing_campaignsInput
+    upsert?: SenderProfileUpsertWithoutMarketing_campaignsInput
+    disconnect?: SenderProfileWhereInput | boolean
+    delete?: SenderProfileWhereInput | boolean
+    connect?: SenderProfileWhereUniqueInput
+    update?: XOR<XOR<SenderProfileUpdateToOneWithWhereWithoutMarketing_campaignsInput, SenderProfileUpdateWithoutMarketing_campaignsInput>, SenderProfileUncheckedUpdateWithoutMarketing_campaignsInput>
+  }
+
+  export type MarketingCampaignContactUpdateManyWithoutCampaignNestedInput = {
+    create?: XOR<MarketingCampaignContactCreateWithoutCampaignInput, MarketingCampaignContactUncheckedCreateWithoutCampaignInput> | MarketingCampaignContactCreateWithoutCampaignInput[] | MarketingCampaignContactUncheckedCreateWithoutCampaignInput[]
+    connectOrCreate?: MarketingCampaignContactCreateOrConnectWithoutCampaignInput | MarketingCampaignContactCreateOrConnectWithoutCampaignInput[]
+    upsert?: MarketingCampaignContactUpsertWithWhereUniqueWithoutCampaignInput | MarketingCampaignContactUpsertWithWhereUniqueWithoutCampaignInput[]
+    createMany?: MarketingCampaignContactCreateManyCampaignInputEnvelope
+    set?: MarketingCampaignContactWhereUniqueInput | MarketingCampaignContactWhereUniqueInput[]
+    disconnect?: MarketingCampaignContactWhereUniqueInput | MarketingCampaignContactWhereUniqueInput[]
+    delete?: MarketingCampaignContactWhereUniqueInput | MarketingCampaignContactWhereUniqueInput[]
+    connect?: MarketingCampaignContactWhereUniqueInput | MarketingCampaignContactWhereUniqueInput[]
+    update?: MarketingCampaignContactUpdateWithWhereUniqueWithoutCampaignInput | MarketingCampaignContactUpdateWithWhereUniqueWithoutCampaignInput[]
+    updateMany?: MarketingCampaignContactUpdateManyWithWhereWithoutCampaignInput | MarketingCampaignContactUpdateManyWithWhereWithoutCampaignInput[]
+    deleteMany?: MarketingCampaignContactScalarWhereInput | MarketingCampaignContactScalarWhereInput[]
+  }
+
+  export type OutreachMessageUpdateManyWithoutCampaignNestedInput = {
+    create?: XOR<OutreachMessageCreateWithoutCampaignInput, OutreachMessageUncheckedCreateWithoutCampaignInput> | OutreachMessageCreateWithoutCampaignInput[] | OutreachMessageUncheckedCreateWithoutCampaignInput[]
+    connectOrCreate?: OutreachMessageCreateOrConnectWithoutCampaignInput | OutreachMessageCreateOrConnectWithoutCampaignInput[]
+    upsert?: OutreachMessageUpsertWithWhereUniqueWithoutCampaignInput | OutreachMessageUpsertWithWhereUniqueWithoutCampaignInput[]
+    createMany?: OutreachMessageCreateManyCampaignInputEnvelope
+    set?: OutreachMessageWhereUniqueInput | OutreachMessageWhereUniqueInput[]
+    disconnect?: OutreachMessageWhereUniqueInput | OutreachMessageWhereUniqueInput[]
+    delete?: OutreachMessageWhereUniqueInput | OutreachMessageWhereUniqueInput[]
+    connect?: OutreachMessageWhereUniqueInput | OutreachMessageWhereUniqueInput[]
+    update?: OutreachMessageUpdateWithWhereUniqueWithoutCampaignInput | OutreachMessageUpdateWithWhereUniqueWithoutCampaignInput[]
+    updateMany?: OutreachMessageUpdateManyWithWhereWithoutCampaignInput | OutreachMessageUpdateManyWithWhereWithoutCampaignInput[]
+    deleteMany?: OutreachMessageScalarWhereInput | OutreachMessageScalarWhereInput[]
+  }
+
+  export type InteractionUpdateManyWithoutCampaignNestedInput = {
+    create?: XOR<InteractionCreateWithoutCampaignInput, InteractionUncheckedCreateWithoutCampaignInput> | InteractionCreateWithoutCampaignInput[] | InteractionUncheckedCreateWithoutCampaignInput[]
+    connectOrCreate?: InteractionCreateOrConnectWithoutCampaignInput | InteractionCreateOrConnectWithoutCampaignInput[]
+    upsert?: InteractionUpsertWithWhereUniqueWithoutCampaignInput | InteractionUpsertWithWhereUniqueWithoutCampaignInput[]
+    createMany?: InteractionCreateManyCampaignInputEnvelope
+    set?: InteractionWhereUniqueInput | InteractionWhereUniqueInput[]
+    disconnect?: InteractionWhereUniqueInput | InteractionWhereUniqueInput[]
+    delete?: InteractionWhereUniqueInput | InteractionWhereUniqueInput[]
+    connect?: InteractionWhereUniqueInput | InteractionWhereUniqueInput[]
+    update?: InteractionUpdateWithWhereUniqueWithoutCampaignInput | InteractionUpdateWithWhereUniqueWithoutCampaignInput[]
+    updateMany?: InteractionUpdateManyWithWhereWithoutCampaignInput | InteractionUpdateManyWithWhereWithoutCampaignInput[]
+    deleteMany?: InteractionScalarWhereInput | InteractionScalarWhereInput[]
+  }
+
+  export type MarketingCampaignContactUncheckedUpdateManyWithoutCampaignNestedInput = {
+    create?: XOR<MarketingCampaignContactCreateWithoutCampaignInput, MarketingCampaignContactUncheckedCreateWithoutCampaignInput> | MarketingCampaignContactCreateWithoutCampaignInput[] | MarketingCampaignContactUncheckedCreateWithoutCampaignInput[]
+    connectOrCreate?: MarketingCampaignContactCreateOrConnectWithoutCampaignInput | MarketingCampaignContactCreateOrConnectWithoutCampaignInput[]
+    upsert?: MarketingCampaignContactUpsertWithWhereUniqueWithoutCampaignInput | MarketingCampaignContactUpsertWithWhereUniqueWithoutCampaignInput[]
+    createMany?: MarketingCampaignContactCreateManyCampaignInputEnvelope
+    set?: MarketingCampaignContactWhereUniqueInput | MarketingCampaignContactWhereUniqueInput[]
+    disconnect?: MarketingCampaignContactWhereUniqueInput | MarketingCampaignContactWhereUniqueInput[]
+    delete?: MarketingCampaignContactWhereUniqueInput | MarketingCampaignContactWhereUniqueInput[]
+    connect?: MarketingCampaignContactWhereUniqueInput | MarketingCampaignContactWhereUniqueInput[]
+    update?: MarketingCampaignContactUpdateWithWhereUniqueWithoutCampaignInput | MarketingCampaignContactUpdateWithWhereUniqueWithoutCampaignInput[]
+    updateMany?: MarketingCampaignContactUpdateManyWithWhereWithoutCampaignInput | MarketingCampaignContactUpdateManyWithWhereWithoutCampaignInput[]
+    deleteMany?: MarketingCampaignContactScalarWhereInput | MarketingCampaignContactScalarWhereInput[]
+  }
+
+  export type OutreachMessageUncheckedUpdateManyWithoutCampaignNestedInput = {
+    create?: XOR<OutreachMessageCreateWithoutCampaignInput, OutreachMessageUncheckedCreateWithoutCampaignInput> | OutreachMessageCreateWithoutCampaignInput[] | OutreachMessageUncheckedCreateWithoutCampaignInput[]
+    connectOrCreate?: OutreachMessageCreateOrConnectWithoutCampaignInput | OutreachMessageCreateOrConnectWithoutCampaignInput[]
+    upsert?: OutreachMessageUpsertWithWhereUniqueWithoutCampaignInput | OutreachMessageUpsertWithWhereUniqueWithoutCampaignInput[]
+    createMany?: OutreachMessageCreateManyCampaignInputEnvelope
+    set?: OutreachMessageWhereUniqueInput | OutreachMessageWhereUniqueInput[]
+    disconnect?: OutreachMessageWhereUniqueInput | OutreachMessageWhereUniqueInput[]
+    delete?: OutreachMessageWhereUniqueInput | OutreachMessageWhereUniqueInput[]
+    connect?: OutreachMessageWhereUniqueInput | OutreachMessageWhereUniqueInput[]
+    update?: OutreachMessageUpdateWithWhereUniqueWithoutCampaignInput | OutreachMessageUpdateWithWhereUniqueWithoutCampaignInput[]
+    updateMany?: OutreachMessageUpdateManyWithWhereWithoutCampaignInput | OutreachMessageUpdateManyWithWhereWithoutCampaignInput[]
+    deleteMany?: OutreachMessageScalarWhereInput | OutreachMessageScalarWhereInput[]
+  }
+
+  export type InteractionUncheckedUpdateManyWithoutCampaignNestedInput = {
+    create?: XOR<InteractionCreateWithoutCampaignInput, InteractionUncheckedCreateWithoutCampaignInput> | InteractionCreateWithoutCampaignInput[] | InteractionUncheckedCreateWithoutCampaignInput[]
+    connectOrCreate?: InteractionCreateOrConnectWithoutCampaignInput | InteractionCreateOrConnectWithoutCampaignInput[]
+    upsert?: InteractionUpsertWithWhereUniqueWithoutCampaignInput | InteractionUpsertWithWhereUniqueWithoutCampaignInput[]
+    createMany?: InteractionCreateManyCampaignInputEnvelope
+    set?: InteractionWhereUniqueInput | InteractionWhereUniqueInput[]
+    disconnect?: InteractionWhereUniqueInput | InteractionWhereUniqueInput[]
+    delete?: InteractionWhereUniqueInput | InteractionWhereUniqueInput[]
+    connect?: InteractionWhereUniqueInput | InteractionWhereUniqueInput[]
+    update?: InteractionUpdateWithWhereUniqueWithoutCampaignInput | InteractionUpdateWithWhereUniqueWithoutCampaignInput[]
+    updateMany?: InteractionUpdateManyWithWhereWithoutCampaignInput | InteractionUpdateManyWithWhereWithoutCampaignInput[]
+    deleteMany?: InteractionScalarWhereInput | InteractionScalarWhereInput[]
+  }
+
+  export type MarketingCampaignCreateNestedOneWithoutCampaign_contactsInput = {
+    create?: XOR<MarketingCampaignCreateWithoutCampaign_contactsInput, MarketingCampaignUncheckedCreateWithoutCampaign_contactsInput>
+    connectOrCreate?: MarketingCampaignCreateOrConnectWithoutCampaign_contactsInput
+    connect?: MarketingCampaignWhereUniqueInput
+  }
+
+  export type ContactCreateNestedOneWithoutCampaign_contactsInput = {
+    create?: XOR<ContactCreateWithoutCampaign_contactsInput, ContactUncheckedCreateWithoutCampaign_contactsInput>
+    connectOrCreate?: ContactCreateOrConnectWithoutCampaign_contactsInput
+    connect?: ContactWhereUniqueInput
+  }
+
+  export type EnumCampaignContactStatusFieldUpdateOperationsInput = {
+    set?: $Enums.CampaignContactStatus
+  }
+
+  export type MarketingCampaignUpdateOneRequiredWithoutCampaign_contactsNestedInput = {
+    create?: XOR<MarketingCampaignCreateWithoutCampaign_contactsInput, MarketingCampaignUncheckedCreateWithoutCampaign_contactsInput>
+    connectOrCreate?: MarketingCampaignCreateOrConnectWithoutCampaign_contactsInput
+    upsert?: MarketingCampaignUpsertWithoutCampaign_contactsInput
+    connect?: MarketingCampaignWhereUniqueInput
+    update?: XOR<XOR<MarketingCampaignUpdateToOneWithWhereWithoutCampaign_contactsInput, MarketingCampaignUpdateWithoutCampaign_contactsInput>, MarketingCampaignUncheckedUpdateWithoutCampaign_contactsInput>
+  }
+
+  export type ContactUpdateOneRequiredWithoutCampaign_contactsNestedInput = {
+    create?: XOR<ContactCreateWithoutCampaign_contactsInput, ContactUncheckedCreateWithoutCampaign_contactsInput>
+    connectOrCreate?: ContactCreateOrConnectWithoutCampaign_contactsInput
+    upsert?: ContactUpsertWithoutCampaign_contactsInput
+    connect?: ContactWhereUniqueInput
+    update?: XOR<XOR<ContactUpdateToOneWithWhereWithoutCampaign_contactsInput, ContactUpdateWithoutCampaign_contactsInput>, ContactUncheckedUpdateWithoutCampaign_contactsInput>
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -22574,6 +27527,13 @@ export namespace Prisma {
     not?: NestedEnumChannelFilter<$PrismaModel> | $Enums.Channel
   }
 
+  export type NestedEnumMsgDirectionFilter<$PrismaModel = never> = {
+    equals?: $Enums.MsgDirection | EnumMsgDirectionFieldRefInput<$PrismaModel>
+    in?: $Enums.MsgDirection[] | ListEnumMsgDirectionFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MsgDirection[] | ListEnumMsgDirectionFieldRefInput<$PrismaModel>
+    not?: NestedEnumMsgDirectionFilter<$PrismaModel> | $Enums.MsgDirection
+  }
+
   export type NestedEnumMsgStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.MsgStatus | EnumMsgStatusFieldRefInput<$PrismaModel>
     in?: $Enums.MsgStatus[] | ListEnumMsgStatusFieldRefInput<$PrismaModel>
@@ -22589,6 +27549,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumChannelFilter<$PrismaModel>
     _max?: NestedEnumChannelFilter<$PrismaModel>
+  }
+
+  export type NestedEnumMsgDirectionWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.MsgDirection | EnumMsgDirectionFieldRefInput<$PrismaModel>
+    in?: $Enums.MsgDirection[] | ListEnumMsgDirectionFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MsgDirection[] | ListEnumMsgDirectionFieldRefInput<$PrismaModel>
+    not?: NestedEnumMsgDirectionWithAggregatesFilter<$PrismaModel> | $Enums.MsgDirection
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumMsgDirectionFilter<$PrismaModel>
+    _max?: NestedEnumMsgDirectionFilter<$PrismaModel>
   }
 
   export type NestedEnumMsgStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -22633,6 +27603,40 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumJobTriggerFilter<$PrismaModel>
     _max?: NestedEnumJobTriggerFilter<$PrismaModel>
+  }
+
+  export type NestedEnumCampaignStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.CampaignStatus | EnumCampaignStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CampaignStatus[] | ListEnumCampaignStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CampaignStatus[] | ListEnumCampaignStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumCampaignStatusFilter<$PrismaModel> | $Enums.CampaignStatus
+  }
+
+  export type NestedEnumCampaignStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CampaignStatus | EnumCampaignStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CampaignStatus[] | ListEnumCampaignStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CampaignStatus[] | ListEnumCampaignStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumCampaignStatusWithAggregatesFilter<$PrismaModel> | $Enums.CampaignStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCampaignStatusFilter<$PrismaModel>
+    _max?: NestedEnumCampaignStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumCampaignContactStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.CampaignContactStatus | EnumCampaignContactStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CampaignContactStatus[] | ListEnumCampaignContactStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CampaignContactStatus[] | ListEnumCampaignContactStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumCampaignContactStatusFilter<$PrismaModel> | $Enums.CampaignContactStatus
+  }
+
+  export type NestedEnumCampaignContactStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CampaignContactStatus | EnumCampaignContactStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CampaignContactStatus[] | ListEnumCampaignContactStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CampaignContactStatus[] | ListEnumCampaignContactStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumCampaignContactStatusWithAggregatesFilter<$PrismaModel> | $Enums.CampaignContactStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCampaignContactStatusFilter<$PrismaModel>
+    _max?: NestedEnumCampaignContactStatusFilter<$PrismaModel>
   }
 
   export type FilterCreateWithoutUserInput = {
@@ -22697,6 +27701,9 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    unsubscribed_at?: Date | string | null
+    unsubscribe_token?: string | null
+    last_interaction_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
     lead: LeadCreateNestedOneWithoutContactsInput
@@ -22704,6 +27711,7 @@ export namespace Prisma {
     tags?: ContactTagCreateNestedManyWithoutContactInput
     interactions?: InteractionCreateNestedManyWithoutContactInput
     outreach_messages?: OutreachMessageCreateNestedManyWithoutContactInput
+    campaign_contacts?: MarketingCampaignContactCreateNestedManyWithoutContactInput
   }
 
   export type ContactUncheckedCreateWithoutUserInput = {
@@ -22724,11 +27732,15 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    unsubscribed_at?: Date | string | null
+    unsubscribe_token?: string | null
+    last_interaction_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
     tags?: ContactTagUncheckedCreateNestedManyWithoutContactInput
     interactions?: InteractionUncheckedCreateNestedManyWithoutContactInput
     outreach_messages?: OutreachMessageUncheckedCreateNestedManyWithoutContactInput
+    campaign_contacts?: MarketingCampaignContactUncheckedCreateNestedManyWithoutContactInput
   }
 
   export type ContactCreateOrConnectWithoutUserInput = {
@@ -22744,15 +27756,23 @@ export namespace Prisma {
   export type OutreachMessageCreateWithoutUserInput = {
     uuid?: string
     channel: $Enums.Channel
+    direction?: $Enums.MsgDirection
     subject?: string | null
     content: string
     status?: $Enums.MsgStatus
+    provider_message_id?: string | null
+    idempotency_key?: string | null
     scheduled_at?: Date | string | null
     sent_at?: Date | string | null
+    delivered_at?: Date | string | null
+    opened_at?: Date | string | null
+    clicked_at?: Date | string | null
+    replied_at?: Date | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     contact: ContactCreateNestedOneWithoutOutreach_messagesInput
+    campaign?: MarketingCampaignCreateNestedOneWithoutOutreach_messagesInput
     interaction?: InteractionCreateNestedOneWithoutOutreach_messageInput
   }
 
@@ -22760,12 +27780,20 @@ export namespace Prisma {
     id?: number
     uuid?: string
     contact_uuid: string
+    campaign_uuid?: string | null
     channel: $Enums.Channel
+    direction?: $Enums.MsgDirection
     subject?: string | null
     content: string
     status?: $Enums.MsgStatus
+    provider_message_id?: string | null
+    idempotency_key?: string | null
     scheduled_at?: Date | string | null
     sent_at?: Date | string | null
+    delivered_at?: Date | string | null
+    opened_at?: Date | string | null
+    clicked_at?: Date | string | null
+    replied_at?: Date | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
@@ -22819,12 +27847,14 @@ export namespace Prisma {
     updated_at?: Date | string
     contact: ContactCreateNestedOneWithoutInteractionsInput
     outreach_message?: OutreachMessageCreateNestedOneWithoutInteractionInput
+    campaign?: MarketingCampaignCreateNestedOneWithoutInteractionsInput
   }
 
   export type InteractionUncheckedCreateWithoutUserInput = {
     id?: number
     uuid?: string
     contact_uuid: string
+    campaign_uuid?: string | null
     type: $Enums.InteractionType
     content?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
@@ -22864,6 +27894,7 @@ export namespace Prisma {
     is_default?: boolean
     created_at?: Date | string
     updated_at?: Date | string
+    marketing_campaigns?: MarketingCampaignCreateNestedManyWithoutSender_profileInput
   }
 
   export type SenderProfileUncheckedCreateWithoutUserInput = {
@@ -22887,6 +27918,7 @@ export namespace Prisma {
     is_default?: boolean
     created_at?: Date | string
     updated_at?: Date | string
+    marketing_campaigns?: MarketingCampaignUncheckedCreateNestedManyWithoutSender_profileInput
   }
 
   export type SenderProfileCreateOrConnectWithoutUserInput = {
@@ -22896,6 +27928,85 @@ export namespace Prisma {
 
   export type SenderProfileCreateManyUserInputEnvelope = {
     data: SenderProfileCreateManyUserInput | SenderProfileCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type MarketingCampaignCreateWithoutUserInput = {
+    uuid?: string
+    name: string
+    description?: string | null
+    status?: $Enums.CampaignStatus
+    channels?: MarketingCampaignCreatechannelsInput | $Enums.Channel[]
+    filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    email_subject?: string | null
+    email_content?: string | null
+    sms_content?: string | null
+    scheduled_at?: Date | string | null
+    started_at?: Date | string | null
+    completed_at?: Date | string | null
+    cancelled_at?: Date | string | null
+    selected_contact_count?: number
+    total_messages?: number
+    queued_count?: number
+    sent_count?: number
+    failed_count?: number
+    skipped_count?: number
+    delivered_count?: number
+    opened_count?: number
+    clicked_count?: number
+    replied_count?: number
+    bounced_count?: number
+    unsubscribed_count?: number
+    created_at?: Date | string
+    updated_at?: Date | string
+    sender_profile?: SenderProfileCreateNestedOneWithoutMarketing_campaignsInput
+    campaign_contacts?: MarketingCampaignContactCreateNestedManyWithoutCampaignInput
+    outreach_messages?: OutreachMessageCreateNestedManyWithoutCampaignInput
+    interactions?: InteractionCreateNestedManyWithoutCampaignInput
+  }
+
+  export type MarketingCampaignUncheckedCreateWithoutUserInput = {
+    id?: number
+    uuid?: string
+    name: string
+    description?: string | null
+    status?: $Enums.CampaignStatus
+    channels?: MarketingCampaignCreatechannelsInput | $Enums.Channel[]
+    filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    email_subject?: string | null
+    email_content?: string | null
+    sms_content?: string | null
+    sender_profile_uuid?: string | null
+    scheduled_at?: Date | string | null
+    started_at?: Date | string | null
+    completed_at?: Date | string | null
+    cancelled_at?: Date | string | null
+    selected_contact_count?: number
+    total_messages?: number
+    queued_count?: number
+    sent_count?: number
+    failed_count?: number
+    skipped_count?: number
+    delivered_count?: number
+    opened_count?: number
+    clicked_count?: number
+    replied_count?: number
+    bounced_count?: number
+    unsubscribed_count?: number
+    created_at?: Date | string
+    updated_at?: Date | string
+    campaign_contacts?: MarketingCampaignContactUncheckedCreateNestedManyWithoutCampaignInput
+    outreach_messages?: OutreachMessageUncheckedCreateNestedManyWithoutCampaignInput
+    interactions?: InteractionUncheckedCreateNestedManyWithoutCampaignInput
+  }
+
+  export type MarketingCampaignCreateOrConnectWithoutUserInput = {
+    where: MarketingCampaignWhereUniqueInput
+    create: XOR<MarketingCampaignCreateWithoutUserInput, MarketingCampaignUncheckedCreateWithoutUserInput>
+  }
+
+  export type MarketingCampaignCreateManyUserInputEnvelope = {
+    data: MarketingCampaignCreateManyUserInput | MarketingCampaignCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -22973,6 +28084,9 @@ export namespace Prisma {
     location?: StringNullableFilter<"Contact"> | string | null
     industry?: StringNullableFilter<"Contact"> | string | null
     description?: StringNullableFilter<"Contact"> | string | null
+    unsubscribed_at?: DateTimeNullableFilter<"Contact"> | Date | string | null
+    unsubscribe_token?: StringNullableFilter<"Contact"> | string | null
+    last_interaction_at?: DateTimeNullableFilter<"Contact"> | Date | string | null
     created_at?: DateTimeFilter<"Contact"> | Date | string
     updated_at?: DateTimeFilter<"Contact"> | Date | string
   }
@@ -23001,12 +28115,20 @@ export namespace Prisma {
     uuid?: StringFilter<"OutreachMessage"> | string
     user_uuid?: StringFilter<"OutreachMessage"> | string
     contact_uuid?: StringFilter<"OutreachMessage"> | string
+    campaign_uuid?: StringNullableFilter<"OutreachMessage"> | string | null
     channel?: EnumChannelFilter<"OutreachMessage"> | $Enums.Channel
+    direction?: EnumMsgDirectionFilter<"OutreachMessage"> | $Enums.MsgDirection
     subject?: StringNullableFilter<"OutreachMessage"> | string | null
     content?: StringFilter<"OutreachMessage"> | string
     status?: EnumMsgStatusFilter<"OutreachMessage"> | $Enums.MsgStatus
+    provider_message_id?: StringNullableFilter<"OutreachMessage"> | string | null
+    idempotency_key?: StringNullableFilter<"OutreachMessage"> | string | null
     scheduled_at?: DateTimeNullableFilter<"OutreachMessage"> | Date | string | null
     sent_at?: DateTimeNullableFilter<"OutreachMessage"> | Date | string | null
+    delivered_at?: DateTimeNullableFilter<"OutreachMessage"> | Date | string | null
+    opened_at?: DateTimeNullableFilter<"OutreachMessage"> | Date | string | null
+    clicked_at?: DateTimeNullableFilter<"OutreachMessage"> | Date | string | null
+    replied_at?: DateTimeNullableFilter<"OutreachMessage"> | Date | string | null
     metadata?: JsonNullableFilter<"OutreachMessage">
     created_at?: DateTimeFilter<"OutreachMessage"> | Date | string
     updated_at?: DateTimeFilter<"OutreachMessage"> | Date | string
@@ -23065,6 +28187,7 @@ export namespace Prisma {
     uuid?: StringFilter<"Interaction"> | string
     contact_uuid?: StringFilter<"Interaction"> | string
     user_uuid?: StringFilter<"Interaction"> | string
+    campaign_uuid?: StringNullableFilter<"Interaction"> | string | null
     type?: EnumInteractionTypeFilter<"Interaction"> | $Enums.InteractionType
     content?: StringNullableFilter<"Interaction"> | string | null
     metadata?: JsonNullableFilter<"Interaction">
@@ -23117,6 +28240,58 @@ export namespace Prisma {
     updated_at?: DateTimeFilter<"SenderProfile"> | Date | string
   }
 
+  export type MarketingCampaignUpsertWithWhereUniqueWithoutUserInput = {
+    where: MarketingCampaignWhereUniqueInput
+    update: XOR<MarketingCampaignUpdateWithoutUserInput, MarketingCampaignUncheckedUpdateWithoutUserInput>
+    create: XOR<MarketingCampaignCreateWithoutUserInput, MarketingCampaignUncheckedCreateWithoutUserInput>
+  }
+
+  export type MarketingCampaignUpdateWithWhereUniqueWithoutUserInput = {
+    where: MarketingCampaignWhereUniqueInput
+    data: XOR<MarketingCampaignUpdateWithoutUserInput, MarketingCampaignUncheckedUpdateWithoutUserInput>
+  }
+
+  export type MarketingCampaignUpdateManyWithWhereWithoutUserInput = {
+    where: MarketingCampaignScalarWhereInput
+    data: XOR<MarketingCampaignUpdateManyMutationInput, MarketingCampaignUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type MarketingCampaignScalarWhereInput = {
+    AND?: MarketingCampaignScalarWhereInput | MarketingCampaignScalarWhereInput[]
+    OR?: MarketingCampaignScalarWhereInput[]
+    NOT?: MarketingCampaignScalarWhereInput | MarketingCampaignScalarWhereInput[]
+    id?: IntFilter<"MarketingCampaign"> | number
+    uuid?: StringFilter<"MarketingCampaign"> | string
+    user_uuid?: StringFilter<"MarketingCampaign"> | string
+    name?: StringFilter<"MarketingCampaign"> | string
+    description?: StringNullableFilter<"MarketingCampaign"> | string | null
+    status?: EnumCampaignStatusFilter<"MarketingCampaign"> | $Enums.CampaignStatus
+    channels?: EnumChannelNullableListFilter<"MarketingCampaign">
+    filters_snapshot?: JsonNullableFilter<"MarketingCampaign">
+    email_subject?: StringNullableFilter<"MarketingCampaign"> | string | null
+    email_content?: StringNullableFilter<"MarketingCampaign"> | string | null
+    sms_content?: StringNullableFilter<"MarketingCampaign"> | string | null
+    sender_profile_uuid?: StringNullableFilter<"MarketingCampaign"> | string | null
+    scheduled_at?: DateTimeNullableFilter<"MarketingCampaign"> | Date | string | null
+    started_at?: DateTimeNullableFilter<"MarketingCampaign"> | Date | string | null
+    completed_at?: DateTimeNullableFilter<"MarketingCampaign"> | Date | string | null
+    cancelled_at?: DateTimeNullableFilter<"MarketingCampaign"> | Date | string | null
+    selected_contact_count?: IntFilter<"MarketingCampaign"> | number
+    total_messages?: IntFilter<"MarketingCampaign"> | number
+    queued_count?: IntFilter<"MarketingCampaign"> | number
+    sent_count?: IntFilter<"MarketingCampaign"> | number
+    failed_count?: IntFilter<"MarketingCampaign"> | number
+    skipped_count?: IntFilter<"MarketingCampaign"> | number
+    delivered_count?: IntFilter<"MarketingCampaign"> | number
+    opened_count?: IntFilter<"MarketingCampaign"> | number
+    clicked_count?: IntFilter<"MarketingCampaign"> | number
+    replied_count?: IntFilter<"MarketingCampaign"> | number
+    bounced_count?: IntFilter<"MarketingCampaign"> | number
+    unsubscribed_count?: IntFilter<"MarketingCampaign"> | number
+    created_at?: DateTimeFilter<"MarketingCampaign"> | Date | string
+    updated_at?: DateTimeFilter<"MarketingCampaign"> | Date | string
+  }
+
   export type UserCreateWithoutFiltersInput = {
     uuid?: string
     email: string
@@ -23130,6 +28305,7 @@ export namespace Prisma {
     outreach_sequences?: OutreachSequenceCreateNestedManyWithoutUserInput
     interactions?: InteractionCreateNestedManyWithoutUserInput
     sender_profiles?: SenderProfileCreateNestedManyWithoutUserInput
+    marketing_campaigns?: MarketingCampaignCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutFiltersInput = {
@@ -23146,6 +28322,7 @@ export namespace Prisma {
     outreach_sequences?: OutreachSequenceUncheckedCreateNestedManyWithoutUserInput
     interactions?: InteractionUncheckedCreateNestedManyWithoutUserInput
     sender_profiles?: SenderProfileUncheckedCreateNestedManyWithoutUserInput
+    marketing_campaigns?: MarketingCampaignUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutFiltersInput = {
@@ -23199,6 +28376,9 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    unsubscribed_at?: Date | string | null
+    unsubscribe_token?: string | null
+    last_interaction_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutContactsInput
@@ -23206,6 +28386,7 @@ export namespace Prisma {
     tags?: ContactTagCreateNestedManyWithoutContactInput
     interactions?: InteractionCreateNestedManyWithoutContactInput
     outreach_messages?: OutreachMessageCreateNestedManyWithoutContactInput
+    campaign_contacts?: MarketingCampaignContactCreateNestedManyWithoutContactInput
   }
 
   export type ContactUncheckedCreateWithoutFilterInput = {
@@ -23226,11 +28407,15 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    unsubscribed_at?: Date | string | null
+    unsubscribe_token?: string | null
+    last_interaction_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
     tags?: ContactTagUncheckedCreateNestedManyWithoutContactInput
     interactions?: InteractionUncheckedCreateNestedManyWithoutContactInput
     outreach_messages?: OutreachMessageUncheckedCreateNestedManyWithoutContactInput
+    campaign_contacts?: MarketingCampaignContactUncheckedCreateNestedManyWithoutContactInput
   }
 
   export type ContactCreateOrConnectWithoutFilterInput = {
@@ -23304,6 +28489,7 @@ export namespace Prisma {
     outreach_sequences?: OutreachSequenceUpdateManyWithoutUserNestedInput
     interactions?: InteractionUpdateManyWithoutUserNestedInput
     sender_profiles?: SenderProfileUpdateManyWithoutUserNestedInput
+    marketing_campaigns?: MarketingCampaignUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFiltersInput = {
@@ -23320,6 +28506,7 @@ export namespace Prisma {
     outreach_sequences?: OutreachSequenceUncheckedUpdateManyWithoutUserNestedInput
     interactions?: InteractionUncheckedUpdateManyWithoutUserNestedInput
     sender_profiles?: SenderProfileUncheckedUpdateManyWithoutUserNestedInput
+    marketing_campaigns?: MarketingCampaignUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type RawLeadUpsertWithWhereUniqueWithoutFilterInput = {
@@ -23635,6 +28822,9 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    unsubscribed_at?: Date | string | null
+    unsubscribe_token?: string | null
+    last_interaction_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutContactsInput
@@ -23642,6 +28832,7 @@ export namespace Prisma {
     tags?: ContactTagCreateNestedManyWithoutContactInput
     interactions?: InteractionCreateNestedManyWithoutContactInput
     outreach_messages?: OutreachMessageCreateNestedManyWithoutContactInput
+    campaign_contacts?: MarketingCampaignContactCreateNestedManyWithoutContactInput
   }
 
   export type ContactUncheckedCreateWithoutLeadInput = {
@@ -23662,11 +28853,15 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    unsubscribed_at?: Date | string | null
+    unsubscribe_token?: string | null
+    last_interaction_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
     tags?: ContactTagUncheckedCreateNestedManyWithoutContactInput
     interactions?: InteractionUncheckedCreateNestedManyWithoutContactInput
     outreach_messages?: OutreachMessageUncheckedCreateNestedManyWithoutContactInput
+    campaign_contacts?: MarketingCampaignContactUncheckedCreateNestedManyWithoutContactInput
   }
 
   export type ContactCreateOrConnectWithoutLeadInput = {
@@ -23913,6 +29108,7 @@ export namespace Prisma {
     outreach_sequences?: OutreachSequenceCreateNestedManyWithoutUserInput
     interactions?: InteractionCreateNestedManyWithoutUserInput
     sender_profiles?: SenderProfileCreateNestedManyWithoutUserInput
+    marketing_campaigns?: MarketingCampaignCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutContactsInput = {
@@ -23929,6 +29125,7 @@ export namespace Prisma {
     outreach_sequences?: OutreachSequenceUncheckedCreateNestedManyWithoutUserInput
     interactions?: InteractionUncheckedCreateNestedManyWithoutUserInput
     sender_profiles?: SenderProfileUncheckedCreateNestedManyWithoutUserInput
+    marketing_campaigns?: MarketingCampaignUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutContactsInput = {
@@ -24057,12 +29254,14 @@ export namespace Prisma {
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutInteractionsInput
     outreach_message?: OutreachMessageCreateNestedOneWithoutInteractionInput
+    campaign?: MarketingCampaignCreateNestedOneWithoutInteractionsInput
   }
 
   export type InteractionUncheckedCreateWithoutContactInput = {
     id?: number
     uuid?: string
     user_uuid: string
+    campaign_uuid?: string | null
     type: $Enums.InteractionType
     content?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
@@ -24085,15 +29284,23 @@ export namespace Prisma {
   export type OutreachMessageCreateWithoutContactInput = {
     uuid?: string
     channel: $Enums.Channel
+    direction?: $Enums.MsgDirection
     subject?: string | null
     content: string
     status?: $Enums.MsgStatus
+    provider_message_id?: string | null
+    idempotency_key?: string | null
     scheduled_at?: Date | string | null
     sent_at?: Date | string | null
+    delivered_at?: Date | string | null
+    opened_at?: Date | string | null
+    clicked_at?: Date | string | null
+    replied_at?: Date | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutOutreach_messagesInput
+    campaign?: MarketingCampaignCreateNestedOneWithoutOutreach_messagesInput
     interaction?: InteractionCreateNestedOneWithoutOutreach_messageInput
   }
 
@@ -24101,12 +29308,20 @@ export namespace Prisma {
     id?: number
     uuid?: string
     user_uuid: string
+    campaign_uuid?: string | null
     channel: $Enums.Channel
+    direction?: $Enums.MsgDirection
     subject?: string | null
     content: string
     status?: $Enums.MsgStatus
+    provider_message_id?: string | null
+    idempotency_key?: string | null
     scheduled_at?: Date | string | null
     sent_at?: Date | string | null
+    delivered_at?: Date | string | null
+    opened_at?: Date | string | null
+    clicked_at?: Date | string | null
+    replied_at?: Date | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
@@ -24120,6 +29335,41 @@ export namespace Prisma {
 
   export type OutreachMessageCreateManyContactInputEnvelope = {
     data: OutreachMessageCreateManyContactInput | OutreachMessageCreateManyContactInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type MarketingCampaignContactCreateWithoutContactInput = {
+    uuid?: string
+    channel: $Enums.Channel
+    status?: $Enums.CampaignContactStatus
+    error_message?: string | null
+    sent_at?: Date | string | null
+    delivered_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    campaign: MarketingCampaignCreateNestedOneWithoutCampaign_contactsInput
+  }
+
+  export type MarketingCampaignContactUncheckedCreateWithoutContactInput = {
+    id?: number
+    uuid?: string
+    campaign_uuid: string
+    channel: $Enums.Channel
+    status?: $Enums.CampaignContactStatus
+    error_message?: string | null
+    sent_at?: Date | string | null
+    delivered_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type MarketingCampaignContactCreateOrConnectWithoutContactInput = {
+    where: MarketingCampaignContactWhereUniqueInput
+    create: XOR<MarketingCampaignContactCreateWithoutContactInput, MarketingCampaignContactUncheckedCreateWithoutContactInput>
+  }
+
+  export type MarketingCampaignContactCreateManyContactInputEnvelope = {
+    data: MarketingCampaignContactCreateManyContactInput | MarketingCampaignContactCreateManyContactInput[]
     skipDuplicates?: boolean
   }
 
@@ -24147,6 +29397,7 @@ export namespace Prisma {
     outreach_sequences?: OutreachSequenceUpdateManyWithoutUserNestedInput
     interactions?: InteractionUpdateManyWithoutUserNestedInput
     sender_profiles?: SenderProfileUpdateManyWithoutUserNestedInput
+    marketing_campaigns?: MarketingCampaignUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutContactsInput = {
@@ -24163,6 +29414,7 @@ export namespace Prisma {
     outreach_sequences?: OutreachSequenceUncheckedUpdateManyWithoutUserNestedInput
     interactions?: InteractionUncheckedUpdateManyWithoutUserNestedInput
     sender_profiles?: SenderProfileUncheckedUpdateManyWithoutUserNestedInput
+    marketing_campaigns?: MarketingCampaignUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type LeadUpsertWithoutContactsInput = {
@@ -24325,6 +29577,39 @@ export namespace Prisma {
     data: XOR<OutreachMessageUpdateManyMutationInput, OutreachMessageUncheckedUpdateManyWithoutContactInput>
   }
 
+  export type MarketingCampaignContactUpsertWithWhereUniqueWithoutContactInput = {
+    where: MarketingCampaignContactWhereUniqueInput
+    update: XOR<MarketingCampaignContactUpdateWithoutContactInput, MarketingCampaignContactUncheckedUpdateWithoutContactInput>
+    create: XOR<MarketingCampaignContactCreateWithoutContactInput, MarketingCampaignContactUncheckedCreateWithoutContactInput>
+  }
+
+  export type MarketingCampaignContactUpdateWithWhereUniqueWithoutContactInput = {
+    where: MarketingCampaignContactWhereUniqueInput
+    data: XOR<MarketingCampaignContactUpdateWithoutContactInput, MarketingCampaignContactUncheckedUpdateWithoutContactInput>
+  }
+
+  export type MarketingCampaignContactUpdateManyWithWhereWithoutContactInput = {
+    where: MarketingCampaignContactScalarWhereInput
+    data: XOR<MarketingCampaignContactUpdateManyMutationInput, MarketingCampaignContactUncheckedUpdateManyWithoutContactInput>
+  }
+
+  export type MarketingCampaignContactScalarWhereInput = {
+    AND?: MarketingCampaignContactScalarWhereInput | MarketingCampaignContactScalarWhereInput[]
+    OR?: MarketingCampaignContactScalarWhereInput[]
+    NOT?: MarketingCampaignContactScalarWhereInput | MarketingCampaignContactScalarWhereInput[]
+    id?: IntFilter<"MarketingCampaignContact"> | number
+    uuid?: StringFilter<"MarketingCampaignContact"> | string
+    campaign_uuid?: StringFilter<"MarketingCampaignContact"> | string
+    contact_uuid?: StringFilter<"MarketingCampaignContact"> | string
+    channel?: EnumChannelFilter<"MarketingCampaignContact"> | $Enums.Channel
+    status?: EnumCampaignContactStatusFilter<"MarketingCampaignContact"> | $Enums.CampaignContactStatus
+    error_message?: StringNullableFilter<"MarketingCampaignContact"> | string | null
+    sent_at?: DateTimeNullableFilter<"MarketingCampaignContact"> | Date | string | null
+    delivered_at?: DateTimeNullableFilter<"MarketingCampaignContact"> | Date | string | null
+    created_at?: DateTimeFilter<"MarketingCampaignContact"> | Date | string
+    updated_at?: DateTimeFilter<"MarketingCampaignContact"> | Date | string
+  }
+
   export type ContactCreateWithoutTagsInput = {
     uuid?: string
     status?: $Enums.LeadStatus
@@ -24340,6 +29625,9 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    unsubscribed_at?: Date | string | null
+    unsubscribe_token?: string | null
+    last_interaction_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutContactsInput
@@ -24347,6 +29635,7 @@ export namespace Prisma {
     filter?: FilterCreateNestedOneWithoutContactsInput
     interactions?: InteractionCreateNestedManyWithoutContactInput
     outreach_messages?: OutreachMessageCreateNestedManyWithoutContactInput
+    campaign_contacts?: MarketingCampaignContactCreateNestedManyWithoutContactInput
   }
 
   export type ContactUncheckedCreateWithoutTagsInput = {
@@ -24368,10 +29657,14 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    unsubscribed_at?: Date | string | null
+    unsubscribe_token?: string | null
+    last_interaction_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
     interactions?: InteractionUncheckedCreateNestedManyWithoutContactInput
     outreach_messages?: OutreachMessageUncheckedCreateNestedManyWithoutContactInput
+    campaign_contacts?: MarketingCampaignContactUncheckedCreateNestedManyWithoutContactInput
   }
 
   export type ContactCreateOrConnectWithoutTagsInput = {
@@ -24405,6 +29698,9 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
+    last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutContactsNestedInput
@@ -24412,6 +29708,7 @@ export namespace Prisma {
     filter?: FilterUpdateOneWithoutContactsNestedInput
     interactions?: InteractionUpdateManyWithoutContactNestedInput
     outreach_messages?: OutreachMessageUpdateManyWithoutContactNestedInput
+    campaign_contacts?: MarketingCampaignContactUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateWithoutTagsInput = {
@@ -24433,10 +29730,14 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
+    last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     interactions?: InteractionUncheckedUpdateManyWithoutContactNestedInput
     outreach_messages?: OutreachMessageUncheckedUpdateManyWithoutContactNestedInput
+    campaign_contacts?: MarketingCampaignContactUncheckedUpdateManyWithoutContactNestedInput
   }
 
   export type ContactCreateWithoutInteractionsInput = {
@@ -24454,6 +29755,9 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    unsubscribed_at?: Date | string | null
+    unsubscribe_token?: string | null
+    last_interaction_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutContactsInput
@@ -24461,6 +29765,7 @@ export namespace Prisma {
     filter?: FilterCreateNestedOneWithoutContactsInput
     tags?: ContactTagCreateNestedManyWithoutContactInput
     outreach_messages?: OutreachMessageCreateNestedManyWithoutContactInput
+    campaign_contacts?: MarketingCampaignContactCreateNestedManyWithoutContactInput
   }
 
   export type ContactUncheckedCreateWithoutInteractionsInput = {
@@ -24482,10 +29787,14 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    unsubscribed_at?: Date | string | null
+    unsubscribe_token?: string | null
+    last_interaction_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
     tags?: ContactTagUncheckedCreateNestedManyWithoutContactInput
     outreach_messages?: OutreachMessageUncheckedCreateNestedManyWithoutContactInput
+    campaign_contacts?: MarketingCampaignContactUncheckedCreateNestedManyWithoutContactInput
   }
 
   export type ContactCreateOrConnectWithoutInteractionsInput = {
@@ -24506,6 +29815,7 @@ export namespace Prisma {
     outreach_messages?: OutreachMessageCreateNestedManyWithoutUserInput
     outreach_sequences?: OutreachSequenceCreateNestedManyWithoutUserInput
     sender_profiles?: SenderProfileCreateNestedManyWithoutUserInput
+    marketing_campaigns?: MarketingCampaignCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutInteractionsInput = {
@@ -24522,6 +29832,7 @@ export namespace Prisma {
     outreach_messages?: OutreachMessageUncheckedCreateNestedManyWithoutUserInput
     outreach_sequences?: OutreachSequenceUncheckedCreateNestedManyWithoutUserInput
     sender_profiles?: SenderProfileUncheckedCreateNestedManyWithoutUserInput
+    marketing_campaigns?: MarketingCampaignUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutInteractionsInput = {
@@ -24532,16 +29843,24 @@ export namespace Prisma {
   export type OutreachMessageCreateWithoutInteractionInput = {
     uuid?: string
     channel: $Enums.Channel
+    direction?: $Enums.MsgDirection
     subject?: string | null
     content: string
     status?: $Enums.MsgStatus
+    provider_message_id?: string | null
+    idempotency_key?: string | null
     scheduled_at?: Date | string | null
     sent_at?: Date | string | null
+    delivered_at?: Date | string | null
+    opened_at?: Date | string | null
+    clicked_at?: Date | string | null
+    replied_at?: Date | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutOutreach_messagesInput
     contact: ContactCreateNestedOneWithoutOutreach_messagesInput
+    campaign?: MarketingCampaignCreateNestedOneWithoutOutreach_messagesInput
   }
 
   export type OutreachMessageUncheckedCreateWithoutInteractionInput = {
@@ -24549,12 +29868,20 @@ export namespace Prisma {
     uuid?: string
     user_uuid: string
     contact_uuid: string
+    campaign_uuid?: string | null
     channel: $Enums.Channel
+    direction?: $Enums.MsgDirection
     subject?: string | null
     content: string
     status?: $Enums.MsgStatus
+    provider_message_id?: string | null
+    idempotency_key?: string | null
     scheduled_at?: Date | string | null
     sent_at?: Date | string | null
+    delivered_at?: Date | string | null
+    opened_at?: Date | string | null
+    clicked_at?: Date | string | null
+    replied_at?: Date | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
@@ -24563,6 +29890,80 @@ export namespace Prisma {
   export type OutreachMessageCreateOrConnectWithoutInteractionInput = {
     where: OutreachMessageWhereUniqueInput
     create: XOR<OutreachMessageCreateWithoutInteractionInput, OutreachMessageUncheckedCreateWithoutInteractionInput>
+  }
+
+  export type MarketingCampaignCreateWithoutInteractionsInput = {
+    uuid?: string
+    name: string
+    description?: string | null
+    status?: $Enums.CampaignStatus
+    channels?: MarketingCampaignCreatechannelsInput | $Enums.Channel[]
+    filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    email_subject?: string | null
+    email_content?: string | null
+    sms_content?: string | null
+    scheduled_at?: Date | string | null
+    started_at?: Date | string | null
+    completed_at?: Date | string | null
+    cancelled_at?: Date | string | null
+    selected_contact_count?: number
+    total_messages?: number
+    queued_count?: number
+    sent_count?: number
+    failed_count?: number
+    skipped_count?: number
+    delivered_count?: number
+    opened_count?: number
+    clicked_count?: number
+    replied_count?: number
+    bounced_count?: number
+    unsubscribed_count?: number
+    created_at?: Date | string
+    updated_at?: Date | string
+    user: UserCreateNestedOneWithoutMarketing_campaignsInput
+    sender_profile?: SenderProfileCreateNestedOneWithoutMarketing_campaignsInput
+    campaign_contacts?: MarketingCampaignContactCreateNestedManyWithoutCampaignInput
+    outreach_messages?: OutreachMessageCreateNestedManyWithoutCampaignInput
+  }
+
+  export type MarketingCampaignUncheckedCreateWithoutInteractionsInput = {
+    id?: number
+    uuid?: string
+    user_uuid: string
+    name: string
+    description?: string | null
+    status?: $Enums.CampaignStatus
+    channels?: MarketingCampaignCreatechannelsInput | $Enums.Channel[]
+    filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    email_subject?: string | null
+    email_content?: string | null
+    sms_content?: string | null
+    sender_profile_uuid?: string | null
+    scheduled_at?: Date | string | null
+    started_at?: Date | string | null
+    completed_at?: Date | string | null
+    cancelled_at?: Date | string | null
+    selected_contact_count?: number
+    total_messages?: number
+    queued_count?: number
+    sent_count?: number
+    failed_count?: number
+    skipped_count?: number
+    delivered_count?: number
+    opened_count?: number
+    clicked_count?: number
+    replied_count?: number
+    bounced_count?: number
+    unsubscribed_count?: number
+    created_at?: Date | string
+    updated_at?: Date | string
+    campaign_contacts?: MarketingCampaignContactUncheckedCreateNestedManyWithoutCampaignInput
+    outreach_messages?: OutreachMessageUncheckedCreateNestedManyWithoutCampaignInput
+  }
+
+  export type MarketingCampaignCreateOrConnectWithoutInteractionsInput = {
+    where: MarketingCampaignWhereUniqueInput
+    create: XOR<MarketingCampaignCreateWithoutInteractionsInput, MarketingCampaignUncheckedCreateWithoutInteractionsInput>
   }
 
   export type ContactUpsertWithoutInteractionsInput = {
@@ -24591,6 +29992,9 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
+    last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutContactsNestedInput
@@ -24598,6 +30002,7 @@ export namespace Prisma {
     filter?: FilterUpdateOneWithoutContactsNestedInput
     tags?: ContactTagUpdateManyWithoutContactNestedInput
     outreach_messages?: OutreachMessageUpdateManyWithoutContactNestedInput
+    campaign_contacts?: MarketingCampaignContactUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateWithoutInteractionsInput = {
@@ -24619,10 +30024,14 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
+    last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     tags?: ContactTagUncheckedUpdateManyWithoutContactNestedInput
     outreach_messages?: OutreachMessageUncheckedUpdateManyWithoutContactNestedInput
+    campaign_contacts?: MarketingCampaignContactUncheckedUpdateManyWithoutContactNestedInput
   }
 
   export type UserUpsertWithoutInteractionsInput = {
@@ -24649,6 +30058,7 @@ export namespace Prisma {
     outreach_messages?: OutreachMessageUpdateManyWithoutUserNestedInput
     outreach_sequences?: OutreachSequenceUpdateManyWithoutUserNestedInput
     sender_profiles?: SenderProfileUpdateManyWithoutUserNestedInput
+    marketing_campaigns?: MarketingCampaignUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutInteractionsInput = {
@@ -24665,6 +30075,7 @@ export namespace Prisma {
     outreach_messages?: OutreachMessageUncheckedUpdateManyWithoutUserNestedInput
     outreach_sequences?: OutreachSequenceUncheckedUpdateManyWithoutUserNestedInput
     sender_profiles?: SenderProfileUncheckedUpdateManyWithoutUserNestedInput
+    marketing_campaigns?: MarketingCampaignUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type OutreachMessageUpsertWithoutInteractionInput = {
@@ -24681,16 +30092,24 @@ export namespace Prisma {
   export type OutreachMessageUpdateWithoutInteractionInput = {
     uuid?: StringFieldUpdateOperationsInput | string
     channel?: EnumChannelFieldUpdateOperationsInput | $Enums.Channel
+    direction?: EnumMsgDirectionFieldUpdateOperationsInput | $Enums.MsgDirection
     subject?: NullableStringFieldUpdateOperationsInput | string | null
     content?: StringFieldUpdateOperationsInput | string
     status?: EnumMsgStatusFieldUpdateOperationsInput | $Enums.MsgStatus
+    provider_message_id?: NullableStringFieldUpdateOperationsInput | string | null
+    idempotency_key?: NullableStringFieldUpdateOperationsInput | string | null
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    opened_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    clicked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    replied_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutOutreach_messagesNestedInput
     contact?: ContactUpdateOneRequiredWithoutOutreach_messagesNestedInput
+    campaign?: MarketingCampaignUpdateOneWithoutOutreach_messagesNestedInput
   }
 
   export type OutreachMessageUncheckedUpdateWithoutInteractionInput = {
@@ -24698,15 +30117,103 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     user_uuid?: StringFieldUpdateOperationsInput | string
     contact_uuid?: StringFieldUpdateOperationsInput | string
+    campaign_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     channel?: EnumChannelFieldUpdateOperationsInput | $Enums.Channel
+    direction?: EnumMsgDirectionFieldUpdateOperationsInput | $Enums.MsgDirection
     subject?: NullableStringFieldUpdateOperationsInput | string | null
     content?: StringFieldUpdateOperationsInput | string
     status?: EnumMsgStatusFieldUpdateOperationsInput | $Enums.MsgStatus
+    provider_message_id?: NullableStringFieldUpdateOperationsInput | string | null
+    idempotency_key?: NullableStringFieldUpdateOperationsInput | string | null
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    opened_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    clicked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    replied_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MarketingCampaignUpsertWithoutInteractionsInput = {
+    update: XOR<MarketingCampaignUpdateWithoutInteractionsInput, MarketingCampaignUncheckedUpdateWithoutInteractionsInput>
+    create: XOR<MarketingCampaignCreateWithoutInteractionsInput, MarketingCampaignUncheckedCreateWithoutInteractionsInput>
+    where?: MarketingCampaignWhereInput
+  }
+
+  export type MarketingCampaignUpdateToOneWithWhereWithoutInteractionsInput = {
+    where?: MarketingCampaignWhereInput
+    data: XOR<MarketingCampaignUpdateWithoutInteractionsInput, MarketingCampaignUncheckedUpdateWithoutInteractionsInput>
+  }
+
+  export type MarketingCampaignUpdateWithoutInteractionsInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCampaignStatusFieldUpdateOperationsInput | $Enums.CampaignStatus
+    channels?: MarketingCampaignUpdatechannelsInput | $Enums.Channel[]
+    filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    email_subject?: NullableStringFieldUpdateOperationsInput | string | null
+    email_content?: NullableStringFieldUpdateOperationsInput | string | null
+    sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    selected_contact_count?: IntFieldUpdateOperationsInput | number
+    total_messages?: IntFieldUpdateOperationsInput | number
+    queued_count?: IntFieldUpdateOperationsInput | number
+    sent_count?: IntFieldUpdateOperationsInput | number
+    failed_count?: IntFieldUpdateOperationsInput | number
+    skipped_count?: IntFieldUpdateOperationsInput | number
+    delivered_count?: IntFieldUpdateOperationsInput | number
+    opened_count?: IntFieldUpdateOperationsInput | number
+    clicked_count?: IntFieldUpdateOperationsInput | number
+    replied_count?: IntFieldUpdateOperationsInput | number
+    bounced_count?: IntFieldUpdateOperationsInput | number
+    unsubscribed_count?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutMarketing_campaignsNestedInput
+    sender_profile?: SenderProfileUpdateOneWithoutMarketing_campaignsNestedInput
+    campaign_contacts?: MarketingCampaignContactUpdateManyWithoutCampaignNestedInput
+    outreach_messages?: OutreachMessageUpdateManyWithoutCampaignNestedInput
+  }
+
+  export type MarketingCampaignUncheckedUpdateWithoutInteractionsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCampaignStatusFieldUpdateOperationsInput | $Enums.CampaignStatus
+    channels?: MarketingCampaignUpdatechannelsInput | $Enums.Channel[]
+    filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    email_subject?: NullableStringFieldUpdateOperationsInput | string | null
+    email_content?: NullableStringFieldUpdateOperationsInput | string | null
+    sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    sender_profile_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    selected_contact_count?: IntFieldUpdateOperationsInput | number
+    total_messages?: IntFieldUpdateOperationsInput | number
+    queued_count?: IntFieldUpdateOperationsInput | number
+    sent_count?: IntFieldUpdateOperationsInput | number
+    failed_count?: IntFieldUpdateOperationsInput | number
+    skipped_count?: IntFieldUpdateOperationsInput | number
+    delivered_count?: IntFieldUpdateOperationsInput | number
+    opened_count?: IntFieldUpdateOperationsInput | number
+    clicked_count?: IntFieldUpdateOperationsInput | number
+    replied_count?: IntFieldUpdateOperationsInput | number
+    bounced_count?: IntFieldUpdateOperationsInput | number
+    unsubscribed_count?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    campaign_contacts?: MarketingCampaignContactUncheckedUpdateManyWithoutCampaignNestedInput
+    outreach_messages?: OutreachMessageUncheckedUpdateManyWithoutCampaignNestedInput
   }
 
   export type UserCreateWithoutOutreach_messagesInput = {
@@ -24722,6 +30229,7 @@ export namespace Prisma {
     outreach_sequences?: OutreachSequenceCreateNestedManyWithoutUserInput
     interactions?: InteractionCreateNestedManyWithoutUserInput
     sender_profiles?: SenderProfileCreateNestedManyWithoutUserInput
+    marketing_campaigns?: MarketingCampaignCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOutreach_messagesInput = {
@@ -24738,6 +30246,7 @@ export namespace Prisma {
     outreach_sequences?: OutreachSequenceUncheckedCreateNestedManyWithoutUserInput
     interactions?: InteractionUncheckedCreateNestedManyWithoutUserInput
     sender_profiles?: SenderProfileUncheckedCreateNestedManyWithoutUserInput
+    marketing_campaigns?: MarketingCampaignUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOutreach_messagesInput = {
@@ -24760,6 +30269,9 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    unsubscribed_at?: Date | string | null
+    unsubscribe_token?: string | null
+    last_interaction_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutContactsInput
@@ -24767,6 +30279,7 @@ export namespace Prisma {
     filter?: FilterCreateNestedOneWithoutContactsInput
     tags?: ContactTagCreateNestedManyWithoutContactInput
     interactions?: InteractionCreateNestedManyWithoutContactInput
+    campaign_contacts?: MarketingCampaignContactCreateNestedManyWithoutContactInput
   }
 
   export type ContactUncheckedCreateWithoutOutreach_messagesInput = {
@@ -24788,15 +30301,93 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    unsubscribed_at?: Date | string | null
+    unsubscribe_token?: string | null
+    last_interaction_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
     tags?: ContactTagUncheckedCreateNestedManyWithoutContactInput
     interactions?: InteractionUncheckedCreateNestedManyWithoutContactInput
+    campaign_contacts?: MarketingCampaignContactUncheckedCreateNestedManyWithoutContactInput
   }
 
   export type ContactCreateOrConnectWithoutOutreach_messagesInput = {
     where: ContactWhereUniqueInput
     create: XOR<ContactCreateWithoutOutreach_messagesInput, ContactUncheckedCreateWithoutOutreach_messagesInput>
+  }
+
+  export type MarketingCampaignCreateWithoutOutreach_messagesInput = {
+    uuid?: string
+    name: string
+    description?: string | null
+    status?: $Enums.CampaignStatus
+    channels?: MarketingCampaignCreatechannelsInput | $Enums.Channel[]
+    filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    email_subject?: string | null
+    email_content?: string | null
+    sms_content?: string | null
+    scheduled_at?: Date | string | null
+    started_at?: Date | string | null
+    completed_at?: Date | string | null
+    cancelled_at?: Date | string | null
+    selected_contact_count?: number
+    total_messages?: number
+    queued_count?: number
+    sent_count?: number
+    failed_count?: number
+    skipped_count?: number
+    delivered_count?: number
+    opened_count?: number
+    clicked_count?: number
+    replied_count?: number
+    bounced_count?: number
+    unsubscribed_count?: number
+    created_at?: Date | string
+    updated_at?: Date | string
+    user: UserCreateNestedOneWithoutMarketing_campaignsInput
+    sender_profile?: SenderProfileCreateNestedOneWithoutMarketing_campaignsInput
+    campaign_contacts?: MarketingCampaignContactCreateNestedManyWithoutCampaignInput
+    interactions?: InteractionCreateNestedManyWithoutCampaignInput
+  }
+
+  export type MarketingCampaignUncheckedCreateWithoutOutreach_messagesInput = {
+    id?: number
+    uuid?: string
+    user_uuid: string
+    name: string
+    description?: string | null
+    status?: $Enums.CampaignStatus
+    channels?: MarketingCampaignCreatechannelsInput | $Enums.Channel[]
+    filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    email_subject?: string | null
+    email_content?: string | null
+    sms_content?: string | null
+    sender_profile_uuid?: string | null
+    scheduled_at?: Date | string | null
+    started_at?: Date | string | null
+    completed_at?: Date | string | null
+    cancelled_at?: Date | string | null
+    selected_contact_count?: number
+    total_messages?: number
+    queued_count?: number
+    sent_count?: number
+    failed_count?: number
+    skipped_count?: number
+    delivered_count?: number
+    opened_count?: number
+    clicked_count?: number
+    replied_count?: number
+    bounced_count?: number
+    unsubscribed_count?: number
+    created_at?: Date | string
+    updated_at?: Date | string
+    campaign_contacts?: MarketingCampaignContactUncheckedCreateNestedManyWithoutCampaignInput
+    interactions?: InteractionUncheckedCreateNestedManyWithoutCampaignInput
+  }
+
+  export type MarketingCampaignCreateOrConnectWithoutOutreach_messagesInput = {
+    where: MarketingCampaignWhereUniqueInput
+    create: XOR<MarketingCampaignCreateWithoutOutreach_messagesInput, MarketingCampaignUncheckedCreateWithoutOutreach_messagesInput>
   }
 
   export type InteractionCreateWithoutOutreach_messageInput = {
@@ -24809,6 +30400,7 @@ export namespace Prisma {
     updated_at?: Date | string
     contact: ContactCreateNestedOneWithoutInteractionsInput
     user: UserCreateNestedOneWithoutInteractionsInput
+    campaign?: MarketingCampaignCreateNestedOneWithoutInteractionsInput
   }
 
   export type InteractionUncheckedCreateWithoutOutreach_messageInput = {
@@ -24816,6 +30408,7 @@ export namespace Prisma {
     uuid?: string
     contact_uuid: string
     user_uuid: string
+    campaign_uuid?: string | null
     type: $Enums.InteractionType
     content?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
@@ -24853,6 +30446,7 @@ export namespace Prisma {
     outreach_sequences?: OutreachSequenceUpdateManyWithoutUserNestedInput
     interactions?: InteractionUpdateManyWithoutUserNestedInput
     sender_profiles?: SenderProfileUpdateManyWithoutUserNestedInput
+    marketing_campaigns?: MarketingCampaignUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOutreach_messagesInput = {
@@ -24869,6 +30463,7 @@ export namespace Prisma {
     outreach_sequences?: OutreachSequenceUncheckedUpdateManyWithoutUserNestedInput
     interactions?: InteractionUncheckedUpdateManyWithoutUserNestedInput
     sender_profiles?: SenderProfileUncheckedUpdateManyWithoutUserNestedInput
+    marketing_campaigns?: MarketingCampaignUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ContactUpsertWithoutOutreach_messagesInput = {
@@ -24897,6 +30492,9 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
+    last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutContactsNestedInput
@@ -24904,6 +30502,7 @@ export namespace Prisma {
     filter?: FilterUpdateOneWithoutContactsNestedInput
     tags?: ContactTagUpdateManyWithoutContactNestedInput
     interactions?: InteractionUpdateManyWithoutContactNestedInput
+    campaign_contacts?: MarketingCampaignContactUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateWithoutOutreach_messagesInput = {
@@ -24925,10 +30524,94 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
+    last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     tags?: ContactTagUncheckedUpdateManyWithoutContactNestedInput
     interactions?: InteractionUncheckedUpdateManyWithoutContactNestedInput
+    campaign_contacts?: MarketingCampaignContactUncheckedUpdateManyWithoutContactNestedInput
+  }
+
+  export type MarketingCampaignUpsertWithoutOutreach_messagesInput = {
+    update: XOR<MarketingCampaignUpdateWithoutOutreach_messagesInput, MarketingCampaignUncheckedUpdateWithoutOutreach_messagesInput>
+    create: XOR<MarketingCampaignCreateWithoutOutreach_messagesInput, MarketingCampaignUncheckedCreateWithoutOutreach_messagesInput>
+    where?: MarketingCampaignWhereInput
+  }
+
+  export type MarketingCampaignUpdateToOneWithWhereWithoutOutreach_messagesInput = {
+    where?: MarketingCampaignWhereInput
+    data: XOR<MarketingCampaignUpdateWithoutOutreach_messagesInput, MarketingCampaignUncheckedUpdateWithoutOutreach_messagesInput>
+  }
+
+  export type MarketingCampaignUpdateWithoutOutreach_messagesInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCampaignStatusFieldUpdateOperationsInput | $Enums.CampaignStatus
+    channels?: MarketingCampaignUpdatechannelsInput | $Enums.Channel[]
+    filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    email_subject?: NullableStringFieldUpdateOperationsInput | string | null
+    email_content?: NullableStringFieldUpdateOperationsInput | string | null
+    sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    selected_contact_count?: IntFieldUpdateOperationsInput | number
+    total_messages?: IntFieldUpdateOperationsInput | number
+    queued_count?: IntFieldUpdateOperationsInput | number
+    sent_count?: IntFieldUpdateOperationsInput | number
+    failed_count?: IntFieldUpdateOperationsInput | number
+    skipped_count?: IntFieldUpdateOperationsInput | number
+    delivered_count?: IntFieldUpdateOperationsInput | number
+    opened_count?: IntFieldUpdateOperationsInput | number
+    clicked_count?: IntFieldUpdateOperationsInput | number
+    replied_count?: IntFieldUpdateOperationsInput | number
+    bounced_count?: IntFieldUpdateOperationsInput | number
+    unsubscribed_count?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutMarketing_campaignsNestedInput
+    sender_profile?: SenderProfileUpdateOneWithoutMarketing_campaignsNestedInput
+    campaign_contacts?: MarketingCampaignContactUpdateManyWithoutCampaignNestedInput
+    interactions?: InteractionUpdateManyWithoutCampaignNestedInput
+  }
+
+  export type MarketingCampaignUncheckedUpdateWithoutOutreach_messagesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCampaignStatusFieldUpdateOperationsInput | $Enums.CampaignStatus
+    channels?: MarketingCampaignUpdatechannelsInput | $Enums.Channel[]
+    filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    email_subject?: NullableStringFieldUpdateOperationsInput | string | null
+    email_content?: NullableStringFieldUpdateOperationsInput | string | null
+    sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    sender_profile_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    selected_contact_count?: IntFieldUpdateOperationsInput | number
+    total_messages?: IntFieldUpdateOperationsInput | number
+    queued_count?: IntFieldUpdateOperationsInput | number
+    sent_count?: IntFieldUpdateOperationsInput | number
+    failed_count?: IntFieldUpdateOperationsInput | number
+    skipped_count?: IntFieldUpdateOperationsInput | number
+    delivered_count?: IntFieldUpdateOperationsInput | number
+    opened_count?: IntFieldUpdateOperationsInput | number
+    clicked_count?: IntFieldUpdateOperationsInput | number
+    replied_count?: IntFieldUpdateOperationsInput | number
+    bounced_count?: IntFieldUpdateOperationsInput | number
+    unsubscribed_count?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    campaign_contacts?: MarketingCampaignContactUncheckedUpdateManyWithoutCampaignNestedInput
+    interactions?: InteractionUncheckedUpdateManyWithoutCampaignNestedInput
   }
 
   export type InteractionUpsertWithoutOutreach_messageInput = {
@@ -24952,6 +30635,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     contact?: ContactUpdateOneRequiredWithoutInteractionsNestedInput
     user?: UserUpdateOneRequiredWithoutInteractionsNestedInput
+    campaign?: MarketingCampaignUpdateOneWithoutInteractionsNestedInput
   }
 
   export type InteractionUncheckedUpdateWithoutOutreach_messageInput = {
@@ -24959,6 +30643,7 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     contact_uuid?: StringFieldUpdateOperationsInput | string
     user_uuid?: StringFieldUpdateOperationsInput | string
+    campaign_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumInteractionTypeFieldUpdateOperationsInput | $Enums.InteractionType
     content?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
@@ -24980,6 +30665,7 @@ export namespace Prisma {
     outreach_messages?: OutreachMessageCreateNestedManyWithoutUserInput
     interactions?: InteractionCreateNestedManyWithoutUserInput
     sender_profiles?: SenderProfileCreateNestedManyWithoutUserInput
+    marketing_campaigns?: MarketingCampaignCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOutreach_sequencesInput = {
@@ -24996,6 +30682,7 @@ export namespace Prisma {
     outreach_messages?: OutreachMessageUncheckedCreateNestedManyWithoutUserInput
     interactions?: InteractionUncheckedCreateNestedManyWithoutUserInput
     sender_profiles?: SenderProfileUncheckedCreateNestedManyWithoutUserInput
+    marketing_campaigns?: MarketingCampaignUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOutreach_sequencesInput = {
@@ -25027,6 +30714,7 @@ export namespace Prisma {
     outreach_messages?: OutreachMessageUpdateManyWithoutUserNestedInput
     interactions?: InteractionUpdateManyWithoutUserNestedInput
     sender_profiles?: SenderProfileUpdateManyWithoutUserNestedInput
+    marketing_campaigns?: MarketingCampaignUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOutreach_sequencesInput = {
@@ -25043,6 +30731,7 @@ export namespace Prisma {
     outreach_messages?: OutreachMessageUncheckedUpdateManyWithoutUserNestedInput
     interactions?: InteractionUncheckedUpdateManyWithoutUserNestedInput
     sender_profiles?: SenderProfileUncheckedUpdateManyWithoutUserNestedInput
+    marketing_campaigns?: MarketingCampaignUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type FilterCreateWithoutJobsInput = {
@@ -25148,6 +30837,7 @@ export namespace Prisma {
     outreach_messages?: OutreachMessageCreateNestedManyWithoutUserInput
     outreach_sequences?: OutreachSequenceCreateNestedManyWithoutUserInput
     interactions?: InteractionCreateNestedManyWithoutUserInput
+    marketing_campaigns?: MarketingCampaignCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSender_profilesInput = {
@@ -25164,11 +30854,91 @@ export namespace Prisma {
     outreach_messages?: OutreachMessageUncheckedCreateNestedManyWithoutUserInput
     outreach_sequences?: OutreachSequenceUncheckedCreateNestedManyWithoutUserInput
     interactions?: InteractionUncheckedCreateNestedManyWithoutUserInput
+    marketing_campaigns?: MarketingCampaignUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSender_profilesInput = {
     where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutSender_profilesInput, UserUncheckedCreateWithoutSender_profilesInput>
+  }
+
+  export type MarketingCampaignCreateWithoutSender_profileInput = {
+    uuid?: string
+    name: string
+    description?: string | null
+    status?: $Enums.CampaignStatus
+    channels?: MarketingCampaignCreatechannelsInput | $Enums.Channel[]
+    filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    email_subject?: string | null
+    email_content?: string | null
+    sms_content?: string | null
+    scheduled_at?: Date | string | null
+    started_at?: Date | string | null
+    completed_at?: Date | string | null
+    cancelled_at?: Date | string | null
+    selected_contact_count?: number
+    total_messages?: number
+    queued_count?: number
+    sent_count?: number
+    failed_count?: number
+    skipped_count?: number
+    delivered_count?: number
+    opened_count?: number
+    clicked_count?: number
+    replied_count?: number
+    bounced_count?: number
+    unsubscribed_count?: number
+    created_at?: Date | string
+    updated_at?: Date | string
+    user: UserCreateNestedOneWithoutMarketing_campaignsInput
+    campaign_contacts?: MarketingCampaignContactCreateNestedManyWithoutCampaignInput
+    outreach_messages?: OutreachMessageCreateNestedManyWithoutCampaignInput
+    interactions?: InteractionCreateNestedManyWithoutCampaignInput
+  }
+
+  export type MarketingCampaignUncheckedCreateWithoutSender_profileInput = {
+    id?: number
+    uuid?: string
+    user_uuid: string
+    name: string
+    description?: string | null
+    status?: $Enums.CampaignStatus
+    channels?: MarketingCampaignCreatechannelsInput | $Enums.Channel[]
+    filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    email_subject?: string | null
+    email_content?: string | null
+    sms_content?: string | null
+    scheduled_at?: Date | string | null
+    started_at?: Date | string | null
+    completed_at?: Date | string | null
+    cancelled_at?: Date | string | null
+    selected_contact_count?: number
+    total_messages?: number
+    queued_count?: number
+    sent_count?: number
+    failed_count?: number
+    skipped_count?: number
+    delivered_count?: number
+    opened_count?: number
+    clicked_count?: number
+    replied_count?: number
+    bounced_count?: number
+    unsubscribed_count?: number
+    created_at?: Date | string
+    updated_at?: Date | string
+    campaign_contacts?: MarketingCampaignContactUncheckedCreateNestedManyWithoutCampaignInput
+    outreach_messages?: OutreachMessageUncheckedCreateNestedManyWithoutCampaignInput
+    interactions?: InteractionUncheckedCreateNestedManyWithoutCampaignInput
+  }
+
+  export type MarketingCampaignCreateOrConnectWithoutSender_profileInput = {
+    where: MarketingCampaignWhereUniqueInput
+    create: XOR<MarketingCampaignCreateWithoutSender_profileInput, MarketingCampaignUncheckedCreateWithoutSender_profileInput>
+  }
+
+  export type MarketingCampaignCreateManySender_profileInputEnvelope = {
+    data: MarketingCampaignCreateManySender_profileInput | MarketingCampaignCreateManySender_profileInput[]
+    skipDuplicates?: boolean
   }
 
   export type UserUpsertWithoutSender_profilesInput = {
@@ -25195,6 +30965,7 @@ export namespace Prisma {
     outreach_messages?: OutreachMessageUpdateManyWithoutUserNestedInput
     outreach_sequences?: OutreachSequenceUpdateManyWithoutUserNestedInput
     interactions?: InteractionUpdateManyWithoutUserNestedInput
+    marketing_campaigns?: MarketingCampaignUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSender_profilesInput = {
@@ -25211,6 +30982,676 @@ export namespace Prisma {
     outreach_messages?: OutreachMessageUncheckedUpdateManyWithoutUserNestedInput
     outreach_sequences?: OutreachSequenceUncheckedUpdateManyWithoutUserNestedInput
     interactions?: InteractionUncheckedUpdateManyWithoutUserNestedInput
+    marketing_campaigns?: MarketingCampaignUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type MarketingCampaignUpsertWithWhereUniqueWithoutSender_profileInput = {
+    where: MarketingCampaignWhereUniqueInput
+    update: XOR<MarketingCampaignUpdateWithoutSender_profileInput, MarketingCampaignUncheckedUpdateWithoutSender_profileInput>
+    create: XOR<MarketingCampaignCreateWithoutSender_profileInput, MarketingCampaignUncheckedCreateWithoutSender_profileInput>
+  }
+
+  export type MarketingCampaignUpdateWithWhereUniqueWithoutSender_profileInput = {
+    where: MarketingCampaignWhereUniqueInput
+    data: XOR<MarketingCampaignUpdateWithoutSender_profileInput, MarketingCampaignUncheckedUpdateWithoutSender_profileInput>
+  }
+
+  export type MarketingCampaignUpdateManyWithWhereWithoutSender_profileInput = {
+    where: MarketingCampaignScalarWhereInput
+    data: XOR<MarketingCampaignUpdateManyMutationInput, MarketingCampaignUncheckedUpdateManyWithoutSender_profileInput>
+  }
+
+  export type UserCreateWithoutMarketing_campaignsInput = {
+    uuid?: string
+    email: string
+    phone?: string | null
+    password: string
+    role?: $Enums.AuthRole
+    created_at?: Date | string
+    updated_at?: Date | string
+    filters?: FilterCreateNestedManyWithoutUserInput
+    contacts?: ContactCreateNestedManyWithoutUserInput
+    outreach_messages?: OutreachMessageCreateNestedManyWithoutUserInput
+    outreach_sequences?: OutreachSequenceCreateNestedManyWithoutUserInput
+    interactions?: InteractionCreateNestedManyWithoutUserInput
+    sender_profiles?: SenderProfileCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutMarketing_campaignsInput = {
+    id?: number
+    uuid?: string
+    email: string
+    phone?: string | null
+    password: string
+    role?: $Enums.AuthRole
+    created_at?: Date | string
+    updated_at?: Date | string
+    filters?: FilterUncheckedCreateNestedManyWithoutUserInput
+    contacts?: ContactUncheckedCreateNestedManyWithoutUserInput
+    outreach_messages?: OutreachMessageUncheckedCreateNestedManyWithoutUserInput
+    outreach_sequences?: OutreachSequenceUncheckedCreateNestedManyWithoutUserInput
+    interactions?: InteractionUncheckedCreateNestedManyWithoutUserInput
+    sender_profiles?: SenderProfileUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutMarketing_campaignsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutMarketing_campaignsInput, UserUncheckedCreateWithoutMarketing_campaignsInput>
+  }
+
+  export type SenderProfileCreateWithoutMarketing_campaignsInput = {
+    uuid?: string
+    name: string
+    company_name?: string | null
+    title?: string | null
+    first_name?: string | null
+    last_name?: string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    address?: string | null
+    city?: string | null
+    country?: string | null
+    logo_url?: string | null
+    booking_url?: string | null
+    sender_id?: string | null
+    signature?: string | null
+    is_default?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    user: UserCreateNestedOneWithoutSender_profilesInput
+  }
+
+  export type SenderProfileUncheckedCreateWithoutMarketing_campaignsInput = {
+    id?: number
+    uuid?: string
+    user_uuid: string
+    name: string
+    company_name?: string | null
+    title?: string | null
+    first_name?: string | null
+    last_name?: string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    address?: string | null
+    city?: string | null
+    country?: string | null
+    logo_url?: string | null
+    booking_url?: string | null
+    sender_id?: string | null
+    signature?: string | null
+    is_default?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type SenderProfileCreateOrConnectWithoutMarketing_campaignsInput = {
+    where: SenderProfileWhereUniqueInput
+    create: XOR<SenderProfileCreateWithoutMarketing_campaignsInput, SenderProfileUncheckedCreateWithoutMarketing_campaignsInput>
+  }
+
+  export type MarketingCampaignContactCreateWithoutCampaignInput = {
+    uuid?: string
+    channel: $Enums.Channel
+    status?: $Enums.CampaignContactStatus
+    error_message?: string | null
+    sent_at?: Date | string | null
+    delivered_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    contact: ContactCreateNestedOneWithoutCampaign_contactsInput
+  }
+
+  export type MarketingCampaignContactUncheckedCreateWithoutCampaignInput = {
+    id?: number
+    uuid?: string
+    contact_uuid: string
+    channel: $Enums.Channel
+    status?: $Enums.CampaignContactStatus
+    error_message?: string | null
+    sent_at?: Date | string | null
+    delivered_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type MarketingCampaignContactCreateOrConnectWithoutCampaignInput = {
+    where: MarketingCampaignContactWhereUniqueInput
+    create: XOR<MarketingCampaignContactCreateWithoutCampaignInput, MarketingCampaignContactUncheckedCreateWithoutCampaignInput>
+  }
+
+  export type MarketingCampaignContactCreateManyCampaignInputEnvelope = {
+    data: MarketingCampaignContactCreateManyCampaignInput | MarketingCampaignContactCreateManyCampaignInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type OutreachMessageCreateWithoutCampaignInput = {
+    uuid?: string
+    channel: $Enums.Channel
+    direction?: $Enums.MsgDirection
+    subject?: string | null
+    content: string
+    status?: $Enums.MsgStatus
+    provider_message_id?: string | null
+    idempotency_key?: string | null
+    scheduled_at?: Date | string | null
+    sent_at?: Date | string | null
+    delivered_at?: Date | string | null
+    opened_at?: Date | string | null
+    clicked_at?: Date | string | null
+    replied_at?: Date | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+    user: UserCreateNestedOneWithoutOutreach_messagesInput
+    contact: ContactCreateNestedOneWithoutOutreach_messagesInput
+    interaction?: InteractionCreateNestedOneWithoutOutreach_messageInput
+  }
+
+  export type OutreachMessageUncheckedCreateWithoutCampaignInput = {
+    id?: number
+    uuid?: string
+    user_uuid: string
+    contact_uuid: string
+    channel: $Enums.Channel
+    direction?: $Enums.MsgDirection
+    subject?: string | null
+    content: string
+    status?: $Enums.MsgStatus
+    provider_message_id?: string | null
+    idempotency_key?: string | null
+    scheduled_at?: Date | string | null
+    sent_at?: Date | string | null
+    delivered_at?: Date | string | null
+    opened_at?: Date | string | null
+    clicked_at?: Date | string | null
+    replied_at?: Date | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+    interaction?: InteractionUncheckedCreateNestedOneWithoutOutreach_messageInput
+  }
+
+  export type OutreachMessageCreateOrConnectWithoutCampaignInput = {
+    where: OutreachMessageWhereUniqueInput
+    create: XOR<OutreachMessageCreateWithoutCampaignInput, OutreachMessageUncheckedCreateWithoutCampaignInput>
+  }
+
+  export type OutreachMessageCreateManyCampaignInputEnvelope = {
+    data: OutreachMessageCreateManyCampaignInput | OutreachMessageCreateManyCampaignInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type InteractionCreateWithoutCampaignInput = {
+    uuid?: string
+    type: $Enums.InteractionType
+    content?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    status_change?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+    contact: ContactCreateNestedOneWithoutInteractionsInput
+    user: UserCreateNestedOneWithoutInteractionsInput
+    outreach_message?: OutreachMessageCreateNestedOneWithoutInteractionInput
+  }
+
+  export type InteractionUncheckedCreateWithoutCampaignInput = {
+    id?: number
+    uuid?: string
+    contact_uuid: string
+    user_uuid: string
+    type: $Enums.InteractionType
+    content?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    status_change?: NullableJsonNullValueInput | InputJsonValue
+    outreach_message_uuid?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type InteractionCreateOrConnectWithoutCampaignInput = {
+    where: InteractionWhereUniqueInput
+    create: XOR<InteractionCreateWithoutCampaignInput, InteractionUncheckedCreateWithoutCampaignInput>
+  }
+
+  export type InteractionCreateManyCampaignInputEnvelope = {
+    data: InteractionCreateManyCampaignInput | InteractionCreateManyCampaignInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithoutMarketing_campaignsInput = {
+    update: XOR<UserUpdateWithoutMarketing_campaignsInput, UserUncheckedUpdateWithoutMarketing_campaignsInput>
+    create: XOR<UserCreateWithoutMarketing_campaignsInput, UserUncheckedCreateWithoutMarketing_campaignsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutMarketing_campaignsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutMarketing_campaignsInput, UserUncheckedUpdateWithoutMarketing_campaignsInput>
+  }
+
+  export type UserUpdateWithoutMarketing_campaignsInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    filters?: FilterUpdateManyWithoutUserNestedInput
+    contacts?: ContactUpdateManyWithoutUserNestedInput
+    outreach_messages?: OutreachMessageUpdateManyWithoutUserNestedInput
+    outreach_sequences?: OutreachSequenceUpdateManyWithoutUserNestedInput
+    interactions?: InteractionUpdateManyWithoutUserNestedInput
+    sender_profiles?: SenderProfileUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutMarketing_campaignsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    filters?: FilterUncheckedUpdateManyWithoutUserNestedInput
+    contacts?: ContactUncheckedUpdateManyWithoutUserNestedInput
+    outreach_messages?: OutreachMessageUncheckedUpdateManyWithoutUserNestedInput
+    outreach_sequences?: OutreachSequenceUncheckedUpdateManyWithoutUserNestedInput
+    interactions?: InteractionUncheckedUpdateManyWithoutUserNestedInput
+    sender_profiles?: SenderProfileUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type SenderProfileUpsertWithoutMarketing_campaignsInput = {
+    update: XOR<SenderProfileUpdateWithoutMarketing_campaignsInput, SenderProfileUncheckedUpdateWithoutMarketing_campaignsInput>
+    create: XOR<SenderProfileCreateWithoutMarketing_campaignsInput, SenderProfileUncheckedCreateWithoutMarketing_campaignsInput>
+    where?: SenderProfileWhereInput
+  }
+
+  export type SenderProfileUpdateToOneWithWhereWithoutMarketing_campaignsInput = {
+    where?: SenderProfileWhereInput
+    data: XOR<SenderProfileUpdateWithoutMarketing_campaignsInput, SenderProfileUncheckedUpdateWithoutMarketing_campaignsInput>
+  }
+
+  export type SenderProfileUpdateWithoutMarketing_campaignsInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    company_name?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
+    booking_url?: NullableStringFieldUpdateOperationsInput | string | null
+    sender_id?: NullableStringFieldUpdateOperationsInput | string | null
+    signature?: NullableStringFieldUpdateOperationsInput | string | null
+    is_default?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutSender_profilesNestedInput
+  }
+
+  export type SenderProfileUncheckedUpdateWithoutMarketing_campaignsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    company_name?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
+    booking_url?: NullableStringFieldUpdateOperationsInput | string | null
+    sender_id?: NullableStringFieldUpdateOperationsInput | string | null
+    signature?: NullableStringFieldUpdateOperationsInput | string | null
+    is_default?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MarketingCampaignContactUpsertWithWhereUniqueWithoutCampaignInput = {
+    where: MarketingCampaignContactWhereUniqueInput
+    update: XOR<MarketingCampaignContactUpdateWithoutCampaignInput, MarketingCampaignContactUncheckedUpdateWithoutCampaignInput>
+    create: XOR<MarketingCampaignContactCreateWithoutCampaignInput, MarketingCampaignContactUncheckedCreateWithoutCampaignInput>
+  }
+
+  export type MarketingCampaignContactUpdateWithWhereUniqueWithoutCampaignInput = {
+    where: MarketingCampaignContactWhereUniqueInput
+    data: XOR<MarketingCampaignContactUpdateWithoutCampaignInput, MarketingCampaignContactUncheckedUpdateWithoutCampaignInput>
+  }
+
+  export type MarketingCampaignContactUpdateManyWithWhereWithoutCampaignInput = {
+    where: MarketingCampaignContactScalarWhereInput
+    data: XOR<MarketingCampaignContactUpdateManyMutationInput, MarketingCampaignContactUncheckedUpdateManyWithoutCampaignInput>
+  }
+
+  export type OutreachMessageUpsertWithWhereUniqueWithoutCampaignInput = {
+    where: OutreachMessageWhereUniqueInput
+    update: XOR<OutreachMessageUpdateWithoutCampaignInput, OutreachMessageUncheckedUpdateWithoutCampaignInput>
+    create: XOR<OutreachMessageCreateWithoutCampaignInput, OutreachMessageUncheckedCreateWithoutCampaignInput>
+  }
+
+  export type OutreachMessageUpdateWithWhereUniqueWithoutCampaignInput = {
+    where: OutreachMessageWhereUniqueInput
+    data: XOR<OutreachMessageUpdateWithoutCampaignInput, OutreachMessageUncheckedUpdateWithoutCampaignInput>
+  }
+
+  export type OutreachMessageUpdateManyWithWhereWithoutCampaignInput = {
+    where: OutreachMessageScalarWhereInput
+    data: XOR<OutreachMessageUpdateManyMutationInput, OutreachMessageUncheckedUpdateManyWithoutCampaignInput>
+  }
+
+  export type InteractionUpsertWithWhereUniqueWithoutCampaignInput = {
+    where: InteractionWhereUniqueInput
+    update: XOR<InteractionUpdateWithoutCampaignInput, InteractionUncheckedUpdateWithoutCampaignInput>
+    create: XOR<InteractionCreateWithoutCampaignInput, InteractionUncheckedCreateWithoutCampaignInput>
+  }
+
+  export type InteractionUpdateWithWhereUniqueWithoutCampaignInput = {
+    where: InteractionWhereUniqueInput
+    data: XOR<InteractionUpdateWithoutCampaignInput, InteractionUncheckedUpdateWithoutCampaignInput>
+  }
+
+  export type InteractionUpdateManyWithWhereWithoutCampaignInput = {
+    where: InteractionScalarWhereInput
+    data: XOR<InteractionUpdateManyMutationInput, InteractionUncheckedUpdateManyWithoutCampaignInput>
+  }
+
+  export type MarketingCampaignCreateWithoutCampaign_contactsInput = {
+    uuid?: string
+    name: string
+    description?: string | null
+    status?: $Enums.CampaignStatus
+    channels?: MarketingCampaignCreatechannelsInput | $Enums.Channel[]
+    filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    email_subject?: string | null
+    email_content?: string | null
+    sms_content?: string | null
+    scheduled_at?: Date | string | null
+    started_at?: Date | string | null
+    completed_at?: Date | string | null
+    cancelled_at?: Date | string | null
+    selected_contact_count?: number
+    total_messages?: number
+    queued_count?: number
+    sent_count?: number
+    failed_count?: number
+    skipped_count?: number
+    delivered_count?: number
+    opened_count?: number
+    clicked_count?: number
+    replied_count?: number
+    bounced_count?: number
+    unsubscribed_count?: number
+    created_at?: Date | string
+    updated_at?: Date | string
+    user: UserCreateNestedOneWithoutMarketing_campaignsInput
+    sender_profile?: SenderProfileCreateNestedOneWithoutMarketing_campaignsInput
+    outreach_messages?: OutreachMessageCreateNestedManyWithoutCampaignInput
+    interactions?: InteractionCreateNestedManyWithoutCampaignInput
+  }
+
+  export type MarketingCampaignUncheckedCreateWithoutCampaign_contactsInput = {
+    id?: number
+    uuid?: string
+    user_uuid: string
+    name: string
+    description?: string | null
+    status?: $Enums.CampaignStatus
+    channels?: MarketingCampaignCreatechannelsInput | $Enums.Channel[]
+    filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    email_subject?: string | null
+    email_content?: string | null
+    sms_content?: string | null
+    sender_profile_uuid?: string | null
+    scheduled_at?: Date | string | null
+    started_at?: Date | string | null
+    completed_at?: Date | string | null
+    cancelled_at?: Date | string | null
+    selected_contact_count?: number
+    total_messages?: number
+    queued_count?: number
+    sent_count?: number
+    failed_count?: number
+    skipped_count?: number
+    delivered_count?: number
+    opened_count?: number
+    clicked_count?: number
+    replied_count?: number
+    bounced_count?: number
+    unsubscribed_count?: number
+    created_at?: Date | string
+    updated_at?: Date | string
+    outreach_messages?: OutreachMessageUncheckedCreateNestedManyWithoutCampaignInput
+    interactions?: InteractionUncheckedCreateNestedManyWithoutCampaignInput
+  }
+
+  export type MarketingCampaignCreateOrConnectWithoutCampaign_contactsInput = {
+    where: MarketingCampaignWhereUniqueInput
+    create: XOR<MarketingCampaignCreateWithoutCampaign_contactsInput, MarketingCampaignUncheckedCreateWithoutCampaign_contactsInput>
+  }
+
+  export type ContactCreateWithoutCampaign_contactsInput = {
+    uuid?: string
+    status?: $Enums.LeadStatus
+    score?: number | null
+    notes?: string | null
+    name?: string | null
+    email?: string | null
+    phone?: string | null
+    company?: string | null
+    website?: string | null
+    linkedin_url?: string | null
+    title?: string | null
+    location?: string | null
+    industry?: string | null
+    description?: string | null
+    unsubscribed_at?: Date | string | null
+    unsubscribe_token?: string | null
+    last_interaction_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    user: UserCreateNestedOneWithoutContactsInput
+    lead: LeadCreateNestedOneWithoutContactsInput
+    filter?: FilterCreateNestedOneWithoutContactsInput
+    tags?: ContactTagCreateNestedManyWithoutContactInput
+    interactions?: InteractionCreateNestedManyWithoutContactInput
+    outreach_messages?: OutreachMessageCreateNestedManyWithoutContactInput
+  }
+
+  export type ContactUncheckedCreateWithoutCampaign_contactsInput = {
+    id?: number
+    uuid?: string
+    user_uuid: string
+    lead_uuid: string
+    filter_uuid?: string | null
+    status?: $Enums.LeadStatus
+    score?: number | null
+    notes?: string | null
+    name?: string | null
+    email?: string | null
+    phone?: string | null
+    company?: string | null
+    website?: string | null
+    linkedin_url?: string | null
+    title?: string | null
+    location?: string | null
+    industry?: string | null
+    description?: string | null
+    unsubscribed_at?: Date | string | null
+    unsubscribe_token?: string | null
+    last_interaction_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    tags?: ContactTagUncheckedCreateNestedManyWithoutContactInput
+    interactions?: InteractionUncheckedCreateNestedManyWithoutContactInput
+    outreach_messages?: OutreachMessageUncheckedCreateNestedManyWithoutContactInput
+  }
+
+  export type ContactCreateOrConnectWithoutCampaign_contactsInput = {
+    where: ContactWhereUniqueInput
+    create: XOR<ContactCreateWithoutCampaign_contactsInput, ContactUncheckedCreateWithoutCampaign_contactsInput>
+  }
+
+  export type MarketingCampaignUpsertWithoutCampaign_contactsInput = {
+    update: XOR<MarketingCampaignUpdateWithoutCampaign_contactsInput, MarketingCampaignUncheckedUpdateWithoutCampaign_contactsInput>
+    create: XOR<MarketingCampaignCreateWithoutCampaign_contactsInput, MarketingCampaignUncheckedCreateWithoutCampaign_contactsInput>
+    where?: MarketingCampaignWhereInput
+  }
+
+  export type MarketingCampaignUpdateToOneWithWhereWithoutCampaign_contactsInput = {
+    where?: MarketingCampaignWhereInput
+    data: XOR<MarketingCampaignUpdateWithoutCampaign_contactsInput, MarketingCampaignUncheckedUpdateWithoutCampaign_contactsInput>
+  }
+
+  export type MarketingCampaignUpdateWithoutCampaign_contactsInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCampaignStatusFieldUpdateOperationsInput | $Enums.CampaignStatus
+    channels?: MarketingCampaignUpdatechannelsInput | $Enums.Channel[]
+    filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    email_subject?: NullableStringFieldUpdateOperationsInput | string | null
+    email_content?: NullableStringFieldUpdateOperationsInput | string | null
+    sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    selected_contact_count?: IntFieldUpdateOperationsInput | number
+    total_messages?: IntFieldUpdateOperationsInput | number
+    queued_count?: IntFieldUpdateOperationsInput | number
+    sent_count?: IntFieldUpdateOperationsInput | number
+    failed_count?: IntFieldUpdateOperationsInput | number
+    skipped_count?: IntFieldUpdateOperationsInput | number
+    delivered_count?: IntFieldUpdateOperationsInput | number
+    opened_count?: IntFieldUpdateOperationsInput | number
+    clicked_count?: IntFieldUpdateOperationsInput | number
+    replied_count?: IntFieldUpdateOperationsInput | number
+    bounced_count?: IntFieldUpdateOperationsInput | number
+    unsubscribed_count?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutMarketing_campaignsNestedInput
+    sender_profile?: SenderProfileUpdateOneWithoutMarketing_campaignsNestedInput
+    outreach_messages?: OutreachMessageUpdateManyWithoutCampaignNestedInput
+    interactions?: InteractionUpdateManyWithoutCampaignNestedInput
+  }
+
+  export type MarketingCampaignUncheckedUpdateWithoutCampaign_contactsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCampaignStatusFieldUpdateOperationsInput | $Enums.CampaignStatus
+    channels?: MarketingCampaignUpdatechannelsInput | $Enums.Channel[]
+    filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    email_subject?: NullableStringFieldUpdateOperationsInput | string | null
+    email_content?: NullableStringFieldUpdateOperationsInput | string | null
+    sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    sender_profile_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    selected_contact_count?: IntFieldUpdateOperationsInput | number
+    total_messages?: IntFieldUpdateOperationsInput | number
+    queued_count?: IntFieldUpdateOperationsInput | number
+    sent_count?: IntFieldUpdateOperationsInput | number
+    failed_count?: IntFieldUpdateOperationsInput | number
+    skipped_count?: IntFieldUpdateOperationsInput | number
+    delivered_count?: IntFieldUpdateOperationsInput | number
+    opened_count?: IntFieldUpdateOperationsInput | number
+    clicked_count?: IntFieldUpdateOperationsInput | number
+    replied_count?: IntFieldUpdateOperationsInput | number
+    bounced_count?: IntFieldUpdateOperationsInput | number
+    unsubscribed_count?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    outreach_messages?: OutreachMessageUncheckedUpdateManyWithoutCampaignNestedInput
+    interactions?: InteractionUncheckedUpdateManyWithoutCampaignNestedInput
+  }
+
+  export type ContactUpsertWithoutCampaign_contactsInput = {
+    update: XOR<ContactUpdateWithoutCampaign_contactsInput, ContactUncheckedUpdateWithoutCampaign_contactsInput>
+    create: XOR<ContactCreateWithoutCampaign_contactsInput, ContactUncheckedCreateWithoutCampaign_contactsInput>
+    where?: ContactWhereInput
+  }
+
+  export type ContactUpdateToOneWithWhereWithoutCampaign_contactsInput = {
+    where?: ContactWhereInput
+    data: XOR<ContactUpdateWithoutCampaign_contactsInput, ContactUncheckedUpdateWithoutCampaign_contactsInput>
+  }
+
+  export type ContactUpdateWithoutCampaign_contactsInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
+    score?: NullableIntFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
+    last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutContactsNestedInput
+    lead?: LeadUpdateOneRequiredWithoutContactsNestedInput
+    filter?: FilterUpdateOneWithoutContactsNestedInput
+    tags?: ContactTagUpdateManyWithoutContactNestedInput
+    interactions?: InteractionUpdateManyWithoutContactNestedInput
+    outreach_messages?: OutreachMessageUpdateManyWithoutContactNestedInput
+  }
+
+  export type ContactUncheckedUpdateWithoutCampaign_contactsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    lead_uuid?: StringFieldUpdateOperationsInput | string
+    filter_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
+    score?: NullableIntFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
+    last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    tags?: ContactTagUncheckedUpdateManyWithoutContactNestedInput
+    interactions?: InteractionUncheckedUpdateManyWithoutContactNestedInput
+    outreach_messages?: OutreachMessageUncheckedUpdateManyWithoutContactNestedInput
   }
 
   export type FilterCreateManyUserInput = {
@@ -25247,6 +31688,9 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    unsubscribed_at?: Date | string | null
+    unsubscribe_token?: string | null
+    last_interaction_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -25255,12 +31699,20 @@ export namespace Prisma {
     id?: number
     uuid?: string
     contact_uuid: string
+    campaign_uuid?: string | null
     channel: $Enums.Channel
+    direction?: $Enums.MsgDirection
     subject?: string | null
     content: string
     status?: $Enums.MsgStatus
+    provider_message_id?: string | null
+    idempotency_key?: string | null
     scheduled_at?: Date | string | null
     sent_at?: Date | string | null
+    delivered_at?: Date | string | null
+    opened_at?: Date | string | null
+    clicked_at?: Date | string | null
+    replied_at?: Date | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
@@ -25279,6 +31731,7 @@ export namespace Prisma {
     id?: number
     uuid?: string
     contact_uuid: string
+    campaign_uuid?: string | null
     type: $Enums.InteractionType
     content?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
@@ -25307,6 +31760,38 @@ export namespace Prisma {
     sender_id?: string | null
     signature?: string | null
     is_default?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type MarketingCampaignCreateManyUserInput = {
+    id?: number
+    uuid?: string
+    name: string
+    description?: string | null
+    status?: $Enums.CampaignStatus
+    channels?: MarketingCampaignCreatechannelsInput | $Enums.Channel[]
+    filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    email_subject?: string | null
+    email_content?: string | null
+    sms_content?: string | null
+    sender_profile_uuid?: string | null
+    scheduled_at?: Date | string | null
+    started_at?: Date | string | null
+    completed_at?: Date | string | null
+    cancelled_at?: Date | string | null
+    selected_contact_count?: number
+    total_messages?: number
+    queued_count?: number
+    sent_count?: number
+    failed_count?: number
+    skipped_count?: number
+    delivered_count?: number
+    opened_count?: number
+    clicked_count?: number
+    replied_count?: number
+    bounced_count?: number
+    unsubscribed_count?: number
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -25379,6 +31864,9 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
+    last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     lead?: LeadUpdateOneRequiredWithoutContactsNestedInput
@@ -25386,6 +31874,7 @@ export namespace Prisma {
     tags?: ContactTagUpdateManyWithoutContactNestedInput
     interactions?: InteractionUpdateManyWithoutContactNestedInput
     outreach_messages?: OutreachMessageUpdateManyWithoutContactNestedInput
+    campaign_contacts?: MarketingCampaignContactUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateWithoutUserInput = {
@@ -25406,11 +31895,15 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
+    last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     tags?: ContactTagUncheckedUpdateManyWithoutContactNestedInput
     interactions?: InteractionUncheckedUpdateManyWithoutContactNestedInput
     outreach_messages?: OutreachMessageUncheckedUpdateManyWithoutContactNestedInput
+    campaign_contacts?: MarketingCampaignContactUncheckedUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateManyWithoutUserInput = {
@@ -25431,6 +31924,9 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
+    last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -25438,15 +31934,23 @@ export namespace Prisma {
   export type OutreachMessageUpdateWithoutUserInput = {
     uuid?: StringFieldUpdateOperationsInput | string
     channel?: EnumChannelFieldUpdateOperationsInput | $Enums.Channel
+    direction?: EnumMsgDirectionFieldUpdateOperationsInput | $Enums.MsgDirection
     subject?: NullableStringFieldUpdateOperationsInput | string | null
     content?: StringFieldUpdateOperationsInput | string
     status?: EnumMsgStatusFieldUpdateOperationsInput | $Enums.MsgStatus
+    provider_message_id?: NullableStringFieldUpdateOperationsInput | string | null
+    idempotency_key?: NullableStringFieldUpdateOperationsInput | string | null
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    opened_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    clicked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    replied_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     contact?: ContactUpdateOneRequiredWithoutOutreach_messagesNestedInput
+    campaign?: MarketingCampaignUpdateOneWithoutOutreach_messagesNestedInput
     interaction?: InteractionUpdateOneWithoutOutreach_messageNestedInput
   }
 
@@ -25454,12 +31958,20 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
     contact_uuid?: StringFieldUpdateOperationsInput | string
+    campaign_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     channel?: EnumChannelFieldUpdateOperationsInput | $Enums.Channel
+    direction?: EnumMsgDirectionFieldUpdateOperationsInput | $Enums.MsgDirection
     subject?: NullableStringFieldUpdateOperationsInput | string | null
     content?: StringFieldUpdateOperationsInput | string
     status?: EnumMsgStatusFieldUpdateOperationsInput | $Enums.MsgStatus
+    provider_message_id?: NullableStringFieldUpdateOperationsInput | string | null
+    idempotency_key?: NullableStringFieldUpdateOperationsInput | string | null
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    opened_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    clicked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    replied_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -25470,12 +31982,20 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
     contact_uuid?: StringFieldUpdateOperationsInput | string
+    campaign_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     channel?: EnumChannelFieldUpdateOperationsInput | $Enums.Channel
+    direction?: EnumMsgDirectionFieldUpdateOperationsInput | $Enums.MsgDirection
     subject?: NullableStringFieldUpdateOperationsInput | string | null
     content?: StringFieldUpdateOperationsInput | string
     status?: EnumMsgStatusFieldUpdateOperationsInput | $Enums.MsgStatus
+    provider_message_id?: NullableStringFieldUpdateOperationsInput | string | null
+    idempotency_key?: NullableStringFieldUpdateOperationsInput | string | null
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    opened_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    clicked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    replied_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -25517,12 +32037,14 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     contact?: ContactUpdateOneRequiredWithoutInteractionsNestedInput
     outreach_message?: OutreachMessageUpdateOneWithoutInteractionNestedInput
+    campaign?: MarketingCampaignUpdateOneWithoutInteractionsNestedInput
   }
 
   export type InteractionUncheckedUpdateWithoutUserInput = {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
     contact_uuid?: StringFieldUpdateOperationsInput | string
+    campaign_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumInteractionTypeFieldUpdateOperationsInput | $Enums.InteractionType
     content?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
@@ -25536,6 +32058,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
     contact_uuid?: StringFieldUpdateOperationsInput | string
+    campaign_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumInteractionTypeFieldUpdateOperationsInput | $Enums.InteractionType
     content?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
@@ -25565,6 +32088,7 @@ export namespace Prisma {
     is_default?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    marketing_campaigns?: MarketingCampaignUpdateManyWithoutSender_profileNestedInput
   }
 
   export type SenderProfileUncheckedUpdateWithoutUserInput = {
@@ -25588,6 +32112,7 @@ export namespace Prisma {
     is_default?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    marketing_campaigns?: MarketingCampaignUncheckedUpdateManyWithoutSender_profileNestedInput
   }
 
   export type SenderProfileUncheckedUpdateManyWithoutUserInput = {
@@ -25609,6 +32134,107 @@ export namespace Prisma {
     sender_id?: NullableStringFieldUpdateOperationsInput | string | null
     signature?: NullableStringFieldUpdateOperationsInput | string | null
     is_default?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MarketingCampaignUpdateWithoutUserInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCampaignStatusFieldUpdateOperationsInput | $Enums.CampaignStatus
+    channels?: MarketingCampaignUpdatechannelsInput | $Enums.Channel[]
+    filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    email_subject?: NullableStringFieldUpdateOperationsInput | string | null
+    email_content?: NullableStringFieldUpdateOperationsInput | string | null
+    sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    selected_contact_count?: IntFieldUpdateOperationsInput | number
+    total_messages?: IntFieldUpdateOperationsInput | number
+    queued_count?: IntFieldUpdateOperationsInput | number
+    sent_count?: IntFieldUpdateOperationsInput | number
+    failed_count?: IntFieldUpdateOperationsInput | number
+    skipped_count?: IntFieldUpdateOperationsInput | number
+    delivered_count?: IntFieldUpdateOperationsInput | number
+    opened_count?: IntFieldUpdateOperationsInput | number
+    clicked_count?: IntFieldUpdateOperationsInput | number
+    replied_count?: IntFieldUpdateOperationsInput | number
+    bounced_count?: IntFieldUpdateOperationsInput | number
+    unsubscribed_count?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    sender_profile?: SenderProfileUpdateOneWithoutMarketing_campaignsNestedInput
+    campaign_contacts?: MarketingCampaignContactUpdateManyWithoutCampaignNestedInput
+    outreach_messages?: OutreachMessageUpdateManyWithoutCampaignNestedInput
+    interactions?: InteractionUpdateManyWithoutCampaignNestedInput
+  }
+
+  export type MarketingCampaignUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCampaignStatusFieldUpdateOperationsInput | $Enums.CampaignStatus
+    channels?: MarketingCampaignUpdatechannelsInput | $Enums.Channel[]
+    filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    email_subject?: NullableStringFieldUpdateOperationsInput | string | null
+    email_content?: NullableStringFieldUpdateOperationsInput | string | null
+    sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    sender_profile_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    selected_contact_count?: IntFieldUpdateOperationsInput | number
+    total_messages?: IntFieldUpdateOperationsInput | number
+    queued_count?: IntFieldUpdateOperationsInput | number
+    sent_count?: IntFieldUpdateOperationsInput | number
+    failed_count?: IntFieldUpdateOperationsInput | number
+    skipped_count?: IntFieldUpdateOperationsInput | number
+    delivered_count?: IntFieldUpdateOperationsInput | number
+    opened_count?: IntFieldUpdateOperationsInput | number
+    clicked_count?: IntFieldUpdateOperationsInput | number
+    replied_count?: IntFieldUpdateOperationsInput | number
+    bounced_count?: IntFieldUpdateOperationsInput | number
+    unsubscribed_count?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    campaign_contacts?: MarketingCampaignContactUncheckedUpdateManyWithoutCampaignNestedInput
+    outreach_messages?: OutreachMessageUncheckedUpdateManyWithoutCampaignNestedInput
+    interactions?: InteractionUncheckedUpdateManyWithoutCampaignNestedInput
+  }
+
+  export type MarketingCampaignUncheckedUpdateManyWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCampaignStatusFieldUpdateOperationsInput | $Enums.CampaignStatus
+    channels?: MarketingCampaignUpdatechannelsInput | $Enums.Channel[]
+    filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    email_subject?: NullableStringFieldUpdateOperationsInput | string | null
+    email_content?: NullableStringFieldUpdateOperationsInput | string | null
+    sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    sender_profile_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    selected_contact_count?: IntFieldUpdateOperationsInput | number
+    total_messages?: IntFieldUpdateOperationsInput | number
+    queued_count?: IntFieldUpdateOperationsInput | number
+    sent_count?: IntFieldUpdateOperationsInput | number
+    failed_count?: IntFieldUpdateOperationsInput | number
+    skipped_count?: IntFieldUpdateOperationsInput | number
+    delivered_count?: IntFieldUpdateOperationsInput | number
+    opened_count?: IntFieldUpdateOperationsInput | number
+    clicked_count?: IntFieldUpdateOperationsInput | number
+    replied_count?: IntFieldUpdateOperationsInput | number
+    bounced_count?: IntFieldUpdateOperationsInput | number
+    unsubscribed_count?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -25641,6 +32267,9 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    unsubscribed_at?: Date | string | null
+    unsubscribe_token?: string | null
+    last_interaction_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -25705,6 +32334,9 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
+    last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutContactsNestedInput
@@ -25712,6 +32344,7 @@ export namespace Prisma {
     tags?: ContactTagUpdateManyWithoutContactNestedInput
     interactions?: InteractionUpdateManyWithoutContactNestedInput
     outreach_messages?: OutreachMessageUpdateManyWithoutContactNestedInput
+    campaign_contacts?: MarketingCampaignContactUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateWithoutFilterInput = {
@@ -25732,11 +32365,15 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
+    last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     tags?: ContactTagUncheckedUpdateManyWithoutContactNestedInput
     interactions?: InteractionUncheckedUpdateManyWithoutContactNestedInput
     outreach_messages?: OutreachMessageUncheckedUpdateManyWithoutContactNestedInput
+    campaign_contacts?: MarketingCampaignContactUncheckedUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateManyWithoutFilterInput = {
@@ -25757,6 +32394,9 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
+    last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -25820,6 +32460,9 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    unsubscribed_at?: Date | string | null
+    unsubscribe_token?: string | null
+    last_interaction_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -25853,6 +32496,9 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
+    last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutContactsNestedInput
@@ -25860,6 +32506,7 @@ export namespace Prisma {
     tags?: ContactTagUpdateManyWithoutContactNestedInput
     interactions?: InteractionUpdateManyWithoutContactNestedInput
     outreach_messages?: OutreachMessageUpdateManyWithoutContactNestedInput
+    campaign_contacts?: MarketingCampaignContactUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateWithoutLeadInput = {
@@ -25880,11 +32527,15 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
+    last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     tags?: ContactTagUncheckedUpdateManyWithoutContactNestedInput
     interactions?: InteractionUncheckedUpdateManyWithoutContactNestedInput
     outreach_messages?: OutreachMessageUncheckedUpdateManyWithoutContactNestedInput
+    campaign_contacts?: MarketingCampaignContactUncheckedUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateManyWithoutLeadInput = {
@@ -25905,6 +32556,9 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
+    last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -25960,6 +32614,7 @@ export namespace Prisma {
     id?: number
     uuid?: string
     user_uuid: string
+    campaign_uuid?: string | null
     type: $Enums.InteractionType
     content?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
@@ -25973,13 +32628,34 @@ export namespace Prisma {
     id?: number
     uuid?: string
     user_uuid: string
+    campaign_uuid?: string | null
     channel: $Enums.Channel
+    direction?: $Enums.MsgDirection
     subject?: string | null
     content: string
     status?: $Enums.MsgStatus
+    provider_message_id?: string | null
+    idempotency_key?: string | null
     scheduled_at?: Date | string | null
     sent_at?: Date | string | null
+    delivered_at?: Date | string | null
+    opened_at?: Date | string | null
+    clicked_at?: Date | string | null
+    replied_at?: Date | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type MarketingCampaignContactCreateManyContactInput = {
+    id?: number
+    uuid?: string
+    campaign_uuid: string
+    channel: $Enums.Channel
+    status?: $Enums.CampaignContactStatus
+    error_message?: string | null
+    sent_at?: Date | string | null
+    delivered_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -26011,12 +32687,14 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutInteractionsNestedInput
     outreach_message?: OutreachMessageUpdateOneWithoutInteractionNestedInput
+    campaign?: MarketingCampaignUpdateOneWithoutInteractionsNestedInput
   }
 
   export type InteractionUncheckedUpdateWithoutContactInput = {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
     user_uuid?: StringFieldUpdateOperationsInput | string
+    campaign_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumInteractionTypeFieldUpdateOperationsInput | $Enums.InteractionType
     content?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
@@ -26030,6 +32708,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
     user_uuid?: StringFieldUpdateOperationsInput | string
+    campaign_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumInteractionTypeFieldUpdateOperationsInput | $Enums.InteractionType
     content?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
@@ -26042,15 +32721,23 @@ export namespace Prisma {
   export type OutreachMessageUpdateWithoutContactInput = {
     uuid?: StringFieldUpdateOperationsInput | string
     channel?: EnumChannelFieldUpdateOperationsInput | $Enums.Channel
+    direction?: EnumMsgDirectionFieldUpdateOperationsInput | $Enums.MsgDirection
     subject?: NullableStringFieldUpdateOperationsInput | string | null
     content?: StringFieldUpdateOperationsInput | string
     status?: EnumMsgStatusFieldUpdateOperationsInput | $Enums.MsgStatus
+    provider_message_id?: NullableStringFieldUpdateOperationsInput | string | null
+    idempotency_key?: NullableStringFieldUpdateOperationsInput | string | null
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    opened_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    clicked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    replied_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutOutreach_messagesNestedInput
+    campaign?: MarketingCampaignUpdateOneWithoutOutreach_messagesNestedInput
     interaction?: InteractionUpdateOneWithoutOutreach_messageNestedInput
   }
 
@@ -26058,12 +32745,20 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
     user_uuid?: StringFieldUpdateOperationsInput | string
+    campaign_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     channel?: EnumChannelFieldUpdateOperationsInput | $Enums.Channel
+    direction?: EnumMsgDirectionFieldUpdateOperationsInput | $Enums.MsgDirection
     subject?: NullableStringFieldUpdateOperationsInput | string | null
     content?: StringFieldUpdateOperationsInput | string
     status?: EnumMsgStatusFieldUpdateOperationsInput | $Enums.MsgStatus
+    provider_message_id?: NullableStringFieldUpdateOperationsInput | string | null
+    idempotency_key?: NullableStringFieldUpdateOperationsInput | string | null
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    opened_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    clicked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    replied_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26074,13 +32769,391 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
     user_uuid?: StringFieldUpdateOperationsInput | string
+    campaign_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     channel?: EnumChannelFieldUpdateOperationsInput | $Enums.Channel
+    direction?: EnumMsgDirectionFieldUpdateOperationsInput | $Enums.MsgDirection
     subject?: NullableStringFieldUpdateOperationsInput | string | null
     content?: StringFieldUpdateOperationsInput | string
     status?: EnumMsgStatusFieldUpdateOperationsInput | $Enums.MsgStatus
+    provider_message_id?: NullableStringFieldUpdateOperationsInput | string | null
+    idempotency_key?: NullableStringFieldUpdateOperationsInput | string | null
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    opened_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    clicked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    replied_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MarketingCampaignContactUpdateWithoutContactInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    channel?: EnumChannelFieldUpdateOperationsInput | $Enums.Channel
+    status?: EnumCampaignContactStatusFieldUpdateOperationsInput | $Enums.CampaignContactStatus
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+    sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    campaign?: MarketingCampaignUpdateOneRequiredWithoutCampaign_contactsNestedInput
+  }
+
+  export type MarketingCampaignContactUncheckedUpdateWithoutContactInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    campaign_uuid?: StringFieldUpdateOperationsInput | string
+    channel?: EnumChannelFieldUpdateOperationsInput | $Enums.Channel
+    status?: EnumCampaignContactStatusFieldUpdateOperationsInput | $Enums.CampaignContactStatus
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+    sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MarketingCampaignContactUncheckedUpdateManyWithoutContactInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    campaign_uuid?: StringFieldUpdateOperationsInput | string
+    channel?: EnumChannelFieldUpdateOperationsInput | $Enums.Channel
+    status?: EnumCampaignContactStatusFieldUpdateOperationsInput | $Enums.CampaignContactStatus
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+    sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MarketingCampaignCreateManySender_profileInput = {
+    id?: number
+    uuid?: string
+    user_uuid: string
+    name: string
+    description?: string | null
+    status?: $Enums.CampaignStatus
+    channels?: MarketingCampaignCreatechannelsInput | $Enums.Channel[]
+    filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    email_subject?: string | null
+    email_content?: string | null
+    sms_content?: string | null
+    scheduled_at?: Date | string | null
+    started_at?: Date | string | null
+    completed_at?: Date | string | null
+    cancelled_at?: Date | string | null
+    selected_contact_count?: number
+    total_messages?: number
+    queued_count?: number
+    sent_count?: number
+    failed_count?: number
+    skipped_count?: number
+    delivered_count?: number
+    opened_count?: number
+    clicked_count?: number
+    replied_count?: number
+    bounced_count?: number
+    unsubscribed_count?: number
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type MarketingCampaignUpdateWithoutSender_profileInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCampaignStatusFieldUpdateOperationsInput | $Enums.CampaignStatus
+    channels?: MarketingCampaignUpdatechannelsInput | $Enums.Channel[]
+    filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    email_subject?: NullableStringFieldUpdateOperationsInput | string | null
+    email_content?: NullableStringFieldUpdateOperationsInput | string | null
+    sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    selected_contact_count?: IntFieldUpdateOperationsInput | number
+    total_messages?: IntFieldUpdateOperationsInput | number
+    queued_count?: IntFieldUpdateOperationsInput | number
+    sent_count?: IntFieldUpdateOperationsInput | number
+    failed_count?: IntFieldUpdateOperationsInput | number
+    skipped_count?: IntFieldUpdateOperationsInput | number
+    delivered_count?: IntFieldUpdateOperationsInput | number
+    opened_count?: IntFieldUpdateOperationsInput | number
+    clicked_count?: IntFieldUpdateOperationsInput | number
+    replied_count?: IntFieldUpdateOperationsInput | number
+    bounced_count?: IntFieldUpdateOperationsInput | number
+    unsubscribed_count?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutMarketing_campaignsNestedInput
+    campaign_contacts?: MarketingCampaignContactUpdateManyWithoutCampaignNestedInput
+    outreach_messages?: OutreachMessageUpdateManyWithoutCampaignNestedInput
+    interactions?: InteractionUpdateManyWithoutCampaignNestedInput
+  }
+
+  export type MarketingCampaignUncheckedUpdateWithoutSender_profileInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCampaignStatusFieldUpdateOperationsInput | $Enums.CampaignStatus
+    channels?: MarketingCampaignUpdatechannelsInput | $Enums.Channel[]
+    filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    email_subject?: NullableStringFieldUpdateOperationsInput | string | null
+    email_content?: NullableStringFieldUpdateOperationsInput | string | null
+    sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    selected_contact_count?: IntFieldUpdateOperationsInput | number
+    total_messages?: IntFieldUpdateOperationsInput | number
+    queued_count?: IntFieldUpdateOperationsInput | number
+    sent_count?: IntFieldUpdateOperationsInput | number
+    failed_count?: IntFieldUpdateOperationsInput | number
+    skipped_count?: IntFieldUpdateOperationsInput | number
+    delivered_count?: IntFieldUpdateOperationsInput | number
+    opened_count?: IntFieldUpdateOperationsInput | number
+    clicked_count?: IntFieldUpdateOperationsInput | number
+    replied_count?: IntFieldUpdateOperationsInput | number
+    bounced_count?: IntFieldUpdateOperationsInput | number
+    unsubscribed_count?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    campaign_contacts?: MarketingCampaignContactUncheckedUpdateManyWithoutCampaignNestedInput
+    outreach_messages?: OutreachMessageUncheckedUpdateManyWithoutCampaignNestedInput
+    interactions?: InteractionUncheckedUpdateManyWithoutCampaignNestedInput
+  }
+
+  export type MarketingCampaignUncheckedUpdateManyWithoutSender_profileInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCampaignStatusFieldUpdateOperationsInput | $Enums.CampaignStatus
+    channels?: MarketingCampaignUpdatechannelsInput | $Enums.Channel[]
+    filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    email_subject?: NullableStringFieldUpdateOperationsInput | string | null
+    email_content?: NullableStringFieldUpdateOperationsInput | string | null
+    sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    selected_contact_count?: IntFieldUpdateOperationsInput | number
+    total_messages?: IntFieldUpdateOperationsInput | number
+    queued_count?: IntFieldUpdateOperationsInput | number
+    sent_count?: IntFieldUpdateOperationsInput | number
+    failed_count?: IntFieldUpdateOperationsInput | number
+    skipped_count?: IntFieldUpdateOperationsInput | number
+    delivered_count?: IntFieldUpdateOperationsInput | number
+    opened_count?: IntFieldUpdateOperationsInput | number
+    clicked_count?: IntFieldUpdateOperationsInput | number
+    replied_count?: IntFieldUpdateOperationsInput | number
+    bounced_count?: IntFieldUpdateOperationsInput | number
+    unsubscribed_count?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MarketingCampaignContactCreateManyCampaignInput = {
+    id?: number
+    uuid?: string
+    contact_uuid: string
+    channel: $Enums.Channel
+    status?: $Enums.CampaignContactStatus
+    error_message?: string | null
+    sent_at?: Date | string | null
+    delivered_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type OutreachMessageCreateManyCampaignInput = {
+    id?: number
+    uuid?: string
+    user_uuid: string
+    contact_uuid: string
+    channel: $Enums.Channel
+    direction?: $Enums.MsgDirection
+    subject?: string | null
+    content: string
+    status?: $Enums.MsgStatus
+    provider_message_id?: string | null
+    idempotency_key?: string | null
+    scheduled_at?: Date | string | null
+    sent_at?: Date | string | null
+    delivered_at?: Date | string | null
+    opened_at?: Date | string | null
+    clicked_at?: Date | string | null
+    replied_at?: Date | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type InteractionCreateManyCampaignInput = {
+    id?: number
+    uuid?: string
+    contact_uuid: string
+    user_uuid: string
+    type: $Enums.InteractionType
+    content?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    status_change?: NullableJsonNullValueInput | InputJsonValue
+    outreach_message_uuid?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type MarketingCampaignContactUpdateWithoutCampaignInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    channel?: EnumChannelFieldUpdateOperationsInput | $Enums.Channel
+    status?: EnumCampaignContactStatusFieldUpdateOperationsInput | $Enums.CampaignContactStatus
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+    sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    contact?: ContactUpdateOneRequiredWithoutCampaign_contactsNestedInput
+  }
+
+  export type MarketingCampaignContactUncheckedUpdateWithoutCampaignInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    contact_uuid?: StringFieldUpdateOperationsInput | string
+    channel?: EnumChannelFieldUpdateOperationsInput | $Enums.Channel
+    status?: EnumCampaignContactStatusFieldUpdateOperationsInput | $Enums.CampaignContactStatus
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+    sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MarketingCampaignContactUncheckedUpdateManyWithoutCampaignInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    contact_uuid?: StringFieldUpdateOperationsInput | string
+    channel?: EnumChannelFieldUpdateOperationsInput | $Enums.Channel
+    status?: EnumCampaignContactStatusFieldUpdateOperationsInput | $Enums.CampaignContactStatus
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+    sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OutreachMessageUpdateWithoutCampaignInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    channel?: EnumChannelFieldUpdateOperationsInput | $Enums.Channel
+    direction?: EnumMsgDirectionFieldUpdateOperationsInput | $Enums.MsgDirection
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: StringFieldUpdateOperationsInput | string
+    status?: EnumMsgStatusFieldUpdateOperationsInput | $Enums.MsgStatus
+    provider_message_id?: NullableStringFieldUpdateOperationsInput | string | null
+    idempotency_key?: NullableStringFieldUpdateOperationsInput | string | null
+    scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    opened_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    clicked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    replied_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutOutreach_messagesNestedInput
+    contact?: ContactUpdateOneRequiredWithoutOutreach_messagesNestedInput
+    interaction?: InteractionUpdateOneWithoutOutreach_messageNestedInput
+  }
+
+  export type OutreachMessageUncheckedUpdateWithoutCampaignInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    contact_uuid?: StringFieldUpdateOperationsInput | string
+    channel?: EnumChannelFieldUpdateOperationsInput | $Enums.Channel
+    direction?: EnumMsgDirectionFieldUpdateOperationsInput | $Enums.MsgDirection
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: StringFieldUpdateOperationsInput | string
+    status?: EnumMsgStatusFieldUpdateOperationsInput | $Enums.MsgStatus
+    provider_message_id?: NullableStringFieldUpdateOperationsInput | string | null
+    idempotency_key?: NullableStringFieldUpdateOperationsInput | string | null
+    scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    opened_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    clicked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    replied_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    interaction?: InteractionUncheckedUpdateOneWithoutOutreach_messageNestedInput
+  }
+
+  export type OutreachMessageUncheckedUpdateManyWithoutCampaignInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    contact_uuid?: StringFieldUpdateOperationsInput | string
+    channel?: EnumChannelFieldUpdateOperationsInput | $Enums.Channel
+    direction?: EnumMsgDirectionFieldUpdateOperationsInput | $Enums.MsgDirection
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: StringFieldUpdateOperationsInput | string
+    status?: EnumMsgStatusFieldUpdateOperationsInput | $Enums.MsgStatus
+    provider_message_id?: NullableStringFieldUpdateOperationsInput | string | null
+    idempotency_key?: NullableStringFieldUpdateOperationsInput | string | null
+    scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    opened_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    clicked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    replied_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InteractionUpdateWithoutCampaignInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    type?: EnumInteractionTypeFieldUpdateOperationsInput | $Enums.InteractionType
+    content?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    status_change?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    contact?: ContactUpdateOneRequiredWithoutInteractionsNestedInput
+    user?: UserUpdateOneRequiredWithoutInteractionsNestedInput
+    outreach_message?: OutreachMessageUpdateOneWithoutInteractionNestedInput
+  }
+
+  export type InteractionUncheckedUpdateWithoutCampaignInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    contact_uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    type?: EnumInteractionTypeFieldUpdateOperationsInput | $Enums.InteractionType
+    content?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    status_change?: NullableJsonNullValueInput | InputJsonValue
+    outreach_message_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InteractionUncheckedUpdateManyWithoutCampaignInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    contact_uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    type?: EnumInteractionTypeFieldUpdateOperationsInput | $Enums.InteractionType
+    content?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    status_change?: NullableJsonNullValueInput | InputJsonValue
+    outreach_message_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }

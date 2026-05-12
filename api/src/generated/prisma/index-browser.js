@@ -214,6 +214,9 @@ exports.Prisma.ContactScalarFieldEnum = {
   location: 'location',
   industry: 'industry',
   description: 'description',
+  unsubscribed_at: 'unsubscribed_at',
+  unsubscribe_token: 'unsubscribe_token',
+  last_interaction_at: 'last_interaction_at',
   created_at: 'created_at',
   updated_at: 'updated_at'
 };
@@ -230,6 +233,7 @@ exports.Prisma.InteractionScalarFieldEnum = {
   uuid: 'uuid',
   contact_uuid: 'contact_uuid',
   user_uuid: 'user_uuid',
+  campaign_uuid: 'campaign_uuid',
   type: 'type',
   content: 'content',
   metadata: 'metadata',
@@ -244,12 +248,20 @@ exports.Prisma.OutreachMessageScalarFieldEnum = {
   uuid: 'uuid',
   user_uuid: 'user_uuid',
   contact_uuid: 'contact_uuid',
+  campaign_uuid: 'campaign_uuid',
   channel: 'channel',
+  direction: 'direction',
   subject: 'subject',
   content: 'content',
   status: 'status',
+  provider_message_id: 'provider_message_id',
+  idempotency_key: 'idempotency_key',
   scheduled_at: 'scheduled_at',
   sent_at: 'sent_at',
+  delivered_at: 'delivered_at',
+  opened_at: 'opened_at',
+  clicked_at: 'clicked_at',
+  replied_at: 'replied_at',
   metadata: 'metadata',
   created_at: 'created_at',
   updated_at: 'updated_at'
@@ -300,6 +312,53 @@ exports.Prisma.SenderProfileScalarFieldEnum = {
   sender_id: 'sender_id',
   signature: 'signature',
   is_default: 'is_default',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.MarketingCampaignScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  user_uuid: 'user_uuid',
+  name: 'name',
+  description: 'description',
+  status: 'status',
+  channels: 'channels',
+  filters_snapshot: 'filters_snapshot',
+  email_subject: 'email_subject',
+  email_content: 'email_content',
+  sms_content: 'sms_content',
+  sender_profile_uuid: 'sender_profile_uuid',
+  scheduled_at: 'scheduled_at',
+  started_at: 'started_at',
+  completed_at: 'completed_at',
+  cancelled_at: 'cancelled_at',
+  selected_contact_count: 'selected_contact_count',
+  total_messages: 'total_messages',
+  queued_count: 'queued_count',
+  sent_count: 'sent_count',
+  failed_count: 'failed_count',
+  skipped_count: 'skipped_count',
+  delivered_count: 'delivered_count',
+  opened_count: 'opened_count',
+  clicked_count: 'clicked_count',
+  replied_count: 'replied_count',
+  bounced_count: 'bounced_count',
+  unsubscribed_count: 'unsubscribed_count',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.MarketingCampaignContactScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  campaign_uuid: 'campaign_uuid',
+  contact_uuid: 'contact_uuid',
+  channel: 'channel',
+  status: 'status',
+  error_message: 'error_message',
+  sent_at: 'sent_at',
+  delivered_at: 'delivered_at',
   created_at: 'created_at',
   updated_at: 'updated_at'
 };
@@ -375,13 +434,38 @@ exports.InteractionType = exports.$Enums.InteractionType = {
   NOTE: 'NOTE',
   CALL: 'CALL',
   EMAIL: 'EMAIL',
-  STATUS_CHANGE: 'STATUS_CHANGE'
+  MEETING: 'MEETING',
+  STATUS_CHANGE: 'STATUS_CHANGE',
+  CAMPAIGN_EMAIL_SENT: 'CAMPAIGN_EMAIL_SENT',
+  CAMPAIGN_SMS_SENT: 'CAMPAIGN_SMS_SENT',
+  EMAIL_DELIVERED: 'EMAIL_DELIVERED',
+  SMS_DELIVERED: 'SMS_DELIVERED',
+  EMAIL_OPENED: 'EMAIL_OPENED',
+  LINK_CLICKED: 'LINK_CLICKED',
+  REPLY_RECEIVED: 'REPLY_RECEIVED',
+  EMAIL_BOUNCED: 'EMAIL_BOUNCED',
+  EMAIL_FAILED: 'EMAIL_FAILED',
+  SMS_FAILED: 'SMS_FAILED',
+  UNSUBSCRIBED: 'UNSUBSCRIBED'
+};
+
+exports.MsgDirection = exports.$Enums.MsgDirection = {
+  OUTBOUND: 'OUTBOUND',
+  INBOUND: 'INBOUND'
 };
 
 exports.MsgStatus = exports.$Enums.MsgStatus = {
   PENDING: 'PENDING',
+  QUEUED: 'QUEUED',
   SENT: 'SENT',
-  FAILED: 'FAILED'
+  FAILED: 'FAILED',
+  DELIVERED: 'DELIVERED',
+  OPENED: 'OPENED',
+  CLICKED: 'CLICKED',
+  REPLIED: 'REPLIED',
+  BOUNCED: 'BOUNCED',
+  UNSUBSCRIBED: 'UNSUBSCRIBED',
+  SKIPPED: 'SKIPPED'
 };
 
 exports.JobStatus = exports.$Enums.JobStatus = {
@@ -396,6 +480,29 @@ exports.JobTrigger = exports.$Enums.JobTrigger = {
   SCHEDULED: 'SCHEDULED'
 };
 
+exports.CampaignStatus = exports.$Enums.CampaignStatus = {
+  DRAFT: 'DRAFT',
+  SCHEDULED: 'SCHEDULED',
+  SENDING: 'SENDING',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED',
+  FAILED: 'FAILED'
+};
+
+exports.CampaignContactStatus = exports.$Enums.CampaignContactStatus = {
+  PENDING: 'PENDING',
+  QUEUED: 'QUEUED',
+  SENT: 'SENT',
+  FAILED: 'FAILED',
+  SKIPPED: 'SKIPPED',
+  DELIVERED: 'DELIVERED',
+  OPENED: 'OPENED',
+  CLICKED: 'CLICKED',
+  REPLIED: 'REPLIED',
+  BOUNCED: 'BOUNCED',
+  UNSUBSCRIBED: 'UNSUBSCRIBED'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Filter: 'Filter',
@@ -408,7 +515,9 @@ exports.Prisma.ModelName = {
   OutreachMessage: 'OutreachMessage',
   OutreachSequence: 'OutreachSequence',
   FilterJob: 'FilterJob',
-  SenderProfile: 'SenderProfile'
+  SenderProfile: 'SenderProfile',
+  MarketingCampaign: 'MarketingCampaign',
+  MarketingCampaignContact: 'MarketingCampaignContact'
 };
 
 /**

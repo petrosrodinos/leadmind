@@ -23,6 +23,8 @@ import { AiDraftMessageDto } from './dto/ai-draft-message.dto';
 import { CreateContactDto } from './dto/create-contact.dto';
 import { EnrichContactDto } from './dto/enrich-contact.dto';
 import { ListContactsDto } from './dto/list-contacts.dto';
+import { LogCallDto } from './dto/log-call.dto';
+import { LogMeetingDto } from './dto/log-meeting.dto';
 import { UpdateContactDto } from './dto/update-contact.dto';
 import { UpdateStatusDto } from './dto/update-status.dto';
 import { UpdateTagsDto } from './dto/update-tags.dto';
@@ -100,12 +102,8 @@ export class ContactsService {
         return this.findOne(user_uuid, contact.uuid);
     }
 
-    async findAll(user_uuid: string, query: ListContactsDto) {
-        const page = query.page ?? 1;
-        const limit = query.limit ?? 20;
-        const skip = (page - 1) * limit;
-
-        const where: Prisma.ContactWhereInput = {
+    buildWhereInput(user_uuid: string, query: ListContactsDto): Prisma.ContactWhereInput {
+        return {
             user_uuid,
             ...(query.status && { status: query.status }),
             ...(query.min_score != null && { score: { gte: query.min_score } }),
@@ -122,6 +120,14 @@ export class ContactsService {
                 ],
             }),
         };
+    }
+
+    async findAll(user_uuid: string, query: ListContactsDto) {
+        const page = query.page ?? 1;
+        const limit = query.limit ?? 20;
+        const skip = (page - 1) * limit;
+
+        const where = this.buildWhereInput(user_uuid, query);
 
         const [data, total] = await Promise.all([
             this.prisma.contact.findMany({
@@ -294,6 +300,51 @@ export class ContactsService {
                 user_uuid,
                 type: InteractionType.NOTE,
                 content: dto.content,
+            },
+        });
+    }
+
+    async logCall(
+        user_uuid: string,
+        uuid: string,
+        dto: LogCallDto,
+    ): Promise<Interaction> {
+        await this.requireOwnedContact(user_uuid, uuid);
+        const metadata: Prisma.InputJsonValue = {
+            outcome: dto.outcome,
+            direction: dto.direction,
+            ...(dto.duration_minutes !== undefined && { duration_minutes: dto.duration_minutes }),
+            ...(dto.occurred_at && { occurred_at: dto.occurred_at }),
+        };
+        return this.prisma.interaction.create({
+            data: {
+                contact_uuid: uuid,
+                user_uuid,
+                type: InteractionType.CALL,
+                content: dto.content?.trim() || null,
+                metadata,
+            },
+        });
+    }
+
+    async logMeeting(
+        user_uuid: string,
+        uuid: string,
+        dto: LogMeetingDto,
+    ): Promise<Interaction> {
+        await this.requireOwnedContact(user_uuid, uuid);
+        const metadata: Prisma.InputJsonValue = {
+            occurred_at: dto.occurred_at,
+            ...(dto.duration_minutes !== undefined && { duration_minutes: dto.duration_minutes }),
+            ...(dto.location?.trim() && { location: dto.location.trim() }),
+        };
+        return this.prisma.interaction.create({
+            data: {
+                contact_uuid: uuid,
+                user_uuid,
+                type: InteractionType.MEETING,
+                content: dto.content?.trim() || null,
+                metadata,
             },
         });
     }

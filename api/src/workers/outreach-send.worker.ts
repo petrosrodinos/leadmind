@@ -4,10 +4,7 @@ import { Job } from 'bullmq';
 import { Channel, InteractionType, MsgStatus } from '@/generated/prisma';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { OUTREACH_SEND_QUEUE } from '@/core/queues/queues.constants';
-import { ResendMailService } from '@/integrations/notifications/resend/services/mail.service';
-import { TwillioSmsService } from '@/integrations/notifications/twillio/services/sms.service';
-import { sanitizeEmailHtml } from '@/shared/utils/sanitize-html.util';
-import { OutreachRenderService } from '@/modules/outreach/services/outreach-render.service';
+import { MessageSendService } from '@/modules/outreach/services/message-send.service';
 
 interface OutreachSendJobData {
     message_uuid: string;
@@ -19,9 +16,7 @@ export class OutreachSendWorker extends WorkerHost {
 
     constructor(
         private readonly prisma: PrismaService,
-        private readonly resendMailService: ResendMailService,
-        private readonly twillioSmsService: TwillioSmsService,
-        private readonly outreachRenderService: OutreachRenderService,
+        private readonly messageSendService: MessageSendService,
     ) {
         super();
     }
@@ -29,7 +24,7 @@ export class OutreachSendWorker extends WorkerHost {
     async process(job: Job<OutreachSendJobData>): Promise<void> {
         const message = await this.prisma.outreachMessage.findUnique({
             where: { uuid: job.data.message_uuid },
-            include: { contact: { include: { lead: true } } },
+            include: { contact: true },
         });
         if (!message) {
             this.logger.warn(`Outreach message ${job.data.message_uuid} not found`);
@@ -39,40 +34,15 @@ export class OutreachSendWorker extends WorkerHost {
             this.logger.warn(`Outreach message ${message.uuid} is ${message.status}, skipping`);
             return;
         }
+        if (message.campaign_uuid) {
+            this.logger.warn(
+                `Outreach message ${message.uuid} is part of campaign ${message.campaign_uuid}; expected the campaign worker to handle it`,
+            );
+            return;
+        }
 
         try {
-            const rendered = await this.outreachRenderService.renderForUser(message.user_uuid, {
-                subject: message.subject,
-                content: message.content,
-            });
-
-            if (message.channel === Channel.EMAIL) {
-                if (!message.contact.email) {
-                    throw new Error('Contact has no email');
-                }
-                await this.resendMailService.sendEmail({
-                    to: message.contact.email,
-                    subject: rendered.subject ?? 'Outreach message',
-                    html: sanitizeEmailHtml(rendered.content),
-                });
-            } else if (message.channel === Channel.SMS) {
-                if (!message.contact.phone) {
-                    throw new Error('Contact has no phone');
-                }
-                await this.twillioSmsService.sendSms({
-                    to: message.contact.phone,
-                    body: rendered.content,
-                });
-            } else {
-                await this.prisma.outreachMessage.update({
-                    where: { uuid: message.uuid },
-                    data: {
-                        status: MsgStatus.FAILED,
-                        metadata: { reason: 'LinkedIn DM not yet implemented' },
-                    },
-                });
-                return;
-            }
+            const { provider_message_id } = await this.messageSendService.deliverOutreachMessage(message);
 
             await this.prisma.$transaction([
                 this.prisma.outreachMessage.update({
@@ -80,6 +50,7 @@ export class OutreachSendWorker extends WorkerHost {
                     data: {
                         status: MsgStatus.SENT,
                         sent_at: new Date(),
+                        provider_message_id,
                         metadata: null,
                     },
                 }),
@@ -90,6 +61,10 @@ export class OutreachSendWorker extends WorkerHost {
                         type: this.toInteractionType(message.channel),
                         outreach_message_uuid: message.uuid,
                     },
+                }),
+                this.prisma.contact.update({
+                    where: { uuid: message.contact_uuid },
+                    data: { last_interaction_at: new Date() },
                 }),
             ]);
         } catch (error) {

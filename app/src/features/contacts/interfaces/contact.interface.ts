@@ -30,10 +30,55 @@ export const InteractionType = {
     NOTE: "NOTE",
     CALL: "CALL",
     EMAIL: "EMAIL",
+    MEETING: "MEETING",
     STATUS_CHANGE: "STATUS_CHANGE",
 } as const;
 
 export type InteractionType = (typeof InteractionType)[keyof typeof InteractionType];
+
+export const CallOutcome = {
+    CONNECTED: "CONNECTED",
+    NO_ANSWER: "NO_ANSWER",
+    VOICEMAIL: "VOICEMAIL",
+    BUSY: "BUSY",
+} as const;
+
+export type CallOutcome = (typeof CallOutcome)[keyof typeof CallOutcome];
+
+export const CallDirection = {
+    OUTBOUND: "OUTBOUND",
+    INBOUND: "INBOUND",
+} as const;
+
+export type CallDirection = (typeof CallDirection)[keyof typeof CallDirection];
+
+export interface CallMetadata {
+    outcome: CallOutcome;
+    direction: CallDirection;
+    duration_minutes?: number;
+    occurred_at?: string;
+}
+
+export interface MeetingMetadata {
+    occurred_at: string;
+    duration_minutes?: number;
+    location?: string;
+}
+
+export interface LogCallPayload {
+    outcome: CallOutcome;
+    direction: CallDirection;
+    duration_minutes?: number;
+    occurred_at?: string;
+    content?: string;
+}
+
+export interface LogMeetingPayload {
+    occurred_at: string;
+    duration_minutes?: number;
+    location?: string;
+    content?: string;
+}
 
 export interface InteractionStatusChange {
     from: LeadStatus;

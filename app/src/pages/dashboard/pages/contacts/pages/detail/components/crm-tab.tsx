@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { Button, ListBox, Select, TextArea } from "@heroui/react";
-import { Sparkles } from "lucide-react";
+import { CalendarDays, Phone, Sparkles } from "lucide-react";
 import type { Contact, LeadStatus } from "@/features/contacts/interfaces/contact.interface";
 import { STATUS_OPTIONS } from "@/features/contacts/constants/contacts.constants";
 import { useRescoreContact, useUpdateContactNotes, useUpdateContactStatus, useUpdateContactTags } from "@/features/contacts/hooks/use-contacts";
 import { ScoreBadge } from "@/pages/dashboard/pages/leads/components/badges";
 import { InteractionTimeline } from "@/pages/dashboard/pages/contacts/components/interaction-timeline";
 import { ChangeStatusModal } from "./change-status-modal";
+import { LogCallModal } from "./log-call-modal";
+import { LogMeetingModal } from "./log-meeting-modal";
 import { Section } from "./section";
 import { TagEditor } from "./tag-editor";
 
@@ -25,6 +27,8 @@ export function CrmTab({ contact, onNavigateToOutreach }: CrmTabProps) {
   const [statusModalOpen, setStatusModalOpen] = useState(false);
   const [pendingStatus, setPendingStatus] = useState<LeadStatus | null>(null);
   const [statusNote, setStatusNote] = useState("");
+  const [logCallOpen, setLogCallOpen] = useState(false);
+  const [logMeetingOpen, setLogMeetingOpen] = useState(false);
 
   useEffect(() => {
     const t = window.setTimeout(() => {
@@ -157,9 +161,34 @@ export function CrmTab({ contact, onNavigateToOutreach }: CrmTabProps) {
         </div>
       </Section>
 
-      <Section title="Activity">
+      <Section
+        title="Activity"
+        action={
+          <div className="flex items-center gap-2">
+            <Button size="sm" variant="tertiary" onPress={() => setLogCallOpen(true)}>
+              <Phone className="size-3.5" />
+              Log call
+            </Button>
+            <Button size="sm" variant="tertiary" onPress={() => setLogMeetingOpen(true)}>
+              <CalendarDays className="size-3.5" />
+              Log meeting
+            </Button>
+          </div>
+        }
+      >
         <InteractionTimeline contactUuid={contact.uuid} onNavigateToOutreach={onNavigateToOutreach} />
       </Section>
+
+      <LogCallModal
+        contactUuid={contact.uuid}
+        isOpen={logCallOpen}
+        onOpenChange={setLogCallOpen}
+      />
+      <LogMeetingModal
+        contactUuid={contact.uuid}
+        isOpen={logMeetingOpen}
+        onOpenChange={setLogMeetingOpen}
+      />
     </div>
   );
 }

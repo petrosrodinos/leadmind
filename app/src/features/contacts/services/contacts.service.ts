@@ -8,6 +8,8 @@ import type {
     CreateContactPayload,
     Interaction,
     ListContactsQuery,
+    LogCallPayload,
+    LogMeetingPayload,
     OutreachMessage,
     PaginatedContacts,
     UpdateContactPayload,
@@ -179,5 +181,29 @@ export const listContactInteractions = async (uuid: string): Promise<Interaction
         return response.data;
     } catch (error: any) {
         throw new Error(error?.response?.data?.message || "Failed to load interactions.");
+    }
+};
+
+export const logCall = async (
+    uuid: string,
+    payload: LogCallPayload,
+): Promise<Interaction> => {
+    try {
+        const response = await axiosInstance.post(ApiRoutes.contacts.log_call(uuid), payload);
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error?.response?.data?.message || "Failed to log call.");
+    }
+};
+
+export const logMeeting = async (
+    uuid: string,
+    payload: LogMeetingPayload,
+): Promise<Interaction> => {
+    try {
+        const response = await axiosInstance.post(ApiRoutes.contacts.log_meeting(uuid), payload);
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error?.response?.data?.message || "Failed to log meeting.");
     }
 };

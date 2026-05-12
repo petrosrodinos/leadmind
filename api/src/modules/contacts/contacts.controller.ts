@@ -22,6 +22,8 @@ import { AddNoteDto } from './dto/add-note.dto';
 import { AiDraftMessageDto } from './dto/ai-draft-message.dto';
 import { CreateContactDto } from './dto/create-contact.dto';
 import { ListContactsDto } from './dto/list-contacts.dto';
+import { LogCallDto } from './dto/log-call.dto';
+import { LogMeetingDto } from './dto/log-meeting.dto';
 import { UpdateContactDto } from './dto/update-contact.dto';
 import { UpdateStatusDto } from './dto/update-status.dto';
 import { UpdateTagsDto } from './dto/update-tags.dto';
@@ -111,6 +113,28 @@ export class ContactsController {
         @Body() dto: AddNoteDto,
     ) {
         return this.contactsService.addNote(user_uuid, uuid, dto);
+    }
+
+    @Post(':uuid/calls')
+    @ApiOperation({ summary: 'Log a call (creates an Interaction of type CALL)' })
+    @ApiResponse({ status: 201 })
+    logCall(
+        @CurrentUser('uuid') user_uuid: string,
+        @Param('uuid') uuid: string,
+        @Body() dto: LogCallDto,
+    ) {
+        return this.contactsService.logCall(user_uuid, uuid, dto);
+    }
+
+    @Post(':uuid/meetings')
+    @ApiOperation({ summary: 'Log a meeting (creates an Interaction of type MEETING)' })
+    @ApiResponse({ status: 201 })
+    logMeeting(
+        @CurrentUser('uuid') user_uuid: string,
+        @Param('uuid') uuid: string,
+        @Body() dto: LogMeetingDto,
+    ) {
+        return this.contactsService.logMeeting(user_uuid, uuid, dto);
     }
 
     @Get(':uuid/interactions')

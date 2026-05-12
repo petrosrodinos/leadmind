@@ -8,6 +8,7 @@ import { SenderProfilesModule } from '@/modules/sender-profiles/sender-profiles.
 import { OutreachController } from './outreach.controller';
 import { OutreachService } from './outreach.service';
 import { OutreachRenderService } from './services/outreach-render.service';
+import { MessageSendService } from './services/message-send.service';
 
 @Module({
     imports: [
@@ -18,7 +19,7 @@ import { OutreachRenderService } from './services/outreach-render.service';
         BullModule.registerQueue({ name: OUTREACH_SEND_QUEUE }),
     ],
     controllers: [OutreachController],
-    providers: [OutreachService, OutreachRenderService],
-    exports: [OutreachService, OutreachRenderService],
+    providers: [OutreachService, OutreachRenderService, MessageSendService],
+    exports: [OutreachService, OutreachRenderService, MessageSendService],
 })
 export class OutreachModule { }

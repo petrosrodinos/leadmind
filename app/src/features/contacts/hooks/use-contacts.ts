@@ -9,6 +9,8 @@ import {
     listContactInteractions,
     listContactMessages,
     listContacts,
+    logCall,
+    logMeeting,
     triggerContactScore,
     triggerDraftMessages,
     updateContact,
@@ -22,6 +24,8 @@ import type {
     CreateContactPayload,
     LeadStatus,
     ListContactsQuery,
+    LogCallPayload,
+    LogMeetingPayload,
     PaginatedContacts,
     UpdateContactPayload,
 } from "../interfaces/contact.interface";
@@ -333,6 +337,48 @@ export function useAiDraftMessage() {
         onError: (error: Error) => {
             toast({
                 title: "AI draft failed",
+                description: error.message,
+                duration: 3000,
+                variant: "error",
+            });
+        },
+    });
+}
+
+export function useLogCall() {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: (vars: { uuid: string; payload: LogCallPayload }) =>
+            logCall(vars.uuid, vars.payload),
+        onSuccess: (_data, vars) => {
+            qc.invalidateQueries({ queryKey: contactsQueryKeys.interactions(vars.uuid) });
+            qc.invalidateQueries({ queryKey: contactsQueryKeys.detail(vars.uuid) });
+            toast({ title: "Call logged", duration: 1500 });
+        },
+        onError: (error: Error) => {
+            toast({
+                title: "Could not log call",
+                description: error.message,
+                duration: 3000,
+                variant: "error",
+            });
+        },
+    });
+}
+
+export function useLogMeeting() {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: (vars: { uuid: string; payload: LogMeetingPayload }) =>
+            logMeeting(vars.uuid, vars.payload),
+        onSuccess: (_data, vars) => {
+            qc.invalidateQueries({ queryKey: contactsQueryKeys.interactions(vars.uuid) });
+            qc.invalidateQueries({ queryKey: contactsQueryKeys.detail(vars.uuid) });
+            toast({ title: "Meeting logged", duration: 1500 });
+        },
+        onError: (error: Error) => {
+            toast({
+                title: "Could not log meeting",
                 description: error.message,
                 duration: 3000,
                 variant: "error",

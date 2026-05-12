@@ -1,0 +1,305 @@
+import { useState } from "react";
+import { Button, Input, Label, ListBox, Select, TextArea, TextField } from "@heroui/react";
+import { Mail, MessageSquare, Sparkles } from "lucide-react";
+import { Channel } from "@/features/contacts/interfaces/contact.interface";
+import { OUTREACH_LANGUAGES, type OutreachLanguage } from "@/features/contacts/constants/outreach-languages";
+import { RichTextEditor } from "@/components/ui/rich-text-editor";
+import { PlaceholderInsertPopover } from "@/components/ui/placeholder-insert-popover";
+import { isEmailHtmlEmpty } from "@/lib/sanitize-html";
+import { cn } from "@/lib/utils";
+import {
+    AI_ACTION_META,
+    DEFAULT_SINGLE_CONTACT_ACTIONS,
+    type AiAction,
+} from "../constants/ai-actions";
+
+const DEFAULT_LANGUAGE: OutreachLanguage = "English";
+
+export interface MessageComposerValue {
+    emailSubject: string;
+    emailContent: string;
+    smsContent: string;
+}
+
+export interface AiGenerateArgs {
+    channel: Channel;
+    action: AiAction;
+    prompt: string;
+    language: OutreachLanguage;
+    currentSubject?: string;
+    currentContent?: string;
+}
+
+export interface MessageComposerProps {
+    /** Which channels are user-selectable. Order = tab order. */
+    channels: Channel[];
+    activeChannel: Channel;
+    onActiveChannelChange: (channel: Channel) => void;
+    value: MessageComposerValue;
+    onChange: (patch: Partial<MessageComposerValue>) => void;
+    /** Optional AI generator. Returns the new subject/content for the active channel. */
+    onAiGenerate?: (args: AiGenerateArgs) => Promise<{ subject?: string | null; content: string }>;
+    /** AI actions to show. Defaults to ["generate"]. Pass DEFAULT_CAMPAIGN_ACTIONS for the campaign flow. */
+    aiActions?: AiAction[];
+    isAiPending?: boolean;
+    /** Disable all inputs (used while a parent mutation is in flight). */
+    disabled?: boolean;
+    /** Hint text under the message body referencing placeholders. */
+    placeholderHint?: React.ReactNode;
+}
+
+export function MessageComposer({
+    channels,
+    activeChannel,
+    onActiveChannelChange,
+    value,
+    onChange,
+    onAiGenerate,
+    aiActions = DEFAULT_SINGLE_CONTACT_ACTIONS,
+    isAiPending = false,
+    disabled = false,
+    placeholderHint,
+}: MessageComposerProps) {
+    const [prompt, setPrompt] = useState("");
+    const [language, setLanguage] = useState<OutreachLanguage>(DEFAULT_LANGUAGE);
+
+    const isEmail = activeChannel === Channel.EMAIL;
+    const promptEmpty = prompt.trim().length === 0;
+
+    const channelHasExisting = isEmail
+        ? !isEmailHtmlEmpty(value.emailContent)
+        : value.smsContent.trim().length > 0;
+
+    const runAction = async (action: AiAction) => {
+        if (!onAiGenerate || isAiPending) return;
+        const meta = AI_ACTION_META[action];
+        if (meta.requiresExisting && !channelHasExisting) return;
+        if (action === "generate" && promptEmpty) return;
+
+        try {
+            const result = await onAiGenerate({
+                channel: activeChannel,
+                action,
+                prompt: prompt.trim(),
+                language,
+                currentSubject: isEmail ? value.emailSubject : undefined,
+                currentContent: isEmail ? value.emailContent : value.smsContent,
+            });
+            if (isEmail) {
+                onChange({
+                    emailSubject: result.subject ?? value.emailSubject,
+                    emailContent: result.content,
+                });
+            } else {
+                onChange({ smsContent: result.content });
+            }
+        } catch {
+            // toast surfaced by caller hook
+        }
+    };
+
+    const smsChars = value.smsContent.length;
+    const smsSegments = smsChars === 0 ? 0 : Math.ceil(smsChars / (smsChars <= 160 ? 160 : 153));
+
+    return (
+        <div className="flex flex-col gap-5">
+            {channels.length > 1 && (
+                <ChannelToggle
+                    channels={channels}
+                    activeChannel={activeChannel}
+                    onChange={onActiveChannelChange}
+                    disabled={disabled || isAiPending}
+                />
+            )}
+
+            {onAiGenerate && (
+                <section className="rounded-lg border border-border bg-surface-secondary/40 p-3 flex flex-col gap-2">
+                    <div className="flex items-center justify-between gap-2 flex-wrap">
+                        <div className="flex items-center gap-2">
+                            <Sparkles className="size-4 text-accent" />
+                            <Label htmlFor="composer-ai-prompt" className="text-sm font-medium text-foreground">
+                                Ask AI to draft this
+                            </Label>
+                        </div>
+                        <Select
+                            className="min-w-[160px]"
+                            aria-label="Output language"
+                            value={language}
+                            onChange={(v) => {
+                                if (typeof v === "string" && (OUTREACH_LANGUAGES as readonly string[]).includes(v)) {
+                                    setLanguage(v as OutreachLanguage);
+                                }
+                            }}
+                            isDisabled={isAiPending}
+                        >
+                            <Select.Trigger>
+                                <Select.Value />
+                                <Select.Indicator />
+                            </Select.Trigger>
+                            <Select.Popover>
+                                <ListBox>
+                                    {OUTREACH_LANGUAGES.map((lang) => (
+                                        <ListBox.Item key={lang} id={lang} textValue={lang}>
+                                            {lang}
+                                            <ListBox.ItemIndicator />
+                                        </ListBox.Item>
+                                    ))}
+                                </ListBox>
+                            </Select.Popover>
+                        </Select>
+                    </div>
+                    <TextArea
+                        id="composer-ai-prompt"
+                        aria-label="AI prompt"
+                        rows={3}
+                        placeholder={
+                            isEmail
+                                ? "e.g. Pitch our service to small clinics, offer a 15-min intro call."
+                                : "e.g. Friendly check-in inviting them to book a call."
+                        }
+                        value={prompt}
+                        onChange={(e) => setPrompt(e.target.value)}
+                        disabled={isAiPending}
+                    />
+                    <div className="flex flex-wrap items-center gap-2">
+                        {aiActions.map((action) => {
+                            const meta = AI_ACTION_META[action];
+                            const Icon = meta.icon;
+                            const requiresExisting = meta.requiresExisting && !channelHasExisting;
+                            const requiresPrompt = action === "generate" && promptEmpty;
+                            const disabledAction = requiresExisting || requiresPrompt || isAiPending;
+                            const tooltip = requiresExisting
+                                ? "Write or generate a draft first"
+                                : requiresPrompt
+                                  ? "Enter a prompt above"
+                                  : meta.description;
+                            return (
+                                <span key={action} title={tooltip} className="inline-flex">
+                                    <Button
+                                        size="sm"
+                                        variant={action === "generate" ? "primary" : "secondary"}
+                                        isDisabled={disabledAction}
+                                        isPending={isAiPending && action === "generate"}
+                                        onPress={() => runAction(action)}
+                                    >
+                                        <Icon className="size-3.5" />
+                                        {meta.label}
+                                    </Button>
+                                </span>
+                            );
+                        })}
+                    </div>
+                </section>
+            )}
+
+            {isEmail && (
+                <TextField className="w-full" name="composer-subject">
+                    <Label>Subject</Label>
+                    <Input
+                        placeholder="Email subject"
+                        value={value.emailSubject}
+                        onChange={(e) => onChange({ emailSubject: e.target.value })}
+                        disabled={disabled || isAiPending}
+                    />
+                </TextField>
+            )}
+
+            <div className="flex flex-col gap-1.5">
+                <div className="flex items-center justify-between gap-2">
+                    <Label htmlFor="composer-content">Message</Label>
+                    <PlaceholderInsertPopover />
+                </div>
+                {isEmail ? (
+                    <RichTextEditor
+                        aria-label="Message content"
+                        value={value.emailContent}
+                        onChange={(v) => onChange({ emailContent: v })}
+                        disabled={disabled || isAiPending}
+                    />
+                ) : (
+                    <>
+                        <TextArea
+                            id="composer-content"
+                            aria-label="Message content"
+                            rows={8}
+                            value={value.smsContent}
+                            onChange={(e) => onChange({ smsContent: e.target.value })}
+                            disabled={disabled || isAiPending}
+                        />
+                        <div className="flex items-center justify-end gap-3 text-xs text-muted">
+                            <span>{smsChars} chars</span>
+                            <span>
+                                {smsSegments} segment{smsSegments === 1 ? "" : "s"}
+                            </span>
+                        </div>
+                    </>
+                )}
+                {placeholderHint ?? (
+                    <p className="text-xs text-muted">
+                        Placeholders like <code>{"{{first_name}}"}</code> or{" "}
+                        <code>{"{{booking_url}}"}</code> are replaced with your sender profile when
+                        the message is sent.
+                    </p>
+                )}
+            </div>
+        </div>
+    );
+}
+
+interface ChannelToggleProps {
+    channels: Channel[];
+    activeChannel: Channel;
+    onChange: (channel: Channel) => void;
+    disabled?: boolean;
+}
+
+function ChannelToggle({ channels, activeChannel, onChange, disabled }: ChannelToggleProps) {
+    return (
+        <div
+            role="radiogroup"
+            aria-label="Channel"
+            className="inline-flex self-start rounded-lg border border-border bg-surface-secondary/40 p-0.5"
+        >
+            {channels.map((c) => (
+                <ChannelToggleButton
+                    key={c}
+                    active={activeChannel === c}
+                    onPress={() => onChange(c)}
+                    disabled={disabled}
+                    icon={c === Channel.EMAIL ? Mail : MessageSquare}
+                    label={c === Channel.EMAIL ? "Email" : c === Channel.SMS ? "SMS" : c}
+                />
+            ))}
+        </div>
+    );
+}
+
+interface ChannelToggleButtonProps {
+    active: boolean;
+    onPress: () => void;
+    disabled?: boolean;
+    icon: React.ComponentType<{ className?: string }>;
+    label: string;
+}
+
+function ChannelToggleButton({ active, onPress, disabled, icon: Icon, label }: ChannelToggleButtonProps) {
+    return (
+        <button
+            type="button"
+            role="radio"
+            aria-checked={active}
+            disabled={disabled}
+            onClick={onPress}
+            className={cn(
+                "inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm transition-colors",
+                "disabled:opacity-50 disabled:pointer-events-none",
+                active
+                    ? "bg-surface text-foreground shadow-sm border border-border"
+                    : "text-muted hover:text-foreground",
+            )}
+        >
+            <Icon className="size-3.5" />
+            {label}
+        </button>
+    );
+}

@@ -19,6 +19,8 @@ import { SenderProfilesModule } from './modules/sender-profiles/sender-profiles.
 import { OutreachModule } from './modules/outreach/outreach.module';
 import { SearchModule } from './modules/search/search.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
+import { MarketingCampaignsModule } from './modules/marketing-campaigns/marketing-campaigns.module';
+import { WebhooksModule } from './modules/webhooks/webhooks.module';
 import { WorkersModule } from './workers/workers.module';
 
 @Module({
@@ -42,6 +44,8 @@ import { WorkersModule } from './workers/workers.module';
     OutreachModule,
     SearchModule,
     DashboardModule,
+    MarketingCampaignsModule,
+    WebhooksModule,
     WorkersModule,
   ],
   controllers: [AppController],

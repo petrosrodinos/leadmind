@@ -18,6 +18,10 @@ import FilterJobsPage from "@/pages/dashboard/pages/filters/pages/jobs";
 import ContactsPage from "@/pages/dashboard/pages/contacts";
 import ContactDetailPage from "@/pages/dashboard/pages/contacts/pages/detail";
 import SenderProfilesPage from "@/pages/dashboard/pages/sender-profiles";
+import CampaignsPage from "@/pages/dashboard/pages/campaigns";
+import NewCampaignPage from "@/pages/dashboard/pages/campaigns/pages/new";
+import EditCampaignPage from "@/pages/dashboard/pages/campaigns/pages/edit";
+import CampaignDetailPage from "@/pages/dashboard/pages/campaigns/pages/detail";
 
 export default function AppRoutes() {
   return (
@@ -52,6 +56,10 @@ export default function AppRoutes() {
         <Route path="contacts" element={<ContactsPage />} />
         <Route path="contacts/:uuid" element={<ContactDetailPage />} />
         <Route path="sender-profiles" element={<SenderProfilesPage />} />
+        <Route path="campaigns" element={<CampaignsPage />} />
+        <Route path="campaigns/new" element={<NewCampaignPage />} />
+        <Route path="campaigns/:uuid" element={<CampaignDetailPage />} />
+        <Route path="campaigns/:uuid/edit" element={<EditCampaignPage />} />
         <Route path="filters" element={<FiltersPage />} />
         <Route path="filters/new" element={<NewFilterPage />} />
         <Route path="filters/:uuid" element={<FilterDetailPage />}>

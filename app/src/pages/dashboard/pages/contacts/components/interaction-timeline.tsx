@@ -1,12 +1,16 @@
 import { useMemo } from "react";
 import { Chip } from "@heroui/react";
-import { ArrowRight, ExternalLink, Mail, Phone, StickyNote } from "lucide-react";
+import { ArrowRight, CalendarDays, ExternalLink, Mail, Phone, StickyNote } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import {
+    CallDirection,
+    CallOutcome,
     InteractionType,
     LeadStatus,
+    type CallMetadata,
     type Interaction,
     type InteractionStatusChange,
+    type MeetingMetadata,
 } from "@/features/contacts/interfaces/contact.interface";
 import { useContactInteractions } from "@/features/contacts/hooks/use-contacts";
 import { StatusChip } from "@/pages/dashboard/pages/leads/components/badges";
@@ -16,6 +20,7 @@ const ICONS = {
     [InteractionType.EMAIL]: Mail,
     [InteractionType.CALL]: Phone,
     [InteractionType.NOTE]: StickyNote,
+    [InteractionType.MEETING]: CalendarDays,
     [InteractionType.STATUS_CHANGE]: ArrowRight,
 } as const;
 
@@ -23,6 +28,7 @@ const ICON_TONE: Record<InteractionType, string> = {
     [InteractionType.EMAIL]: "text-accent bg-accent/15 border-accent/30",
     [InteractionType.CALL]: "text-fuchsia-600 bg-fuchsia-500/15 border-fuchsia-500/30",
     [InteractionType.NOTE]: "text-muted bg-surface-secondary border-border",
+    [InteractionType.MEETING]: "text-emerald-600 bg-emerald-500/15 border-emerald-500/30",
     [InteractionType.STATUS_CHANGE]:
         "text-warning bg-warning-soft/40 border-warning/30",
 };
@@ -34,6 +40,7 @@ const BADGE_COLOR: Record<
     [InteractionType.EMAIL]: "success",
     [InteractionType.CALL]: "warning",
     [InteractionType.NOTE]: "default",
+    [InteractionType.MEETING]: "success",
     [InteractionType.STATUS_CHANGE]: "warning",
 };
 
@@ -41,8 +48,68 @@ const BADGE_LABEL: Record<InteractionType, string> = {
     [InteractionType.EMAIL]: "Email",
     [InteractionType.CALL]: "Call",
     [InteractionType.NOTE]: "Note",
+    [InteractionType.MEETING]: "Meeting",
     [InteractionType.STATUS_CHANGE]: "Status change",
 };
+
+const CALL_OUTCOME_LABEL: Record<CallOutcome, string> = {
+    [CallOutcome.CONNECTED]: "Connected",
+    [CallOutcome.NO_ANSWER]: "No answer",
+    [CallOutcome.VOICEMAIL]: "Voicemail",
+    [CallOutcome.BUSY]: "Busy",
+};
+
+const CALL_OUTCOME_COLOR: Record<CallOutcome, "default" | "success" | "warning" | "danger"> = {
+    [CallOutcome.CONNECTED]: "success",
+    [CallOutcome.VOICEMAIL]: "warning",
+    [CallOutcome.NO_ANSWER]: "default",
+    [CallOutcome.BUSY]: "default",
+};
+
+const CALL_DIRECTION_LABEL: Record<CallDirection, string> = {
+    [CallDirection.OUTBOUND]: "Outbound",
+    [CallDirection.INBOUND]: "Inbound",
+};
+
+function isCallOutcome(v: unknown): v is CallOutcome {
+    return typeof v === "string" && (Object.values(CallOutcome) as string[]).includes(v);
+}
+
+function isCallDirection(v: unknown): v is CallDirection {
+    return typeof v === "string" && (Object.values(CallDirection) as string[]).includes(v);
+}
+
+function parseCallMetadata(raw: Interaction["metadata"]): CallMetadata | null {
+    if (!raw || typeof raw !== "object") return null;
+    const o = raw as Record<string, unknown>;
+    if (!isCallOutcome(o.outcome) || !isCallDirection(o.direction)) return null;
+    const meta: CallMetadata = { outcome: o.outcome, direction: o.direction };
+    if (typeof o.duration_minutes === "number") meta.duration_minutes = o.duration_minutes;
+    if (typeof o.occurred_at === "string") meta.occurred_at = o.occurred_at;
+    return meta;
+}
+
+function parseMeetingMetadata(raw: Interaction["metadata"]): MeetingMetadata | null {
+    if (!raw || typeof raw !== "object") return null;
+    const o = raw as Record<string, unknown>;
+    if (typeof o.occurred_at !== "string") return null;
+    const meta: MeetingMetadata = { occurred_at: o.occurred_at };
+    if (typeof o.duration_minutes === "number") meta.duration_minutes = o.duration_minutes;
+    if (typeof o.location === "string") meta.location = o.location;
+    return meta;
+}
+
+function formatOccurredAt(iso: string): string {
+    const d = new Date(iso);
+    if (isNaN(d.getTime())) return iso;
+    return d.toLocaleString(undefined, {
+        weekday: "short",
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+    });
+}
 
 function isLeadStatus(v: unknown): v is LeadStatus {
     return typeof v === "string" && (Object.values(LeadStatus) as string[]).includes(v);
@@ -50,7 +117,7 @@ function isLeadStatus(v: unknown): v is LeadStatus {
 
 function parseStatusChange(raw: Interaction["status_change"]): InteractionStatusChange | null {
     if (!raw || typeof raw !== "object") return null;
-    const o = raw as Record<string, unknown>;
+    const o = raw as unknown as Record<string, unknown>;
     const from = o.from;
     const to = o.to;
     if (!isLeadStatus(from) || !isLeadStatus(to)) return null;
@@ -104,6 +171,14 @@ export function InteractionTimeline({ contactUuid, onNavigateToOutreach }: Inter
                     interaction.type === InteractionType.STATUS_CHANGE
                         ? parseStatusChange(interaction.status_change)
                         : null;
+                const callMeta =
+                    interaction.type === InteractionType.CALL
+                        ? parseCallMetadata(interaction.metadata)
+                        : null;
+                const meetingMeta =
+                    interaction.type === InteractionType.MEETING
+                        ? parseMeetingMetadata(interaction.metadata)
+                        : null;
 
                 return (
                     <li key={interaction.uuid} className="flex gap-3">
@@ -154,6 +229,42 @@ export function InteractionTimeline({ contactUuid, onNavigateToOutreach }: Inter
                                             />
                                             <StatusChip status={pair.to} />
                                         </div>
+                                    ) : null}
+                                    {interaction.content?.trim() ? (
+                                        <p className="text-sm text-foreground whitespace-pre-line break-words mt-2">
+                                            {interaction.content}
+                                        </p>
+                                    ) : null}
+                                </>
+                            ) : callMeta ? (
+                                <>
+                                    <div className="flex flex-wrap items-center gap-2 mt-2 text-xs text-muted">
+                                        <Chip size="sm" variant="soft" color={CALL_OUTCOME_COLOR[callMeta.outcome]}>
+                                            <Chip.Label>{CALL_OUTCOME_LABEL[callMeta.outcome]}</Chip.Label>
+                                        </Chip>
+                                        <Chip size="sm" variant="soft" color="default">
+                                            <Chip.Label>{CALL_DIRECTION_LABEL[callMeta.direction]}</Chip.Label>
+                                        </Chip>
+                                        {callMeta.duration_minutes !== undefined ? (
+                                            <span>· {callMeta.duration_minutes} min</span>
+                                        ) : null}
+                                    </div>
+                                    {interaction.content?.trim() ? (
+                                        <p className="text-sm text-foreground whitespace-pre-line break-words mt-2">
+                                            {interaction.content}
+                                        </p>
+                                    ) : null}
+                                </>
+                            ) : meetingMeta ? (
+                                <>
+                                    <div className="flex flex-wrap items-center gap-2 mt-2 text-sm text-foreground">
+                                        <span className="font-medium">{formatOccurredAt(meetingMeta.occurred_at)}</span>
+                                        {meetingMeta.duration_minutes !== undefined ? (
+                                            <span className="text-xs text-muted">· {meetingMeta.duration_minutes} min</span>
+                                        ) : null}
+                                    </div>
+                                    {meetingMeta.location ? (
+                                        <p className="text-xs text-muted mt-1 break-words">{meetingMeta.location}</p>
                                     ) : null}
                                     {interaction.content?.trim() ? (
                                         <p className="text-sm text-foreground whitespace-pre-line break-words mt-2">
