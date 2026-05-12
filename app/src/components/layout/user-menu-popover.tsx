@@ -1,39 +1,41 @@
-import { Popover } from '@heroui/react';
-import { User, CreditCard, LogOut, ChevronsUpDown } from 'lucide-react';
-import { useAuthStore } from '@/stores/auth';
-import { cn } from '@/lib/utils';
+import { Popover } from "@heroui/react";
+import { User, CreditCard, LogOut, ChevronsUpDown } from "lucide-react";
+import { useAuthStore } from "@/stores/auth";
+import { cn } from "@/lib/utils";
 
 function getInitials(name: string): string {
   return name
-    .split(' ')
+    .split(" ")
     .filter(Boolean)
     .slice(0, 2)
     .map((p) => p[0].toUpperCase())
-    .join('');
+    .join("");
 }
 
 interface UserMenuPopoverProps {
   collapsed?: boolean;
-  placement?: 'top' | 'bottom';
+  placement?: "top" | "bottom";
 }
 
-export default function UserMenuPopover({ collapsed = false, placement = 'top' }: UserMenuPopoverProps) {
+export default function UserMenuPopover({ collapsed = false, placement = "top" }: UserMenuPopoverProps) {
   const { full_name, email, logout } = useAuthStore();
 
-  const displayName = full_name || email || 'User';
+  const displayName = full_name || email || "User";
   const initials = getInitials(displayName);
 
   const menuItems = [
-    { label: 'Account', icon: User, onClick: () => {} },
-    { label: 'Billing', icon: CreditCard, onClick: () => {} },
+    { label: "Account", icon: User, onClick: () => {} },
+    { label: "Billing", icon: CreditCard, onClick: () => {} },
   ];
 
-  const AvatarBadge = ({ size = 'md' }: { size?: 'sm' | 'md' }) => (
+  const Avatar = ({ size = "md" }: { size?: "sm" | "md" }) => (
     <div
-      className={cn(
-        'rounded-full bg-accent text-accent-foreground flex items-center justify-center font-semibold shrink-0 select-none shadow-sm',
-        size === 'md' ? 'h-7 w-7 text-xs' : 'h-6 w-6 text-xs',
-      )}
+      className={cn("rounded-full flex items-center justify-center font-semibold shrink-0 select-none", size === "md" ? "h-7 w-7 text-xs" : "h-6 w-6 text-xs")}
+      style={{
+        background: "color-mix(in oklch, var(--accent) 90%, oklch(0.35 0.06 280))",
+        color: "oklch(0.98 0 0)",
+        boxShadow: "0 1px 4px color-mix(in oklch, var(--accent) 35%, transparent)",
+      }}
     >
       {initials}
     </div>
@@ -41,22 +43,15 @@ export default function UserMenuPopover({ collapsed = false, placement = 'top' }
 
   return (
     <Popover>
-      <Popover.Trigger
-        className={cn(
-          'group w-full rounded-lg transition-all duration-150 cursor-pointer outline-none',
-          collapsed
-            ? 'flex justify-center p-1.5 hover:bg-surface-secondary'
-            : 'flex items-center gap-2 px-2 py-1 hover:bg-surface-secondary',
-        )}
-      >
+      <Popover.Trigger className={cn("group w-full rounded-xl transition-all duration-150 cursor-pointer outline-none", "hover:bg-surface-secondary", collapsed ? "flex justify-center p-1.5" : "flex items-center gap-2 px-1 py-1.5")}>
         {collapsed ? (
-          <AvatarBadge />
+          <Avatar />
         ) : (
           <>
-            <AvatarBadge />
+            <Avatar />
             <div className="flex-1 min-w-0 text-left">
               <p className="text-xs font-semibold text-foreground truncate leading-snug">{displayName}</p>
-              <p className="text-xs text-muted truncate leading-snug">{email ?? ''}</p>
+              <p className="text-xs text-muted truncate leading-snug">{email ?? ""}</p>
             </div>
             <ChevronsUpDown className="h-3 w-3 text-muted shrink-0 group-hover:text-foreground transition-colors" />
           </>
@@ -64,33 +59,39 @@ export default function UserMenuPopover({ collapsed = false, placement = 'top' }
       </Popover.Trigger>
 
       <Popover.Content
-        placement={placement === 'top' ? 'top start' : 'bottom end'}
-        className="w-36 p-0 rounded-xl border border-border bg-overlay shadow-overlay overflow-hidden"
+        placement={placement === "top" ? "top start" : "bottom end"}
+        className="w-48 p-0 rounded-xl border border-border bg-surface overflow-hidden"
+        style={{
+          boxShadow: `
+            0 0 0 1px color-mix(in oklch, var(--accent) 7%, transparent),
+            0 16px 36px -8px color-mix(in oklch, black 22%, transparent),
+            0 4px 10px -2px color-mix(in oklch, black 10%, transparent)
+          `,
+        }}
       >
-        <Popover.Dialog>
-          <div className="py-1">
+        <Popover.Dialog className="p-2 outline-none">
+          {/* User info header */}
+          <div className="flex items-center gap-2.5 py-2.5 border-b border-border">
+            <Avatar size="sm" />
+            <div className="min-w-0">
+              <p className="text-xs font-semibold text-foreground truncate">{displayName}</p>
+              <p className="text-[11px] text-muted truncate">{email ?? ""}</p>
+            </div>
+          </div>
+
+          {/* Menu items */}
+          <div className="py-1.5">
             {menuItems.map(({ label, icon: Icon, onClick }) => (
-              <button
-                key={label}
-                onClick={onClick}
-                className="w-full flex items-center gap-2 px-1.5 py-1 text-sm text-foreground hover:bg-surface-secondary transition-colors duration-100 group/item"
-              >
-                <span className="h-5 w-5 rounded-md bg-default group-hover/item:bg-surface-tertiary flex items-center justify-center transition-colors duration-100 shrink-0">
-                  <Icon className="h-3 w-3 text-muted" />
-                </span>
+              <button key={label} onClick={onClick} className="w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-sm text-foreground hover:bg-surface-secondary transition-colors duration-100">
+                <Icon className="h-3.5 w-3.5 text-muted shrink-0" />
                 {label}
               </button>
             ))}
           </div>
 
-          <div className="px-1 pb-1">
-            <button
-              onClick={logout}
-              className="w-full flex items-center gap-2 px-1.5 py-1 rounded-lg text-sm text-danger hover:bg-danger/10 transition-colors duration-100 group/logout"
-            >
-              <span className="h-5 w-5 rounded-md bg-danger/10 group-hover/logout:bg-danger/15 flex items-center justify-center transition-colors duration-100 shrink-0">
-                <LogOut className="h-3 w-3 text-danger" />
-              </span>
+          <div className="py-1.5 border-t border-border">
+            <button onClick={logout} className="w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-sm text-danger hover:bg-danger/10 transition-colors duration-100">
+              <LogOut className="h-3.5 w-3.5 shrink-0" />
               Log out
             </button>
           </div>

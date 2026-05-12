@@ -29,6 +29,19 @@ export interface Lead {
     updated_at: string;
 }
 
+export interface UpdateLeadPayload {
+    name?: string;
+    email?: string;
+    phone?: string;
+    company?: string;
+    website?: string;
+    linkedin_url?: string;
+    title?: string;
+    location?: string;
+    industry?: string;
+    description?: string;
+}
+
 export interface ListLeadsQuery {
     page?: number;
     limit?: number;

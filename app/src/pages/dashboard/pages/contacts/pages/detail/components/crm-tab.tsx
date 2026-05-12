@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Button, ListBox, Select, TextArea, Tooltip } from "@heroui/react";
-import { CalendarDays, Phone, Sparkles } from "lucide-react";
+import { Button, Dropdown, ListBox, Select, TextArea, Tooltip } from "@heroui/react";
+import { CalendarDays, ChevronDown, Info, Phone, Sparkles } from "lucide-react";
 import type { Contact, LeadStatus } from "@/features/contacts/interfaces/contact.interface";
 import { STATUS_OPTIONS } from "@/features/contacts/constants/contacts.constants";
 import { useRescoreContact, useUpdateContactNotes, useUpdateContactStatus, useUpdateContactTags } from "@/features/contacts/hooks/use-contacts";
@@ -129,19 +129,20 @@ export function CrmTab({ contact, onNavigateToOutreach }: CrmTabProps) {
             </Select>
           </div>
           <div>
-            <p className="text-xs font-medium text-muted uppercase tracking-wide mb-1">AI score</p>
-            {contact.filter?.scoring_instructions ? (
-              <Tooltip>
-                <span tabIndex={0} className="inline-flex cursor-default outline-none">
-                  <ScoreBadge score={contact.score} />
-                </span>
-                <Tooltip.Content className="max-w-xs text-xs whitespace-pre-line">
-                  {contact.filter.scoring_instructions}
-                </Tooltip.Content>
-              </Tooltip>
-            ) : (
-              <ScoreBadge score={contact.score} />
-            )}
+            <div className="flex items-center gap-1 mb-1">
+              <p className="text-xs font-medium text-muted uppercase tracking-wide">AI score</p>
+              {contact.filter?.scoring_instructions && (
+                <Tooltip>
+                  <Tooltip.Trigger>
+                    <Info className="size-3 text-muted cursor-default" />
+                  </Tooltip.Trigger>
+                  <Tooltip.Content className="max-w-xs text-xs whitespace-pre-line">
+                    {contact.filter.scoring_instructions}
+                  </Tooltip.Content>
+                </Tooltip>
+              )}
+            </div>
+            <ScoreBadge score={contact.score} />
           </div>
           <div className="sm:col-span-1">
             <p className="text-xs font-medium text-muted uppercase tracking-wide mb-1">Tags</p>
@@ -175,16 +176,29 @@ export function CrmTab({ contact, onNavigateToOutreach }: CrmTabProps) {
       <Section
         title="Activity"
         action={
-          <div className="flex items-center gap-2">
-            <Button size="sm" variant="tertiary" onPress={() => setLogCallOpen(true)}>
-              <Phone className="size-3.5" />
-              Log call
-            </Button>
-            <Button size="sm" variant="tertiary" onPress={() => setLogMeetingOpen(true)}>
-              <CalendarDays className="size-3.5" />
-              Log meeting
-            </Button>
-          </div>
+          <Dropdown>
+            <Dropdown.Trigger asChild>
+              <Button size="sm" variant="tertiary">
+                Log activity
+                <ChevronDown className="size-3.5" />
+              </Button>
+            </Dropdown.Trigger>
+            <Dropdown.Popover placement="bottom end">
+              <Dropdown.Menu onAction={(key) => {
+                if (key === "call") setLogCallOpen(true);
+                if (key === "meeting") setLogMeetingOpen(true);
+              }}>
+                <Dropdown.Item id="call" textValue="Log call">
+                  <Phone className="size-4" />
+                  Log call
+                </Dropdown.Item>
+                <Dropdown.Item id="meeting" textValue="Log meeting">
+                  <CalendarDays className="size-4" />
+                  Log meeting
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown.Popover>
+          </Dropdown>
         }
       >
         <InteractionTimeline contactUuid={contact.uuid} onNavigateToOutreach={onNavigateToOutreach} />

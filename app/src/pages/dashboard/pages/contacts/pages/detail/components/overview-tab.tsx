@@ -21,7 +21,7 @@ import { OverviewUrlField } from "@/components/ui/overview-url-field";
 import { EnrichmentSnapshotPanel } from "@/components/ui/enrichment-snapshot-panel";
 import { SectionCard, Row, ProfileValue } from "@/components/ui/profile-section";
 import { initialsFromName, formatShortDate, normalizeUrl } from "@/lib/profile";
-import { StatusChip, ScoreBadge } from "@/pages/dashboard/pages/leads/components/badges";
+import { StatusChip } from "@/pages/dashboard/pages/leads/components/badges";
 import { Section } from "./section";
 import type { ProfileDraft } from "../types";
 import { profileDraftFromContact } from "../utils/profile-draft";
@@ -93,8 +93,6 @@ function ReadOnlyView({ contact, onEdit }: { contact: Contact; onEdit: () => voi
                                     </span>
                                 ) : null}
                                 <StatusChip status={contact.status} />
-                                <ScoreBadge score={contact.score} />
-                                <SourceBadge source={contact.lead.source_type} className="shrink-0" />
                             </div>
                             {contact.tags.length > 0 && (
                                 <div className="flex flex-wrap gap-1.5">
@@ -205,9 +203,6 @@ function ReadOnlyView({ contact, onEdit }: { contact: Contact; onEdit: () => voi
                 </SectionCard>
 
                 <SectionCard title="Context" icon={Tag}>
-                    <Row label="Source">
-                        <SourceBadge source={contact.lead.source_type} />
-                    </Row>
                     {filterName && (
                         <Row label="Filter">
                             <ProfileValue value={filterName} />

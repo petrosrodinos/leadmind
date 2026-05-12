@@ -1,16 +1,71 @@
+import { useMemo, useState } from "react";
+import { Button, Input, Label, TextArea } from "@heroui/react";
+import { AtSign, Briefcase, Building2, CalendarClock, ExternalLink, Globe, MapPin, Pencil, Tag, X } from "lucide-react";
 import type { Lead } from "@/features/leads/interfaces/lead.interface";
+import type { UpdateLeadPayload } from "@/features/leads/interfaces/lead.interface";
+import { useUpdateLead } from "@/features/leads/hooks/use-leads";
+import { useAuthStore } from "@/stores/auth";
+import { RoleTypes } from "@/features/user/interfaces/user.interface";
 import { EnrichmentSnapshotPanel } from "@/components/ui/enrichment-snapshot-panel";
 import { SourceBadge } from "@/components/ui/source-badge";
+import { OverviewUrlField } from "@/components/ui/overview-url-field";
 import { SectionCard, Row, ProfileValue } from "@/components/ui/profile-section";
 import { initialsFromName, formatShortDate, normalizeUrl } from "@/lib/profile";
-import { AtSign, Briefcase, Building2, CalendarClock, ExternalLink, Globe, MapPin, Tag } from "lucide-react";
 
-export function LeadDirectoryProfileTab({ lead }: { lead: Lead }) {
+interface LeadDirectoryProfileTabProps {
+    lead: Lead;
+}
+
+type LeadDraft = {
+    name: string;
+    email: string;
+    phone: string;
+    company: string;
+    website: string;
+    linkedin_url: string;
+    title: string;
+    location: string;
+    industry: string;
+    description: string;
+};
+
+function draftFromLead(lead: Lead): LeadDraft {
+    return {
+        name: lead.name ?? "",
+        email: lead.email ?? "",
+        phone: lead.phone ?? "",
+        company: lead.company ?? "",
+        website: lead.website ?? "",
+        linkedin_url: lead.linkedin_url ?? "",
+        title: lead.title ?? "",
+        location: lead.location ?? "",
+        industry: lead.industry ?? "",
+        description: lead.description ?? "",
+    };
+}
+
+export function LeadDirectoryProfileTab({ lead }: LeadDirectoryProfileTabProps) {
+    const { role } = useAuthStore();
+    const isAdmin = role === RoleTypes.ADMIN || role === RoleTypes.SUPER_ADMIN;
+    const [editing, setEditing] = useState(false);
+
+    return (
+        <div className="space-y-6 max-w-5xl">
+            {editing ? (
+                <EditForm lead={lead} onDone={() => setEditing(false)} />
+            ) : (
+                <ReadOnlyView lead={lead} isAdmin={isAdmin} onEdit={() => setEditing(true)} />
+            )}
+        </div>
+    );
+}
+
+function ReadOnlyView({ lead, isAdmin, onEdit }: { lead: Lead; isAdmin: boolean; onEdit: () => void }) {
     const websiteHref = lead.website?.trim() ? normalizeUrl(lead.website.trim()) : undefined;
     const linkedinHref = lead.linkedin_url?.trim() || undefined;
 
     return (
-        <div className="space-y-6 max-w-5xl">
+        <div className="space-y-6">
             <div className="relative overflow-hidden rounded-2xl border border-border/80 bg-linear-to-br from-accent/[0.07] via-surface to-surface-secondary/30 p-6 sm:p-8">
                 <div className="pointer-events-none absolute -right-16 -top-24 size-56 rounded-full bg-accent/10 blur-3xl" aria-hidden />
                 <div className="pointer-events-none absolute -bottom-20 -left-12 size-48 rounded-full bg-link/5 blur-3xl" aria-hidden />
@@ -46,22 +101,26 @@ export function LeadDirectoryProfileTab({ lead }: { lead: Lead }) {
                             </p>
                         </div>
                     </div>
-                    {(websiteHref || linkedinHref) && (
-                        <div className="flex shrink-0 flex-wrap gap-2 sm:justify-end">
-                            {websiteHref ? (
-                                <a href={websiteHref} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-xl border border-border/80 bg-surface-secondary/90 px-4 py-2.5 text-sm font-medium text-foreground shadow-sm transition hover:border-accent/40 hover:bg-surface-tertiary/80">
-                                    <Globe className="size-4 text-accent" strokeWidth={2} />
-                                    Website
-                                </a>
-                            ) : null}
-                            {linkedinHref ? (
-                                <a href={linkedinHref} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-xl border border-border/80 bg-surface-secondary/90 px-4 py-2.5 text-sm font-medium text-foreground shadow-sm transition hover:border-accent/40 hover:bg-surface-tertiary/80">
-                                    <ExternalLink className="size-4 text-accent" strokeWidth={2} />
-                                    LinkedIn
-                                </a>
-                            ) : null}
-                        </div>
-                    )}
+                    <div className="flex shrink-0 flex-wrap gap-2 sm:justify-end sm:items-start">
+                        {websiteHref ? (
+                            <a href={websiteHref} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-xl border border-border/80 bg-surface-secondary/90 px-4 py-2.5 text-sm font-medium text-foreground shadow-sm transition hover:border-accent/40 hover:bg-surface-tertiary/80">
+                                <Globe className="size-4 text-accent" strokeWidth={2} />
+                                Website
+                            </a>
+                        ) : null}
+                        {linkedinHref ? (
+                            <a href={linkedinHref} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-xl border border-border/80 bg-surface-secondary/90 px-4 py-2.5 text-sm font-medium text-foreground shadow-sm transition hover:border-accent/40 hover:bg-surface-tertiary/80">
+                                <ExternalLink className="size-4 text-accent" strokeWidth={2} />
+                                LinkedIn
+                            </a>
+                        ) : null}
+                        {isAdmin && (
+                            <Button size="sm" variant="secondary" onPress={onEdit}>
+                                <Pencil className="size-3.5" />
+                                Edit
+                            </Button>
+                        )}
+                    </div>
                 </div>
                 <EnrichmentSnapshotPanel summary={lead.enrichment_summary} className="relative mt-6" hideWhenEmpty />
             </div>
@@ -121,5 +180,96 @@ export function LeadDirectoryProfileTab({ lead }: { lead: Lead }) {
                 </SectionCard>
             </div>
         </div>
+    );
+}
+
+function EditForm({ lead, onDone }: { lead: Lead; onDone: () => void }) {
+    const updateLead = useUpdateLead();
+    const [draft, setDraft] = useState<LeadDraft>(() => draftFromLead(lead));
+
+    const dirty = useMemo(() => {
+        const prev = draftFromLead(lead);
+        return (Object.keys(prev) as (keyof LeadDraft)[]).some(
+            (k) => draft[k].trim() !== prev[k].trim(),
+        );
+    }, [lead, draft]);
+
+    const setField = <K extends keyof LeadDraft>(key: K, value: LeadDraft[K]) =>
+        setDraft((p) => ({ ...p, [key]: value }));
+
+    const handleSave = () => {
+        const t = (s: string) => s.trim();
+        const payload: UpdateLeadPayload = {
+            name: t(draft.name) || undefined,
+            email: t(draft.email) || undefined,
+            phone: t(draft.phone) || undefined,
+            company: t(draft.company) || undefined,
+            website: t(draft.website) || undefined,
+            title: t(draft.title) || undefined,
+            location: t(draft.location) || undefined,
+            linkedin_url: t(draft.linkedin_url) || undefined,
+            industry: t(draft.industry) || undefined,
+            description: t(draft.description) || undefined,
+        };
+        updateLead.mutate({ uuid: lead.uuid, payload }, { onSuccess: onDone });
+    };
+
+    return (
+        <section className="flex flex-col gap-3">
+            <div className="flex items-center justify-between gap-2 flex-wrap">
+                <h3 className="text-sm font-semibold text-foreground">Edit lead</h3>
+                <div className="flex items-center gap-2">
+                    <Button size="sm" variant="secondary" onPress={onDone} isDisabled={updateLead.isPending}>
+                        <X className="size-3.5" />
+                        Cancel
+                    </Button>
+                    <Button size="sm" isDisabled={!dirty || updateLead.isPending} isPending={updateLead.isPending} onPress={handleSave}>
+                        Save changes
+                    </Button>
+                </div>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="flex flex-col gap-1.5 sm:col-span-2 lg:col-span-3">
+                    <Label htmlFor="ld-name">Name</Label>
+                    <Input id="ld-name" placeholder="Full name" value={draft.name} onChange={(e) => setField("name", e.target.value)} />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                    <Label htmlFor="ld-company">Company</Label>
+                    <Input id="ld-company" placeholder="Acme Inc." value={draft.company} onChange={(e) => setField("company", e.target.value)} />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                    <Label htmlFor="ld-email">Email</Label>
+                    <Input id="ld-email" type="email" placeholder="name@company.com" value={draft.email} onChange={(e) => setField("email", e.target.value)} />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                    <Label htmlFor="ld-phone">Phone</Label>
+                    <Input id="ld-phone" placeholder="+1 555 0100" value={draft.phone} onChange={(e) => setField("phone", e.target.value)} />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                    <Label htmlFor="ld-title">Title</Label>
+                    <Input id="ld-title" placeholder="Head of Sales" value={draft.title} onChange={(e) => setField("title", e.target.value)} />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                    <Label htmlFor="ld-location">Location</Label>
+                    <Input id="ld-location" placeholder="City, Country" value={draft.location} onChange={(e) => setField("location", e.target.value)} />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                    <Label htmlFor="ld-industry">Industry</Label>
+                    <Input id="ld-industry" placeholder="Software" value={draft.industry} onChange={(e) => setField("industry", e.target.value)} />
+                </div>
+                <OverviewUrlField id="ld-website" label="Website" value={draft.website} onChange={(e) => setField("website", e.target.value)} placeholder="https://example.com" Icon={Globe} openAriaLabel="Open website in new tab" />
+                <OverviewUrlField id="ld-linkedin" label="LinkedIn" value={draft.linkedin_url} onChange={(e) => setField("linkedin_url", e.target.value)} placeholder="https://linkedin.com/in/…" Icon={ExternalLink} openAriaLabel="Open LinkedIn profile in new tab" />
+            </div>
+            <div className="flex flex-col gap-1.5">
+                <Label htmlFor="ld-description">Description</Label>
+                <TextArea id="ld-description" rows={4} placeholder="Short summary or notes about this lead…" value={draft.description} onChange={(e) => setField("description", e.target.value)} />
+            </div>
+            <div>
+                <p className="text-xs font-medium text-muted uppercase tracking-wide">Source</p>
+                <div className="mt-0.5">
+                    <SourceBadge source={lead.source_type} />
+                </div>
+            </div>
+        </section>
     );
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import {
     ApiBearerAuth,
     ApiOperation,
@@ -8,9 +8,13 @@ import {
 } from '@nestjs/swagger';
 import { EnrichmentSource, SourceType } from '@/generated/prisma';
 import { JwtGuard } from '@/shared/guards/jwt.guard';
+import { RolesGuard } from '@/shared/guards/roles.guard';
+import { Roles } from '@/shared/decorators/roles.decorator';
+import { AuthRoles } from '@/modules/auth/interfaces/auth.interface';
 import { EnrichLeadDto } from './dto/enrich-lead.dto';
 import { ListLeadEnrichmentsDto } from './dto/list-lead-enrichments.dto';
 import { ListLeadsDto } from './dto/list-leads.dto';
+import { UpdateLeadDto } from './dto/update-lead.dto';
 import { LeadsService } from './leads.service';
 
 @ApiTags('leads')
@@ -41,6 +45,16 @@ export class LeadsController {
     @ApiResponse({ status: 404, description: 'Lead not found' })
     findEnrichments(@Param('uuid') uuid: string, @Query() query: ListLeadEnrichmentsDto) {
         return this.leadsService.findEnrichmentsForLead(uuid, query);
+    }
+
+    @Put(':uuid')
+    @UseGuards(RolesGuard)
+    @Roles(AuthRoles.ADMIN)
+    @ApiOperation({ summary: 'Update a lead (admin only)' })
+    @ApiResponse({ status: 200, description: 'Lead updated' })
+    @ApiResponse({ status: 404, description: 'Lead not found' })
+    update(@Param('uuid') uuid: string, @Body() dto: UpdateLeadDto) {
+        return this.leadsService.update(uuid, dto);
     }
 
     @Get(':uuid')

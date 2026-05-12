@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import { cn } from "@/lib/utils";
 import { LayoutDashboard, Users, Globe, Filter, IdCard, Megaphone } from "lucide-react";
 import { Routes } from "@/routes/routes";
 
@@ -16,18 +17,51 @@ const navItems = [
   { label: "Campaigns", icon: Megaphone, href: Routes.dashboard.campaigns, end: false },
 ];
 
-const activeClass = "bg-accent/15 text-accent font-medium";
-const inactiveClass = "text-muted hover:bg-surface-secondary hover:text-foreground";
-const baseClass = "flex items-center rounded-lg transition-all duration-200 w-full";
-
 export default function SidebarContent({ collapsed, onNavigate }: SidebarContentProps) {
   return (
-    <ul className="space-y-1">
+    <ul className="space-y-0.5">
       {navItems.map(({ label, icon: Icon, href, end }) => (
         <li key={href}>
-          <NavLink to={href} end={end} title={collapsed ? label : undefined} onClick={onNavigate} className={({ isActive }) => `${baseClass} ${isActive ? activeClass : inactiveClass} ${collapsed ? "justify-center px-0 py-2.5" : "gap-3 px-3 py-2.5"}`}>
-            <Icon className="h-5 w-5 shrink-0" />
-            {!collapsed && <span className="text-sm truncate">{label}</span>}
+          <NavLink
+            to={href}
+            end={end}
+            title={collapsed ? label : undefined}
+            onClick={onNavigate}
+            className={({ isActive }) =>
+              cn(
+                'group flex items-center w-full rounded-xl transition-all duration-200 outline-none',
+                'focus-visible:ring-1 focus-visible:ring-accent/50',
+                collapsed ? 'justify-center py-2.5 px-0' : 'gap-2.5 px-2.5 py-[8px]',
+                isActive
+                  ? 'text-foreground'
+                  : 'text-muted hover:text-foreground hover:bg-surface-secondary',
+              )
+            }
+            style={({ isActive }) =>
+              isActive
+                ? {
+                    background: 'color-mix(in oklch, var(--accent) 12%, transparent)',
+                    boxShadow: 'inset 0 0 0 1px color-mix(in oklch, var(--accent) 22%, transparent)',
+                  }
+                : {}
+            }
+          >
+            {({ isActive }) => (
+              <>
+                <Icon
+                  className="shrink-0 transition-transform duration-200 group-hover:scale-[1.07]"
+                  style={{ width: 16, height: 16, color: isActive ? 'var(--accent)' : undefined }}
+                />
+                {!collapsed && (
+                  <span
+                    className="text-[13px] font-medium truncate leading-none"
+                    style={{ letterSpacing: '-0.005em' }}
+                  >
+                    {label}
+                  </span>
+                )}
+              </>
+            )}
           </NavLink>
         </li>
       ))}

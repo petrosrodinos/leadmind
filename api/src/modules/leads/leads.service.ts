@@ -8,6 +8,7 @@ import { DEFAULT_ENRICHMENT_SOURCES } from './constants/enrichment.constants';
 import { EnrichLeadDto } from './dto/enrich-lead.dto';
 import { ListLeadEnrichmentsDto } from './dto/list-lead-enrichments.dto';
 import { ListLeadsDto } from './dto/list-leads.dto';
+import { UpdateLeadDto } from './dto/update-lead.dto';
 
 @Injectable()
 export class LeadsService {
@@ -64,6 +65,14 @@ export class LeadsService {
             throw new NotFoundException(`Lead ${uuid} not found`);
         }
         return lead;
+    }
+
+    async update(uuid: string, dto: UpdateLeadDto): Promise<Lead> {
+        await this.findOne(uuid);
+        return this.prisma.lead.update({
+            where: { uuid },
+            data: dto,
+        });
     }
 
     async findEnrichmentsForLead(leadUuid: string, query: ListLeadEnrichmentsDto) {

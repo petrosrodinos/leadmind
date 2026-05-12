@@ -1,6 +1,6 @@
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
-import type { Lead, ListLeadsQuery, PaginatedLeads } from "../interfaces/lead.interface";
+import type { Lead, ListLeadsQuery, PaginatedLeads, UpdateLeadPayload } from "../interfaces/lead.interface";
 
 export const listLeads = async (query: ListLeadsQuery = {}): Promise<PaginatedLeads> => {
     try {
@@ -8,6 +8,15 @@ export const listLeads = async (query: ListLeadsQuery = {}): Promise<PaginatedLe
         return response.data;
     } catch (error: any) {
         throw new Error(error?.response?.data?.message || "Failed to load leads.");
+    }
+};
+
+export const updateLead = async (uuid: string, payload: UpdateLeadPayload): Promise<Lead> => {
+    try {
+        const response = await axiosInstance.put(ApiRoutes.leads.update(uuid), payload);
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error?.response?.data?.message || "Failed to update lead.");
     }
 };
 

@@ -1,10 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "LinkedIn Profile Scraper",
-    "description": "Scrapes LinkedIn profile data from URLs, extracting comprehensive person information including experience, education, posts, and more.",
-    "version": "1.0",
-    "x-build-id": "seqviCjDwTGOXZw5w"
+    "version": "0.0",
+    "x-build-id": "dyUoDbigN6gbyBMbP"
   },
   "servers": [
     {
@@ -12,9 +10,9 @@
     }
   ],
   "paths": {
-    "/acts/scrapeengine~linkedin-profile-scraper/run-sync-get-dataset-items": {
+    "/acts/dev_fusion~linkedin-profile-scraper/run-sync-get-dataset-items": {
       "post": {
-        "operationId": "run-sync-get-dataset-items-scrapeengine-linkedin-profile-scraper",
+        "operationId": "run-sync-get-dataset-items-dev_fusion-linkedin-profile-scraper",
         "x-openai-isConsequential": false,
         "summary": "Executes an Actor, waits for its completion, and returns Actor's dataset items in response.",
         "tags": ["Run Actor"],
@@ -46,9 +44,9 @@
         }
       }
     },
-    "/acts/scrapeengine~linkedin-profile-scraper/runs": {
+    "/acts/dev_fusion~linkedin-profile-scraper/runs": {
       "post": {
-        "operationId": "runs-sync-scrapeengine-linkedin-profile-scraper",
+        "operationId": "runs-sync-dev_fusion-linkedin-profile-scraper",
         "x-openai-isConsequential": false,
         "summary": "Executes an Actor and returns information about the initiated run in response.",
         "tags": ["Run Actor"],
@@ -87,9 +85,9 @@
         }
       }
     },
-    "/acts/scrapeengine~linkedin-profile-scraper/run-sync": {
+    "/acts/dev_fusion~linkedin-profile-scraper/run-sync": {
       "post": {
-        "operationId": "run-sync-scrapeengine-linkedin-profile-scraper",
+        "operationId": "run-sync-dev_fusion-linkedin-profile-scraper",
         "x-openai-isConsequential": false,
         "summary": "Executes an Actor, waits for completion, and returns the OUTPUT from Key-value store in response.",
         "tags": ["Run Actor"],
@@ -126,37 +124,15 @@
     "schemas": {
       "inputSchema": {
         "type": "object",
+        "required": ["profileUrls"],
         "properties": {
-          "urls": {
-            "title": "LinkedIn profile URLs",
+          "profileUrls": {
+            "title": "🔎 Linkedin Profile URLs",
             "type": "array",
-            "description": "Paste the full profile links you want to scrape (e.g. https://www.linkedin.com/in/username). One per line or add multiple — we'll process them in order.",
+            "description": "Enter the Linkedin URLs of the people, you want to enrich data.",
             "items": {
               "type": "string"
             }
-          },
-          "proxyConfiguration": {
-            "title": "Proxy & network",
-            "type": "object",
-            "description": "Use Apify Proxy or your own. Fallback order: Your proxy → Datacenter → Residential → Direct. Helps avoid blocks and rate limits."
-          },
-          "extractSimilarProfiles": {
-            "title": "People also viewed",
-            "type": "boolean",
-            "description": "Include 'People also viewed' / similar profiles in the result. Great for expanding your network or lead list.",
-            "default": true
-          },
-          "extractProjects": {
-            "title": "Projects",
-            "type": "boolean",
-            "description": "Extract the Projects section (name, dates, description, contributors). Turn off if you only need experience and education.",
-            "default": true
-          },
-          "extractRecommendations": {
-            "title": "Recommendations",
-            "type": "boolean",
-            "description": "Include written recommendations from other members. Useful for credibility and social proof.",
-            "default": true
           }
         }
       },
