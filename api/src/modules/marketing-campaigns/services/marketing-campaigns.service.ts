@@ -327,6 +327,7 @@ export class MarketingCampaignsService {
 
         await this.removePendingJobsForCampaign(uuid);
 
+        await this.prisma.outreachMessage.deleteMany({ where: { campaign_uuid: uuid } });
         await this.prisma.marketingCampaignContact.deleteMany({ where: { campaign_uuid: uuid } });
 
         await this.prisma.marketingCampaign.update({

@@ -1,6 +1,8 @@
-import { Command, Sun, Moon } from 'lucide-react';
+import { Sun, Moon } from 'lucide-react';
 import { environments } from '@/config/environments';
 import { Link } from 'react-router-dom';
+import { Routes } from '@/routes/routes';
+import { AppLogo } from '@/components/layout/app-logo';
 import { useThemeContext } from '@/components/providers/theme-provider';
 
 export default function Navbar() {
@@ -8,8 +10,8 @@ export default function Navbar() {
 
   return (
     <header className="bg-surface border-b border-border px-6 py-3 flex items-center justify-between">
-      <Link to="/" className="flex items-center gap-2 text-sm font-medium text-foreground">
-        <Command className="h-5 w-5 text-accent" />
+      <Link to={Routes.root} className="flex items-center gap-2 text-sm font-medium text-foreground">
+        <AppLogo className="h-8 w-8" />
         {environments.APP_NAME}
       </Link>
 

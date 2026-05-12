@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
-import { PanelLeftClose, PanelLeftOpen, Command } from 'lucide-react';
+import { PanelLeftClose, PanelLeftOpen } from 'lucide-react';
+import { NavLink } from 'react-router-dom';
 import { environments } from '@/config/environments';
+import { Routes } from '@/routes/routes';
+import { AppLogo } from '@/components/layout/app-logo';
 import SidebarContent from '@/components/layout/sidebar-content';
 import UserMenuPopover from '@/components/layout/user-menu-popover';
 
@@ -32,21 +35,34 @@ export default function Sidebar() {
       {/* Header */}
       <div className="h-16 border-b border-border flex items-center shrink-0 px-3">
         {collapsed ? (
-          <button
-            onClick={() => setCollapsed(false)}
-            title="Expand sidebar"
-            className="mx-auto p-1.5 rounded-lg text-muted hover:bg-surface-secondary hover:text-foreground transition-colors duration-200"
-          >
-            <PanelLeftOpen className="h-4 w-4" />
-          </button>
+          <div className="flex flex-col items-center justify-center w-full gap-1.5 py-1">
+            <NavLink
+              to={Routes.dashboard.root}
+              aria-label="Dashboard"
+              title="Dashboard"
+              className="rounded-lg p-0.5 text-muted hover:bg-surface-secondary hover:text-foreground transition-colors duration-200"
+            >
+              <AppLogo className="h-7 w-7" />
+            </NavLink>
+            <button
+              onClick={() => setCollapsed(false)}
+              title="Expand sidebar"
+              className="p-1.5 rounded-lg text-muted hover:bg-surface-secondary hover:text-foreground transition-colors duration-200"
+            >
+              <PanelLeftOpen className="h-4 w-4" />
+            </button>
+          </div>
         ) : (
           <>
-            <div className="flex items-center gap-2 flex-1 min-w-0">
-              <Command className="h-5 w-5 text-accent shrink-0" />
+            <NavLink
+              to={Routes.dashboard.root}
+              className="flex items-center gap-2 flex-1 min-w-0 rounded-lg p-0.5 -m-0.5 hover:bg-surface-secondary/80 transition-colors duration-200"
+            >
+              <AppLogo className="h-7 w-7" />
               <span className="text-sm font-semibold text-foreground truncate">
                 {environments.APP_NAME}
               </span>
-            </div>
+            </NavLink>
             <button
               onClick={() => setCollapsed(true)}
               title="Collapse sidebar"

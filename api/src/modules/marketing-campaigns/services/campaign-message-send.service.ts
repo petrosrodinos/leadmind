@@ -39,6 +39,7 @@ export class CampaignMessageSendService {
         }
 
         if (this.isTerminal(mcc.status)) {
+            await this.checkCompletion(mcc.campaign_uuid);
             return { status: 'noop', reason: `MCC already in terminal state ${mcc.status}` };
         }
 
@@ -105,6 +106,7 @@ export class CampaignMessageSendService {
         }
 
         if (message.status === MsgStatus.SENT || message.status === MsgStatus.DELIVERED) {
+            await this.checkCompletion(mcc.campaign_uuid);
             return { status: 'noop', reason: `Already ${message.status}` };
         }
 

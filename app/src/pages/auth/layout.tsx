@@ -1,6 +1,6 @@
 import Navbar from "@/components/layout/navbar";
+import { AppLogo } from "@/components/layout/app-logo";
 import { environments } from "@/config/environments";
-import { Command } from "lucide-react";
 import { Outlet } from "react-router-dom";
 
 export default function AuthLayout() {
@@ -10,7 +10,7 @@ export default function AuthLayout() {
       <main className="flex min-h-0 flex-1 justify-center overflow-y-auto p-4 pt-10 sm:pt-16">
         <div className="w-full max-w-md space-y-6">
           <div className="flex items-center justify-center gap-2">
-            <Command className="h-6 w-6 text-accent" />
+            <AppLogo className="h-9 w-9" />
             <span className="text-xl font-semibold text-foreground">{environments.APP_NAME}</span>
           </div>
           <Outlet />

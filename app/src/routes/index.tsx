@@ -71,10 +71,10 @@ export default function AppRoutes() {
       </Route>
 
       {/* Default redirect */}
-      <Route path="/" element={<Navigate to={Routes.auth.sign_in} replace />} />
+      <Route path={Routes.root} element={<Navigate to={Routes.auth.sign_in} replace />} />
 
       {/* Catch all */}
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="*" element={<Navigate to={Routes.root} replace />} />
     </ReactRoutes>
   );
 }

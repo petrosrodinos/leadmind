@@ -1,5 +1,5 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { ChevronLeft, Loader2 } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import {
     useCampaign,
     useCampaignContacts,
@@ -9,6 +9,7 @@ import { CampaignStatusBadge } from "../../components/campaign-status-badge";
 import { StatsCards } from "../../components/stats-cards";
 import { RecipientsTable } from "../../components/recipients-table";
 import { CampaignActionsDropdown } from "../../components/campaign-actions-dropdown";
+import { CampaignDetailSkeleton } from "../../components/campaign-detail-skeleton";
 
 export default function CampaignDetailPage() {
     const { uuid } = useParams<{ uuid: string }>();
@@ -17,12 +18,7 @@ export default function CampaignDetailPage() {
     const { data: contactsPage } = useCampaignContacts(uuid, { limit: 100 });
 
     if (isLoading || !campaign) {
-        return (
-            <div className="flex items-center justify-center min-h-[40vh] text-muted text-sm gap-2">
-                <Loader2 className="size-4 animate-spin" />
-                Loading campaign…
-            </div>
-        );
+        return <CampaignDetailSkeleton />;
     }
 
     return (
