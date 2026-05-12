@@ -20,6 +20,7 @@ import {
     useCreateDraftMessage,
 } from "@/features/outreach/hooks/use-outreach";
 import { RichTextEditor } from "@/components/ui/rich-text-editor";
+import { PlaceholderInsertPopover } from "@/components/ui/placeholder-insert-popover";
 import { isEmailHtmlEmpty } from "@/lib/sanitize-html";
 import { cn } from "@/lib/utils";
 import {
@@ -229,7 +230,10 @@ function ComposeForm({ contact_uuid, onClose }: ComposeFormProps) {
                         )}
 
                         <div className="flex flex-col gap-1.5">
-                            <Label htmlFor="compose-content">Message</Label>
+                            <div className="flex items-center justify-between gap-2">
+                                <Label htmlFor="compose-content">Message</Label>
+                                <PlaceholderInsertPopover />
+                            </div>
                             {isEmail ? (
                                 <RichTextEditor
                                     aria-label="Message content"
@@ -249,8 +253,9 @@ function ComposeForm({ contact_uuid, onClose }: ComposeFormProps) {
                             )}
                             <p className="text-xs text-muted">
                                 Placeholders like <code>{"{{first_name}}"}</code> or{" "}
-                                <code>{"{{booking_url}}"}</code> are replaced with your default
-                                sender profile when the message is sent.
+                                <code>{"{{booking_url}}"}</code> work in both the subject and the
+                                message — they're replaced with your default sender profile when
+                                the message is sent.
                             </p>
                         </div>
                     </div>
