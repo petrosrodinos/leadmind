@@ -55,9 +55,9 @@ export class OutreachController {
     }
 
     @Post('messages/:uuid/send')
-    @ApiOperation({ summary: 'Enqueue outreach message for sending' })
+    @ApiOperation({ summary: 'Enqueue outreach message for sending (or retry a failed message)' })
     @ApiResponse({ status: 201 })
-    @ApiResponse({ status: 409, description: 'Only pending messages can be sent' })
+    @ApiResponse({ status: 409, description: 'Only pending or failed messages can be sent' })
     sendMessage(@CurrentUser('uuid') user_uuid: string, @Param('uuid') message_uuid: string) {
         return this.outreachService.sendMessage(user_uuid, message_uuid);
     }
@@ -76,6 +76,13 @@ export class OutreachController {
     @ApiResponse({ status: 201 })
     createAndQueue(@CurrentUser('uuid') user_uuid: string, @Body() dto: SendOutreachDto) {
         return this.outreachService.createAndQueue(user_uuid, dto);
+    }
+
+    @Post('messages/draft')
+    @ApiOperation({ summary: 'Create a PENDING outreach message without queueing it for send' })
+    @ApiResponse({ status: 201 })
+    createDraft(@CurrentUser('uuid') user_uuid: string, @Body() dto: SendOutreachDto) {
+        return this.outreachService.createDraft(user_uuid, dto);
     }
 
     @Post('sequences')

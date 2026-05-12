@@ -1,4 +1,5 @@
 export interface ProfileDraft {
+  filter_uuid: string;
   name: string;
   email: string;
   phone: string;

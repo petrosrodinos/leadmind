@@ -1,10 +1,15 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
+    createAndSendMessage,
+    createDraftMessage,
     deleteOutreachMessage,
     sendOutreachMessage,
     updateOutreachMessage,
 } from "../services/outreach.service";
-import type { UpdateMessagePayload } from "@/features/contacts/interfaces/contact.interface";
+import type {
+    CreateMessagePayload,
+    UpdateMessagePayload,
+} from "@/features/contacts/interfaces/contact.interface";
 import { contactsQueryKeys } from "@/features/contacts/hooks/use-contacts";
 import { toast } from "@/hooks/use-toast";
 
@@ -47,6 +52,48 @@ export function useSendOutreachMessage() {
             sendOutreachMessage(vars.uuid),
         onSuccess: (_data, vars) => {
             invalidateContact(qc, vars.contact_uuid);
+            toast({
+                title: "Message queued for send",
+                description: "We'll update its status when delivery completes.",
+                duration: 2500,
+            });
+        },
+        onError: (error: Error) => {
+            toast({
+                title: "Could not send message",
+                description: error.message,
+                duration: 3000,
+                variant: "error",
+            });
+        },
+    });
+}
+
+export function useCreateDraftMessage() {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: (payload: CreateMessagePayload) => createDraftMessage(payload),
+        onSuccess: (_data, payload) => {
+            invalidateContact(qc, payload.contact_uuid);
+            toast({ title: "Draft saved", duration: 1500 });
+        },
+        onError: (error: Error) => {
+            toast({
+                title: "Could not save draft",
+                description: error.message,
+                duration: 3000,
+                variant: "error",
+            });
+        },
+    });
+}
+
+export function useCreateAndSendMessage() {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: (payload: CreateMessagePayload) => createAndSendMessage(payload),
+        onSuccess: (_data, payload) => {
+            invalidateContact(qc, payload.contact_uuid);
             toast({
                 title: "Message queued for send",
                 description: "We'll update its status when delivery completes.",

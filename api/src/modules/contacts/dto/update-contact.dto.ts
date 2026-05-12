@@ -4,6 +4,7 @@ import { CreateContactDto } from './create-contact.dto';
 
 export class UpdateContactDto extends PartialType(
     PickType(CreateContactDto, [
+        'filter_uuid',
         'name',
         'email',
         'phone',

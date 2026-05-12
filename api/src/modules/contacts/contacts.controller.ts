@@ -19,6 +19,7 @@ import { CurrentUser } from '@/shared/decorators/current-user.decorator';
 import { JwtGuard } from '@/shared/guards/jwt.guard';
 import { ContactsService } from './contacts.service';
 import { AddNoteDto } from './dto/add-note.dto';
+import { AiDraftMessageDto } from './dto/ai-draft-message.dto';
 import { CreateContactDto } from './dto/create-contact.dto';
 import { ListContactsDto } from './dto/list-contacts.dto';
 import { UpdateContactDto } from './dto/update-contact.dto';
@@ -136,6 +137,18 @@ export class ContactsController {
         @Param('uuid') uuid: string,
     ) {
         return this.contactsService.triggerDraftMessages(user_uuid, uuid);
+    }
+
+    @Post('ai-draft-message')
+    @ApiOperation({
+        summary: 'Generate a one-off AI draft (Email or SMS) for a contact using a free-text prompt. Returns subject + content without persisting.',
+    })
+    @ApiResponse({ status: 201 })
+    aiDraftMessage(
+        @CurrentUser('uuid') user_uuid: string,
+        @Body() dto: AiDraftMessageDto,
+    ) {
+        return this.contactsService.draftAdHocMessage(user_uuid, dto);
     }
 
     @Post(':uuid/enrich')

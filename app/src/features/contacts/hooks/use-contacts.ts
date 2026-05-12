@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+    aiDraftMessage,
     createContact,
     createContactFromLead,
     deleteContact,
@@ -16,6 +17,7 @@ import {
     updateContactTags,
 } from "../services/contacts.service";
 import type {
+    AiDraftMessagePayload,
     Contact,
     CreateContactPayload,
     LeadStatus,
@@ -228,7 +230,8 @@ export function useUpdateContact() {
     return useMutation({
         mutationFn: (vars: { uuid: string; payload: UpdateContactPayload }) =>
             updateContact(vars.uuid, vars.payload),
-        onSuccess: () => {
+        onSuccess: (_data, vars) => {
+            qc.invalidateQueries({ queryKey: contactsQueryKeys.detail(vars.uuid) });
             qc.invalidateQueries({ queryKey: contactsQueryKeys.all });
             toast({ title: "Contact updated", duration: 1500 });
         },
@@ -316,6 +319,20 @@ export function useRedraftMessages() {
         onError: (error: Error) => {
             toast({
                 title: "Could not enqueue redraft",
+                description: error.message,
+                duration: 3000,
+                variant: "error",
+            });
+        },
+    });
+}
+
+export function useAiDraftMessage() {
+    return useMutation({
+        mutationFn: (payload: AiDraftMessagePayload) => aiDraftMessage(payload),
+        onError: (error: Error) => {
+            toast({
+                title: "AI draft failed",
                 description: error.message,
                 duration: 3000,
                 variant: "error",

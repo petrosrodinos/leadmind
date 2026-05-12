@@ -124,7 +124,27 @@ export interface UpdateMessagePayload {
     content?: string;
 }
 
+export interface CreateMessagePayload {
+    channel: Channel;
+    content: string;
+    subject?: string;
+    contact_uuid: string;
+}
+
+export interface AiDraftMessagePayload {
+    contact_uuid: string;
+    channel: Channel;
+    prompt: string;
+    language?: string;
+}
+
+export interface AiDraftMessageResult {
+    subject: string | null;
+    content: string;
+}
+
 export interface CreateContactPayload {
+    filter_uuid: string;
     name?: string;
     email?: string;
     phone?: string;
@@ -140,6 +160,7 @@ export interface CreateContactPayload {
 }
 
 export interface UpdateContactPayload {
+    filter_uuid?: string;
     name?: string;
     email?: string;
     phone?: string;

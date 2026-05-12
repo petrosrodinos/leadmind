@@ -1,6 +1,16 @@
 import { Contact, Lead } from '@/generated/prisma';
 import { formatContactForAi } from '../utils/contact-ai-profile.utils';
 
+function languageDirective(language?: string): string {
+    if (!language) return '';
+    return `
+OUTPUT LANGUAGE — STRICT:
+- Write the entire output (subject if any, and body) in ${language}.
+- Use natural ${language} idiom and tone for B2B outreach. Do NOT mix languages.
+- Placeholder tokens (e.g. {{first_name}}, {{booking_url}}) MUST stay as-is in English, exactly as written. Do NOT translate them.
+`.trim();
+}
+
 const EMAIL_FOOTER_PLACEHOLDERS = [
     '{{first_name}}',
     '{{last_name}}',
@@ -10,6 +20,7 @@ const EMAIL_FOOTER_PLACEHOLDERS = [
     '{{email}}',
     '{{phone}}',
     '{{website}}',
+    '{{website_display}}',
     '{{booking_url}}',
     '{{address}}',
     '{{city}}',
@@ -44,11 +55,18 @@ Return:
 `.trim();
 }
 
-export function buildEmailPrompt(contact: Contact, lead: Lead, outreach_instructions: string): string {
+export function buildEmailPrompt(
+    contact: Contact,
+    lead: Lead,
+    outreach_instructions: string,
+    language?: string,
+): string {
     return `
 You are drafting a cold outreach EMAIL for the lead below.
 
 TARGET CHANNEL: EMAIL — produce a normal email with a subject line and an HTML body. Do not write SMS or LinkedIn DM style.
+
+${languageDirective(language)}
 
 USER OUTREACH INSTRUCTIONS:
 """
@@ -70,27 +88,45 @@ HTML BODY RULES — STRICT:
 - Wrap each paragraph in <p>...</p>. Use <br> only for intentional intra-paragraph line breaks.
 - Do NOT include inline styles, class, id, data-* attributes, or any on* event handlers.
 - Do NOT include <script>, <iframe>, <img>, <style>, <html>, <body>, <head>, or <meta>.
-- Anchor hrefs must use http, https, or mailto schemes only.
+- Anchor href values must be either http/https/mailto URLs OR one of the URL placeholders below ({{website}}, {{booking_url}}). NEVER use other schemes.
 - Do NOT wrap the output in <html>/<body> or in a markdown code block.
+
+URL / LINK RULES — STRICT (MOST IMPORTANT):
+- Every URL or web destination you mention MUST be wrapped in an <a href="..."> tag. Never write a bare URL or a placeholder-as-text in the body.
+- The website link in the footer is MANDATORY when {{website}} is used, and MUST be written EXACTLY like this:
+    <a href="{{website}}">{{website_display}}</a>
+  - {{website}} is the full URL (with protocol) and goes ONLY inside href.
+  - {{website_display}} is the host-only form (no protocol, no trailing slash) and goes ONLY as the visible link text.
+  - NEVER write {{website}} as link text. NEVER write {{website_display}} as an href. NEVER use them outside of this exact pair.
+- A "book a call" / CTA link MUST be written EXACTLY like this (only the link text can vary):
+    <a href="{{booking_url}}">grab a slot on my calendar</a>
+  - {{booking_url}} goes ONLY inside href. NEVER as visible link text. NEVER as a bare URL.
+- The href value is a literal placeholder string (e.g. href="{{booking_url}}") — do NOT replace, translate, prefix, suffix, or interpolate it.
 
 SIGN-OFF / FOOTER RULES — STRICT:
 - The email MUST end with a polite sign-off plus a sender contact block.
-- For sender details (name, company, contact info, website, address) use ONLY these placeholders, exactly as written, including the double curly braces:
+- For sender details use ONLY these placeholders, exactly as written, including the double curly braces:
   ${EMAIL_FOOTER_PLACEHOLDERS}
 - Placeholders are replaced with the sender's real profile data at send time. Do NOT invent placeholders, do NOT use square brackets like [Your Name], do NOT write any real or made-up personal/contact info.
 - A good footer looks like:
-  <p>Best,<br><strong>{{full_name}}</strong><br>{{title}} · {{company_name}}<br>{{email}} · {{phone}}<br><a href="{{website}}">{{website}}</a></p>
-- It is fine to omit any placeholder that would not naturally appear in the footer (e.g. drop {{phone}} for a more text-only feel). Do not pad with placeholders for their own sake.
-- Same placeholders may also be used in the body when it reads naturally (e.g. signing off with {{first_name}}, or offering a meeting via <a href="{{booking_url}}">book a quick call</a>). They are not allowed in the subject line.
-- The {{booking_url}} placeholder should be used as the href of an anchor (never as visible link text), e.g. <a href="{{booking_url}}">grab a slot on my calendar</a>.
+  <p>Best,<br><strong>{{full_name}}</strong><br>{{title}} · {{company_name}}<br>{{email}} · {{phone}}<br><a href="{{website}}">{{website_display}}</a></p>
+- It is fine to omit any placeholder that would not naturally appear (e.g. drop {{phone}} for a more text-only feel). Do not pad with placeholders for their own sake.
+- Body usage: signing off with {{first_name}} inline is fine, and the CTA may use the {{booking_url}} anchor pattern above. Placeholders are NOT allowed in the subject line.
 `.trim();
 }
 
-export function buildSmsPrompt(contact: Contact, lead: Lead, outreach_instructions: string): string {
+export function buildSmsPrompt(
+    contact: Contact,
+    lead: Lead,
+    outreach_instructions: string,
+    language?: string,
+): string {
     return `
 Draft a cold outreach SMS for this lead.
 
 TARGET CHANNEL: SMS — single text message only. Hard limit: 160 characters. No subject lines. No LinkedIn fluff.
+
+${languageDirective(language)}
 
 USER OUTREACH INSTRUCTIONS:
 """
@@ -113,11 +149,18 @@ Output: only the SMS body. No subject. No quotes. No commentary.
 `.trim();
 }
 
-export function buildLinkedInPrompt(contact: Contact, lead: Lead, outreach_instructions: string): string {
+export function buildLinkedInPrompt(
+    contact: Contact,
+    lead: Lead,
+    outreach_instructions: string,
+    language?: string,
+): string {
     return `
 Draft a LinkedIn outreach DM for this lead.
 
 TARGET CHANNEL: LINKEDIN — short connection/conversation DM (not an email, not SMS).
+
+${languageDirective(language)}
 
 USER OUTREACH INSTRUCTIONS:
 """

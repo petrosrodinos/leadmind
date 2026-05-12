@@ -1,11 +1,12 @@
 import { type ReactNode, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Button, Chip, Drawer } from "@heroui/react";
-import { ExternalLink, Mail, MessageCircle } from "lucide-react";
+import { ExternalLink, Mail, MessageCircle, RefreshCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Channel, MsgStatus } from "@/features/contacts/interfaces/contact.interface";
 import { SourceBadge } from "@/components/ui/source-badge";
 import { useContact } from "@/features/contacts/hooks/use-contacts";
+import { useSendOutreachMessage } from "@/features/outreach/hooks/use-outreach";
 import { Routes } from "@/routes/routes";
 import { ScoreBadge, StatusChip } from "./badges";
 
@@ -23,6 +24,7 @@ interface LeadDrawerProps {
 
 export function LeadDrawer({ contactUuid, isOpen, onOpenChange }: LeadDrawerProps) {
   const { data: contact, isLoading } = useContact(contactUuid);
+  const sendMessage = useSendOutreachMessage();
 
   const { drafts, sentHistory } = useMemo(() => {
     const messages = contact?.outreach_messages ?? [];
@@ -124,7 +126,27 @@ export function LeadDrawer({ contactUuid, isOpen, onOpenChange }: LeadDrawerProp
                             <Chip.Label>{m.channel}</Chip.Label>
                           </Chip>
                           {m.subject && <span className="text-sm font-medium text-foreground truncate">{m.subject}</span>}
-                          <span className="ml-auto text-xs text-muted whitespace-nowrap">{m.sent_at ? new Date(m.sent_at).toLocaleString() : "—"}</span>
+                          <div className="ml-auto flex items-center gap-2 shrink-0">
+                            {m.status === MsgStatus.FAILED ? (
+                              <Button
+                                size="sm"
+                                variant="secondary"
+                                isDisabled={sendMessage.isPending}
+                                onPress={() =>
+                                  sendMessage.mutate({
+                                    uuid: m.uuid,
+                                    contact_uuid: contact.uuid,
+                                  })
+                                }
+                              >
+                                <RefreshCcw className="size-3.5" />
+                                Resend
+                              </Button>
+                            ) : null}
+                            <span className="text-xs text-muted whitespace-nowrap">
+                              {m.sent_at ? new Date(m.sent_at).toLocaleString() : "—"}
+                            </span>
+                          </div>
                         </div>
                         <p className="text-sm text-muted line-clamp-2 whitespace-pre-line">{m.content}</p>
                       </div>

@@ -19,6 +19,7 @@ import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { ElasticsearchService } from '@/integrations/elasticsearch/elasticsearch.service';
 import { AI_PROCESS_QUEUE } from '@/core/queues/queues.constants';
 import { AddNoteDto } from './dto/add-note.dto';
+import { AiDraftMessageDto } from './dto/ai-draft-message.dto';
 import { CreateContactDto } from './dto/create-contact.dto';
 import { EnrichContactDto } from './dto/enrich-contact.dto';
 import { ListContactsDto } from './dto/list-contacts.dto';
@@ -27,16 +28,25 @@ import { UpdateStatusDto } from './dto/update-status.dto';
 import { UpdateTagsDto } from './dto/update-tags.dto';
 import { CONTACT_PROFILE_UPDATE_KEYS } from './constants/contact-profile.constants';
 import { contactProfileFromLead } from './utils/contact-profile.utils';
+import { ContactAiService } from './services/contact-ai.service';
 
 @Injectable()
 export class ContactsService {
     constructor(
         private readonly prisma: PrismaService,
         private readonly elasticsearchService: ElasticsearchService,
+        private readonly contactAiService: ContactAiService,
         @InjectQueue(AI_PROCESS_QUEUE) private readonly aiProcessQueue: Queue,
     ) { }
 
     async create(user_uuid: string, dto: CreateContactDto) {
+        const filter = await this.prisma.filter.findFirst({
+            where: { uuid: dto.filter_uuid, user_uuid },
+        });
+        if (!filter) {
+            throw new NotFoundException('Filter not found');
+        }
+
         const lead = await this.prisma.lead.create({
             data: {
                 source_type: SourceType.MANUAL,
@@ -59,6 +69,7 @@ export class ContactsService {
             data: {
                 user_uuid,
                 lead_uuid: lead.uuid,
+                filter_uuid: dto.filter_uuid,
                 status: LeadStatus.NEW,
                 notes: dto.notes,
                 ...profile,
@@ -168,6 +179,15 @@ export class ContactsService {
         const data: Prisma.ContactUpdateInput = {};
         if (dto.notes !== undefined) {
             data.notes = dto.notes;
+        }
+        if (dto.filter_uuid !== undefined) {
+            const filter = await this.prisma.filter.findFirst({
+                where: { uuid: dto.filter_uuid, user_uuid },
+            });
+            if (!filter) {
+                throw new NotFoundException('Filter not found');
+            }
+            data.filter = { connect: { uuid: dto.filter_uuid } };
         }
         for (const key of CONTACT_PROFILE_UPDATE_KEYS) {
             if (dto[key] !== undefined) {
@@ -331,6 +351,13 @@ export class ContactsService {
             { removeOnComplete: 100, removeOnFail: 100 },
         );
         return { jobId: String(job.id) };
+    }
+
+    async draftAdHocMessage(
+        user_uuid: string,
+        dto: AiDraftMessageDto,
+    ): Promise<{ subject: string | null; content: string }> {
+        return this.contactAiService.draftAdHocMessage(user_uuid, dto);
     }
 
     async enrichContact(

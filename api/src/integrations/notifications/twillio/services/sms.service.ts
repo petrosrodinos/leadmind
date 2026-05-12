@@ -20,6 +20,11 @@ export class TwillioSmsService {
     public async sendSms(create_sms: CreateSms) {
 
         try {
+            if (!this.twillioClient) {
+                throw new Error(
+                    'Twilio is not configured (set TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN to send SMS)',
+                );
+            }
             const shortcode = (create_sms.from || this.shortCodes.appointly).substring(0, 10);
             const msg = {
                 to: create_sms.to,

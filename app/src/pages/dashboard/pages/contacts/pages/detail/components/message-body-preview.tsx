@@ -1,4 +1,11 @@
+import { useMemo } from "react";
 import { Channel } from "@/features/contacts/interfaces/contact.interface";
+import { useSenderProfiles } from "@/features/sender-profiles/hooks/use-sender-profiles";
+import {
+    defaultSenderProfile,
+    renderPlaceholders,
+    senderProfileToPlaceholders,
+} from "@/lib/placeholder-render";
 import { sanitizeEmailHtml } from "@/lib/sanitize-html";
 import { cn } from "@/lib/utils";
 
@@ -19,15 +26,22 @@ const htmlStyles =
     "[&_a]:text-primary [&_a]:underline [&_strong]:font-semibold [&_em]:italic [&_u]:underline";
 
 export function MessageBodyPreview({ channel, content, className }: MessageBodyPreviewProps) {
+    const { data: profiles } = useSenderProfiles();
+
+    const rendered = useMemo(() => {
+        const vars = senderProfileToPlaceholders(defaultSenderProfile(profiles));
+        return renderPlaceholders(content, vars);
+    }, [content, profiles]);
+
     if (channel === Channel.EMAIL) {
         return (
             <div
                 className={cn(htmlStyles, className)}
-                dangerouslySetInnerHTML={{ __html: sanitizeEmailHtml(content) }}
+                dangerouslySetInnerHTML={{ __html: sanitizeEmailHtml(rendered) }}
             />
         );
     }
     return (
-        <p className={cn("text-sm text-muted whitespace-pre-line", className)}>{content}</p>
+        <p className={cn("text-sm text-muted whitespace-pre-line", className)}>{rendered}</p>
     );
 }

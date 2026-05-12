@@ -1,4 +1,4 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
     ArrayUnique,
     IsArray,
@@ -6,10 +6,15 @@ import {
     IsOptional,
     IsString,
     IsUrl,
+    IsUUID,
     MaxLength,
 } from 'class-validator';
 
 export class CreateContactDto {
+    @ApiProperty({ format: 'uuid' })
+    @IsUUID()
+    filter_uuid: string;
+
     @ApiPropertyOptional({ maxLength: 200 })
     @IsOptional()
     @IsString()

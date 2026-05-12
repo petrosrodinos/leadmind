@@ -1,6 +1,7 @@
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type {
+    CreateMessagePayload,
     OutreachMessage,
     UpdateMessagePayload,
 } from "@/features/contacts/interfaces/contact.interface";
@@ -20,13 +21,35 @@ export const updateOutreachMessage = async (
     }
 };
 
+export const createDraftMessage = async (
+    payload: CreateMessagePayload,
+): Promise<OutreachMessage> => {
+    try {
+        const response = await axiosInstance.post(ApiRoutes.outreach.create_draft, payload);
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error?.response?.data?.message || "Failed to save draft.");
+    }
+};
+
+export const createAndSendMessage = async (
+    payload: CreateMessagePayload,
+): Promise<OutreachMessage> => {
+    try {
+        const response = await axiosInstance.post(ApiRoutes.outreach.create_and_send, payload);
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error?.response?.data?.message || "Failed to send message.");
+    }
+};
+
 export const sendOutreachMessage = async (uuid: string): Promise<OutreachMessage> => {
     try {
         const response = await axiosInstance.post(ApiRoutes.outreach.send_message(uuid));
         return response.data;
     } catch (error: any) {
         if (error?.response?.status === 409) {
-            throw new Error("Only pending messages can be sent.");
+            throw new Error("Only pending or failed messages can be sent.");
         }
         throw new Error(error?.response?.data?.message || "Failed to send message.");
     }

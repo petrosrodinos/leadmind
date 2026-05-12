@@ -32,6 +32,7 @@ export class OutreachService {
     ) { }
 
     async createAndQueue(user_uuid: string, dto: SendOutreachDto): Promise<OutreachMessage> {
+        const { content } = this.normalizeContentForChannel(dto.channel, dto.content);
         const contact = await this.requireOwnedContact(user_uuid, dto.contact_uuid);
         const scheduled_at = dto.scheduled_at ? new Date(dto.scheduled_at) : undefined;
         const message = await this.prisma.outreachMessage.create({
@@ -40,13 +41,37 @@ export class OutreachService {
                 contact_uuid: contact.uuid,
                 channel: dto.channel,
                 subject: dto.subject,
-                content: dto.content,
+                content,
                 status: MsgStatus.PENDING,
                 scheduled_at,
             },
         });
         await this.enqueueMessage(message.uuid, scheduled_at);
         return message;
+    }
+
+    async createDraft(user_uuid: string, dto: SendOutreachDto): Promise<OutreachMessage> {
+        const { content } = this.normalizeContentForChannel(dto.channel, dto.content);
+        const contact = await this.requireOwnedContact(user_uuid, dto.contact_uuid);
+        return this.prisma.outreachMessage.create({
+            data: {
+                user_uuid,
+                contact_uuid: contact.uuid,
+                channel: dto.channel,
+                subject: dto.subject,
+                content,
+                status: MsgStatus.PENDING,
+            },
+        });
+    }
+
+    private normalizeContentForChannel(channel: Channel, content: string): { content: string } {
+        if (channel !== Channel.EMAIL) return { content };
+        const sanitized = sanitizeEmailHtml(content);
+        if (isEmailHtmlEmpty(sanitized)) {
+            throw new BadRequestException('Email body cannot be empty');
+        }
+        return { content: sanitized };
     }
 
     async updateMessage(
@@ -77,9 +102,27 @@ export class OutreachService {
 
     async sendMessage(user_uuid: string, message_uuid: string): Promise<{ jobId: string }> {
         const message = await this.requireOwnedMessage(user_uuid, message_uuid);
-        this.ensurePending(message);
-        const job = await this.enqueueMessage(message.uuid, message.scheduled_at ?? undefined);
-        return { jobId: String(job.id) };
+
+        if (message.status === MsgStatus.PENDING) {
+            const job = await this.enqueueMessage(message.uuid, message.scheduled_at ?? undefined);
+            return { jobId: String(job.id) };
+        }
+
+        if (message.status === MsgStatus.FAILED) {
+            await this.prisma.outreachMessage.update({
+                where: { uuid: message_uuid },
+                data: {
+                    status: MsgStatus.PENDING,
+                    sent_at: null,
+                    metadata: null,
+                },
+            });
+            const fresh = await this.requireOwnedMessage(user_uuid, message_uuid);
+            const job = await this.enqueueMessage(message_uuid, fresh.scheduled_at ?? undefined);
+            return { jobId: String(job.id) };
+        }
+
+        throw new ConflictException('Only pending or failed messages can be sent');
     }
 
     async deleteMessage(user_uuid: string, message_uuid: string): Promise<void> {

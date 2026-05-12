@@ -2,6 +2,8 @@ import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type { EnrichmentSource } from "@/features/lead-enrichment/constants/enrichment-sources";
 import type {
+    AiDraftMessagePayload,
+    AiDraftMessageResult,
     Contact,
     CreateContactPayload,
     Interaction,
@@ -133,6 +135,20 @@ export const triggerDraftMessages = async (uuid: string): Promise<{ jobId: strin
         return response.data;
     } catch (error: any) {
         throw new Error(error?.response?.data?.message || "Failed to enqueue redraft.");
+    }
+};
+
+export const aiDraftMessage = async (
+    payload: AiDraftMessagePayload,
+): Promise<AiDraftMessageResult> => {
+    try {
+        const response = await axiosInstance.post(
+            ApiRoutes.contacts.ai_draft_message,
+            payload,
+        );
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error?.response?.data?.message || "Failed to generate AI draft.");
     }
 };
 

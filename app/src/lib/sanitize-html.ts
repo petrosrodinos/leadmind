@@ -28,7 +28,7 @@ export function sanitizeEmailHtml(input: string): string {
         ALLOWED_ATTR,
         FORBID_TAGS,
         FORBID_ATTR,
-        ALLOWED_URI_REGEXP: /^(?:https?:|mailto:)/i,
+        ALLOWED_URI_REGEXP: /^(?:(?:https?|mailto):|\{\{[a-zA-Z0-9_]+\}\}$)/i,
         ADD_ATTR: ["target", "rel"],
     });
 }

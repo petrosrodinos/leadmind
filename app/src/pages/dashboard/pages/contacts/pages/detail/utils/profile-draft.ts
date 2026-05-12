@@ -3,6 +3,7 @@ import type { ProfileDraft } from "../types";
 
 export function profileDraftFromContact(contact: Contact): ProfileDraft {
   return {
+    filter_uuid: contact.filter_uuid ?? "",
     name: contact.name ?? "",
     email: contact.email ?? "",
     phone: contact.phone ?? "",

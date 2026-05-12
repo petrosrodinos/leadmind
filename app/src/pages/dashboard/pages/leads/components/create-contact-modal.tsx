@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
     Button,
@@ -6,12 +6,15 @@ import {
     FieldError,
     Input,
     Label,
+    ListBox,
     Modal,
+    Select,
     TextArea,
 } from "@heroui/react";
 import { Plus, X } from "lucide-react";
 import { useCreateContact } from "@/features/contacts/hooks/use-contacts";
 import type { CreateContactPayload } from "@/features/contacts/interfaces/contact.interface";
+import { useFilters } from "@/features/filters/hooks/use-filters";
 import { Routes } from "@/routes/routes";
 
 interface CreateContactModalProps {
@@ -20,6 +23,7 @@ interface CreateContactModalProps {
 }
 
 const emptyForm = (): CreateContactPayload => ({
+    filter_uuid: "",
     name: "",
     email: "",
     phone: "",
@@ -37,10 +41,16 @@ const emptyForm = (): CreateContactPayload => ({
 export function CreateContactModal({ isOpen, onOpenChange }: CreateContactModalProps) {
     const navigate = useNavigate();
     const createContact = useCreateContact();
+    const { data: filters = [] } = useFilters();
 
     const [form, setForm] = useState<CreateContactPayload>(emptyForm());
     const [tagDraft, setTagDraft] = useState("");
     const [error, setError] = useState<string | null>(null);
+
+    const filterOptions = useMemo(() => {
+        const enabled = filters.filter((f) => f.enabled);
+        return enabled.length > 0 ? enabled : filters;
+    }, [filters]);
 
     useEffect(() => {
         if (isOpen) {
@@ -49,6 +59,16 @@ export function CreateContactModal({ isOpen, onOpenChange }: CreateContactModalP
             setError(null);
         }
     }, [isOpen]);
+
+    useEffect(() => {
+        if (!isOpen || filterOptions.length === 0) return;
+        setForm((prev) => {
+            if (prev.filter_uuid && filterOptions.some((f) => f.uuid === prev.filter_uuid)) {
+                return prev;
+            }
+            return { ...prev, filter_uuid: filterOptions[0].uuid };
+        });
+    }, [isOpen, filterOptions]);
 
     const set = <K extends keyof CreateContactPayload>(
         key: K,
@@ -77,7 +97,7 @@ export function CreateContactModal({ isOpen, onOpenChange }: CreateContactModalP
         e.preventDefault();
         setError(null);
 
-        const trimmed: CreateContactPayload = {};
+        const trimmed: Partial<CreateContactPayload> = {};
         for (const k of [
             "name",
             "email",
@@ -96,6 +116,16 @@ export function CreateContactModal({ isOpen, onOpenChange }: CreateContactModalP
         }
         if (form.tags && form.tags.length > 0) trimmed.tags = form.tags;
 
+        const filterUuid = form.filter_uuid?.trim() ?? "";
+        if (!filterUuid) {
+            setError(
+                filterOptions.length === 0
+                    ? "Create a filter in Filters before adding a lead."
+                    : "Select a filter.",
+            );
+            return;
+        }
+
         const hasIdentifier =
             !!trimmed.name ||
             !!trimmed.email ||
@@ -109,7 +139,10 @@ export function CreateContactModal({ isOpen, onOpenChange }: CreateContactModalP
         }
 
         try {
-            const created = await createContact.mutateAsync(trimmed);
+            const created = await createContact.mutateAsync({
+                ...trimmed,
+                filter_uuid: filterUuid,
+            } as CreateContactPayload);
             onOpenChange(false);
             navigate(Routes.dashboard.contacts_detail.replace(":uuid", created.uuid));
         } catch {
@@ -120,14 +153,52 @@ export function CreateContactModal({ isOpen, onOpenChange }: CreateContactModalP
     return (
         <Modal.Backdrop isOpen={isOpen} onOpenChange={onOpenChange}>
             <Modal.Container>
-                <Modal.Dialog className="sm:max-w-2xl">
+                <Modal.Dialog className="sm:max-w-2xl max-h-[90dvh]">
                     <Modal.CloseTrigger />
-                    <Modal.Header>
+                    <Modal.Header className="shrink-0">
                         <Modal.Heading>Add lead manually</Modal.Heading>
                     </Modal.Header>
-                    <form onSubmit={handleSubmit}>
-                        <Modal.Body className="p-6">
+                    <form
+                        onSubmit={handleSubmit}
+                        className="flex min-h-0 flex-1 flex-col"
+                    >
+                        <Modal.Body className="min-h-0 flex-1 overflow-y-auto p-6">
                             <div className="grid gap-4 sm:grid-cols-2">
+                                <div className="flex flex-col gap-1.5 sm:col-span-2">
+                                    <Select
+                                        className="w-full"
+                                        placeholder={
+                                            filterOptions.length === 0
+                                                ? "No filters yet"
+                                                : "Select a filter"
+                                        }
+                                        value={form.filter_uuid || null}
+                                        onChange={(v) =>
+                                            set("filter_uuid", (v as string) ?? "")
+                                        }
+                                        isDisabled={filterOptions.length === 0}
+                                    >
+                                        <Label>Filter</Label>
+                                        <Select.Trigger>
+                                            <Select.Value />
+                                            <Select.Indicator />
+                                        </Select.Trigger>
+                                        <Select.Popover>
+                                            <ListBox>
+                                                {filterOptions.map((f) => (
+                                                    <ListBox.Item
+                                                        key={f.uuid}
+                                                        id={f.uuid}
+                                                        textValue={f.name}
+                                                    >
+                                                        {f.name}
+                                                        <ListBox.ItemIndicator />
+                                                    </ListBox.Item>
+                                                ))}
+                                            </ListBox>
+                                        </Select.Popover>
+                                    </Select>
+                                </div>
                                 <div className="flex flex-col gap-1.5 sm:col-span-2">
                                     <Label htmlFor="cl-name">Name</Label>
                                     <Input
@@ -288,13 +359,15 @@ export function CreateContactModal({ isOpen, onOpenChange }: CreateContactModalP
                                 </div>
                             )}
                         </Modal.Body>
-                        <Modal.Footer>
+                        <Modal.Footer className="shrink-0">
                             <Button slot="close" variant="secondary" type="button">
                                 Cancel
                             </Button>
                             <Button
                                 type="submit"
-                                isDisabled={createContact.isPending}
+                                isDisabled={
+                                    createContact.isPending || filterOptions.length === 0
+                                }
                                 isPending={createContact.isPending}
                             >
                                 <Plus className="size-4" />

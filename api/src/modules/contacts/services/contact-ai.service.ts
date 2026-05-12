@@ -1,5 +1,6 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
 import { Channel, Contact, Filter, Lead, MsgStatus, OutreachMessage } from '@/generated/prisma';
+import { AiDraftMessageDto } from '../dto/ai-draft-message.dto';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { AiService } from '@/integrations/ai/services/ai.service';
 import { AiModels, AiProviders } from '@/integrations/ai/interfaces/ai.interface';
@@ -115,13 +116,39 @@ export class ContactAiService {
         return created;
     }
 
+    async draftAdHocMessage(
+        user_uuid: string,
+        dto: AiDraftMessageDto,
+    ): Promise<{ subject: string | null; content: string }> {
+        const contact = await this.prisma.contact.findFirst({
+            where: { uuid: dto.contact_uuid, user_uuid },
+            include: { lead: true },
+        });
+        if (!contact) {
+            throw new ForbiddenException(`Contact ${dto.contact_uuid} not found`);
+        }
+
+        const draft = await this.draftForChannel(
+            dto.channel,
+            contact,
+            contact.lead,
+            dto.prompt,
+            dto.language,
+        );
+        const content =
+            dto.channel === Channel.EMAIL ? sanitizeEmailHtml(draft.content) : draft.content;
+
+        return { subject: draft.subject, content };
+    }
+
     private async draftForChannel(
         channel: Channel,
         contact: Contact,
         lead: Lead,
         outreach_instructions: string,
+        language?: string,
     ): Promise<{ subject: string | null; content: string }> {
-        const prompt = this.promptForChannel(channel, contact, lead, outreach_instructions);
+        const prompt = this.promptForChannel(channel, contact, lead, outreach_instructions, language);
 
         const { response } = await this.aiService.generateText({
             provider: AiProviders.openai,
@@ -141,14 +168,15 @@ export class ContactAiService {
         contact: Contact,
         lead: Lead,
         outreach_instructions: string,
+        language?: string,
     ): string {
         switch (channel) {
             case Channel.EMAIL:
-                return buildEmailPrompt(contact, lead, outreach_instructions);
+                return buildEmailPrompt(contact, lead, outreach_instructions, language);
             case Channel.SMS:
-                return buildSmsPrompt(contact, lead, outreach_instructions);
+                return buildSmsPrompt(contact, lead, outreach_instructions, language);
             case Channel.LINKEDIN:
-                return buildLinkedInPrompt(contact, lead, outreach_instructions);
+                return buildLinkedInPrompt(contact, lead, outreach_instructions, language);
             default:
                 throw new Error(`Unsupported channel: ${channel}`);
         }

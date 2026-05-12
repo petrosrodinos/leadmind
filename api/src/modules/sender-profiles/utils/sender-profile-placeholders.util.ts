@@ -10,6 +10,7 @@ export const SENDER_PROFILE_PLACEHOLDER_KEYS = [
     'email',
     'phone',
     'website',
+    'website_display',
     'address',
     'city',
     'country',
@@ -17,6 +18,17 @@ export const SENDER_PROFILE_PLACEHOLDER_KEYS = [
     'signature',
     'sender_id',
 ] as const;
+
+function ensureProtocol(url: string): string {
+    if (!url) return '';
+    if (/^https?:\/\//i.test(url)) return url;
+    return `https://${url}`;
+}
+
+function stripProtocol(url: string): string {
+    if (!url) return '';
+    return url.replace(/^https?:\/\//i, '').replace(/\/$/, '');
+}
 
 export function senderProfileToPlaceholders(profile: SenderProfile | null | undefined): PlaceholderVars {
     if (!profile) {
@@ -26,6 +38,8 @@ export function senderProfileToPlaceholders(profile: SenderProfile | null | unde
     const first = profile.first_name ?? '';
     const last = profile.last_name ?? '';
     const full = [first, last].filter(Boolean).join(' ').trim();
+    const rawWebsite = profile.website ?? '';
+    const rawBookingUrl = profile.booking_url ?? '';
 
     return {
         first_name: first,
@@ -35,11 +49,12 @@ export function senderProfileToPlaceholders(profile: SenderProfile | null | unde
         company_name: profile.company_name ?? '',
         email: profile.email ?? '',
         phone: profile.phone ?? '',
-        website: profile.website ?? '',
+        website: ensureProtocol(rawWebsite),
+        website_display: stripProtocol(rawWebsite),
         address: profile.address ?? '',
         city: profile.city ?? '',
         country: profile.country ?? '',
-        booking_url: profile.booking_url ?? '',
+        booking_url: ensureProtocol(rawBookingUrl),
         signature: profile.signature ?? '',
         sender_id: profile.sender_id ?? '',
     };

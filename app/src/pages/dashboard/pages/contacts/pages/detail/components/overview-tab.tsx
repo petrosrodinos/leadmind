@@ -1,8 +1,10 @@
 import { useMemo, useState } from "react";
-import { Button, Input, Label, TextArea } from "@heroui/react";
+import { Button, Input, Label, ListBox, Select, TextArea } from "@heroui/react";
 import { Globe, Link as LinkIcon } from "lucide-react";
 import type { Contact } from "@/features/contacts/interfaces/contact.interface";
 import { useEnrichContact, useUpdateContact } from "@/features/contacts/hooks/use-contacts";
+import type { UpdateContactPayload } from "@/features/contacts/interfaces/contact.interface";
+import { useFilters } from "@/features/filters/hooks/use-filters";
 import { SourceBadge } from "@/components/ui/source-badge";
 import { OverviewUrlField } from "@/components/ui/overview-url-field";
 import { EnrichmentActionPopover } from "@/components/ui/enrichment-action-popover";
@@ -18,7 +20,12 @@ interface OverviewTabProps {
 export function OverviewTab({ contact }: OverviewTabProps) {
   const updateProfile = useUpdateContact();
   const enrichContactMut = useEnrichContact();
+  const { data: filters = [] } = useFilters();
   const [draft, setDraft] = useState<ProfileDraft>(() => profileDraftFromContact(contact));
+  const filterOptions = useMemo(() => {
+    const enabled = filters.filter((f) => f.enabled);
+    return enabled.length > 0 ? enabled : filters;
+  }, [filters]);
   const dirty = useMemo(() => {
     const prev = profileDraftFromContact(contact);
     return (Object.keys(prev) as (keyof ProfileDraft)[]).some((k) => draft[k].trim() !== prev[k].trim());
@@ -28,20 +35,25 @@ export function OverviewTab({ contact }: OverviewTabProps) {
 
   const handleSave = () => {
     const t = (s: string) => s.trim();
+    const payload: UpdateContactPayload = {
+      name: t(draft.name) || undefined,
+      email: t(draft.email) || undefined,
+      phone: t(draft.phone) || undefined,
+      company: t(draft.company) || undefined,
+      website: t(draft.website) || undefined,
+      title: t(draft.title) || undefined,
+      location: t(draft.location) || undefined,
+      linkedin_url: t(draft.linkedin_url) || undefined,
+      industry: t(draft.industry) || undefined,
+      description: t(draft.description) || undefined,
+    };
+    const filterTrim = t(draft.filter_uuid);
+    if (filterTrim && filterTrim !== (contact.filter_uuid ?? "")) {
+      payload.filter_uuid = filterTrim;
+    }
     updateProfile.mutate({
       uuid: contact.uuid,
-      payload: {
-        name: t(draft.name) || undefined,
-        email: t(draft.email) || undefined,
-        phone: t(draft.phone) || undefined,
-        company: t(draft.company) || undefined,
-        website: t(draft.website) || undefined,
-        title: t(draft.title) || undefined,
-        location: t(draft.location) || undefined,
-        linkedin_url: t(draft.linkedin_url) || undefined,
-        industry: t(draft.industry) || undefined,
-        description: t(draft.description) || undefined,
-      },
+      payload,
     });
   };
 
@@ -56,6 +68,33 @@ export function OverviewTab({ contact }: OverviewTabProps) {
         }
       >
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="flex flex-col gap-1.5 sm:col-span-2 lg:col-span-3">
+            <Select
+              className="w-full"
+              placeholder={
+                filterOptions.length === 0 ? "No filters yet" : "Select a filter"
+              }
+              value={draft.filter_uuid || null}
+              onChange={(v) => setField("filter_uuid", (v as string) ?? "")}
+              isDisabled={filterOptions.length === 0}
+            >
+              <Label>Filter</Label>
+              <Select.Trigger>
+                <Select.Value />
+                <Select.Indicator />
+              </Select.Trigger>
+              <Select.Popover>
+                <ListBox>
+                  {filterOptions.map((f) => (
+                    <ListBox.Item key={f.uuid} id={f.uuid} textValue={f.name}>
+                      {f.name}
+                      <ListBox.ItemIndicator />
+                    </ListBox.Item>
+                  ))}
+                </ListBox>
+              </Select.Popover>
+            </Select>
+          </div>
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="pf-company">Company</Label>
             <Input id="pf-company" placeholder="Acme Inc." value={draft.company} onChange={(e) => setField("company", e.target.value)} />

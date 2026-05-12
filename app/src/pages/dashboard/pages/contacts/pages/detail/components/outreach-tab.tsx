@@ -1,12 +1,13 @@
 import { useMemo, useState } from "react";
 import { Button, Chip } from "@heroui/react";
-import { Pencil, RefreshCcw, Send, Trash } from "lucide-react";
+import { Pencil, Plus, RefreshCcw, Send, Trash } from "lucide-react";
 import type { Contact } from "@/features/contacts/interfaces/contact.interface";
 import { MsgStatus, type OutreachMessage } from "@/features/contacts/interfaces/contact.interface";
 import { useRedraftMessages } from "@/features/contacts/hooks/use-contacts";
 import { useDeleteOutreachMessage, useSendOutreachMessage } from "@/features/outreach/hooks/use-outreach";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { EditMessageModal } from "@/pages/dashboard/pages/leads/components/edit-message-modal";
+import { ComposeMessageModal } from "./compose-message-modal";
 import { MessageBodyPreview } from "./message-body-preview";
 import { Section } from "./section";
 import { channelIcon } from "../utils/channel-icon";
@@ -22,6 +23,7 @@ export function OutreachTab({ contact }: OutreachTabProps) {
 
   const [editingMessage, setEditingMessage] = useState<OutreachMessage | null>(null);
   const [draftPendingDelete, setDraftPendingDelete] = useState<OutreachMessage | null>(null);
+  const [composeOpen, setComposeOpen] = useState(false);
 
   const { drafts, sentHistory } = useMemo(() => {
     const messages = contact.outreach_messages ?? [];
@@ -41,12 +43,18 @@ export function OutreachTab({ contact }: OutreachTabProps) {
       <Section
         title={`Drafted outreach (${drafts.length})`}
         action={
-          <Button size="sm" variant="secondary" isDisabled={redraft.isPending} isPending={redraft.isPending} onPress={() => redraft.mutate(contact.uuid)}>
-            <RefreshCcw className="size-3.5" />
-            Redraft messages
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button size="sm" variant="tertiary" onPress={() => setComposeOpen(true)}>
+              <Plus className="size-3.5" />
+              New message
+            </Button>
+            <Button size="sm" variant="secondary" isDisabled={redraft.isPending} isPending={redraft.isPending} onPress={() => redraft.mutate(contact.uuid)}>
+              <RefreshCcw className="size-3.5" />
+              Redraft messages
+            </Button>
+          </div>
         }
-        emptyText="No pending drafts. Click Redraft messages to generate new ones."
+        emptyText="No pending drafts. Click New message to write one, or Redraft messages to generate filter-based drafts."
       >
         <div className="flex flex-col gap-2">
           {drafts.map((m) => {
@@ -103,7 +111,27 @@ export function OutreachTab({ contact }: OutreachTabProps) {
                   <Chip.Label>{m.channel}</Chip.Label>
                 </Chip>
                 {m.subject && <span className="text-sm font-medium text-foreground truncate">{m.subject}</span>}
-                <span className="ml-auto text-xs text-muted whitespace-nowrap">{m.sent_at ? new Date(m.sent_at).toLocaleString() : "—"}</span>
+                <div className="ml-auto flex items-center gap-2 shrink-0">
+                  {m.status === MsgStatus.FAILED ? (
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      isDisabled={sendMessage.isPending}
+                      onPress={() =>
+                        sendMessage.mutate({
+                          uuid: m.uuid,
+                          contact_uuid: contact.uuid,
+                        })
+                      }
+                    >
+                      <RefreshCcw className="size-3.5" />
+                      Resend
+                    </Button>
+                  ) : null}
+                  <span className="text-xs text-muted whitespace-nowrap">
+                    {m.sent_at ? new Date(m.sent_at).toLocaleString() : "—"}
+                  </span>
+                </div>
               </div>
               <MessageBodyPreview channel={m.channel} content={m.content} />
             </div>
@@ -117,6 +145,12 @@ export function OutreachTab({ contact }: OutreachTabProps) {
         onOpenChange={(open) => {
           if (!open) setEditingMessage(null);
         }}
+        contact_uuid={contact.uuid}
+      />
+
+      <ComposeMessageModal
+        isOpen={composeOpen}
+        onOpenChange={setComposeOpen}
         contact_uuid={contact.uuid}
       />
 
