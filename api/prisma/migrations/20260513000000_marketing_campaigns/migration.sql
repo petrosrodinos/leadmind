@@ -112,7 +112,7 @@ CREATE TABLE "marketing_campaign_contacts" (
     CONSTRAINT "marketing_campaign_contacts_pkey" PRIMARY KEY ("id")
 );
 CREATE UNIQUE INDEX "marketing_campaign_contacts_uuid_key" ON "marketing_campaign_contacts"("uuid");
-CREATE UNIQUE INDEX "marketing_campaign_contacts_campaign_uuid_contact_uuid_channel_key" ON "marketing_campaign_contacts"("campaign_uuid", "contact_uuid", "channel");
+CREATE UNIQUE INDEX "marketing_campaign_contacts_target_key" ON "marketing_campaign_contacts"("campaign_uuid", "contact_uuid", "channel");
 CREATE INDEX "marketing_campaign_contacts_campaign_uuid_idx" ON "marketing_campaign_contacts"("campaign_uuid");
 CREATE INDEX "marketing_campaign_contacts_contact_uuid_idx" ON "marketing_campaign_contacts"("contact_uuid");
 CREATE INDEX "marketing_campaign_contacts_status_idx" ON "marketing_campaign_contacts"("status");

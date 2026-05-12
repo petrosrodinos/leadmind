@@ -374,7 +374,7 @@ model MarketingCampaignContact {
   campaign MarketingCampaign @relation(fields: [campaign_uuid], references: [uuid], onDelete: Cascade)
   contact  Contact           @relation(fields: [contact_uuid], references: [uuid], onDelete: Cascade)
 
-  @@unique([campaign_uuid, contact_uuid, channel])
+  @@unique([campaign_uuid, contact_uuid, channel], map: "marketing_campaign_contacts_target_key")
   @@index([campaign_uuid])
   @@index([contact_uuid])
   @@index([status])

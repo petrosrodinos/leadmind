@@ -1,2 +1,0 @@
--- RenameIndex
-ALTER INDEX "marketing_campaign_contacts_campaign_uuid_contact_uuid_channel_" RENAME TO "marketing_campaign_contacts_campaign_uuid_contact_uuid_chan_key";
