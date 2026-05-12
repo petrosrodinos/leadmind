@@ -18,26 +18,10 @@ export class LinkedInProfileAdapter
     constructor(private readonly apifyClient: ApifyClient) { }
 
     buildInput(query_config: LinkedInProfileQueryConfig): ApifyRunInput {
-        const urls = query_config.start_urls
+        const profileUrls = query_config.profile_urls
             .map((entry) => this.toProfileUrl(entry))
             .filter((url): url is string => Boolean(url));
-
-        const input: ApifyRunInput = {
-            urls,
-            proxyConfiguration: query_config.proxy_configuration ?? { useApifyProxy: true },
-        };
-
-        if (query_config.extract_similar_profiles !== undefined) {
-            input.extractSimilarProfiles = query_config.extract_similar_profiles;
-        }
-        if (query_config.extract_projects !== undefined) {
-            input.extractProjects = query_config.extract_projects;
-        }
-        if (query_config.extract_recommendations !== undefined) {
-            input.extractRecommendations = query_config.extract_recommendations;
-        }
-
-        return input;
+        return { profileUrls };
     }
 
     /**
@@ -62,7 +46,7 @@ export class LinkedInProfileAdapter
     /** Run the actor and return typed `NormalizedProfile` records. */
     async fetchProfiles(query_config: LinkedInProfileQueryConfig): Promise<NormalizedProfile[]> {
         const items = await this.run(query_config);
-        const resolved_urls = query_config.start_urls
+        const resolved_urls = query_config.profile_urls
             .map((entry) => this.toProfileUrl(entry))
             .filter((url): url is string => Boolean(url));
         return items.map((item, index) =>
@@ -72,7 +56,7 @@ export class LinkedInProfileAdapter
 
     /** Convenience: fetch a single profile by URL or username. */
     async fetchProfile(url_or_username: string): Promise<NormalizedProfile | null> {
-        const profiles = await this.fetchProfiles({ start_urls: [url_or_username] });
+        const profiles = await this.fetchProfiles({ profile_urls: [url_or_username] });
         return profiles[0] ?? null;
     }
 

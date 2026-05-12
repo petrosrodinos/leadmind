@@ -1,23 +1,5 @@
-export interface LinkedInProfileProxyConfiguration {
-    useApifyProxy?: boolean;
-    apifyProxyGroups?: string[];
-    apifyProxyCountry?: string;
-    proxyUrls?: string[];
-}
-
 export interface LinkedInProfileQueryConfig {
-    /**
-     * LinkedIn profile URLs (https://www.linkedin.com/in/<username>) or
-     * bare usernames (e.g. "timbakke"). Mixed entries are allowed.
-     */
-    start_urls: string[];
-    proxy_configuration?: LinkedInProfileProxyConfiguration;
-    /** Include "People also viewed" / similar profiles. Default: true. */
-    extract_similar_profiles?: boolean;
-    /** Include the Projects section. Default: true. */
-    extract_projects?: boolean;
-    /** Include written recommendations. Default: true. */
-    extract_recommendations?: boolean;
+    profile_urls: string[];
 }
 
 export interface LinkedInProfileExperience {

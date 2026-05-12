@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "version": "0.1",
-    "x-build-id": "JAYpj6Xd2Rd625FoH"
+    "version": "0.0",
+    "x-build-id": "PPH7cfvctbuAcaPnr"
   },
   "servers": [
     {
@@ -10,9 +10,9 @@
     }
   ],
   "paths": {
-    "/acts/scraper-engine~linkedin-company-about-scraper/run-sync-get-dataset-items": {
+    "/acts/harvestapi~linkedin-company/run-sync-get-dataset-items": {
       "post": {
-        "operationId": "run-sync-get-dataset-items-scraper-engine-linkedin-company-about-scraper",
+        "operationId": "run-sync-get-dataset-items-harvestapi-linkedin-company",
         "x-openai-isConsequential": false,
         "summary": "Executes an Actor, waits for its completion, and returns Actor's dataset items in response.",
         "tags": ["Run Actor"],
@@ -44,9 +44,9 @@
         }
       }
     },
-    "/acts/scraper-engine~linkedin-company-about-scraper/runs": {
+    "/acts/harvestapi~linkedin-company/runs": {
       "post": {
-        "operationId": "runs-sync-scraper-engine-linkedin-company-about-scraper",
+        "operationId": "runs-sync-harvestapi-linkedin-company",
         "x-openai-isConsequential": false,
         "summary": "Executes an Actor and returns information about the initiated run in response.",
         "tags": ["Run Actor"],
@@ -85,9 +85,9 @@
         }
       }
     },
-    "/acts/scraper-engine~linkedin-company-about-scraper/run-sync": {
+    "/acts/harvestapi~linkedin-company/run-sync": {
       "post": {
-        "operationId": "run-sync-scraper-engine-linkedin-company-about-scraper",
+        "operationId": "run-sync-harvestapi-linkedin-company",
         "x-openai-isConsequential": false,
         "summary": "Executes an Actor, waits for completion, and returns the OUTPUT from Key-value store in response.",
         "tags": ["Run Actor"],
@@ -124,20 +124,22 @@
     "schemas": {
       "inputSchema": {
         "type": "object",
-        "required": ["startUrls"],
         "properties": {
-          "startUrls": {
-            "title": "LinkedIn Company URLs or Usernames",
+          "companies": {
+            "title": "Company LinkedIn URLs",
             "type": "array",
-            "description": "List one or more LinkedIn company URLs (e.g., https://www.linkedin.com/company/company-name) or usernames (e.g., company-name).",
+            "description": "List of LinkedIn company URLs",
             "items": {
               "type": "string"
             }
           },
-          "proxyConfiguration": {
-            "title": "Proxy Configuration",
-            "type": "object",
-            "description": "Choose which proxies to use. If LinkedIn rejects the proxy, a residential proxy will be used as a fallback."
+          "searches": {
+            "title": "Company names (to search)",
+            "type": "array",
+            "description": "List of company names to search on LinkedIn",
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
