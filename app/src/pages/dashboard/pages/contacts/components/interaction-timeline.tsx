@@ -1,6 +1,6 @@
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 import { Chip } from "@heroui/react";
-import { ArrowRight, CalendarDays, ExternalLink, Mail, Phone, StickyNote } from "lucide-react";
+import { ArrowRight, CalendarDays, ExternalLink, Mail, Megaphone, MessageSquare, Phone, StickyNote, XCircle } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import {
     CallDirection,
@@ -16,40 +16,52 @@ import { useContactInteractions } from "@/features/contacts/hooks/use-contacts";
 import { StatusChip } from "@/pages/dashboard/pages/leads/components/badges";
 import { cn } from "@/lib/utils";
 
-const ICONS = {
+const ICONS: Record<InteractionType, React.ComponentType<{ className?: string }>> = {
     [InteractionType.EMAIL]: Mail,
     [InteractionType.CALL]: Phone,
     [InteractionType.NOTE]: StickyNote,
     [InteractionType.MEETING]: CalendarDays,
     [InteractionType.STATUS_CHANGE]: ArrowRight,
-} as const;
+    [InteractionType.CAMPAIGN_EMAIL_SENT]: Megaphone,
+    [InteractionType.CAMPAIGN_SMS_SENT]: Megaphone,
+    [InteractionType.EMAIL_FAILED]: XCircle,
+    [InteractionType.SMS_FAILED]: XCircle,
+};
 
 const ICON_TONE: Record<InteractionType, string> = {
     [InteractionType.EMAIL]: "text-accent bg-accent/15 border-accent/30",
     [InteractionType.CALL]: "text-fuchsia-600 bg-fuchsia-500/15 border-fuchsia-500/30",
     [InteractionType.NOTE]: "text-muted bg-surface-secondary border-border",
     [InteractionType.MEETING]: "text-emerald-600 bg-emerald-500/15 border-emerald-500/30",
-    [InteractionType.STATUS_CHANGE]:
-        "text-warning bg-warning-soft/40 border-warning/30",
+    [InteractionType.STATUS_CHANGE]: "text-warning bg-warning-soft/40 border-warning/30",
+    [InteractionType.CAMPAIGN_EMAIL_SENT]: "text-accent bg-accent/15 border-accent/30",
+    [InteractionType.CAMPAIGN_SMS_SENT]: "text-accent bg-accent/15 border-accent/30",
+    [InteractionType.EMAIL_FAILED]: "text-danger bg-danger/10 border-danger/30",
+    [InteractionType.SMS_FAILED]: "text-danger bg-danger/10 border-danger/30",
 };
 
-const BADGE_COLOR: Record<
-    InteractionType,
-    "default" | "success" | "warning" | "danger"
-> = {
+const BADGE_COLOR: Record<InteractionType, "default" | "success" | "warning" | "danger"> = {
     [InteractionType.EMAIL]: "success",
     [InteractionType.CALL]: "warning",
     [InteractionType.NOTE]: "default",
     [InteractionType.MEETING]: "success",
     [InteractionType.STATUS_CHANGE]: "warning",
+    [InteractionType.CAMPAIGN_EMAIL_SENT]: "success",
+    [InteractionType.CAMPAIGN_SMS_SENT]: "success",
+    [InteractionType.EMAIL_FAILED]: "danger",
+    [InteractionType.SMS_FAILED]: "danger",
 };
 
 const BADGE_LABEL: Record<InteractionType, string> = {
-    [InteractionType.EMAIL]: "Email",
+    [InteractionType.EMAIL]: "Email sent",
     [InteractionType.CALL]: "Call",
     [InteractionType.NOTE]: "Note",
     [InteractionType.MEETING]: "Meeting",
     [InteractionType.STATUS_CHANGE]: "Status change",
+    [InteractionType.CAMPAIGN_EMAIL_SENT]: "Campaign email",
+    [InteractionType.CAMPAIGN_SMS_SENT]: "Campaign SMS",
+    [InteractionType.EMAIL_FAILED]: "Email failed",
+    [InteractionType.SMS_FAILED]: "SMS failed",
 };
 
 const CALL_OUTCOME_LABEL: Record<CallOutcome, string> = {

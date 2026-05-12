@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, ListBox, Select, TextArea } from "@heroui/react";
+import { Button, ListBox, Select, TextArea, Tooltip } from "@heroui/react";
 import { CalendarDays, Phone, Sparkles } from "lucide-react";
 import type { Contact, LeadStatus } from "@/features/contacts/interfaces/contact.interface";
 import { STATUS_OPTIONS } from "@/features/contacts/constants/contacts.constants";
@@ -130,7 +130,18 @@ export function CrmTab({ contact, onNavigateToOutreach }: CrmTabProps) {
           </div>
           <div>
             <p className="text-xs font-medium text-muted uppercase tracking-wide mb-1">AI score</p>
-            <ScoreBadge score={contact.score} />
+            {contact.filter?.scoring_instructions ? (
+              <Tooltip>
+                <span tabIndex={0} className="inline-flex cursor-default outline-none">
+                  <ScoreBadge score={contact.score} />
+                </span>
+                <Tooltip.Content className="max-w-xs text-xs whitespace-pre-line">
+                  {contact.filter.scoring_instructions}
+                </Tooltip.Content>
+              </Tooltip>
+            ) : (
+              <ScoreBadge score={contact.score} />
+            )}
           </div>
           <div className="sm:col-span-1">
             <p className="text-xs font-medium text-muted uppercase tracking-wide mb-1">Tags</p>

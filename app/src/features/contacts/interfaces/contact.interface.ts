@@ -32,6 +32,10 @@ export const InteractionType = {
     EMAIL: "EMAIL",
     MEETING: "MEETING",
     STATUS_CHANGE: "STATUS_CHANGE",
+    CAMPAIGN_EMAIL_SENT: "CAMPAIGN_EMAIL_SENT",
+    CAMPAIGN_SMS_SENT: "CAMPAIGN_SMS_SENT",
+    EMAIL_FAILED: "EMAIL_FAILED",
+    SMS_FAILED: "SMS_FAILED",
 } as const;
 
 export type InteractionType = (typeof InteractionType)[keyof typeof InteractionType];
