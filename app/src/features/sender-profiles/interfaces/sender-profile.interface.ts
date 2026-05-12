@@ -16,6 +16,7 @@ export interface SenderProfile {
     booking_url: string | null;
     sender_id: string | null;
     signature: string | null;
+    business_description: string | null;
     is_default: boolean;
     created_at: string;
     updated_at: string;
@@ -37,6 +38,7 @@ export interface CreateSenderProfilePayload {
     booking_url?: string;
     sender_id?: string;
     signature?: string;
+    business_description?: string;
     is_default?: boolean;
 }
 

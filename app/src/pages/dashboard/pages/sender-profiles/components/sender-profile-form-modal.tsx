@@ -44,6 +44,7 @@ const emptyForm = (): FormState => ({
     booking_url: "",
     sender_id: "",
     signature: "",
+    business_description: "",
     is_default: false,
 });
 
@@ -63,6 +64,7 @@ const fromProfile = (p: SenderProfile): FormState => ({
     booking_url: p.booking_url ?? "",
     sender_id: p.sender_id ?? "",
     signature: p.signature ?? "",
+    business_description: p.business_description ?? "",
     is_default: p.is_default,
 });
 
@@ -116,6 +118,7 @@ export function SenderProfileFormModal({
             "booking_url",
             "sender_id",
             "signature",
+            "business_description",
         ];
 
         const payload: CreateSenderProfilePayload = {
@@ -383,6 +386,31 @@ export function SenderProfileFormModal({
                                     />
                                     <p className="text-xs text-muted">
                                         Alphanumeric, up to 11 characters.
+                                    </p>
+                                </div>
+                            </section>
+
+                            <section className="space-y-3">
+                                <h3 className="text-sm font-semibold text-foreground">
+                                    Business description
+                                </h3>
+                                <div className="flex flex-col gap-1.5">
+                                    <Label htmlFor="sp-business-description">
+                                        What the company offers
+                                    </Label>
+                                    <TextArea
+                                        id="sp-business-description"
+                                        rows={6}
+                                        placeholder="e.g. We help SaaS founders book 5–10 qualified discovery calls per week through outbound + paid LinkedIn. Typical clients are seed-Series B B2B startups in the US/EU."
+                                        value={form.business_description}
+                                        onChange={(e) =>
+                                            set("business_description", e.target.value)
+                                        }
+                                        maxLength={5000}
+                                    />
+                                    <p className="text-xs text-muted">
+                                        Used by the AI as context when generating email and SMS
+                                        outreach so messages reflect what you actually offer.
                                     </p>
                                 </div>
                             </section>

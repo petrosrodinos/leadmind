@@ -11,6 +11,16 @@ OUTPUT LANGUAGE — STRICT:
 `.trim();
 }
 
+function senderBusinessBlock(sender_business_description?: string): string {
+    if (!sender_business_description) return '';
+    return `
+SENDER / BUSINESS CONTEXT (what the sender's company does and the services they offer — use to ground the message; do not quote verbatim):
+"""
+${sender_business_description}
+"""
+`.trim();
+}
+
 const EMAIL_FOOTER_PLACEHOLDERS = [
     '{{first_name}}',
     '{{last_name}}',
@@ -60,6 +70,7 @@ export function buildEmailPrompt(
     lead: Lead,
     outreach_instructions: string,
     language?: string,
+    sender_business_description?: string,
 ): string {
     return `
 You are drafting a cold outreach EMAIL for the lead below.
@@ -67,6 +78,8 @@ You are drafting a cold outreach EMAIL for the lead below.
 TARGET CHANNEL: EMAIL — produce a normal email with a subject line and an HTML body. Do not write SMS or LinkedIn DM style.
 
 ${languageDirective(language)}
+
+${senderBusinessBlock(sender_business_description)}
 
 USER OUTREACH INSTRUCTIONS:
 """
@@ -120,6 +133,7 @@ export function buildSmsPrompt(
     lead: Lead,
     outreach_instructions: string,
     language?: string,
+    sender_business_description?: string,
 ): string {
     return `
 Draft a cold outreach SMS for this lead.
@@ -127,6 +141,8 @@ Draft a cold outreach SMS for this lead.
 TARGET CHANNEL: SMS — single text message only. Hard limit: 160 characters. No subject lines. No LinkedIn fluff.
 
 ${languageDirective(language)}
+
+${senderBusinessBlock(sender_business_description)}
 
 USER OUTREACH INSTRUCTIONS:
 """
@@ -154,6 +170,7 @@ export function buildLinkedInPrompt(
     lead: Lead,
     outreach_instructions: string,
     language?: string,
+    sender_business_description?: string,
 ): string {
     return `
 Draft a LinkedIn outreach DM for this lead.
@@ -161,6 +178,8 @@ Draft a LinkedIn outreach DM for this lead.
 TARGET CHANNEL: LINKEDIN — short connection/conversation DM (not an email, not SMS).
 
 ${languageDirective(language)}
+
+${senderBusinessBlock(sender_business_description)}
 
 USER OUTREACH INSTRUCTIONS:
 """

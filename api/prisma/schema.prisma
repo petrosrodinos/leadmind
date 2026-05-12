@@ -301,6 +301,7 @@ model SenderProfile {
   booking_url  String?
   sender_id    String?
   signature    String?  @db.Text
+  business_description String? @db.Text
   is_default   Boolean  @default(false)
   created_at   DateTime @default(now())
   updated_at   DateTime @updatedAt

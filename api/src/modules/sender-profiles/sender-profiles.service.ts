@@ -26,6 +26,7 @@ export class SenderProfilesService {
             booking_url: dto.booking_url,
             sender_id: dto.sender_id,
             signature: dto.signature,
+            business_description: dto.business_description,
             is_default: dto.is_default ?? false,
         };
 
@@ -89,6 +90,7 @@ export class SenderProfilesService {
             'booking_url',
             'sender_id',
             'signature',
+            'business_description',
             'is_default',
         ];
         for (const key of writable) {

@@ -72,6 +72,10 @@ export class ContactAiService {
             return [];
         }
 
+        const sender_business_description = await this.resolveSenderBusinessDescription(
+            contact.user_uuid,
+        );
+
         const created: OutreachMessage[] = [];
 
         for (const channel of filter.channels) {
@@ -90,7 +94,14 @@ export class ContactAiService {
             }
 
             try {
-                const draft = await this.draftForChannel(channel, contact, lead, filter.outreach_instructions);
+                const draft = await this.draftForChannel(
+                    channel,
+                    contact,
+                    lead,
+                    filter.outreach_instructions,
+                    undefined,
+                    sender_business_description,
+                );
 
                 const content =
                     channel === Channel.EMAIL ? sanitizeEmailHtml(draft.content) : draft.content;
@@ -128,17 +139,34 @@ export class ContactAiService {
             throw new ForbiddenException(`Contact ${dto.contact_uuid} not found`);
         }
 
+        const sender_business_description = await this.resolveSenderBusinessDescription(user_uuid);
+
         const draft = await this.draftForChannel(
             dto.channel,
             contact,
             contact.lead,
             dto.prompt,
             dto.language,
+            sender_business_description,
         );
         const content =
             dto.channel === Channel.EMAIL ? sanitizeEmailHtml(draft.content) : draft.content;
 
         return { subject: draft.subject, content };
+    }
+
+    private async resolveSenderBusinessDescription(user_uuid: string): Promise<string | undefined> {
+        const profile = await this.prisma.senderProfile.findFirst({
+            where: { user_uuid, is_default: true },
+            select: { business_description: true },
+        });
+        if (profile?.business_description) return profile.business_description;
+        const fallback = await this.prisma.senderProfile.findFirst({
+            where: { user_uuid },
+            orderBy: { created_at: 'desc' },
+            select: { business_description: true },
+        });
+        return fallback?.business_description ?? undefined;
     }
 
     private async draftForChannel(
@@ -147,8 +175,16 @@ export class ContactAiService {
         lead: Lead,
         outreach_instructions: string,
         language?: string,
+        sender_business_description?: string,
     ): Promise<{ subject: string | null; content: string }> {
-        const prompt = this.promptForChannel(channel, contact, lead, outreach_instructions, language);
+        const prompt = this.promptForChannel(
+            channel,
+            contact,
+            lead,
+            outreach_instructions,
+            language,
+            sender_business_description,
+        );
 
         const { response } = await this.aiService.generateText({
             provider: AiProviders.openai,
@@ -169,14 +205,15 @@ export class ContactAiService {
         lead: Lead,
         outreach_instructions: string,
         language?: string,
+        sender_business_description?: string,
     ): string {
         switch (channel) {
             case Channel.EMAIL:
-                return buildEmailPrompt(contact, lead, outreach_instructions, language);
+                return buildEmailPrompt(contact, lead, outreach_instructions, language, sender_business_description);
             case Channel.SMS:
-                return buildSmsPrompt(contact, lead, outreach_instructions, language);
+                return buildSmsPrompt(contact, lead, outreach_instructions, language, sender_business_description);
             case Channel.LINKEDIN:
-                return buildLinkedInPrompt(contact, lead, outreach_instructions, language);
+                return buildLinkedInPrompt(contact, lead, outreach_instructions, language, sender_business_description);
             default:
                 throw new Error(`Unsupported channel: ${channel}`);
         }

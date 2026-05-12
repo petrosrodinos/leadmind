@@ -4,6 +4,7 @@ import { CampaignAiAction } from '../dto/generate-campaign-message.dto';
 interface PromptContext {
     campaign_name?: string;
     campaign_description?: string;
+    sender_business_description?: string;
     user_prompt?: string;
     current_subject?: string;
     current_content?: string;
@@ -36,6 +37,11 @@ function campaignContext(ctx: PromptContext): string {
     if (ctx.user_prompt) parts.push(`Author's intent: ${ctx.user_prompt}`);
     if (parts.length === 0) return '';
     return `CAMPAIGN CONTEXT:\n"""\n${parts.join('\n')}\n"""`;
+}
+
+function senderBusinessContext(ctx: PromptContext): string {
+    if (!ctx.sender_business_description) return '';
+    return `SENDER / BUSINESS CONTEXT (use this to ground the message in what the sender actually offers; do not quote it verbatim):\n"""\n${ctx.sender_business_description}\n"""`;
 }
 
 function emailRules(): string {
@@ -78,6 +84,7 @@ export function buildCampaignPrompt(
     const channelLabel = isEmail ? 'EMAIL' : 'SMS';
     const rules = isEmail ? emailRules() : smsRules();
     const campaignCtx = campaignContext(ctx);
+    const senderCtx = senderBusinessContext(ctx);
 
     const outputSpec = isEmail
         ? `Output format (no markdown, no commentary, no code fences):
@@ -127,6 +134,8 @@ ${ctx.current_subject ? `Subject: ${ctx.current_subject}\n\n` : ''}${ctx.current
         `TARGET CHANNEL: ${channelLabel}`,
         '',
         lang,
+        '',
+        senderCtx,
         '',
         campaignCtx,
         '',

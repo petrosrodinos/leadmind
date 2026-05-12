@@ -16314,6 +16314,7 @@ export namespace Prisma {
     booking_url: string | null
     sender_id: string | null
     signature: string | null
+    business_description: string | null
     is_default: boolean | null
     created_at: Date | null
     updated_at: Date | null
@@ -16338,6 +16339,7 @@ export namespace Prisma {
     booking_url: string | null
     sender_id: string | null
     signature: string | null
+    business_description: string | null
     is_default: boolean | null
     created_at: Date | null
     updated_at: Date | null
@@ -16362,6 +16364,7 @@ export namespace Prisma {
     booking_url: number
     sender_id: number
     signature: number
+    business_description: number
     is_default: number
     created_at: number
     updated_at: number
@@ -16396,6 +16399,7 @@ export namespace Prisma {
     booking_url?: true
     sender_id?: true
     signature?: true
+    business_description?: true
     is_default?: true
     created_at?: true
     updated_at?: true
@@ -16420,6 +16424,7 @@ export namespace Prisma {
     booking_url?: true
     sender_id?: true
     signature?: true
+    business_description?: true
     is_default?: true
     created_at?: true
     updated_at?: true
@@ -16444,6 +16449,7 @@ export namespace Prisma {
     booking_url?: true
     sender_id?: true
     signature?: true
+    business_description?: true
     is_default?: true
     created_at?: true
     updated_at?: true
@@ -16555,6 +16561,7 @@ export namespace Prisma {
     booking_url: string | null
     sender_id: string | null
     signature: string | null
+    business_description: string | null
     is_default: boolean
     created_at: Date
     updated_at: Date
@@ -16598,6 +16605,7 @@ export namespace Prisma {
     booking_url?: boolean
     sender_id?: boolean
     signature?: boolean
+    business_description?: boolean
     is_default?: boolean
     created_at?: boolean
     updated_at?: boolean
@@ -16625,6 +16633,7 @@ export namespace Prisma {
     booking_url?: boolean
     sender_id?: boolean
     signature?: boolean
+    business_description?: boolean
     is_default?: boolean
     created_at?: boolean
     updated_at?: boolean
@@ -16650,6 +16659,7 @@ export namespace Prisma {
     booking_url?: boolean
     sender_id?: boolean
     signature?: boolean
+    business_description?: boolean
     is_default?: boolean
     created_at?: boolean
     updated_at?: boolean
@@ -16675,12 +16685,13 @@ export namespace Prisma {
     booking_url?: boolean
     sender_id?: boolean
     signature?: boolean
+    business_description?: boolean
     is_default?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type SenderProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "name" | "company_name" | "title" | "first_name" | "last_name" | "email" | "phone" | "website" | "address" | "city" | "country" | "logo_url" | "booking_url" | "sender_id" | "signature" | "is_default" | "created_at" | "updated_at", ExtArgs["result"]["senderProfile"]>
+  export type SenderProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "name" | "company_name" | "title" | "first_name" | "last_name" | "email" | "phone" | "website" | "address" | "city" | "country" | "logo_url" | "booking_url" | "sender_id" | "signature" | "business_description" | "is_default" | "created_at" | "updated_at", ExtArgs["result"]["senderProfile"]>
   export type SenderProfileInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     marketing_campaigns?: boolean | SenderProfile$marketing_campaignsArgs<ExtArgs>
@@ -16718,6 +16729,7 @@ export namespace Prisma {
       booking_url: string | null
       sender_id: string | null
       signature: string | null
+      business_description: string | null
       is_default: boolean
       created_at: Date
       updated_at: Date
@@ -17164,6 +17176,7 @@ export namespace Prisma {
     readonly booking_url: FieldRef<"SenderProfile", 'String'>
     readonly sender_id: FieldRef<"SenderProfile", 'String'>
     readonly signature: FieldRef<"SenderProfile", 'String'>
+    readonly business_description: FieldRef<"SenderProfile", 'String'>
     readonly is_default: FieldRef<"SenderProfile", 'Boolean'>
     readonly created_at: FieldRef<"SenderProfile", 'DateTime'>
     readonly updated_at: FieldRef<"SenderProfile", 'DateTime'>
@@ -20591,6 +20604,7 @@ export namespace Prisma {
     booking_url: 'booking_url',
     sender_id: 'sender_id',
     signature: 'signature',
+    business_description: 'business_description',
     is_default: 'is_default',
     created_at: 'created_at',
     updated_at: 'updated_at'
@@ -22110,6 +22124,7 @@ export namespace Prisma {
     booking_url?: StringNullableFilter<"SenderProfile"> | string | null
     sender_id?: StringNullableFilter<"SenderProfile"> | string | null
     signature?: StringNullableFilter<"SenderProfile"> | string | null
+    business_description?: StringNullableFilter<"SenderProfile"> | string | null
     is_default?: BoolFilter<"SenderProfile"> | boolean
     created_at?: DateTimeFilter<"SenderProfile"> | Date | string
     updated_at?: DateTimeFilter<"SenderProfile"> | Date | string
@@ -22136,6 +22151,7 @@ export namespace Prisma {
     booking_url?: SortOrderInput | SortOrder
     sender_id?: SortOrderInput | SortOrder
     signature?: SortOrderInput | SortOrder
+    business_description?: SortOrderInput | SortOrder
     is_default?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -22165,6 +22181,7 @@ export namespace Prisma {
     booking_url?: StringNullableFilter<"SenderProfile"> | string | null
     sender_id?: StringNullableFilter<"SenderProfile"> | string | null
     signature?: StringNullableFilter<"SenderProfile"> | string | null
+    business_description?: StringNullableFilter<"SenderProfile"> | string | null
     is_default?: BoolFilter<"SenderProfile"> | boolean
     created_at?: DateTimeFilter<"SenderProfile"> | Date | string
     updated_at?: DateTimeFilter<"SenderProfile"> | Date | string
@@ -22191,6 +22208,7 @@ export namespace Prisma {
     booking_url?: SortOrderInput | SortOrder
     sender_id?: SortOrderInput | SortOrder
     signature?: SortOrderInput | SortOrder
+    business_description?: SortOrderInput | SortOrder
     is_default?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -22223,6 +22241,7 @@ export namespace Prisma {
     booking_url?: StringNullableWithAggregatesFilter<"SenderProfile"> | string | null
     sender_id?: StringNullableWithAggregatesFilter<"SenderProfile"> | string | null
     signature?: StringNullableWithAggregatesFilter<"SenderProfile"> | string | null
+    business_description?: StringNullableWithAggregatesFilter<"SenderProfile"> | string | null
     is_default?: BoolWithAggregatesFilter<"SenderProfile"> | boolean
     created_at?: DateTimeWithAggregatesFilter<"SenderProfile"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"SenderProfile"> | Date | string
@@ -23756,6 +23775,7 @@ export namespace Prisma {
     booking_url?: string | null
     sender_id?: string | null
     signature?: string | null
+    business_description?: string | null
     is_default?: boolean
     created_at?: Date | string
     updated_at?: Date | string
@@ -23782,6 +23802,7 @@ export namespace Prisma {
     booking_url?: string | null
     sender_id?: string | null
     signature?: string | null
+    business_description?: string | null
     is_default?: boolean
     created_at?: Date | string
     updated_at?: Date | string
@@ -23805,6 +23826,7 @@ export namespace Prisma {
     booking_url?: NullableStringFieldUpdateOperationsInput | string | null
     sender_id?: NullableStringFieldUpdateOperationsInput | string | null
     signature?: NullableStringFieldUpdateOperationsInput | string | null
+    business_description?: NullableStringFieldUpdateOperationsInput | string | null
     is_default?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23831,6 +23853,7 @@ export namespace Prisma {
     booking_url?: NullableStringFieldUpdateOperationsInput | string | null
     sender_id?: NullableStringFieldUpdateOperationsInput | string | null
     signature?: NullableStringFieldUpdateOperationsInput | string | null
+    business_description?: NullableStringFieldUpdateOperationsInput | string | null
     is_default?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23856,6 +23879,7 @@ export namespace Prisma {
     booking_url?: string | null
     sender_id?: string | null
     signature?: string | null
+    business_description?: string | null
     is_default?: boolean
     created_at?: Date | string
     updated_at?: Date | string
@@ -23878,6 +23902,7 @@ export namespace Prisma {
     booking_url?: NullableStringFieldUpdateOperationsInput | string | null
     sender_id?: NullableStringFieldUpdateOperationsInput | string | null
     signature?: NullableStringFieldUpdateOperationsInput | string | null
+    business_description?: NullableStringFieldUpdateOperationsInput | string | null
     is_default?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23902,6 +23927,7 @@ export namespace Prisma {
     booking_url?: NullableStringFieldUpdateOperationsInput | string | null
     sender_id?: NullableStringFieldUpdateOperationsInput | string | null
     signature?: NullableStringFieldUpdateOperationsInput | string | null
+    business_description?: NullableStringFieldUpdateOperationsInput | string | null
     is_default?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -25530,6 +25556,7 @@ export namespace Prisma {
     booking_url?: SortOrder
     sender_id?: SortOrder
     signature?: SortOrder
+    business_description?: SortOrder
     is_default?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -25558,6 +25585,7 @@ export namespace Prisma {
     booking_url?: SortOrder
     sender_id?: SortOrder
     signature?: SortOrder
+    business_description?: SortOrder
     is_default?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -25582,6 +25610,7 @@ export namespace Prisma {
     booking_url?: SortOrder
     sender_id?: SortOrder
     signature?: SortOrder
+    business_description?: SortOrder
     is_default?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -27891,6 +27920,7 @@ export namespace Prisma {
     booking_url?: string | null
     sender_id?: string | null
     signature?: string | null
+    business_description?: string | null
     is_default?: boolean
     created_at?: Date | string
     updated_at?: Date | string
@@ -27915,6 +27945,7 @@ export namespace Prisma {
     booking_url?: string | null
     sender_id?: string | null
     signature?: string | null
+    business_description?: string | null
     is_default?: boolean
     created_at?: Date | string
     updated_at?: Date | string
@@ -28235,6 +28266,7 @@ export namespace Prisma {
     booking_url?: StringNullableFilter<"SenderProfile"> | string | null
     sender_id?: StringNullableFilter<"SenderProfile"> | string | null
     signature?: StringNullableFilter<"SenderProfile"> | string | null
+    business_description?: StringNullableFilter<"SenderProfile"> | string | null
     is_default?: BoolFilter<"SenderProfile"> | boolean
     created_at?: DateTimeFilter<"SenderProfile"> | Date | string
     updated_at?: DateTimeFilter<"SenderProfile"> | Date | string
@@ -31056,6 +31088,7 @@ export namespace Prisma {
     booking_url?: string | null
     sender_id?: string | null
     signature?: string | null
+    business_description?: string | null
     is_default?: boolean
     created_at?: Date | string
     updated_at?: Date | string
@@ -31081,6 +31114,7 @@ export namespace Prisma {
     booking_url?: string | null
     sender_id?: string | null
     signature?: string | null
+    business_description?: string | null
     is_default?: boolean
     created_at?: Date | string
     updated_at?: Date | string
@@ -31292,6 +31326,7 @@ export namespace Prisma {
     booking_url?: NullableStringFieldUpdateOperationsInput | string | null
     sender_id?: NullableStringFieldUpdateOperationsInput | string | null
     signature?: NullableStringFieldUpdateOperationsInput | string | null
+    business_description?: NullableStringFieldUpdateOperationsInput | string | null
     is_default?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31317,6 +31352,7 @@ export namespace Prisma {
     booking_url?: NullableStringFieldUpdateOperationsInput | string | null
     sender_id?: NullableStringFieldUpdateOperationsInput | string | null
     signature?: NullableStringFieldUpdateOperationsInput | string | null
+    business_description?: NullableStringFieldUpdateOperationsInput | string | null
     is_default?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31759,6 +31795,7 @@ export namespace Prisma {
     booking_url?: string | null
     sender_id?: string | null
     signature?: string | null
+    business_description?: string | null
     is_default?: boolean
     created_at?: Date | string
     updated_at?: Date | string
@@ -32085,6 +32122,7 @@ export namespace Prisma {
     booking_url?: NullableStringFieldUpdateOperationsInput | string | null
     sender_id?: NullableStringFieldUpdateOperationsInput | string | null
     signature?: NullableStringFieldUpdateOperationsInput | string | null
+    business_description?: NullableStringFieldUpdateOperationsInput | string | null
     is_default?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32109,6 +32147,7 @@ export namespace Prisma {
     booking_url?: NullableStringFieldUpdateOperationsInput | string | null
     sender_id?: NullableStringFieldUpdateOperationsInput | string | null
     signature?: NullableStringFieldUpdateOperationsInput | string | null
+    business_description?: NullableStringFieldUpdateOperationsInput | string | null
     is_default?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32133,6 +32172,7 @@ export namespace Prisma {
     booking_url?: NullableStringFieldUpdateOperationsInput | string | null
     sender_id?: NullableStringFieldUpdateOperationsInput | string | null
     signature?: NullableStringFieldUpdateOperationsInput | string | null
+    business_description?: NullableStringFieldUpdateOperationsInput | string | null
     is_default?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string

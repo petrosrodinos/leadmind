@@ -333,10 +333,31 @@ export class MarketingCampaignsService {
         dto: GenerateCampaignMessageDto,
     ): Promise<{ subject: string | null; content: string }> {
         const campaign = await this.requireOwned(user_uuid, uuid);
+        const senderDescription = await this.resolveSenderBusinessDescription(
+            user_uuid,
+            campaign.sender_profile_uuid,
+        );
         return this.aiService.generate(dto, {
             campaign_name: campaign.name,
             campaign_description: campaign.description ?? undefined,
+            sender_business_description: senderDescription,
         });
+    }
+
+    private async resolveSenderBusinessDescription(
+        user_uuid: string,
+        sender_profile_uuid: string | null,
+    ): Promise<string | undefined> {
+        const profile = sender_profile_uuid
+            ? await this.prisma.senderProfile.findFirst({
+                where: { uuid: sender_profile_uuid, user_uuid },
+                select: { business_description: true },
+            })
+            : await this.prisma.senderProfile.findFirst({
+                where: { user_uuid, is_default: true },
+                select: { business_description: true },
+            });
+        return profile?.business_description ?? undefined;
     }
 
     private async requireOwned(user_uuid: string, uuid: string): Promise<MarketingCampaign> {

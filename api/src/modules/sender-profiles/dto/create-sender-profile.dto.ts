@@ -108,6 +108,16 @@ export class CreateSenderProfileDto {
     @MaxLength(5000)
     signature?: string;
 
+    @ApiPropertyOptional({
+        maxLength: 5000,
+        description:
+            'Free-text description of the company and services offered. Used as context by the AI when generating email/SMS outreach so drafts can reference what the sender provides.',
+    })
+    @IsOptional()
+    @IsString()
+    @MaxLength(5000)
+    business_description?: string;
+
     @ApiPropertyOptional()
     @IsOptional()
     @IsBoolean()
