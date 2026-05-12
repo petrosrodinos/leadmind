@@ -19,15 +19,19 @@ export class LinkedInCompanyAdapter
     constructor(private readonly apifyClient: ApifyClient) { }
 
     buildInput(query_config: LinkedInCompanyQueryConfig): ApifyRunInput {
-        const start_urls = query_config.start_urls
-            .map((entry) => this.toCompanyUrl(entry))
-            .filter((url): url is string => Boolean(url));
-
-        const input: ApifyRunInput = {
-            startUrls: start_urls,
-            proxyConfiguration: query_config.proxy_configuration ?? { useApifyProxy: true },
-        };
-
+        const input: ApifyRunInput = {};
+        if (query_config.company_urls?.length) {
+            const companies = query_config.company_urls
+                .map((entry) => this.toCompanyUrl(entry))
+                .filter((url): url is string => Boolean(url));
+            if (companies.length) input.companies = companies;
+        }
+        if (query_config.searches?.length) {
+            const searches = query_config.searches
+                .map((s) => s?.trim())
+                .filter((s): s is string => Boolean(s));
+            if (searches.length) input.searches = searches;
+        }
         return input;
     }
 
@@ -59,7 +63,7 @@ export class LinkedInCompanyAdapter
 
     /** Convenience: fetch a single company by URL or username. */
     async fetchCompany(url_or_username: string): Promise<NormalizedCompany | null> {
-        const companies = await this.fetchCompanies({ start_urls: [url_or_username] });
+        const companies = await this.fetchCompanies({ company_urls: [url_or_username] });
         return companies[0] ?? null;
     }
 

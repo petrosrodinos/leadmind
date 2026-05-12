@@ -1,17 +1,6 @@
-export interface LinkedInCompanyProxyConfiguration {
-    useApifyProxy?: boolean;
-    apifyProxyGroups?: string[];
-    apifyProxyCountry?: string;
-    proxyUrls?: string[];
-}
-
 export interface LinkedInCompanyQueryConfig {
-    /**
-     * LinkedIn company URLs (https://www.linkedin.com/company/<name>) or
-     * bare usernames (e.g. "anthropic"). Mixed entries are allowed.
-     */
-    start_urls: string[];
-    proxy_configuration?: LinkedInCompanyProxyConfiguration;
+    company_urls?: string[];
+    searches?: string[];
 }
 
 export interface LinkedInCompanyHeadquarters {
