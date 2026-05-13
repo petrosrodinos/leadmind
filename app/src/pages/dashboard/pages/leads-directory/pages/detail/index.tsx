@@ -1,18 +1,21 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Button, Input, Label, ListBox, Pagination, Select, Tabs } from "@heroui/react";
-import { ArrowLeft, Check, Plus, Search } from "lucide-react";
+import { Button, Dropdown, Input, Label, ListBox, Pagination, Select, Tabs } from "@heroui/react";
+import { ArrowLeft, Check, MoreVertical, Plus, Search, Sparkles, Trash2 } from "lucide-react";
 import type { Lead } from "@/features/leads/interfaces/lead.interface";
 import { EnrichmentSourceBadge } from "@/components/ui/enrichment-source-badge";
 import { SourceBadge } from "@/components/ui/source-badge";
 import { ENRICHMENT_SOURCE_OPTIONS, type EnrichmentSource } from "@/features/lead-enrichment/constants/enrichment-sources";
 import { useEnrichLead, useLeadEnrichments } from "@/features/lead-enrichment/hooks/use-lead-enrichment";
-import { useLead } from "@/features/leads/hooks/use-leads";
+import { useLead, useDeleteLead } from "@/features/leads/hooks/use-leads";
 import { useAddLeadToCrm } from "@/features/contacts/hooks/use-contacts";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { Routes } from "@/routes/routes";
-import { EnrichmentActionPopover } from "@/components/ui/enrichment-action-popover";
+import { EnrichmentRunModal } from "@/components/ui/enrichment-action-popover";
 import { EnrichmentSnapshotPanel } from "@/components/ui/enrichment-snapshot-panel";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { useAuthStore } from "@/stores/auth";
+import { RoleTypes } from "@/features/user/interfaces/user.interface";
 import { LeadDirectoryProfileTab } from "./components/lead-directory-profile-tab";
 
 const ENRICHMENT_PAGE_SIZE = 10;
@@ -28,8 +31,20 @@ export default function LeadDirectoryDetailPage() {
   const { data: lead, isLoading, isError } = useLead(uuid);
   const enrich = useEnrichLead();
   const addToCrm = useAddLeadToCrm();
+  const deleteLeadMu = useDeleteLead();
+  const { role } = useAuthStore();
+  const canAdminDelete = role === RoleTypes.ADMIN || role === RoleTypes.SUPER_ADMIN;
   const [activeTab, setActiveTab] = useState<string>("profile");
   const [adopted, setAdopted] = useState(false);
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [enrichModalOpen, setEnrichModalOpen] = useState(false);
+
+  const handleConfirmDelete = async () => {
+    if (!uuid) return;
+    await deleteLeadMu.mutateAsync(uuid);
+    setConfirmDeleteOpen(false);
+    navigate(Routes.dashboard.leads_directory);
+  };
 
   const handleAddToCrm = () => {
     if (!uuid) return;
@@ -77,24 +92,80 @@ export default function LeadDirectoryDetailPage() {
           </div>
         </div>
         {lead && (
-          <div className="flex flex-wrap items-center gap-2 shrink-0">
-            <EnrichmentActionPopover mode="lead" isPending={enrich.isPending} onEnrich={(sources) => enrich.mutate({ uuid: lead.uuid, sources })} />
-            <Button size="sm" variant={adopted ? "tertiary" : "secondary"} isDisabled={adopted || addToCrm.isPending} onPress={handleAddToCrm}>
-              {adopted ? (
-                <>
-                  <Check className="size-3.5" />
-                  Added
-                </>
-              ) : (
-                <>
-                  <Plus className="size-3.5" />
-                  Add to CRM
-                </>
-              )}
-            </Button>
-          </div>
+          <>
+            <Dropdown>
+              <Dropdown.Trigger
+                aria-label="Lead actions"
+                className="inline-flex items-center justify-center size-9 rounded-lg border border-border bg-surface hover:bg-surface-secondary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent shrink-0"
+              >
+                <MoreVertical className="size-4" />
+              </Dropdown.Trigger>
+              <Dropdown.Popover
+                placement="bottom end"
+                className="rounded-xl border border-border bg-surface p-1 shadow-xl outline-none backdrop-blur-none [backdrop-filter:none]"
+              >
+                <Dropdown.Menu
+                  className="min-w-[11rem] bg-transparent p-0 outline-none backdrop-blur-none [backdrop-filter:none]"
+                  onAction={(key) => {
+                    if (key === "enrich") setEnrichModalOpen(true);
+                    if (key === "add-crm") handleAddToCrm();
+                    if (key === "delete") setConfirmDeleteOpen(true);
+                  }}
+                >
+                  <Dropdown.Item id="enrich" textValue="Run enrichment" isDisabled={enrich.isPending}>
+                    <span className="flex items-center gap-2.5 antialiased">
+                      <Sparkles className="size-4 shrink-0 text-violet-500" strokeWidth={2} />
+                      <span className="font-medium text-violet-400">Run enrichment</span>
+                    </span>
+                  </Dropdown.Item>
+                  <Dropdown.Item id="add-crm" textValue={adopted ? "Added to CRM" : "Add to CRM"} isDisabled={adopted || addToCrm.isPending}>
+                    {adopted ? (
+                      <span className="flex items-center gap-2.5 antialiased">
+                        <Check className="size-4 shrink-0 text-emerald-500" strokeWidth={2} />
+                        <span className="font-medium text-emerald-400">Added to CRM</span>
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-2.5 antialiased">
+                        <Plus className="size-4 shrink-0 text-emerald-500" strokeWidth={2} />
+                        <span className="font-medium text-emerald-400">Add to CRM</span>
+                      </span>
+                    )}
+                  </Dropdown.Item>
+                  {canAdminDelete ? (
+                    <Dropdown.Item id="delete" variant="danger" textValue="Delete lead" isDisabled={deleteLeadMu.isPending}>
+                      <span className="flex items-center gap-2.5 antialiased">
+                        <Trash2 className="size-4 shrink-0 text-red-500" strokeWidth={2} />
+                        <span className="font-medium text-red-400">Delete lead</span>
+                      </span>
+                    </Dropdown.Item>
+                  ) : null}
+                </Dropdown.Menu>
+              </Dropdown.Popover>
+            </Dropdown>
+            <EnrichmentRunModal
+              isOpen={enrichModalOpen}
+              onOpenChange={setEnrichModalOpen}
+              mode="lead"
+              isPending={enrich.isPending}
+              onEnrich={(sources) => enrich.mutate({ uuid: lead.uuid, sources })}
+            />
+          </>
         )}
       </div>
+
+      {lead && canAdminDelete ? (
+        <ConfirmDialog
+          isOpen={confirmDeleteOpen}
+          onOpenChange={setConfirmDeleteOpen}
+          title={`Delete lead "${lead.name ?? "this lead"}"?`}
+          description="This permanently removes the public lead record, all enrichment history, and every CRM contact linked to it."
+          confirmLabel="Delete"
+          cancelLabel="Cancel"
+          variant="danger"
+          isPending={deleteLeadMu.isPending}
+          onConfirm={handleConfirmDelete}
+        />
+      ) : null}
 
       <Tabs selectedKey={activeTab} onSelectionChange={(key) => setActiveTab(String(key))}>
         <Tabs.List className="inline-flex gap-1 rounded-lg bg-surface-secondary p-1 border border-border overflow-x-auto max-w-full">
@@ -157,7 +228,7 @@ function EnrichmentTabContent({ leadUuid, lead }: { leadUuid: string; lead: Lead
 
   return (
     <div className="space-y-6">
-      <EnrichmentSnapshotPanel className="max-w-5xl" summary={lead.enrichment_summary} />
+      <EnrichmentSnapshotPanel className="max-w-5xl" summary={lead.enrichment_summary} metadata={lead.enrichment_metadata} />
 
       <div>
         <p className="text-sm font-medium text-foreground mb-3">History</p>

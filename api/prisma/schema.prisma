@@ -97,9 +97,10 @@ model Lead {
   industry           String?
   description        String?
   source_type        SourceType
-  raw_data           Json?
-  enrichment_summary String?    @db.Text
-  created_at         DateTime   @default(now())
+  raw_data             Json?
+  enrichment_summary   String?    @db.Text
+  enrichment_metadata  Json?
+  created_at           DateTime   @default(now())
   updated_at         DateTime   @updatedAt
 
   raw_lead    RawLead?         @relation(fields: [raw_lead_uuid], references: [uuid], onDelete: SetNull)

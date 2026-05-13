@@ -3,12 +3,15 @@ import { Logger } from '@nestjs/common';
 import { Job } from 'bullmq';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { ContactAiService } from '@/modules/contacts/services/contact-ai.service';
-import { DEFAULT_ENRICHMENT_SOURCES } from '@/modules/leads/constants/enrichment.constants';
 import { LeadEnrichmentOrchestrator } from '@/modules/leads/services/lead-enrichment.orchestrator';
 import { AI_PROCESS_QUEUE } from '@/core/queues/queues.constants';
 import { AiProcessJobData, LeadJobData } from './interfaces/workers.interfaces';
 import { ContactJobData } from './interfaces/workers.interfaces';
-import { isLeadJob, resolveContactEnrichmentSources } from './utils/workers.utils';
+import {
+    isLeadJob,
+    resolveContactEnrichmentSources,
+    resolveLeadJobEnrichmentSources,
+} from './utils/workers.utils';
 
 @Processor(AI_PROCESS_QUEUE, { concurrency: 5 })
 export class AiProcessWorker extends WorkerHost {
@@ -36,9 +39,7 @@ export class AiProcessWorker extends WorkerHost {
             this.logger.warn(`Lead ${data.lead_uuid} not found — skipping enrichment`);
             return;
         }
-        const sources = data.enrichment_sources?.length
-            ? data.enrichment_sources
-            : DEFAULT_ENRICHMENT_SOURCES;
+        const sources = resolveLeadJobEnrichmentSources(data);
         try {
             await this.leadEnrichmentOrchestrator.run(data.lead_uuid, sources, {
                 force: data.force_enrichment ?? false,

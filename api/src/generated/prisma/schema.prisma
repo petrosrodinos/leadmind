@@ -83,24 +83,25 @@ model RawLead {
 // Each Lead is created from a RawLead (`raw_lead_uuid`), which is the audit
 // record of what the scraper returned.
 model Lead {
-  id                 Int        @id @default(autoincrement())
-  uuid               String     @unique @default(uuid())
-  raw_lead_uuid      String?    @unique
-  name               String?
-  email              String?
-  phone              String?
-  company            String?
-  website            String?
-  linkedin_url       String?
-  title              String?
-  location           String?
-  industry           String?
-  description        String?
-  source_type        SourceType
-  raw_data           Json?
-  enrichment_summary String?    @db.Text
-  created_at         DateTime   @default(now())
-  updated_at         DateTime   @updatedAt
+  id                  Int        @id @default(autoincrement())
+  uuid                String     @unique @default(uuid())
+  raw_lead_uuid       String?    @unique
+  name                String?
+  email               String?
+  phone               String?
+  company             String?
+  website             String?
+  linkedin_url        String?
+  title               String?
+  location            String?
+  industry            String?
+  description         String?
+  source_type         SourceType
+  raw_data            Json?
+  enrichment_summary  String?    @db.Text
+  enrichment_metadata Json?
+  created_at          DateTime   @default(now())
+  updated_at          DateTime   @updatedAt
 
   raw_lead    RawLead?         @relation(fields: [raw_lead_uuid], references: [uuid], onDelete: SetNull)
   contacts    Contact[]

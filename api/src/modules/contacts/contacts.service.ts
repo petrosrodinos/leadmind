@@ -7,7 +7,6 @@ import {
 import { Queue } from 'bullmq';
 import {
     Contact,
-    EnrichmentSource,
     Interaction,
     InteractionType,
     LeadStatus,
@@ -18,6 +17,7 @@ import {
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { ElasticsearchService } from '@/integrations/elasticsearch/elasticsearch.service';
 import { AI_PROCESS_QUEUE } from '@/core/queues/queues.constants';
+import { resolveContactEnrichmentSources } from '@/modules/leads/utils/enrichment-sources.utils';
 import { AddNoteDto } from './dto/add-note.dto';
 import { AiDraftMessageDto } from './dto/ai-draft-message.dto';
 import { CreateContactDto } from './dto/create-contact.dto';
@@ -446,14 +446,7 @@ export class ContactsService {
         if (!row) {
             throw new NotFoundException(`Contact ${uuid} not found`);
         }
-        let enrichment_sources: EnrichmentSource[];
-        if (dto.sources !== undefined) {
-            enrichment_sources = dto.sources;
-        } else if (row.filter?.enrichment_sources?.length) {
-            enrichment_sources = row.filter.enrichment_sources;
-        } else {
-            enrichment_sources = [];
-        }
+        const enrichment_sources = resolveContactEnrichmentSources(dto.sources, row.filter);
         const job = await this.aiProcessQueue.add(
             `contact-enrich:${uuid}`,
             {

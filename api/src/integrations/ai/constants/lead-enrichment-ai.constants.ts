@@ -6,6 +6,8 @@ export type LeadEnrichmentAiProvider = typeof AiProviders.perplexity | typeof Ai
 
 export const DEFAULT_LEAD_ENRICHMENT_AI_PROVIDER: LeadEnrichmentAiProvider = AiProviders.claude;
 
+export const LEAD_ENRICHMENT_SUMMARY_MODEL = AiModels.openai.gpt4oMini;
+
 export const LEAD_ENRICHMENT_AI_MODEL: Record<LeadEnrichmentAiProvider, string> = {
     [AiProviders.perplexity]: AiModels.perplexity.sonarPro,
     [AiProviders.claude]: AiModels.claude.sonnet,

@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getLead, listLeads, updateLead } from "../services/leads.service";
+import { getLead, listLeads, updateLead, deleteLead } from "../services/leads.service";
 import type { ListLeadsQuery, UpdateLeadPayload } from "../interfaces/lead.interface";
 import { toast } from "@/hooks/use-toast";
 
@@ -30,6 +30,27 @@ export function useUpdateLead() {
         onError: (error: Error) => {
             toast({
                 title: "Could not update lead",
+                description: error.message,
+                duration: 3000,
+                variant: "error",
+            });
+        },
+    });
+}
+
+export function useDeleteLead() {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: (uuid: string) => deleteLead(uuid),
+        onSuccess: (_data, uuid) => {
+            qc.invalidateQueries({ queryKey: leadsQueryKeys.detail(uuid) });
+            qc.invalidateQueries({ queryKey: leadsQueryKeys.all });
+            qc.invalidateQueries({ queryKey: ["contacts"] });
+            toast({ title: "Lead deleted", duration: 1500 });
+        },
+        onError: (error: Error) => {
+            toast({
+                title: "Could not delete lead",
                 description: error.message,
                 duration: 3000,
                 variant: "error",

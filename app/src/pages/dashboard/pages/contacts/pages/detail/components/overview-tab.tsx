@@ -7,7 +7,6 @@ import {
     CalendarClock,
     ExternalLink,
     Globe,
-    MapPin,
     Pencil,
     Tag,
     X,
@@ -69,7 +68,7 @@ function ReadOnlyView({ contact, onEdit }: { contact: Contact; onEdit: () => voi
                     <div className="flex min-w-0 flex-col gap-5 sm:flex-row sm:items-start sm:gap-6">
                         {/* Initials avatar */}
                         <div
-                            className="flex size-[4.5rem] shrink-0 items-center justify-center rounded-2xl bg-linear-to-br from-accent/25 to-accent/5 text-xl font-semibold tracking-tight text-accent-foreground ring-2 ring-accent/25 ring-offset-2 ring-offset-[var(--surface)] shadow-lg"
+                            className="flex size-[4.5rem] shrink-0 items-center justify-center rounded-2xl bg-linear-to-br from-accent/25 to-accent/5 text-xl font-semibold tracking-tight text-accent-foreground ring-2 ring-accent/25 ring-offset-2 ring-offset-[var(--surface)]"
                             aria-hidden
                         >
                             {initialsFromName(contact.name)}
@@ -108,7 +107,7 @@ function ReadOnlyView({ contact, onEdit }: { contact: Contact; onEdit: () => voi
                                     <CalendarClock className="size-3.5 shrink-0 opacity-80" strokeWidth={2} />
                                     Added {formatShortDate(contact.created_at)}
                                 </span>
-                                <span className="hidden sm:inline text-border">·</span>
+                                <span className="hidden sm:inline text-muted/40" aria-hidden>·</span>
                                 <span className="inline-flex items-center gap-1.5">
                                     Updated {formatShortDate(contact.updated_at)}
                                 </span>
@@ -119,13 +118,13 @@ function ReadOnlyView({ contact, onEdit }: { contact: Contact; onEdit: () => voi
                     {/* Right side: links + edit button */}
                     <div className="flex shrink-0 flex-wrap gap-2 sm:justify-end sm:items-start">
                         {websiteHref ? (
-                            <a href={websiteHref} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-xl border border-border/80 bg-surface-secondary/90 px-4 py-2.5 text-sm font-medium text-foreground shadow-sm transition hover:border-accent/40 hover:bg-surface-tertiary/80">
+                            <a href={websiteHref} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-xl border border-border/80 bg-surface-secondary/90 px-4 py-2.5 text-sm font-medium text-foreground transition hover:border-accent/40 hover:bg-surface-tertiary/80">
                                 <Globe className="size-4 text-accent" strokeWidth={2} />
                                 Website
                             </a>
                         ) : null}
                         {linkedinHref ? (
-                            <a href={linkedinHref} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-xl border border-border/80 bg-surface-secondary/90 px-4 py-2.5 text-sm font-medium text-foreground shadow-sm transition hover:border-accent/40 hover:bg-surface-tertiary/80">
+                            <a href={linkedinHref} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-xl border border-border/80 bg-surface-secondary/90 px-4 py-2.5 text-sm font-medium text-foreground transition hover:border-accent/40 hover:bg-surface-tertiary/80">
                                 <ExternalLink className="size-4 text-accent" strokeWidth={2} />
                                 LinkedIn
                             </a>
@@ -139,6 +138,7 @@ function ReadOnlyView({ contact, onEdit }: { contact: Contact; onEdit: () => voi
 
                 <EnrichmentSnapshotPanel
                     summary={contact.lead.enrichment_summary}
+                    metadata={contact.lead.enrichment_metadata}
                     className="relative mt-6"
                     hideWhenEmpty
                 />
@@ -172,33 +172,16 @@ function ReadOnlyView({ contact, onEdit }: { contact: Contact; onEdit: () => voi
                         <ProfileValue value={contact.industry} />
                     </Row>
                     <Row label="Location">
-                        <div className="flex items-start gap-2 min-w-0">
-                            {contact.location?.trim() ? (
-                                <MapPin className="size-4 shrink-0 text-muted mt-0.5" strokeWidth={2} aria-hidden />
-                            ) : null}
-                            <div className="min-w-0 flex-1">
-                                <ProfileValue value={contact.location} />
-                            </div>
-                        </div>
+                        <ProfileValue value={contact.location} />
                     </Row>
                 </SectionCard>
 
-                <SectionCard title="Links & presence" icon={Globe}>
+                <SectionCard title="Links & Presence" icon={Globe}>
                     <Row label="Website">
-                        <div className="flex items-start gap-2">
-                            {websiteHref ? (
-                                <Globe className="size-4 shrink-0 text-muted mt-0.5" strokeWidth={2} aria-hidden />
-                            ) : null}
-                            <ProfileValue value={contact.website} href={websiteHref} />
-                        </div>
+                        <ProfileValue value={contact.website} href={websiteHref} />
                     </Row>
                     <Row label="LinkedIn">
-                        <div className="flex items-start gap-2">
-                            {linkedinHref ? (
-                                <ExternalLink className="size-4 shrink-0 text-muted mt-0.5" strokeWidth={2} aria-hidden />
-                            ) : null}
-                            <ProfileValue value={contact.linkedin_url} href={linkedinHref} />
-                        </div>
+                        <ProfileValue value={contact.linkedin_url} href={linkedinHref} />
                     </Row>
                 </SectionCard>
 
@@ -345,7 +328,7 @@ function EditForm({ contact, onDone }: { contact: Contact; onDone: () => void })
                 <TextArea id="pf-description" rows={4} placeholder="Short summary or notes about this contact…" value={draft.description} onChange={(e) => setField("description", e.target.value)} />
             </div>
             <div>
-                <p className="text-xs font-medium text-muted uppercase tracking-wide">Source</p>
+                <p className="text-xs font-semibold text-muted uppercase tracking-[0.12em]">Source</p>
                 <div className="mt-0.5">
                     <SourceBadge source={contact.lead.source_type} />
                 </div>

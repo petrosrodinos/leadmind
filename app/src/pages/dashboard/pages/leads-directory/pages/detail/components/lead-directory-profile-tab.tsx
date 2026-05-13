@@ -122,7 +122,7 @@ function ReadOnlyView({ lead, isAdmin, onEdit }: { lead: Lead; isAdmin: boolean;
                         )}
                     </div>
                 </div>
-                <EnrichmentSnapshotPanel summary={lead.enrichment_summary} className="relative mt-6" hideWhenEmpty />
+                <EnrichmentSnapshotPanel summary={lead.enrichment_summary} metadata={lead.enrichment_metadata} className="relative mt-6" hideWhenEmpty />
             </div>
 
             <div className="grid gap-4 lg:grid-cols-2">

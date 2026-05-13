@@ -6377,6 +6377,7 @@ export namespace Prisma {
     source_type: number
     raw_data: number
     enrichment_summary: number
+    enrichment_metadata: number
     created_at: number
     updated_at: number
     _all: number
@@ -6448,6 +6449,7 @@ export namespace Prisma {
     source_type?: true
     raw_data?: true
     enrichment_summary?: true
+    enrichment_metadata?: true
     created_at?: true
     updated_at?: true
     _all?: true
@@ -6556,6 +6558,7 @@ export namespace Prisma {
     source_type: $Enums.SourceType
     raw_data: JsonValue | null
     enrichment_summary: string | null
+    enrichment_metadata: JsonValue | null
     created_at: Date
     updated_at: Date
     _count: LeadCountAggregateOutputType | null
@@ -6596,6 +6599,7 @@ export namespace Prisma {
     source_type?: boolean
     raw_data?: boolean
     enrichment_summary?: boolean
+    enrichment_metadata?: boolean
     created_at?: boolean
     updated_at?: boolean
     raw_lead?: boolean | Lead$raw_leadArgs<ExtArgs>
@@ -6621,6 +6625,7 @@ export namespace Prisma {
     source_type?: boolean
     raw_data?: boolean
     enrichment_summary?: boolean
+    enrichment_metadata?: boolean
     created_at?: boolean
     updated_at?: boolean
     raw_lead?: boolean | Lead$raw_leadArgs<ExtArgs>
@@ -6643,6 +6648,7 @@ export namespace Prisma {
     source_type?: boolean
     raw_data?: boolean
     enrichment_summary?: boolean
+    enrichment_metadata?: boolean
     created_at?: boolean
     updated_at?: boolean
     raw_lead?: boolean | Lead$raw_leadArgs<ExtArgs>
@@ -6665,11 +6671,12 @@ export namespace Prisma {
     source_type?: boolean
     raw_data?: boolean
     enrichment_summary?: boolean
+    enrichment_metadata?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type LeadOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "raw_lead_uuid" | "name" | "email" | "phone" | "company" | "website" | "linkedin_url" | "title" | "location" | "industry" | "description" | "source_type" | "raw_data" | "enrichment_summary" | "created_at" | "updated_at", ExtArgs["result"]["lead"]>
+  export type LeadOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "raw_lead_uuid" | "name" | "email" | "phone" | "company" | "website" | "linkedin_url" | "title" | "location" | "industry" | "description" | "source_type" | "raw_data" | "enrichment_summary" | "enrichment_metadata" | "created_at" | "updated_at", ExtArgs["result"]["lead"]>
   export type LeadInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     raw_lead?: boolean | Lead$raw_leadArgs<ExtArgs>
     contacts?: boolean | Lead$contactsArgs<ExtArgs>
@@ -6707,6 +6714,7 @@ export namespace Prisma {
       source_type: $Enums.SourceType
       raw_data: Prisma.JsonValue | null
       enrichment_summary: string | null
+      enrichment_metadata: Prisma.JsonValue | null
       created_at: Date
       updated_at: Date
     }, ExtArgs["result"]["lead"]>
@@ -7151,6 +7159,7 @@ export namespace Prisma {
     readonly source_type: FieldRef<"Lead", 'SourceType'>
     readonly raw_data: FieldRef<"Lead", 'Json'>
     readonly enrichment_summary: FieldRef<"Lead", 'String'>
+    readonly enrichment_metadata: FieldRef<"Lead", 'Json'>
     readonly created_at: FieldRef<"Lead", 'DateTime'>
     readonly updated_at: FieldRef<"Lead", 'DateTime'>
   }
@@ -20445,6 +20454,7 @@ export namespace Prisma {
     source_type: 'source_type',
     raw_data: 'raw_data',
     enrichment_summary: 'enrichment_summary',
+    enrichment_metadata: 'enrichment_metadata',
     created_at: 'created_at',
     updated_at: 'updated_at'
   };
@@ -21277,6 +21287,7 @@ export namespace Prisma {
     source_type?: EnumSourceTypeFilter<"Lead"> | $Enums.SourceType
     raw_data?: JsonNullableFilter<"Lead">
     enrichment_summary?: StringNullableFilter<"Lead"> | string | null
+    enrichment_metadata?: JsonNullableFilter<"Lead">
     created_at?: DateTimeFilter<"Lead"> | Date | string
     updated_at?: DateTimeFilter<"Lead"> | Date | string
     raw_lead?: XOR<RawLeadNullableScalarRelationFilter, RawLeadWhereInput> | null
@@ -21301,6 +21312,7 @@ export namespace Prisma {
     source_type?: SortOrder
     raw_data?: SortOrderInput | SortOrder
     enrichment_summary?: SortOrderInput | SortOrder
+    enrichment_metadata?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     raw_lead?: RawLeadOrderByWithRelationInput
@@ -21328,6 +21340,7 @@ export namespace Prisma {
     source_type?: EnumSourceTypeFilter<"Lead"> | $Enums.SourceType
     raw_data?: JsonNullableFilter<"Lead">
     enrichment_summary?: StringNullableFilter<"Lead"> | string | null
+    enrichment_metadata?: JsonNullableFilter<"Lead">
     created_at?: DateTimeFilter<"Lead"> | Date | string
     updated_at?: DateTimeFilter<"Lead"> | Date | string
     raw_lead?: XOR<RawLeadNullableScalarRelationFilter, RawLeadWhereInput> | null
@@ -21352,6 +21365,7 @@ export namespace Prisma {
     source_type?: SortOrder
     raw_data?: SortOrderInput | SortOrder
     enrichment_summary?: SortOrderInput | SortOrder
+    enrichment_metadata?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     _count?: LeadCountOrderByAggregateInput
@@ -21381,6 +21395,7 @@ export namespace Prisma {
     source_type?: EnumSourceTypeWithAggregatesFilter<"Lead"> | $Enums.SourceType
     raw_data?: JsonNullableWithAggregatesFilter<"Lead">
     enrichment_summary?: StringNullableWithAggregatesFilter<"Lead"> | string | null
+    enrichment_metadata?: JsonNullableWithAggregatesFilter<"Lead">
     created_at?: DateTimeWithAggregatesFilter<"Lead"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"Lead"> | Date | string
   }
@@ -22853,6 +22868,7 @@ export namespace Prisma {
     source_type: $Enums.SourceType
     raw_data?: NullableJsonNullValueInput | InputJsonValue
     enrichment_summary?: string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     raw_lead?: RawLeadCreateNestedOneWithoutLeadInput
@@ -22877,6 +22893,7 @@ export namespace Prisma {
     source_type: $Enums.SourceType
     raw_data?: NullableJsonNullValueInput | InputJsonValue
     enrichment_summary?: string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     contacts?: ContactUncheckedCreateNestedManyWithoutLeadInput
@@ -22898,6 +22915,7 @@ export namespace Prisma {
     source_type?: EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
     raw_data?: NullableJsonNullValueInput | InputJsonValue
     enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     raw_lead?: RawLeadUpdateOneWithoutLeadNestedInput
@@ -22922,6 +22940,7 @@ export namespace Prisma {
     source_type?: EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
     raw_data?: NullableJsonNullValueInput | InputJsonValue
     enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     contacts?: ContactUncheckedUpdateManyWithoutLeadNestedInput
@@ -22945,6 +22964,7 @@ export namespace Prisma {
     source_type: $Enums.SourceType
     raw_data?: NullableJsonNullValueInput | InputJsonValue
     enrichment_summary?: string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -22964,6 +22984,7 @@ export namespace Prisma {
     source_type?: EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
     raw_data?: NullableJsonNullValueInput | InputJsonValue
     enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -22985,6 +23006,7 @@ export namespace Prisma {
     source_type?: EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
     raw_data?: NullableJsonNullValueInput | InputJsonValue
     enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -24817,6 +24839,7 @@ export namespace Prisma {
     source_type?: SortOrder
     raw_data?: SortOrder
     enrichment_summary?: SortOrder
+    enrichment_metadata?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -28678,6 +28701,7 @@ export namespace Prisma {
     source_type: $Enums.SourceType
     raw_data?: NullableJsonNullValueInput | InputJsonValue
     enrichment_summary?: string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     contacts?: ContactCreateNestedManyWithoutLeadInput
@@ -28700,6 +28724,7 @@ export namespace Prisma {
     source_type: $Enums.SourceType
     raw_data?: NullableJsonNullValueInput | InputJsonValue
     enrichment_summary?: string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     contacts?: ContactUncheckedCreateNestedManyWithoutLeadInput
@@ -28785,6 +28810,7 @@ export namespace Prisma {
     source_type?: EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
     raw_data?: NullableJsonNullValueInput | InputJsonValue
     enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     contacts?: ContactUpdateManyWithoutLeadNestedInput
@@ -28807,6 +28833,7 @@ export namespace Prisma {
     source_type?: EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
     raw_data?: NullableJsonNullValueInput | InputJsonValue
     enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     contacts?: ContactUncheckedUpdateManyWithoutLeadNestedInput
@@ -29040,6 +29067,7 @@ export namespace Prisma {
     source_type: $Enums.SourceType
     raw_data?: NullableJsonNullValueInput | InputJsonValue
     enrichment_summary?: string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     raw_lead?: RawLeadCreateNestedOneWithoutLeadInput
@@ -29063,6 +29091,7 @@ export namespace Prisma {
     source_type: $Enums.SourceType
     raw_data?: NullableJsonNullValueInput | InputJsonValue
     enrichment_summary?: string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     contacts?: ContactUncheckedCreateNestedManyWithoutLeadInput
@@ -29099,6 +29128,7 @@ export namespace Prisma {
     source_type?: EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
     raw_data?: NullableJsonNullValueInput | InputJsonValue
     enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     raw_lead?: RawLeadUpdateOneWithoutLeadNestedInput
@@ -29122,6 +29152,7 @@ export namespace Prisma {
     source_type?: EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
     raw_data?: NullableJsonNullValueInput | InputJsonValue
     enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     contacts?: ContactUncheckedUpdateManyWithoutLeadNestedInput
@@ -29180,6 +29211,7 @@ export namespace Prisma {
     source_type: $Enums.SourceType
     raw_data?: NullableJsonNullValueInput | InputJsonValue
     enrichment_summary?: string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     raw_lead?: RawLeadCreateNestedOneWithoutLeadInput
@@ -29203,6 +29235,7 @@ export namespace Prisma {
     source_type: $Enums.SourceType
     raw_data?: NullableJsonNullValueInput | InputJsonValue
     enrichment_summary?: string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     enrichments?: LeadEnrichmentUncheckedCreateNestedManyWithoutLeadInput
@@ -29475,6 +29508,7 @@ export namespace Prisma {
     source_type?: EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
     raw_data?: NullableJsonNullValueInput | InputJsonValue
     enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     raw_lead?: RawLeadUpdateOneWithoutLeadNestedInput
@@ -29498,6 +29532,7 @@ export namespace Prisma {
     source_type?: EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
     raw_data?: NullableJsonNullValueInput | InputJsonValue
     enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     enrichments?: LeadEnrichmentUncheckedUpdateManyWithoutLeadNestedInput

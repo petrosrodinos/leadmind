@@ -38,6 +38,10 @@ export class AiConfig {
         return DEFAULT_LEAD_ENRICHMENT_AI_PROVIDER;
     }
 
+    isOpenAiConfigured(): boolean {
+        return Boolean(this.configService.get<string>('OPENAI_API_KEY')?.trim());
+    }
+
     isPerplexityConfigured(): boolean {
         return Boolean(this.configService.get<string>('PERPLEXITY_API_KEY')?.trim());
     }

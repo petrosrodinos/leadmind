@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 
 interface EnrichmentSnapshotPanelProps {
   summary: string | null | undefined;
+  metadata?: unknown;
   emptyLabel?: string;
   className?: string;
   action?: ReactNode;
@@ -11,6 +12,10 @@ interface EnrichmentSnapshotPanelProps {
   variant?: "snapshot" | "scrollOnly";
   scrollClassName?: string;
   textClassName?: string;
+}
+
+function hasMetadataToShow(value: unknown): value is Record<string, unknown> {
+  return value != null && typeof value === "object" && !Array.isArray(value) && Object.keys(value as object).length > 0;
 }
 
 function EnrichmentSummaryInner({
@@ -35,8 +40,26 @@ function EnrichmentSummaryInner({
   );
 }
 
+function EnrichmentMetadataBlock({ metadata }: { metadata: Record<string, unknown> }) {
+  let formatted: string;
+  try {
+    formatted = JSON.stringify(metadata, null, 2);
+  } catch {
+    formatted = String(metadata);
+  }
+  return (
+    <div className="mt-3 border-t border-accent/15 pt-3">
+      <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted">Enrichment metadata</p>
+      <pre className="max-h-64 overflow-auto rounded-md bg-background/80 p-3 text-xs leading-relaxed text-foreground/90 border border-border [scrollbar-gutter:stable] whitespace-pre-wrap break-words">
+        {formatted}
+      </pre>
+    </div>
+  );
+}
+
 export function EnrichmentSnapshotPanel({
   summary,
+  metadata,
   emptyLabel = "No enrichment summary yet.",
   className,
   action,
@@ -45,11 +68,14 @@ export function EnrichmentSnapshotPanel({
   scrollClassName,
   textClassName,
 }: EnrichmentSnapshotPanelProps) {
+  const metaObj = hasMetadataToShow(metadata) ? metadata : null;
+  const hasSummary = Boolean(summary?.trim());
+
   if (variant === "scrollOnly") {
     return <EnrichmentSummaryInner summary={summary} emptyLabel={emptyLabel} scrollClassName={scrollClassName} textClassName={textClassName} />;
   }
 
-  if (hideWhenEmpty && !summary?.trim()) {
+  if (hideWhenEmpty && !hasSummary && !metaObj) {
     return null;
   }
 
@@ -67,6 +93,7 @@ export function EnrichmentSnapshotPanel({
           scrollClassName={scrollClassName}
           textClassName={textClassName ?? "text-foreground/90"}
         />
+        {metaObj ? <EnrichmentMetadataBlock metadata={metaObj} /> : null}
       </div>
     </div>
   );

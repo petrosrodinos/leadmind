@@ -20,6 +20,15 @@ export const updateLead = async (uuid: string, payload: UpdateLeadPayload): Prom
     }
 };
 
+export const deleteLead = async (uuid: string): Promise<{ uuid: string }> => {
+    try {
+        const response = await axiosInstance.delete(ApiRoutes.leads.remove(uuid));
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error?.response?.data?.message || "Failed to delete lead.");
+    }
+};
+
 export const getLead = async (uuid: string): Promise<Lead> => {
     try {
         const response = await axiosInstance.get(ApiRoutes.leads.get(uuid));

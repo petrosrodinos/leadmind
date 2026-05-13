@@ -3,18 +3,20 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Queue } from 'bullmq';
 import { EnrichmentSource, Prisma, Lead } from '@/generated/prisma';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
+import { ElasticsearchService } from '@/integrations/elasticsearch/elasticsearch.service';
 import { AI_PROCESS_QUEUE } from '@/core/queues/queues.constants';
-import { DEFAULT_ENRICHMENT_SOURCES } from './constants/enrichment.constants';
 import { EnrichLeadDto } from './dto/enrich-lead.dto';
 import { ListLeadEnrichmentsDto } from './dto/list-lead-enrichments.dto';
 import { ListLeadsDto } from './dto/list-leads.dto';
 import { UpdateLeadDto } from './dto/update-lead.dto';
+import { resolveLeadEnrichmentSources } from './utils/enrichment-sources.utils';
 
 @Injectable()
 export class LeadsService {
     constructor(
         private readonly prisma: PrismaService,
         @InjectQueue(AI_PROCESS_QUEUE) private readonly aiProcessQueue: Queue,
+        private readonly elasticsearchService: ElasticsearchService,
     ) { }
 
     async findAll(query: ListLeadsDto): Promise<{
@@ -75,6 +77,18 @@ export class LeadsService {
         });
     }
 
+    async remove(uuid: string): Promise<{ uuid: string }> {
+        await this.findOne(uuid);
+        const contacts = await this.prisma.contact.findMany({
+            where: { lead_uuid: uuid },
+            select: { uuid: true },
+        });
+        await this.prisma.lead.delete({ where: { uuid } });
+        await this.elasticsearchService.deleteLead(uuid);
+        await Promise.all(contacts.map((c) => this.elasticsearchService.deleteContact(c.uuid)));
+        return { uuid };
+    }
+
     async findEnrichmentsForLead(leadUuid: string, query: ListLeadEnrichmentsDto) {
         await this.findOne(leadUuid);
         const page = query.page ?? 1;
@@ -130,8 +144,7 @@ export class LeadsService {
 
     async triggerEnrich(uuid: string, dto: EnrichLeadDto): Promise<{ jobId: string }> {
         await this.findOne(uuid);
-        const enrichment_sources: EnrichmentSource[] =
-            dto.sources?.length ? dto.sources : DEFAULT_ENRICHMENT_SOURCES;
+        const enrichment_sources: EnrichmentSource[] = resolveLeadEnrichmentSources(dto.sources);
         const job = await this.aiProcessQueue.add(
             `lead-enrich:${uuid}`,
             {

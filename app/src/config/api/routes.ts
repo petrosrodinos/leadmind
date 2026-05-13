@@ -24,6 +24,7 @@ export const ApiRoutes = {
         get: (uuid: string) => `/leads/${uuid}`,
         enrichments: (uuid: string) => `/leads/${uuid}/enrichments`,
         update: (uuid: string) => `/leads/${uuid}`,
+        remove: (uuid: string) => `/leads/${uuid}`,
         enrich: (uuid: string) => `/leads/${uuid}/enrich`,
     },
     contacts: {

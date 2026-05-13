@@ -24,6 +24,7 @@ export interface Lead {
     description: string | null;
     source_type: SourceType;
     enrichment_summary: string | null;
+    enrichment_metadata?: unknown;
     raw_data: Record<string, unknown> | null;
     created_at: string;
     updated_at: string;

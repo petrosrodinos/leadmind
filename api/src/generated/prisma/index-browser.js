@@ -176,6 +176,7 @@ exports.Prisma.LeadScalarFieldEnum = {
   source_type: 'source_type',
   raw_data: 'raw_data',
   enrichment_summary: 'enrichment_summary',
+  enrichment_metadata: 'enrichment_metadata',
   created_at: 'created_at',
   updated_at: 'updated_at'
 };

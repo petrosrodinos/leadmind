@@ -8,6 +8,7 @@ import { LeadsController } from './leads.controller';
 import { LeadsService } from './leads.service';
 import { LeadAiService } from './utils/lead-ai.service';
 import { LeadEnrichmentOrchestrator } from './services/lead-enrichment.orchestrator';
+import { LeadEnrichmentSummaryService } from './services/lead-enrichment-summary.service';
 
 @Module({
     imports: [
@@ -17,7 +18,7 @@ import { LeadEnrichmentOrchestrator } from './services/lead-enrichment.orchestra
         BullModule.registerQueue({ name: AI_PROCESS_QUEUE }),
     ],
     controllers: [LeadsController],
-    providers: [LeadsService, LeadAiService, LeadEnrichmentOrchestrator],
-    exports: [LeadsService, LeadAiService, LeadEnrichmentOrchestrator],
+    providers: [LeadsService, LeadAiService, LeadEnrichmentOrchestrator, LeadEnrichmentSummaryService],
+    exports: [LeadsService, LeadAiService, LeadEnrichmentOrchestrator, LeadEnrichmentSummaryService],
 })
 export class LeadsModule { }

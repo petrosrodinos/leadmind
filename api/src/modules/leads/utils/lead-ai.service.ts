@@ -1,19 +1,39 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { EnrichmentSource, Lead } from '@/generated/prisma';
+import { EnrichmentSource, Lead, Prisma } from '@/generated/prisma';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { AiService } from '@/integrations/ai/services/ai.service';
 import { AiConfig } from '@/integrations/ai/utils/ai.config';
 import { AiProviders } from '@/integrations/ai/interfaces/ai.interface';
 import { WebsiteContentCrawlerAdapter } from '@/integrations/apify/website-content-crawler/website-content-crawler.adapter';
 import { plainTextFromCrawledPage } from '@/integrations/apify/website-content-crawler/crawl-page-text.utils';
-import { leadEnrichmentModelForProvider } from '../constants/lead-enrichment-ai.constants';
 import {
+    LEAD_ENRICHMENT_SUMMARY_MODEL,
+    leadEnrichmentModelForProvider,
+} from '../constants/lead-enrichment-ai.constants';
+import {
+    buildGoogleEnrichmentSummaryUserPrompt,
     buildLeadAiResearchPrompt,
-    CLAUDE_LEAD_SYSTEM_PROMPT,
+    buildLinkedInEnrichmentSummaryUserPrompt,
+    buildWebsiteEnrichmentSummaryUserPrompt,
+    GOOGLE_ENRICHMENT_SUMMARY_SYSTEM_PROMPT,
+    LEAD_ENRICHMENT_SYSTEM_PROMPT,
+    LINKEDIN_ENRICHMENT_SUMMARY_SYSTEM_PROMPT,
+    WEBSITE_ENRICHMENT_SUMMARY_SYSTEM_PROMPT,
     leadHasAiResearchSeed,
-    PERPLEXITY_LEAD_SYSTEM_PROMPT,
 } from '../constants/ai-config';
-import { recomputeLeadEnrichmentSummary } from './lead-enrichment-summary.utils';
+import {
+    buildGoogleDeterministicSummary,
+    buildLinkedInDeterministicSummary,
+    buildWebsiteDeterministicSummary,
+    extractLinkedInDataFromEnrichmentPayload,
+    googleSearchPayloadToContext,
+    linkedInPlainForAiContext,
+    normalizeWebsiteUrl,
+    summarizeLinkedInPlain,
+    websiteEnrichmentForAiContext,
+} from './enrichment-data.utils';
+import { LeadEnrichmentSourceResult } from '../interfaces/lead-enrichment-execution.interface';
+import { LeadEnrichmentSummaryService } from '../services/lead-enrichment-summary.service';
 
 @Injectable()
 export class LeadAiService {
@@ -24,6 +44,7 @@ export class LeadAiService {
         private readonly aiService: AiService,
         private readonly aiConfig: AiConfig,
         private readonly websiteCrawler: WebsiteContentCrawlerAdapter,
+        private readonly summaryService: LeadEnrichmentSummaryService,
     ) {}
 
     async enrichLead(lead: Lead): Promise<string | null> {
@@ -32,7 +53,11 @@ export class LeadAiService {
 
     async enrichWithAiFromWebsite(
         lead: Lead,
-        opts: { force?: boolean; prefetchedPageText?: string | null },
+        opts: {
+            force?: boolean;
+            prefetchedPageText?: string | null;
+            linkedinProfileExcerpt?: string | null;
+        },
     ): Promise<string | null> {
         if (!opts.force) {
             const existing = await this.prisma.leadEnrichment.findFirst({
@@ -42,7 +67,205 @@ export class LeadAiService {
                 return existing.summary ?? null;
             }
         }
+        const result = await this.buildAiEnrichmentResult(lead, opts);
+        if (!result) {
+            return null;
+        }
+        await this.prisma.leadEnrichment.create({
+            data: {
+                lead_uuid: lead.uuid,
+                source: result.source,
+                source_url: result.source_url,
+                summary: result.summary,
+                payload: result.payload,
+                cost_usd: result.cost_usd ?? null,
+                input_tokens: result.input_tokens ?? null,
+                output_tokens: result.output_tokens ?? null,
+                metadata: {
+                    status: 'success',
+                    ...(result.metadata && typeof result.metadata === 'object' && !Array.isArray(result.metadata)
+                        ? result.metadata
+                        : {}),
+                } as Prisma.InputJsonValue,
+            },
+        });
+        await this.summaryService.regenerate(lead.uuid);
+        return result.summary;
+    }
 
+    async summarizeLinkedInEnrichment(
+        plain: Record<string, unknown>,
+        subtype: 'profile' | 'company',
+    ): Promise<{
+        summary: string;
+        cost_usd: number | null;
+        input_tokens: number | null;
+        output_tokens: number | null;
+    }> {
+        const fallback =
+            buildLinkedInDeterministicSummary(plain, subtype).trim() ||
+            summarizeLinkedInPlain(plain).trim() ||
+            '(LinkedIn)';
+        if (!this.aiConfig.isOpenAiConfigured()) {
+            return {
+                summary: fallback,
+                cost_usd: null,
+                input_tokens: null,
+                output_tokens: null,
+            };
+        }
+        try {
+            const context = linkedInPlainForAiContext(plain, subtype);
+            const { response, usage } = await this.aiService.generateText({
+                provider: AiProviders.openai,
+                model: LEAD_ENRICHMENT_SUMMARY_MODEL,
+                prompt: buildLinkedInEnrichmentSummaryUserPrompt(context),
+                system: LINKEDIN_ENRICHMENT_SUMMARY_SYSTEM_PROMPT,
+                maxTokens: 768,
+            });
+            const t = response?.trim();
+            if (t) {
+                return {
+                    summary: t,
+                    cost_usd: usage?.totalCost ?? null,
+                    input_tokens: usage?.inputTokens ?? null,
+                    output_tokens: usage?.outputTokens ?? null,
+                };
+            }
+        } catch (error) {
+            this.logger.warn(
+                `LinkedIn enrichment summary failed: ${error instanceof Error ? error.message : error}`,
+            );
+        }
+        return {
+            summary: fallback,
+            cost_usd: null,
+            input_tokens: null,
+            output_tokens: null,
+        };
+    }
+
+    async summarizeWebsiteEnrichment(input: {
+        url: string;
+        title: string | null;
+        textSample: string | null;
+        markdownSample: string | null;
+    }): Promise<{
+        summary: string;
+        cost_usd: number | null;
+        input_tokens: number | null;
+        output_tokens: number | null;
+    }> {
+        const fallback =
+            buildWebsiteDeterministicSummary({
+                url: input.url,
+                title: input.title,
+                textSample: input.textSample,
+                markdownSample: input.markdownSample,
+            }).trim() || input.url.trim();
+        if (!this.aiConfig.isOpenAiConfigured()) {
+            return {
+                summary: fallback,
+                cost_usd: null,
+                input_tokens: null,
+                output_tokens: null,
+            };
+        }
+        try {
+            const context = websiteEnrichmentForAiContext({
+                url: input.url,
+                title: input.title,
+                textSample: input.textSample,
+                markdownSample: input.markdownSample,
+            });
+            const { response, usage } = await this.aiService.generateText({
+                provider: AiProviders.openai,
+                model: LEAD_ENRICHMENT_SUMMARY_MODEL,
+                prompt: buildWebsiteEnrichmentSummaryUserPrompt(context),
+                system: WEBSITE_ENRICHMENT_SUMMARY_SYSTEM_PROMPT,
+                maxTokens: 768,
+            });
+            const t = response?.trim();
+            if (t) {
+                return {
+                    summary: t,
+                    cost_usd: usage?.totalCost ?? null,
+                    input_tokens: usage?.inputTokens ?? null,
+                    output_tokens: usage?.outputTokens ?? null,
+                };
+            }
+        } catch (error) {
+            this.logger.warn(
+                `Website enrichment summary failed: ${error instanceof Error ? error.message : error}`,
+            );
+        }
+        return {
+            summary: fallback,
+            cost_usd: null,
+            input_tokens: null,
+            output_tokens: null,
+        };
+    }
+
+    async summarizeGoogleSearchEnrichment(input: {
+        query: string;
+        results: { title?: string; url?: string; snippet?: string }[];
+    }): Promise<{
+        summary: string;
+        cost_usd: number | null;
+        input_tokens: number | null;
+        output_tokens: number | null;
+    }> {
+        const fallback =
+            buildGoogleDeterministicSummary(input.query, input.results).trim() || '(Google Search)';
+        if (!this.aiConfig.isOpenAiConfigured()) {
+            return {
+                summary: fallback,
+                cost_usd: null,
+                input_tokens: null,
+                output_tokens: null,
+            };
+        }
+        try {
+            const resultsContext =
+                googleSearchPayloadToContext({ results: input.results }) ?? '';
+            const { response, usage } = await this.aiService.generateText({
+                provider: AiProviders.openai,
+                model: LEAD_ENRICHMENT_SUMMARY_MODEL,
+                prompt: buildGoogleEnrichmentSummaryUserPrompt(input.query, resultsContext),
+                system: GOOGLE_ENRICHMENT_SUMMARY_SYSTEM_PROMPT,
+                maxTokens: 768,
+            });
+            const t = response?.trim();
+            if (t) {
+                return {
+                    summary: t,
+                    cost_usd: usage?.totalCost ?? null,
+                    input_tokens: usage?.inputTokens ?? null,
+                    output_tokens: usage?.outputTokens ?? null,
+                };
+            }
+        } catch (error) {
+            this.logger.warn(
+                `Google search enrichment summary failed: ${error instanceof Error ? error.message : error}`,
+            );
+        }
+        return {
+            summary: fallback,
+            cost_usd: null,
+            input_tokens: null,
+            output_tokens: null,
+        };
+    }
+
+    async buildAiEnrichmentResult(
+        lead: Lead,
+        opts: {
+            force?: boolean;
+            prefetchedPageText?: string | null;
+            linkedinProfileExcerpt?: string | null;
+        },
+    ): Promise<LeadEnrichmentSourceResult | null> {
         const provider = this.aiConfig.resolveLeadEnrichmentAiProvider();
         if (!this.aiConfig.isLeadEnrichmentAiConfigured(provider)) {
             const keyHint =
@@ -51,80 +274,129 @@ export class LeadAiService {
             return null;
         }
 
-        if (!leadHasAiResearchSeed(lead)) {
+        let websiteExcerpt = await this.resolveWebsiteExcerpt(lead, opts);
+
+        const linkedinExcerpt = await this.resolveLinkedinExcerpt(lead.uuid, opts);
+
+        const googleExcerpt = await this.resolveGoogleSearchExcerpt(lead.uuid);
+
+        if (
+            !leadHasAiResearchSeed(lead) &&
+            !websiteExcerpt?.trim() &&
+            !linkedinExcerpt?.trim() &&
+            !googleExcerpt?.trim()
+        ) {
             this.logger.warn(
-                `Lead ${lead.uuid}: insufficient identity fields for AI research (need name, company, email, linkedin, or website)`,
+                `Lead ${lead.uuid}: insufficient identity fields for AI research (need name, company, email, linkedin, website, or stored enrichment payloads)`,
             );
             return null;
         }
 
-        let websiteExcerpt: string | null = null;
-        if (opts.prefetchedPageText != null && opts.prefetchedPageText !== undefined) {
-            websiteExcerpt = opts.prefetchedPageText;
-        } else if (lead.website?.trim()) {
-            const w = lead.website.trim();
-            const url = w.startsWith('http') ? w : `https://${w}`;
-            websiteExcerpt = await this.getPageTextFromApifyCrawl(url);
-        }
-
-        const prompt = buildLeadAiResearchPrompt(lead, websiteExcerpt, provider);
+        const prompt = buildLeadAiResearchPrompt(
+            lead,
+            websiteExcerpt,
+            linkedinExcerpt,
+            googleExcerpt,
+        );
         const model = leadEnrichmentModelForProvider(provider);
-        const system =
-            provider === AiProviders.claude ? CLAUDE_LEAD_SYSTEM_PROMPT : PERPLEXITY_LEAD_SYSTEM_PROMPT;
 
         const { response, usage } = await this.aiService.generateText({
             provider,
             model,
             prompt,
-            system,
+            system: LEAD_ENRICHMENT_SYSTEM_PROMPT,
             maxTokens: 1_024,
         });
 
-        const fallbackSource =
-            provider === AiProviders.claude ? 'claude:lead-research' : 'perplexity:lead-research';
-        const sourceUrl =
-            lead.linkedin_url?.trim() ||
-            (lead.website?.trim()
-                ? lead.website.trim().startsWith('http')
-                    ? lead.website.trim()
-                    : `https://${lead.website.trim()}`
-                : null) ||
-            fallbackSource;
-
-        await this.prisma.$transaction(async (tx) => {
-            await tx.leadEnrichment.create({
-                data: {
-                    lead_uuid: lead.uuid,
-                    source: EnrichmentSource.AI,
-                    source_url: sourceUrl,
-                    summary: response,
-                    payload: {
-                        provider,
-                        model,
-                        generated_at: new Date().toISOString(),
-                        website_context_used: Boolean(websiteExcerpt?.trim()),
-                    },
-                    cost_usd: usage?.totalCost ?? null,
-                    input_tokens: usage?.inputTokens ?? null,
-                    output_tokens: usage?.outputTokens ?? null,
-                    metadata: {
-                        model,
-                        provider,
-                        total_tokens: usage?.totalTokens,
-                    },
-                },
-            });
-            await recomputeLeadEnrichmentSummary(tx, lead.uuid);
-        });
+        const sourceUrl = lead.website?.trim()
+            ? normalizeWebsiteUrl(lead.website.trim())
+            : null;
 
         this.logger.log(`Lead ${lead.uuid}: ${provider} enrichment (${usage?.totalTokens ?? '?'} tokens)`);
 
-        return response;
+        return {
+            source: EnrichmentSource.AI,
+            source_url: sourceUrl,
+            summary: response,
+            payload: {
+                provider,
+                model,
+                generated_at: new Date().toISOString(),
+                website_context_used: Boolean(websiteExcerpt?.trim()),
+                linkedin_context_used: Boolean(linkedinExcerpt?.trim()),
+                google_search_context_used: Boolean(googleExcerpt?.trim()),
+            },
+            metadata: {
+                model,
+                provider,
+                total_tokens: usage?.totalTokens,
+            },
+            cost_usd: usage?.totalCost ?? null,
+            input_tokens: usage?.inputTokens ?? null,
+            output_tokens: usage?.outputTokens ?? null,
+        };
     }
 
     async fetchWebsiteText(url: string): Promise<string | null> {
         const normalized = url.startsWith('http') ? url : `https://${url}`;
         return this.getPageTextFromApifyCrawl(normalized);
+    }
+
+    private async resolveWebsiteExcerpt(
+        lead: Lead,
+        opts: { prefetchedPageText?: string | null },
+    ): Promise<string | null> {
+        if (opts.prefetchedPageText !== undefined) {
+            const t = opts.prefetchedPageText?.trim();
+            return t && t.length > 0 ? t : null;
+        }
+        const row = await this.prisma.leadEnrichment.findFirst({
+            where: { lead_uuid: lead.uuid, source: EnrichmentSource.WEBSITE },
+            orderBy: { created_at: 'desc' },
+        });
+        if (row?.payload && typeof row.payload === 'object' && !Array.isArray(row.payload)) {
+            const p = row.payload as Record<string, unknown>;
+            const text = typeof p.text_sample === 'string' ? p.text_sample : '';
+            const md = typeof p.markdown_sample === 'string' ? p.markdown_sample : '';
+            const pick = text.trim().length > 0 ? text : md;
+            if (pick.trim().length > 0) {
+                return pick.trim();
+            }
+        }
+        if (lead.website?.trim()) {
+            const w = lead.website.trim();
+            const url = w.startsWith('http') ? w : `https://${w}`;
+            return this.getPageTextFromApifyCrawl(url);
+        }
+        return null;
+    }
+
+    private async resolveGoogleSearchExcerpt(leadUuid: string): Promise<string | null> {
+        const row = await this.prisma.leadEnrichment.findFirst({
+            where: { lead_uuid: leadUuid, source: EnrichmentSource.GOOGLE_SEARCH },
+            orderBy: { created_at: 'desc' },
+        });
+        return googleSearchPayloadToContext(row?.payload ?? null);
+    }
+
+    private async resolveLinkedinExcerpt(
+        leadUuid: string,
+        opts: { linkedinProfileExcerpt?: string | null },
+    ): Promise<string | null> {
+        if (opts.linkedinProfileExcerpt?.trim()) {
+            return opts.linkedinProfileExcerpt.trim();
+        }
+        const row = await this.prisma.leadEnrichment.findFirst({
+            where: { lead_uuid: leadUuid, source: EnrichmentSource.LINKEDIN },
+            orderBy: { created_at: 'desc' },
+        });
+        const plain = extractLinkedInDataFromEnrichmentPayload(row?.payload);
+        if (!plain) {
+            return null;
+        }
+        const meta = row?.metadata as Record<string, unknown> | null;
+        const subtype = meta?.subtype === 'company' ? 'company' : 'profile';
+        return linkedInPlainForAiContext(plain, subtype);
     }
 
     private async getPageTextFromApifyCrawl(url: string): Promise<string | null> {

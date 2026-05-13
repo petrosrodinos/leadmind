@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import {
     ApiBearerAuth,
     ApiOperation,
@@ -49,12 +49,22 @@ export class LeadsController {
 
     @Put(':uuid')
     @UseGuards(RolesGuard)
-    @Roles(AuthRoles.ADMIN)
+    @Roles(AuthRoles.ADMIN, AuthRoles.SUPER_ADMIN)
     @ApiOperation({ summary: 'Update a lead (admin only)' })
     @ApiResponse({ status: 200, description: 'Lead updated' })
     @ApiResponse({ status: 404, description: 'Lead not found' })
     update(@Param('uuid') uuid: string, @Body() dto: UpdateLeadDto) {
         return this.leadsService.update(uuid, dto);
+    }
+
+    @Delete(':uuid')
+    @UseGuards(RolesGuard)
+    @Roles(AuthRoles.ADMIN, AuthRoles.SUPER_ADMIN)
+    @ApiOperation({ summary: 'Delete a lead (admin only)' })
+    @ApiResponse({ status: 200, description: 'Lead deleted' })
+    @ApiResponse({ status: 404, description: 'Lead not found' })
+    remove(@Param('uuid') uuid: string) {
+        return this.leadsService.remove(uuid);
     }
 
     @Get(':uuid')
