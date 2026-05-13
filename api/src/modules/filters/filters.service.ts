@@ -120,7 +120,7 @@ export class FiltersService {
     }> {
         const filter = await this.findOne(user_uuid, uuid);
 
-        if (filter.source_type === 'MANUAL') {
+        if (filter.source_type === SourceType.MANUAL) {
             throw new BadRequestException('MANUAL filters cannot be run');
         }
 

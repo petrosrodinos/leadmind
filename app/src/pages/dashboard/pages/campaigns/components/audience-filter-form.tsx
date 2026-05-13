@@ -174,6 +174,18 @@ export function AudienceFilterForm({
 
             <div className="sm:col-span-2">
                 <SwitchRow
+                    label="Never contacted"
+                    description="Only include contacts who have never been sent an email or SMS campaign."
+                    checked={!!value.never_contacted}
+                    onChange={(checked) =>
+                        onChange({ never_contacted: checked || undefined })
+                    }
+                    disabled={disabled}
+                />
+            </div>
+
+            <div className="sm:col-span-2">
+                <SwitchRow
                     label="Include unsubscribed"
                     description="Off by default — keeps unsubscribed contacts safe."
                     checked={!!value.include_unsubscribed}

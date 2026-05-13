@@ -93,4 +93,10 @@ export class CampaignFiltersDto {
     @Type(() => Boolean)
     @IsBoolean()
     include_unsubscribed?: boolean;
+
+    @ApiPropertyOptional({ description: 'Only contacts who have never been sent an email or SMS campaign message' })
+    @IsOptional()
+    @Type(() => Boolean)
+    @IsBoolean()
+    never_contacted?: boolean;
 }

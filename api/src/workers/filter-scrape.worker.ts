@@ -101,7 +101,7 @@ export class FilterScrapeWorker extends WorkerHost {
         const new_contact_uuids: string[] = [];
 
         for (const normalized of normalized_leads) {
-            if (!normalized.email && !normalized.linkedin_url) continue;
+            if (!normalized.email && !normalized.phone) continue;
 
             const raw_lead = await this.prisma.rawLead.create({
                 data: {

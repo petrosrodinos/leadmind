@@ -41,6 +41,7 @@ export interface CampaignFilters {
     last_interaction_before?: string;
     exclude_uuids?: string[];
     include_unsubscribed?: boolean;
+    never_contacted?: boolean;
 }
 
 export interface MarketingCampaign {

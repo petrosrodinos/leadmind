@@ -17,17 +17,17 @@ export type WebhookEvent =
     | { kind: 'complained'; provider_message_id: string; metadata?: any };
 
 const STATUS_RANK: Record<MsgStatus, number> = {
-    PENDING: 0,
-    QUEUED: 1,
-    SENT: 2,
-    FAILED: 3,
-    BOUNCED: 3,
-    UNSUBSCRIBED: 3,
-    SKIPPED: 3,
-    DELIVERED: 4,
-    OPENED: 5,
-    CLICKED: 6,
-    REPLIED: 7,
+    [MsgStatus.PENDING]: 0,
+    [MsgStatus.QUEUED]: 1,
+    [MsgStatus.SENT]: 2,
+    [MsgStatus.FAILED]: 3,
+    [MsgStatus.BOUNCED]: 3,
+    [MsgStatus.UNSUBSCRIBED]: 3,
+    [MsgStatus.SKIPPED]: 3,
+    [MsgStatus.DELIVERED]: 4,
+    [MsgStatus.OPENED]: 5,
+    [MsgStatus.CLICKED]: 6,
+    [MsgStatus.REPLIED]: 7,
 };
 
 @Injectable()

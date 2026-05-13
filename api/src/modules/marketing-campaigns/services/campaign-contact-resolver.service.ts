@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@/generated/prisma';
+import { CampaignContactStatus, Channel, Prisma } from '@/generated/prisma';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { ContactsService } from '@/modules/contacts/contacts.service';
 import { CampaignFiltersDto } from '../dto/campaign-filters.dto';
@@ -38,6 +38,26 @@ export class CampaignContactResolverService {
         }
         if (!filters.include_unsubscribed) {
             and.push({ unsubscribed_at: null });
+        }
+        if (filters.never_contacted) {
+            and.push({
+                campaign_contacts: {
+                    none: {
+                        channel: { in: [Channel.EMAIL, Channel.SMS] },
+                        status: {
+                            in: [
+                                CampaignContactStatus.SENT,
+                                CampaignContactStatus.DELIVERED,
+                                CampaignContactStatus.OPENED,
+                                CampaignContactStatus.CLICKED,
+                                CampaignContactStatus.REPLIED,
+                                CampaignContactStatus.BOUNCED,
+                                CampaignContactStatus.UNSUBSCRIBED,
+                            ],
+                        },
+                    },
+                },
+            });
         }
 
         if (and.length > 0) {
