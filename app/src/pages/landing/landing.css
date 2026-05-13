@@ -1,0 +1,374 @@
+/* ─── Animations ──────────────────────────────────────────────────────────── */
+
+@keyframes lf-float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-12px); }
+}
+@keyframes lf-float-alt {
+  0%, 100% { transform: translateY(0px) rotate(-1deg); }
+  50%       { transform: translateY(-8px) rotate(1deg); }
+}
+@keyframes lf-scan {
+  0%   { top: -1px; opacity: 0; }
+  4%   { opacity: 1; }
+  96%  { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+@keyframes lf-lead-in {
+  from { opacity: 0; transform: translateX(16px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes lf-shimmer {
+  0%, 100% { opacity: 0.6; }
+  50%       { opacity: 1; }
+}
+@keyframes lf-pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.4; transform: scale(0.85); }
+}
+
+/* ─── CSS Custom Properties — dark (default) ─────────────────────────────── */
+
+.lf-root {
+  /* Base */
+  --lf-bg:          oklch(0.064 0.007 243);
+  --lf-sur:         oklch(0.112 0.008 243);
+  --lf-inset:       oklch(0.040 0.005 243);
+  --lf-tx:          oklch(0.932 0.004 243);
+  --lf-mu:          oklch(0.520 0.012 243);
+
+  /* Accent (blue) */
+  --lf-acc:         oklch(0.620 0.220 240);
+  --lf-acc-h:       oklch(0.678 0.220 240);
+  --lf-acc-lt:      oklch(0.660 0.200 240);
+  --lf-acc-bg:      oklch(0.620 0.220 240 / 0.12);
+  --lf-acc-bd-xs:   oklch(0.620 0.220 240 / 0.08);
+  --lf-acc-bd-sm:   oklch(0.620 0.220 240 / 0.14);
+  --lf-acc-bd:      oklch(0.620 0.220 240 / 0.22);
+  --lf-acc-bd-lg:   oklch(0.620 0.220 240 / 0.40);
+  --lf-acc-wm:      oklch(0.620 0.220 240 / 0.06);
+  --lf-acc-glow:    oklch(0.620 0.220 240 / 0.09);
+  --lf-acc-sh-sm:   0 0 20px oklch(0.620 0.220 240 / 0.28);
+  --lf-acc-sh-md:   0 0 36px oklch(0.620 0.220 240 / 0.30);
+  --lf-acc-sh-lg:   0 0 48px oklch(0.620 0.220 240 / 0.36);
+  --lf-acc-sh-h:    0 0 64px oklch(0.620 0.220 240 / 0.52);
+  --lf-acc-step:    0 0 30px oklch(0.620 0.220 240 / 0.15);
+
+  /* Violet */
+  --lf-vio:         oklch(0.600 0.220 290);
+  --lf-vio-lt:      oklch(0.720 0.190 290);
+  --lf-vio-bg:      oklch(0.600 0.220 290 / 0.12);
+  --lf-vio-bd:      oklch(0.600 0.220 290 / 0.22);
+  --lf-vio-bd-lg:   oklch(0.600 0.220 290 / 0.28);
+  --lf-vio-wm:      oklch(0.600 0.220 290 / 0.06);
+  --lf-vio-glow:    oklch(0.600 0.220 290 / 0.07);
+  --lf-vio-step:    0 0 30px oklch(0.600 0.220 290 / 0.15);
+
+  /* Green */
+  --lf-grn:         oklch(0.700 0.180 155);
+  --lf-grn-lt:      oklch(0.760 0.175 155);
+  --lf-grn-bg:      oklch(0.700 0.180 155 / 0.12);
+  --lf-grn-bd:      oklch(0.700 0.180 155 / 0.22);
+  --lf-grn-bd-lg:   oklch(0.700 0.180 155 / 0.28);
+  --lf-grn-wm:      oklch(0.700 0.180 155 / 0.06);
+  --lf-grn-step:    0 0 30px oklch(0.700 0.180 155 / 0.15);
+
+  /* Yellow */
+  --lf-ylw:         oklch(0.840 0.170 90);
+
+  /* Surfaces */
+  --lf-row-bg:      oklch(1 0 0 / 0.028);
+  --lf-row-bd:      oklch(1 0 0 / 0.055);
+  --lf-ghost:       oklch(1 0 0 / 0.04);
+  --lf-ghost-h:     oklch(1 0 0 / 0.08);
+  --lf-ghost-bd:    oklch(1 0 0 / 0.10);
+  --lf-ghost-bd2:   oklch(1 0 0 / 0.12);
+  --lf-shimmer:     oklch(1 0 0 / 0.06);
+
+  /* Structure */
+  --lf-nav-bg:      oklch(0.064 0.007 243 / 0.80);
+  --lf-nav-bd:      oklch(0.620 0.220 240 / 0.08);
+  --lf-grid:        oklch(0.620 0.220 240 / 0.04);
+  --lf-hero-glow:   oklch(0.620 0.220 240 / 0.14);
+  --lf-scan:        oklch(0.620 0.220 240 / 0.90);
+  --lf-stats-bg:    oklch(0.112 0.008 243 / 0.85);
+  --lf-stats-bd:    oklch(0.620 0.220 240 / 0.12);
+  --lf-term-sh:     0 32px 80px oklch(0 0 0 / 0.55), 0 1px 0 oklch(1 0 0 / 0.04) inset;
+  --lf-float-sh:    0 12px 40px oklch(0 0 0 / 0.40);
+  --lf-hover-sh:    0 24px 64px oklch(0 0 0 / 0.45), 0 0 40px oklch(0.620 0.220 240 / 0.12);
+  --lf-foot-bd:     oklch(0.620 0.220 240 / 0.08);
+
+  /* CTA */
+  --lf-cta-from:    oklch(0.112 0.008 243);
+  --lf-cta-mid:     oklch(0.120 0.012 258);
+  --lf-cta-bd:      oklch(0.620 0.220 240 / 0.22);
+  --lf-cta-glow:    oklch(0.620 0.220 240 / 0.18);
+
+  /* Source badges */
+  --lf-li-c:        oklch(0.660 0.200 240);
+  --lf-li-bg:       oklch(0.400 0.220 234 / 0.18);
+  --lf-li-bd:       oklch(0.400 0.220 234 / 0.30);
+  --lf-gm-c:        oklch(0.700 0.160 52);
+  --lf-gm-bg:       oklch(0.600 0.150 52 / 0.18);
+  --lf-gm-bd:       oklch(0.600 0.150 52 / 0.30);
+}
+
+/* ─── Light theme overrides ───────────────────────────────────────────────── */
+
+.lf-root.lf-light {
+  /* Base */
+  --lf-bg:          oklch(0.973 0.003 243);
+  --lf-sur:         oklch(0.997 0.001 243);
+  --lf-inset:       oklch(0.948 0.006 243);
+  --lf-tx:          oklch(0.176 0.012 243);
+  --lf-mu:          oklch(0.462 0.014 243);
+
+  /* Accent (deeper blue for white bg contrast) */
+  --lf-acc:         oklch(0.460 0.244 240);
+  --lf-acc-h:       oklch(0.400 0.244 240);
+  --lf-acc-lt:      oklch(0.460 0.244 240);
+  --lf-acc-bg:      oklch(0.460 0.244 240 / 0.09);
+  --lf-acc-bd-xs:   oklch(0.460 0.244 240 / 0.10);
+  --lf-acc-bd-sm:   oklch(0.460 0.244 240 / 0.17);
+  --lf-acc-bd:      oklch(0.460 0.244 240 / 0.25);
+  --lf-acc-bd-lg:   oklch(0.460 0.244 240 / 0.44);
+  --lf-acc-wm:      oklch(0.460 0.244 240 / 0.07);
+  --lf-acc-glow:    oklch(0.460 0.244 240 / 0.06);
+  --lf-acc-sh-sm:   0 2px 8px oklch(0.460 0.244 240 / 0.18);
+  --lf-acc-sh-md:   0 4px 16px oklch(0.460 0.244 240 / 0.20);
+  --lf-acc-sh-lg:   0 6px 24px oklch(0.460 0.244 240 / 0.26);
+  --lf-acc-sh-h:    0 8px 32px oklch(0.460 0.244 240 / 0.36);
+  --lf-acc-step:    none;
+
+  /* Violet */
+  --lf-vio:         oklch(0.456 0.224 290);
+  --lf-vio-lt:      oklch(0.456 0.224 290);
+  --lf-vio-bg:      oklch(0.456 0.224 290 / 0.09);
+  --lf-vio-bd:      oklch(0.456 0.224 290 / 0.22);
+  --lf-vio-bd-lg:   oklch(0.456 0.224 290 / 0.28);
+  --lf-vio-wm:      oklch(0.456 0.224 290 / 0.07);
+  --lf-vio-glow:    oklch(0.456 0.224 290 / 0.04);
+  --lf-vio-step:    none;
+
+  /* Green */
+  --lf-grn:         oklch(0.488 0.182 155);
+  --lf-grn-lt:      oklch(0.488 0.182 155);
+  --lf-grn-bg:      oklch(0.488 0.182 155 / 0.09);
+  --lf-grn-bd:      oklch(0.488 0.182 155 / 0.22);
+  --lf-grn-bd-lg:   oklch(0.488 0.182 155 / 0.28);
+  --lf-grn-wm:      oklch(0.488 0.182 155 / 0.07);
+  --lf-grn-step:    none;
+
+  /* Yellow */
+  --lf-ylw:         oklch(0.560 0.148 88);
+
+  /* Surfaces (invert the white-on-dark approach) */
+  --lf-row-bg:      oklch(0.966 0.004 243);
+  --lf-row-bd:      oklch(0.886 0.007 243);
+  --lf-ghost:       oklch(0.952 0.006 243);
+  --lf-ghost-h:     oklch(0.938 0.008 243);
+  --lf-ghost-bd:    oklch(0.870 0.009 243);
+  --lf-ghost-bd2:   oklch(0.852 0.010 243);
+  --lf-shimmer:     oklch(0.902 0.006 243);
+
+  /* Structure */
+  --lf-nav-bg:      oklch(0.973 0.003 243 / 0.88);
+  --lf-nav-bd:      oklch(0.870 0.009 243);
+  --lf-grid:        oklch(0.460 0.244 240 / 0.05);
+  --lf-hero-glow:   oklch(0.460 0.244 240 / 0.07);
+  --lf-scan:        oklch(0.460 0.244 240 / 0.50);
+  --lf-stats-bg:    oklch(0.997 0.001 243);
+  --lf-stats-bd:    oklch(0.870 0.009 243);
+  --lf-term-sh:     0 4px 24px oklch(0.300 0.050 243 / 0.10), 0 1px 4px oklch(0.300 0.050 243 / 0.08);
+  --lf-float-sh:    0 4px 16px oklch(0.300 0.050 243 / 0.12), 0 1px 4px oklch(0.300 0.050 243 / 0.06);
+  --lf-hover-sh:    0 8px 32px oklch(0.300 0.050 243 / 0.12), 0 2px 8px oklch(0.300 0.050 243 / 0.06);
+  --lf-foot-bd:     oklch(0.870 0.009 243);
+
+  /* CTA */
+  --lf-cta-from:    oklch(0.962 0.006 243);
+  --lf-cta-mid:     oklch(0.952 0.010 253);
+  --lf-cta-bd:      oklch(0.460 0.244 240 / 0.22);
+  --lf-cta-glow:    oklch(0.460 0.244 240 / 0.08);
+
+  /* Source badges */
+  --lf-li-c:        oklch(0.416 0.240 240);
+  --lf-li-bg:       oklch(0.416 0.200 234 / 0.10);
+  --lf-li-bd:       oklch(0.416 0.200 234 / 0.22);
+  --lf-gm-c:        oklch(0.500 0.148 52);
+  --lf-gm-bg:       oklch(0.500 0.148 52 / 0.10);
+  --lf-gm-bd:       oklch(0.500 0.148 52 / 0.22);
+}
+
+/* ─── Grid background ─────────────────────────────────────────────────────── */
+
+.lf-root .lf-grid-bg {
+  background-image:
+    linear-gradient(var(--lf-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--lf-grid) 1px, transparent 1px);
+  background-size: 72px 72px;
+}
+
+/* ─── Scan beam ───────────────────────────────────────────────────────────── */
+
+.lf-scan-beam {
+  position: absolute;
+  left: 0; right: 0;
+  height: 1px;
+  pointer-events: none;
+  z-index: 20;
+  background: linear-gradient(90deg, transparent 0%, var(--lf-scan) 50%, transparent 100%);
+  animation: lf-scan 3.5s linear infinite;
+}
+
+/* ─── Floating animations ─────────────────────────────────────────────────── */
+
+.lf-float     { animation: lf-float     4s ease-in-out infinite; }
+.lf-float-alt { animation: lf-float-alt 5.5s ease-in-out 1.2s infinite; }
+
+/* ─── Lead card stagger ───────────────────────────────────────────────────── */
+
+.lf-lead-1 { animation: lf-lead-in 0.45s ease 0.25s both; }
+.lf-lead-2 { animation: lf-lead-in 0.45s ease 0.60s both; }
+.lf-lead-3 { animation: lf-lead-in 0.45s ease 0.95s both; }
+.lf-lead-4 { animation: lf-lead-in 0.45s ease 1.30s both; }
+
+/* ─── Pulse dot ───────────────────────────────────────────────────────────── */
+
+.lf-pulse-dot { animation: lf-pulse-dot 1.8s ease-in-out infinite; }
+
+/* ─── Progress shimmer ────────────────────────────────────────────────────── */
+
+.lf-shimmer-bar { animation: lf-shimmer 2s ease-in-out infinite; }
+
+/* ─── Buttons ─────────────────────────────────────────────────────────────── */
+
+.lf-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 12px;
+  background: var(--lf-acc);
+  color: oklch(0.98 0 0);
+  box-shadow: var(--lf-acc-sh-md);
+  transition: background 0.18s ease, box-shadow 0.18s ease;
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+}
+.lf-btn-primary:hover {
+  background: var(--lf-acc-h);
+  box-shadow: var(--lf-acc-sh-lg);
+}
+.lf-btn-primary.lf-sm {
+  padding: 8px 16px;
+  font-size: 13px;
+  border-radius: 8px;
+}
+
+.lf-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 12px;
+  background: var(--lf-ghost);
+  color: var(--lf-tx);
+  border: 1px solid var(--lf-ghost-bd);
+  transition: background 0.18s ease;
+  cursor: pointer;
+  text-decoration: none;
+}
+.lf-btn-ghost:hover {
+  background: var(--lf-ghost-h);
+}
+.lf-btn-ghost.lf-cta-ghost {
+  border-color: var(--lf-ghost-bd2);
+  padding: 16px 32px;
+}
+
+.lf-btn-text {
+  font-size: 14px;
+  color: var(--lf-mu);
+  background: none;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: color 0.15s ease;
+  text-decoration: none;
+}
+.lf-btn-text:hover { color: var(--lf-tx); }
+
+.lf-theme-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--lf-ghost);
+  border: 1px solid var(--lf-ghost-bd);
+  color: var(--lf-mu);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+  flex-shrink: 0;
+}
+.lf-theme-btn:hover {
+  background: var(--lf-ghost-h);
+  color: var(--lf-tx);
+}
+
+/* ─── Section labels ──────────────────────────────────────────────────────── */
+
+.lf-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.lf-label-blue   { background: var(--lf-acc-bg); border: 1px solid var(--lf-acc-bd-sm); color: var(--lf-acc-lt); }
+.lf-label-violet { background: var(--lf-vio-bg); border: 1px solid var(--lf-vio-bd);    color: var(--lf-vio-lt); }
+.lf-label-green  { background: var(--lf-grn-bg); border: 1px solid var(--lf-grn-bd);    color: var(--lf-grn-lt); }
+
+/* ─── Card hover ──────────────────────────────────────────────────────────── */
+
+.lf-card-hover {
+  transition: transform 0.28s ease, box-shadow 0.28s ease;
+}
+.lf-card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--lf-hover-sh);
+}
+
+/* ─── Nav links ───────────────────────────────────────────────────────────── */
+
+.lf-nav-link {
+  font-size: 14px;
+  color: var(--lf-mu);
+  transition: color 0.15s ease;
+  text-decoration: none;
+}
+.lf-nav-link:hover { color: var(--lf-tx); }
+
+/* ─── Footer links ────────────────────────────────────────────────────────── */
+
+.lf-foot-link {
+  display: block;
+  font-size: 14px;
+  color: var(--lf-mu);
+  transition: color 0.15s ease;
+  text-decoration: none;
+}
+.lf-foot-link:hover { color: var(--lf-tx); }
+
+/* ─── Accent text ─────────────────────────────────────────────────────────── */
+
+.lf-accent-text { color: var(--lf-acc); }

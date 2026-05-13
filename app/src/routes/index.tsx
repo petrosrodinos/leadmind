@@ -1,6 +1,7 @@
 import { Routes as ReactRoutes, Route, Navigate } from "react-router-dom";
 import { Routes } from "@/routes/routes";
 import ProtectedRoute from "@/routes/protected-route";
+import LandingPage from "@/pages/landing";
 import SignIn from "@/pages/auth/pages/sign-in";
 import SignUp from "@/pages/auth/pages/sign-up";
 import AuthLayout from "@/pages/auth/layout";
@@ -70,8 +71,8 @@ export default function AppRoutes() {
         </Route>
       </Route>
 
-      {/* Default redirect */}
-      <Route path={Routes.root} element={<Navigate to={Routes.auth.sign_in} replace />} />
+      {/* Landing page */}
+      <Route path={Routes.root} element={<LandingPage />} />
 
       {/* Catch all */}
       <Route path="*" element={<Navigate to={Routes.root} replace />} />
