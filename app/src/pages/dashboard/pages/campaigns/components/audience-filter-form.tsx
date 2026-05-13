@@ -108,6 +108,7 @@ export function AudienceFilterForm({
                     type="number"
                     min={1}
                     max={10}
+                    placeholder="Any"
                     value={value.min_score ?? ""}
                     onChange={(e) => {
                         const n = Number(e.target.value);
@@ -170,22 +171,6 @@ export function AudienceFilterForm({
                     disabled={disabled}
                 />
             </TextField>
-
-            <SwitchRow
-                label="Only with email"
-                description="For email channel deliverability"
-                checked={!!value.has_email}
-                onChange={(checked) => onChange({ has_email: checked || undefined })}
-                disabled={disabled}
-            />
-
-            <SwitchRow
-                label="Only with phone"
-                description="For SMS channel deliverability"
-                checked={!!value.has_phone}
-                onChange={(checked) => onChange({ has_phone: checked || undefined })}
-                disabled={disabled}
-            />
 
             <div className="sm:col-span-2">
                 <SwitchRow

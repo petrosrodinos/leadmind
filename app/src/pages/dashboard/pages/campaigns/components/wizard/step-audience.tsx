@@ -26,9 +26,24 @@ export function StepAudience({
     const preview = usePreviewCampaignContacts();
     const [result, setResult] = useState<PreviewContactsResult | null>(null);
 
+    // Auto-enforce channel-based contact requirements (not exposed in UI)
+    const channelOverrides = useMemo<Partial<CampaignFilters>>(() => ({
+        has_email: channels.includes("EMAIL") ? true : undefined,
+        has_phone: channels.includes("SMS") ? true : undefined,
+    }), [channels]);
+
+    const effectiveValue = useMemo<CampaignFilters>(
+        () => ({ ...value, ...channelOverrides }),
+        [value, channelOverrides],
+    );
+
+    const handleChange = (patch: Partial<CampaignFilters>) => {
+        onChange({ ...effectiveValue, ...patch });
+    };
+
     // De-bounced auto-preview when filters change
     const debounceTimer = useRef<number | null>(null);
-    const serializedFilters = useMemo(() => JSON.stringify(value), [value]);
+    const serializedFilters = useMemo(() => JSON.stringify(effectiveValue), [effectiveValue]);
 
     useEffect(() => {
         if (debounceTimer.current !== null) {
@@ -38,7 +53,7 @@ export function StepAudience({
             try {
                 const res = await preview.mutateAsync({
                     uuid: campaignUuid,
-                    filters: value,
+                    filters: effectiveValue,
                 });
                 setResult(res);
             } catch {
@@ -54,18 +69,15 @@ export function StepAudience({
     }, [serializedFilters, campaignUuid]);
 
     const excluded = useMemo(
-        () => new Set(value.exclude_uuids ?? []),
-        [value.exclude_uuids],
+        () => new Set(effectiveValue.exclude_uuids ?? []),
+        [effectiveValue.exclude_uuids],
     );
 
     const onToggleExclude = (uuid: string) => {
         const next = new Set(excluded);
         if (next.has(uuid)) next.delete(uuid);
         else next.add(uuid);
-        onChange({
-            ...value,
-            exclude_uuids: Array.from(next),
-        });
+        handleChange({ exclude_uuids: Array.from(next) });
     };
 
     const includedCount = (result?.total ?? 0) - excluded.size;
@@ -73,8 +85,8 @@ export function StepAudience({
     return (
         <div className="flex flex-col gap-6">
             <AudienceFilterForm
-                value={value}
-                onChange={(patch) => onChange({ ...value, ...patch })}
+                value={effectiveValue}
+                onChange={handleChange}
             />
 
             <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border bg-surface p-3">
@@ -98,7 +110,7 @@ export function StepAudience({
                     onPress={async () => {
                         const res = await preview.mutateAsync({
                             uuid: campaignUuid,
-                            filters: value,
+                            filters: effectiveValue,
                         });
                         setResult(res);
                     }}
