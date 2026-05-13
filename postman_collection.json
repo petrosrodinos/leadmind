@@ -1,0 +1,1137 @@
+{
+  "info": {
+    "name": "Leadfinder API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000", "type": "string" },
+    { "key": "token", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Health check",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/", "host": ["{{baseUrl}}"], "path": [""] },
+            "description": "Returns a hello message to confirm the API is running."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/auth/email/register", "host": ["{{baseUrl}}"], "path": ["auth", "email", "register"] },
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\",\n  \"name\": \"John Doe\"\n}"
+            },
+            "description": "Register a new user with email and password."
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/auth/email/login", "host": ["{{baseUrl}}"], "path": ["auth", "email", "login"] },
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "description": "Login with email and password. Copy the returned token into the {{token}} variable."
+          }
+        },
+        {
+          "name": "Waitlist",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/auth/email/waitlist", "host": ["{{baseUrl}}"], "path": ["auth", "email", "waitlist"] },
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"ref_code\": \"ABC123\"\n}"
+            },
+            "description": "Add a user to the waitlist with a referral code."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Leads",
+      "item": [
+        {
+          "name": "List leads",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/leads?page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["leads"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" },
+                { "key": "search", "value": "", "disabled": true },
+                { "key": "source_type", "value": "", "disabled": true }
+              ]
+            },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "Paginated list of public leads. Filter by source_type or search by name/email/company."
+          }
+        },
+        {
+          "name": "Get lead by UUID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/leads/:uuid", "host": ["{{baseUrl}}"], "path": ["leads", ":uuid"], "variable": [{ "key": "uuid", "value": "" }] },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "Get a single public lead by UUID."
+          }
+        },
+        {
+          "name": "Get lead enrichments",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/leads/:uuid/enrichments?page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["leads", ":uuid", "enrichments"],
+              "variable": [{ "key": "uuid", "value": "" }],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" },
+                { "key": "source", "value": "", "disabled": true },
+                { "key": "search", "value": "", "disabled": true }
+              ]
+            },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "Paginated enrichment history for a lead, newest first."
+          }
+        },
+        {
+          "name": "Update lead (admin)",
+          "request": {
+            "method": "PUT",
+            "url": { "raw": "{{baseUrl}}/leads/:uuid", "host": ["{{baseUrl}}"], "path": ["leads", ":uuid"], "variable": [{ "key": "uuid", "value": "" }] },
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Jane Doe\",\n  \"company\": \"Acme Corp\",\n  \"title\": \"CEO\",\n  \"email\": \"jane@acme.com\"\n}"
+            },
+            "description": "Update a lead. Requires ADMIN or SUPER_ADMIN role."
+          }
+        },
+        {
+          "name": "Delete lead (admin)",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/leads/:uuid", "host": ["{{baseUrl}}"], "path": ["leads", ":uuid"], "variable": [{ "key": "uuid", "value": "" }] },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "Delete a lead. Requires ADMIN or SUPER_ADMIN role."
+          }
+        },
+        {
+          "name": "Enrich lead",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/leads/:uuid/enrich", "host": ["{{baseUrl}}"], "path": ["leads", ":uuid", "enrich"], "variable": [{ "key": "uuid", "value": "" }] },
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sources\": [\"LINKEDIN\", \"WEBSITE\"]\n}"
+            },
+            "description": "Enqueue AI enrichment for a lead."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Search (Elasticsearch)",
+      "item": [
+        {
+          "name": "Search leads (semantic)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/search/leads?q=software engineer&page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["search", "leads"],
+              "query": [
+                { "key": "q", "value": "software engineer" },
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" },
+                { "key": "source_type", "value": "", "disabled": true }
+              ]
+            },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "Semantic KNN search over public leads using Elasticsearch embeddings."
+          }
+        },
+        {
+          "name": "Search contacts (semantic)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/search/contacts?q=founder fintech&page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["search", "contacts"],
+              "query": [
+                { "key": "q", "value": "founder fintech" },
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" },
+                { "key": "status", "value": "", "disabled": true },
+                { "key": "min_score", "value": "", "disabled": true },
+                { "key": "tags", "value": "", "disabled": true }
+              ]
+            },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "Semantic KNN search over the current user's contacts."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Contacts",
+      "item": [
+        {
+          "name": "Create contact",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/contacts", "host": ["{{baseUrl}}"], "path": ["contacts"] },
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Jane Doe\",\n  \"email\": \"jane@example.com\",\n  \"company\": \"Acme\",\n  \"title\": \"CTO\"\n}"
+            },
+            "description": "Create a contact manually — also creates a MANUAL Lead behind the scenes."
+          }
+        },
+        {
+          "name": "List contacts",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/contacts?page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["contacts"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" },
+                { "key": "status", "value": "", "disabled": true },
+                { "key": "search", "value": "", "disabled": true },
+                { "key": "tags", "value": "", "disabled": true }
+              ]
+            },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "List contacts for the current user."
+          }
+        },
+        {
+          "name": "Convert lead to contact",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/contacts/from-lead/:lead_uuid", "host": ["{{baseUrl}}"], "path": ["contacts", "from-lead", ":lead_uuid"], "variable": [{ "key": "lead_uuid", "value": "" }] },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "Adopt a public Lead as a Contact for the current user."
+          }
+        },
+        {
+          "name": "Get contact",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/contacts/:uuid", "host": ["{{baseUrl}}"], "path": ["contacts", ":uuid"], "variable": [{ "key": "uuid", "value": "" }] },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "Get a contact with tags, interactions, lead, and outreach messages."
+          }
+        },
+        {
+          "name": "Update contact",
+          "request": {
+            "method": "PUT",
+            "url": { "raw": "{{baseUrl}}/contacts/:uuid", "host": ["{{baseUrl}}"], "path": ["contacts", ":uuid"], "variable": [{ "key": "uuid", "value": "" }] },
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Jane Doe\",\n  \"title\": \"VP Engineering\",\n  \"notes\": \"Met at conference\"\n}"
+            },
+            "description": "Update contact profile fields and notes."
+          }
+        },
+        {
+          "name": "Delete contact",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/contacts/:uuid", "host": ["{{baseUrl}}"], "path": ["contacts", ":uuid"], "variable": [{ "key": "uuid", "value": "" }] },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "Delete a contact."
+          }
+        },
+        {
+          "name": "Update contact status",
+          "request": {
+            "method": "PUT",
+            "url": { "raw": "{{baseUrl}}/contacts/:uuid/status", "host": ["{{baseUrl}}"], "path": ["contacts", ":uuid", "status"], "variable": [{ "key": "uuid", "value": "" }] },
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"CONTACTED\"\n}"
+            },
+            "description": "Update contact status — also records an Interaction."
+          }
+        },
+        {
+          "name": "Update contact tags",
+          "request": {
+            "method": "PUT",
+            "url": { "raw": "{{baseUrl}}/contacts/:uuid/tags", "host": ["{{baseUrl}}"], "path": ["contacts", ":uuid", "tags"], "variable": [{ "key": "uuid", "value": "" }] },
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tags\": [\"vip\", \"warm-lead\"]\n}"
+            },
+            "description": "Replace the full tag set for a contact."
+          }
+        },
+        {
+          "name": "Add note",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/contacts/:uuid/notes", "host": ["{{baseUrl}}"], "path": ["contacts", ":uuid", "notes"], "variable": [{ "key": "uuid", "value": "" }] },
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"Interested in enterprise plan\"\n}"
+            },
+            "description": "Add a note — creates an Interaction of type NOTE."
+          }
+        },
+        {
+          "name": "Log call",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/contacts/:uuid/calls", "host": ["{{baseUrl}}"], "path": ["contacts", ":uuid", "calls"], "variable": [{ "key": "uuid", "value": "" }] },
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"duration_minutes\": 15,\n  \"notes\": \"Discussed pricing\"\n}"
+            },
+            "description": "Log a call — creates an Interaction of type CALL."
+          }
+        },
+        {
+          "name": "Log meeting",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/contacts/:uuid/meetings", "host": ["{{baseUrl}}"], "path": ["contacts", ":uuid", "meetings"], "variable": [{ "key": "uuid", "value": "" }] },
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"scheduled_at\": \"2026-06-01T10:00:00Z\",\n  \"notes\": \"Product demo\"\n}"
+            },
+            "description": "Log a meeting — creates an Interaction of type MEETING."
+          }
+        },
+        {
+          "name": "Get interactions",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/contacts/:uuid/interactions", "host": ["{{baseUrl}}"], "path": ["contacts", ":uuid", "interactions"], "variable": [{ "key": "uuid", "value": "" }] },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "List all interactions for a contact, most recent first."
+          }
+        },
+        {
+          "name": "Trigger AI scoring",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/contacts/:uuid/score", "host": ["{{baseUrl}}"], "path": ["contacts", ":uuid", "score"], "variable": [{ "key": "uuid", "value": "" }] },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "Trigger AI scoring for the contact."
+          }
+        },
+        {
+          "name": "Trigger draft messages",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/contacts/:uuid/draft-messages", "host": ["{{baseUrl}}"], "path": ["contacts", ":uuid", "draft-messages"], "variable": [{ "key": "uuid", "value": "" }] },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "Trigger AI to (re)draft OutreachMessage rows per filter channel."
+          }
+        },
+        {
+          "name": "AI draft message (one-off)",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/contacts/ai-draft-message", "host": ["{{baseUrl}}"], "path": ["contacts", "ai-draft-message"] },
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"contact_uuid\": \"\",\n  \"channel\": \"EMAIL\",\n  \"prompt\": \"Write a short intro email focusing on our AI features\"\n}"
+            },
+            "description": "Generate a one-off AI draft (Email or SMS) without persisting it."
+          }
+        },
+        {
+          "name": "Enrich contact",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/contacts/:uuid/enrich", "host": ["{{baseUrl}}"], "path": ["contacts", ":uuid", "enrich"], "variable": [{ "key": "uuid", "value": "" }] },
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sources\": [\"LINKEDIN\"]\n}"
+            },
+            "description": "Queue enrichment for the contact's lead."
+          }
+        },
+        {
+          "name": "List contact messages",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/contacts/:uuid/messages", "host": ["{{baseUrl}}"], "path": ["contacts", ":uuid", "messages"], "variable": [{ "key": "uuid", "value": "" }] },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "List the contact's outreach messages (drafts + sent)."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Filters",
+      "item": [
+        {
+          "name": "Create filter",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/filters", "host": ["{{baseUrl}}"], "path": ["filters"] },
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"SaaS Founders NYC\",\n  \"industry\": \"SaaS\",\n  \"location\": \"New York\"\n}"
+            },
+            "description": "Create a new lead filter for the current user."
+          }
+        },
+        {
+          "name": "List filters",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/filters", "host": ["{{baseUrl}}"], "path": ["filters"] },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "List all filters for the current user."
+          }
+        },
+        {
+          "name": "Get filter",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/filters/:uuid", "host": ["{{baseUrl}}"], "path": ["filters", ":uuid"], "variable": [{ "key": "uuid", "value": "" }] },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "Get a filter by UUID."
+          }
+        },
+        {
+          "name": "Update filter",
+          "request": {
+            "method": "PUT",
+            "url": { "raw": "{{baseUrl}}/filters/:uuid", "host": ["{{baseUrl}}"], "path": ["filters", ":uuid"], "variable": [{ "key": "uuid", "value": "" }] },
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Filter Name\"\n}"
+            },
+            "description": "Update a filter."
+          }
+        },
+        {
+          "name": "Delete filter",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/filters/:uuid", "host": ["{{baseUrl}}"], "path": ["filters", ":uuid"], "variable": [{ "key": "uuid", "value": "" }] },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "Delete a filter."
+          }
+        },
+        {
+          "name": "Run filter manually",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/filters/:uuid/run", "host": ["{{baseUrl}}"], "path": ["filters", ":uuid", "run"], "variable": [{ "key": "uuid", "value": "" }] },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "Manually enqueue a scrape job for a filter."
+          }
+        },
+        {
+          "name": "List filter jobs",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/filters/:uuid/jobs?page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["filters", ":uuid", "jobs"],
+              "variable": [{ "key": "uuid", "value": "" }],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" }
+              ]
+            },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "List FilterJob records for a filter, paginated."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dashboard",
+      "item": [
+        {
+          "name": "Get stats",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/dashboard/stats", "host": ["{{baseUrl}}"], "path": ["dashboard", "stats"] },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "Aggregated counters: totals, conversion rate, status breakdown."
+          }
+        },
+        {
+          "name": "Get top contacts",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/top-contacts?limit=5",
+              "host": ["{{baseUrl}}"],
+              "path": ["dashboard", "top-contacts"],
+              "query": [{ "key": "limit", "value": "5" }]
+            },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "Top scored contacts for the dashboard widget."
+          }
+        },
+        {
+          "name": "Get pending drafts",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/pending-drafts?limit=5",
+              "host": ["{{baseUrl}}"],
+              "path": ["dashboard", "pending-drafts"],
+              "query": [{ "key": "limit", "value": "5" }]
+            },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "Contacts that have at least one PENDING outreach message."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Outreach",
+      "item": [
+        {
+          "name": "List messages",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/outreach/messages?page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["outreach", "messages"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" },
+                { "key": "contact_uuid", "value": "", "disabled": true },
+                { "key": "status", "value": "", "disabled": true }
+              ]
+            },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "List outreach messages for the current user."
+          }
+        },
+        {
+          "name": "Create and queue message",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/outreach/messages", "host": ["{{baseUrl}}"], "path": ["outreach", "messages"] },
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"contact_uuid\": \"\",\n  \"channel\": \"EMAIL\",\n  \"subject\": \"Quick intro\",\n  \"content\": \"Hi, I wanted to reach out...\"\n}"
+            },
+            "description": "Create and immediately enqueue an outreach message."
+          }
+        },
+        {
+          "name": "Create draft message",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/outreach/messages/draft", "host": ["{{baseUrl}}"], "path": ["outreach", "messages", "draft"] },
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"contact_uuid\": \"\",\n  \"channel\": \"EMAIL\",\n  \"subject\": \"Quick intro\",\n  \"content\": \"Hi, I wanted to reach out...\"\n}"
+            },
+            "description": "Create a PENDING outreach message without queueing it."
+          }
+        },
+        {
+          "name": "Update message",
+          "request": {
+            "method": "PUT",
+            "url": { "raw": "{{baseUrl}}/outreach/messages/:uuid", "host": ["{{baseUrl}}"], "path": ["outreach", "messages", ":uuid"], "variable": [{ "key": "uuid", "value": "" }] },
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"subject\": \"Updated subject\",\n  \"content\": \"Updated content\"\n}"
+            },
+            "description": "Update a pending outreach message."
+          }
+        },
+        {
+          "name": "Send message",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/outreach/messages/:uuid/send", "host": ["{{baseUrl}}"], "path": ["outreach", "messages", ":uuid", "send"], "variable": [{ "key": "uuid", "value": "" }] },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "Enqueue a pending or failed outreach message for sending."
+          }
+        },
+        {
+          "name": "Delete message",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/outreach/messages/:uuid", "host": ["{{baseUrl}}"], "path": ["outreach", "messages", ":uuid"], "variable": [{ "key": "uuid", "value": "" }] },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "Delete a pending outreach message."
+          }
+        },
+        {
+          "name": "Create sequence",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/outreach/sequences", "host": ["{{baseUrl}}"], "path": ["outreach", "sequences"] },
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Cold Outreach Sequence\",\n  \"steps\": []\n}"
+            },
+            "description": "Create an outreach sequence."
+          }
+        },
+        {
+          "name": "List sequences",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/outreach/sequences", "host": ["{{baseUrl}}"], "path": ["outreach", "sequences"] },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "List outreach sequences for the current user."
+          }
+        },
+        {
+          "name": "Assign sequence to contact",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/outreach/sequences/:uuid/assign", "host": ["{{baseUrl}}"], "path": ["outreach", "sequences", ":uuid", "assign"], "variable": [{ "key": "uuid", "value": "" }] },
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"contact_uuid\": \"\"\n}"
+            },
+            "description": "Assign a sequence to a contact and enqueue its messages."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sender Profiles",
+      "item": [
+        {
+          "name": "Create sender profile",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/sender-profiles", "host": ["{{baseUrl}}"], "path": ["sender-profiles"] },
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John from Acme\",\n  \"email\": \"john@acme.com\",\n  \"phone\": \"+15551234567\"\n}"
+            },
+            "description": "Create a sender profile for the current user."
+          }
+        },
+        {
+          "name": "List sender profiles",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/sender-profiles", "host": ["{{baseUrl}}"], "path": ["sender-profiles"] },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "List sender profiles for the current user."
+          }
+        },
+        {
+          "name": "Get sender profile",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/sender-profiles/:uuid", "host": ["{{baseUrl}}"], "path": ["sender-profiles", ":uuid"], "variable": [{ "key": "uuid", "value": "" }] },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "Get a sender profile by UUID."
+          }
+        },
+        {
+          "name": "Update sender profile",
+          "request": {
+            "method": "PUT",
+            "url": { "raw": "{{baseUrl}}/sender-profiles/:uuid", "host": ["{{baseUrl}}"], "path": ["sender-profiles", ":uuid"], "variable": [{ "key": "uuid", "value": "" }] },
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Jane from Acme\"\n}"
+            },
+            "description": "Update a sender profile."
+          }
+        },
+        {
+          "name": "Delete sender profile",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/sender-profiles/:uuid", "host": ["{{baseUrl}}"], "path": ["sender-profiles", ":uuid"], "variable": [{ "key": "uuid", "value": "" }] },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "Delete a sender profile."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Marketing Campaigns",
+      "item": [
+        {
+          "name": "Create campaign",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/marketing-campaigns", "host": ["{{baseUrl}}"], "path": ["marketing-campaigns"] },
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Summer Outreach\",\n  \"channel\": \"EMAIL\",\n  \"subject\": \"Exclusive offer\",\n  \"content\": \"Hi {{name}}, ...\"\n}"
+            },
+            "description": "Create a draft marketing campaign."
+          }
+        },
+        {
+          "name": "List campaigns",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/marketing-campaigns?page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["marketing-campaigns"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" }
+              ]
+            },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "List marketing campaigns for the current user."
+          }
+        },
+        {
+          "name": "Get campaign",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/marketing-campaigns/:uuid", "host": ["{{baseUrl}}"], "path": ["marketing-campaigns", ":uuid"], "variable": [{ "key": "uuid", "value": "" }] },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "Get campaign detail with full stats."
+          }
+        },
+        {
+          "name": "Update campaign",
+          "request": {
+            "method": "PATCH",
+            "url": { "raw": "{{baseUrl}}/marketing-campaigns/:uuid", "host": ["{{baseUrl}}"], "path": ["marketing-campaigns", ":uuid"], "variable": [{ "key": "uuid", "value": "" }] },
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Campaign Name\"\n}"
+            },
+            "description": "Update a DRAFT campaign."
+          }
+        },
+        {
+          "name": "Delete campaign",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/marketing-campaigns/:uuid", "host": ["{{baseUrl}}"], "path": ["marketing-campaigns", ":uuid"], "variable": [{ "key": "uuid", "value": "" }] },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "Delete a draft, cancelled, completed, or failed campaign."
+          }
+        },
+        {
+          "name": "List campaign contacts",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/marketing-campaigns/:uuid/contacts?page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["marketing-campaigns", ":uuid", "contacts"],
+              "variable": [{ "key": "uuid", "value": "" }],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" }
+              ]
+            },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "List campaign recipients with their statuses."
+          }
+        },
+        {
+          "name": "Preview contacts",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/marketing-campaigns/:uuid/preview-contacts", "host": ["{{baseUrl}}"], "path": ["marketing-campaigns", ":uuid", "preview-contacts"], "variable": [{ "key": "uuid", "value": "" }] },
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tags\": [\"vip\"],\n  \"status\": \"NEW\"\n}"
+            },
+            "description": "Preview the matched contact set for a filter without persisting."
+          }
+        },
+        {
+          "name": "Start campaign",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/marketing-campaigns/:uuid/start", "host": ["{{baseUrl}}"], "path": ["marketing-campaigns", ":uuid", "start"], "variable": [{ "key": "uuid", "value": "" }] },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "Start a draft campaign (immediate or at scheduled_at)."
+          }
+        },
+        {
+          "name": "Schedule campaign",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/marketing-campaigns/:uuid/schedule", "host": ["{{baseUrl}}"], "path": ["marketing-campaigns", ":uuid", "schedule"], "variable": [{ "key": "uuid", "value": "" }] },
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"scheduled_at\": \"2026-06-15T09:00:00Z\"\n}"
+            },
+            "description": "Set scheduled_at and queue dispatch."
+          }
+        },
+        {
+          "name": "Duplicate campaign",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/marketing-campaigns/:uuid/duplicate", "host": ["{{baseUrl}}"], "path": ["marketing-campaigns", ":uuid", "duplicate"], "variable": [{ "key": "uuid", "value": "" }] },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "Duplicate a campaign as a new DRAFT."
+          }
+        },
+        {
+          "name": "Rerun campaign",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/marketing-campaigns/:uuid/rerun", "host": ["{{baseUrl}}"], "path": ["marketing-campaigns", ":uuid", "rerun"], "variable": [{ "key": "uuid", "value": "" }] },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "Re-run a completed, cancelled, or failed campaign from scratch."
+          }
+        },
+        {
+          "name": "Cancel campaign",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/marketing-campaigns/:uuid/cancel", "host": ["{{baseUrl}}"], "path": ["marketing-campaigns", ":uuid", "cancel"], "variable": [{ "key": "uuid", "value": "" }] },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "Cancel a sending or scheduled campaign."
+          }
+        },
+        {
+          "name": "AI generate message",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/marketing-campaigns/:uuid/ai/generate", "host": ["{{baseUrl}}"], "path": ["marketing-campaigns", ":uuid", "ai", "generate"], "variable": [{ "key": "uuid", "value": "" }] },
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"instruction\": \"Shorten the message and make the tone more casual\"\n}"
+            },
+            "description": "AI generate / improve / shorten / re-tone a campaign message."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Google Maps",
+      "item": [
+        {
+          "name": "Get timezone",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/google-maps/timezone?lat=37.7749&lng=-122.4194",
+              "host": ["{{baseUrl}}"],
+              "path": ["google-maps", "timezone"],
+              "query": [
+                { "key": "lat", "value": "37.7749" },
+                { "key": "lng", "value": "-122.4194" }
+              ]
+            },
+            "description": "Get timezone data for a lat/lng coordinate."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Webhooks",
+      "item": [
+        {
+          "name": "Resend webhook",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/webhooks/resend", "host": ["{{baseUrl}}"], "path": ["webhooks", "resend"] },
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "svix-id", "value": "msg_xxx" },
+              { "key": "svix-timestamp", "value": "1234567890" },
+              { "key": "svix-signature", "value": "v1,signature_here" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"email.delivered\",\n  \"data\": { \"email_id\": \"email_xxx\" }\n}"
+            },
+            "description": "Resend email delivery / engagement events. Verified via svix signature."
+          }
+        },
+        {
+          "name": "Twilio webhook",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/webhooks/twilio", "host": ["{{baseUrl}}"], "path": ["webhooks", "twilio"] },
+            "header": [
+              { "key": "Content-Type", "value": "application/x-www-form-urlencoded" },
+              { "key": "x-twilio-signature", "value": "" }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "MessageSid", "value": "SMxxx" },
+                { "key": "MessageStatus", "value": "delivered" }
+              ]
+            },
+            "description": "Twilio SMS status callback. Verified via Twilio signature."
+          }
+        },
+        {
+          "name": "Unsubscribe",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/unsubscribe/:token", "host": ["{{baseUrl}}"], "path": ["unsubscribe", ":token"], "variable": [{ "key": "token", "value": "" }] },
+            "description": "Public unsubscribe endpoint reached via email footer link. Returns HTML."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Internal (Admin only)",
+      "item": [
+        {
+          "name": "Trigger AI operation",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/ai", "host": ["{{baseUrl}}"], "path": ["ai"] },
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{}" },
+            "description": "Internal AI operation. Requires ADMIN role."
+          }
+        },
+        {
+          "name": "Send email",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/mail/send-email", "host": ["{{baseUrl}}"], "path": ["mail", "send-email"] },
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"to\": \"recipient@example.com\",\n  \"subject\": \"Test\",\n  \"html\": \"<p>Hello</p>\"\n}"
+            },
+            "description": "Send a transactional email. Requires ADMIN role."
+          }
+        },
+        {
+          "name": "Set cache entry",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/redis-cache", "host": ["{{baseUrl}}"], "path": ["redis-cache"] },
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"key\": \"my_key\",\n  \"value\": \"my_value\",\n  \"ttl\": 3600\n}"
+            },
+            "description": "Set a Redis cache entry. Requires ADMIN role."
+          }
+        },
+        {
+          "name": "Get cache entry",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/redis-cache/:key", "host": ["{{baseUrl}}"], "path": ["redis-cache", ":key"], "variable": [{ "key": "key", "value": "my_key" }] },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "Get a Redis cache entry by key. Requires ADMIN role."
+          }
+        },
+        {
+          "name": "Delete cache entry",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/redis-cache/:key", "host": ["{{baseUrl}}"], "path": ["redis-cache", ":key"], "variable": [{ "key": "key", "value": "my_key" }] },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "Delete a Redis cache entry by key. Requires ADMIN role."
+          }
+        },
+        {
+          "name": "Send SMS",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/sms", "host": ["{{baseUrl}}"], "path": ["sms"] },
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"to\": \"+15551234567\",\n  \"message\": \"Hello from Leadfinder\"\n}"
+            },
+            "description": "Send an SMS message. Requires ADMIN role."
+          }
+        },
+        {
+          "name": "List SMS records",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/sms", "host": ["{{baseUrl}}"], "path": ["sms"] },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "List all SMS records. Requires ADMIN role."
+          }
+        },
+        {
+          "name": "Get SMS record",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/sms/:id", "host": ["{{baseUrl}}"], "path": ["sms", ":id"], "variable": [{ "key": "id", "value": "1" }] },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "Get an SMS record by ID. Requires ADMIN role."
+          }
+        },
+        {
+          "name": "Update SMS record",
+          "request": {
+            "method": "PATCH",
+            "url": { "raw": "{{baseUrl}}/sms/:id", "host": ["{{baseUrl}}"], "path": ["sms", ":id"], "variable": [{ "key": "id", "value": "1" }] },
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{}" },
+            "description": "Update an SMS record by ID. Requires ADMIN role."
+          }
+        },
+        {
+          "name": "Delete SMS record",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/sms/:id", "host": ["{{baseUrl}}"], "path": ["sms", ":id"], "variable": [{ "key": "id", "value": "1" }] },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "Delete an SMS record by ID. Requires ADMIN role."
+          }
+        }
+      ]
+    }
+  ]
+}
