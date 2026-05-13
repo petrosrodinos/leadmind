@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "@heroui/react";
-import { ArrowLeft, ArrowRight, Save, Send } from "lucide-react";
+import { ArrowLeft, ArrowRight, Save, Send, Sparkles } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { isEmailHtmlEmpty } from "@/lib/sanitize-html";
 import {
     useStartCampaign,
     useUpdateCampaign,
@@ -10,6 +11,7 @@ import type {
     MarketingCampaign,
     CampaignFilters,
 } from "@/features/marketing-campaigns/interfaces/campaign.interface";
+import { CampaignType, CampaignStatuses } from "@/features/marketing-campaigns/interfaces/campaign.interface";
 import { Channel } from "@/features/contacts/interfaces/contact.interface";
 import { Routes } from "@/routes/routes";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
@@ -41,6 +43,7 @@ export function CampaignWizard({ campaign }: CampaignWizardProps) {
         () => ({
             name: campaign.name,
             description: campaign.description ?? "",
+            campaign_type: campaign.campaign_type ?? CampaignType.STANDARD,
             channels: campaign.channels.length ? campaign.channels : [Channel.EMAIL],
             scheduled_at: campaign.scheduled_at
                 ? toLocalInputValue(campaign.scheduled_at)
@@ -66,12 +69,14 @@ export function CampaignWizard({ campaign }: CampaignWizardProps) {
     const [basics, setBasics] = useState<BasicsValues>(initialBasics);
     const [filters, setFilters] = useState<CampaignFilters>(initialFilters);
     const [message, setMessage] = useState<MessageComposerValue>(initialMessage);
+    const [aiPrompt, setAiPrompt] = useState<string>(campaign.ai_prompt ?? "");
     const [audienceCount, setAudienceCount] = useState<number | null>(
         campaign.selected_contact_count > 0 ? campaign.selected_contact_count : null,
     );
     const [confirmStart, setConfirmStart] = useState(false);
 
-    const isDraft = campaign.status === "DRAFT";
+    const isDraft = campaign.status === CampaignStatuses.DRAFT;
+    const isPersonalized = basics.campaign_type === CampaignType.PERSONALIZED;
 
     const stepIndex = WIZARD_STEPS.findIndex((s) => s.key === activeStep);
     const isLastStep = stepIndex === WIZARD_STEPS.length - 1;
@@ -82,20 +87,31 @@ export function CampaignWizard({ campaign }: CampaignWizardProps) {
         const payload: Record<string, unknown> = {
             name: basics.name,
             description: basics.description || undefined,
+            campaign_type: basics.campaign_type,
             channels: basics.channels,
-            scheduled_at: basics.scheduled_at
-                ? new Date(basics.scheduled_at).toISOString()
-                : null,
             filters,
-            email_subject: basics.channels.includes(Channel.EMAIL)
-                ? message.emailSubject || undefined
-                : null,
-            email_content: basics.channels.includes(Channel.EMAIL)
-                ? message.emailContent || undefined
-                : null,
-            sms_content: basics.channels.includes(Channel.SMS)
-                ? message.smsContent || undefined
-                : null,
+            ...(isPersonalized
+                ? {
+                      ai_prompt: aiPrompt || undefined,
+                      email_subject: null,
+                      email_content: null,
+                      sms_content: null,
+                      scheduled_at: null,
+                  }
+                : {
+                      scheduled_at: basics.scheduled_at
+                          ? new Date(basics.scheduled_at).toISOString()
+                          : null,
+                      email_subject: basics.channels.includes(Channel.EMAIL)
+                          ? message.emailSubject || undefined
+                          : null,
+                      email_content: basics.channels.includes(Channel.EMAIL)
+                          ? (isEmailHtmlEmpty(message.emailContent) ? undefined : message.emailContent)
+                          : null,
+                      sms_content: basics.channels.includes(Channel.SMS)
+                          ? message.smsContent || undefined
+                          : null,
+                  }),
             ...extra,
         };
         return updateMutation.mutateAsync({ uuid: campaign.uuid, payload: payload as any });
@@ -139,6 +155,12 @@ export function CampaignWizard({ campaign }: CampaignWizardProps) {
         }
     };
 
+    const startLabel = isPersonalized
+        ? "Generate Drafts"
+        : basics.scheduled_at
+        ? "Schedule campaign"
+        : "Start campaign";
+
     return (
         <div className="space-y-6">
             <WizardShell activeStep={activeStep} onSelect={setActiveStep}>
@@ -156,9 +178,12 @@ export function CampaignWizard({ campaign }: CampaignWizardProps) {
                 {activeStep === "message" && (
                     <StepMessage
                         campaignUuid={campaign.uuid}
+                        campaignType={basics.campaign_type}
                         channels={basics.channels}
                         value={message}
                         onChange={setMessage}
+                        aiPrompt={aiPrompt}
+                        onAiPromptChange={setAiPrompt}
                     />
                 )}
                 {activeStep === "review" && (
@@ -166,6 +191,7 @@ export function CampaignWizard({ campaign }: CampaignWizardProps) {
                         basics={basics}
                         audienceCount={audienceCount}
                         message={message}
+                        aiPrompt={aiPrompt}
                     />
                 )}
             </WizardShell>
@@ -199,8 +225,8 @@ export function CampaignWizard({ campaign }: CampaignWizardProps) {
                             onPress={() => setConfirmStart(true)}
                             isDisabled={!isDraft}
                         >
-                            <Send className="size-4" />
-                            {basics.scheduled_at ? "Schedule campaign" : "Start campaign"}
+                            {isPersonalized ? <Sparkles className="size-4" /> : <Send className="size-4" />}
+                            {startLabel}
                         </Button>
                     )}
                 </div>
@@ -209,23 +235,33 @@ export function CampaignWizard({ campaign }: CampaignWizardProps) {
             <ConfirmDialog
                 isOpen={confirmStart}
                 onOpenChange={setConfirmStart}
-                title={basics.scheduled_at ? "Schedule this campaign?" : "Start this campaign?"}
-                description={
-                    <>
-                        {basics.scheduled_at ? (
-                            <>
-                                The campaign will dispatch at{" "}
-                                <span className="font-medium">
-                                    {new Date(basics.scheduled_at).toLocaleString()}
-                                </span>
-                                . You can cancel any time before then.
-                            </>
-                        ) : (
-                            <>This will dispatch the campaign to all matched contacts immediately.</>
-                        )}
-                    </>
+                title={
+                    isPersonalized
+                        ? "Generate personalized drafts?"
+                        : basics.scheduled_at
+                        ? "Schedule this campaign?"
+                        : "Start this campaign?"
                 }
-                confirmLabel={basics.scheduled_at ? "Schedule" : "Start now"}
+                description={
+                    isPersonalized ? (
+                        <>
+                            The AI will generate a unique message for each matched contact. You can review the drafts before sending.
+                        </>
+                    ) : basics.scheduled_at ? (
+                        <>
+                            The campaign will dispatch at{" "}
+                            <span className="font-medium">
+                                {new Date(basics.scheduled_at).toLocaleString()}
+                            </span>
+                            . You can cancel any time before then.
+                        </>
+                    ) : (
+                        <>This will dispatch the campaign to all matched contacts immediately.</>
+                    )
+                }
+                confirmLabel={
+                    isPersonalized ? "Generate Drafts" : basics.scheduled_at ? "Schedule" : "Start now"
+                }
                 isPending={startMutation.isPending || updateMutation.isPending}
                 onConfirm={handleStart}
             />

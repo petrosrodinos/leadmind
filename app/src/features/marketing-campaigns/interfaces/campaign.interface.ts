@@ -1,7 +1,15 @@
 import type { Channel, Contact, LeadStatus } from "@/features/contacts/interfaces/contact.interface";
 
-export const CampaignStatus = {
+export const CampaignType = {
+    STANDARD: "STANDARD",
+    PERSONALIZED: "PERSONALIZED",
+} as const;
+
+export type CampaignType = (typeof CampaignType)[keyof typeof CampaignType];
+
+export const CampaignStatuses = {
     DRAFT: "DRAFT",
+    DRAFTS_READY: "DRAFTS_READY",
     SCHEDULED: "SCHEDULED",
     SENDING: "SENDING",
     COMPLETED: "COMPLETED",
@@ -9,9 +17,9 @@ export const CampaignStatus = {
     FAILED: "FAILED",
 } as const;
 
-export type CampaignStatus = (typeof CampaignStatus)[keyof typeof CampaignStatus];
+export type CampaignStatuses = (typeof CampaignStatuses)[keyof typeof CampaignStatuses];
 
-export const CampaignContactStatus = {
+export const CampaignContactStatuses = {
     PENDING: "PENDING",
     QUEUED: "QUEUED",
     SENT: "SENT",
@@ -25,8 +33,8 @@ export const CampaignContactStatus = {
     UNSUBSCRIBED: "UNSUBSCRIBED",
 } as const;
 
-export type CampaignContactStatus =
-    (typeof CampaignContactStatus)[keyof typeof CampaignContactStatus];
+export type CampaignContactStatuses =
+    (typeof CampaignContactStatuses)[keyof typeof CampaignContactStatuses];
 
 export interface CampaignFilters {
     status?: LeadStatus;
@@ -49,12 +57,14 @@ export interface MarketingCampaign {
     user_uuid: string;
     name: string;
     description: string | null;
-    status: CampaignStatus;
+    status: CampaignStatuses;
+    campaign_type: CampaignType;
     channels: Channel[];
     filters_snapshot: CampaignFilters | null;
     email_subject: string | null;
     email_content: string | null;
     sms_content: string | null;
+    ai_prompt: string | null;
     sender_profile_uuid: string | null;
     scheduled_at: string | null;
     started_at: string | null;
@@ -81,7 +91,7 @@ export interface MarketingCampaignContact {
     campaign_uuid: string;
     contact_uuid: string;
     channel: Channel;
-    status: CampaignContactStatus;
+    status: CampaignContactStatuses;
     error_message: string | null;
     sent_at: string | null;
     delivered_at: string | null;
@@ -107,7 +117,7 @@ export interface PaginatedCampaignContacts {
 }
 
 export interface ListCampaignsQuery {
-    status?: CampaignStatus;
+    status?: CampaignStatuses;
     tags?: string[];
     search?: string;
     page?: number;
@@ -115,7 +125,7 @@ export interface ListCampaignsQuery {
 }
 
 export interface ListCampaignContactsQuery {
-    status?: CampaignContactStatus;
+    status?: CampaignContactStatuses;
     channel?: Channel;
     search?: string;
     page?: number;
@@ -125,10 +135,12 @@ export interface ListCampaignContactsQuery {
 export interface CreateCampaignPayload {
     name: string;
     description?: string;
+    campaign_type?: CampaignType;
     channels: Channel[];
     email_subject?: string;
     email_content?: string;
     sms_content?: string;
+    ai_prompt?: string;
     sender_profile_uuid?: string;
     scheduled_at?: string;
     filters?: CampaignFilters;
@@ -146,13 +158,13 @@ export interface PreviewContactsResult {
 export interface GenerateCampaignMessagePayload {
     channel: Channel;
     action:
-        | "generate"
-        | "improve"
-        | "shorten"
-        | "tone_professional"
-        | "tone_friendly"
-        | "tone_direct"
-        | "personalize";
+    | "generate"
+    | "improve"
+    | "shorten"
+    | "tone_professional"
+    | "tone_friendly"
+    | "tone_direct"
+    | "personalize";
     prompt?: string;
     language?: string;
     current_subject?: string;
@@ -163,4 +175,29 @@ export interface GenerateCampaignMessagePayload {
 export interface GenerateCampaignMessageResult {
     subject: string | null;
     content: string;
+}
+
+export interface DraftMessage {
+    uuid: string;
+    contact_uuid: string;
+    channel: Channel;
+    subject: string | null;
+    content: string;
+    status: string;
+    created_at: string;
+    contact: {
+        uuid: string;
+        name: string | null;
+        email: string | null;
+        phone: string | null;
+        company: string | null;
+    };
+}
+
+export interface PaginatedDraftMessages {
+    data: DraftMessage[];
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
 }

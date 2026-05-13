@@ -2,6 +2,7 @@ import { Link, useParams } from "react-router-dom";
 import { ChevronLeft, Loader2 } from "lucide-react";
 import { Button } from "@heroui/react";
 import { useCampaign } from "@/features/marketing-campaigns/hooks/use-marketing-campaigns";
+import { CampaignStatuses } from "@/features/marketing-campaigns/interfaces/campaign.interface";
 import { Routes } from "@/routes/routes";
 import { CampaignWizard } from "../../components/wizard/campaign-wizard";
 
@@ -30,7 +31,7 @@ export default function EditCampaignPage() {
         );
     }
 
-    if (campaign.status !== "DRAFT") {
+    if (campaign.status !== CampaignStatuses.DRAFT) {
         return (
             <div className="space-y-4">
                 <Link to={`/dashboard/campaigns/${campaign.uuid}`} className="inline-flex items-center text-sm text-muted hover:text-foreground">

@@ -13,10 +13,15 @@ import {
     MaxLength,
     ValidateNested,
 } from 'class-validator';
-import { Channel } from '@/generated/prisma';
+import { Channel, CampaignType } from '@/generated/prisma';
 import { CampaignFiltersDto } from './campaign-filters.dto';
 
 export class CreateCampaignDto {
+    @ApiPropertyOptional({ enum: CampaignType, description: 'STANDARD (template) or PERSONALIZED (AI draft per contact)' })
+    @IsOptional()
+    @IsEnum(CampaignType)
+    campaign_type?: CampaignType;
+
     @ApiProperty({ maxLength: 120 })
     @IsString()
     @MaxLength(120)
@@ -62,6 +67,12 @@ export class CreateCampaignDto {
     @IsOptional()
     @IsDateString()
     scheduled_at?: string;
+
+    @ApiPropertyOptional({ description: 'AI prompt for PERSONALIZED campaigns', maxLength: 2000 })
+    @IsOptional()
+    @IsString()
+    @MaxLength(2000)
+    ai_prompt?: string;
 
     @ApiPropertyOptional({ type: CampaignFiltersDto })
     @IsOptional()

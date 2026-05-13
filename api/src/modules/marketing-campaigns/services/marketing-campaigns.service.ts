@@ -10,6 +10,7 @@ import { Queue } from 'bullmq';
 import {
     CampaignContactStatus,
     CampaignStatus,
+    CampaignType,
     Channel,
     MarketingCampaign,
     Prisma,
@@ -30,6 +31,7 @@ import { CampaignFiltersDto } from '../dto/campaign-filters.dto';
 import { PreviewContactsDto } from '../dto/preview-contacts.dto';
 import { CampaignContactResolverService } from './campaign-contact-resolver.service';
 import { CampaignAiService } from './campaign-ai.service';
+import { ContactAiService } from '@/modules/contacts/services/contact-ai.service';
 
 @Injectable()
 export class MarketingCampaignsService {
@@ -39,6 +41,7 @@ export class MarketingCampaignsService {
         private readonly prisma: PrismaService,
         private readonly resolver: CampaignContactResolverService,
         private readonly aiService: CampaignAiService,
+        private readonly contactAiService: ContactAiService,
         @InjectQueue(MARKETING_CAMPAIGN_DISPATCH_QUEUE)
         private readonly dispatchQueue: Queue,
         @InjectQueue(MARKETING_MESSAGE_SEND_QUEUE)
@@ -47,7 +50,8 @@ export class MarketingCampaignsService {
 
     async create(user_uuid: string, dto: CreateCampaignDto): Promise<MarketingCampaign> {
         // Drafts are loose: only enforce shape/length. Full content validation runs at start().
-        this.validateContentLoose(dto.channels, dto.email_subject, dto.email_content, dto.sms_content);
+        const type = dto.campaign_type ?? CampaignType.STANDARD;
+        this.validateContentLoose(dto.channels, dto.email_subject, dto.email_content, dto.sms_content, type);
         if (dto.sender_profile_uuid) {
             await this.assertOwnedSenderProfile(user_uuid, dto.sender_profile_uuid);
         }
@@ -57,12 +61,14 @@ export class MarketingCampaignsService {
                 user_uuid,
                 name: dto.name,
                 description: dto.description,
+                campaign_type: dto.campaign_type ?? CampaignType.STANDARD,
                 channels: dto.channels,
                 email_subject: dto.email_subject ?? null,
                 email_content: dto.email_content
                     ? sanitizeEmailHtml(dto.email_content)
                     : null,
                 sms_content: dto.sms_content ?? null,
+                ai_prompt: dto.ai_prompt ?? null,
                 sender_profile_uuid: dto.sender_profile_uuid ?? null,
                 scheduled_at: dto.scheduled_at ? new Date(dto.scheduled_at) : null,
                 filters_snapshot: (dto.filters ?? {}) as unknown as Prisma.InputJsonValue,
@@ -92,8 +98,9 @@ export class MarketingCampaignsService {
             dto.sms_content !== undefined ? dto.sms_content : existing.sms_content;
 
         // Only enforce content validity when the field is being touched; partial drafts are allowed.
+        const campaignType = dto.campaign_type ?? existing.campaign_type;
         if (dto.email_content !== undefined || dto.sms_content !== undefined || dto.channels) {
-            this.validateContentLoose(channels, email_subject ?? null, email_content, sms_content);
+            this.validateContentLoose(channels, email_subject ?? null, email_content, sms_content, campaignType);
         }
 
         if (dto.sender_profile_uuid) {
@@ -105,6 +112,7 @@ export class MarketingCampaignsService {
             data: {
                 ...(dto.name !== undefined && { name: dto.name }),
                 ...(dto.description !== undefined && { description: dto.description }),
+                ...(dto.campaign_type !== undefined && { campaign_type: dto.campaign_type }),
                 ...(dto.channels && { channels: dto.channels }),
                 ...(dto.email_subject !== undefined && { email_subject: dto.email_subject }),
                 ...(dto.email_content !== undefined && {
@@ -113,6 +121,7 @@ export class MarketingCampaignsService {
                         : null,
                 }),
                 ...(dto.sms_content !== undefined && { sms_content: dto.sms_content }),
+                ...(dto.ai_prompt !== undefined && { ai_prompt: dto.ai_prompt }),
                 ...(dto.sender_profile_uuid !== undefined && {
                     sender_profile_uuid: dto.sender_profile_uuid,
                 }),
@@ -130,6 +139,7 @@ export class MarketingCampaignsService {
         const existing = await this.requireOwned(user_uuid, uuid);
         if (
             existing.status !== CampaignStatus.DRAFT &&
+            existing.status !== CampaignStatus.DRAFTS_READY &&
             existing.status !== CampaignStatus.CANCELLED &&
             existing.status !== CampaignStatus.COMPLETED &&
             existing.status !== CampaignStatus.FAILED
@@ -244,15 +254,20 @@ export class MarketingCampaignsService {
             throw new ConflictException(`Only DRAFT campaigns can be started (is ${campaign.status})`);
         }
 
+        if (!campaign.filters_snapshot) {
+            throw new BadRequestException('Campaign must have an audience filter before starting');
+        }
+
+        if (campaign.campaign_type === CampaignType.PERSONALIZED) {
+            return this.startPersonalized(user_uuid, campaign);
+        }
+
         this.validateContent(
             campaign.channels,
             campaign.email_subject,
             campaign.email_content,
             campaign.sms_content,
         );
-        if (!campaign.filters_snapshot) {
-            throw new BadRequestException('Campaign must have an audience filter before starting');
-        }
 
         const now = new Date();
         const scheduled =
@@ -287,6 +302,142 @@ export class MarketingCampaignsService {
         return updated;
     }
 
+    private async startPersonalized(
+        user_uuid: string,
+        campaign: MarketingCampaign,
+    ): Promise<MarketingCampaign> {
+        if (!campaign.ai_prompt || campaign.ai_prompt.trim().length === 0) {
+            throw new BadRequestException('AI prompt is required for PERSONALIZED campaigns');
+        }
+        if (campaign.channels.length === 0) {
+            throw new BadRequestException('At least one channel is required');
+        }
+
+        const channel = campaign.channels[0];
+        const filters = campaign.filters_snapshot as any;
+
+        const contactUuids = await this.resolver.resolveContactUuids(user_uuid, filters, 201);
+        if (contactUuids.length > 200) {
+            throw new BadRequestException(
+                'Audience exceeds 200 contacts. Narrow your filters to proceed.',
+            );
+        }
+        if (contactUuids.length === 0) {
+            throw new BadRequestException('No matching contacts found for this campaign');
+        }
+
+        // Create MCC records (PENDING = awaiting send after drafts are ready)
+        await this.prisma.marketingCampaignContact.createMany({
+            data: contactUuids.map((contact_uuid) => ({
+                campaign_uuid: campaign.uuid,
+                contact_uuid,
+                channel,
+                status: CampaignContactStatus.PENDING,
+            })),
+            skipDuplicates: true,
+        });
+
+        const contacts = await this.prisma.contact.findMany({
+            where: { uuid: { in: contactUuids } },
+            include: { lead: true },
+        });
+
+        const { generated, skipped, failed } = await this.contactAiService.draftBulkMessages(
+            user_uuid,
+            contacts as any,
+            channel,
+            campaign.ai_prompt,
+            undefined,
+            campaign.uuid,
+        );
+
+        this.logger.log(
+            `PERSONALIZED campaign ${campaign.uuid}: drafts generated=${generated} skipped=${skipped} failed=${failed}`,
+        );
+
+        return this.prisma.marketingCampaign.update({
+            where: { uuid: campaign.uuid },
+            data: {
+                status: CampaignStatus.DRAFTS_READY,
+                selected_contact_count: contactUuids.length,
+                total_messages: generated,
+            },
+        });
+    }
+
+    async sendPersonalizedDrafts(user_uuid: string, uuid: string): Promise<MarketingCampaign> {
+        const campaign = await this.requireOwned(user_uuid, uuid);
+        if (campaign.campaign_type !== CampaignType.PERSONALIZED) {
+            throw new ConflictException('Only PERSONALIZED campaigns support this action');
+        }
+        if (campaign.status !== CampaignStatus.DRAFTS_READY) {
+            throw new ConflictException(
+                `Campaign must be in DRAFTS_READY status to send (is ${campaign.status})`,
+            );
+        }
+
+        const mccs = await this.prisma.marketingCampaignContact.findMany({
+            where: { campaign_uuid: uuid, status: CampaignContactStatus.PENDING },
+        });
+
+        if (mccs.length === 0) {
+            throw new BadRequestException('No pending draft contacts found for this campaign');
+        }
+
+        await this.prisma.marketingCampaignContact.updateMany({
+            where: { campaign_uuid: uuid, status: CampaignContactStatus.PENDING },
+            data: { status: CampaignContactStatus.QUEUED },
+        });
+
+        const jobs = mccs.map((mcc) => ({
+            name: `send-${mcc.uuid}`,
+            data: { campaign_uuid: uuid, mcc_uuid: mcc.uuid },
+            opts: {
+                jobId: `mcc-${mcc.uuid}`,
+                attempts: 3,
+                backoff: { type: 'exponential' as const, delay: 30_000 },
+                removeOnComplete: 100,
+                removeOnFail: 100,
+            },
+        }));
+        await this.messageSendQueue.addBulk(jobs);
+
+        this.logger.log(`PERSONALIZED campaign ${uuid}: queued ${mccs.length} send jobs`);
+
+        return this.prisma.marketingCampaign.update({
+            where: { uuid },
+            data: {
+                status: CampaignStatus.SENDING,
+                started_at: new Date(),
+                queued_count: mccs.length,
+                total_messages: mccs.length,
+            },
+        });
+    }
+
+    async listDraftMessages(user_uuid: string, uuid: string, query: { page?: number; limit?: number }) {
+        await this.requireOwned(user_uuid, uuid);
+
+        const page = query.page ?? 1;
+        const limit = query.limit ?? 20;
+        const skip = (page - 1) * limit;
+
+        const where = { campaign_uuid: uuid };
+
+        const [data, total] = await Promise.all([
+            this.prisma.outreachMessage.findMany({
+                where,
+                include: { contact: { select: { uuid: true, name: true, email: true, phone: true, company: true } } },
+                orderBy: { created_at: 'asc' },
+                skip,
+                take: limit,
+            }),
+            this.prisma.outreachMessage.count({ where }),
+        ]);
+
+        return { data, total, page, limit, totalPages: Math.ceil(total / limit) };
+    }
+
     async schedule(
         user_uuid: string,
         uuid: string,
@@ -310,10 +461,12 @@ export class MarketingCampaignsService {
                 user_uuid,
                 name: `Copy of ${campaign.name}`,
                 description: campaign.description,
+                campaign_type: campaign.campaign_type,
                 channels: campaign.channels,
                 email_subject: campaign.email_subject,
                 email_content: campaign.email_content,
                 sms_content: campaign.sms_content,
+                ai_prompt: campaign.ai_prompt,
                 sender_profile_uuid: campaign.sender_profile_uuid,
                 filters_snapshot: campaign.filters_snapshot ?? Prisma.JsonNull,
             },
@@ -326,10 +479,11 @@ export class MarketingCampaignsService {
             CampaignStatus.COMPLETED,
             CampaignStatus.CANCELLED,
             CampaignStatus.FAILED,
+            CampaignStatus.DRAFTS_READY,
         ];
         if (!rerunnableStatuses.includes(campaign.status as any)) {
             throw new ConflictException(
-                `Only COMPLETED, CANCELLED, or FAILED campaigns can be re-run (is ${campaign.status})`,
+                `Only COMPLETED, CANCELLED, FAILED, or DRAFTS_READY campaigns can be re-run (is ${campaign.status})`,
             );
         }
 
@@ -380,6 +534,11 @@ export class MarketingCampaignsService {
         });
 
         await this.removePendingJobsForCampaign(uuid);
+
+        if (campaign.status === CampaignStatus.DRAFTS_READY) {
+            // Discard un-sent drafts before user sends them
+            await this.prisma.outreachMessage.deleteMany({ where: { campaign_uuid: uuid } });
+        }
 
         // In-flight send jobs check campaign.status before send and short-circuit to SKIPPED.
         await this.prisma.marketingCampaignContact.updateMany({
@@ -454,7 +613,9 @@ export class MarketingCampaignsService {
         email_subject: string | null | undefined,
         email_content: string | null | undefined,
         sms_content: string | null | undefined,
+        campaign_type: CampaignType = CampaignType.STANDARD,
     ): void {
+        if (campaign_type === CampaignType.PERSONALIZED) return;
         if (channels.includes(Channel.EMAIL)) {
             if (!email_subject || email_subject.trim().length === 0) {
                 throw new BadRequestException('Email subject is required when EMAIL is selected');
@@ -478,7 +639,9 @@ export class MarketingCampaignsService {
         email_subject: string | null | undefined,
         email_content: string | null | undefined,
         sms_content: string | null | undefined,
+        campaign_type: CampaignType = CampaignType.STANDARD,
     ): void {
+        if (campaign_type === CampaignType.PERSONALIZED) return;
         // For partial saves on drafts: only check max lengths / format, not required-ness.
         if (channels.includes(Channel.EMAIL) && email_content && isEmailHtmlEmpty(email_content)) {
             throw new BadRequestException('Email body cannot be empty HTML');

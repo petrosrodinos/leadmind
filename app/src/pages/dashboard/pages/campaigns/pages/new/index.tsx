@@ -4,6 +4,7 @@ import { Button } from "@heroui/react";
 import { ChevronLeft, Save } from "lucide-react";
 import { useCreateCampaign } from "@/features/marketing-campaigns/hooks/use-marketing-campaigns";
 import { Channel } from "@/features/contacts/interfaces/contact.interface";
+import { CampaignType } from "@/features/marketing-campaigns/interfaces/campaign.interface";
 import { Routes } from "@/routes/routes";
 import {
     StepBasics,
@@ -17,6 +18,7 @@ export default function NewCampaignPage() {
     const [basics, setBasics] = useState<BasicsValues>({
         name: "",
         description: "",
+        campaign_type: CampaignType.STANDARD,
         channels: [Channel.EMAIL],
         scheduled_at: null,
     });
@@ -29,10 +31,12 @@ export default function NewCampaignPage() {
             const campaign = await createMutation.mutateAsync({
                 name: basics.name.trim(),
                 description: basics.description.trim() || undefined,
+                campaign_type: basics.campaign_type,
                 channels: basics.channels,
-                scheduled_at: basics.scheduled_at
-                    ? new Date(basics.scheduled_at).toISOString()
-                    : undefined,
+                scheduled_at:
+                    basics.campaign_type === CampaignType.STANDARD && basics.scheduled_at
+                        ? new Date(basics.scheduled_at).toISOString()
+                        : undefined,
             });
             navigate(`/dashboard/campaigns/${campaign.uuid}/edit?step=audience`);
         } catch {
@@ -51,8 +55,7 @@ export default function NewCampaignPage() {
             <header>
                 <h1 className="text-xl font-semibold text-foreground">New campaign</h1>
                 <p className="text-sm text-muted">
-                    Give the campaign a name and pick its channel. You'll choose the audience and
-                    write the message in the next steps.
+                    Pick a type, channel, and name. You'll choose the audience and message in the next steps.
                 </p>
             </header>
 

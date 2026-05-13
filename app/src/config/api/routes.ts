@@ -95,5 +95,7 @@ export const ApiRoutes = {
         rerun: (uuid: string) => `/marketing-campaigns/${uuid}/rerun`,
         duplicate: (uuid: string) => `/marketing-campaigns/${uuid}/duplicate`,
         ai_generate: (uuid: string) => `/marketing-campaigns/${uuid}/ai/generate`,
+        send_drafts: (uuid: string) => `/marketing-campaigns/${uuid}/send-drafts`,
+        draft_messages: (uuid: string) => `/marketing-campaigns/${uuid}/draft-messages`,
     },
 }

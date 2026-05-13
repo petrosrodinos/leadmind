@@ -25,6 +25,7 @@ import { ListCampaignContactsDto } from './dto/list-campaign-contacts.dto';
 import { ScheduleCampaignDto } from './dto/schedule-campaign.dto';
 import { GenerateCampaignMessageDto } from './dto/generate-campaign-message.dto';
 import { PreviewContactsDto } from './dto/preview-contacts.dto';
+import { ListDraftMessagesDto } from './dto/list-draft-messages.dto';
 import { MarketingCampaignsService } from './services/marketing-campaigns.service';
 
 @ApiTags('marketing-campaigns')
@@ -149,5 +150,24 @@ export class MarketingCampaignsController {
         @Body() dto: GenerateCampaignMessageDto,
     ) {
         return this.service.generateMessage(user_uuid, uuid, dto);
+    }
+
+    @Post(':uuid/send-drafts')
+    @ApiOperation({ summary: 'Send pre-generated personalized drafts for a DRAFTS_READY campaign' })
+    sendPersonalizedDrafts(
+        @CurrentUser('uuid') user_uuid: string,
+        @Param('uuid', ParseUUIDPipe) uuid: string,
+    ) {
+        return this.service.sendPersonalizedDrafts(user_uuid, uuid);
+    }
+
+    @Get(':uuid/draft-messages')
+    @ApiOperation({ summary: 'List per-contact draft messages for a PERSONALIZED campaign' })
+    listDraftMessages(
+        @CurrentUser('uuid') user_uuid: string,
+        @Param('uuid', ParseUUIDPipe) uuid: string,
+        @Query() query: ListDraftMessagesDto,
+    ) {
+        return this.service.listDraftMessages(user_uuid, uuid, query);
     }
 }

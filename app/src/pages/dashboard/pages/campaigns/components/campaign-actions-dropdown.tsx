@@ -8,6 +8,7 @@ import {
     useRerunCampaign,
 } from "@/features/marketing-campaigns/hooks/use-marketing-campaigns";
 import type { MarketingCampaign } from "@/features/marketing-campaigns/interfaces/campaign.interface";
+import { CampaignStatuses } from "@/features/marketing-campaigns/interfaces/campaign.interface";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 interface CampaignActionsDropdownProps {
@@ -24,16 +25,21 @@ export function CampaignActionsDropdown({ campaign, onDeleted }: CampaignActions
     const [confirmRerun, setConfirmRerun] = useState(false);
     const [confirmDelete, setConfirmDelete] = useState(false);
 
-    const canCancel = campaign.status === "SENDING" || campaign.status === "SCHEDULED";
+    const canCancel =
+        campaign.status === CampaignStatuses.SENDING ||
+        campaign.status === CampaignStatuses.SCHEDULED ||
+        campaign.status === CampaignStatuses.DRAFTS_READY;
     const canRerun =
-        campaign.status === "COMPLETED" ||
-        campaign.status === "CANCELLED" ||
-        campaign.status === "FAILED";
+        campaign.status === CampaignStatuses.COMPLETED ||
+        campaign.status === CampaignStatuses.CANCELLED ||
+        campaign.status === CampaignStatuses.FAILED ||
+        campaign.status === CampaignStatuses.DRAFTS_READY;
     const canDelete =
-        campaign.status === "DRAFT" ||
-        campaign.status === "COMPLETED" ||
-        campaign.status === "CANCELLED" ||
-        campaign.status === "FAILED";
+        campaign.status === CampaignStatuses.DRAFT ||
+        campaign.status === CampaignStatuses.DRAFTS_READY ||
+        campaign.status === CampaignStatuses.COMPLETED ||
+        campaign.status === CampaignStatuses.CANCELLED ||
+        campaign.status === CampaignStatuses.FAILED;
 
     return (
         <>

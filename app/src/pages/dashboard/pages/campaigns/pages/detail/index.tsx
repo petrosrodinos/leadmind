@@ -1,25 +1,33 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Send } from "lucide-react";
+import { Button } from "@heroui/react";
 import {
     useCampaign,
     useCampaignContacts,
+    useSendPersonalizedDrafts,
 } from "@/features/marketing-campaigns/hooks/use-marketing-campaigns";
+import { CampaignType, CampaignStatuses } from "@/features/marketing-campaigns/interfaces/campaign.interface";
 import { Routes } from "@/routes/routes";
 import { CampaignStatusBadge } from "../../components/campaign-status-badge";
 import { StatsCards } from "../../components/stats-cards";
 import { RecipientsTable } from "../../components/recipients-table";
 import { CampaignActionsDropdown } from "../../components/campaign-actions-dropdown";
 import { CampaignDetailSkeleton } from "../../components/campaign-detail-skeleton";
+import { DraftedMessagesTable } from "../../components/drafted-messages-table";
 
 export default function CampaignDetailPage() {
     const { uuid } = useParams<{ uuid: string }>();
     const navigate = useNavigate();
     const { data: campaign, isLoading } = useCampaign(uuid);
     const { data: contactsPage } = useCampaignContacts(uuid, { limit: 100 });
+    const sendDraftsMutation = useSendPersonalizedDrafts();
 
     if (isLoading || !campaign) {
         return <CampaignDetailSkeleton />;
     }
+
+    const isPersonalized = campaign.campaign_type === CampaignType.PERSONALIZED;
+    const isDraftsReady = campaign.status === CampaignStatuses.DRAFTS_READY;
 
     return (
         <div className="space-y-6">
@@ -46,23 +54,41 @@ export default function CampaignDetailPage() {
                             ` · cancelled ${new Date(campaign.cancelled_at).toLocaleString()}`}
                     </p>
                 </div>
-                <CampaignActionsDropdown
-                    campaign={campaign}
-                    onDeleted={() => navigate(Routes.dashboard.campaigns)}
-                />
+                <div className="flex items-center gap-2">
+                    {isPersonalized && isDraftsReady && (
+                        <Button
+                            onPress={() => sendDraftsMutation.mutate(campaign.uuid)}
+                            isPending={sendDraftsMutation.isPending}
+                        >
+                            <Send className="size-4" />
+                            Send Campaign
+                        </Button>
+                    )}
+                    <CampaignActionsDropdown
+                        campaign={campaign}
+                        onDeleted={() => navigate(Routes.dashboard.campaigns)}
+                    />
+                </div>
             </header>
 
             <StatsCards campaign={campaign} />
 
-            <section className="space-y-3">
-                <h2 className="text-sm font-semibold text-foreground">Recipients</h2>
-                <RecipientsTable rows={contactsPage?.data ?? []} />
-                {contactsPage && contactsPage.total > (contactsPage.data?.length ?? 0) && (
-                    <p className="text-xs text-muted text-center">
-                        Showing first {contactsPage.data.length} of {contactsPage.total}.
-                    </p>
-                )}
-            </section>
+            {isPersonalized && (isDraftsReady || campaign.status === CampaignStatuses.SENDING || campaign.status === CampaignStatuses.COMPLETED) ? (
+                <section className="space-y-3">
+                    <h2 className="text-sm font-semibold text-foreground">Drafted Messages</h2>
+                    <DraftedMessagesTable campaignUuid={campaign.uuid} />
+                </section>
+            ) : (
+                <section className="space-y-3">
+                    <h2 className="text-sm font-semibold text-foreground">Recipients</h2>
+                    <RecipientsTable rows={contactsPage?.data ?? []} />
+                    {contactsPage && contactsPage.total > (contactsPage.data?.length ?? 0) && (
+                        <p className="text-xs text-muted text-center">
+                            Showing first {contactsPage.data.length} of {contactsPage.total}.
+                        </p>
+                    )}
+                </section>
+            )}
         </div>
     );
 }

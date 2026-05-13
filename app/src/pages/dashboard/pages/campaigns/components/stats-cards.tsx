@@ -1,3 +1,5 @@
+import { useAuthStore } from "@/stores/auth";
+import { RoleTypes } from "@/features/user/interfaces/user.interface";
 import type { MarketingCampaign } from "@/features/marketing-campaigns/interfaces/campaign.interface";
 
 interface StatTile {
@@ -7,20 +9,26 @@ interface StatTile {
 }
 
 export function StatsCards({ campaign }: { campaign: MarketingCampaign }) {
+    const { role } = useAuthStore();
+    const isAdmin = role === RoleTypes.ADMIN || role === RoleTypes.SUPER_ADMIN;
+
     const tiles: StatTile[] = [
         { label: "Contacts", value: campaign.selected_contact_count, accent: "neutral" },
         { label: "Messages", value: campaign.total_messages, accent: "neutral" },
         { label: "Sent", value: campaign.sent_count, accent: "primary" },
         { label: "Delivered", value: campaign.delivered_count, accent: "success" },
         { label: "Opened", value: campaign.opened_count, accent: "success" },
-        { label: "Clicked", value: campaign.clicked_count, accent: "success" },
-        { label: "Replied", value: campaign.replied_count, accent: "success" },
-        { label: "Skipped", value: campaign.skipped_count, accent: "neutral" },
         { label: "Failed", value: campaign.failed_count, accent: "error" },
-        { label: "Bounced", value: campaign.bounced_count, accent: "error" },
-        { label: "Unsubscribed", value: campaign.unsubscribed_count, accent: "warning" },
-        { label: "Queued", value: campaign.queued_count, accent: "neutral" },
+        ...(isAdmin ? [
+            { label: "Clicked", value: campaign.clicked_count, accent: "success" as const },
+            { label: "Replied", value: campaign.replied_count, accent: "success" as const },
+            { label: "Skipped", value: campaign.skipped_count, accent: "neutral" as const },
+            { label: "Bounced", value: campaign.bounced_count, accent: "error" as const },
+            { label: "Unsubscribed", value: campaign.unsubscribed_count, accent: "warning" as const },
+            { label: "Queued", value: campaign.queued_count, accent: "neutral" as const },
+        ] : []),
     ];
+
     return (
         <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
             {tiles.map((tile) => (

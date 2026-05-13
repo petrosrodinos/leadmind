@@ -9,6 +9,7 @@ import type {
     MarketingCampaign,
     PaginatedCampaignContacts,
     PaginatedCampaigns,
+    PaginatedDraftMessages,
     PreviewContactsResult,
     UpdateCampaignPayload,
 } from "../interfaces/campaign.interface";
@@ -183,5 +184,31 @@ export async function generateCampaignMessage(
         return response.data;
     } catch (error: any) {
         unwrap(error, "AI generation failed.");
+    }
+}
+
+export async function sendPersonalizedDrafts(uuid: string): Promise<MarketingCampaign> {
+    try {
+        const response = await axiosInstance.post(
+            ApiRoutes.marketing_campaigns.send_drafts(uuid),
+        );
+        return response.data;
+    } catch (error: any) {
+        unwrap(error, "Failed to send drafts.");
+    }
+}
+
+export async function listCampaignDraftMessages(
+    uuid: string,
+    query: { page?: number; limit?: number } = {},
+): Promise<PaginatedDraftMessages> {
+    try {
+        const response = await axiosInstance.get(
+            ApiRoutes.marketing_campaigns.draft_messages(uuid),
+            { params: query },
+        );
+        return response.data;
+    } catch (error: any) {
+        unwrap(error, "Failed to load draft messages.");
     }
 }

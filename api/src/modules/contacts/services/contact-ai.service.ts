@@ -128,6 +128,71 @@ export class ContactAiService {
         return created;
     }
 
+    async draftBulkMessages(
+        user_uuid: string,
+        contacts: Array<Contact & { lead: Lead }>,
+        channel: Channel,
+        prompt: string,
+        language?: string,
+        campaign_uuid?: string,
+    ): Promise<{ generated: number; skipped: number; failed: number }> {
+        const sender_business_description = await this.resolveSenderBusinessDescription(user_uuid);
+        let generated = 0;
+        let skipped = 0;
+        let failed = 0;
+
+        for (const item of contacts) {
+            const idempotencyKey = campaign_uuid
+                ? `campaign:${campaign_uuid}:${item.uuid}:${channel}`
+                : undefined;
+
+            const existing = await this.prisma.outreachMessage.findFirst({
+                where: {
+                    contact_uuid: item.uuid,
+                    channel,
+                    status: MsgStatus.PENDING,
+                    ...(campaign_uuid ? { campaign_uuid } : {}),
+                },
+            });
+            if (existing) {
+                skipped++;
+                this.logger.debug(`Bulk draft ${item.uuid}/${channel}: PENDING draft exists, skipping`);
+                continue;
+            }
+
+            try {
+                const draft = await this.draftForChannel(
+                    channel,
+                    item as Contact,
+                    item.lead,
+                    prompt,
+                    language,
+                    sender_business_description,
+                );
+                const content = channel === Channel.EMAIL ? sanitizeEmailHtml(draft.content) : draft.content;
+                await this.prisma.outreachMessage.create({
+                    data: {
+                        user_uuid,
+                        contact_uuid: item.uuid,
+                        channel,
+                        subject: draft.subject ?? null,
+                        content,
+                        status: MsgStatus.PENDING,
+                        ...(campaign_uuid ? { campaign_uuid, idempotency_key: idempotencyKey } : {}),
+                    },
+                });
+                generated++;
+            } catch (error) {
+                const message = error instanceof Error ? error.message : 'Unknown error';
+                this.logger.error(`Bulk draft ${item.uuid}/${channel}: failed: ${message}`);
+                failed++;
+            }
+        }
+
+        this.logger.log(`Bulk draft complete: ${generated} generated, ${skipped} skipped, ${failed} failed`);
+        return { generated, skipped, failed };
+    }
+
     async draftAdHocMessage(
         user_uuid: string,
         dto: AiDraftMessageDto,

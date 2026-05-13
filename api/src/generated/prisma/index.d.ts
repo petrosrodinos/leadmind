@@ -206,8 +206,17 @@ export const InteractionType: {
 export type InteractionType = (typeof InteractionType)[keyof typeof InteractionType]
 
 
+export const CampaignType: {
+  STANDARD: 'STANDARD',
+  PERSONALIZED: 'PERSONALIZED'
+};
+
+export type CampaignType = (typeof CampaignType)[keyof typeof CampaignType]
+
+
 export const CampaignStatus: {
   DRAFT: 'DRAFT',
+  DRAFTS_READY: 'DRAFTS_READY',
   SCHEDULED: 'SCHEDULED',
   SENDING: 'SENDING',
   COMPLETED: 'COMPLETED',
@@ -275,6 +284,10 @@ export const MsgDirection: typeof $Enums.MsgDirection
 export type InteractionType = $Enums.InteractionType
 
 export const InteractionType: typeof $Enums.InteractionType
+
+export type CampaignType = $Enums.CampaignType
+
+export const CampaignType: typeof $Enums.CampaignType
 
 export type CampaignStatus = $Enums.CampaignStatus
 
@@ -17678,9 +17691,11 @@ export namespace Prisma {
     name: string | null
     description: string | null
     status: $Enums.CampaignStatus | null
+    campaign_type: $Enums.CampaignType | null
     email_subject: string | null
     email_content: string | null
     sms_content: string | null
+    ai_prompt: string | null
     sender_profile_uuid: string | null
     scheduled_at: Date | null
     started_at: Date | null
@@ -17709,9 +17724,11 @@ export namespace Prisma {
     name: string | null
     description: string | null
     status: $Enums.CampaignStatus | null
+    campaign_type: $Enums.CampaignType | null
     email_subject: string | null
     email_content: string | null
     sms_content: string | null
+    ai_prompt: string | null
     sender_profile_uuid: string | null
     scheduled_at: Date | null
     started_at: Date | null
@@ -17740,11 +17757,13 @@ export namespace Prisma {
     name: number
     description: number
     status: number
+    campaign_type: number
     channels: number
     filters_snapshot: number
     email_subject: number
     email_content: number
     sms_content: number
+    ai_prompt: number
     sender_profile_uuid: number
     scheduled_at: number
     started_at: number
@@ -17807,9 +17826,11 @@ export namespace Prisma {
     name?: true
     description?: true
     status?: true
+    campaign_type?: true
     email_subject?: true
     email_content?: true
     sms_content?: true
+    ai_prompt?: true
     sender_profile_uuid?: true
     scheduled_at?: true
     started_at?: true
@@ -17838,9 +17859,11 @@ export namespace Prisma {
     name?: true
     description?: true
     status?: true
+    campaign_type?: true
     email_subject?: true
     email_content?: true
     sms_content?: true
+    ai_prompt?: true
     sender_profile_uuid?: true
     scheduled_at?: true
     started_at?: true
@@ -17869,11 +17892,13 @@ export namespace Prisma {
     name?: true
     description?: true
     status?: true
+    campaign_type?: true
     channels?: true
     filters_snapshot?: true
     email_subject?: true
     email_content?: true
     sms_content?: true
+    ai_prompt?: true
     sender_profile_uuid?: true
     scheduled_at?: true
     started_at?: true
@@ -17989,11 +18014,13 @@ export namespace Prisma {
     name: string
     description: string | null
     status: $Enums.CampaignStatus
+    campaign_type: $Enums.CampaignType
     channels: $Enums.Channel[]
     filters_snapshot: JsonValue | null
     email_subject: string | null
     email_content: string | null
     sms_content: string | null
+    ai_prompt: string | null
     sender_profile_uuid: string | null
     scheduled_at: Date | null
     started_at: Date | null
@@ -18041,11 +18068,13 @@ export namespace Prisma {
     name?: boolean
     description?: boolean
     status?: boolean
+    campaign_type?: boolean
     channels?: boolean
     filters_snapshot?: boolean
     email_subject?: boolean
     email_content?: boolean
     sms_content?: boolean
+    ai_prompt?: boolean
     sender_profile_uuid?: boolean
     scheduled_at?: boolean
     started_at?: boolean
@@ -18080,11 +18109,13 @@ export namespace Prisma {
     name?: boolean
     description?: boolean
     status?: boolean
+    campaign_type?: boolean
     channels?: boolean
     filters_snapshot?: boolean
     email_subject?: boolean
     email_content?: boolean
     sms_content?: boolean
+    ai_prompt?: boolean
     sender_profile_uuid?: boolean
     scheduled_at?: boolean
     started_at?: boolean
@@ -18115,11 +18146,13 @@ export namespace Prisma {
     name?: boolean
     description?: boolean
     status?: boolean
+    campaign_type?: boolean
     channels?: boolean
     filters_snapshot?: boolean
     email_subject?: boolean
     email_content?: boolean
     sms_content?: boolean
+    ai_prompt?: boolean
     sender_profile_uuid?: boolean
     scheduled_at?: boolean
     started_at?: boolean
@@ -18150,11 +18183,13 @@ export namespace Prisma {
     name?: boolean
     description?: boolean
     status?: boolean
+    campaign_type?: boolean
     channels?: boolean
     filters_snapshot?: boolean
     email_subject?: boolean
     email_content?: boolean
     sms_content?: boolean
+    ai_prompt?: boolean
     sender_profile_uuid?: boolean
     scheduled_at?: boolean
     started_at?: boolean
@@ -18176,7 +18211,7 @@ export namespace Prisma {
     updated_at?: boolean
   }
 
-  export type MarketingCampaignOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "name" | "description" | "status" | "channels" | "filters_snapshot" | "email_subject" | "email_content" | "sms_content" | "sender_profile_uuid" | "scheduled_at" | "started_at" | "completed_at" | "cancelled_at" | "selected_contact_count" | "total_messages" | "queued_count" | "sent_count" | "failed_count" | "skipped_count" | "delivered_count" | "opened_count" | "clicked_count" | "replied_count" | "bounced_count" | "unsubscribed_count" | "created_at" | "updated_at", ExtArgs["result"]["marketingCampaign"]>
+  export type MarketingCampaignOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "name" | "description" | "status" | "campaign_type" | "channels" | "filters_snapshot" | "email_subject" | "email_content" | "sms_content" | "ai_prompt" | "sender_profile_uuid" | "scheduled_at" | "started_at" | "completed_at" | "cancelled_at" | "selected_contact_count" | "total_messages" | "queued_count" | "sent_count" | "failed_count" | "skipped_count" | "delivered_count" | "opened_count" | "clicked_count" | "replied_count" | "bounced_count" | "unsubscribed_count" | "created_at" | "updated_at", ExtArgs["result"]["marketingCampaign"]>
   export type MarketingCampaignInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     sender_profile?: boolean | MarketingCampaign$sender_profileArgs<ExtArgs>
@@ -18210,11 +18245,13 @@ export namespace Prisma {
       name: string
       description: string | null
       status: $Enums.CampaignStatus
+      campaign_type: $Enums.CampaignType
       channels: $Enums.Channel[]
       filters_snapshot: Prisma.JsonValue | null
       email_subject: string | null
       email_content: string | null
       sms_content: string | null
+      ai_prompt: string | null
       sender_profile_uuid: string | null
       scheduled_at: Date | null
       started_at: Date | null
@@ -18668,11 +18705,13 @@ export namespace Prisma {
     readonly name: FieldRef<"MarketingCampaign", 'String'>
     readonly description: FieldRef<"MarketingCampaign", 'String'>
     readonly status: FieldRef<"MarketingCampaign", 'CampaignStatus'>
+    readonly campaign_type: FieldRef<"MarketingCampaign", 'CampaignType'>
     readonly channels: FieldRef<"MarketingCampaign", 'Channel[]'>
     readonly filters_snapshot: FieldRef<"MarketingCampaign", 'Json'>
     readonly email_subject: FieldRef<"MarketingCampaign", 'String'>
     readonly email_content: FieldRef<"MarketingCampaign", 'String'>
     readonly sms_content: FieldRef<"MarketingCampaign", 'String'>
+    readonly ai_prompt: FieldRef<"MarketingCampaign", 'String'>
     readonly sender_profile_uuid: FieldRef<"MarketingCampaign", 'String'>
     readonly scheduled_at: FieldRef<"MarketingCampaign", 'DateTime'>
     readonly started_at: FieldRef<"MarketingCampaign", 'DateTime'>
@@ -20630,11 +20669,13 @@ export namespace Prisma {
     name: 'name',
     description: 'description',
     status: 'status',
+    campaign_type: 'campaign_type',
     channels: 'channels',
     filters_snapshot: 'filters_snapshot',
     email_subject: 'email_subject',
     email_content: 'email_content',
     sms_content: 'sms_content',
+    ai_prompt: 'ai_prompt',
     sender_profile_uuid: 'sender_profile_uuid',
     scheduled_at: 'scheduled_at',
     started_at: 'started_at',
@@ -20957,6 +20998,20 @@ export namespace Prisma {
    * Reference to a field of type 'CampaignStatus[]'
    */
   export type ListEnumCampaignStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CampaignStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'CampaignType'
+   */
+  export type EnumCampaignTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CampaignType'>
+    
+
+
+  /**
+   * Reference to a field of type 'CampaignType[]'
+   */
+  export type ListEnumCampaignTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CampaignType[]'>
     
 
 
@@ -22272,11 +22327,13 @@ export namespace Prisma {
     name?: StringFilter<"MarketingCampaign"> | string
     description?: StringNullableFilter<"MarketingCampaign"> | string | null
     status?: EnumCampaignStatusFilter<"MarketingCampaign"> | $Enums.CampaignStatus
+    campaign_type?: EnumCampaignTypeFilter<"MarketingCampaign"> | $Enums.CampaignType
     channels?: EnumChannelNullableListFilter<"MarketingCampaign">
     filters_snapshot?: JsonNullableFilter<"MarketingCampaign">
     email_subject?: StringNullableFilter<"MarketingCampaign"> | string | null
     email_content?: StringNullableFilter<"MarketingCampaign"> | string | null
     sms_content?: StringNullableFilter<"MarketingCampaign"> | string | null
+    ai_prompt?: StringNullableFilter<"MarketingCampaign"> | string | null
     sender_profile_uuid?: StringNullableFilter<"MarketingCampaign"> | string | null
     scheduled_at?: DateTimeNullableFilter<"MarketingCampaign"> | Date | string | null
     started_at?: DateTimeNullableFilter<"MarketingCampaign"> | Date | string | null
@@ -22310,11 +22367,13 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrderInput | SortOrder
     status?: SortOrder
+    campaign_type?: SortOrder
     channels?: SortOrder
     filters_snapshot?: SortOrderInput | SortOrder
     email_subject?: SortOrderInput | SortOrder
     email_content?: SortOrderInput | SortOrder
     sms_content?: SortOrderInput | SortOrder
+    ai_prompt?: SortOrderInput | SortOrder
     sender_profile_uuid?: SortOrderInput | SortOrder
     scheduled_at?: SortOrderInput | SortOrder
     started_at?: SortOrderInput | SortOrder
@@ -22351,11 +22410,13 @@ export namespace Prisma {
     name?: StringFilter<"MarketingCampaign"> | string
     description?: StringNullableFilter<"MarketingCampaign"> | string | null
     status?: EnumCampaignStatusFilter<"MarketingCampaign"> | $Enums.CampaignStatus
+    campaign_type?: EnumCampaignTypeFilter<"MarketingCampaign"> | $Enums.CampaignType
     channels?: EnumChannelNullableListFilter<"MarketingCampaign">
     filters_snapshot?: JsonNullableFilter<"MarketingCampaign">
     email_subject?: StringNullableFilter<"MarketingCampaign"> | string | null
     email_content?: StringNullableFilter<"MarketingCampaign"> | string | null
     sms_content?: StringNullableFilter<"MarketingCampaign"> | string | null
+    ai_prompt?: StringNullableFilter<"MarketingCampaign"> | string | null
     sender_profile_uuid?: StringNullableFilter<"MarketingCampaign"> | string | null
     scheduled_at?: DateTimeNullableFilter<"MarketingCampaign"> | Date | string | null
     started_at?: DateTimeNullableFilter<"MarketingCampaign"> | Date | string | null
@@ -22389,11 +22450,13 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrderInput | SortOrder
     status?: SortOrder
+    campaign_type?: SortOrder
     channels?: SortOrder
     filters_snapshot?: SortOrderInput | SortOrder
     email_subject?: SortOrderInput | SortOrder
     email_content?: SortOrderInput | SortOrder
     sms_content?: SortOrderInput | SortOrder
+    ai_prompt?: SortOrderInput | SortOrder
     sender_profile_uuid?: SortOrderInput | SortOrder
     scheduled_at?: SortOrderInput | SortOrder
     started_at?: SortOrderInput | SortOrder
@@ -22430,11 +22493,13 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"MarketingCampaign"> | string
     description?: StringNullableWithAggregatesFilter<"MarketingCampaign"> | string | null
     status?: EnumCampaignStatusWithAggregatesFilter<"MarketingCampaign"> | $Enums.CampaignStatus
+    campaign_type?: EnumCampaignTypeWithAggregatesFilter<"MarketingCampaign"> | $Enums.CampaignType
     channels?: EnumChannelNullableListFilter<"MarketingCampaign">
     filters_snapshot?: JsonNullableWithAggregatesFilter<"MarketingCampaign">
     email_subject?: StringNullableWithAggregatesFilter<"MarketingCampaign"> | string | null
     email_content?: StringNullableWithAggregatesFilter<"MarketingCampaign"> | string | null
     sms_content?: StringNullableWithAggregatesFilter<"MarketingCampaign"> | string | null
+    ai_prompt?: StringNullableWithAggregatesFilter<"MarketingCampaign"> | string | null
     sender_profile_uuid?: StringNullableWithAggregatesFilter<"MarketingCampaign"> | string | null
     scheduled_at?: DateTimeNullableWithAggregatesFilter<"MarketingCampaign"> | Date | string | null
     started_at?: DateTimeNullableWithAggregatesFilter<"MarketingCampaign"> | Date | string | null
@@ -23960,11 +24025,13 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.CampaignStatus
+    campaign_type?: $Enums.CampaignType
     channels?: MarketingCampaignCreatechannelsInput | $Enums.Channel[]
     filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
     email_subject?: string | null
     email_content?: string | null
     sms_content?: string | null
+    ai_prompt?: string | null
     scheduled_at?: Date | string | null
     started_at?: Date | string | null
     completed_at?: Date | string | null
@@ -23997,11 +24064,13 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.CampaignStatus
+    campaign_type?: $Enums.CampaignType
     channels?: MarketingCampaignCreatechannelsInput | $Enums.Channel[]
     filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
     email_subject?: string | null
     email_content?: string | null
     sms_content?: string | null
+    ai_prompt?: string | null
     sender_profile_uuid?: string | null
     scheduled_at?: Date | string | null
     started_at?: Date | string | null
@@ -24031,11 +24100,13 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumCampaignStatusFieldUpdateOperationsInput | $Enums.CampaignStatus
+    campaign_type?: EnumCampaignTypeFieldUpdateOperationsInput | $Enums.CampaignType
     channels?: MarketingCampaignUpdatechannelsInput | $Enums.Channel[]
     filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
     email_subject?: NullableStringFieldUpdateOperationsInput | string | null
     email_content?: NullableStringFieldUpdateOperationsInput | string | null
     sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    ai_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -24068,11 +24139,13 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumCampaignStatusFieldUpdateOperationsInput | $Enums.CampaignStatus
+    campaign_type?: EnumCampaignTypeFieldUpdateOperationsInput | $Enums.CampaignType
     channels?: MarketingCampaignUpdatechannelsInput | $Enums.Channel[]
     filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
     email_subject?: NullableStringFieldUpdateOperationsInput | string | null
     email_content?: NullableStringFieldUpdateOperationsInput | string | null
     sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    ai_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     sender_profile_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -24104,11 +24177,13 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.CampaignStatus
+    campaign_type?: $Enums.CampaignType
     channels?: MarketingCampaignCreatechannelsInput | $Enums.Channel[]
     filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
     email_subject?: string | null
     email_content?: string | null
     sms_content?: string | null
+    ai_prompt?: string | null
     sender_profile_uuid?: string | null
     scheduled_at?: Date | string | null
     started_at?: Date | string | null
@@ -24135,11 +24210,13 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumCampaignStatusFieldUpdateOperationsInput | $Enums.CampaignStatus
+    campaign_type?: EnumCampaignTypeFieldUpdateOperationsInput | $Enums.CampaignType
     channels?: MarketingCampaignUpdatechannelsInput | $Enums.Channel[]
     filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
     email_subject?: NullableStringFieldUpdateOperationsInput | string | null
     email_content?: NullableStringFieldUpdateOperationsInput | string | null
     sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    ai_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -24167,11 +24244,13 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumCampaignStatusFieldUpdateOperationsInput | $Enums.CampaignStatus
+    campaign_type?: EnumCampaignTypeFieldUpdateOperationsInput | $Enums.CampaignType
     channels?: MarketingCampaignUpdatechannelsInput | $Enums.Channel[]
     filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
     email_subject?: NullableStringFieldUpdateOperationsInput | string | null
     email_content?: NullableStringFieldUpdateOperationsInput | string | null
     sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    ai_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     sender_profile_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -25650,6 +25729,13 @@ export namespace Prisma {
     not?: NestedEnumCampaignStatusFilter<$PrismaModel> | $Enums.CampaignStatus
   }
 
+  export type EnumCampaignTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.CampaignType | EnumCampaignTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.CampaignType[] | ListEnumCampaignTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CampaignType[] | ListEnumCampaignTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumCampaignTypeFilter<$PrismaModel> | $Enums.CampaignType
+  }
+
   export type SenderProfileNullableScalarRelationFilter = {
     is?: SenderProfileWhereInput | null
     isNot?: SenderProfileWhereInput | null
@@ -25662,11 +25748,13 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrder
     status?: SortOrder
+    campaign_type?: SortOrder
     channels?: SortOrder
     filters_snapshot?: SortOrder
     email_subject?: SortOrder
     email_content?: SortOrder
     sms_content?: SortOrder
+    ai_prompt?: SortOrder
     sender_profile_uuid?: SortOrder
     scheduled_at?: SortOrder
     started_at?: SortOrder
@@ -25711,9 +25799,11 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrder
     status?: SortOrder
+    campaign_type?: SortOrder
     email_subject?: SortOrder
     email_content?: SortOrder
     sms_content?: SortOrder
+    ai_prompt?: SortOrder
     sender_profile_uuid?: SortOrder
     scheduled_at?: SortOrder
     started_at?: SortOrder
@@ -25742,9 +25832,11 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrder
     status?: SortOrder
+    campaign_type?: SortOrder
     email_subject?: SortOrder
     email_content?: SortOrder
     sms_content?: SortOrder
+    ai_prompt?: SortOrder
     sender_profile_uuid?: SortOrder
     scheduled_at?: SortOrder
     started_at?: SortOrder
@@ -25790,6 +25882,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumCampaignStatusFilter<$PrismaModel>
     _max?: NestedEnumCampaignStatusFilter<$PrismaModel>
+  }
+
+  export type EnumCampaignTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CampaignType | EnumCampaignTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.CampaignType[] | ListEnumCampaignTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CampaignType[] | ListEnumCampaignTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumCampaignTypeWithAggregatesFilter<$PrismaModel> | $Enums.CampaignType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCampaignTypeFilter<$PrismaModel>
+    _max?: NestedEnumCampaignTypeFilter<$PrismaModel>
   }
 
   export type EnumCampaignContactStatusFilter<$PrismaModel = never> = {
@@ -27074,6 +27176,10 @@ export namespace Prisma {
     set?: $Enums.CampaignStatus
   }
 
+  export type EnumCampaignTypeFieldUpdateOperationsInput = {
+    set?: $Enums.CampaignType
+  }
+
   export type MarketingCampaignUpdatechannelsInput = {
     set?: $Enums.Channel[]
     push?: $Enums.Channel | $Enums.Channel[]
@@ -27664,6 +27770,13 @@ export namespace Prisma {
     not?: NestedEnumCampaignStatusFilter<$PrismaModel> | $Enums.CampaignStatus
   }
 
+  export type NestedEnumCampaignTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.CampaignType | EnumCampaignTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.CampaignType[] | ListEnumCampaignTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CampaignType[] | ListEnumCampaignTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumCampaignTypeFilter<$PrismaModel> | $Enums.CampaignType
+  }
+
   export type NestedEnumCampaignStatusWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.CampaignStatus | EnumCampaignStatusFieldRefInput<$PrismaModel>
     in?: $Enums.CampaignStatus[] | ListEnumCampaignStatusFieldRefInput<$PrismaModel>
@@ -27672,6 +27785,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumCampaignStatusFilter<$PrismaModel>
     _max?: NestedEnumCampaignStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumCampaignTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CampaignType | EnumCampaignTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.CampaignType[] | ListEnumCampaignTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CampaignType[] | ListEnumCampaignTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumCampaignTypeWithAggregatesFilter<$PrismaModel> | $Enums.CampaignType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCampaignTypeFilter<$PrismaModel>
+    _max?: NestedEnumCampaignTypeFilter<$PrismaModel>
   }
 
   export type NestedEnumCampaignContactStatusFilter<$PrismaModel = never> = {
@@ -27990,11 +28113,13 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.CampaignStatus
+    campaign_type?: $Enums.CampaignType
     channels?: MarketingCampaignCreatechannelsInput | $Enums.Channel[]
     filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
     email_subject?: string | null
     email_content?: string | null
     sms_content?: string | null
+    ai_prompt?: string | null
     scheduled_at?: Date | string | null
     started_at?: Date | string | null
     completed_at?: Date | string | null
@@ -28025,11 +28150,13 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.CampaignStatus
+    campaign_type?: $Enums.CampaignType
     channels?: MarketingCampaignCreatechannelsInput | $Enums.Channel[]
     filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
     email_subject?: string | null
     email_content?: string | null
     sms_content?: string | null
+    ai_prompt?: string | null
     sender_profile_uuid?: string | null
     scheduled_at?: Date | string | null
     started_at?: Date | string | null
@@ -28321,11 +28448,13 @@ export namespace Prisma {
     name?: StringFilter<"MarketingCampaign"> | string
     description?: StringNullableFilter<"MarketingCampaign"> | string | null
     status?: EnumCampaignStatusFilter<"MarketingCampaign"> | $Enums.CampaignStatus
+    campaign_type?: EnumCampaignTypeFilter<"MarketingCampaign"> | $Enums.CampaignType
     channels?: EnumChannelNullableListFilter<"MarketingCampaign">
     filters_snapshot?: JsonNullableFilter<"MarketingCampaign">
     email_subject?: StringNullableFilter<"MarketingCampaign"> | string | null
     email_content?: StringNullableFilter<"MarketingCampaign"> | string | null
     sms_content?: StringNullableFilter<"MarketingCampaign"> | string | null
+    ai_prompt?: StringNullableFilter<"MarketingCampaign"> | string | null
     sender_profile_uuid?: StringNullableFilter<"MarketingCampaign"> | string | null
     scheduled_at?: DateTimeNullableFilter<"MarketingCampaign"> | Date | string | null
     started_at?: DateTimeNullableFilter<"MarketingCampaign"> | Date | string | null
@@ -29964,11 +30093,13 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.CampaignStatus
+    campaign_type?: $Enums.CampaignType
     channels?: MarketingCampaignCreatechannelsInput | $Enums.Channel[]
     filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
     email_subject?: string | null
     email_content?: string | null
     sms_content?: string | null
+    ai_prompt?: string | null
     scheduled_at?: Date | string | null
     started_at?: Date | string | null
     completed_at?: Date | string | null
@@ -30000,11 +30131,13 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.CampaignStatus
+    campaign_type?: $Enums.CampaignType
     channels?: MarketingCampaignCreatechannelsInput | $Enums.Channel[]
     filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
     email_subject?: string | null
     email_content?: string | null
     sms_content?: string | null
+    ai_prompt?: string | null
     sender_profile_uuid?: string | null
     scheduled_at?: Date | string | null
     started_at?: Date | string | null
@@ -30219,11 +30352,13 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumCampaignStatusFieldUpdateOperationsInput | $Enums.CampaignStatus
+    campaign_type?: EnumCampaignTypeFieldUpdateOperationsInput | $Enums.CampaignType
     channels?: MarketingCampaignUpdatechannelsInput | $Enums.Channel[]
     filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
     email_subject?: NullableStringFieldUpdateOperationsInput | string | null
     email_content?: NullableStringFieldUpdateOperationsInput | string | null
     sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    ai_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -30255,11 +30390,13 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumCampaignStatusFieldUpdateOperationsInput | $Enums.CampaignStatus
+    campaign_type?: EnumCampaignTypeFieldUpdateOperationsInput | $Enums.CampaignType
     channels?: MarketingCampaignUpdatechannelsInput | $Enums.Channel[]
     filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
     email_subject?: NullableStringFieldUpdateOperationsInput | string | null
     email_content?: NullableStringFieldUpdateOperationsInput | string | null
     sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    ai_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     sender_profile_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -30388,11 +30525,13 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.CampaignStatus
+    campaign_type?: $Enums.CampaignType
     channels?: MarketingCampaignCreatechannelsInput | $Enums.Channel[]
     filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
     email_subject?: string | null
     email_content?: string | null
     sms_content?: string | null
+    ai_prompt?: string | null
     scheduled_at?: Date | string | null
     started_at?: Date | string | null
     completed_at?: Date | string | null
@@ -30424,11 +30563,13 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.CampaignStatus
+    campaign_type?: $Enums.CampaignType
     channels?: MarketingCampaignCreatechannelsInput | $Enums.Channel[]
     filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
     email_subject?: string | null
     email_content?: string | null
     sms_content?: string | null
+    ai_prompt?: string | null
     sender_profile_uuid?: string | null
     scheduled_at?: Date | string | null
     started_at?: Date | string | null
@@ -30617,11 +30758,13 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumCampaignStatusFieldUpdateOperationsInput | $Enums.CampaignStatus
+    campaign_type?: EnumCampaignTypeFieldUpdateOperationsInput | $Enums.CampaignType
     channels?: MarketingCampaignUpdatechannelsInput | $Enums.Channel[]
     filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
     email_subject?: NullableStringFieldUpdateOperationsInput | string | null
     email_content?: NullableStringFieldUpdateOperationsInput | string | null
     sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    ai_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -30653,11 +30796,13 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumCampaignStatusFieldUpdateOperationsInput | $Enums.CampaignStatus
+    campaign_type?: EnumCampaignTypeFieldUpdateOperationsInput | $Enums.CampaignType
     channels?: MarketingCampaignUpdatechannelsInput | $Enums.Channel[]
     filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
     email_subject?: NullableStringFieldUpdateOperationsInput | string | null
     email_content?: NullableStringFieldUpdateOperationsInput | string | null
     sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    ai_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     sender_profile_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -30934,11 +31079,13 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.CampaignStatus
+    campaign_type?: $Enums.CampaignType
     channels?: MarketingCampaignCreatechannelsInput | $Enums.Channel[]
     filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
     email_subject?: string | null
     email_content?: string | null
     sms_content?: string | null
+    ai_prompt?: string | null
     scheduled_at?: Date | string | null
     started_at?: Date | string | null
     completed_at?: Date | string | null
@@ -30970,11 +31117,13 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.CampaignStatus
+    campaign_type?: $Enums.CampaignType
     channels?: MarketingCampaignCreatechannelsInput | $Enums.Channel[]
     filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
     email_subject?: string | null
     email_content?: string | null
     sms_content?: string | null
+    ai_prompt?: string | null
     scheduled_at?: Date | string | null
     started_at?: Date | string | null
     completed_at?: Date | string | null
@@ -31446,11 +31595,13 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.CampaignStatus
+    campaign_type?: $Enums.CampaignType
     channels?: MarketingCampaignCreatechannelsInput | $Enums.Channel[]
     filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
     email_subject?: string | null
     email_content?: string | null
     sms_content?: string | null
+    ai_prompt?: string | null
     scheduled_at?: Date | string | null
     started_at?: Date | string | null
     completed_at?: Date | string | null
@@ -31482,11 +31633,13 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.CampaignStatus
+    campaign_type?: $Enums.CampaignType
     channels?: MarketingCampaignCreatechannelsInput | $Enums.Channel[]
     filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
     email_subject?: string | null
     email_content?: string | null
     sms_content?: string | null
+    ai_prompt?: string | null
     sender_profile_uuid?: string | null
     scheduled_at?: Date | string | null
     started_at?: Date | string | null
@@ -31593,11 +31746,13 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumCampaignStatusFieldUpdateOperationsInput | $Enums.CampaignStatus
+    campaign_type?: EnumCampaignTypeFieldUpdateOperationsInput | $Enums.CampaignType
     channels?: MarketingCampaignUpdatechannelsInput | $Enums.Channel[]
     filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
     email_subject?: NullableStringFieldUpdateOperationsInput | string | null
     email_content?: NullableStringFieldUpdateOperationsInput | string | null
     sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    ai_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -31629,11 +31784,13 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumCampaignStatusFieldUpdateOperationsInput | $Enums.CampaignStatus
+    campaign_type?: EnumCampaignTypeFieldUpdateOperationsInput | $Enums.CampaignType
     channels?: MarketingCampaignUpdatechannelsInput | $Enums.Channel[]
     filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
     email_subject?: NullableStringFieldUpdateOperationsInput | string | null
     email_content?: NullableStringFieldUpdateOperationsInput | string | null
     sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    ai_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     sender_profile_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -31842,11 +31999,13 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.CampaignStatus
+    campaign_type?: $Enums.CampaignType
     channels?: MarketingCampaignCreatechannelsInput | $Enums.Channel[]
     filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
     email_subject?: string | null
     email_content?: string | null
     sms_content?: string | null
+    ai_prompt?: string | null
     sender_profile_uuid?: string | null
     scheduled_at?: Date | string | null
     started_at?: Date | string | null
@@ -32218,11 +32377,13 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumCampaignStatusFieldUpdateOperationsInput | $Enums.CampaignStatus
+    campaign_type?: EnumCampaignTypeFieldUpdateOperationsInput | $Enums.CampaignType
     channels?: MarketingCampaignUpdatechannelsInput | $Enums.Channel[]
     filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
     email_subject?: NullableStringFieldUpdateOperationsInput | string | null
     email_content?: NullableStringFieldUpdateOperationsInput | string | null
     sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    ai_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -32253,11 +32414,13 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumCampaignStatusFieldUpdateOperationsInput | $Enums.CampaignStatus
+    campaign_type?: EnumCampaignTypeFieldUpdateOperationsInput | $Enums.CampaignType
     channels?: MarketingCampaignUpdatechannelsInput | $Enums.Channel[]
     filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
     email_subject?: NullableStringFieldUpdateOperationsInput | string | null
     email_content?: NullableStringFieldUpdateOperationsInput | string | null
     sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    ai_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     sender_profile_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -32288,11 +32451,13 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumCampaignStatusFieldUpdateOperationsInput | $Enums.CampaignStatus
+    campaign_type?: EnumCampaignTypeFieldUpdateOperationsInput | $Enums.CampaignType
     channels?: MarketingCampaignUpdatechannelsInput | $Enums.Channel[]
     filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
     email_subject?: NullableStringFieldUpdateOperationsInput | string | null
     email_content?: NullableStringFieldUpdateOperationsInput | string | null
     sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    ai_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     sender_profile_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -32908,11 +33073,13 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.CampaignStatus
+    campaign_type?: $Enums.CampaignType
     channels?: MarketingCampaignCreatechannelsInput | $Enums.Channel[]
     filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
     email_subject?: string | null
     email_content?: string | null
     sms_content?: string | null
+    ai_prompt?: string | null
     scheduled_at?: Date | string | null
     started_at?: Date | string | null
     completed_at?: Date | string | null
@@ -32938,11 +33105,13 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumCampaignStatusFieldUpdateOperationsInput | $Enums.CampaignStatus
+    campaign_type?: EnumCampaignTypeFieldUpdateOperationsInput | $Enums.CampaignType
     channels?: MarketingCampaignUpdatechannelsInput | $Enums.Channel[]
     filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
     email_subject?: NullableStringFieldUpdateOperationsInput | string | null
     email_content?: NullableStringFieldUpdateOperationsInput | string | null
     sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    ai_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -32974,11 +33143,13 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumCampaignStatusFieldUpdateOperationsInput | $Enums.CampaignStatus
+    campaign_type?: EnumCampaignTypeFieldUpdateOperationsInput | $Enums.CampaignType
     channels?: MarketingCampaignUpdatechannelsInput | $Enums.Channel[]
     filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
     email_subject?: NullableStringFieldUpdateOperationsInput | string | null
     email_content?: NullableStringFieldUpdateOperationsInput | string | null
     sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    ai_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -33009,11 +33180,13 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumCampaignStatusFieldUpdateOperationsInput | $Enums.CampaignStatus
+    campaign_type?: EnumCampaignTypeFieldUpdateOperationsInput | $Enums.CampaignType
     channels?: MarketingCampaignUpdatechannelsInput | $Enums.Channel[]
     filters_snapshot?: NullableJsonNullValueInput | InputJsonValue
     email_subject?: NullableStringFieldUpdateOperationsInput | string | null
     email_content?: NullableStringFieldUpdateOperationsInput | string | null
     sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    ai_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null

@@ -1,11 +1,13 @@
 import { Input, Label, TextArea, TextField } from "@heroui/react";
 import { Channel } from "@/features/contacts/interfaces/contact.interface";
+import { CampaignType } from "@/features/marketing-campaigns/interfaces/campaign.interface";
 import { cn } from "@/lib/utils";
-import { Mail, MessageSquare } from "lucide-react";
+import { Mail, MessageSquare, Sparkles, LayoutTemplate } from "lucide-react";
 
 export interface BasicsValues {
     name: string;
     description: string;
+    campaign_type: CampaignType;
     channels: Channel[];
     scheduled_at: string | null;
 }
@@ -20,6 +22,12 @@ export function StepBasics({ value, onChange }: StepBasicsProps) {
     const selectChannel = (c: Channel) => {
         if (activeChannel === c) return;
         onChange({ channels: [c] });
+    };
+    const selectType = (t: CampaignType) => {
+        if (value.campaign_type === t) return;
+        const patch: Partial<BasicsValues> = { campaign_type: t };
+        if (t === CampaignType.PERSONALIZED) patch.scheduled_at = null;
+        onChange(patch);
     };
 
     return (
@@ -45,6 +53,26 @@ export function StepBasics({ value, onChange }: StepBasicsProps) {
                 />
             </TextField>
 
+            <div role="radiogroup" aria-label="Campaign type">
+                <Label>Campaign type</Label>
+                <div className="mt-2 flex gap-2 flex-wrap">
+                    <TypeChip
+                        active={value.campaign_type === CampaignType.STANDARD}
+                        onClick={() => selectType(CampaignType.STANDARD)}
+                        icon={LayoutTemplate}
+                        label="Standard"
+                        description="Same template for all contacts"
+                    />
+                    <TypeChip
+                        active={value.campaign_type === CampaignType.PERSONALIZED}
+                        onClick={() => selectType(CampaignType.PERSONALIZED)}
+                        icon={Sparkles}
+                        label="Personalized"
+                        description="Unique AI draft per contact"
+                    />
+                </div>
+            </div>
+
             <div role="radiogroup" aria-label="Channel">
                 <Label>Channel</Label>
                 <div className="mt-2 flex gap-2 flex-wrap">
@@ -66,23 +94,56 @@ export function StepBasics({ value, onChange }: StepBasicsProps) {
                 </p>
             </div>
 
-            <TextField name="scheduled_at">
-                <Label>Schedule (optional)</Label>
-                <Input
-                    type="datetime-local"
-                    value={value.scheduled_at ?? ""}
-                    onChange={(e) =>
-                        onChange({
-                            scheduled_at: e.target.value || null,
-                        })
-                    }
-                />
-                <p className="text-xs text-muted mt-1">
-                    If empty, the campaign starts immediately when you press Start. Otherwise
-                    it queues for this time.
-                </p>
-            </TextField>
+            {value.campaign_type === CampaignType.STANDARD && (
+                <TextField name="scheduled_at">
+                    <Label>Schedule (optional)</Label>
+                    <Input
+                        type="datetime-local"
+                        value={value.scheduled_at ?? ""}
+                        onChange={(e) =>
+                            onChange({
+                                scheduled_at: e.target.value || null,
+                            })
+                        }
+                    />
+                    <p className="text-xs text-muted mt-1">
+                        If empty, the campaign starts immediately when you press Start. Otherwise
+                        it queues for this time.
+                    </p>
+                </TextField>
+            )}
         </div>
+    );
+}
+
+interface TypeChipProps {
+    active: boolean;
+    onClick: () => void;
+    icon: React.ComponentType<{ className?: string }>;
+    label: string;
+    description: string;
+}
+
+function TypeChip({ active, onClick, icon: Icon, label, description }: TypeChipProps) {
+    return (
+        <button
+            type="button"
+            role="radio"
+            aria-checked={active}
+            onClick={onClick}
+            className={cn(
+                "inline-flex items-start gap-3 rounded-xl border px-4 py-3 text-sm transition-colors text-left w-48",
+                active
+                    ? "border-accent bg-accent/10 text-accent"
+                    : "border-border text-muted hover:text-foreground",
+            )}
+        >
+            <Icon className="size-4 mt-0.5 shrink-0" />
+            <div>
+                <div className="font-medium">{label}</div>
+                <div className={cn("text-xs mt-0.5", active ? "text-accent/70" : "text-muted")}>{description}</div>
+            </div>
+        </button>
     );
 }
 

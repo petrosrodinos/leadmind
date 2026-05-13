@@ -1,6 +1,7 @@
 import { Chip } from "@heroui/react";
-import { Calendar, Mail, MessageSquare, Users } from "lucide-react";
+import { Calendar, Mail, MessageSquare, Sparkles, Users } from "lucide-react";
 import type { Channel } from "@/features/contacts/interfaces/contact.interface";
+import { CampaignType } from "@/features/marketing-campaigns/interfaces/campaign.interface";
 import type { MessageComposerValue } from "@/features/messaging/components/message-composer";
 import type { BasicsValues } from "./step-basics";
 
@@ -8,9 +9,12 @@ interface StepReviewProps {
     basics: BasicsValues;
     audienceCount: number | null;
     message: MessageComposerValue;
+    aiPrompt: string;
 }
 
-export function StepReview({ basics, audienceCount, message }: StepReviewProps) {
+export function StepReview({ basics, audienceCount, message, aiPrompt }: StepReviewProps) {
+    const isPersonalized = basics.campaign_type === CampaignType.PERSONALIZED;
+
     return (
         <div className="flex flex-col gap-5 max-w-3xl">
             <section className="rounded-xl border border-border bg-surface p-4 space-y-2">
@@ -25,6 +29,12 @@ export function StepReview({ basics, audienceCount, message }: StepReviewProps) 
                             <Chip.Label>{c}</Chip.Label>
                         </Chip>
                     ))}
+                    {isPersonalized && (
+                        <Chip size="sm" variant="soft" color="success">
+                            <Sparkles className="size-3" />
+                            <Chip.Label>Personalized</Chip.Label>
+                        </Chip>
+                    )}
                     {basics.scheduled_at && (
                         <Chip size="sm" variant="soft" color="warning">
                             <Calendar className="size-3" />
@@ -42,7 +52,19 @@ export function StepReview({ basics, audienceCount, message }: StepReviewProps) 
                 </div>
             </section>
 
-            {basics.channels.includes("EMAIL" as Channel) && (
+            {isPersonalized && (
+                <section className="rounded-xl border border-border bg-surface p-4 space-y-2">
+                    <h3 className="text-xs uppercase tracking-wide text-muted">Message goal</h3>
+                    <p className="text-sm text-foreground whitespace-pre-wrap">
+                        {aiPrompt || <span className="text-muted italic">— no prompt set —</span>}
+                    </p>
+                    <p className="text-xs text-muted">
+                        The AI will generate a unique message for each contact when you click "Generate Drafts".
+                    </p>
+                </section>
+            )}
+
+            {!isPersonalized && basics.channels.includes("EMAIL" as Channel) && (
                 <section className="rounded-xl border border-border bg-surface p-4 space-y-3">
                     <h3 className="text-xs uppercase tracking-wide text-muted">Email</h3>
                     <div>
@@ -64,7 +86,7 @@ export function StepReview({ basics, audienceCount, message }: StepReviewProps) 
                 </section>
             )}
 
-            {basics.channels.includes("SMS" as Channel) && (
+            {!isPersonalized && basics.channels.includes("SMS" as Channel) && (
                 <section className="rounded-xl border border-border bg-surface p-4 space-y-2">
                     <h3 className="text-xs uppercase tracking-wide text-muted">SMS</h3>
                     <div className="rounded-lg border border-border bg-surface-secondary/30 p-3 text-sm whitespace-pre-wrap">

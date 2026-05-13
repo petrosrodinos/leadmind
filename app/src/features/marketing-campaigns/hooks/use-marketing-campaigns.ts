@@ -7,16 +7,18 @@ import {
     generateCampaignMessage,
     getCampaign,
     listCampaignContacts,
+    listCampaignDraftMessages,
     listCampaigns,
     previewCampaignContacts,
     rerunCampaign,
     scheduleCampaign,
+    sendPersonalizedDrafts,
     startCampaign,
     updateCampaign,
 } from "../services/marketing-campaigns.service";
 import type {
     CampaignFilters,
-    CampaignStatus,
+    CampaignStatuses,
     CreateCampaignPayload,
     GenerateCampaignMessagePayload,
     ListCampaignContactsQuery,
@@ -24,6 +26,7 @@ import type {
     MarketingCampaign,
     UpdateCampaignPayload,
 } from "../interfaces/campaign.interface";
+import { CampaignStatuses as CS, CampaignType } from "../interfaces/campaign.interface";
 import { toast } from "@/hooks/use-toast";
 
 export const campaignsQueryKeys = {
@@ -34,8 +37,8 @@ export const campaignsQueryKeys = {
         ["marketing-campaigns", "contacts", uuid, query] as const,
 };
 
-const isActiveStatus = (status: CampaignStatus) =>
-    status === "SENDING" || status === "SCHEDULED";
+const isActiveStatus = (status: CampaignStatuses) =>
+    status === CS.SENDING || status === CS.SCHEDULED;
 
 export function useCampaigns(query: ListCampaignsQuery) {
     return useQuery({
@@ -149,10 +152,15 @@ export function useStartCampaign() {
     const qc = useQueryClient();
     return useMutation({
         mutationFn: (uuid: string) => startCampaign(uuid),
-        onSuccess: (_data, uuid) => {
+        onSuccess: (data, uuid) => {
             qc.invalidateQueries({ queryKey: campaignsQueryKeys.detail(uuid) });
             qc.invalidateQueries({ queryKey: campaignsQueryKeys.all });
-            toast({ title: "Campaign queued for dispatch", duration: 2500 });
+            const isPersonalized = data.campaign_type === CampaignType.PERSONALIZED;
+            toast({
+                title: isPersonalized ? "Drafts generated" : "Campaign queued for dispatch",
+                description: isPersonalized ? "Review your drafts and send when ready." : undefined,
+                duration: 3000,
+            });
         },
         onError: (error: Error) => {
             toast({
@@ -257,5 +265,34 @@ export function useCampaignAiGenerate() {
                 variant: "error",
             });
         },
+    });
+}
+
+export function useSendPersonalizedDrafts() {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: (uuid: string) => sendPersonalizedDrafts(uuid),
+        onSuccess: (_data, uuid) => {
+            qc.invalidateQueries({ queryKey: campaignsQueryKeys.detail(uuid) });
+            qc.invalidateQueries({ queryKey: campaignsQueryKeys.all });
+            toast({ title: "Campaign dispatching", description: "Messages are being sent.", duration: 2500 });
+        },
+        onError: (error: Error) => {
+            toast({
+                title: "Could not send drafts",
+                description: error.message,
+                duration: 3000,
+                variant: "error",
+            });
+        },
+    });
+}
+
+export function useCampaignDraftMessages(uuid: string | null | undefined, query: { page?: number; limit?: number } = {}) {
+    return useQuery({
+        queryKey: ["marketing-campaigns", "draft-messages", uuid, query],
+        queryFn: () => listCampaignDraftMessages(uuid as string, query),
+        enabled: !!uuid,
+        placeholderData: (prev) => prev,
     });
 }

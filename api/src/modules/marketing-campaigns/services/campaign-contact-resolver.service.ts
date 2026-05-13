@@ -96,11 +96,12 @@ export class CampaignContactResolverService {
         };
     }
 
-    async resolveContactUuids(user_uuid: string, filters: CampaignFiltersDto): Promise<string[]> {
+    async resolveContactUuids(user_uuid: string, filters: CampaignFiltersDto, limit?: number): Promise<string[]> {
         const where = this.buildWhereInput(user_uuid, filters);
         const rows = await this.prisma.contact.findMany({
             where,
             select: { uuid: true },
+            ...(limit !== undefined && { take: limit }),
         });
         return rows.map((r) => r.uuid);
     }

@@ -321,11 +321,13 @@ model MarketingCampaign {
   name                String
   description         String?
   status              CampaignStatus @default(DRAFT)
+  campaign_type       CampaignType   @default(STANDARD)
   channels            Channel[]      @default([EMAIL])
   filters_snapshot    Json?
   email_subject       String?
   email_content       String?        @db.Text
   sms_content         String?        @db.Text
+  ai_prompt           String?        @db.Text
   sender_profile_uuid String?
   scheduled_at        DateTime?
   started_at          DateTime?
@@ -472,8 +474,14 @@ enum InteractionType {
   UNSUBSCRIBED
 }
 
+enum CampaignType {
+  STANDARD
+  PERSONALIZED
+}
+
 enum CampaignStatus {
   DRAFT
+  DRAFTS_READY
   SCHEDULED
   SENDING
   COMPLETED

@@ -325,11 +325,13 @@ exports.Prisma.MarketingCampaignScalarFieldEnum = {
   name: 'name',
   description: 'description',
   status: 'status',
+  campaign_type: 'campaign_type',
   channels: 'channels',
   filters_snapshot: 'filters_snapshot',
   email_subject: 'email_subject',
   email_content: 'email_content',
   sms_content: 'sms_content',
+  ai_prompt: 'ai_prompt',
   sender_profile_uuid: 'sender_profile_uuid',
   scheduled_at: 'scheduled_at',
   started_at: 'started_at',
@@ -484,11 +486,17 @@ exports.JobTrigger = exports.$Enums.JobTrigger = {
 
 exports.CampaignStatus = exports.$Enums.CampaignStatus = {
   DRAFT: 'DRAFT',
+  DRAFTS_READY: 'DRAFTS_READY',
   SCHEDULED: 'SCHEDULED',
   SENDING: 'SENDING',
   COMPLETED: 'COMPLETED',
   CANCELLED: 'CANCELLED',
   FAILED: 'FAILED'
+};
+
+exports.CampaignType = exports.$Enums.CampaignType = {
+  STANDARD: 'STANDARD',
+  PERSONALIZED: 'PERSONALIZED'
 };
 
 exports.CampaignContactStatus = exports.$Enums.CampaignContactStatus = {

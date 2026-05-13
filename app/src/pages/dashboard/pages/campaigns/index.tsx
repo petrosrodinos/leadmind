@@ -12,6 +12,7 @@ import {
 import type {
     MarketingCampaign,
 } from "@/features/marketing-campaigns/interfaces/campaign.interface";
+import { CampaignStatuses } from "@/features/marketing-campaigns/interfaces/campaign.interface";
 import { useContactTags } from "@/features/contacts/hooks/use-contacts";
 import { MultiSelect } from "@/components/ui/multi-select";
 import { Routes } from "@/routes/routes";
@@ -108,7 +109,7 @@ export default function CampaignsPage() {
 
 function CampaignRow({ campaign }: { campaign: MarketingCampaign }) {
     const href =
-        campaign.status === "DRAFT"
+        campaign.status === CampaignStatuses.DRAFT
             ? `/dashboard/campaigns/${campaign.uuid}/edit`
             : `/dashboard/campaigns/${campaign.uuid}`;
     return (
