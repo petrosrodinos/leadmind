@@ -6,6 +6,7 @@ import {
     deleteContact,
     enrichContact,
     getContact,
+    getContactTags,
     listContactInteractions,
     listContactMessages,
     listContacts,
@@ -38,12 +39,21 @@ export const contactsQueryKeys = {
     detail: (uuid: string) => ["contacts", "detail", uuid] as const,
     messages: (uuid: string) => ["outreach-messages", uuid] as const,
     interactions: (uuid: string) => ["contact-interactions", uuid] as const,
+    tags: ["contact-tags"] as const,
 };
 
 const anyContactProcessing = (page: PaginatedContacts | undefined): boolean => {
     if (!page) return false;
     return page.data.some((c) => c.score == null);
 };
+
+export function useContactTags() {
+    return useQuery({
+        queryKey: contactsQueryKeys.tags,
+        queryFn: getContactTags,
+        staleTime: 30_000,
+    });
+}
 
 export function useContacts(query: ListContactsQuery) {
     return useQuery({
@@ -225,6 +235,7 @@ export function useUpdateContactTags() {
         },
         onSettled: () => {
             qc.invalidateQueries({ queryKey: contactsQueryKeys.all });
+            qc.invalidateQueries({ queryKey: contactsQueryKeys.tags });
         },
     });
 }

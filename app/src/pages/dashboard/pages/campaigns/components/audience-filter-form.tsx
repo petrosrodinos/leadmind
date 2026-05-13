@@ -2,6 +2,8 @@ import { Input, Label, ListBox, Select, Switch, TextField } from "@heroui/react"
 import type { CampaignFilters } from "@/features/marketing-campaigns/interfaces/campaign.interface";
 import { LeadStatus } from "@/features/contacts/interfaces/contact.interface";
 import { useFilters } from "@/features/filters/hooks/use-filters";
+import { useContactTags } from "@/features/contacts/hooks/use-contacts";
+import { MultiSelect } from "@/components/ui/multi-select";
 
 interface AudienceFilterFormProps {
     value: CampaignFilters;
@@ -15,6 +17,7 @@ export function AudienceFilterForm({
     disabled,
 }: AudienceFilterFormProps) {
     const { data: filters, isLoading: filtersLoading } = useFilters();
+    const { data: availableTags = [] } = useContactTags();
 
     return (
         <div className="grid gap-4 sm:grid-cols-2">
@@ -116,21 +119,17 @@ export function AudienceFilterForm({
                 />
             </TextField>
 
-            <TextField name="tags" className="w-full">
-                <Label>Tags (comma-separated)</Label>
-                <Input
-                    placeholder="warm, vip"
-                    value={(value.tags ?? []).join(", ")}
-                    onChange={(e) => {
-                        const tags = e.target.value
-                            .split(",")
-                            .map((s) => s.trim())
-                            .filter(Boolean);
-                        onChange({ tags: tags.length ? tags : undefined });
-                    }}
+            <div>
+                <Label className="mb-1 block">Tags</Label>
+                <MultiSelect
+                    options={availableTags}
+                    value={value.tags ?? []}
+                    onChange={(next) => onChange({ tags: next.length ? next : undefined })}
+                    placeholder="Any tags"
                     disabled={disabled}
+                    aria-label="Filter by tags"
                 />
-            </TextField>
+            </div>
 
             <TextField name="last_after" className="w-full">
                 <Label>Last interaction after</Label>

@@ -3,7 +3,7 @@ import { Button, Dropdown, ListBox, Select, TextArea, Tooltip } from "@heroui/re
 import { CalendarDays, ChevronDown, Info, Phone, Sparkles } from "lucide-react";
 import type { Contact, LeadStatus } from "@/features/contacts/interfaces/contact.interface";
 import { STATUS_OPTIONS } from "@/features/contacts/constants/contacts.constants";
-import { useRescoreContact, useUpdateContactNotes, useUpdateContactStatus, useUpdateContactTags } from "@/features/contacts/hooks/use-contacts";
+import { useContactTags, useRescoreContact, useUpdateContactNotes, useUpdateContactStatus, useUpdateContactTags } from "@/features/contacts/hooks/use-contacts";
 import { ScoreBadge } from "@/pages/dashboard/pages/leads/components/badges";
 import { InteractionTimeline } from "@/pages/dashboard/pages/contacts/components/interaction-timeline";
 import { ChangeStatusModal } from "./change-status-modal";
@@ -23,6 +23,7 @@ export function CrmTab({ contact, onNavigateToOutreach }: CrmTabProps) {
   const updateNotes = useUpdateContactNotes();
   const updateTags = useUpdateContactTags();
   const rescore = useRescoreContact();
+  const { data: allTags = [] } = useContactTags();
 
   const [notes, setNotes] = useState(contact.notes ?? "");
   const [statusModalOpen, setStatusModalOpen] = useState(false);
@@ -160,7 +161,7 @@ export function CrmTab({ contact, onNavigateToOutreach }: CrmTabProps) {
 
           <div className="flex flex-col gap-2">
             <p className={LABEL_CLASS}>Tags</p>
-            <TagEditor tags={contact.tags} onChange={handleTagsChange} disabled={updateTags.isPending} />
+            <TagEditor tags={contact.tags} onChange={handleTagsChange} disabled={updateTags.isPending} availableTags={allTags} />
           </div>
         </div>
       </div>

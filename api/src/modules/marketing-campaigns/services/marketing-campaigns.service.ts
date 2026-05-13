@@ -154,6 +154,14 @@ export class MarketingCampaignsService {
                     { description: { contains: query.search, mode: 'insensitive' } },
                 ],
             }),
+            ...(query.tags && query.tags.length > 0 && {
+                AND: query.tags.map((tag) => ({
+                    filters_snapshot: {
+                        path: ['tags'],
+                        array_contains: [tag],
+                    },
+                })),
+            }),
         };
 
         const [data, total] = await Promise.all([

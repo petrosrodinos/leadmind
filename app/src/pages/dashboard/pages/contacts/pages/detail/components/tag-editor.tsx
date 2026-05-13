@@ -6,14 +6,19 @@ interface TagEditorProps {
   tags: string[];
   onChange: (next: string[]) => void;
   disabled?: boolean;
+  availableTags?: string[];
 }
 
-export function TagEditor({ tags, onChange, disabled }: TagEditorProps) {
+export function TagEditor({ tags, onChange, disabled, availableTags = [] }: TagEditorProps) {
   const [adding, setAdding] = useState(false);
   const [draft, setDraft] = useState("");
   const [editingIdx, setEditingIdx] = useState<number | null>(null);
   const [editingValue, setEditingValue] = useState("");
   const editInputRef = useRef<HTMLInputElement | null>(null);
+
+  const suggestions = availableTags.filter(
+    (t) => !tags.includes(t) && (!draft.trim() || t.toLowerCase().includes(draft.toLowerCase().trim())),
+  ).slice(0, 8);
 
   const commitAdd = () => {
     const t = draft.trim();
@@ -22,6 +27,13 @@ export function TagEditor({ tags, onChange, disabled }: TagEditorProps) {
     if (!t) return;
     if (tags.includes(t)) return;
     onChange([...tags, t]);
+  };
+
+  const pickSuggestion = (tag: string) => {
+    setAdding(false);
+    setDraft("");
+    if (tags.includes(tag)) return;
+    onChange([...tags, tag]);
   };
 
   const cancelAdd = () => {
@@ -101,7 +113,7 @@ export function TagEditor({ tags, onChange, disabled }: TagEditorProps) {
       )}
 
       {adding ? (
-        <span className="inline-flex items-center gap-1 rounded-md bg-surface-secondary border border-border px-2 py-0.5">
+        <span className="relative inline-flex items-center gap-1 rounded-md bg-surface-secondary border border-border px-2 py-0.5">
           <Input
             autoFocus
             value={draft}
@@ -115,11 +127,32 @@ export function TagEditor({ tags, onChange, disabled }: TagEditorProps) {
                 cancelAdd();
               }
             }}
-            onBlur={commitAdd}
+            onBlur={(e) => {
+              if ((e.relatedTarget as HTMLElement)?.dataset?.suggestion) return;
+              commitAdd();
+            }}
             placeholder="tag name"
             className="h-6 px-1 text-xs w-28 bg-transparent border-0 shadow-none focus-visible:ring-0"
             aria-label="New tag"
           />
+          {suggestions.length > 0 && (
+            <div className="absolute top-full left-0 z-10 mt-1 min-w-[10rem] rounded-lg border border-border bg-surface shadow-lg py-1">
+              {suggestions.map((tag) => (
+                <button
+                  key={tag}
+                  type="button"
+                  data-suggestion="true"
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    pickSuggestion(tag);
+                  }}
+                  className="w-full text-left px-3 py-1.5 text-xs hover:bg-surface-secondary text-foreground"
+                >
+                  {tag}
+                </button>
+              ))}
+            </div>
+          )}
         </span>
       ) : (
         <Button

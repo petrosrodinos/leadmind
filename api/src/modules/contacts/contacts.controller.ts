@@ -61,6 +61,12 @@ export class ContactsController {
         return this.contactsService.convertFromLead(user_uuid, lead_uuid);
     }
 
+    @Get('tags')
+    @ApiOperation({ summary: 'List all distinct tag strings for the current user contacts' })
+    getUserTags(@CurrentUser('uuid') user_uuid: string) {
+        return this.contactsService.getUserTags(user_uuid);
+    }
+
     @Get(':uuid')
     @ApiOperation({ summary: 'Get a contact with tags, interactions, lead, and outreach messages' })
     @ApiResponse({ status: 404, description: 'Contact not found' })

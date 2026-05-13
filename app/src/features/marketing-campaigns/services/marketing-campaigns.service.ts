@@ -22,9 +22,11 @@ export async function listCampaigns(
     query: ListCampaignsQuery,
 ): Promise<PaginatedCampaigns> {
     try {
-        const response = await axiosInstance.get(ApiRoutes.marketing_campaigns.list, {
-            params: query,
-        });
+        const params: Record<string, unknown> = { ...query };
+        if (Array.isArray(query.tags)) {
+            params.tags = query.tags.length > 0 ? query.tags.join(",") : undefined;
+        }
+        const response = await axiosInstance.get(ApiRoutes.marketing_campaigns.list, { params });
         return response.data;
     } catch (error: any) {
         unwrap(error, "Failed to load campaigns.");

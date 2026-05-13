@@ -85,12 +85,6 @@ export default function ContactsPage() {
 
   const contacts = data?.data ?? [];
 
-  const availableTags = useMemo(() => {
-    const set = new Set<string>();
-    contacts.forEach((c) => c.tags.forEach((t) => set.add(t)));
-    return Array.from(set).sort();
-  }, [contacts]);
-
   const goToDetail = (uuid: string) => navigate(Routes.dashboard.contacts_detail.replace(":uuid", uuid));
 
   return (
@@ -135,7 +129,6 @@ export default function ContactsPage() {
             page: "1",
           })
         }
-        availableTags={availableTags}
       />
 
       {view === "table" ? <ContactsTable contacts={contacts} isLoading={isLoading} isFetching={isFetching} page={page} pageSize={pageSize} total={data?.total ?? 0} totalPages={data?.totalPages ?? 1} onPageChange={(p) => updateParams({ page: String(p) })} onRowClick={(c) => goToDetail(c.uuid)} selectedKeys={selectedKeys} onSelectionChange={setSelectedKeys} /> : <PipelineView contacts={contacts} isLoading={isLoading} onCardClick={(c) => goToDetail(c.uuid)} />}

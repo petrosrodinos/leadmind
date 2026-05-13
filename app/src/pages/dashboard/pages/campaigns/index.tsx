@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useMemo } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Button, Chip, Input, TextField } from "@heroui/react";
 import {
     Megaphone,
@@ -12,14 +12,39 @@ import {
 import type {
     MarketingCampaign,
 } from "@/features/marketing-campaigns/interfaces/campaign.interface";
+import { useContactTags } from "@/features/contacts/hooks/use-contacts";
+import { MultiSelect } from "@/components/ui/multi-select";
 import { Routes } from "@/routes/routes";
 import { CampaignStatusBadge } from "./components/campaign-status-badge";
 import { CampaignActionsDropdown } from "./components/campaign-actions-dropdown";
 
 export default function CampaignsPage() {
     const navigate = useNavigate();
-    const [search, setSearch] = useState("");
-    const { data, isLoading } = useCampaigns({ search: search || undefined, limit: 50 });
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const search = searchParams.get("search") ?? "";
+    const tagsParam = searchParams.get("tags") ?? "";
+    const tags = useMemo(
+        () => tagsParam.split(",").map((t) => t.trim()).filter(Boolean),
+        [tagsParam],
+    );
+
+    const { data: availableTags = [] } = useContactTags();
+
+    const updateParams = (next: Record<string, string | undefined | null>) => {
+        const params = new URLSearchParams(searchParams);
+        for (const [k, v] of Object.entries(next)) {
+            if (v == null || v === "") params.delete(k);
+            else params.set(k, v);
+        }
+        setSearchParams(params, { replace: true });
+    };
+
+    const { data, isLoading } = useCampaigns({
+        search: search || undefined,
+        tags: tags.length > 0 ? tags : undefined,
+        limit: 50,
+    });
 
     return (
         <div className="space-y-6">
@@ -37,16 +62,31 @@ export default function CampaignsPage() {
                 </Button>
             </header>
 
-            <div className="max-w-md relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted pointer-events-none" />
-                <TextField name="search" className="w-full">
-                    <Input
-                        className="pl-9"
-                        placeholder="Search by name or description"
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                    />
-                </TextField>
+            <div className="flex flex-wrap gap-3 items-end">
+                <div className="w-72 relative">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted pointer-events-none" />
+                    <TextField name="search" className="w-full">
+                        <Input
+                            className="pl-9"
+                            placeholder="Search by name or description"
+                            value={search}
+                            onChange={(e) => updateParams({ search: e.target.value || null })}
+                        />
+                    </TextField>
+                </div>
+                {availableTags.length > 0 && (
+                    <div className="w-60">
+                        <MultiSelect
+                            options={availableTags}
+                            value={tags}
+                            onChange={(next) =>
+                                updateParams({ tags: next.length > 0 ? next.join(",") : null })
+                            }
+                            placeholder="Filter by tags"
+                            aria-label="Filter campaigns by tags"
+                        />
+                    </div>
+                )}
             </div>
 
             {isLoading ? (

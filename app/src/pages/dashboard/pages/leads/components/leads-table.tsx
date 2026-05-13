@@ -10,13 +10,7 @@ import { SourceBadge } from "@/components/ui/source-badge";
 import { useDeleteContact, useUpdateContactStatus } from "@/features/contacts/hooks/use-contacts";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { ScoreBadge } from "./badges";
-
-const STATUS_OPTIONS: Array<{ id: LeadStatus; label: string }> = [
-  { id: LeadStatus.NEW, label: "New" },
-  { id: LeadStatus.CONTACTED, label: "Contacted" },
-  { id: LeadStatus.CONVERTED, label: "Converted" },
-  { id: LeadStatus.ARCHIVED, label: "Archived" },
-];
+import { STATUS_OPTIONS } from "@/features/contacts/constants/contacts.constants";
 
 const columnHelper = createColumnHelper<Contact>();
 

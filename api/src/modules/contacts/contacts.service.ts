@@ -460,6 +460,16 @@ export class ContactsService {
         return { jobId: String(job.id) };
     }
 
+    async getUserTags(user_uuid: string): Promise<string[]> {
+        const rows = await this.prisma.contactTag.findMany({
+            where: { contact: { user_uuid } },
+            distinct: ['tag'],
+            select: { tag: true },
+            orderBy: { tag: 'asc' },
+        });
+        return rows.map((r) => r.tag);
+    }
+
     async listMessages(user_uuid: string, uuid: string): Promise<OutreachMessage[]> {
         await this.requireOwnedContact(user_uuid, uuid);
         return this.prisma.outreachMessage.findMany({

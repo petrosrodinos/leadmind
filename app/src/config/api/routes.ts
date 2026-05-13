@@ -30,6 +30,7 @@ export const ApiRoutes = {
     contacts: {
         prefix: "/contacts",
         list: "/contacts",
+        tags: "/contacts/tags",
         create: "/contacts",
         get: (uuid: string) => `/contacts/${uuid}`,
         update: (uuid: string) => `/contacts/${uuid}`,

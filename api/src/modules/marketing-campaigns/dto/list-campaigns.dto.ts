@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
-import { IsEnum, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
+import { Transform, Type } from 'class-transformer';
+import { IsArray, IsEnum, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 import { CampaignStatus } from '@/generated/prisma';
 
 export class ListCampaignsDto {
@@ -13,6 +13,20 @@ export class ListCampaignsDto {
     @IsOptional()
     @IsString()
     search?: string;
+
+    @ApiPropertyOptional({
+        type: [String],
+        description: 'Filter by tags in filters_snapshot (comma-separated or repeated)',
+    })
+    @IsOptional()
+    @Transform(({ value }) => {
+        if (Array.isArray(value)) return value;
+        if (typeof value === 'string') return value.split(',').map((t) => t.trim()).filter(Boolean);
+        return value;
+    })
+    @IsArray()
+    @IsString({ each: true })
+    tags?: string[];
 
     @ApiPropertyOptional({ default: 1, minimum: 1 })
     @IsOptional()

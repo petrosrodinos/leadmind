@@ -107,6 +107,7 @@ export interface PaginatedCampaignContacts {
 
 export interface ListCampaignsQuery {
     status?: CampaignStatus;
+    tags?: string[];
     search?: string;
     page?: number;
     limit?: number;

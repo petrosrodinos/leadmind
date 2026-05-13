@@ -175,6 +175,15 @@ export const listContactMessages = async (uuid: string): Promise<OutreachMessage
     }
 };
 
+export const getContactTags = async (): Promise<string[]> => {
+    try {
+        const response = await axiosInstance.get(ApiRoutes.contacts.tags);
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error?.response?.data?.message || "Failed to load tags.");
+    }
+};
+
 export const listContactInteractions = async (uuid: string): Promise<Interaction[]> => {
     try {
         const response = await axiosInstance.get(ApiRoutes.contacts.interactions(uuid));
