@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Button, Input, Label, TextArea } from "@heroui/react";
-import { AtSign, Briefcase, Building2, CalendarClock, ExternalLink, Globe, MapPin, Pencil, Tag, X } from "lucide-react";
+import { AtSign, Briefcase, Building2, CalendarClock, ExternalLink, Globe, Pencil, Tag, X } from "lucide-react";
 import type { Lead } from "@/features/leads/interfaces/lead.interface";
 import type { UpdateLeadPayload } from "@/features/leads/interfaces/lead.interface";
 import { useUpdateLead } from "@/features/leads/hooks/use-leads";
@@ -50,135 +50,170 @@ export function LeadDirectoryProfileTab({ lead }: LeadDirectoryProfileTabProps) 
     const [editing, setEditing] = useState(false);
 
     return (
-        <div className="space-y-6 max-w-5xl">
-            {editing ? (
-                <EditForm lead={lead} onDone={() => setEditing(false)} />
-            ) : (
-                <ReadOnlyView lead={lead} isAdmin={isAdmin} onEdit={() => setEditing(true)} />
-            )}
+        <div className="flex flex-col gap-8 max-w-5xl lg:flex-row lg:items-start">
+            <IdentitySidebar lead={lead} />
+            <div className="flex-1 min-w-0">
+                {editing ? (
+                    <EditForm lead={lead} onDone={() => setEditing(false)} />
+                ) : (
+                    <DetailPanel lead={lead} isAdmin={isAdmin} onEdit={() => setEditing(true)} />
+                )}
+            </div>
         </div>
     );
 }
 
-function ReadOnlyView({ lead, isAdmin, onEdit }: { lead: Lead; isAdmin: boolean; onEdit: () => void }) {
+function IdentitySidebar({ lead }: { lead: Lead }) {
+    const websiteHref = lead.website?.trim() ? normalizeUrl(lead.website.trim()) : undefined;
+    const linkedinHref = lead.linkedin_url?.trim() || undefined;
+    const hasLinks = !!(linkedinHref || websiteHref);
+
+    return (
+        <aside className="flex flex-col gap-5 lg:w-56 lg:shrink-0 lg:border-r lg:border-border/50 lg:pr-8">
+            {/* Avatar + identity */}
+            <div className="flex flex-col gap-4">
+                <div
+                    className="flex size-[4.5rem] items-center justify-center rounded-2xl bg-linear-to-br from-accent/25 to-accent/5 text-xl font-semibold tracking-tight text-accent-foreground ring-2 ring-accent/20 ring-offset-2 ring-offset-[var(--background)]"
+                    aria-hidden
+                >
+                    {initialsFromName(lead.name)}
+                </div>
+
+                <div className="space-y-0.5">
+                    <h2 className="text-xl font-semibold tracking-tight text-foreground leading-snug">
+                        {lead.name?.trim() || "Unnamed lead"}
+                    </h2>
+                    {lead.title?.trim() ? (
+                        <p className="text-sm text-muted">{lead.title.trim()}</p>
+                    ) : null}
+                    {lead.company?.trim() ? (
+                        <p className="flex items-center gap-1.5 pt-0.5 text-sm text-foreground/70">
+                            <Building2 className="size-3.5 shrink-0 text-muted" strokeWidth={2} aria-hidden />
+                            {lead.company.trim()}
+                        </p>
+                    ) : null}
+                </div>
+
+                <SourceBadge source={lead.source_type} />
+            </div>
+
+            <div className="border-t border-border/50" />
+
+            {/* Quick links */}
+            <div className="flex flex-col gap-0.5">
+                {hasLinks ? (
+                    <>
+                        {linkedinHref ? (
+                            <a
+                                href={linkedinHref}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2.5 rounded-lg px-2 py-2 text-sm text-muted transition-colors hover:bg-surface-secondary/80 hover:text-foreground"
+                            >
+                                <ExternalLink className="size-4 shrink-0 text-accent" strokeWidth={2} aria-hidden />
+                                LinkedIn
+                            </a>
+                        ) : null}
+                        {websiteHref ? (
+                            <a
+                                href={websiteHref}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2.5 rounded-lg px-2 py-2 text-sm text-muted transition-colors hover:bg-surface-secondary/80 hover:text-foreground"
+                            >
+                                <Globe className="size-4 shrink-0 text-accent" strokeWidth={2} aria-hidden />
+                                Website
+                            </a>
+                        ) : null}
+                    </>
+                ) : (
+                    <p className="px-2 text-xs italic text-muted/50">No links on file.</p>
+                )}
+            </div>
+
+            <div className="border-t border-border/50" />
+
+            {/* Timestamps */}
+            <div className="flex flex-col gap-1.5 text-xs text-muted/60">
+                <span className="flex items-center gap-1.5">
+                    <CalendarClock className="size-3.5 shrink-0 opacity-60" strokeWidth={2} aria-hidden />
+                    Added {formatShortDate(lead.created_at)}
+                </span>
+                <span className="pl-5">Updated {formatShortDate(lead.updated_at)}</span>
+            </div>
+        </aside>
+    );
+}
+
+function DetailPanel({ lead, isAdmin, onEdit }: { lead: Lead; isAdmin: boolean; onEdit: () => void }) {
     const websiteHref = lead.website?.trim() ? normalizeUrl(lead.website.trim()) : undefined;
     const linkedinHref = lead.linkedin_url?.trim() || undefined;
 
     return (
-        <div className="space-y-6">
-            <div className="relative overflow-hidden rounded-2xl border border-border/80 bg-linear-to-br from-accent/[0.07] via-surface to-surface-secondary/30 p-6 sm:p-8">
-                <div className="pointer-events-none absolute -right-16 -top-24 size-56 rounded-full bg-accent/10 blur-3xl" aria-hidden />
-                <div className="pointer-events-none absolute -bottom-20 -left-12 size-48 rounded-full bg-link/5 blur-3xl" aria-hidden />
-                <div className="relative flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
-                    <div className="flex min-w-0 flex-col gap-5 sm:flex-row sm:items-start sm:gap-6">
-                        <div className="flex size-[4.5rem] shrink-0 items-center justify-center rounded-2xl bg-linear-to-br from-accent/25 to-accent/5 text-xl font-semibold tracking-tight text-accent-foreground ring-2 ring-accent/25 ring-offset-2 ring-offset-[var(--surface)] shadow-lg" aria-hidden>
-                            {initialsFromName(lead.name)}
-                        </div>
-                        <div className="min-w-0 space-y-2">
-                            <h2 className="text-2xl font-semibold tracking-tight text-foreground truncate">{lead.name?.trim() || "Unnamed lead"}</h2>
-                            <div className="flex flex-wrap items-center gap-2">
-                                {lead.title?.trim() ? (
-                                    <span className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-surface-secondary/80 px-3 py-1 text-xs font-medium text-foreground">
-                                        <Briefcase className="size-3.5 text-muted" strokeWidth={2} />
-                                        {lead.title.trim()}
-                                    </span>
-                                ) : null}
-                                {lead.company?.trim() ? (
-                                    <span className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-surface-secondary/80 px-3 py-1 text-xs font-medium text-foreground">
-                                        <Building2 className="size-3.5 text-muted" strokeWidth={2} />
-                                        {lead.company.trim()}
-                                    </span>
-                                ) : null}
-                                <SourceBadge source={lead.source_type} className="shrink-0" />
-                            </div>
-                            <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted">
-                                <span className="inline-flex items-center gap-1.5">
-                                    <CalendarClock className="size-3.5 shrink-0 opacity-80" strokeWidth={2} />
-                                    Added {formatShortDate(lead.created_at)}
-                                </span>
-                                <span className="hidden sm:inline text-border">·</span>
-                                <span className="inline-flex items-center gap-1.5">Updated {formatShortDate(lead.updated_at)}</span>
-                            </p>
-                        </div>
-                    </div>
-                    <div className="flex shrink-0 flex-wrap gap-2 sm:justify-end sm:items-start">
-                        {websiteHref ? (
-                            <a href={websiteHref} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-xl border border-border/80 bg-surface-secondary/90 px-4 py-2.5 text-sm font-medium text-foreground shadow-sm transition hover:border-accent/40 hover:bg-surface-tertiary/80">
-                                <Globe className="size-4 text-accent" strokeWidth={2} />
-                                Website
-                            </a>
-                        ) : null}
-                        {linkedinHref ? (
-                            <a href={linkedinHref} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-xl border border-border/80 bg-surface-secondary/90 px-4 py-2.5 text-sm font-medium text-foreground shadow-sm transition hover:border-accent/40 hover:bg-surface-tertiary/80">
-                                <ExternalLink className="size-4 text-accent" strokeWidth={2} />
-                                LinkedIn
-                            </a>
-                        ) : null}
-                        {isAdmin && (
-                            <Button size="sm" variant="secondary" onPress={onEdit}>
-                                <Pencil className="size-3.5" />
-                                Edit
-                            </Button>
-                        )}
-                    </div>
+        <div className="space-y-4">
+            {isAdmin ? (
+                <div className="flex justify-end">
+                    <Button size="sm" variant="secondary" onPress={onEdit}>
+                        <Pencil className="size-3.5" />
+                        Edit
+                    </Button>
                 </div>
-                <EnrichmentSnapshotPanel summary={lead.enrichment_summary} metadata={lead.enrichment_metadata} className="relative mt-6" hideWhenEmpty />
-            </div>
+            ) : null}
 
-            <div className="grid gap-4 lg:grid-cols-2">
-                <SectionCard title="Contact" icon={AtSign}>
-                    <Row label="Email">
-                        <ProfileValue value={lead.email} href={lead.email?.trim() ? `mailto:${lead.email.trim()}` : undefined} />
-                    </Row>
-                    <Row label="Phone">
-                        <ProfileValue value={lead.phone} href={lead.phone?.trim() ? `tel:${lead.phone.trim()}` : undefined} />
-                    </Row>
-                </SectionCard>
+            <EnrichmentSnapshotPanel
+                summary={lead.enrichment_summary}
+                metadata={lead.enrichment_metadata}
+                hideWhenEmpty
+            />
 
-                <SectionCard title="Professional" icon={Briefcase}>
-                    <Row label="Title">
-                        <ProfileValue value={lead.title} />
-                    </Row>
-                    <Row label="Company">
-                        <ProfileValue value={lead.company} />
-                    </Row>
-                    <Row label="Industry">
-                        <ProfileValue value={lead.industry} />
-                    </Row>
-                    <Row label="Location">
-                        <div className="flex items-start gap-2 min-w-0">
-                            {lead.location?.trim() ? <MapPin className="size-4 shrink-0 text-muted mt-0.5" strokeWidth={2} aria-hidden /> : null}
-                            <div className="min-w-0 flex-1">
-                                <ProfileValue value={lead.location} />
-                            </div>
-                        </div>
-                    </Row>
-                </SectionCard>
+            <SectionCard title="Contact" icon={AtSign}>
+                <Row label="Email">
+                    <ProfileValue
+                        value={lead.email}
+                        href={lead.email?.trim() ? `mailto:${lead.email.trim()}` : undefined}
+                    />
+                </Row>
+                <Row label="Phone">
+                    <ProfileValue
+                        value={lead.phone}
+                        href={lead.phone?.trim() ? `tel:${lead.phone.trim()}` : undefined}
+                    />
+                </Row>
+            </SectionCard>
 
-                <SectionCard title="Links & presence" icon={Globe}>
-                    <Row label="Website">
-                        <div className="flex items-start gap-2">
-                            {websiteHref ? <Globe className="size-4 shrink-0 text-muted mt-0.5" strokeWidth={2} aria-hidden /> : null}
-                            <ProfileValue value={lead.website} href={websiteHref} />
-                        </div>
-                    </Row>
-                    <Row label="LinkedIn">
-                        <div className="flex items-start gap-2">
-                            {linkedinHref ? <ExternalLink className="size-4 shrink-0 text-muted mt-0.5" strokeWidth={2} aria-hidden /> : null}
-                            <ProfileValue value={lead.linkedin_url} href={linkedinHref} />
-                        </div>
-                    </Row>
-                </SectionCard>
+            <SectionCard title="Professional" icon={Briefcase}>
+                <Row label="Title">
+                    <ProfileValue value={lead.title} />
+                </Row>
+                <Row label="Company">
+                    <ProfileValue value={lead.company} />
+                </Row>
+                <Row label="Industry">
+                    <ProfileValue value={lead.industry} />
+                </Row>
+                <Row label="Location">
+                    <ProfileValue value={lead.location} />
+                </Row>
+            </SectionCard>
 
-                <SectionCard title="Context" icon={Tag}>
-                    <Row label="Source">
-                        <SourceBadge source={lead.source_type} />
-                    </Row>
-                    <Row label="About">
-                        <ProfileValue value={lead.description} emptyLabel="No description on file." />
-                    </Row>
-                </SectionCard>
-            </div>
+            <SectionCard title="Links & Presence" icon={Globe}>
+                <Row label="Website">
+                    <ProfileValue value={lead.website} href={websiteHref} />
+                </Row>
+                <Row label="LinkedIn">
+                    <ProfileValue value={lead.linkedin_url} href={linkedinHref} />
+                </Row>
+            </SectionCard>
+
+            <SectionCard title="Context" icon={Tag}>
+                <Row label="Source">
+                    <SourceBadge source={lead.source_type} />
+                </Row>
+                <Row label="About">
+                    <ProfileValue value={lead.description} emptyLabel="No description on file." />
+                </Row>
+            </SectionCard>
+
         </div>
     );
 }
@@ -215,21 +250,27 @@ function EditForm({ lead, onDone }: { lead: Lead; onDone: () => void }) {
     };
 
     return (
-        <section className="flex flex-col gap-3">
-            <div className="flex items-center justify-between gap-2 flex-wrap">
+        <div className="space-y-4">
+            <div className="flex items-center justify-between gap-2">
                 <h3 className="text-sm font-semibold text-foreground">Edit lead</h3>
                 <div className="flex items-center gap-2">
                     <Button size="sm" variant="secondary" onPress={onDone} isDisabled={updateLead.isPending}>
                         <X className="size-3.5" />
                         Cancel
                     </Button>
-                    <Button size="sm" isDisabled={!dirty || updateLead.isPending} isPending={updateLead.isPending} onPress={handleSave}>
+                    <Button
+                        size="sm"
+                        isDisabled={!dirty || updateLead.isPending}
+                        isPending={updateLead.isPending}
+                        onPress={handleSave}
+                    >
                         Save changes
                     </Button>
                 </div>
             </div>
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                <div className="flex flex-col gap-1.5 sm:col-span-2 lg:col-span-3">
+
+            <div className="grid gap-3 sm:grid-cols-2">
+                <div className="flex flex-col gap-1.5 sm:col-span-2">
                     <Label htmlFor="ld-name">Name</Label>
                     <Input id="ld-name" placeholder="Full name" value={draft.name} onChange={(e) => setField("name", e.target.value)} />
                 </div>
@@ -257,19 +298,35 @@ function EditForm({ lead, onDone }: { lead: Lead; onDone: () => void }) {
                     <Label htmlFor="ld-industry">Industry</Label>
                     <Input id="ld-industry" placeholder="Software" value={draft.industry} onChange={(e) => setField("industry", e.target.value)} />
                 </div>
-                <OverviewUrlField id="ld-website" label="Website" value={draft.website} onChange={(e) => setField("website", e.target.value)} placeholder="https://example.com" Icon={Globe} openAriaLabel="Open website in new tab" />
-                <OverviewUrlField id="ld-linkedin" label="LinkedIn" value={draft.linkedin_url} onChange={(e) => setField("linkedin_url", e.target.value)} placeholder="https://linkedin.com/in/…" Icon={ExternalLink} openAriaLabel="Open LinkedIn profile in new tab" />
+                <OverviewUrlField
+                    id="ld-website"
+                    label="Website"
+                    value={draft.website}
+                    onChange={(e) => setField("website", e.target.value)}
+                    placeholder="https://example.com"
+                    Icon={Globe}
+                    openAriaLabel="Open website in new tab"
+                />
+                <OverviewUrlField
+                    id="ld-linkedin"
+                    label="LinkedIn"
+                    value={draft.linkedin_url}
+                    onChange={(e) => setField("linkedin_url", e.target.value)}
+                    placeholder="https://linkedin.com/in/…"
+                    Icon={ExternalLink}
+                    openAriaLabel="Open LinkedIn profile in new tab"
+                />
             </div>
             <div className="flex flex-col gap-1.5">
                 <Label htmlFor="ld-description">Description</Label>
-                <TextArea id="ld-description" rows={4} placeholder="Short summary or notes about this lead…" value={draft.description} onChange={(e) => setField("description", e.target.value)} />
+                <TextArea
+                    id="ld-description"
+                    rows={4}
+                    placeholder="Short summary or notes about this lead…"
+                    value={draft.description}
+                    onChange={(e) => setField("description", e.target.value)}
+                />
             </div>
-            <div>
-                <p className="text-xs font-medium text-muted uppercase tracking-wide">Source</p>
-                <div className="mt-0.5">
-                    <SourceBadge source={lead.source_type} />
-                </div>
-            </div>
-        </section>
+        </div>
     );
 }

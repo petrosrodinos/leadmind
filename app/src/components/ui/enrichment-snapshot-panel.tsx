@@ -48,12 +48,12 @@ function EnrichmentMetadataBlock({ metadata }: { metadata: Record<string, unknow
     formatted = String(metadata);
   }
   return (
-    <div className="mt-3 border-t border-accent/15 pt-3">
-      <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted">Enrichment metadata</p>
-      <pre className="max-h-64 overflow-auto rounded-md bg-background/80 p-3 text-xs leading-relaxed text-foreground/90 border border-border [scrollbar-gutter:stable] whitespace-pre-wrap break-words">
+    <details className="mt-3 border-t border-accent/15 pt-3 text-xs">
+      <summary className="cursor-pointer text-muted hover:text-foreground">Enrichment metadata</summary>
+      <pre className="mt-2 max-h-64 overflow-auto rounded-md bg-surface-secondary p-3 font-mono text-xs leading-relaxed text-foreground/90 border border-border [scrollbar-gutter:stable] whitespace-pre-wrap break-words">
         {formatted}
       </pre>
-    </div>
+    </details>
   );
 }
 

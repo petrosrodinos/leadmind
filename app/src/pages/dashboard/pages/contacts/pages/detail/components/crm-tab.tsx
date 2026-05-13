@@ -9,13 +9,14 @@ import { InteractionTimeline } from "@/pages/dashboard/pages/contacts/components
 import { ChangeStatusModal } from "./change-status-modal";
 import { LogCallModal } from "./log-call-modal";
 import { LogMeetingModal } from "./log-meeting-modal";
-import { Section } from "./section";
 import { TagEditor } from "./tag-editor";
 
 interface CrmTabProps {
   contact: Contact;
   onNavigateToOutreach?: (outreachUuid: string) => void;
 }
+
+const LABEL_CLASS = "text-xs font-semibold uppercase tracking-[0.12em] text-muted";
 
 export function CrmTab({ contact, onNavigateToOutreach }: CrmTabProps) {
   const updateStatus = useUpdateContactStatus();
@@ -41,7 +42,9 @@ export function CrmTab({ contact, onNavigateToOutreach }: CrmTabProps) {
 
   const handleTagsChange = (next: string[]) => updateTags.mutate({ uuid: contact.uuid, tags: next });
 
-  const pendingStatusLabel = pendingStatus ? (STATUS_OPTIONS.find((o) => o.id === pendingStatus)?.label ?? pendingStatus) : "";
+  const pendingStatusLabel = pendingStatus
+    ? (STATUS_OPTIONS.find((o) => o.id === pendingStatus)?.label ?? pendingStatus)
+    : "";
 
   const handleStatusModalOpenChange = (open: boolean) => {
     setStatusModalOpen(open);
@@ -60,11 +63,7 @@ export function CrmTab({ contact, onNavigateToOutreach }: CrmTabProps) {
   const handleConfirmStatus = () => {
     if (!pendingStatus) return;
     updateStatus.mutate(
-      {
-        uuid: contact.uuid,
-        status: pendingStatus,
-        note: statusNote.trim() || undefined,
-      },
+      { uuid: contact.uuid, status: pendingStatus, note: statusNote.trim() || undefined },
       {
         onSuccess: () => {
           setStatusModalOpen(false);
@@ -76,7 +75,7 @@ export function CrmTab({ contact, onNavigateToOutreach }: CrmTabProps) {
   };
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-5 max-w-3xl">
       <ChangeStatusModal
         isOpen={statusModalOpen}
         onOpenChange={handleStatusModalOpenChange}
@@ -89,93 +88,119 @@ export function CrmTab({ contact, onNavigateToOutreach }: CrmTabProps) {
         isPending={updateStatus.isPending}
       />
 
-      <Section
-        title="CRM state"
-        action={
-          <Button size="sm" variant="tertiary" isDisabled={rescore.isPending} isPending={rescore.isPending} onPress={() => rescore.mutate(contact)}>
+      {/* CRM State */}
+      <div className="rounded-2xl border border-border/80 bg-surface/80">
+        <div className="flex items-center justify-between gap-2 border-b border-border/60 px-5 py-3.5">
+          <h3 className="text-sm font-semibold text-foreground">CRM State</h3>
+          <Button
+            size="sm"
+            variant="tertiary"
+            isDisabled={rescore.isPending}
+            isPending={rescore.isPending}
+            onPress={() => rescore.mutate(contact)}
+          >
             <Sparkles className="size-3.5" />
             Rescore
           </Button>
-        }
-      >
-        <div className="grid gap-4 sm:grid-cols-3">
-          <div>
-            <p className="text-xs font-medium text-muted uppercase tracking-wide mb-1">Status</p>
-            <Select
-              className="w-full"
-              value={contact.status}
-              onChange={(v) => {
-                const next = v as LeadStatus;
-                if (next === contact.status) return;
-                setPendingStatus(next);
-                setStatusNote("");
-                setStatusModalOpen(true);
-              }}
-            >
-              <Select.Trigger>
-                <Select.Value />
-                <Select.Indicator />
-              </Select.Trigger>
-              <Select.Popover>
-                <ListBox>
-                  {STATUS_OPTIONS.map((opt) => (
-                    <ListBox.Item key={opt.id} id={opt.id} textValue={opt.label}>
-                      {opt.label}
-                      <ListBox.ItemIndicator />
-                    </ListBox.Item>
-                  ))}
-                </ListBox>
-              </Select.Popover>
-            </Select>
-          </div>
-          <div>
-            <div className="flex items-center gap-1 mb-1">
-              <p className="text-xs font-medium text-muted uppercase tracking-wide">AI score</p>
-              {contact.filter?.scoring_instructions && (
-                <Tooltip>
-                  <Tooltip.Trigger>
-                    <Info className="size-3 text-muted cursor-default" />
-                  </Tooltip.Trigger>
-                  <Tooltip.Content className="max-w-xs text-xs whitespace-pre-line">
-                    {contact.filter.scoring_instructions}
-                  </Tooltip.Content>
-                </Tooltip>
-              )}
+        </div>
+
+        <div className="px-5 py-4 space-y-5">
+          <div className="flex flex-wrap gap-5">
+            <div className="flex-1 min-w-[180px] flex flex-col gap-2">
+              <p className={LABEL_CLASS}>Status</p>
+              <Select
+                className="w-full"
+                value={contact.status}
+                onChange={(v) => {
+                  const next = v as LeadStatus;
+                  if (next === contact.status) return;
+                  setPendingStatus(next);
+                  setStatusNote("");
+                  setStatusModalOpen(true);
+                }}
+              >
+                <Select.Trigger>
+                  <Select.Value />
+                  <Select.Indicator />
+                </Select.Trigger>
+                <Select.Popover>
+                  <ListBox>
+                    {STATUS_OPTIONS.map((opt) => (
+                      <ListBox.Item key={opt.id} id={opt.id} textValue={opt.label}>
+                        {opt.label}
+                        <ListBox.ItemIndicator />
+                      </ListBox.Item>
+                    ))}
+                  </ListBox>
+                </Select.Popover>
+              </Select>
             </div>
-            <ScoreBadge score={contact.score} />
+
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-1.5">
+                <p className={LABEL_CLASS}>AI Score</p>
+                {contact.filter?.scoring_instructions ? (
+                  <Tooltip>
+                    <Tooltip.Trigger>
+                      <Info className="size-3 text-muted cursor-default" />
+                    </Tooltip.Trigger>
+                    <Tooltip.Content className="max-w-xs text-xs whitespace-pre-line">
+                      {contact.filter.scoring_instructions}
+                    </Tooltip.Content>
+                  </Tooltip>
+                ) : null}
+              </div>
+              <div className="flex items-center h-full pt-0.5">
+                <ScoreBadge score={contact.score} />
+              </div>
+            </div>
           </div>
-          <div className="sm:col-span-1">
-            <p className="text-xs font-medium text-muted uppercase tracking-wide mb-1">Tags</p>
+
+          <div className="border-t border-border/50" />
+
+          <div className="flex flex-col gap-2">
+            <p className={LABEL_CLASS}>Tags</p>
             <TagEditor tags={contact.tags} onChange={handleTagsChange} disabled={updateTags.isPending} />
           </div>
         </div>
-      </Section>
+      </div>
 
-      <Section title="Notes">
-        <div className="flex flex-col gap-2">
-          <TextArea id="contact-notes" aria-label="CRM notes" placeholder="Internal notes about this contact — next steps, context, call outcomes…" rows={6} value={notes} onChange={(e) => setNotes(e.target.value)} />
-          <div className="flex justify-end">
+      {/* Notes */}
+      <div className="rounded-2xl border border-border/80 bg-surface/80">
+        <div className="border-b border-border/60 px-5 py-3.5">
+          <h3 className="text-sm font-semibold text-foreground">Notes</h3>
+        </div>
+        <div className="px-5 py-4 flex flex-col gap-3">
+          <TextArea
+            id="contact-notes"
+            aria-label="CRM notes"
+            placeholder="Internal notes about this contact — next steps, context, call outcomes…"
+            rows={7}
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            className="resize-none"
+          />
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-xs text-muted/50 transition-opacity duration-150" style={{ opacity: notesDirty ? 1 : 0 }}>
+              Unsaved changes
+            </span>
             <Button
               size="sm"
               variant="secondary"
               isDisabled={!notesDirty || updateNotes.isPending}
               isPending={updateNotes.isPending}
-              onPress={() =>
-                updateNotes.mutate({
-                  uuid: contact.uuid,
-                  notes,
-                })
-              }
+              onPress={() => updateNotes.mutate({ uuid: contact.uuid, notes })}
             >
               Save notes
             </Button>
           </div>
         </div>
-      </Section>
+      </div>
 
-      <Section
-        title="Activity"
-        action={
+      {/* Activity */}
+      <div className="rounded-2xl border border-border/80 bg-surface/80">
+        <div className="flex items-center justify-between gap-2 border-b border-border/60 px-5 py-3.5">
+          <h3 className="text-sm font-semibold text-foreground">Activity</h3>
           <Dropdown>
             <Dropdown.Trigger asChild>
               <Button size="sm" variant="tertiary">
@@ -184,10 +209,12 @@ export function CrmTab({ contact, onNavigateToOutreach }: CrmTabProps) {
               </Button>
             </Dropdown.Trigger>
             <Dropdown.Popover placement="bottom end">
-              <Dropdown.Menu onAction={(key) => {
-                if (key === "call") setLogCallOpen(true);
-                if (key === "meeting") setLogMeetingOpen(true);
-              }}>
+              <Dropdown.Menu
+                onAction={(key) => {
+                  if (key === "call") setLogCallOpen(true);
+                  if (key === "meeting") setLogMeetingOpen(true);
+                }}
+              >
                 <Dropdown.Item id="call" textValue="Log call">
                   <Phone className="size-4" />
                   Log call
@@ -199,21 +226,14 @@ export function CrmTab({ contact, onNavigateToOutreach }: CrmTabProps) {
               </Dropdown.Menu>
             </Dropdown.Popover>
           </Dropdown>
-        }
-      >
-        <InteractionTimeline contactUuid={contact.uuid} onNavigateToOutreach={onNavigateToOutreach} />
-      </Section>
+        </div>
+        <div className="px-5 py-4">
+          <InteractionTimeline contactUuid={contact.uuid} onNavigateToOutreach={onNavigateToOutreach} />
+        </div>
+      </div>
 
-      <LogCallModal
-        contactUuid={contact.uuid}
-        isOpen={logCallOpen}
-        onOpenChange={setLogCallOpen}
-      />
-      <LogMeetingModal
-        contactUuid={contact.uuid}
-        isOpen={logMeetingOpen}
-        onOpenChange={setLogMeetingOpen}
-      />
+      <LogCallModal contactUuid={contact.uuid} isOpen={logCallOpen} onOpenChange={setLogCallOpen} />
+      <LogMeetingModal contactUuid={contact.uuid} isOpen={logMeetingOpen} onOpenChange={setLogMeetingOpen} />
     </div>
   );
 }

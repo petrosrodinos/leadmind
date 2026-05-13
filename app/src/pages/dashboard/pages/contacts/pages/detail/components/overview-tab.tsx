@@ -21,7 +21,6 @@ import { EnrichmentSnapshotPanel } from "@/components/ui/enrichment-snapshot-pan
 import { SectionCard, Row, ProfileValue } from "@/components/ui/profile-section";
 import { initialsFromName, formatShortDate, normalizeUrl } from "@/lib/profile";
 import { StatusChip } from "@/pages/dashboard/pages/leads/components/badges";
-import { Section } from "./section";
 import type { ProfileDraft } from "../types";
 import { profileDraftFromContact } from "../utils/profile-draft";
 
@@ -33,174 +32,193 @@ export function OverviewTab({ contact }: OverviewTabProps) {
     const [editing, setEditing] = useState(false);
 
     return (
-        <div className="space-y-6 max-w-5xl">
-            {editing ? (
-                <EditForm contact={contact} onDone={() => setEditing(false)} />
-            ) : (
-                <ReadOnlyView contact={contact} onEdit={() => setEditing(true)} />
-            )}
+        <div className="flex flex-col gap-8 max-w-5xl lg:flex-row lg:items-start">
+            <IdentitySidebar contact={contact} />
+            <div className="flex-1 min-w-0">
+                {editing ? (
+                    <EditForm contact={contact} onDone={() => setEditing(false)} />
+                ) : (
+                    <DetailPanel contact={contact} onEdit={() => setEditing(true)} />
+                )}
+            </div>
         </div>
     );
 }
 
-function ReadOnlyView({ contact, onEdit }: { contact: Contact; onEdit: () => void }) {
+function IdentitySidebar({ contact }: { contact: Contact }) {
+    const websiteHref = contact.website?.trim() ? normalizeUrl(contact.website.trim()) : undefined;
+    const linkedinHref = contact.linkedin_url?.trim() || undefined;
+    const hasLinks = !!(linkedinHref || websiteHref);
+
+    return (
+        <aside className="flex flex-col gap-5 lg:w-56 lg:shrink-0 lg:border-r lg:border-border/50 lg:pr-8">
+            {/* Avatar + identity */}
+            <div className="flex flex-col gap-4">
+                <div
+                    className="flex size-[4.5rem] items-center justify-center rounded-2xl bg-linear-to-br from-accent/25 to-accent/5 text-xl font-semibold tracking-tight text-accent-foreground ring-2 ring-accent/20 ring-offset-2 ring-offset-[var(--background)]"
+                    aria-hidden
+                >
+                    {initialsFromName(contact.name)}
+                </div>
+
+                <div className="space-y-0.5">
+                    <h2 className="text-xl font-semibold tracking-tight text-foreground leading-snug">
+                        {contact.name?.trim() || "Unnamed contact"}
+                    </h2>
+                    {contact.title?.trim() ? (
+                        <p className="text-sm text-muted">{contact.title.trim()}</p>
+                    ) : null}
+                    {contact.company?.trim() ? (
+                        <p className="flex items-center gap-1.5 pt-0.5 text-sm text-foreground/70">
+                            <Building2 className="size-3.5 shrink-0 text-muted" strokeWidth={2} aria-hidden />
+                            {contact.company.trim()}
+                        </p>
+                    ) : null}
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2">
+                    <StatusChip status={contact.status} />
+                    <SourceBadge source={contact.lead.source_type} />
+                </div>
+
+                {contact.tags.length > 0 ? (
+                    <div className="flex flex-wrap gap-1.5">
+                        {contact.tags.map((tag) => (
+                            <Chip key={tag} size="sm" variant="soft">
+                                <Chip.Label>{tag}</Chip.Label>
+                            </Chip>
+                        ))}
+                    </div>
+                ) : null}
+            </div>
+
+            <div className="border-t border-border/50" />
+
+            {/* Quick links */}
+            <div className="flex flex-col gap-0.5">
+                {hasLinks ? (
+                    <>
+                        {linkedinHref ? (
+                            <a
+                                href={linkedinHref}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2.5 rounded-lg px-2 py-2 text-sm text-muted transition-colors hover:bg-surface-secondary/80 hover:text-foreground"
+                            >
+                                <ExternalLink className="size-4 shrink-0 text-accent" strokeWidth={2} aria-hidden />
+                                LinkedIn
+                            </a>
+                        ) : null}
+                        {websiteHref ? (
+                            <a
+                                href={websiteHref}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2.5 rounded-lg px-2 py-2 text-sm text-muted transition-colors hover:bg-surface-secondary/80 hover:text-foreground"
+                            >
+                                <Globe className="size-4 shrink-0 text-accent" strokeWidth={2} aria-hidden />
+                                Website
+                            </a>
+                        ) : null}
+                    </>
+                ) : (
+                    <p className="px-2 text-xs italic text-muted/50">No links on file.</p>
+                )}
+            </div>
+
+            <div className="border-t border-border/50" />
+
+            {/* Timestamps */}
+            <div className="flex flex-col gap-1.5 text-xs text-muted/60">
+                <span className="flex items-center gap-1.5">
+                    <CalendarClock className="size-3.5 shrink-0 opacity-60" strokeWidth={2} aria-hidden />
+                    Added {formatShortDate(contact.created_at)}
+                </span>
+                <span className="pl-5">Updated {formatShortDate(contact.updated_at)}</span>
+            </div>
+        </aside>
+    );
+}
+
+function DetailPanel({ contact, onEdit }: { contact: Contact; onEdit: () => void }) {
     const { data: filters = [] } = useFilters();
     const filterName = useMemo(
         () => filters.find((f) => f.uuid === contact.filter_uuid)?.name ?? null,
         [filters, contact.filter_uuid],
     );
 
-    const websiteHref = contact.website?.trim()
-        ? /^https?:\/\//i.test(contact.website.trim())
-            ? contact.website.trim()
-            : `https://${contact.website.trim()}`
-        : undefined;
+    const websiteHref = contact.website?.trim() ? normalizeUrl(contact.website.trim()) : undefined;
     const linkedinHref = contact.linkedin_url?.trim() || undefined;
 
     return (
-        <div className="space-y-6">
-            {/* Hero banner */}
-            <div className="relative overflow-hidden rounded-2xl border border-border/80 bg-linear-to-br from-accent/[0.07] via-surface to-surface-secondary/30 p-6 sm:p-8">
-                <div className="pointer-events-none absolute -right-16 -top-24 size-56 rounded-full bg-accent/10 blur-3xl" aria-hidden />
-                <div className="pointer-events-none absolute -bottom-20 -left-12 size-48 rounded-full bg-link/5 blur-3xl" aria-hidden />
-
-                <div className="relative flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
-                    <div className="flex min-w-0 flex-col gap-5 sm:flex-row sm:items-start sm:gap-6">
-                        {/* Initials avatar */}
-                        <div
-                            className="flex size-[4.5rem] shrink-0 items-center justify-center rounded-2xl bg-linear-to-br from-accent/25 to-accent/5 text-xl font-semibold tracking-tight text-accent-foreground ring-2 ring-accent/25 ring-offset-2 ring-offset-[var(--surface)]"
-                            aria-hidden
-                        >
-                            {initialsFromName(contact.name)}
-                        </div>
-
-                        <div className="min-w-0 space-y-2">
-                            <h2 className="text-2xl font-semibold tracking-tight text-foreground truncate">
-                                {contact.name?.trim() || "Unnamed contact"}
-                            </h2>
-                            <div className="flex flex-wrap items-center gap-2">
-                                {contact.title?.trim() ? (
-                                    <span className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-surface-secondary/80 px-3 py-1 text-xs font-medium text-foreground">
-                                        <Briefcase className="size-3.5 text-muted" strokeWidth={2} />
-                                        {contact.title.trim()}
-                                    </span>
-                                ) : null}
-                                {contact.company?.trim() ? (
-                                    <span className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-surface-secondary/80 px-3 py-1 text-xs font-medium text-foreground">
-                                        <Building2 className="size-3.5 text-muted" strokeWidth={2} />
-                                        {contact.company.trim()}
-                                    </span>
-                                ) : null}
-                                <StatusChip status={contact.status} />
-                            </div>
-                            {contact.tags.length > 0 && (
-                                <div className="flex flex-wrap gap-1.5">
-                                    {contact.tags.map((tag) => (
-                                        <Chip key={tag} size="sm" variant="soft">
-                                            <Chip.Label>{tag}</Chip.Label>
-                                        </Chip>
-                                    ))}
-                                </div>
-                            )}
-                            <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted">
-                                <span className="inline-flex items-center gap-1.5">
-                                    <CalendarClock className="size-3.5 shrink-0 opacity-80" strokeWidth={2} />
-                                    Added {formatShortDate(contact.created_at)}
-                                </span>
-                                <span className="hidden sm:inline text-muted/40" aria-hidden>·</span>
-                                <span className="inline-flex items-center gap-1.5">
-                                    Updated {formatShortDate(contact.updated_at)}
-                                </span>
-                            </p>
-                        </div>
-                    </div>
-
-                    {/* Right side: links + edit button */}
-                    <div className="flex shrink-0 flex-wrap gap-2 sm:justify-end sm:items-start">
-                        {websiteHref ? (
-                            <a href={websiteHref} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-xl border border-border/80 bg-surface-secondary/90 px-4 py-2.5 text-sm font-medium text-foreground transition hover:border-accent/40 hover:bg-surface-tertiary/80">
-                                <Globe className="size-4 text-accent" strokeWidth={2} />
-                                Website
-                            </a>
-                        ) : null}
-                        {linkedinHref ? (
-                            <a href={linkedinHref} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-xl border border-border/80 bg-surface-secondary/90 px-4 py-2.5 text-sm font-medium text-foreground transition hover:border-accent/40 hover:bg-surface-tertiary/80">
-                                <ExternalLink className="size-4 text-accent" strokeWidth={2} />
-                                LinkedIn
-                            </a>
-                        ) : null}
-                        <Button size="sm" variant="secondary" onPress={onEdit}>
-                            <Pencil className="size-3.5" />
-                            Edit
-                        </Button>
-                    </div>
-                </div>
-
-                <EnrichmentSnapshotPanel
-                    summary={contact.lead.enrichment_summary}
-                    metadata={contact.lead.enrichment_metadata}
-                    className="relative mt-6"
-                    hideWhenEmpty
-                />
+        <div className="space-y-4">
+            <div className="flex justify-end">
+                <Button size="sm" variant="secondary" onPress={onEdit}>
+                    <Pencil className="size-3.5" />
+                    Edit
+                </Button>
             </div>
 
-            {/* Info cards */}
-            <div className="grid gap-4 lg:grid-cols-2">
-                <SectionCard title="Contact" icon={AtSign}>
-                    <Row label="Email">
-                        <ProfileValue
-                            value={contact.email}
-                            href={contact.email?.trim() ? `mailto:${contact.email.trim()}` : undefined}
-                        />
-                    </Row>
-                    <Row label="Phone">
-                        <ProfileValue
-                            value={contact.phone}
-                            href={contact.phone?.trim() ? `tel:${contact.phone.trim()}` : undefined}
-                        />
-                    </Row>
-                </SectionCard>
+            <EnrichmentSnapshotPanel
+                summary={contact.lead.enrichment_summary}
+                metadata={contact.lead.enrichment_metadata}
+                hideWhenEmpty
+            />
 
-                <SectionCard title="Professional" icon={Briefcase}>
-                    <Row label="Title">
-                        <ProfileValue value={contact.title} />
-                    </Row>
-                    <Row label="Company">
-                        <ProfileValue value={contact.company} />
-                    </Row>
-                    <Row label="Industry">
-                        <ProfileValue value={contact.industry} />
-                    </Row>
-                    <Row label="Location">
-                        <ProfileValue value={contact.location} />
-                    </Row>
-                </SectionCard>
+            <SectionCard title="Contact" icon={AtSign}>
+                <Row label="Email">
+                    <ProfileValue
+                        value={contact.email}
+                        href={contact.email?.trim() ? `mailto:${contact.email.trim()}` : undefined}
+                    />
+                </Row>
+                <Row label="Phone">
+                    <ProfileValue
+                        value={contact.phone}
+                        href={contact.phone?.trim() ? `tel:${contact.phone.trim()}` : undefined}
+                    />
+                </Row>
+            </SectionCard>
 
-                <SectionCard title="Links & Presence" icon={Globe}>
-                    <Row label="Website">
-                        <ProfileValue value={contact.website} href={websiteHref} />
-                    </Row>
-                    <Row label="LinkedIn">
-                        <ProfileValue value={contact.linkedin_url} href={linkedinHref} />
-                    </Row>
-                </SectionCard>
+            <SectionCard title="Professional" icon={Briefcase}>
+                <Row label="Title">
+                    <ProfileValue value={contact.title} />
+                </Row>
+                <Row label="Company">
+                    <ProfileValue value={contact.company} />
+                </Row>
+                <Row label="Industry">
+                    <ProfileValue value={contact.industry} />
+                </Row>
+                <Row label="Location">
+                    <ProfileValue value={contact.location} />
+                </Row>
+            </SectionCard>
 
-                <SectionCard title="Context" icon={Tag}>
-                    {filterName && (
-                        <Row label="Filter">
-                            <ProfileValue value={filterName} />
-                        </Row>
-                    )}
-                    <Row label="About">
-                        <ProfileValue value={contact.description} emptyLabel="No description on file." />
+            <SectionCard title="Links & Presence" icon={Globe}>
+                <Row label="Website">
+                    <ProfileValue value={contact.website} href={websiteHref} />
+                </Row>
+                <Row label="LinkedIn">
+                    <ProfileValue value={contact.linkedin_url} href={linkedinHref} />
+                </Row>
+            </SectionCard>
+
+            <SectionCard title="Context" icon={Tag}>
+                {filterName ? (
+                    <Row label="Filter">
+                        <ProfileValue value={filterName} />
                     </Row>
-                    {contact.notes && (
-                        <Row label="Notes">
-                            <ProfileValue value={contact.notes} />
-                        </Row>
-                    )}
-                </SectionCard>
-            </div>
+                ) : null}
+                <Row label="About">
+                    <ProfileValue value={contact.description} emptyLabel="No description on file." />
+                </Row>
+                {contact.notes ? (
+                    <Row label="Notes">
+                        <ProfileValue value={contact.notes} />
+                    </Row>
+                ) : null}
+            </SectionCard>
         </div>
     );
 }
@@ -247,9 +265,9 @@ function EditForm({ contact, onDone }: { contact: Contact; onDone: () => void })
     };
 
     return (
-        <Section
-            title="Edit contact"
-            action={
+        <div className="space-y-4">
+            <div className="flex items-center justify-between gap-2">
+                <h3 className="text-sm font-semibold text-foreground">Edit contact</h3>
                 <div className="flex items-center gap-2">
                     <Button size="sm" variant="secondary" onPress={onDone} isDisabled={updateProfile.isPending}>
                         <X className="size-3.5" />
@@ -264,10 +282,10 @@ function EditForm({ contact, onDone }: { contact: Contact; onDone: () => void })
                         Save changes
                     </Button>
                 </div>
-            }
-        >
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                <div className="flex flex-col gap-1.5 sm:col-span-2 lg:col-span-3">
+            </div>
+
+            <div className="grid gap-3 sm:grid-cols-2">
+                <div className="flex flex-col gap-1.5 sm:col-span-2">
                     <Select
                         className="w-full"
                         placeholder={filterOptions.length === 0 ? "No filters yet" : "Select a filter"}
@@ -292,7 +310,7 @@ function EditForm({ contact, onDone }: { contact: Contact; onDone: () => void })
                         </Select.Popover>
                     </Select>
                 </div>
-                <div className="flex flex-col gap-1.5 sm:col-span-2 lg:col-span-3">
+                <div className="flex flex-col gap-1.5 sm:col-span-2">
                     <Label htmlFor="pf-name">Name</Label>
                     <Input id="pf-name" placeholder="Full name" value={draft.name} onChange={(e) => setField("name", e.target.value)} />
                 </div>
@@ -320,20 +338,35 @@ function EditForm({ contact, onDone }: { contact: Contact; onDone: () => void })
                     <Label htmlFor="pf-industry">Industry</Label>
                     <Input id="pf-industry" placeholder="Software" value={draft.industry} onChange={(e) => setField("industry", e.target.value)} />
                 </div>
-                <OverviewUrlField id="pf-website" label="Website" value={draft.website} onChange={(e) => setField("website", e.target.value)} placeholder="https://example.com" Icon={Globe} openAriaLabel="Open website in new tab" />
-                <OverviewUrlField id="pf-linkedin" label="LinkedIn" value={draft.linkedin_url} onChange={(e) => setField("linkedin_url", e.target.value)} placeholder="https://linkedin.com/in/…" Icon={ExternalLink} openAriaLabel="Open LinkedIn profile in new tab" />
+                <OverviewUrlField
+                    id="pf-website"
+                    label="Website"
+                    value={draft.website}
+                    onChange={(e) => setField("website", e.target.value)}
+                    placeholder="https://example.com"
+                    Icon={Globe}
+                    openAriaLabel="Open website in new tab"
+                />
+                <OverviewUrlField
+                    id="pf-linkedin"
+                    label="LinkedIn"
+                    value={draft.linkedin_url}
+                    onChange={(e) => setField("linkedin_url", e.target.value)}
+                    placeholder="https://linkedin.com/in/…"
+                    Icon={ExternalLink}
+                    openAriaLabel="Open LinkedIn profile in new tab"
+                />
             </div>
             <div className="flex flex-col gap-1.5">
                 <Label htmlFor="pf-description">Description</Label>
-                <TextArea id="pf-description" rows={4} placeholder="Short summary or notes about this contact…" value={draft.description} onChange={(e) => setField("description", e.target.value)} />
+                <TextArea
+                    id="pf-description"
+                    rows={4}
+                    placeholder="Short summary or notes about this contact…"
+                    value={draft.description}
+                    onChange={(e) => setField("description", e.target.value)}
+                />
             </div>
-            <div>
-                <p className="text-xs font-semibold text-muted uppercase tracking-[0.12em]">Source</p>
-                <div className="mt-0.5">
-                    <SourceBadge source={contact.lead.source_type} />
-                </div>
-            </div>
-        </Section>
+        </div>
     );
 }
-
