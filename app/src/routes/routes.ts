@@ -18,9 +18,7 @@ export const Routes = {
         filters: "/dashboard/filters",
         filters_new: "/dashboard/filters/new",
         filters_detail: "/dashboard/filters/:uuid",
-        filters_contacts: "/dashboard/filters/:uuid/contacts",
-        filters_jobs: "/dashboard/filters/:uuid/jobs",
-        filters_edit: "/dashboard/filters/:uuid/edit",
+        filters_detail_tab_query: "tab",
         map: "/dashboard/map",
         analytics: "/dashboard/analytics",
         settings: "/dashboard/settings",
@@ -31,3 +29,9 @@ export const Routes = {
         campaigns_edit: "/dashboard/campaigns/:uuid/edit",
     },
 };
+
+export const FilterDetailTabIds = {
+    FILTER: "filter",
+    CONTACTS: "contacts",
+    JOBS: "jobs",
+} as const;

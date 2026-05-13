@@ -3,29 +3,33 @@ import { useFilter, useUpdateFilter } from "@/features/filters/hooks/use-filters
 import { Routes } from "@/routes/routes";
 import { FilterForm } from "../../components/filter-form";
 
-export default function EditFilterPage() {
-    const { uuid } = useParams<{ uuid: string }>();
-    const navigate = useNavigate();
-    const { data: filter, isLoading } = useFilter(uuid);
-    const updateFilter = useUpdateFilter();
+interface FilterEditPanelProps {
+  onCancel: () => void;
+}
 
-    if (isLoading || !filter) {
-        return <div className="h-96 rounded-xl bg-surface-secondary animate-pulse" />;
-    }
+export function FilterEditPanel({ onCancel }: FilterEditPanelProps) {
+  const { uuid } = useParams<{ uuid: string }>();
+  const navigate = useNavigate();
+  const { data: filter, isLoading } = useFilter(uuid);
+  const updateFilter = useUpdateFilter();
 
-    return (
-        <FilterForm
-            initial={filter}
-            onCancel={() => navigate(Routes.dashboard.filters)}
-            isPending={updateFilter.isPending}
-            submitLabel="Save changes"
-            onSubmit={async (payload) => {
-                await updateFilter.mutateAsync({
-                    uuid: filter.uuid,
-                    payload,
-                });
-                navigate(Routes.dashboard.filters);
-            }}
-        />
-    );
+  if (isLoading || !filter) {
+    return <div className="h-96 rounded-xl bg-surface-secondary animate-pulse" />;
+  }
+
+  return (
+    <FilterForm
+      initial={filter}
+      onCancel={onCancel}
+      isPending={updateFilter.isPending}
+      submitLabel="Save changes"
+      onSubmit={async (payload) => {
+        await updateFilter.mutateAsync({
+          uuid: filter.uuid,
+          payload,
+        });
+        navigate(Routes.dashboard.filters);
+      }}
+    />
+  );
 }

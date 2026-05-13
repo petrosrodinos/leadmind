@@ -1,4 +1,4 @@
-import cronstrue from "cronstrue";
+import { tryDescribeCronExpression } from "@/lib/cron";
 import { Channel } from "@/features/contacts/interfaces/contact.interface";
 import { SourceType } from "@/features/leads/interfaces/lead.interface";
 import {
@@ -60,9 +60,5 @@ export const selectIdToCron = (id: string): string => {
 
 export const cronPreview = (expr: string | undefined): string | null => {
     if (!expr) return null;
-    try {
-        return cronstrue.toString(expr);
-    } catch {
-        return "Invalid cron expression";
-    }
+    return tryDescribeCronExpression(expr) ?? "Invalid cron expression";
 };

@@ -2,13 +2,13 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Chip, Switch } from "@heroui/react";
 import { Calendar, History as HistoryIcon, Pencil, Trash } from "lucide-react";
-import cronstrue from "cronstrue";
 import { SourceBadge } from "@/components/ui/source-badge";
 import { Channel } from "@/features/contacts/interfaces/contact.interface";
 import { JobStatus, type Filter, type FilterJob } from "@/features/filters/interfaces/filter.interface";
 import { SourceType } from "@/features/leads/interfaces/lead.interface";
 import { useDeleteFilter, useFilterJobs, useRunFilter, useUpdateFilter } from "@/features/filters/hooks/use-filters";
-import { Routes } from "@/routes/routes";
+import { humanizeCron } from "@/lib/cron";
+import { FilterDetailTabIds, Routes } from "@/routes/routes";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { FilterRunButton } from "@/pages/dashboard/pages/filters/components/filter-run-controls";
 
@@ -23,15 +23,6 @@ const JOB_STATUS_COLOR: Record<JobStatus, "default" | "success" | "warning" | "d
   [JobStatus.RUNNING]: "warning",
   [JobStatus.COMPLETED]: "success",
   [JobStatus.FAILED]: "danger",
-};
-
-const humanizeCron = (expr: string | null): string => {
-  if (!expr) return "No schedule";
-  try {
-    return cronstrue.toString(expr);
-  } catch {
-    return expr;
-  }
 };
 
 interface FilterCardProps {
@@ -119,11 +110,31 @@ export function FilterCard({ filter }: FilterCardProps) {
 
       <div onClick={stopBubble} className="flex flex-wrap items-center gap-2 mt-auto pt-1">
         <FilterRunButton onPress={() => runFilter.mutate(filter.uuid)} isStarting={isStarting} isJobRunning={isJobRunning} isManual={isManual} filterEnabled={filter.enabled} />
-        <Button size="sm" variant="secondary" onPress={() => navigate(Routes.dashboard.filters_edit.replace(":uuid", filter.uuid))} aria-label="Edit filter">
+        <Button
+          size="sm"
+          variant="secondary"
+          onPress={() => {
+            const pathname = Routes.dashboard.filters_detail.replace(":uuid", filter.uuid);
+            const sp = new URLSearchParams();
+            sp.set(Routes.dashboard.filters_detail_tab_query, FilterDetailTabIds.FILTER);
+            navigate({ pathname, search: sp.toString() });
+          }}
+          aria-label="Edit filter"
+        >
           <Pencil className="size-3.5" />
           <span className="hidden @[20rem]:inline">Edit</span>
         </Button>
-        <Button size="sm" variant="tertiary" onPress={() => navigate(Routes.dashboard.filters_jobs.replace(":uuid", filter.uuid))} aria-label="View job history">
+        <Button
+          size="sm"
+          variant="tertiary"
+          onPress={() => {
+            const pathname = Routes.dashboard.filters_detail.replace(":uuid", filter.uuid);
+            const sp = new URLSearchParams();
+            sp.set(Routes.dashboard.filters_detail_tab_query, FilterDetailTabIds.JOBS);
+            navigate({ pathname, search: sp.toString() });
+          }}
+          aria-label="View job history"
+        >
           <HistoryIcon className="size-3.5" />
           <span className="hidden @[22rem]:inline">History</span>
         </Button>

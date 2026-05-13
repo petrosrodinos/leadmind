@@ -1,5 +1,5 @@
-import { Routes as ReactRoutes, Route, Navigate } from "react-router-dom";
-import { Routes } from "@/routes/routes";
+import { Routes as ReactRoutes, Route, Navigate, useParams } from "react-router-dom";
+import { FilterDetailTabIds, Routes } from "@/routes/routes";
 import ProtectedRoute from "@/routes/protected-route";
 import LandingPage from "@/pages/landing";
 import SignIn from "@/pages/auth/pages/sign-in";
@@ -13,9 +13,6 @@ import LeadsPage from "@/pages/dashboard/pages/leads";
 import FiltersPage from "@/pages/dashboard/pages/filters";
 import NewFilterPage from "@/pages/dashboard/pages/filters/pages/new";
 import FilterDetailPage from "@/pages/dashboard/pages/filters/pages/detail";
-import FilterContactsPage from "@/pages/dashboard/pages/filters/pages/contacts";
-import EditFilterPage from "@/pages/dashboard/pages/filters/pages/edit";
-import FilterJobsPage from "@/pages/dashboard/pages/filters/pages/jobs";
 import ContactsPage from "@/pages/dashboard/pages/contacts";
 import ContactDetailPage from "@/pages/dashboard/pages/contacts/pages/detail";
 import SenderProfilesPage from "@/pages/dashboard/pages/sender-profiles";
@@ -23,6 +20,16 @@ import CampaignsPage from "@/pages/dashboard/pages/campaigns";
 import NewCampaignPage from "@/pages/dashboard/pages/campaigns/pages/new";
 import EditCampaignPage from "@/pages/dashboard/pages/campaigns/pages/edit";
 import CampaignDetailPage from "@/pages/dashboard/pages/campaigns/pages/detail";
+
+function NavigateToFilterTab({ tab }: { tab: (typeof FilterDetailTabIds)[keyof typeof FilterDetailTabIds] }) {
+  const { uuid } = useParams<{ uuid: string }>();
+  if (!uuid) {
+    return <Navigate to={Routes.dashboard.filters} replace />;
+  }
+  const sp = new URLSearchParams();
+  sp.set(Routes.dashboard.filters_detail_tab_query, tab);
+  return <Navigate to={{ pathname: Routes.dashboard.filters_detail.replace(":uuid", uuid), search: sp.toString() }} replace />;
+}
 
 export default function AppRoutes() {
   return (
@@ -63,12 +70,10 @@ export default function AppRoutes() {
         <Route path="campaigns/:uuid/edit" element={<EditCampaignPage />} />
         <Route path="filters" element={<FiltersPage />} />
         <Route path="filters/new" element={<NewFilterPage />} />
-        <Route path="filters/:uuid" element={<FilterDetailPage />}>
-          <Route index element={<Navigate to="contacts" replace />} />
-          <Route path="contacts" element={<FilterContactsPage />} />
-          <Route path="jobs" element={<FilterJobsPage />} />
-          <Route path="edit" element={<EditFilterPage />} />
-        </Route>
+        <Route path="filters/:uuid/contacts" element={<NavigateToFilterTab tab={FilterDetailTabIds.CONTACTS} />} />
+        <Route path="filters/:uuid/jobs" element={<NavigateToFilterTab tab={FilterDetailTabIds.JOBS} />} />
+        <Route path="filters/:uuid/filter" element={<NavigateToFilterTab tab={FilterDetailTabIds.FILTER} />} />
+        <Route path="filters/:uuid" element={<FilterDetailPage />} />
       </Route>
 
       {/* Landing page */}
