@@ -21,6 +21,7 @@ import { AI_PROCESS_QUEUE } from '@/core/queues/queues.constants';
 import { resolveContactEnrichmentSources } from '@/modules/leads/utils/enrichment-sources.utils';
 import { AddNoteDto } from './dto/add-note.dto';
 import { AiDraftMessageDto } from './dto/ai-draft-message.dto';
+import { BulkTriggerScoreDto } from './dto/bulk-trigger-score.dto';
 import { CreateContactDto } from './dto/create-contact.dto';
 import { EnrichContactDto } from './dto/enrich-contact.dto';
 import { ListContactsDto } from './dto/list-contacts.dto';
@@ -37,6 +38,7 @@ import { UpdateTagsDto } from './dto/update-tags.dto';
 import { CONTACT_PROFILE_UPDATE_KEYS } from './constants/contact-profile.constants';
 import { contactProfileFromLead } from './utils/contact-profile.utils';
 import { ContactAiService } from './services/contact-ai.service';
+import { enqueueContactScoreJob } from './utils/contact-score-queue.utils';
 
 @Injectable()
 export class ContactsService {
@@ -471,35 +473,93 @@ export class ContactsService {
         }
         const allowed =
             row.filter?.filter_scoring_instructions.map((x) => x.scoring_instruction_uuid) ?? [];
-        if (allowed.length === 0) {
-            throw new BadRequestException('This filter has no scoring instructions to rescore.');
+        return enqueueContactScoreJob(
+            this.aiProcessQueue,
+            this.prisma,
+            uuid,
+            allowed,
+            dto?.scoring_instruction_uuids,
+        );
+    }
+
+    async triggerBulkScore(
+        user_uuid: string,
+        dto: BulkTriggerScoreDto,
+    ): Promise<{ jobIds: string[]; queued: number; skipped_contacts: number }> {
+        const contactUuids = [...new Set(dto.contact_uuids)];
+        const filterUuids = [...new Set(dto.filter_uuids)];
+        const ruleUuids = [...new Set(dto.scoring_instruction_uuids)];
+
+        const filters = await this.prisma.filter.findMany({
+            where: { user_uuid, uuid: { in: filterUuids } },
+            include: {
+                filter_scoring_instructions: { select: { scoring_instruction_uuid: true } },
+            },
+        });
+        if (filters.length !== filterUuids.length) {
+            const found = new Set(filters.map((f) => f.uuid));
+            const missing = filterUuids.filter((u) => !found.has(u));
+            throw new NotFoundException(`Filter(s) not found: ${missing.join(', ')}`);
         }
-        const requestedRaw = dto?.scoring_instruction_uuids?.filter(Boolean) ?? [];
-        const requested =
-            requestedRaw.length > 0 ? [...new Set(requestedRaw)] : allowed;
-        for (const id of requested) {
-            if (!allowed.includes(id)) {
+
+        const rulesAllowedByFilters = new Set<string>();
+        for (const f of filters) {
+            for (const link of f.filter_scoring_instructions) {
+                rulesAllowedByFilters.add(link.scoring_instruction_uuid);
+            }
+        }
+        for (const id of ruleUuids) {
+            if (!rulesAllowedByFilters.has(id)) {
                 throw new BadRequestException(
-                    `Scoring instruction ${id} is not attached to this contact's filter.`,
+                    `Scoring instruction ${id} is not attached to any of the selected filters.`,
                 );
             }
         }
-        await this.prisma.contactScore.deleteMany({
-            where: { contact_uuid: uuid, scoring_instruction_uuid: { in: requested } },
+
+        const contacts = await this.prisma.contact.findMany({
+            where: { user_uuid, uuid: { in: contactUuids } },
+            include: {
+                filter: {
+                    include: {
+                        filter_scoring_instructions: { select: { scoring_instruction_uuid: true } },
+                    },
+                },
+            },
         });
-        const jobPayload: {
-            contact_uuid: string;
-            action: 'score';
-            scoring_instruction_uuids?: string[];
-        } = { contact_uuid: uuid, action: 'score' as const };
-        if (requested.length < allowed.length) {
-            jobPayload.scoring_instruction_uuids = requested;
+        if (contacts.length !== contactUuids.length) {
+            const found = new Set(contacts.map((c) => c.uuid));
+            const missing = contactUuids.filter((u) => !found.has(u));
+            throw new NotFoundException(`Contact(s) not found: ${missing.join(', ')}`);
         }
-        const job = await this.aiProcessQueue.add(`contact-score:${uuid}`, jobPayload, {
-            removeOnComplete: 100,
-            removeOnFail: 100,
-        });
-        return { jobId: String(job.id) };
+
+        const jobIds: string[] = [];
+        let skipped_contacts = 0;
+
+        for (const c of contacts) {
+            const allowed =
+                c.filter?.filter_scoring_instructions.map((x) => x.scoring_instruction_uuid) ?? [];
+            const perContactRequested = ruleUuids.filter((id) => allowed.includes(id));
+            if (perContactRequested.length === 0) {
+                skipped_contacts += 1;
+                continue;
+            }
+            const job = await enqueueContactScoreJob(
+                this.aiProcessQueue,
+                this.prisma,
+                c.uuid,
+                allowed,
+                perContactRequested,
+            );
+            jobIds.push(job.jobId);
+        }
+
+        if (jobIds.length === 0) {
+            throw new BadRequestException(
+                'None of the selected contacts use any of the chosen scoring rules on their filter.',
+            );
+        }
+
+        return { jobIds, queued: jobIds.length, skipped_contacts };
     }
 
     async triggerDraftMessages(

@@ -253,3 +253,15 @@ export interface UpdateContactPayload {
     description?: string;
     notes?: string;
 }
+
+export interface BulkTriggerContactScorePayload {
+    contact_uuids: string[];
+    filter_uuids: string[];
+    scoring_instruction_uuids: string[];
+}
+
+export interface BulkTriggerContactScoreResult {
+    jobIds: string[];
+    queued: number;
+    skipped_contacts: number;
+}

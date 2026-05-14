@@ -4,6 +4,8 @@ import type { EnrichmentSource } from "@/features/lead-enrichment/constants/enri
 import type {
     AiDraftMessagePayload,
     AiDraftMessageResult,
+    BulkTriggerContactScorePayload,
+    BulkTriggerContactScoreResult,
     Contact,
     CreateContactPayload,
     Interaction,
@@ -135,6 +137,17 @@ export const triggerContactScore = async (
         return response.data;
     } catch (error: any) {
         throw new Error(error?.response?.data?.message || "Failed to enqueue rescore.");
+    }
+};
+
+export const triggerContactsBulkScore = async (
+    payload: BulkTriggerContactScorePayload,
+): Promise<BulkTriggerContactScoreResult> => {
+    try {
+        const response = await axiosInstance.post(ApiRoutes.contacts.bulk_score, payload);
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error?.response?.data?.message || "Failed to enqueue bulk scoring.");
     }
 };
 

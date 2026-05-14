@@ -20,6 +20,7 @@ import { JwtGuard } from '@/shared/guards/jwt.guard';
 import { ContactsService } from './contacts.service';
 import { AddNoteDto } from './dto/add-note.dto';
 import { AiDraftMessageDto } from './dto/ai-draft-message.dto';
+import { BulkTriggerScoreDto } from './dto/bulk-trigger-score.dto';
 import { CreateContactDto } from './dto/create-contact.dto';
 import { ListContactsDto } from './dto/list-contacts.dto';
 import { LogCallDto } from './dto/log-call.dto';
@@ -66,6 +67,18 @@ export class ContactsController {
     @ApiOperation({ summary: 'List all distinct tag strings for the current user contacts' })
     getUserTags(@CurrentUser('uuid') user_uuid: string) {
         return this.contactsService.getUserTags(user_uuid);
+    }
+
+    @Post('bulk-score')
+    @ApiOperation({ summary: 'Trigger AI scoring for multiple contacts (rules scoped to selected filters)' })
+    @ApiResponse({ status: 201 })
+    @ApiResponse({ status: 400 })
+    @ApiResponse({ status: 404 })
+    triggerBulkScore(
+        @CurrentUser('uuid') user_uuid: string,
+        @Body() dto: BulkTriggerScoreDto,
+    ) {
+        return this.contactsService.triggerBulkScore(user_uuid, dto);
     }
 
     @Get(':uuid')

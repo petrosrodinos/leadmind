@@ -13,6 +13,7 @@ import {
     logCall,
     logMeeting,
     triggerContactScore,
+    triggerContactsBulkScore,
     triggerDraftMessages,
     updateContact,
     updateContactNotes,
@@ -21,6 +22,7 @@ import {
 } from "../services/contacts.service";
 import type {
     AiDraftMessagePayload,
+    BulkTriggerContactScorePayload,
     Contact,
     CreateContactPayload,
     LeadStatus,
@@ -316,12 +318,40 @@ export function useRescoreContact() {
                 duration: 2500,
             });
             qc.invalidateQueries({ queryKey: contactsQueryKeys.detail(vars.contact.uuid) });
+            qc.invalidateQueries({ queryKey: contactsQueryKeys.all });
         },
         onError: (error: Error) => {
             toast({
                 title: "Could not enqueue rescore",
                 description: error.message,
                 duration: 3000,
+                variant: "error",
+            });
+        },
+    });
+}
+
+export function useBulkTriggerContactScore() {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: (payload: BulkTriggerContactScorePayload) => triggerContactsBulkScore(payload),
+        onSuccess: (data, vars) => {
+            const skip = data.skipped_contacts > 0 ? ` (${data.skipped_contacts} skipped — no matching rules on their filter.)` : "";
+            toast({
+                title: "Scoring queued",
+                description: `${data.queued} job${data.queued === 1 ? "" : "s"} enqueued.${skip}`,
+                duration: 3500,
+            });
+            qc.invalidateQueries({ queryKey: contactsQueryKeys.all });
+            for (const uuid of vars.contact_uuids) {
+                qc.invalidateQueries({ queryKey: contactsQueryKeys.detail(uuid) });
+            }
+        },
+        onError: (error: Error) => {
+            toast({
+                title: "Could not enqueue scoring",
+                description: error.message,
+                duration: 4000,
                 variant: "error",
             });
         },

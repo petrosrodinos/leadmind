@@ -5,6 +5,7 @@ import { Columns3, LayoutList, Plus } from "lucide-react";
 import { ContactsTable } from "./components/contacts-table";
 import { PipelineView } from "./components/pipeline-view";
 import { NewContactModal } from "./components/new-contact-modal";
+import { BulkScoreContactsPopover } from "./components/bulk-score-contacts-popover";
 import { LeadFilters } from "@/pages/dashboard/pages/leads/components/lead-filters";
 import { LeadStatus } from "@/features/contacts/interfaces/contact.interface";
 import { SourceType } from "@/features/leads/interfaces/lead.interface";
@@ -94,6 +95,9 @@ export default function ContactsPage() {
       <div className="flex items-center justify-between gap-2 flex-wrap">
         <h1 className="text-xl font-semibold text-foreground">Contacts</h1>
         <div className="flex items-center gap-2">
+          {view === "table" ? (
+            <BulkScoreContactsPopover selectedContactUuids={[...selectedKeys]} onScoringComplete={() => setSelectedKeys(new Set())} />
+          ) : null}
           <Tabs selectedKey={view} onSelectionChange={(key) => setView(String(key) as View)}>
             <Tabs.List className="inline-flex gap-1 rounded-lg bg-surface-secondary p-1 border border-border">
               <Tabs.Tab id="table" className="px-3 py-1.5 text-sm font-medium rounded-md cursor-pointer transition-colors text-muted hover:text-foreground data-[selected]:bg-accent data-[selected]:text-accent-foreground data-[selected]:shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-accent inline-flex items-center gap-1.5">
