@@ -1,9 +1,10 @@
 import { Link, useParams } from "react-router-dom";
-import { ChevronLeft, Loader2 } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { Button } from "@heroui/react";
 import { useCampaign } from "@/features/marketing-campaigns/hooks/use-marketing-campaigns";
 import { CampaignStatuses } from "@/features/marketing-campaigns/interfaces/campaign.interface";
 import { Routes } from "@/routes/routes";
+import { CampaignEditPageSkeleton } from "../../components/campaign-edit-page-skeleton";
 import { CampaignWizard } from "../../components/wizard/campaign-wizard";
 
 export default function EditCampaignPage() {
@@ -11,12 +12,7 @@ export default function EditCampaignPage() {
     const { data: campaign, isLoading, isError, error } = useCampaign(uuid);
 
     if (isLoading) {
-        return (
-            <div className="flex items-center justify-center min-h-[40vh] text-muted text-sm gap-2">
-                <Loader2 className="size-4 animate-spin" />
-                Loading campaign…
-            </div>
-        );
+        return <CampaignEditPageSkeleton />;
     }
     if (isError || !campaign) {
         return (

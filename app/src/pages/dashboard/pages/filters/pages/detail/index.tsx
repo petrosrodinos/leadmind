@@ -8,6 +8,7 @@ import { SourceType } from "@/features/leads/interfaces/lead.interface";
 import { useDeleteFilter, useFilter, useLatestFilterJob, useRunFilter, useUpdateFilter } from "@/features/filters/hooks/use-filters";
 import { FilterDetailTabIds, Routes } from "@/routes/routes";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { FilterDetailHeaderActionsSkeleton, FilterDetailHeaderSkeleton } from "@/pages/dashboard/pages/filters/components/filter-detail-header-skeleton";
 import { FilterRunLeadingVisual } from "@/pages/dashboard/pages/filters/components/filter-run-controls";
 import { useAuthStore } from "@/stores/auth";
 import { RoleTypes } from "@/features/user/interfaces/user.interface";
@@ -92,58 +93,68 @@ export default function FilterDetailPage() {
             <ArrowLeft className="size-4" />
           </Button>
           <div className="min-w-0">
-            <h1 className="text-xl font-semibold text-foreground truncate">{isLoading ? "Loading…" : (filter?.name ?? "Filter not found")}</h1>
-            {filter && (
-              <div className="flex items-center gap-1.5 flex-wrap mt-1">
-                <SourceBadge source={filter.source_type} />
-                {filter.channels.map((c) => (
-                  <Chip key={c} size="sm" variant="soft" color="accent">
-                    <Chip.Label>{CHANNEL_LABEL[c]}</Chip.Label>
-                  </Chip>
-                ))}
-              </div>
+            {isLoading ? (
+              <FilterDetailHeaderSkeleton />
+            ) : (
+              <>
+                <h1 className="text-xl font-semibold text-foreground truncate">{filter?.name ?? "Filter not found"}</h1>
+                {filter && (
+                  <div className="flex items-center gap-1.5 flex-wrap mt-1">
+                    <SourceBadge source={filter.source_type} />
+                    {filter.channels.map((c) => (
+                      <Chip key={c} size="sm" variant="soft" color="accent">
+                        <Chip.Label>{CHANNEL_LABEL[c]}</Chip.Label>
+                      </Chip>
+                    ))}
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>
 
-        {filter && (
-          <div className="flex items-center gap-2">
-            <Chip size="sm" variant="soft" color={filter.enabled ? "success" : "default"}>
-              <Chip.Label>{filter.enabled ? "Enabled" : "Disabled"}</Chip.Label>
-            </Chip>
-            <Dropdown>
-              <Dropdown.Trigger aria-label="Filter actions" className="inline-flex items-center justify-center size-9 rounded-lg border border-border bg-surface hover:bg-surface-secondary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent">
-                <MoreVertical className="size-4" />
-              </Dropdown.Trigger>
-              <Dropdown.Popover placement="bottom end">
-                <Dropdown.Menu onAction={handleAction}>
-                  <Dropdown.Item id="run" isDisabled={runDisabled} textValue={runBusy ? (runStarting ? "Starting filter run" : "Filter run in progress") : "Run now"}>
-                    <span className="flex items-center gap-2">
-                      <FilterRunLeadingVisual isStarting={runStarting} isJobRunning={runJobRunning} iconClassName="size-4" />
-                      {runBusy ? (runStarting ? "Starting…" : "Running…") : "Run now"}
-                    </span>
-                  </Dropdown.Item>
-                  <Dropdown.Item id="toggle" isDisabled={toggleDisabled} textValue={filter.enabled ? "Disable" : "Enable"}>
-                    {filter.enabled ? (
-                      <>
-                        <Pause className="size-4" />
-                        Disable
-                      </>
-                    ) : (
-                      <>
-                        <Play className="size-4" />
-                        Enable
-                      </>
-                    )}
-                  </Dropdown.Item>
-                  <Dropdown.Item id="delete" variant="danger" textValue="Delete">
-                    <Trash className="size-4" />
-                    Delete
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown.Popover>
-            </Dropdown>
-          </div>
+        {isLoading ? (
+          <FilterDetailHeaderActionsSkeleton />
+        ) : (
+          filter && (
+            <div className="flex items-center gap-2">
+              <Chip size="sm" variant="soft" color={filter.enabled ? "success" : "default"}>
+                <Chip.Label>{filter.enabled ? "Enabled" : "Disabled"}</Chip.Label>
+              </Chip>
+              <Dropdown>
+                <Dropdown.Trigger aria-label="Filter actions" className="inline-flex items-center justify-center size-9 rounded-lg border border-border bg-surface hover:bg-surface-secondary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent">
+                  <MoreVertical className="size-4" />
+                </Dropdown.Trigger>
+                <Dropdown.Popover placement="bottom end">
+                  <Dropdown.Menu onAction={handleAction}>
+                    <Dropdown.Item id="run" isDisabled={runDisabled} textValue={runBusy ? (runStarting ? "Starting filter run" : "Filter run in progress") : "Run now"}>
+                      <span className="flex items-center gap-2">
+                        <FilterRunLeadingVisual isStarting={runStarting} isJobRunning={runJobRunning} iconClassName="size-4" />
+                        {runBusy ? (runStarting ? "Starting…" : "Running…") : "Run now"}
+                      </span>
+                    </Dropdown.Item>
+                    <Dropdown.Item id="toggle" isDisabled={toggleDisabled} textValue={filter.enabled ? "Disable" : "Enable"}>
+                      {filter.enabled ? (
+                        <>
+                          <Pause className="size-4" />
+                          Disable
+                        </>
+                      ) : (
+                        <>
+                          <Play className="size-4" />
+                          Enable
+                        </>
+                      )}
+                    </Dropdown.Item>
+                    <Dropdown.Item id="delete" variant="danger" textValue="Delete">
+                      <Trash className="size-4" />
+                      Delete
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown.Popover>
+              </Dropdown>
+            </div>
+          )
         )}
       </div>
 

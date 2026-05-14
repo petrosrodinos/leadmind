@@ -9,12 +9,49 @@ interface DraftedMessagesTableProps {
     campaignUuid: string;
 }
 
+function DraftedMessagesTableSkeleton() {
+    return (
+        <div className="rounded-xl border border-border overflow-hidden animate-pulse">
+            <table className="w-full text-sm">
+                <thead>
+                    <tr className="border-b border-border bg-surface-secondary/50">
+                        <th className="px-4 py-3 text-left text-xs font-medium text-muted uppercase tracking-wide">Contact</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-muted uppercase tracking-wide">Subject / Preview</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-muted uppercase tracking-wide">Status</th>
+                        <th className="px-4 py-3 w-10" />
+                    </tr>
+                </thead>
+                <tbody>
+                    {Array.from({ length: 5 }).map((_, i) => (
+                        <tr key={i} className="border-b border-border last:border-0">
+                            <td className="px-4 py-3 space-y-2">
+                                <div className="h-4 w-36 rounded bg-surface-secondary" />
+                                <div className="h-3 w-28 rounded bg-surface-secondary" />
+                            </td>
+                            <td className="px-4 py-3 space-y-2 max-w-xs">
+                                <div className="h-4 w-full rounded bg-surface-secondary" />
+                                <div className="h-3 w-3/4 max-w-full rounded bg-surface-secondary" />
+                            </td>
+                            <td className="px-4 py-3">
+                                <div className="h-6 w-20 rounded-full bg-surface-secondary" />
+                            </td>
+                            <td className="px-4 py-3">
+                                <div className="h-4 w-4 rounded bg-surface-secondary mx-auto" />
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
+    );
+}
+
 export function DraftedMessagesTable({ campaignUuid }: DraftedMessagesTableProps) {
     const [page, setPage] = useState(1);
     const { data, isLoading } = useCampaignDraftMessages(campaignUuid, { page, limit: 20 });
 
     if (isLoading) {
-        return <div className="text-sm text-muted py-8 text-center">Loading drafts…</div>;
+        return <DraftedMessagesTableSkeleton />;
     }
 
     if (!data || data.data.length === 0) {

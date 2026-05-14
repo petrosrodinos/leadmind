@@ -14,7 +14,17 @@ export default function SignUp() {
         </p>
       </div>
 
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense
+        fallback={
+          <div className="space-y-4 animate-pulse" aria-hidden>
+            <div className="h-10 w-full rounded-lg bg-surface-secondary" />
+            <div className="h-10 w-full rounded-lg bg-surface-secondary" />
+            <div className="h-10 w-full rounded-lg bg-surface-secondary" />
+            <div className="h-10 w-full rounded-lg bg-surface-secondary" />
+            <div className="h-10 w-28 rounded-lg bg-surface-secondary" />
+          </div>
+        }
+      >
         <SignUpForm />
       </Suspense>
 
