@@ -2,6 +2,7 @@ import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type { EnrichmentSource } from "@/features/lead-enrichment/constants/enrichment-sources";
 import type {
+    BulkEnrichLeadsResponse,
     ListLeadEnrichmentsQuery,
     PaginatedLeadEnrichments,
 } from "../interfaces/lead-enrichment.interfaces";
@@ -27,5 +28,17 @@ export const enrichLead = async (
         return response.data;
     } catch (error: any) {
         throw new Error(error?.response?.data?.message || "Failed to enqueue enrichment.");
+    }
+};
+
+export const enrichLeadsBulk = async (payload: {
+    uuids: string[];
+    sources?: EnrichmentSource[];
+}): Promise<BulkEnrichLeadsResponse> => {
+    try {
+        const response = await axiosInstance.post(ApiRoutes.leads.bulk_enrich, payload);
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error?.response?.data?.message || "Failed to enqueue bulk enrichment.");
     }
 };

@@ -30,6 +30,7 @@ export interface EnrichmentRunModalProps {
     initialSources?: EnrichmentSource[];
     isPending: boolean;
     onEnrich: (sources: EnrichmentSource[]) => void;
+    contextHint?: string;
 }
 
 const SOURCE_META: Record<EnrichmentSource, { hint: string; iconWrap: string }> = {
@@ -69,6 +70,7 @@ function EnrichmentRunPanel({
     isPending,
     onCancel,
     onConfirm,
+    contextHint,
 }: {
     isActive: boolean;
     mode: EnrichmentActionMode;
@@ -76,6 +78,7 @@ function EnrichmentRunPanel({
     isPending: boolean;
     onCancel: () => void;
     onConfirm: (sources: EnrichmentSource[]) => void;
+    contextHint?: string;
 }) {
     const [selected, setSelected] = useState<EnrichmentSource[]>([]);
 
@@ -121,7 +124,7 @@ function EnrichmentRunPanel({
                             Run enrichment
                         </p>
                         <p className="text-[11px] text-muted leading-snug mt-0.5">
-                            Pick sources; we queue one job per run.
+                            {contextHint ?? "Pick sources; we queue one job per run."}
                         </p>
                     </div>
                 </div>
@@ -230,6 +233,7 @@ export function EnrichmentRunModal({
     initialSources,
     isPending,
     onEnrich,
+    contextHint,
 }: EnrichmentRunModalProps) {
     return (
         <Modal.Backdrop isOpen={isOpen} onOpenChange={onOpenChange}>
@@ -247,6 +251,7 @@ export function EnrichmentRunModal({
                         mode={mode}
                         initialSources={initialSources}
                         isPending={isPending}
+                        contextHint={contextHint}
                         onCancel={() => onOpenChange(false)}
                         onConfirm={(sources) => {
                             onEnrich(sources);

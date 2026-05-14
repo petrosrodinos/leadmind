@@ -5,11 +5,13 @@ import { EnrichmentSource, Prisma, Lead } from '@/generated/prisma';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { ElasticsearchService } from '@/integrations/elasticsearch/elasticsearch.service';
 import { AI_PROCESS_QUEUE } from '@/core/queues/queues.constants';
+import { BulkEnrichLeadsDto } from './dto/bulk-enrich-leads.dto';
 import { EnrichLeadDto } from './dto/enrich-lead.dto';
 import { ListLeadEnrichmentsDto } from './dto/list-lead-enrichments.dto';
 import { ListLeadsDto } from './dto/list-leads.dto';
 import { UpdateLeadDto } from './dto/update-lead.dto';
 import { resolveLeadEnrichmentSources } from './utils/enrichment-sources.utils';
+import { enqueueLeadEnrichmentJob } from './utils/lead-enrichment-queue.utils';
 
 @Injectable()
 export class LeadsService {
@@ -145,16 +147,24 @@ export class LeadsService {
     async triggerEnrich(uuid: string, dto: EnrichLeadDto): Promise<{ jobId: string }> {
         await this.findOne(uuid);
         const enrichment_sources: EnrichmentSource[] = resolveLeadEnrichmentSources(dto.sources);
-        const job = await this.aiProcessQueue.add(
-            `lead-enrich:${uuid}`,
-            {
-                lead_uuid: uuid,
-                enrichment_sources,
-                force_enrichment: true,
-            },
-            { removeOnComplete: 100, removeOnFail: 100 },
-        );
+        return enqueueLeadEnrichmentJob(this.aiProcessQueue, uuid, enrichment_sources);
+    }
 
-        return { jobId: String(job.id) };
+    async triggerBulkEnrich(dto: BulkEnrichLeadsDto): Promise<{ jobIds: string[] }> {
+        const unique = [...new Set(dto.uuids)];
+        const existing = await this.prisma.lead.findMany({
+            where: { uuid: { in: unique } },
+            select: { uuid: true },
+        });
+        if (existing.length !== unique.length) {
+            const found = new Set(existing.map((e) => e.uuid));
+            const missing = unique.filter((u) => !found.has(u));
+            throw new NotFoundException(`Lead(s) not found: ${missing.join(', ')}`);
+        }
+        const enrichment_sources: EnrichmentSource[] = resolveLeadEnrichmentSources(dto.sources);
+        const jobs = await Promise.all(
+            unique.map((leadUuid) => enqueueLeadEnrichmentJob(this.aiProcessQueue, leadUuid, enrichment_sources)),
+        );
+        return { jobIds: jobs.map((j) => j.jobId) };
     }
 }

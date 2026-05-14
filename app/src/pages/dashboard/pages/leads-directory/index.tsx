@@ -1,9 +1,10 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Input, Label, ListBox, Select, Table } from "@heroui/react";
+import type { Selection } from "@heroui/react";
+import { Button, Checkbox, Input, Label, ListBox, Select, Table } from "@heroui/react";
 import { TablePagination } from "@/components/ui/table-pagination";
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { Check, Plus, Search } from "lucide-react";
+import { Check, Plus, Search, Sparkles } from "lucide-react";
 import type { Lead, SourceType } from "@/features/leads/interfaces/lead.interface";
 import { SOURCE_OPTIONS } from "@/features/leads/constants/source-options";
 import { SourceBadge } from "@/components/ui/source-badge";
@@ -11,6 +12,10 @@ import { useLeads } from "@/features/leads/hooks/use-leads";
 import { useAddLeadToCrm } from "@/features/contacts/hooks/use-contacts";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { Routes } from "@/routes/routes";
+import { useAuthStore } from "@/stores/auth";
+import { RoleTypes } from "@/features/user/interfaces/user.interface";
+import { EnrichmentRunModal } from "@/components/ui/enrichment-action-popover";
+import { useEnrichLeadsBulk } from "@/features/lead-enrichment/hooks/use-lead-enrichment";
 
 const PAGE_SIZE = 20;
 
@@ -18,9 +23,13 @@ const columnHelper = createColumnHelper<Lead>();
 
 export default function LeadsDirectoryPage() {
   const navigate = useNavigate();
+  const { role } = useAuthStore();
+  const isAdmin = role === RoleTypes.ADMIN || role === RoleTypes.SUPER_ADMIN;
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [sourceType, setSourceType] = useState<SourceType | undefined>(undefined);
+  const [selectedKeys, setSelectedKeys] = useState<Set<string>>(new Set());
+  const [enrichModalOpen, setEnrichModalOpen] = useState(false);
 
   const debouncedSearch = useDebouncedValue(search, 300);
 
@@ -34,8 +43,13 @@ export default function LeadsDirectoryPage() {
     [page, debouncedSearch, sourceType],
   );
 
+  useEffect(() => {
+    setSelectedKeys(new Set());
+  }, [page, debouncedSearch, sourceType]);
+
   const { data, isLoading, isFetching } = useLeads(query);
   const addToCrm = useAddLeadToCrm();
+  const enrichBulk = useEnrichLeadsBulk();
 
   const [adoptedUuids, setAdoptedUuids] = useState<Set<string>>(new Set());
 
@@ -116,9 +130,18 @@ export default function LeadsDirectoryPage() {
     columns,
     data: rows,
     getCoreRowModel: getCoreRowModel(),
+    getRowId: (row) => row.uuid,
     manualPagination: true,
     pageCount: data?.totalPages ?? 0,
   });
+
+  const handleSelectionChange = (keys: Selection) => {
+    if (keys === "all") {
+      setSelectedKeys(new Set(rows.map((r) => r.uuid)));
+    } else {
+      setSelectedKeys(new Set(Array.from(keys, String)));
+    }
+  };
 
   const total = data?.total ?? 0;
   const totalPages = data?.totalPages ?? 1;
@@ -126,6 +149,10 @@ export default function LeadsDirectoryPage() {
   const openLeadDetail = (lead: Lead) => {
     navigate(Routes.dashboard.leads_directory_detail.replace(":uuid", lead.uuid));
   };
+
+  const selectedCount = selectedKeys.size;
+  const bulkContextHint =
+    selectedCount > 0 ? `One job per selected lead (${selectedCount}). Same sources for all.` : undefined;
 
   return (
     <div className="space-y-4">
@@ -180,13 +207,74 @@ export default function LeadsDirectoryPage() {
             </Select.Popover>
           </Select>
         </div>
+        {isAdmin ? (
+          <div className="w-full sm:w-auto sm:ms-auto shrink-0">
+            <Label className="mb-1 block opacity-0 pointer-events-none select-none" aria-hidden>
+              Enrich
+            </Label>
+            <Button
+              size="md"
+              variant="secondary"
+              isDisabled={selectedCount === 0 || enrichBulk.isPending}
+              onPress={() => setEnrichModalOpen(true)}
+            >
+              <Sparkles className="size-4" />
+              Enrich selected{selectedCount > 0 ? ` (${selectedCount})` : ""}
+            </Button>
+          </div>
+        ) : null}
       </div>
+
+      {isAdmin ? (
+        <EnrichmentRunModal
+          isOpen={enrichModalOpen}
+          onOpenChange={setEnrichModalOpen}
+          mode="lead"
+          isPending={enrichBulk.isPending}
+          contextHint={bulkContextHint}
+          onEnrich={(sources) => {
+            if (selectedKeys.size === 0) return;
+            enrichBulk.mutate(
+              { uuids: [...selectedKeys], sources },
+              {
+                onSuccess: () => {
+                  setSelectedKeys(new Set());
+                },
+              },
+            );
+          }}
+        />
+      ) : null}
 
       <div className="bg-surface rounded-xl border border-border overflow-hidden">
         <Table>
           <Table.ScrollContainer>
-            <Table.Content aria-label="Public leads directory" className="min-w-[900px]">
+            <Table.Content
+              aria-label="Public leads directory"
+              className={isAdmin ? "min-w-[960px]" : "min-w-[900px]"}
+              {...(isAdmin
+                ? {
+                    selectionMode: "multiple" as const,
+                    selectionBehavior: "toggle" as const,
+                    selectedKeys,
+                    onSelectionChange: handleSelectionChange,
+                  }
+                : {})}
+              onRowAction={(key) => {
+                const lead = rows.find((r) => r.uuid === key);
+                if (lead) openLeadDetail(lead);
+              }}
+            >
               <Table.Header>
+                {isAdmin ? (
+                  <Table.Column className="pr-0 w-10">
+                    <Checkbox aria-label="Select all on this page" slot="selection">
+                      <Checkbox.Control>
+                        <Checkbox.Indicator />
+                      </Checkbox.Control>
+                    </Checkbox>
+                  </Table.Column>
+                ) : null}
                 {table.getHeaderGroups()[0]!.headers.map((header) => (
                   <Table.Column key={header.id} id={header.id} isRowHeader={header.id === "name"}>
                     {flexRender(header.column.columnDef.header, header.getContext())}
@@ -197,6 +285,11 @@ export default function LeadsDirectoryPage() {
                 {isLoading
                   ? Array.from({ length: 5 }).map((_, i) => (
                       <Table.Row key={`sk-${i}`} id={`sk-${i}`}>
+                        {isAdmin ? (
+                          <Table.Cell className="pr-0">
+                            <div className="h-4 w-4 rounded bg-surface-secondary animate-pulse" />
+                          </Table.Cell>
+                        ) : null}
                         {columns.map((c) => (
                           <Table.Cell key={c.id}>
                             <div className="h-4 w-3/4 rounded bg-surface-secondary animate-pulse" />
@@ -205,7 +298,16 @@ export default function LeadsDirectoryPage() {
                       </Table.Row>
                     ))
                   : table.getRowModel().rows.map((row) => (
-                      <Table.Row key={row.id} id={row.id} onAction={() => openLeadDetail(row.original)} className="cursor-pointer">
+                      <Table.Row key={row.id} id={row.id} className="cursor-pointer">
+                        {isAdmin ? (
+                          <Table.Cell className="pr-0">
+                            <Checkbox aria-label={`Select ${row.original.name ?? "lead"}`} slot="selection">
+                              <Checkbox.Control>
+                                <Checkbox.Indicator />
+                              </Checkbox.Control>
+                            </Checkbox>
+                          </Table.Cell>
+                        ) : null}
                         {row.getVisibleCells().map((cell) => (
                           <Table.Cell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</Table.Cell>
                         ))}

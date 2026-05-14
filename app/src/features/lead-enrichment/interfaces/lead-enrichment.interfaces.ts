@@ -28,3 +28,7 @@ export interface PaginatedLeadEnrichments {
     limit: number;
     totalPages: number;
 }
+
+export interface BulkEnrichLeadsResponse {
+    jobIds: string[];
+}

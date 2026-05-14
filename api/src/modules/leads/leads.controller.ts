@@ -11,6 +11,7 @@ import { JwtGuard } from '@/shared/guards/jwt.guard';
 import { RolesGuard } from '@/shared/guards/roles.guard';
 import { Roles } from '@/shared/decorators/roles.decorator';
 import { AuthRoles } from '@/modules/auth/interfaces/auth.interface';
+import { BulkEnrichLeadsDto } from './dto/bulk-enrich-leads.dto';
 import { EnrichLeadDto } from './dto/enrich-lead.dto';
 import { ListLeadEnrichmentsDto } from './dto/list-lead-enrichments.dto';
 import { ListLeadsDto } from './dto/list-leads.dto';
@@ -33,6 +34,16 @@ export class LeadsController {
     @ApiResponse({ status: 200, description: 'Paginated list of public leads' })
     findAll(@Query() query: ListLeadsDto) {
         return this.leadsService.findAll(query);
+    }
+
+    @Post('bulk-enrich')
+    @UseGuards(RolesGuard)
+    @Roles(AuthRoles.ADMIN, AuthRoles.SUPER_ADMIN)
+    @ApiOperation({ summary: 'Enqueue AI enrichment for multiple leads (admin only)' })
+    @ApiResponse({ status: 201, description: 'Enrichment jobs enqueued' })
+    @ApiResponse({ status: 404, description: 'One or more leads not found' })
+    triggerBulkEnrich(@Body() dto: BulkEnrichLeadsDto) {
+        return this.leadsService.triggerBulkEnrich(dto);
     }
 
     @Get(':uuid/enrichments')

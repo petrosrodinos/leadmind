@@ -26,6 +26,7 @@ export const ApiRoutes = {
         update: (uuid: string) => `/leads/${uuid}`,
         remove: (uuid: string) => `/leads/${uuid}`,
         enrich: (uuid: string) => `/leads/${uuid}/enrich`,
+        bulk_enrich: "/leads/bulk-enrich",
     },
     contacts: {
         prefix: "/contacts",

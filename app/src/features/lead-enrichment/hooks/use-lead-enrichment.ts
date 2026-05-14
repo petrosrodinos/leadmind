@@ -3,7 +3,7 @@ import type { EnrichmentSource } from "@/features/lead-enrichment/constants/enri
 import { leadsQueryKeys } from "@/features/leads/hooks/use-leads";
 import { toast } from "@/hooks/use-toast";
 import type { ListLeadEnrichmentsQuery } from "../interfaces/lead-enrichment.interfaces";
-import { enrichLead, listLeadEnrichments } from "../services/lead-enrichment.services";
+import { enrichLead, enrichLeadsBulk, listLeadEnrichments } from "../services/lead-enrichment.services";
 
 export const leadEnrichmentQueryKeys = {
     all: ["lead-enrichment"] as const,
@@ -36,6 +36,35 @@ export function useEnrichLead() {
         onError: (error: Error) => {
             toast({
                 title: "Could not enrich lead",
+                description: error.message,
+                duration: 3000,
+                variant: "error",
+            });
+        },
+    });
+}
+
+export function useEnrichLeadsBulk() {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: (vars: { uuids: string[]; sources?: EnrichmentSource[] }) =>
+            enrichLeadsBulk({ uuids: vars.uuids, sources: vars.sources }),
+        onSuccess: (_data, vars) => {
+            const n = vars.uuids.length;
+            toast({
+                title: "Enrichment queued",
+                description: `${n} lead${n === 1 ? "" : "s"} will refresh shortly.`,
+                duration: 2500,
+            });
+            qc.invalidateQueries({ queryKey: leadsQueryKeys.all });
+            for (const uuid of vars.uuids) {
+                qc.invalidateQueries({ queryKey: leadsQueryKeys.detail(uuid) });
+                qc.invalidateQueries({ queryKey: [...leadEnrichmentQueryKeys.all, "list", uuid] });
+            }
+        },
+        onError: (error: Error) => {
+            toast({
+                title: "Could not enrich leads",
                 description: error.message,
                 duration: 3000,
                 variant: "error",
