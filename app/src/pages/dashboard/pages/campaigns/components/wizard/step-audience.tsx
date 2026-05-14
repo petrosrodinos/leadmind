@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Button } from "@heroui/react";
+import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import { RefreshCw, Users } from "lucide-react";
 import type {
     CampaignFilters,
@@ -104,7 +104,7 @@ export function StepAudience({
                         )}
                     </div>
                 </div>
-                <Button
+                <ActionButtonWithPending
                     size="sm"
                     variant="secondary"
                     onPress={async () => {
@@ -115,10 +115,10 @@ export function StepAudience({
                         setResult(res);
                     }}
                     isPending={preview.isPending}
+                    idleLeading={<RefreshCw className="size-3.5" />}
                 >
-                    <RefreshCw className="size-3.5" />
                     Refresh
-                </Button>
+                </ActionButtonWithPending>
             </div>
 
             <AudiencePreviewTable

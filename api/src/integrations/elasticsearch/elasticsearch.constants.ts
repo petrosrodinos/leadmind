@@ -35,7 +35,13 @@ export const CONTACTS_MAPPING = {
         user_uuid: { type: 'keyword' },
         lead_uuid: { type: 'keyword' },
         status: { type: 'keyword' },
-        score: { type: 'integer' },
+        scores: {
+            type: 'nested',
+            properties: {
+                scoring_instruction_uuid: { type: 'keyword' },
+                score: { type: 'integer' },
+            },
+        },
         tags: { type: 'keyword' },
         name: { type: 'text' },
         email: { type: 'keyword' },

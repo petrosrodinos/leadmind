@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Button, Input, Label, ListBox, Select, TextArea, TextField } from "@heroui/react";
+import { Input, Label, ListBox, Select, TextArea, TextField } from "@heroui/react";
+import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import { Mail, MessageSquare, Sparkles } from "lucide-react";
 import { Channel } from "@/features/contacts/interfaces/contact.interface";
 import { OUTREACH_LANGUAGES, type OutreachLanguage } from "@/features/contacts/constants/outreach-languages";
@@ -175,16 +176,16 @@ export function MessageComposer({
                                   : meta.description;
                             return (
                                 <span key={action} title={tooltip} className="inline-flex">
-                                    <Button
+                                    <ActionButtonWithPending
                                         size="sm"
                                         variant={action === "generate" ? "primary" : "secondary"}
                                         isDisabled={disabledAction}
                                         isPending={isAiPending && action === "generate"}
                                         onPress={() => runAction(action)}
+                                        idleLeading={<Icon className="size-3.5" />}
                                     >
-                                        <Icon className="size-3.5" />
                                         {meta.label}
-                                    </Button>
+                                    </ActionButtonWithPending>
                                 </span>
                             );
                         })}

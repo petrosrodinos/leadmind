@@ -28,8 +28,9 @@ model User {
   outreach_messages   OutreachMessage[]
   outreach_sequences  OutreachSequence[]
   interactions        Interaction[]
-  sender_profiles     SenderProfile[]
-  marketing_campaigns MarketingCampaign[]
+  sender_profiles        SenderProfile[]
+  marketing_campaigns    MarketingCampaign[]
+  scoring_instructions   ScoringInstruction[]
 
   @@index([email])
   @@index([phone])
@@ -48,17 +49,46 @@ model Filter {
   enabled               Boolean            @default(true)
   cron_schedule         String?
   channels              Channel[]          @default([EMAIL])
-  scoring_instructions  String?
   outreach_instructions String?
   created_at            DateTime           @default(now())
   updated_at            DateTime           @updatedAt
 
-  user      User        @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
-  raw_leads RawLead[]
-  contacts  Contact[]
-  jobs      FilterJob[]
+  user                         User                         @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
+  raw_leads                    RawLead[]
+  contacts                     Contact[]
+  jobs                         FilterJob[]
+  filter_scoring_instructions  FilterScoringInstruction[]
 
   @@index([user_uuid])
+}
+
+model ScoringInstruction {
+  id             Int      @id @default(autoincrement())
+  uuid           String   @unique @default(uuid())
+  user_uuid      String
+  name           String
+  instructions   String   @db.Text
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+
+  user                         User                         @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
+  filter_links                 FilterScoringInstruction[]
+  contact_scores               ContactScore[]
+
+  @@index([user_uuid])
+  @@map("scoring_instructions")
+}
+
+model FilterScoringInstruction {
+  filter_uuid                String
+  scoring_instruction_uuid   String
+  created_at                   DateTime @default(now())
+
+  filter               Filter               @relation(fields: [filter_uuid], references: [uuid], onDelete: Cascade)
+  scoring_instruction  ScoringInstruction   @relation(fields: [scoring_instruction_uuid], references: [uuid], onDelete: Cascade)
+
+  @@id([filter_uuid, scoring_instruction_uuid])
+  @@map("filter_scoring_instructions")
 }
 
 model RawLead {
@@ -78,7 +108,7 @@ model RawLead {
 }
 
 // Lead is the generic, public, app-wide record of a person/business.
-// It has no owner. Per-user state (status, score, notes) lives on Contact;
+// It has no owner. Per-user state (status, notes, per-instruction scores) lives on Contact;
 // AI-drafted outreach lives on OutreachMessage (one per filter.channel).
 // Each Lead is created from a RawLead (`raw_lead_uuid`), which is the audit
 // record of what the scraper returned.
@@ -139,7 +169,6 @@ model Contact {
   lead_uuid           String
   filter_uuid         String?
   status              LeadStatus @default(NEW)
-  score               Int?
   notes               String?
   name                String?
   email               String?
@@ -164,6 +193,7 @@ model Contact {
   interactions      Interaction[]
   outreach_messages OutreachMessage[]
   campaign_contacts MarketingCampaignContact[]
+  contact_scores    ContactScore[]
 
   @@unique([user_uuid, lead_uuid])
   @@index([user_uuid])
@@ -171,8 +201,23 @@ model Contact {
   @@index([lead_uuid])
   @@index([email])
   @@index([unsubscribed_at])
-  @@index([score])
   @@index([last_interaction_at])
+}
+
+model ContactScore {
+  id                       Int      @id @default(autoincrement())
+  contact_uuid             String
+  scoring_instruction_uuid String
+  score                    Int
+  updated_at               DateTime @updatedAt
+
+  contact              Contact            @relation(fields: [contact_uuid], references: [uuid], onDelete: Cascade)
+  scoring_instruction  ScoringInstruction @relation(fields: [scoring_instruction_uuid], references: [uuid], onDelete: Cascade)
+
+  @@unique([contact_uuid, scoring_instruction_uuid])
+  @@index([contact_uuid])
+  @@index([scoring_instruction_uuid])
+  @@map("contact_scores")
 }
 
 model ContactTag {

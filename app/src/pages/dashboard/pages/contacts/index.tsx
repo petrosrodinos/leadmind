@@ -10,6 +10,7 @@ import { LeadStatus } from "@/features/contacts/interfaces/contact.interface";
 import { SourceType } from "@/features/leads/interfaces/lead.interface";
 import { useContacts } from "@/features/contacts/hooks/use-contacts";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
+import { parseScoreRulesParam, serializeScoreRulesParam } from "@/lib/contact-score-rules";
 import { Routes } from "@/routes/routes";
 
 const TABLE_PAGE_SIZE = 20;
@@ -42,7 +43,8 @@ export default function ContactsPage() {
   const statusParam = searchParams.get("status");
   const sourceParam = searchParams.get("source_type");
   const filterUuid = searchParams.get("filter_uuid") || undefined;
-  const minScore = Math.max(1, Math.min(10, Number(searchParams.get("min_score") ?? 1)));
+  const scoreRulesParam = searchParams.get("score_rules");
+  const scoreRules = useMemo(() => parseScoreRulesParam(scoreRulesParam), [scoreRulesParam]);
   const tags = (searchParams.get("tags") ?? "")
     .split(",")
     .map((t) => t.trim())
@@ -75,10 +77,10 @@ export default function ContactsPage() {
       status,
       source_type: sourceType,
       filter_uuid: filterUuid,
-      min_score: minScore > 1 ? minScore : undefined,
+      score_rules: scoreRules.length > 0 ? scoreRules : undefined,
       tags: tags.length > 0 ? tags : undefined,
     }),
-    [view, page, pageSize, debouncedSearch, status, sourceType, filterUuid, minScore, tags.join(",")],
+    [view, page, pageSize, debouncedSearch, status, sourceType, filterUuid, scoreRulesParam, tags.join(",")],
   );
 
   const { data, isLoading, isFetching } = useContacts(query);
@@ -116,8 +118,11 @@ export default function ContactsPage() {
         onSearchChange={(s) => updateParams({ search: s, page: "1" })}
         status={status}
         onStatusChange={(s) => updateParams({ status: s, page: "1" })}
-        minScore={minScore}
-        onMinScoreChange={(n) => updateParams({ min_score: n > 1 ? String(n) : undefined, page: "1" })}
+        scoreRules={scoreRules}
+        onScoreRulesChange={(next) => {
+          const enc = serializeScoreRulesParam(next);
+          updateParams({ score_rules: enc ?? undefined, page: "1" });
+        }}
         sourceType={sourceType}
         onSourceTypeChange={(s) => updateParams({ source_type: s, page: "1" })}
         filterUuid={filterUuid}

@@ -72,6 +72,14 @@ export const ApiRoutes = {
         run: (uuid: string) => `/filters/${uuid}/run`,
         jobs: (uuid: string) => `/filters/${uuid}/jobs`,
     },
+    scoring_instructions: {
+        prefix: "/scoring-instructions",
+        list: "/scoring-instructions",
+        create: "/scoring-instructions",
+        get: (uuid: string) => `/scoring-instructions/${uuid}`,
+        update: (uuid: string) => `/scoring-instructions/${uuid}`,
+        remove: (uuid: string) => `/scoring-instructions/${uuid}`,
+    },
     sender_profiles: {
         prefix: "/sender-profiles",
         list: "/sender-profiles",

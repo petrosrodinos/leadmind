@@ -24,6 +24,16 @@ export type User = $Result.DefaultSelection<Prisma.$UserPayload>
  */
 export type Filter = $Result.DefaultSelection<Prisma.$FilterPayload>
 /**
+ * Model ScoringInstruction
+ * 
+ */
+export type ScoringInstruction = $Result.DefaultSelection<Prisma.$ScoringInstructionPayload>
+/**
+ * Model FilterScoringInstruction
+ * 
+ */
+export type FilterScoringInstruction = $Result.DefaultSelection<Prisma.$FilterScoringInstructionPayload>
+/**
  * Model RawLead
  * 
  */
@@ -43,6 +53,11 @@ export type LeadEnrichment = $Result.DefaultSelection<Prisma.$LeadEnrichmentPayl
  * 
  */
 export type Contact = $Result.DefaultSelection<Prisma.$ContactPayload>
+/**
+ * Model ContactScore
+ * 
+ */
+export type ContactScore = $Result.DefaultSelection<Prisma.$ContactScorePayload>
 /**
  * Model ContactTag
  * 
@@ -435,6 +450,26 @@ export class PrismaClient<
   get filter(): Prisma.FilterDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.scoringInstruction`: Exposes CRUD operations for the **ScoringInstruction** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ScoringInstructions
+    * const scoringInstructions = await prisma.scoringInstruction.findMany()
+    * ```
+    */
+  get scoringInstruction(): Prisma.ScoringInstructionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.filterScoringInstruction`: Exposes CRUD operations for the **FilterScoringInstruction** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more FilterScoringInstructions
+    * const filterScoringInstructions = await prisma.filterScoringInstruction.findMany()
+    * ```
+    */
+  get filterScoringInstruction(): Prisma.FilterScoringInstructionDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.rawLead`: Exposes CRUD operations for the **RawLead** model.
     * Example usage:
     * ```ts
@@ -473,6 +508,16 @@ export class PrismaClient<
     * ```
     */
   get contact(): Prisma.ContactDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.contactScore`: Exposes CRUD operations for the **ContactScore** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ContactScores
+    * const contactScores = await prisma.contactScore.findMany()
+    * ```
+    */
+  get contactScore(): Prisma.ContactScoreDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.contactTag`: Exposes CRUD operations for the **ContactTag** model.
@@ -989,10 +1034,13 @@ export namespace Prisma {
   export const ModelName: {
     User: 'User',
     Filter: 'Filter',
+    ScoringInstruction: 'ScoringInstruction',
+    FilterScoringInstruction: 'FilterScoringInstruction',
     RawLead: 'RawLead',
     Lead: 'Lead',
     LeadEnrichment: 'LeadEnrichment',
     Contact: 'Contact',
+    ContactScore: 'ContactScore',
     ContactTag: 'ContactTag',
     Interaction: 'Interaction',
     OutreachMessage: 'OutreachMessage',
@@ -1016,7 +1064,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "filter" | "rawLead" | "lead" | "leadEnrichment" | "contact" | "contactTag" | "interaction" | "outreachMessage" | "outreachSequence" | "filterJob" | "senderProfile" | "marketingCampaign" | "marketingCampaignContact"
+      modelProps: "user" | "filter" | "scoringInstruction" | "filterScoringInstruction" | "rawLead" | "lead" | "leadEnrichment" | "contact" | "contactScore" | "contactTag" | "interaction" | "outreachMessage" | "outreachSequence" | "filterJob" | "senderProfile" | "marketingCampaign" | "marketingCampaignContact"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1165,6 +1213,154 @@ export namespace Prisma {
           count: {
             args: Prisma.FilterCountArgs<ExtArgs>
             result: $Utils.Optional<FilterCountAggregateOutputType> | number
+          }
+        }
+      }
+      ScoringInstruction: {
+        payload: Prisma.$ScoringInstructionPayload<ExtArgs>
+        fields: Prisma.ScoringInstructionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ScoringInstructionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScoringInstructionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ScoringInstructionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScoringInstructionPayload>
+          }
+          findFirst: {
+            args: Prisma.ScoringInstructionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScoringInstructionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ScoringInstructionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScoringInstructionPayload>
+          }
+          findMany: {
+            args: Prisma.ScoringInstructionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScoringInstructionPayload>[]
+          }
+          create: {
+            args: Prisma.ScoringInstructionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScoringInstructionPayload>
+          }
+          createMany: {
+            args: Prisma.ScoringInstructionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ScoringInstructionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScoringInstructionPayload>[]
+          }
+          delete: {
+            args: Prisma.ScoringInstructionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScoringInstructionPayload>
+          }
+          update: {
+            args: Prisma.ScoringInstructionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScoringInstructionPayload>
+          }
+          deleteMany: {
+            args: Prisma.ScoringInstructionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ScoringInstructionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ScoringInstructionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScoringInstructionPayload>[]
+          }
+          upsert: {
+            args: Prisma.ScoringInstructionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScoringInstructionPayload>
+          }
+          aggregate: {
+            args: Prisma.ScoringInstructionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateScoringInstruction>
+          }
+          groupBy: {
+            args: Prisma.ScoringInstructionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ScoringInstructionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ScoringInstructionCountArgs<ExtArgs>
+            result: $Utils.Optional<ScoringInstructionCountAggregateOutputType> | number
+          }
+        }
+      }
+      FilterScoringInstruction: {
+        payload: Prisma.$FilterScoringInstructionPayload<ExtArgs>
+        fields: Prisma.FilterScoringInstructionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.FilterScoringInstructionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FilterScoringInstructionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.FilterScoringInstructionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FilterScoringInstructionPayload>
+          }
+          findFirst: {
+            args: Prisma.FilterScoringInstructionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FilterScoringInstructionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.FilterScoringInstructionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FilterScoringInstructionPayload>
+          }
+          findMany: {
+            args: Prisma.FilterScoringInstructionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FilterScoringInstructionPayload>[]
+          }
+          create: {
+            args: Prisma.FilterScoringInstructionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FilterScoringInstructionPayload>
+          }
+          createMany: {
+            args: Prisma.FilterScoringInstructionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.FilterScoringInstructionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FilterScoringInstructionPayload>[]
+          }
+          delete: {
+            args: Prisma.FilterScoringInstructionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FilterScoringInstructionPayload>
+          }
+          update: {
+            args: Prisma.FilterScoringInstructionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FilterScoringInstructionPayload>
+          }
+          deleteMany: {
+            args: Prisma.FilterScoringInstructionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.FilterScoringInstructionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.FilterScoringInstructionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FilterScoringInstructionPayload>[]
+          }
+          upsert: {
+            args: Prisma.FilterScoringInstructionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FilterScoringInstructionPayload>
+          }
+          aggregate: {
+            args: Prisma.FilterScoringInstructionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFilterScoringInstruction>
+          }
+          groupBy: {
+            args: Prisma.FilterScoringInstructionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FilterScoringInstructionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.FilterScoringInstructionCountArgs<ExtArgs>
+            result: $Utils.Optional<FilterScoringInstructionCountAggregateOutputType> | number
           }
         }
       }
@@ -1461,6 +1657,80 @@ export namespace Prisma {
           count: {
             args: Prisma.ContactCountArgs<ExtArgs>
             result: $Utils.Optional<ContactCountAggregateOutputType> | number
+          }
+        }
+      }
+      ContactScore: {
+        payload: Prisma.$ContactScorePayload<ExtArgs>
+        fields: Prisma.ContactScoreFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ContactScoreFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactScorePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ContactScoreFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactScorePayload>
+          }
+          findFirst: {
+            args: Prisma.ContactScoreFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactScorePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ContactScoreFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactScorePayload>
+          }
+          findMany: {
+            args: Prisma.ContactScoreFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactScorePayload>[]
+          }
+          create: {
+            args: Prisma.ContactScoreCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactScorePayload>
+          }
+          createMany: {
+            args: Prisma.ContactScoreCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ContactScoreCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactScorePayload>[]
+          }
+          delete: {
+            args: Prisma.ContactScoreDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactScorePayload>
+          }
+          update: {
+            args: Prisma.ContactScoreUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactScorePayload>
+          }
+          deleteMany: {
+            args: Prisma.ContactScoreDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ContactScoreUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ContactScoreUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactScorePayload>[]
+          }
+          upsert: {
+            args: Prisma.ContactScoreUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactScorePayload>
+          }
+          aggregate: {
+            args: Prisma.ContactScoreAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateContactScore>
+          }
+          groupBy: {
+            args: Prisma.ContactScoreGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ContactScoreGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ContactScoreCountArgs<ExtArgs>
+            result: $Utils.Optional<ContactScoreCountAggregateOutputType> | number
           }
         }
       }
@@ -2166,10 +2436,13 @@ export namespace Prisma {
   export type GlobalOmitConfig = {
     user?: UserOmit
     filter?: FilterOmit
+    scoringInstruction?: ScoringInstructionOmit
+    filterScoringInstruction?: FilterScoringInstructionOmit
     rawLead?: RawLeadOmit
     lead?: LeadOmit
     leadEnrichment?: LeadEnrichmentOmit
     contact?: ContactOmit
+    contactScore?: ContactScoreOmit
     contactTag?: ContactTagOmit
     interaction?: InteractionOmit
     outreachMessage?: OutreachMessageOmit
@@ -2265,6 +2538,7 @@ export namespace Prisma {
     interactions: number
     sender_profiles: number
     marketing_campaigns: number
+    scoring_instructions: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2275,6 +2549,7 @@ export namespace Prisma {
     interactions?: boolean | UserCountOutputTypeCountInteractionsArgs
     sender_profiles?: boolean | UserCountOutputTypeCountSender_profilesArgs
     marketing_campaigns?: boolean | UserCountOutputTypeCountMarketing_campaignsArgs
+    scoring_instructions?: boolean | UserCountOutputTypeCountScoring_instructionsArgs
   }
 
   // Custom InputTypes
@@ -2337,6 +2612,13 @@ export namespace Prisma {
     where?: MarketingCampaignWhereInput
   }
 
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountScoring_instructionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ScoringInstructionWhereInput
+  }
+
 
   /**
    * Count Type FilterCountOutputType
@@ -2346,12 +2628,14 @@ export namespace Prisma {
     raw_leads: number
     contacts: number
     jobs: number
+    filter_scoring_instructions: number
   }
 
   export type FilterCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     raw_leads?: boolean | FilterCountOutputTypeCountRaw_leadsArgs
     contacts?: boolean | FilterCountOutputTypeCountContactsArgs
     jobs?: boolean | FilterCountOutputTypeCountJobsArgs
+    filter_scoring_instructions?: boolean | FilterCountOutputTypeCountFilter_scoring_instructionsArgs
   }
 
   // Custom InputTypes
@@ -2384,6 +2668,53 @@ export namespace Prisma {
    */
   export type FilterCountOutputTypeCountJobsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: FilterJobWhereInput
+  }
+
+  /**
+   * FilterCountOutputType without action
+   */
+  export type FilterCountOutputTypeCountFilter_scoring_instructionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FilterScoringInstructionWhereInput
+  }
+
+
+  /**
+   * Count Type ScoringInstructionCountOutputType
+   */
+
+  export type ScoringInstructionCountOutputType = {
+    filter_links: number
+    contact_scores: number
+  }
+
+  export type ScoringInstructionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    filter_links?: boolean | ScoringInstructionCountOutputTypeCountFilter_linksArgs
+    contact_scores?: boolean | ScoringInstructionCountOutputTypeCountContact_scoresArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ScoringInstructionCountOutputType without action
+   */
+  export type ScoringInstructionCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScoringInstructionCountOutputType
+     */
+    select?: ScoringInstructionCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ScoringInstructionCountOutputType without action
+   */
+  export type ScoringInstructionCountOutputTypeCountFilter_linksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FilterScoringInstructionWhereInput
+  }
+
+  /**
+   * ScoringInstructionCountOutputType without action
+   */
+  export type ScoringInstructionCountOutputTypeCountContact_scoresArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ContactScoreWhereInput
   }
 
 
@@ -2436,6 +2767,7 @@ export namespace Prisma {
     interactions: number
     outreach_messages: number
     campaign_contacts: number
+    contact_scores: number
   }
 
   export type ContactCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2443,6 +2775,7 @@ export namespace Prisma {
     interactions?: boolean | ContactCountOutputTypeCountInteractionsArgs
     outreach_messages?: boolean | ContactCountOutputTypeCountOutreach_messagesArgs
     campaign_contacts?: boolean | ContactCountOutputTypeCountCampaign_contactsArgs
+    contact_scores?: boolean | ContactCountOutputTypeCountContact_scoresArgs
   }
 
   // Custom InputTypes
@@ -2482,6 +2815,13 @@ export namespace Prisma {
    */
   export type ContactCountOutputTypeCountCampaign_contactsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: MarketingCampaignContactWhereInput
+  }
+
+  /**
+   * ContactCountOutputType without action
+   */
+  export type ContactCountOutputTypeCountContact_scoresArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ContactScoreWhereInput
   }
 
 
@@ -2798,6 +3138,7 @@ export namespace Prisma {
     interactions?: boolean | User$interactionsArgs<ExtArgs>
     sender_profiles?: boolean | User$sender_profilesArgs<ExtArgs>
     marketing_campaigns?: boolean | User$marketing_campaignsArgs<ExtArgs>
+    scoring_instructions?: boolean | User$scoring_instructionsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -2843,6 +3184,7 @@ export namespace Prisma {
     interactions?: boolean | User$interactionsArgs<ExtArgs>
     sender_profiles?: boolean | User$sender_profilesArgs<ExtArgs>
     marketing_campaigns?: boolean | User$marketing_campaignsArgs<ExtArgs>
+    scoring_instructions?: boolean | User$scoring_instructionsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -2858,6 +3200,7 @@ export namespace Prisma {
       interactions: Prisma.$InteractionPayload<ExtArgs>[]
       sender_profiles: Prisma.$SenderProfilePayload<ExtArgs>[]
       marketing_campaigns: Prisma.$MarketingCampaignPayload<ExtArgs>[]
+      scoring_instructions: Prisma.$ScoringInstructionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -3269,6 +3612,7 @@ export namespace Prisma {
     interactions<T extends User$interactionsArgs<ExtArgs> = {}>(args?: Subset<T, User$interactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InteractionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     sender_profiles<T extends User$sender_profilesArgs<ExtArgs> = {}>(args?: Subset<T, User$sender_profilesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SenderProfilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     marketing_campaigns<T extends User$marketing_campaignsArgs<ExtArgs> = {}>(args?: Subset<T, User$marketing_campaignsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketingCampaignPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    scoring_instructions<T extends User$scoring_instructionsArgs<ExtArgs> = {}>(args?: Subset<T, User$scoring_instructionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ScoringInstructionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3862,6 +4206,30 @@ export namespace Prisma {
   }
 
   /**
+   * User.scoring_instructions
+   */
+  export type User$scoring_instructionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScoringInstruction
+     */
+    select?: ScoringInstructionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScoringInstruction
+     */
+    omit?: ScoringInstructionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScoringInstructionInclude<ExtArgs> | null
+    where?: ScoringInstructionWhereInput
+    orderBy?: ScoringInstructionOrderByWithRelationInput | ScoringInstructionOrderByWithRelationInput[]
+    cursor?: ScoringInstructionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ScoringInstructionScalarFieldEnum | ScoringInstructionScalarFieldEnum[]
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3908,7 +4276,6 @@ export namespace Prisma {
     source_type: $Enums.SourceType | null
     enabled: boolean | null
     cron_schedule: string | null
-    scoring_instructions: string | null
     outreach_instructions: string | null
     created_at: Date | null
     updated_at: Date | null
@@ -3922,7 +4289,6 @@ export namespace Prisma {
     source_type: $Enums.SourceType | null
     enabled: boolean | null
     cron_schedule: string | null
-    scoring_instructions: string | null
     outreach_instructions: string | null
     created_at: Date | null
     updated_at: Date | null
@@ -3939,7 +4305,6 @@ export namespace Prisma {
     enabled: number
     cron_schedule: number
     channels: number
-    scoring_instructions: number
     outreach_instructions: number
     created_at: number
     updated_at: number
@@ -3963,7 +4328,6 @@ export namespace Prisma {
     source_type?: true
     enabled?: true
     cron_schedule?: true
-    scoring_instructions?: true
     outreach_instructions?: true
     created_at?: true
     updated_at?: true
@@ -3977,7 +4341,6 @@ export namespace Prisma {
     source_type?: true
     enabled?: true
     cron_schedule?: true
-    scoring_instructions?: true
     outreach_instructions?: true
     created_at?: true
     updated_at?: true
@@ -3994,7 +4357,6 @@ export namespace Prisma {
     enabled?: true
     cron_schedule?: true
     channels?: true
-    scoring_instructions?: true
     outreach_instructions?: true
     created_at?: true
     updated_at?: true
@@ -4098,7 +4460,6 @@ export namespace Prisma {
     enabled: boolean
     cron_schedule: string | null
     channels: $Enums.Channel[]
-    scoring_instructions: string | null
     outreach_instructions: string | null
     created_at: Date
     updated_at: Date
@@ -4134,7 +4495,6 @@ export namespace Prisma {
     enabled?: boolean
     cron_schedule?: boolean
     channels?: boolean
-    scoring_instructions?: boolean
     outreach_instructions?: boolean
     created_at?: boolean
     updated_at?: boolean
@@ -4142,6 +4502,7 @@ export namespace Prisma {
     raw_leads?: boolean | Filter$raw_leadsArgs<ExtArgs>
     contacts?: boolean | Filter$contactsArgs<ExtArgs>
     jobs?: boolean | Filter$jobsArgs<ExtArgs>
+    filter_scoring_instructions?: boolean | Filter$filter_scoring_instructionsArgs<ExtArgs>
     _count?: boolean | FilterCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["filter"]>
 
@@ -4156,7 +4517,6 @@ export namespace Prisma {
     enabled?: boolean
     cron_schedule?: boolean
     channels?: boolean
-    scoring_instructions?: boolean
     outreach_instructions?: boolean
     created_at?: boolean
     updated_at?: boolean
@@ -4174,7 +4534,6 @@ export namespace Prisma {
     enabled?: boolean
     cron_schedule?: boolean
     channels?: boolean
-    scoring_instructions?: boolean
     outreach_instructions?: boolean
     created_at?: boolean
     updated_at?: boolean
@@ -4192,18 +4551,18 @@ export namespace Prisma {
     enabled?: boolean
     cron_schedule?: boolean
     channels?: boolean
-    scoring_instructions?: boolean
     outreach_instructions?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type FilterOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "name" | "source_type" | "query_config" | "enrichment_sources" | "enabled" | "cron_schedule" | "channels" | "scoring_instructions" | "outreach_instructions" | "created_at" | "updated_at", ExtArgs["result"]["filter"]>
+  export type FilterOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "name" | "source_type" | "query_config" | "enrichment_sources" | "enabled" | "cron_schedule" | "channels" | "outreach_instructions" | "created_at" | "updated_at", ExtArgs["result"]["filter"]>
   export type FilterInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     raw_leads?: boolean | Filter$raw_leadsArgs<ExtArgs>
     contacts?: boolean | Filter$contactsArgs<ExtArgs>
     jobs?: boolean | Filter$jobsArgs<ExtArgs>
+    filter_scoring_instructions?: boolean | Filter$filter_scoring_instructionsArgs<ExtArgs>
     _count?: boolean | FilterCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type FilterIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4220,6 +4579,7 @@ export namespace Prisma {
       raw_leads: Prisma.$RawLeadPayload<ExtArgs>[]
       contacts: Prisma.$ContactPayload<ExtArgs>[]
       jobs: Prisma.$FilterJobPayload<ExtArgs>[]
+      filter_scoring_instructions: Prisma.$FilterScoringInstructionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -4232,7 +4592,6 @@ export namespace Prisma {
       enabled: boolean
       cron_schedule: string | null
       channels: $Enums.Channel[]
-      scoring_instructions: string | null
       outreach_instructions: string | null
       created_at: Date
       updated_at: Date
@@ -4634,6 +4993,7 @@ export namespace Prisma {
     raw_leads<T extends Filter$raw_leadsArgs<ExtArgs> = {}>(args?: Subset<T, Filter$raw_leadsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RawLeadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     contacts<T extends Filter$contactsArgs<ExtArgs> = {}>(args?: Subset<T, Filter$contactsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     jobs<T extends Filter$jobsArgs<ExtArgs> = {}>(args?: Subset<T, Filter$jobsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FilterJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    filter_scoring_instructions<T extends Filter$filter_scoring_instructionsArgs<ExtArgs> = {}>(args?: Subset<T, Filter$filter_scoring_instructionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FilterScoringInstructionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4673,7 +5033,6 @@ export namespace Prisma {
     readonly enabled: FieldRef<"Filter", 'Boolean'>
     readonly cron_schedule: FieldRef<"Filter", 'String'>
     readonly channels: FieldRef<"Filter", 'Channel[]'>
-    readonly scoring_instructions: FieldRef<"Filter", 'String'>
     readonly outreach_instructions: FieldRef<"Filter", 'String'>
     readonly created_at: FieldRef<"Filter", 'DateTime'>
     readonly updated_at: FieldRef<"Filter", 'DateTime'>
@@ -5145,6 +5504,30 @@ export namespace Prisma {
   }
 
   /**
+   * Filter.filter_scoring_instructions
+   */
+  export type Filter$filter_scoring_instructionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FilterScoringInstruction
+     */
+    select?: FilterScoringInstructionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FilterScoringInstruction
+     */
+    omit?: FilterScoringInstructionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FilterScoringInstructionInclude<ExtArgs> | null
+    where?: FilterScoringInstructionWhereInput
+    orderBy?: FilterScoringInstructionOrderByWithRelationInput | FilterScoringInstructionOrderByWithRelationInput[]
+    cursor?: FilterScoringInstructionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FilterScoringInstructionScalarFieldEnum | FilterScoringInstructionScalarFieldEnum[]
+  }
+
+  /**
    * Filter without action
    */
   export type FilterDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5160,6 +5543,2222 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: FilterInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ScoringInstruction
+   */
+
+  export type AggregateScoringInstruction = {
+    _count: ScoringInstructionCountAggregateOutputType | null
+    _avg: ScoringInstructionAvgAggregateOutputType | null
+    _sum: ScoringInstructionSumAggregateOutputType | null
+    _min: ScoringInstructionMinAggregateOutputType | null
+    _max: ScoringInstructionMaxAggregateOutputType | null
+  }
+
+  export type ScoringInstructionAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type ScoringInstructionSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type ScoringInstructionMinAggregateOutputType = {
+    id: number | null
+    uuid: string | null
+    user_uuid: string | null
+    name: string | null
+    instructions: string | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type ScoringInstructionMaxAggregateOutputType = {
+    id: number | null
+    uuid: string | null
+    user_uuid: string | null
+    name: string | null
+    instructions: string | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type ScoringInstructionCountAggregateOutputType = {
+    id: number
+    uuid: number
+    user_uuid: number
+    name: number
+    instructions: number
+    created_at: number
+    updated_at: number
+    _all: number
+  }
+
+
+  export type ScoringInstructionAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type ScoringInstructionSumAggregateInputType = {
+    id?: true
+  }
+
+  export type ScoringInstructionMinAggregateInputType = {
+    id?: true
+    uuid?: true
+    user_uuid?: true
+    name?: true
+    instructions?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type ScoringInstructionMaxAggregateInputType = {
+    id?: true
+    uuid?: true
+    user_uuid?: true
+    name?: true
+    instructions?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type ScoringInstructionCountAggregateInputType = {
+    id?: true
+    uuid?: true
+    user_uuid?: true
+    name?: true
+    instructions?: true
+    created_at?: true
+    updated_at?: true
+    _all?: true
+  }
+
+  export type ScoringInstructionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ScoringInstruction to aggregate.
+     */
+    where?: ScoringInstructionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ScoringInstructions to fetch.
+     */
+    orderBy?: ScoringInstructionOrderByWithRelationInput | ScoringInstructionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ScoringInstructionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ScoringInstructions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ScoringInstructions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ScoringInstructions
+    **/
+    _count?: true | ScoringInstructionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ScoringInstructionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ScoringInstructionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ScoringInstructionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ScoringInstructionMaxAggregateInputType
+  }
+
+  export type GetScoringInstructionAggregateType<T extends ScoringInstructionAggregateArgs> = {
+        [P in keyof T & keyof AggregateScoringInstruction]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateScoringInstruction[P]>
+      : GetScalarType<T[P], AggregateScoringInstruction[P]>
+  }
+
+
+
+
+  export type ScoringInstructionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ScoringInstructionWhereInput
+    orderBy?: ScoringInstructionOrderByWithAggregationInput | ScoringInstructionOrderByWithAggregationInput[]
+    by: ScoringInstructionScalarFieldEnum[] | ScoringInstructionScalarFieldEnum
+    having?: ScoringInstructionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ScoringInstructionCountAggregateInputType | true
+    _avg?: ScoringInstructionAvgAggregateInputType
+    _sum?: ScoringInstructionSumAggregateInputType
+    _min?: ScoringInstructionMinAggregateInputType
+    _max?: ScoringInstructionMaxAggregateInputType
+  }
+
+  export type ScoringInstructionGroupByOutputType = {
+    id: number
+    uuid: string
+    user_uuid: string
+    name: string
+    instructions: string
+    created_at: Date
+    updated_at: Date
+    _count: ScoringInstructionCountAggregateOutputType | null
+    _avg: ScoringInstructionAvgAggregateOutputType | null
+    _sum: ScoringInstructionSumAggregateOutputType | null
+    _min: ScoringInstructionMinAggregateOutputType | null
+    _max: ScoringInstructionMaxAggregateOutputType | null
+  }
+
+  type GetScoringInstructionGroupByPayload<T extends ScoringInstructionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ScoringInstructionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ScoringInstructionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ScoringInstructionGroupByOutputType[P]>
+            : GetScalarType<T[P], ScoringInstructionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ScoringInstructionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uuid?: boolean
+    user_uuid?: boolean
+    name?: boolean
+    instructions?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    filter_links?: boolean | ScoringInstruction$filter_linksArgs<ExtArgs>
+    contact_scores?: boolean | ScoringInstruction$contact_scoresArgs<ExtArgs>
+    _count?: boolean | ScoringInstructionCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["scoringInstruction"]>
+
+  export type ScoringInstructionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uuid?: boolean
+    user_uuid?: boolean
+    name?: boolean
+    instructions?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["scoringInstruction"]>
+
+  export type ScoringInstructionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uuid?: boolean
+    user_uuid?: boolean
+    name?: boolean
+    instructions?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["scoringInstruction"]>
+
+  export type ScoringInstructionSelectScalar = {
+    id?: boolean
+    uuid?: boolean
+    user_uuid?: boolean
+    name?: boolean
+    instructions?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }
+
+  export type ScoringInstructionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "name" | "instructions" | "created_at" | "updated_at", ExtArgs["result"]["scoringInstruction"]>
+  export type ScoringInstructionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    filter_links?: boolean | ScoringInstruction$filter_linksArgs<ExtArgs>
+    contact_scores?: boolean | ScoringInstruction$contact_scoresArgs<ExtArgs>
+    _count?: boolean | ScoringInstructionCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type ScoringInstructionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type ScoringInstructionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $ScoringInstructionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ScoringInstruction"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      filter_links: Prisma.$FilterScoringInstructionPayload<ExtArgs>[]
+      contact_scores: Prisma.$ContactScorePayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      uuid: string
+      user_uuid: string
+      name: string
+      instructions: string
+      created_at: Date
+      updated_at: Date
+    }, ExtArgs["result"]["scoringInstruction"]>
+    composites: {}
+  }
+
+  type ScoringInstructionGetPayload<S extends boolean | null | undefined | ScoringInstructionDefaultArgs> = $Result.GetResult<Prisma.$ScoringInstructionPayload, S>
+
+  type ScoringInstructionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ScoringInstructionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ScoringInstructionCountAggregateInputType | true
+    }
+
+  export interface ScoringInstructionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ScoringInstruction'], meta: { name: 'ScoringInstruction' } }
+    /**
+     * Find zero or one ScoringInstruction that matches the filter.
+     * @param {ScoringInstructionFindUniqueArgs} args - Arguments to find a ScoringInstruction
+     * @example
+     * // Get one ScoringInstruction
+     * const scoringInstruction = await prisma.scoringInstruction.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ScoringInstructionFindUniqueArgs>(args: SelectSubset<T, ScoringInstructionFindUniqueArgs<ExtArgs>>): Prisma__ScoringInstructionClient<$Result.GetResult<Prisma.$ScoringInstructionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ScoringInstruction that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ScoringInstructionFindUniqueOrThrowArgs} args - Arguments to find a ScoringInstruction
+     * @example
+     * // Get one ScoringInstruction
+     * const scoringInstruction = await prisma.scoringInstruction.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ScoringInstructionFindUniqueOrThrowArgs>(args: SelectSubset<T, ScoringInstructionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ScoringInstructionClient<$Result.GetResult<Prisma.$ScoringInstructionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ScoringInstruction that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScoringInstructionFindFirstArgs} args - Arguments to find a ScoringInstruction
+     * @example
+     * // Get one ScoringInstruction
+     * const scoringInstruction = await prisma.scoringInstruction.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ScoringInstructionFindFirstArgs>(args?: SelectSubset<T, ScoringInstructionFindFirstArgs<ExtArgs>>): Prisma__ScoringInstructionClient<$Result.GetResult<Prisma.$ScoringInstructionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ScoringInstruction that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScoringInstructionFindFirstOrThrowArgs} args - Arguments to find a ScoringInstruction
+     * @example
+     * // Get one ScoringInstruction
+     * const scoringInstruction = await prisma.scoringInstruction.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ScoringInstructionFindFirstOrThrowArgs>(args?: SelectSubset<T, ScoringInstructionFindFirstOrThrowArgs<ExtArgs>>): Prisma__ScoringInstructionClient<$Result.GetResult<Prisma.$ScoringInstructionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ScoringInstructions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScoringInstructionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ScoringInstructions
+     * const scoringInstructions = await prisma.scoringInstruction.findMany()
+     * 
+     * // Get first 10 ScoringInstructions
+     * const scoringInstructions = await prisma.scoringInstruction.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const scoringInstructionWithIdOnly = await prisma.scoringInstruction.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ScoringInstructionFindManyArgs>(args?: SelectSubset<T, ScoringInstructionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ScoringInstructionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ScoringInstruction.
+     * @param {ScoringInstructionCreateArgs} args - Arguments to create a ScoringInstruction.
+     * @example
+     * // Create one ScoringInstruction
+     * const ScoringInstruction = await prisma.scoringInstruction.create({
+     *   data: {
+     *     // ... data to create a ScoringInstruction
+     *   }
+     * })
+     * 
+     */
+    create<T extends ScoringInstructionCreateArgs>(args: SelectSubset<T, ScoringInstructionCreateArgs<ExtArgs>>): Prisma__ScoringInstructionClient<$Result.GetResult<Prisma.$ScoringInstructionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ScoringInstructions.
+     * @param {ScoringInstructionCreateManyArgs} args - Arguments to create many ScoringInstructions.
+     * @example
+     * // Create many ScoringInstructions
+     * const scoringInstruction = await prisma.scoringInstruction.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ScoringInstructionCreateManyArgs>(args?: SelectSubset<T, ScoringInstructionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ScoringInstructions and returns the data saved in the database.
+     * @param {ScoringInstructionCreateManyAndReturnArgs} args - Arguments to create many ScoringInstructions.
+     * @example
+     * // Create many ScoringInstructions
+     * const scoringInstruction = await prisma.scoringInstruction.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ScoringInstructions and only return the `id`
+     * const scoringInstructionWithIdOnly = await prisma.scoringInstruction.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ScoringInstructionCreateManyAndReturnArgs>(args?: SelectSubset<T, ScoringInstructionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ScoringInstructionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ScoringInstruction.
+     * @param {ScoringInstructionDeleteArgs} args - Arguments to delete one ScoringInstruction.
+     * @example
+     * // Delete one ScoringInstruction
+     * const ScoringInstruction = await prisma.scoringInstruction.delete({
+     *   where: {
+     *     // ... filter to delete one ScoringInstruction
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ScoringInstructionDeleteArgs>(args: SelectSubset<T, ScoringInstructionDeleteArgs<ExtArgs>>): Prisma__ScoringInstructionClient<$Result.GetResult<Prisma.$ScoringInstructionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ScoringInstruction.
+     * @param {ScoringInstructionUpdateArgs} args - Arguments to update one ScoringInstruction.
+     * @example
+     * // Update one ScoringInstruction
+     * const scoringInstruction = await prisma.scoringInstruction.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ScoringInstructionUpdateArgs>(args: SelectSubset<T, ScoringInstructionUpdateArgs<ExtArgs>>): Prisma__ScoringInstructionClient<$Result.GetResult<Prisma.$ScoringInstructionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ScoringInstructions.
+     * @param {ScoringInstructionDeleteManyArgs} args - Arguments to filter ScoringInstructions to delete.
+     * @example
+     * // Delete a few ScoringInstructions
+     * const { count } = await prisma.scoringInstruction.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ScoringInstructionDeleteManyArgs>(args?: SelectSubset<T, ScoringInstructionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ScoringInstructions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScoringInstructionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ScoringInstructions
+     * const scoringInstruction = await prisma.scoringInstruction.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ScoringInstructionUpdateManyArgs>(args: SelectSubset<T, ScoringInstructionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ScoringInstructions and returns the data updated in the database.
+     * @param {ScoringInstructionUpdateManyAndReturnArgs} args - Arguments to update many ScoringInstructions.
+     * @example
+     * // Update many ScoringInstructions
+     * const scoringInstruction = await prisma.scoringInstruction.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ScoringInstructions and only return the `id`
+     * const scoringInstructionWithIdOnly = await prisma.scoringInstruction.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ScoringInstructionUpdateManyAndReturnArgs>(args: SelectSubset<T, ScoringInstructionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ScoringInstructionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ScoringInstruction.
+     * @param {ScoringInstructionUpsertArgs} args - Arguments to update or create a ScoringInstruction.
+     * @example
+     * // Update or create a ScoringInstruction
+     * const scoringInstruction = await prisma.scoringInstruction.upsert({
+     *   create: {
+     *     // ... data to create a ScoringInstruction
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ScoringInstruction we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ScoringInstructionUpsertArgs>(args: SelectSubset<T, ScoringInstructionUpsertArgs<ExtArgs>>): Prisma__ScoringInstructionClient<$Result.GetResult<Prisma.$ScoringInstructionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ScoringInstructions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScoringInstructionCountArgs} args - Arguments to filter ScoringInstructions to count.
+     * @example
+     * // Count the number of ScoringInstructions
+     * const count = await prisma.scoringInstruction.count({
+     *   where: {
+     *     // ... the filter for the ScoringInstructions we want to count
+     *   }
+     * })
+    **/
+    count<T extends ScoringInstructionCountArgs>(
+      args?: Subset<T, ScoringInstructionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ScoringInstructionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ScoringInstruction.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScoringInstructionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ScoringInstructionAggregateArgs>(args: Subset<T, ScoringInstructionAggregateArgs>): Prisma.PrismaPromise<GetScoringInstructionAggregateType<T>>
+
+    /**
+     * Group by ScoringInstruction.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScoringInstructionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ScoringInstructionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ScoringInstructionGroupByArgs['orderBy'] }
+        : { orderBy?: ScoringInstructionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ScoringInstructionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetScoringInstructionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ScoringInstruction model
+   */
+  readonly fields: ScoringInstructionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ScoringInstruction.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ScoringInstructionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    filter_links<T extends ScoringInstruction$filter_linksArgs<ExtArgs> = {}>(args?: Subset<T, ScoringInstruction$filter_linksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FilterScoringInstructionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    contact_scores<T extends ScoringInstruction$contact_scoresArgs<ExtArgs> = {}>(args?: Subset<T, ScoringInstruction$contact_scoresArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactScorePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ScoringInstruction model
+   */
+  interface ScoringInstructionFieldRefs {
+    readonly id: FieldRef<"ScoringInstruction", 'Int'>
+    readonly uuid: FieldRef<"ScoringInstruction", 'String'>
+    readonly user_uuid: FieldRef<"ScoringInstruction", 'String'>
+    readonly name: FieldRef<"ScoringInstruction", 'String'>
+    readonly instructions: FieldRef<"ScoringInstruction", 'String'>
+    readonly created_at: FieldRef<"ScoringInstruction", 'DateTime'>
+    readonly updated_at: FieldRef<"ScoringInstruction", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ScoringInstruction findUnique
+   */
+  export type ScoringInstructionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScoringInstruction
+     */
+    select?: ScoringInstructionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScoringInstruction
+     */
+    omit?: ScoringInstructionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScoringInstructionInclude<ExtArgs> | null
+    /**
+     * Filter, which ScoringInstruction to fetch.
+     */
+    where: ScoringInstructionWhereUniqueInput
+  }
+
+  /**
+   * ScoringInstruction findUniqueOrThrow
+   */
+  export type ScoringInstructionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScoringInstruction
+     */
+    select?: ScoringInstructionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScoringInstruction
+     */
+    omit?: ScoringInstructionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScoringInstructionInclude<ExtArgs> | null
+    /**
+     * Filter, which ScoringInstruction to fetch.
+     */
+    where: ScoringInstructionWhereUniqueInput
+  }
+
+  /**
+   * ScoringInstruction findFirst
+   */
+  export type ScoringInstructionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScoringInstruction
+     */
+    select?: ScoringInstructionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScoringInstruction
+     */
+    omit?: ScoringInstructionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScoringInstructionInclude<ExtArgs> | null
+    /**
+     * Filter, which ScoringInstruction to fetch.
+     */
+    where?: ScoringInstructionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ScoringInstructions to fetch.
+     */
+    orderBy?: ScoringInstructionOrderByWithRelationInput | ScoringInstructionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ScoringInstructions.
+     */
+    cursor?: ScoringInstructionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ScoringInstructions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ScoringInstructions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ScoringInstructions.
+     */
+    distinct?: ScoringInstructionScalarFieldEnum | ScoringInstructionScalarFieldEnum[]
+  }
+
+  /**
+   * ScoringInstruction findFirstOrThrow
+   */
+  export type ScoringInstructionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScoringInstruction
+     */
+    select?: ScoringInstructionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScoringInstruction
+     */
+    omit?: ScoringInstructionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScoringInstructionInclude<ExtArgs> | null
+    /**
+     * Filter, which ScoringInstruction to fetch.
+     */
+    where?: ScoringInstructionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ScoringInstructions to fetch.
+     */
+    orderBy?: ScoringInstructionOrderByWithRelationInput | ScoringInstructionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ScoringInstructions.
+     */
+    cursor?: ScoringInstructionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ScoringInstructions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ScoringInstructions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ScoringInstructions.
+     */
+    distinct?: ScoringInstructionScalarFieldEnum | ScoringInstructionScalarFieldEnum[]
+  }
+
+  /**
+   * ScoringInstruction findMany
+   */
+  export type ScoringInstructionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScoringInstruction
+     */
+    select?: ScoringInstructionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScoringInstruction
+     */
+    omit?: ScoringInstructionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScoringInstructionInclude<ExtArgs> | null
+    /**
+     * Filter, which ScoringInstructions to fetch.
+     */
+    where?: ScoringInstructionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ScoringInstructions to fetch.
+     */
+    orderBy?: ScoringInstructionOrderByWithRelationInput | ScoringInstructionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ScoringInstructions.
+     */
+    cursor?: ScoringInstructionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ScoringInstructions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ScoringInstructions.
+     */
+    skip?: number
+    distinct?: ScoringInstructionScalarFieldEnum | ScoringInstructionScalarFieldEnum[]
+  }
+
+  /**
+   * ScoringInstruction create
+   */
+  export type ScoringInstructionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScoringInstruction
+     */
+    select?: ScoringInstructionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScoringInstruction
+     */
+    omit?: ScoringInstructionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScoringInstructionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ScoringInstruction.
+     */
+    data: XOR<ScoringInstructionCreateInput, ScoringInstructionUncheckedCreateInput>
+  }
+
+  /**
+   * ScoringInstruction createMany
+   */
+  export type ScoringInstructionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ScoringInstructions.
+     */
+    data: ScoringInstructionCreateManyInput | ScoringInstructionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ScoringInstruction createManyAndReturn
+   */
+  export type ScoringInstructionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScoringInstruction
+     */
+    select?: ScoringInstructionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScoringInstruction
+     */
+    omit?: ScoringInstructionOmit<ExtArgs> | null
+    /**
+     * The data used to create many ScoringInstructions.
+     */
+    data: ScoringInstructionCreateManyInput | ScoringInstructionCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScoringInstructionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ScoringInstruction update
+   */
+  export type ScoringInstructionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScoringInstruction
+     */
+    select?: ScoringInstructionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScoringInstruction
+     */
+    omit?: ScoringInstructionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScoringInstructionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ScoringInstruction.
+     */
+    data: XOR<ScoringInstructionUpdateInput, ScoringInstructionUncheckedUpdateInput>
+    /**
+     * Choose, which ScoringInstruction to update.
+     */
+    where: ScoringInstructionWhereUniqueInput
+  }
+
+  /**
+   * ScoringInstruction updateMany
+   */
+  export type ScoringInstructionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ScoringInstructions.
+     */
+    data: XOR<ScoringInstructionUpdateManyMutationInput, ScoringInstructionUncheckedUpdateManyInput>
+    /**
+     * Filter which ScoringInstructions to update
+     */
+    where?: ScoringInstructionWhereInput
+    /**
+     * Limit how many ScoringInstructions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ScoringInstruction updateManyAndReturn
+   */
+  export type ScoringInstructionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScoringInstruction
+     */
+    select?: ScoringInstructionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScoringInstruction
+     */
+    omit?: ScoringInstructionOmit<ExtArgs> | null
+    /**
+     * The data used to update ScoringInstructions.
+     */
+    data: XOR<ScoringInstructionUpdateManyMutationInput, ScoringInstructionUncheckedUpdateManyInput>
+    /**
+     * Filter which ScoringInstructions to update
+     */
+    where?: ScoringInstructionWhereInput
+    /**
+     * Limit how many ScoringInstructions to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScoringInstructionIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ScoringInstruction upsert
+   */
+  export type ScoringInstructionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScoringInstruction
+     */
+    select?: ScoringInstructionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScoringInstruction
+     */
+    omit?: ScoringInstructionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScoringInstructionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ScoringInstruction to update in case it exists.
+     */
+    where: ScoringInstructionWhereUniqueInput
+    /**
+     * In case the ScoringInstruction found by the `where` argument doesn't exist, create a new ScoringInstruction with this data.
+     */
+    create: XOR<ScoringInstructionCreateInput, ScoringInstructionUncheckedCreateInput>
+    /**
+     * In case the ScoringInstruction was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ScoringInstructionUpdateInput, ScoringInstructionUncheckedUpdateInput>
+  }
+
+  /**
+   * ScoringInstruction delete
+   */
+  export type ScoringInstructionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScoringInstruction
+     */
+    select?: ScoringInstructionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScoringInstruction
+     */
+    omit?: ScoringInstructionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScoringInstructionInclude<ExtArgs> | null
+    /**
+     * Filter which ScoringInstruction to delete.
+     */
+    where: ScoringInstructionWhereUniqueInput
+  }
+
+  /**
+   * ScoringInstruction deleteMany
+   */
+  export type ScoringInstructionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ScoringInstructions to delete
+     */
+    where?: ScoringInstructionWhereInput
+    /**
+     * Limit how many ScoringInstructions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ScoringInstruction.filter_links
+   */
+  export type ScoringInstruction$filter_linksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FilterScoringInstruction
+     */
+    select?: FilterScoringInstructionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FilterScoringInstruction
+     */
+    omit?: FilterScoringInstructionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FilterScoringInstructionInclude<ExtArgs> | null
+    where?: FilterScoringInstructionWhereInput
+    orderBy?: FilterScoringInstructionOrderByWithRelationInput | FilterScoringInstructionOrderByWithRelationInput[]
+    cursor?: FilterScoringInstructionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FilterScoringInstructionScalarFieldEnum | FilterScoringInstructionScalarFieldEnum[]
+  }
+
+  /**
+   * ScoringInstruction.contact_scores
+   */
+  export type ScoringInstruction$contact_scoresArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactScore
+     */
+    select?: ContactScoreSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactScore
+     */
+    omit?: ContactScoreOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactScoreInclude<ExtArgs> | null
+    where?: ContactScoreWhereInput
+    orderBy?: ContactScoreOrderByWithRelationInput | ContactScoreOrderByWithRelationInput[]
+    cursor?: ContactScoreWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ContactScoreScalarFieldEnum | ContactScoreScalarFieldEnum[]
+  }
+
+  /**
+   * ScoringInstruction without action
+   */
+  export type ScoringInstructionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScoringInstruction
+     */
+    select?: ScoringInstructionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScoringInstruction
+     */
+    omit?: ScoringInstructionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScoringInstructionInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model FilterScoringInstruction
+   */
+
+  export type AggregateFilterScoringInstruction = {
+    _count: FilterScoringInstructionCountAggregateOutputType | null
+    _min: FilterScoringInstructionMinAggregateOutputType | null
+    _max: FilterScoringInstructionMaxAggregateOutputType | null
+  }
+
+  export type FilterScoringInstructionMinAggregateOutputType = {
+    filter_uuid: string | null
+    scoring_instruction_uuid: string | null
+    created_at: Date | null
+  }
+
+  export type FilterScoringInstructionMaxAggregateOutputType = {
+    filter_uuid: string | null
+    scoring_instruction_uuid: string | null
+    created_at: Date | null
+  }
+
+  export type FilterScoringInstructionCountAggregateOutputType = {
+    filter_uuid: number
+    scoring_instruction_uuid: number
+    created_at: number
+    _all: number
+  }
+
+
+  export type FilterScoringInstructionMinAggregateInputType = {
+    filter_uuid?: true
+    scoring_instruction_uuid?: true
+    created_at?: true
+  }
+
+  export type FilterScoringInstructionMaxAggregateInputType = {
+    filter_uuid?: true
+    scoring_instruction_uuid?: true
+    created_at?: true
+  }
+
+  export type FilterScoringInstructionCountAggregateInputType = {
+    filter_uuid?: true
+    scoring_instruction_uuid?: true
+    created_at?: true
+    _all?: true
+  }
+
+  export type FilterScoringInstructionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FilterScoringInstruction to aggregate.
+     */
+    where?: FilterScoringInstructionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FilterScoringInstructions to fetch.
+     */
+    orderBy?: FilterScoringInstructionOrderByWithRelationInput | FilterScoringInstructionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FilterScoringInstructionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FilterScoringInstructions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FilterScoringInstructions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned FilterScoringInstructions
+    **/
+    _count?: true | FilterScoringInstructionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FilterScoringInstructionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FilterScoringInstructionMaxAggregateInputType
+  }
+
+  export type GetFilterScoringInstructionAggregateType<T extends FilterScoringInstructionAggregateArgs> = {
+        [P in keyof T & keyof AggregateFilterScoringInstruction]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFilterScoringInstruction[P]>
+      : GetScalarType<T[P], AggregateFilterScoringInstruction[P]>
+  }
+
+
+
+
+  export type FilterScoringInstructionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FilterScoringInstructionWhereInput
+    orderBy?: FilterScoringInstructionOrderByWithAggregationInput | FilterScoringInstructionOrderByWithAggregationInput[]
+    by: FilterScoringInstructionScalarFieldEnum[] | FilterScoringInstructionScalarFieldEnum
+    having?: FilterScoringInstructionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FilterScoringInstructionCountAggregateInputType | true
+    _min?: FilterScoringInstructionMinAggregateInputType
+    _max?: FilterScoringInstructionMaxAggregateInputType
+  }
+
+  export type FilterScoringInstructionGroupByOutputType = {
+    filter_uuid: string
+    scoring_instruction_uuid: string
+    created_at: Date
+    _count: FilterScoringInstructionCountAggregateOutputType | null
+    _min: FilterScoringInstructionMinAggregateOutputType | null
+    _max: FilterScoringInstructionMaxAggregateOutputType | null
+  }
+
+  type GetFilterScoringInstructionGroupByPayload<T extends FilterScoringInstructionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FilterScoringInstructionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FilterScoringInstructionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FilterScoringInstructionGroupByOutputType[P]>
+            : GetScalarType<T[P], FilterScoringInstructionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FilterScoringInstructionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    filter_uuid?: boolean
+    scoring_instruction_uuid?: boolean
+    created_at?: boolean
+    filter?: boolean | FilterDefaultArgs<ExtArgs>
+    scoring_instruction?: boolean | ScoringInstructionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["filterScoringInstruction"]>
+
+  export type FilterScoringInstructionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    filter_uuid?: boolean
+    scoring_instruction_uuid?: boolean
+    created_at?: boolean
+    filter?: boolean | FilterDefaultArgs<ExtArgs>
+    scoring_instruction?: boolean | ScoringInstructionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["filterScoringInstruction"]>
+
+  export type FilterScoringInstructionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    filter_uuid?: boolean
+    scoring_instruction_uuid?: boolean
+    created_at?: boolean
+    filter?: boolean | FilterDefaultArgs<ExtArgs>
+    scoring_instruction?: boolean | ScoringInstructionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["filterScoringInstruction"]>
+
+  export type FilterScoringInstructionSelectScalar = {
+    filter_uuid?: boolean
+    scoring_instruction_uuid?: boolean
+    created_at?: boolean
+  }
+
+  export type FilterScoringInstructionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"filter_uuid" | "scoring_instruction_uuid" | "created_at", ExtArgs["result"]["filterScoringInstruction"]>
+  export type FilterScoringInstructionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    filter?: boolean | FilterDefaultArgs<ExtArgs>
+    scoring_instruction?: boolean | ScoringInstructionDefaultArgs<ExtArgs>
+  }
+  export type FilterScoringInstructionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    filter?: boolean | FilterDefaultArgs<ExtArgs>
+    scoring_instruction?: boolean | ScoringInstructionDefaultArgs<ExtArgs>
+  }
+  export type FilterScoringInstructionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    filter?: boolean | FilterDefaultArgs<ExtArgs>
+    scoring_instruction?: boolean | ScoringInstructionDefaultArgs<ExtArgs>
+  }
+
+  export type $FilterScoringInstructionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "FilterScoringInstruction"
+    objects: {
+      filter: Prisma.$FilterPayload<ExtArgs>
+      scoring_instruction: Prisma.$ScoringInstructionPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      filter_uuid: string
+      scoring_instruction_uuid: string
+      created_at: Date
+    }, ExtArgs["result"]["filterScoringInstruction"]>
+    composites: {}
+  }
+
+  type FilterScoringInstructionGetPayload<S extends boolean | null | undefined | FilterScoringInstructionDefaultArgs> = $Result.GetResult<Prisma.$FilterScoringInstructionPayload, S>
+
+  type FilterScoringInstructionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<FilterScoringInstructionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: FilterScoringInstructionCountAggregateInputType | true
+    }
+
+  export interface FilterScoringInstructionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['FilterScoringInstruction'], meta: { name: 'FilterScoringInstruction' } }
+    /**
+     * Find zero or one FilterScoringInstruction that matches the filter.
+     * @param {FilterScoringInstructionFindUniqueArgs} args - Arguments to find a FilterScoringInstruction
+     * @example
+     * // Get one FilterScoringInstruction
+     * const filterScoringInstruction = await prisma.filterScoringInstruction.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends FilterScoringInstructionFindUniqueArgs>(args: SelectSubset<T, FilterScoringInstructionFindUniqueArgs<ExtArgs>>): Prisma__FilterScoringInstructionClient<$Result.GetResult<Prisma.$FilterScoringInstructionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one FilterScoringInstruction that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {FilterScoringInstructionFindUniqueOrThrowArgs} args - Arguments to find a FilterScoringInstruction
+     * @example
+     * // Get one FilterScoringInstruction
+     * const filterScoringInstruction = await prisma.filterScoringInstruction.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends FilterScoringInstructionFindUniqueOrThrowArgs>(args: SelectSubset<T, FilterScoringInstructionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FilterScoringInstructionClient<$Result.GetResult<Prisma.$FilterScoringInstructionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FilterScoringInstruction that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FilterScoringInstructionFindFirstArgs} args - Arguments to find a FilterScoringInstruction
+     * @example
+     * // Get one FilterScoringInstruction
+     * const filterScoringInstruction = await prisma.filterScoringInstruction.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends FilterScoringInstructionFindFirstArgs>(args?: SelectSubset<T, FilterScoringInstructionFindFirstArgs<ExtArgs>>): Prisma__FilterScoringInstructionClient<$Result.GetResult<Prisma.$FilterScoringInstructionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FilterScoringInstruction that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FilterScoringInstructionFindFirstOrThrowArgs} args - Arguments to find a FilterScoringInstruction
+     * @example
+     * // Get one FilterScoringInstruction
+     * const filterScoringInstruction = await prisma.filterScoringInstruction.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends FilterScoringInstructionFindFirstOrThrowArgs>(args?: SelectSubset<T, FilterScoringInstructionFindFirstOrThrowArgs<ExtArgs>>): Prisma__FilterScoringInstructionClient<$Result.GetResult<Prisma.$FilterScoringInstructionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more FilterScoringInstructions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FilterScoringInstructionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all FilterScoringInstructions
+     * const filterScoringInstructions = await prisma.filterScoringInstruction.findMany()
+     * 
+     * // Get first 10 FilterScoringInstructions
+     * const filterScoringInstructions = await prisma.filterScoringInstruction.findMany({ take: 10 })
+     * 
+     * // Only select the `filter_uuid`
+     * const filterScoringInstructionWithFilter_uuidOnly = await prisma.filterScoringInstruction.findMany({ select: { filter_uuid: true } })
+     * 
+     */
+    findMany<T extends FilterScoringInstructionFindManyArgs>(args?: SelectSubset<T, FilterScoringInstructionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FilterScoringInstructionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a FilterScoringInstruction.
+     * @param {FilterScoringInstructionCreateArgs} args - Arguments to create a FilterScoringInstruction.
+     * @example
+     * // Create one FilterScoringInstruction
+     * const FilterScoringInstruction = await prisma.filterScoringInstruction.create({
+     *   data: {
+     *     // ... data to create a FilterScoringInstruction
+     *   }
+     * })
+     * 
+     */
+    create<T extends FilterScoringInstructionCreateArgs>(args: SelectSubset<T, FilterScoringInstructionCreateArgs<ExtArgs>>): Prisma__FilterScoringInstructionClient<$Result.GetResult<Prisma.$FilterScoringInstructionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many FilterScoringInstructions.
+     * @param {FilterScoringInstructionCreateManyArgs} args - Arguments to create many FilterScoringInstructions.
+     * @example
+     * // Create many FilterScoringInstructions
+     * const filterScoringInstruction = await prisma.filterScoringInstruction.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends FilterScoringInstructionCreateManyArgs>(args?: SelectSubset<T, FilterScoringInstructionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many FilterScoringInstructions and returns the data saved in the database.
+     * @param {FilterScoringInstructionCreateManyAndReturnArgs} args - Arguments to create many FilterScoringInstructions.
+     * @example
+     * // Create many FilterScoringInstructions
+     * const filterScoringInstruction = await prisma.filterScoringInstruction.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many FilterScoringInstructions and only return the `filter_uuid`
+     * const filterScoringInstructionWithFilter_uuidOnly = await prisma.filterScoringInstruction.createManyAndReturn({
+     *   select: { filter_uuid: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends FilterScoringInstructionCreateManyAndReturnArgs>(args?: SelectSubset<T, FilterScoringInstructionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FilterScoringInstructionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a FilterScoringInstruction.
+     * @param {FilterScoringInstructionDeleteArgs} args - Arguments to delete one FilterScoringInstruction.
+     * @example
+     * // Delete one FilterScoringInstruction
+     * const FilterScoringInstruction = await prisma.filterScoringInstruction.delete({
+     *   where: {
+     *     // ... filter to delete one FilterScoringInstruction
+     *   }
+     * })
+     * 
+     */
+    delete<T extends FilterScoringInstructionDeleteArgs>(args: SelectSubset<T, FilterScoringInstructionDeleteArgs<ExtArgs>>): Prisma__FilterScoringInstructionClient<$Result.GetResult<Prisma.$FilterScoringInstructionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one FilterScoringInstruction.
+     * @param {FilterScoringInstructionUpdateArgs} args - Arguments to update one FilterScoringInstruction.
+     * @example
+     * // Update one FilterScoringInstruction
+     * const filterScoringInstruction = await prisma.filterScoringInstruction.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends FilterScoringInstructionUpdateArgs>(args: SelectSubset<T, FilterScoringInstructionUpdateArgs<ExtArgs>>): Prisma__FilterScoringInstructionClient<$Result.GetResult<Prisma.$FilterScoringInstructionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more FilterScoringInstructions.
+     * @param {FilterScoringInstructionDeleteManyArgs} args - Arguments to filter FilterScoringInstructions to delete.
+     * @example
+     * // Delete a few FilterScoringInstructions
+     * const { count } = await prisma.filterScoringInstruction.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends FilterScoringInstructionDeleteManyArgs>(args?: SelectSubset<T, FilterScoringInstructionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FilterScoringInstructions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FilterScoringInstructionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many FilterScoringInstructions
+     * const filterScoringInstruction = await prisma.filterScoringInstruction.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends FilterScoringInstructionUpdateManyArgs>(args: SelectSubset<T, FilterScoringInstructionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FilterScoringInstructions and returns the data updated in the database.
+     * @param {FilterScoringInstructionUpdateManyAndReturnArgs} args - Arguments to update many FilterScoringInstructions.
+     * @example
+     * // Update many FilterScoringInstructions
+     * const filterScoringInstruction = await prisma.filterScoringInstruction.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more FilterScoringInstructions and only return the `filter_uuid`
+     * const filterScoringInstructionWithFilter_uuidOnly = await prisma.filterScoringInstruction.updateManyAndReturn({
+     *   select: { filter_uuid: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends FilterScoringInstructionUpdateManyAndReturnArgs>(args: SelectSubset<T, FilterScoringInstructionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FilterScoringInstructionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one FilterScoringInstruction.
+     * @param {FilterScoringInstructionUpsertArgs} args - Arguments to update or create a FilterScoringInstruction.
+     * @example
+     * // Update or create a FilterScoringInstruction
+     * const filterScoringInstruction = await prisma.filterScoringInstruction.upsert({
+     *   create: {
+     *     // ... data to create a FilterScoringInstruction
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the FilterScoringInstruction we want to update
+     *   }
+     * })
+     */
+    upsert<T extends FilterScoringInstructionUpsertArgs>(args: SelectSubset<T, FilterScoringInstructionUpsertArgs<ExtArgs>>): Prisma__FilterScoringInstructionClient<$Result.GetResult<Prisma.$FilterScoringInstructionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of FilterScoringInstructions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FilterScoringInstructionCountArgs} args - Arguments to filter FilterScoringInstructions to count.
+     * @example
+     * // Count the number of FilterScoringInstructions
+     * const count = await prisma.filterScoringInstruction.count({
+     *   where: {
+     *     // ... the filter for the FilterScoringInstructions we want to count
+     *   }
+     * })
+    **/
+    count<T extends FilterScoringInstructionCountArgs>(
+      args?: Subset<T, FilterScoringInstructionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FilterScoringInstructionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a FilterScoringInstruction.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FilterScoringInstructionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FilterScoringInstructionAggregateArgs>(args: Subset<T, FilterScoringInstructionAggregateArgs>): Prisma.PrismaPromise<GetFilterScoringInstructionAggregateType<T>>
+
+    /**
+     * Group by FilterScoringInstruction.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FilterScoringInstructionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FilterScoringInstructionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FilterScoringInstructionGroupByArgs['orderBy'] }
+        : { orderBy?: FilterScoringInstructionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FilterScoringInstructionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFilterScoringInstructionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the FilterScoringInstruction model
+   */
+  readonly fields: FilterScoringInstructionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for FilterScoringInstruction.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__FilterScoringInstructionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    filter<T extends FilterDefaultArgs<ExtArgs> = {}>(args?: Subset<T, FilterDefaultArgs<ExtArgs>>): Prisma__FilterClient<$Result.GetResult<Prisma.$FilterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    scoring_instruction<T extends ScoringInstructionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ScoringInstructionDefaultArgs<ExtArgs>>): Prisma__ScoringInstructionClient<$Result.GetResult<Prisma.$ScoringInstructionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the FilterScoringInstruction model
+   */
+  interface FilterScoringInstructionFieldRefs {
+    readonly filter_uuid: FieldRef<"FilterScoringInstruction", 'String'>
+    readonly scoring_instruction_uuid: FieldRef<"FilterScoringInstruction", 'String'>
+    readonly created_at: FieldRef<"FilterScoringInstruction", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * FilterScoringInstruction findUnique
+   */
+  export type FilterScoringInstructionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FilterScoringInstruction
+     */
+    select?: FilterScoringInstructionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FilterScoringInstruction
+     */
+    omit?: FilterScoringInstructionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FilterScoringInstructionInclude<ExtArgs> | null
+    /**
+     * Filter, which FilterScoringInstruction to fetch.
+     */
+    where: FilterScoringInstructionWhereUniqueInput
+  }
+
+  /**
+   * FilterScoringInstruction findUniqueOrThrow
+   */
+  export type FilterScoringInstructionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FilterScoringInstruction
+     */
+    select?: FilterScoringInstructionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FilterScoringInstruction
+     */
+    omit?: FilterScoringInstructionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FilterScoringInstructionInclude<ExtArgs> | null
+    /**
+     * Filter, which FilterScoringInstruction to fetch.
+     */
+    where: FilterScoringInstructionWhereUniqueInput
+  }
+
+  /**
+   * FilterScoringInstruction findFirst
+   */
+  export type FilterScoringInstructionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FilterScoringInstruction
+     */
+    select?: FilterScoringInstructionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FilterScoringInstruction
+     */
+    omit?: FilterScoringInstructionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FilterScoringInstructionInclude<ExtArgs> | null
+    /**
+     * Filter, which FilterScoringInstruction to fetch.
+     */
+    where?: FilterScoringInstructionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FilterScoringInstructions to fetch.
+     */
+    orderBy?: FilterScoringInstructionOrderByWithRelationInput | FilterScoringInstructionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FilterScoringInstructions.
+     */
+    cursor?: FilterScoringInstructionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FilterScoringInstructions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FilterScoringInstructions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FilterScoringInstructions.
+     */
+    distinct?: FilterScoringInstructionScalarFieldEnum | FilterScoringInstructionScalarFieldEnum[]
+  }
+
+  /**
+   * FilterScoringInstruction findFirstOrThrow
+   */
+  export type FilterScoringInstructionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FilterScoringInstruction
+     */
+    select?: FilterScoringInstructionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FilterScoringInstruction
+     */
+    omit?: FilterScoringInstructionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FilterScoringInstructionInclude<ExtArgs> | null
+    /**
+     * Filter, which FilterScoringInstruction to fetch.
+     */
+    where?: FilterScoringInstructionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FilterScoringInstructions to fetch.
+     */
+    orderBy?: FilterScoringInstructionOrderByWithRelationInput | FilterScoringInstructionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FilterScoringInstructions.
+     */
+    cursor?: FilterScoringInstructionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FilterScoringInstructions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FilterScoringInstructions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FilterScoringInstructions.
+     */
+    distinct?: FilterScoringInstructionScalarFieldEnum | FilterScoringInstructionScalarFieldEnum[]
+  }
+
+  /**
+   * FilterScoringInstruction findMany
+   */
+  export type FilterScoringInstructionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FilterScoringInstruction
+     */
+    select?: FilterScoringInstructionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FilterScoringInstruction
+     */
+    omit?: FilterScoringInstructionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FilterScoringInstructionInclude<ExtArgs> | null
+    /**
+     * Filter, which FilterScoringInstructions to fetch.
+     */
+    where?: FilterScoringInstructionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FilterScoringInstructions to fetch.
+     */
+    orderBy?: FilterScoringInstructionOrderByWithRelationInput | FilterScoringInstructionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing FilterScoringInstructions.
+     */
+    cursor?: FilterScoringInstructionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FilterScoringInstructions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FilterScoringInstructions.
+     */
+    skip?: number
+    distinct?: FilterScoringInstructionScalarFieldEnum | FilterScoringInstructionScalarFieldEnum[]
+  }
+
+  /**
+   * FilterScoringInstruction create
+   */
+  export type FilterScoringInstructionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FilterScoringInstruction
+     */
+    select?: FilterScoringInstructionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FilterScoringInstruction
+     */
+    omit?: FilterScoringInstructionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FilterScoringInstructionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a FilterScoringInstruction.
+     */
+    data: XOR<FilterScoringInstructionCreateInput, FilterScoringInstructionUncheckedCreateInput>
+  }
+
+  /**
+   * FilterScoringInstruction createMany
+   */
+  export type FilterScoringInstructionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many FilterScoringInstructions.
+     */
+    data: FilterScoringInstructionCreateManyInput | FilterScoringInstructionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * FilterScoringInstruction createManyAndReturn
+   */
+  export type FilterScoringInstructionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FilterScoringInstruction
+     */
+    select?: FilterScoringInstructionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FilterScoringInstruction
+     */
+    omit?: FilterScoringInstructionOmit<ExtArgs> | null
+    /**
+     * The data used to create many FilterScoringInstructions.
+     */
+    data: FilterScoringInstructionCreateManyInput | FilterScoringInstructionCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FilterScoringInstructionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FilterScoringInstruction update
+   */
+  export type FilterScoringInstructionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FilterScoringInstruction
+     */
+    select?: FilterScoringInstructionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FilterScoringInstruction
+     */
+    omit?: FilterScoringInstructionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FilterScoringInstructionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a FilterScoringInstruction.
+     */
+    data: XOR<FilterScoringInstructionUpdateInput, FilterScoringInstructionUncheckedUpdateInput>
+    /**
+     * Choose, which FilterScoringInstruction to update.
+     */
+    where: FilterScoringInstructionWhereUniqueInput
+  }
+
+  /**
+   * FilterScoringInstruction updateMany
+   */
+  export type FilterScoringInstructionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update FilterScoringInstructions.
+     */
+    data: XOR<FilterScoringInstructionUpdateManyMutationInput, FilterScoringInstructionUncheckedUpdateManyInput>
+    /**
+     * Filter which FilterScoringInstructions to update
+     */
+    where?: FilterScoringInstructionWhereInput
+    /**
+     * Limit how many FilterScoringInstructions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * FilterScoringInstruction updateManyAndReturn
+   */
+  export type FilterScoringInstructionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FilterScoringInstruction
+     */
+    select?: FilterScoringInstructionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FilterScoringInstruction
+     */
+    omit?: FilterScoringInstructionOmit<ExtArgs> | null
+    /**
+     * The data used to update FilterScoringInstructions.
+     */
+    data: XOR<FilterScoringInstructionUpdateManyMutationInput, FilterScoringInstructionUncheckedUpdateManyInput>
+    /**
+     * Filter which FilterScoringInstructions to update
+     */
+    where?: FilterScoringInstructionWhereInput
+    /**
+     * Limit how many FilterScoringInstructions to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FilterScoringInstructionIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FilterScoringInstruction upsert
+   */
+  export type FilterScoringInstructionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FilterScoringInstruction
+     */
+    select?: FilterScoringInstructionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FilterScoringInstruction
+     */
+    omit?: FilterScoringInstructionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FilterScoringInstructionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the FilterScoringInstruction to update in case it exists.
+     */
+    where: FilterScoringInstructionWhereUniqueInput
+    /**
+     * In case the FilterScoringInstruction found by the `where` argument doesn't exist, create a new FilterScoringInstruction with this data.
+     */
+    create: XOR<FilterScoringInstructionCreateInput, FilterScoringInstructionUncheckedCreateInput>
+    /**
+     * In case the FilterScoringInstruction was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FilterScoringInstructionUpdateInput, FilterScoringInstructionUncheckedUpdateInput>
+  }
+
+  /**
+   * FilterScoringInstruction delete
+   */
+  export type FilterScoringInstructionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FilterScoringInstruction
+     */
+    select?: FilterScoringInstructionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FilterScoringInstruction
+     */
+    omit?: FilterScoringInstructionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FilterScoringInstructionInclude<ExtArgs> | null
+    /**
+     * Filter which FilterScoringInstruction to delete.
+     */
+    where: FilterScoringInstructionWhereUniqueInput
+  }
+
+  /**
+   * FilterScoringInstruction deleteMany
+   */
+  export type FilterScoringInstructionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FilterScoringInstructions to delete
+     */
+    where?: FilterScoringInstructionWhereInput
+    /**
+     * Limit how many FilterScoringInstructions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * FilterScoringInstruction without action
+   */
+  export type FilterScoringInstructionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FilterScoringInstruction
+     */
+    select?: FilterScoringInstructionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FilterScoringInstruction
+     */
+    omit?: FilterScoringInstructionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FilterScoringInstructionInclude<ExtArgs> | null
   }
 
 
@@ -8857,12 +11456,10 @@ export namespace Prisma {
 
   export type ContactAvgAggregateOutputType = {
     id: number | null
-    score: number | null
   }
 
   export type ContactSumAggregateOutputType = {
     id: number | null
-    score: number | null
   }
 
   export type ContactMinAggregateOutputType = {
@@ -8872,7 +11469,6 @@ export namespace Prisma {
     lead_uuid: string | null
     filter_uuid: string | null
     status: $Enums.LeadStatus | null
-    score: number | null
     notes: string | null
     name: string | null
     email: string | null
@@ -8898,7 +11494,6 @@ export namespace Prisma {
     lead_uuid: string | null
     filter_uuid: string | null
     status: $Enums.LeadStatus | null
-    score: number | null
     notes: string | null
     name: string | null
     email: string | null
@@ -8924,7 +11519,6 @@ export namespace Prisma {
     lead_uuid: number
     filter_uuid: number
     status: number
-    score: number
     notes: number
     name: number
     email: number
@@ -8947,12 +11541,10 @@ export namespace Prisma {
 
   export type ContactAvgAggregateInputType = {
     id?: true
-    score?: true
   }
 
   export type ContactSumAggregateInputType = {
     id?: true
-    score?: true
   }
 
   export type ContactMinAggregateInputType = {
@@ -8962,7 +11554,6 @@ export namespace Prisma {
     lead_uuid?: true
     filter_uuid?: true
     status?: true
-    score?: true
     notes?: true
     name?: true
     email?: true
@@ -8988,7 +11579,6 @@ export namespace Prisma {
     lead_uuid?: true
     filter_uuid?: true
     status?: true
-    score?: true
     notes?: true
     name?: true
     email?: true
@@ -9014,7 +11604,6 @@ export namespace Prisma {
     lead_uuid?: true
     filter_uuid?: true
     status?: true
-    score?: true
     notes?: true
     name?: true
     email?: true
@@ -9127,7 +11716,6 @@ export namespace Prisma {
     lead_uuid: string
     filter_uuid: string | null
     status: $Enums.LeadStatus
-    score: number | null
     notes: string | null
     name: string | null
     email: string | null
@@ -9172,7 +11760,6 @@ export namespace Prisma {
     lead_uuid?: boolean
     filter_uuid?: boolean
     status?: boolean
-    score?: boolean
     notes?: boolean
     name?: boolean
     email?: boolean
@@ -9196,6 +11783,7 @@ export namespace Prisma {
     interactions?: boolean | Contact$interactionsArgs<ExtArgs>
     outreach_messages?: boolean | Contact$outreach_messagesArgs<ExtArgs>
     campaign_contacts?: boolean | Contact$campaign_contactsArgs<ExtArgs>
+    contact_scores?: boolean | Contact$contact_scoresArgs<ExtArgs>
     _count?: boolean | ContactCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["contact"]>
 
@@ -9206,7 +11794,6 @@ export namespace Prisma {
     lead_uuid?: boolean
     filter_uuid?: boolean
     status?: boolean
-    score?: boolean
     notes?: boolean
     name?: boolean
     email?: boolean
@@ -9235,7 +11822,6 @@ export namespace Prisma {
     lead_uuid?: boolean
     filter_uuid?: boolean
     status?: boolean
-    score?: boolean
     notes?: boolean
     name?: boolean
     email?: boolean
@@ -9264,7 +11850,6 @@ export namespace Prisma {
     lead_uuid?: boolean
     filter_uuid?: boolean
     status?: boolean
-    score?: boolean
     notes?: boolean
     name?: boolean
     email?: boolean
@@ -9283,7 +11868,7 @@ export namespace Prisma {
     updated_at?: boolean
   }
 
-  export type ContactOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "lead_uuid" | "filter_uuid" | "status" | "score" | "notes" | "name" | "email" | "phone" | "company" | "website" | "linkedin_url" | "title" | "location" | "industry" | "description" | "unsubscribed_at" | "unsubscribe_token" | "last_interaction_at" | "created_at" | "updated_at", ExtArgs["result"]["contact"]>
+  export type ContactOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "lead_uuid" | "filter_uuid" | "status" | "notes" | "name" | "email" | "phone" | "company" | "website" | "linkedin_url" | "title" | "location" | "industry" | "description" | "unsubscribed_at" | "unsubscribe_token" | "last_interaction_at" | "created_at" | "updated_at", ExtArgs["result"]["contact"]>
   export type ContactInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     lead?: boolean | LeadDefaultArgs<ExtArgs>
@@ -9292,6 +11877,7 @@ export namespace Prisma {
     interactions?: boolean | Contact$interactionsArgs<ExtArgs>
     outreach_messages?: boolean | Contact$outreach_messagesArgs<ExtArgs>
     campaign_contacts?: boolean | Contact$campaign_contactsArgs<ExtArgs>
+    contact_scores?: boolean | Contact$contact_scoresArgs<ExtArgs>
     _count?: boolean | ContactCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ContactIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -9315,6 +11901,7 @@ export namespace Prisma {
       interactions: Prisma.$InteractionPayload<ExtArgs>[]
       outreach_messages: Prisma.$OutreachMessagePayload<ExtArgs>[]
       campaign_contacts: Prisma.$MarketingCampaignContactPayload<ExtArgs>[]
+      contact_scores: Prisma.$ContactScorePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -9323,7 +11910,6 @@ export namespace Prisma {
       lead_uuid: string
       filter_uuid: string | null
       status: $Enums.LeadStatus
-      score: number | null
       notes: string | null
       name: string | null
       email: string | null
@@ -9741,6 +12327,7 @@ export namespace Prisma {
     interactions<T extends Contact$interactionsArgs<ExtArgs> = {}>(args?: Subset<T, Contact$interactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InteractionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     outreach_messages<T extends Contact$outreach_messagesArgs<ExtArgs> = {}>(args?: Subset<T, Contact$outreach_messagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OutreachMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     campaign_contacts<T extends Contact$campaign_contactsArgs<ExtArgs> = {}>(args?: Subset<T, Contact$campaign_contactsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketingCampaignContactPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    contact_scores<T extends Contact$contact_scoresArgs<ExtArgs> = {}>(args?: Subset<T, Contact$contact_scoresArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactScorePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9776,7 +12363,6 @@ export namespace Prisma {
     readonly lead_uuid: FieldRef<"Contact", 'String'>
     readonly filter_uuid: FieldRef<"Contact", 'String'>
     readonly status: FieldRef<"Contact", 'LeadStatus'>
-    readonly score: FieldRef<"Contact", 'Int'>
     readonly notes: FieldRef<"Contact", 'String'>
     readonly name: FieldRef<"Contact", 'String'>
     readonly email: FieldRef<"Contact", 'String'>
@@ -10304,6 +12890,30 @@ export namespace Prisma {
   }
 
   /**
+   * Contact.contact_scores
+   */
+  export type Contact$contact_scoresArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactScore
+     */
+    select?: ContactScoreSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactScore
+     */
+    omit?: ContactScoreOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactScoreInclude<ExtArgs> | null
+    where?: ContactScoreWhereInput
+    orderBy?: ContactScoreOrderByWithRelationInput | ContactScoreOrderByWithRelationInput[]
+    cursor?: ContactScoreWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ContactScoreScalarFieldEnum | ContactScoreScalarFieldEnum[]
+  }
+
+  /**
    * Contact without action
    */
   export type ContactDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -10319,6 +12929,1110 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: ContactInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ContactScore
+   */
+
+  export type AggregateContactScore = {
+    _count: ContactScoreCountAggregateOutputType | null
+    _avg: ContactScoreAvgAggregateOutputType | null
+    _sum: ContactScoreSumAggregateOutputType | null
+    _min: ContactScoreMinAggregateOutputType | null
+    _max: ContactScoreMaxAggregateOutputType | null
+  }
+
+  export type ContactScoreAvgAggregateOutputType = {
+    id: number | null
+    score: number | null
+  }
+
+  export type ContactScoreSumAggregateOutputType = {
+    id: number | null
+    score: number | null
+  }
+
+  export type ContactScoreMinAggregateOutputType = {
+    id: number | null
+    contact_uuid: string | null
+    scoring_instruction_uuid: string | null
+    score: number | null
+    updated_at: Date | null
+  }
+
+  export type ContactScoreMaxAggregateOutputType = {
+    id: number | null
+    contact_uuid: string | null
+    scoring_instruction_uuid: string | null
+    score: number | null
+    updated_at: Date | null
+  }
+
+  export type ContactScoreCountAggregateOutputType = {
+    id: number
+    contact_uuid: number
+    scoring_instruction_uuid: number
+    score: number
+    updated_at: number
+    _all: number
+  }
+
+
+  export type ContactScoreAvgAggregateInputType = {
+    id?: true
+    score?: true
+  }
+
+  export type ContactScoreSumAggregateInputType = {
+    id?: true
+    score?: true
+  }
+
+  export type ContactScoreMinAggregateInputType = {
+    id?: true
+    contact_uuid?: true
+    scoring_instruction_uuid?: true
+    score?: true
+    updated_at?: true
+  }
+
+  export type ContactScoreMaxAggregateInputType = {
+    id?: true
+    contact_uuid?: true
+    scoring_instruction_uuid?: true
+    score?: true
+    updated_at?: true
+  }
+
+  export type ContactScoreCountAggregateInputType = {
+    id?: true
+    contact_uuid?: true
+    scoring_instruction_uuid?: true
+    score?: true
+    updated_at?: true
+    _all?: true
+  }
+
+  export type ContactScoreAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ContactScore to aggregate.
+     */
+    where?: ContactScoreWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ContactScores to fetch.
+     */
+    orderBy?: ContactScoreOrderByWithRelationInput | ContactScoreOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ContactScoreWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ContactScores from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ContactScores.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ContactScores
+    **/
+    _count?: true | ContactScoreCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ContactScoreAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ContactScoreSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ContactScoreMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ContactScoreMaxAggregateInputType
+  }
+
+  export type GetContactScoreAggregateType<T extends ContactScoreAggregateArgs> = {
+        [P in keyof T & keyof AggregateContactScore]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateContactScore[P]>
+      : GetScalarType<T[P], AggregateContactScore[P]>
+  }
+
+
+
+
+  export type ContactScoreGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ContactScoreWhereInput
+    orderBy?: ContactScoreOrderByWithAggregationInput | ContactScoreOrderByWithAggregationInput[]
+    by: ContactScoreScalarFieldEnum[] | ContactScoreScalarFieldEnum
+    having?: ContactScoreScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ContactScoreCountAggregateInputType | true
+    _avg?: ContactScoreAvgAggregateInputType
+    _sum?: ContactScoreSumAggregateInputType
+    _min?: ContactScoreMinAggregateInputType
+    _max?: ContactScoreMaxAggregateInputType
+  }
+
+  export type ContactScoreGroupByOutputType = {
+    id: number
+    contact_uuid: string
+    scoring_instruction_uuid: string
+    score: number
+    updated_at: Date
+    _count: ContactScoreCountAggregateOutputType | null
+    _avg: ContactScoreAvgAggregateOutputType | null
+    _sum: ContactScoreSumAggregateOutputType | null
+    _min: ContactScoreMinAggregateOutputType | null
+    _max: ContactScoreMaxAggregateOutputType | null
+  }
+
+  type GetContactScoreGroupByPayload<T extends ContactScoreGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ContactScoreGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ContactScoreGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ContactScoreGroupByOutputType[P]>
+            : GetScalarType<T[P], ContactScoreGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ContactScoreSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    contact_uuid?: boolean
+    scoring_instruction_uuid?: boolean
+    score?: boolean
+    updated_at?: boolean
+    contact?: boolean | ContactDefaultArgs<ExtArgs>
+    scoring_instruction?: boolean | ScoringInstructionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["contactScore"]>
+
+  export type ContactScoreSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    contact_uuid?: boolean
+    scoring_instruction_uuid?: boolean
+    score?: boolean
+    updated_at?: boolean
+    contact?: boolean | ContactDefaultArgs<ExtArgs>
+    scoring_instruction?: boolean | ScoringInstructionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["contactScore"]>
+
+  export type ContactScoreSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    contact_uuid?: boolean
+    scoring_instruction_uuid?: boolean
+    score?: boolean
+    updated_at?: boolean
+    contact?: boolean | ContactDefaultArgs<ExtArgs>
+    scoring_instruction?: boolean | ScoringInstructionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["contactScore"]>
+
+  export type ContactScoreSelectScalar = {
+    id?: boolean
+    contact_uuid?: boolean
+    scoring_instruction_uuid?: boolean
+    score?: boolean
+    updated_at?: boolean
+  }
+
+  export type ContactScoreOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "contact_uuid" | "scoring_instruction_uuid" | "score" | "updated_at", ExtArgs["result"]["contactScore"]>
+  export type ContactScoreInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    contact?: boolean | ContactDefaultArgs<ExtArgs>
+    scoring_instruction?: boolean | ScoringInstructionDefaultArgs<ExtArgs>
+  }
+  export type ContactScoreIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    contact?: boolean | ContactDefaultArgs<ExtArgs>
+    scoring_instruction?: boolean | ScoringInstructionDefaultArgs<ExtArgs>
+  }
+  export type ContactScoreIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    contact?: boolean | ContactDefaultArgs<ExtArgs>
+    scoring_instruction?: boolean | ScoringInstructionDefaultArgs<ExtArgs>
+  }
+
+  export type $ContactScorePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ContactScore"
+    objects: {
+      contact: Prisma.$ContactPayload<ExtArgs>
+      scoring_instruction: Prisma.$ScoringInstructionPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      contact_uuid: string
+      scoring_instruction_uuid: string
+      score: number
+      updated_at: Date
+    }, ExtArgs["result"]["contactScore"]>
+    composites: {}
+  }
+
+  type ContactScoreGetPayload<S extends boolean | null | undefined | ContactScoreDefaultArgs> = $Result.GetResult<Prisma.$ContactScorePayload, S>
+
+  type ContactScoreCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ContactScoreFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ContactScoreCountAggregateInputType | true
+    }
+
+  export interface ContactScoreDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ContactScore'], meta: { name: 'ContactScore' } }
+    /**
+     * Find zero or one ContactScore that matches the filter.
+     * @param {ContactScoreFindUniqueArgs} args - Arguments to find a ContactScore
+     * @example
+     * // Get one ContactScore
+     * const contactScore = await prisma.contactScore.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ContactScoreFindUniqueArgs>(args: SelectSubset<T, ContactScoreFindUniqueArgs<ExtArgs>>): Prisma__ContactScoreClient<$Result.GetResult<Prisma.$ContactScorePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ContactScore that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ContactScoreFindUniqueOrThrowArgs} args - Arguments to find a ContactScore
+     * @example
+     * // Get one ContactScore
+     * const contactScore = await prisma.contactScore.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ContactScoreFindUniqueOrThrowArgs>(args: SelectSubset<T, ContactScoreFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ContactScoreClient<$Result.GetResult<Prisma.$ContactScorePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ContactScore that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContactScoreFindFirstArgs} args - Arguments to find a ContactScore
+     * @example
+     * // Get one ContactScore
+     * const contactScore = await prisma.contactScore.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ContactScoreFindFirstArgs>(args?: SelectSubset<T, ContactScoreFindFirstArgs<ExtArgs>>): Prisma__ContactScoreClient<$Result.GetResult<Prisma.$ContactScorePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ContactScore that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContactScoreFindFirstOrThrowArgs} args - Arguments to find a ContactScore
+     * @example
+     * // Get one ContactScore
+     * const contactScore = await prisma.contactScore.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ContactScoreFindFirstOrThrowArgs>(args?: SelectSubset<T, ContactScoreFindFirstOrThrowArgs<ExtArgs>>): Prisma__ContactScoreClient<$Result.GetResult<Prisma.$ContactScorePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ContactScores that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContactScoreFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ContactScores
+     * const contactScores = await prisma.contactScore.findMany()
+     * 
+     * // Get first 10 ContactScores
+     * const contactScores = await prisma.contactScore.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const contactScoreWithIdOnly = await prisma.contactScore.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ContactScoreFindManyArgs>(args?: SelectSubset<T, ContactScoreFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactScorePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ContactScore.
+     * @param {ContactScoreCreateArgs} args - Arguments to create a ContactScore.
+     * @example
+     * // Create one ContactScore
+     * const ContactScore = await prisma.contactScore.create({
+     *   data: {
+     *     // ... data to create a ContactScore
+     *   }
+     * })
+     * 
+     */
+    create<T extends ContactScoreCreateArgs>(args: SelectSubset<T, ContactScoreCreateArgs<ExtArgs>>): Prisma__ContactScoreClient<$Result.GetResult<Prisma.$ContactScorePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ContactScores.
+     * @param {ContactScoreCreateManyArgs} args - Arguments to create many ContactScores.
+     * @example
+     * // Create many ContactScores
+     * const contactScore = await prisma.contactScore.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ContactScoreCreateManyArgs>(args?: SelectSubset<T, ContactScoreCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ContactScores and returns the data saved in the database.
+     * @param {ContactScoreCreateManyAndReturnArgs} args - Arguments to create many ContactScores.
+     * @example
+     * // Create many ContactScores
+     * const contactScore = await prisma.contactScore.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ContactScores and only return the `id`
+     * const contactScoreWithIdOnly = await prisma.contactScore.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ContactScoreCreateManyAndReturnArgs>(args?: SelectSubset<T, ContactScoreCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactScorePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ContactScore.
+     * @param {ContactScoreDeleteArgs} args - Arguments to delete one ContactScore.
+     * @example
+     * // Delete one ContactScore
+     * const ContactScore = await prisma.contactScore.delete({
+     *   where: {
+     *     // ... filter to delete one ContactScore
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ContactScoreDeleteArgs>(args: SelectSubset<T, ContactScoreDeleteArgs<ExtArgs>>): Prisma__ContactScoreClient<$Result.GetResult<Prisma.$ContactScorePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ContactScore.
+     * @param {ContactScoreUpdateArgs} args - Arguments to update one ContactScore.
+     * @example
+     * // Update one ContactScore
+     * const contactScore = await prisma.contactScore.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ContactScoreUpdateArgs>(args: SelectSubset<T, ContactScoreUpdateArgs<ExtArgs>>): Prisma__ContactScoreClient<$Result.GetResult<Prisma.$ContactScorePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ContactScores.
+     * @param {ContactScoreDeleteManyArgs} args - Arguments to filter ContactScores to delete.
+     * @example
+     * // Delete a few ContactScores
+     * const { count } = await prisma.contactScore.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ContactScoreDeleteManyArgs>(args?: SelectSubset<T, ContactScoreDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ContactScores.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContactScoreUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ContactScores
+     * const contactScore = await prisma.contactScore.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ContactScoreUpdateManyArgs>(args: SelectSubset<T, ContactScoreUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ContactScores and returns the data updated in the database.
+     * @param {ContactScoreUpdateManyAndReturnArgs} args - Arguments to update many ContactScores.
+     * @example
+     * // Update many ContactScores
+     * const contactScore = await prisma.contactScore.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ContactScores and only return the `id`
+     * const contactScoreWithIdOnly = await prisma.contactScore.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ContactScoreUpdateManyAndReturnArgs>(args: SelectSubset<T, ContactScoreUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactScorePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ContactScore.
+     * @param {ContactScoreUpsertArgs} args - Arguments to update or create a ContactScore.
+     * @example
+     * // Update or create a ContactScore
+     * const contactScore = await prisma.contactScore.upsert({
+     *   create: {
+     *     // ... data to create a ContactScore
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ContactScore we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ContactScoreUpsertArgs>(args: SelectSubset<T, ContactScoreUpsertArgs<ExtArgs>>): Prisma__ContactScoreClient<$Result.GetResult<Prisma.$ContactScorePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ContactScores.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContactScoreCountArgs} args - Arguments to filter ContactScores to count.
+     * @example
+     * // Count the number of ContactScores
+     * const count = await prisma.contactScore.count({
+     *   where: {
+     *     // ... the filter for the ContactScores we want to count
+     *   }
+     * })
+    **/
+    count<T extends ContactScoreCountArgs>(
+      args?: Subset<T, ContactScoreCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ContactScoreCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ContactScore.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContactScoreAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ContactScoreAggregateArgs>(args: Subset<T, ContactScoreAggregateArgs>): Prisma.PrismaPromise<GetContactScoreAggregateType<T>>
+
+    /**
+     * Group by ContactScore.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContactScoreGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ContactScoreGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ContactScoreGroupByArgs['orderBy'] }
+        : { orderBy?: ContactScoreGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ContactScoreGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetContactScoreGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ContactScore model
+   */
+  readonly fields: ContactScoreFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ContactScore.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ContactScoreClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    contact<T extends ContactDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ContactDefaultArgs<ExtArgs>>): Prisma__ContactClient<$Result.GetResult<Prisma.$ContactPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    scoring_instruction<T extends ScoringInstructionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ScoringInstructionDefaultArgs<ExtArgs>>): Prisma__ScoringInstructionClient<$Result.GetResult<Prisma.$ScoringInstructionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ContactScore model
+   */
+  interface ContactScoreFieldRefs {
+    readonly id: FieldRef<"ContactScore", 'Int'>
+    readonly contact_uuid: FieldRef<"ContactScore", 'String'>
+    readonly scoring_instruction_uuid: FieldRef<"ContactScore", 'String'>
+    readonly score: FieldRef<"ContactScore", 'Int'>
+    readonly updated_at: FieldRef<"ContactScore", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ContactScore findUnique
+   */
+  export type ContactScoreFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactScore
+     */
+    select?: ContactScoreSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactScore
+     */
+    omit?: ContactScoreOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactScoreInclude<ExtArgs> | null
+    /**
+     * Filter, which ContactScore to fetch.
+     */
+    where: ContactScoreWhereUniqueInput
+  }
+
+  /**
+   * ContactScore findUniqueOrThrow
+   */
+  export type ContactScoreFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactScore
+     */
+    select?: ContactScoreSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactScore
+     */
+    omit?: ContactScoreOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactScoreInclude<ExtArgs> | null
+    /**
+     * Filter, which ContactScore to fetch.
+     */
+    where: ContactScoreWhereUniqueInput
+  }
+
+  /**
+   * ContactScore findFirst
+   */
+  export type ContactScoreFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactScore
+     */
+    select?: ContactScoreSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactScore
+     */
+    omit?: ContactScoreOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactScoreInclude<ExtArgs> | null
+    /**
+     * Filter, which ContactScore to fetch.
+     */
+    where?: ContactScoreWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ContactScores to fetch.
+     */
+    orderBy?: ContactScoreOrderByWithRelationInput | ContactScoreOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ContactScores.
+     */
+    cursor?: ContactScoreWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ContactScores from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ContactScores.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ContactScores.
+     */
+    distinct?: ContactScoreScalarFieldEnum | ContactScoreScalarFieldEnum[]
+  }
+
+  /**
+   * ContactScore findFirstOrThrow
+   */
+  export type ContactScoreFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactScore
+     */
+    select?: ContactScoreSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactScore
+     */
+    omit?: ContactScoreOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactScoreInclude<ExtArgs> | null
+    /**
+     * Filter, which ContactScore to fetch.
+     */
+    where?: ContactScoreWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ContactScores to fetch.
+     */
+    orderBy?: ContactScoreOrderByWithRelationInput | ContactScoreOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ContactScores.
+     */
+    cursor?: ContactScoreWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ContactScores from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ContactScores.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ContactScores.
+     */
+    distinct?: ContactScoreScalarFieldEnum | ContactScoreScalarFieldEnum[]
+  }
+
+  /**
+   * ContactScore findMany
+   */
+  export type ContactScoreFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactScore
+     */
+    select?: ContactScoreSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactScore
+     */
+    omit?: ContactScoreOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactScoreInclude<ExtArgs> | null
+    /**
+     * Filter, which ContactScores to fetch.
+     */
+    where?: ContactScoreWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ContactScores to fetch.
+     */
+    orderBy?: ContactScoreOrderByWithRelationInput | ContactScoreOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ContactScores.
+     */
+    cursor?: ContactScoreWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ContactScores from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ContactScores.
+     */
+    skip?: number
+    distinct?: ContactScoreScalarFieldEnum | ContactScoreScalarFieldEnum[]
+  }
+
+  /**
+   * ContactScore create
+   */
+  export type ContactScoreCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactScore
+     */
+    select?: ContactScoreSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactScore
+     */
+    omit?: ContactScoreOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactScoreInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ContactScore.
+     */
+    data: XOR<ContactScoreCreateInput, ContactScoreUncheckedCreateInput>
+  }
+
+  /**
+   * ContactScore createMany
+   */
+  export type ContactScoreCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ContactScores.
+     */
+    data: ContactScoreCreateManyInput | ContactScoreCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ContactScore createManyAndReturn
+   */
+  export type ContactScoreCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactScore
+     */
+    select?: ContactScoreSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactScore
+     */
+    omit?: ContactScoreOmit<ExtArgs> | null
+    /**
+     * The data used to create many ContactScores.
+     */
+    data: ContactScoreCreateManyInput | ContactScoreCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactScoreIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ContactScore update
+   */
+  export type ContactScoreUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactScore
+     */
+    select?: ContactScoreSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactScore
+     */
+    omit?: ContactScoreOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactScoreInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ContactScore.
+     */
+    data: XOR<ContactScoreUpdateInput, ContactScoreUncheckedUpdateInput>
+    /**
+     * Choose, which ContactScore to update.
+     */
+    where: ContactScoreWhereUniqueInput
+  }
+
+  /**
+   * ContactScore updateMany
+   */
+  export type ContactScoreUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ContactScores.
+     */
+    data: XOR<ContactScoreUpdateManyMutationInput, ContactScoreUncheckedUpdateManyInput>
+    /**
+     * Filter which ContactScores to update
+     */
+    where?: ContactScoreWhereInput
+    /**
+     * Limit how many ContactScores to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ContactScore updateManyAndReturn
+   */
+  export type ContactScoreUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactScore
+     */
+    select?: ContactScoreSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactScore
+     */
+    omit?: ContactScoreOmit<ExtArgs> | null
+    /**
+     * The data used to update ContactScores.
+     */
+    data: XOR<ContactScoreUpdateManyMutationInput, ContactScoreUncheckedUpdateManyInput>
+    /**
+     * Filter which ContactScores to update
+     */
+    where?: ContactScoreWhereInput
+    /**
+     * Limit how many ContactScores to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactScoreIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ContactScore upsert
+   */
+  export type ContactScoreUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactScore
+     */
+    select?: ContactScoreSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactScore
+     */
+    omit?: ContactScoreOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactScoreInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ContactScore to update in case it exists.
+     */
+    where: ContactScoreWhereUniqueInput
+    /**
+     * In case the ContactScore found by the `where` argument doesn't exist, create a new ContactScore with this data.
+     */
+    create: XOR<ContactScoreCreateInput, ContactScoreUncheckedCreateInput>
+    /**
+     * In case the ContactScore was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ContactScoreUpdateInput, ContactScoreUncheckedUpdateInput>
+  }
+
+  /**
+   * ContactScore delete
+   */
+  export type ContactScoreDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactScore
+     */
+    select?: ContactScoreSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactScore
+     */
+    omit?: ContactScoreOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactScoreInclude<ExtArgs> | null
+    /**
+     * Filter which ContactScore to delete.
+     */
+    where: ContactScoreWhereUniqueInput
+  }
+
+  /**
+   * ContactScore deleteMany
+   */
+  export type ContactScoreDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ContactScores to delete
+     */
+    where?: ContactScoreWhereInput
+    /**
+     * Limit how many ContactScores to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ContactScore without action
+   */
+  export type ContactScoreDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactScore
+     */
+    select?: ContactScoreSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactScore
+     */
+    omit?: ContactScoreOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactScoreInclude<ExtArgs> | null
   }
 
 
@@ -20453,13 +24167,34 @@ export namespace Prisma {
     enabled: 'enabled',
     cron_schedule: 'cron_schedule',
     channels: 'channels',
-    scoring_instructions: 'scoring_instructions',
     outreach_instructions: 'outreach_instructions',
     created_at: 'created_at',
     updated_at: 'updated_at'
   };
 
   export type FilterScalarFieldEnum = (typeof FilterScalarFieldEnum)[keyof typeof FilterScalarFieldEnum]
+
+
+  export const ScoringInstructionScalarFieldEnum: {
+    id: 'id',
+    uuid: 'uuid',
+    user_uuid: 'user_uuid',
+    name: 'name',
+    instructions: 'instructions',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
+  };
+
+  export type ScoringInstructionScalarFieldEnum = (typeof ScoringInstructionScalarFieldEnum)[keyof typeof ScoringInstructionScalarFieldEnum]
+
+
+  export const FilterScoringInstructionScalarFieldEnum: {
+    filter_uuid: 'filter_uuid',
+    scoring_instruction_uuid: 'scoring_instruction_uuid',
+    created_at: 'created_at'
+  };
+
+  export type FilterScoringInstructionScalarFieldEnum = (typeof FilterScoringInstructionScalarFieldEnum)[keyof typeof FilterScoringInstructionScalarFieldEnum]
 
 
   export const RawLeadScalarFieldEnum: {
@@ -20526,7 +24261,6 @@ export namespace Prisma {
     lead_uuid: 'lead_uuid',
     filter_uuid: 'filter_uuid',
     status: 'status',
-    score: 'score',
     notes: 'notes',
     name: 'name',
     email: 'email',
@@ -20546,6 +24280,17 @@ export namespace Prisma {
   };
 
   export type ContactScalarFieldEnum = (typeof ContactScalarFieldEnum)[keyof typeof ContactScalarFieldEnum]
+
+
+  export const ContactScoreScalarFieldEnum: {
+    id: 'id',
+    contact_uuid: 'contact_uuid',
+    scoring_instruction_uuid: 'scoring_instruction_uuid',
+    score: 'score',
+    updated_at: 'updated_at'
+  };
+
+  export type ContactScoreScalarFieldEnum = (typeof ContactScoreScalarFieldEnum)[keyof typeof ContactScoreScalarFieldEnum]
 
 
   export const ContactTagScalarFieldEnum: {
@@ -21065,6 +24810,7 @@ export namespace Prisma {
     interactions?: InteractionListRelationFilter
     sender_profiles?: SenderProfileListRelationFilter
     marketing_campaigns?: MarketingCampaignListRelationFilter
+    scoring_instructions?: ScoringInstructionListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -21083,6 +24829,7 @@ export namespace Prisma {
     interactions?: InteractionOrderByRelationAggregateInput
     sender_profiles?: SenderProfileOrderByRelationAggregateInput
     marketing_campaigns?: MarketingCampaignOrderByRelationAggregateInput
+    scoring_instructions?: ScoringInstructionOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -21104,6 +24851,7 @@ export namespace Prisma {
     interactions?: InteractionListRelationFilter
     sender_profiles?: SenderProfileListRelationFilter
     marketing_campaigns?: MarketingCampaignListRelationFilter
+    scoring_instructions?: ScoringInstructionListRelationFilter
   }, "id" | "uuid" | "email" | "phone">
 
   export type UserOrderByWithAggregationInput = {
@@ -21150,7 +24898,6 @@ export namespace Prisma {
     enabled?: BoolFilter<"Filter"> | boolean
     cron_schedule?: StringNullableFilter<"Filter"> | string | null
     channels?: EnumChannelNullableListFilter<"Filter">
-    scoring_instructions?: StringNullableFilter<"Filter"> | string | null
     outreach_instructions?: StringNullableFilter<"Filter"> | string | null
     created_at?: DateTimeFilter<"Filter"> | Date | string
     updated_at?: DateTimeFilter<"Filter"> | Date | string
@@ -21158,6 +24905,7 @@ export namespace Prisma {
     raw_leads?: RawLeadListRelationFilter
     contacts?: ContactListRelationFilter
     jobs?: FilterJobListRelationFilter
+    filter_scoring_instructions?: FilterScoringInstructionListRelationFilter
   }
 
   export type FilterOrderByWithRelationInput = {
@@ -21171,7 +24919,6 @@ export namespace Prisma {
     enabled?: SortOrder
     cron_schedule?: SortOrderInput | SortOrder
     channels?: SortOrder
-    scoring_instructions?: SortOrderInput | SortOrder
     outreach_instructions?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -21179,6 +24926,7 @@ export namespace Prisma {
     raw_leads?: RawLeadOrderByRelationAggregateInput
     contacts?: ContactOrderByRelationAggregateInput
     jobs?: FilterJobOrderByRelationAggregateInput
+    filter_scoring_instructions?: FilterScoringInstructionOrderByRelationAggregateInput
   }
 
   export type FilterWhereUniqueInput = Prisma.AtLeast<{
@@ -21195,7 +24943,6 @@ export namespace Prisma {
     enabled?: BoolFilter<"Filter"> | boolean
     cron_schedule?: StringNullableFilter<"Filter"> | string | null
     channels?: EnumChannelNullableListFilter<"Filter">
-    scoring_instructions?: StringNullableFilter<"Filter"> | string | null
     outreach_instructions?: StringNullableFilter<"Filter"> | string | null
     created_at?: DateTimeFilter<"Filter"> | Date | string
     updated_at?: DateTimeFilter<"Filter"> | Date | string
@@ -21203,6 +24950,7 @@ export namespace Prisma {
     raw_leads?: RawLeadListRelationFilter
     contacts?: ContactListRelationFilter
     jobs?: FilterJobListRelationFilter
+    filter_scoring_instructions?: FilterScoringInstructionListRelationFilter
   }, "id" | "uuid">
 
   export type FilterOrderByWithAggregationInput = {
@@ -21216,7 +24964,6 @@ export namespace Prisma {
     enabled?: SortOrder
     cron_schedule?: SortOrderInput | SortOrder
     channels?: SortOrder
-    scoring_instructions?: SortOrderInput | SortOrder
     outreach_instructions?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -21241,10 +24988,131 @@ export namespace Prisma {
     enabled?: BoolWithAggregatesFilter<"Filter"> | boolean
     cron_schedule?: StringNullableWithAggregatesFilter<"Filter"> | string | null
     channels?: EnumChannelNullableListFilter<"Filter">
-    scoring_instructions?: StringNullableWithAggregatesFilter<"Filter"> | string | null
     outreach_instructions?: StringNullableWithAggregatesFilter<"Filter"> | string | null
     created_at?: DateTimeWithAggregatesFilter<"Filter"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"Filter"> | Date | string
+  }
+
+  export type ScoringInstructionWhereInput = {
+    AND?: ScoringInstructionWhereInput | ScoringInstructionWhereInput[]
+    OR?: ScoringInstructionWhereInput[]
+    NOT?: ScoringInstructionWhereInput | ScoringInstructionWhereInput[]
+    id?: IntFilter<"ScoringInstruction"> | number
+    uuid?: StringFilter<"ScoringInstruction"> | string
+    user_uuid?: StringFilter<"ScoringInstruction"> | string
+    name?: StringFilter<"ScoringInstruction"> | string
+    instructions?: StringFilter<"ScoringInstruction"> | string
+    created_at?: DateTimeFilter<"ScoringInstruction"> | Date | string
+    updated_at?: DateTimeFilter<"ScoringInstruction"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    filter_links?: FilterScoringInstructionListRelationFilter
+    contact_scores?: ContactScoreListRelationFilter
+  }
+
+  export type ScoringInstructionOrderByWithRelationInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    user_uuid?: SortOrder
+    name?: SortOrder
+    instructions?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    user?: UserOrderByWithRelationInput
+    filter_links?: FilterScoringInstructionOrderByRelationAggregateInput
+    contact_scores?: ContactScoreOrderByRelationAggregateInput
+  }
+
+  export type ScoringInstructionWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    uuid?: string
+    AND?: ScoringInstructionWhereInput | ScoringInstructionWhereInput[]
+    OR?: ScoringInstructionWhereInput[]
+    NOT?: ScoringInstructionWhereInput | ScoringInstructionWhereInput[]
+    user_uuid?: StringFilter<"ScoringInstruction"> | string
+    name?: StringFilter<"ScoringInstruction"> | string
+    instructions?: StringFilter<"ScoringInstruction"> | string
+    created_at?: DateTimeFilter<"ScoringInstruction"> | Date | string
+    updated_at?: DateTimeFilter<"ScoringInstruction"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    filter_links?: FilterScoringInstructionListRelationFilter
+    contact_scores?: ContactScoreListRelationFilter
+  }, "id" | "uuid">
+
+  export type ScoringInstructionOrderByWithAggregationInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    user_uuid?: SortOrder
+    name?: SortOrder
+    instructions?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    _count?: ScoringInstructionCountOrderByAggregateInput
+    _avg?: ScoringInstructionAvgOrderByAggregateInput
+    _max?: ScoringInstructionMaxOrderByAggregateInput
+    _min?: ScoringInstructionMinOrderByAggregateInput
+    _sum?: ScoringInstructionSumOrderByAggregateInput
+  }
+
+  export type ScoringInstructionScalarWhereWithAggregatesInput = {
+    AND?: ScoringInstructionScalarWhereWithAggregatesInput | ScoringInstructionScalarWhereWithAggregatesInput[]
+    OR?: ScoringInstructionScalarWhereWithAggregatesInput[]
+    NOT?: ScoringInstructionScalarWhereWithAggregatesInput | ScoringInstructionScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"ScoringInstruction"> | number
+    uuid?: StringWithAggregatesFilter<"ScoringInstruction"> | string
+    user_uuid?: StringWithAggregatesFilter<"ScoringInstruction"> | string
+    name?: StringWithAggregatesFilter<"ScoringInstruction"> | string
+    instructions?: StringWithAggregatesFilter<"ScoringInstruction"> | string
+    created_at?: DateTimeWithAggregatesFilter<"ScoringInstruction"> | Date | string
+    updated_at?: DateTimeWithAggregatesFilter<"ScoringInstruction"> | Date | string
+  }
+
+  export type FilterScoringInstructionWhereInput = {
+    AND?: FilterScoringInstructionWhereInput | FilterScoringInstructionWhereInput[]
+    OR?: FilterScoringInstructionWhereInput[]
+    NOT?: FilterScoringInstructionWhereInput | FilterScoringInstructionWhereInput[]
+    filter_uuid?: StringFilter<"FilterScoringInstruction"> | string
+    scoring_instruction_uuid?: StringFilter<"FilterScoringInstruction"> | string
+    created_at?: DateTimeFilter<"FilterScoringInstruction"> | Date | string
+    filter?: XOR<FilterScalarRelationFilter, FilterWhereInput>
+    scoring_instruction?: XOR<ScoringInstructionScalarRelationFilter, ScoringInstructionWhereInput>
+  }
+
+  export type FilterScoringInstructionOrderByWithRelationInput = {
+    filter_uuid?: SortOrder
+    scoring_instruction_uuid?: SortOrder
+    created_at?: SortOrder
+    filter?: FilterOrderByWithRelationInput
+    scoring_instruction?: ScoringInstructionOrderByWithRelationInput
+  }
+
+  export type FilterScoringInstructionWhereUniqueInput = Prisma.AtLeast<{
+    filter_uuid_scoring_instruction_uuid?: FilterScoringInstructionFilter_uuidScoring_instruction_uuidCompoundUniqueInput
+    AND?: FilterScoringInstructionWhereInput | FilterScoringInstructionWhereInput[]
+    OR?: FilterScoringInstructionWhereInput[]
+    NOT?: FilterScoringInstructionWhereInput | FilterScoringInstructionWhereInput[]
+    filter_uuid?: StringFilter<"FilterScoringInstruction"> | string
+    scoring_instruction_uuid?: StringFilter<"FilterScoringInstruction"> | string
+    created_at?: DateTimeFilter<"FilterScoringInstruction"> | Date | string
+    filter?: XOR<FilterScalarRelationFilter, FilterWhereInput>
+    scoring_instruction?: XOR<ScoringInstructionScalarRelationFilter, ScoringInstructionWhereInput>
+  }, "filter_uuid_scoring_instruction_uuid">
+
+  export type FilterScoringInstructionOrderByWithAggregationInput = {
+    filter_uuid?: SortOrder
+    scoring_instruction_uuid?: SortOrder
+    created_at?: SortOrder
+    _count?: FilterScoringInstructionCountOrderByAggregateInput
+    _max?: FilterScoringInstructionMaxOrderByAggregateInput
+    _min?: FilterScoringInstructionMinOrderByAggregateInput
+  }
+
+  export type FilterScoringInstructionScalarWhereWithAggregatesInput = {
+    AND?: FilterScoringInstructionScalarWhereWithAggregatesInput | FilterScoringInstructionScalarWhereWithAggregatesInput[]
+    OR?: FilterScoringInstructionScalarWhereWithAggregatesInput[]
+    NOT?: FilterScoringInstructionScalarWhereWithAggregatesInput | FilterScoringInstructionScalarWhereWithAggregatesInput[]
+    filter_uuid?: StringWithAggregatesFilter<"FilterScoringInstruction"> | string
+    scoring_instruction_uuid?: StringWithAggregatesFilter<"FilterScoringInstruction"> | string
+    created_at?: DateTimeWithAggregatesFilter<"FilterScoringInstruction"> | Date | string
   }
 
   export type RawLeadWhereInput = {
@@ -21557,7 +25425,6 @@ export namespace Prisma {
     lead_uuid?: StringFilter<"Contact"> | string
     filter_uuid?: StringNullableFilter<"Contact"> | string | null
     status?: EnumLeadStatusFilter<"Contact"> | $Enums.LeadStatus
-    score?: IntNullableFilter<"Contact"> | number | null
     notes?: StringNullableFilter<"Contact"> | string | null
     name?: StringNullableFilter<"Contact"> | string | null
     email?: StringNullableFilter<"Contact"> | string | null
@@ -21581,6 +25448,7 @@ export namespace Prisma {
     interactions?: InteractionListRelationFilter
     outreach_messages?: OutreachMessageListRelationFilter
     campaign_contacts?: MarketingCampaignContactListRelationFilter
+    contact_scores?: ContactScoreListRelationFilter
   }
 
   export type ContactOrderByWithRelationInput = {
@@ -21590,7 +25458,6 @@ export namespace Prisma {
     lead_uuid?: SortOrder
     filter_uuid?: SortOrderInput | SortOrder
     status?: SortOrder
-    score?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
     name?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
@@ -21614,6 +25481,7 @@ export namespace Prisma {
     interactions?: InteractionOrderByRelationAggregateInput
     outreach_messages?: OutreachMessageOrderByRelationAggregateInput
     campaign_contacts?: MarketingCampaignContactOrderByRelationAggregateInput
+    contact_scores?: ContactScoreOrderByRelationAggregateInput
   }
 
   export type ContactWhereUniqueInput = Prisma.AtLeast<{
@@ -21628,7 +25496,6 @@ export namespace Prisma {
     lead_uuid?: StringFilter<"Contact"> | string
     filter_uuid?: StringNullableFilter<"Contact"> | string | null
     status?: EnumLeadStatusFilter<"Contact"> | $Enums.LeadStatus
-    score?: IntNullableFilter<"Contact"> | number | null
     notes?: StringNullableFilter<"Contact"> | string | null
     name?: StringNullableFilter<"Contact"> | string | null
     email?: StringNullableFilter<"Contact"> | string | null
@@ -21651,6 +25518,7 @@ export namespace Prisma {
     interactions?: InteractionListRelationFilter
     outreach_messages?: OutreachMessageListRelationFilter
     campaign_contacts?: MarketingCampaignContactListRelationFilter
+    contact_scores?: ContactScoreListRelationFilter
   }, "id" | "uuid" | "unsubscribe_token" | "user_uuid_lead_uuid">
 
   export type ContactOrderByWithAggregationInput = {
@@ -21660,7 +25528,6 @@ export namespace Prisma {
     lead_uuid?: SortOrder
     filter_uuid?: SortOrderInput | SortOrder
     status?: SortOrder
-    score?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
     name?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
@@ -21694,7 +25561,6 @@ export namespace Prisma {
     lead_uuid?: StringWithAggregatesFilter<"Contact"> | string
     filter_uuid?: StringNullableWithAggregatesFilter<"Contact"> | string | null
     status?: EnumLeadStatusWithAggregatesFilter<"Contact"> | $Enums.LeadStatus
-    score?: IntNullableWithAggregatesFilter<"Contact"> | number | null
     notes?: StringNullableWithAggregatesFilter<"Contact"> | string | null
     name?: StringNullableWithAggregatesFilter<"Contact"> | string | null
     email?: StringNullableWithAggregatesFilter<"Contact"> | string | null
@@ -21711,6 +25577,67 @@ export namespace Prisma {
     last_interaction_at?: DateTimeNullableWithAggregatesFilter<"Contact"> | Date | string | null
     created_at?: DateTimeWithAggregatesFilter<"Contact"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"Contact"> | Date | string
+  }
+
+  export type ContactScoreWhereInput = {
+    AND?: ContactScoreWhereInput | ContactScoreWhereInput[]
+    OR?: ContactScoreWhereInput[]
+    NOT?: ContactScoreWhereInput | ContactScoreWhereInput[]
+    id?: IntFilter<"ContactScore"> | number
+    contact_uuid?: StringFilter<"ContactScore"> | string
+    scoring_instruction_uuid?: StringFilter<"ContactScore"> | string
+    score?: IntFilter<"ContactScore"> | number
+    updated_at?: DateTimeFilter<"ContactScore"> | Date | string
+    contact?: XOR<ContactScalarRelationFilter, ContactWhereInput>
+    scoring_instruction?: XOR<ScoringInstructionScalarRelationFilter, ScoringInstructionWhereInput>
+  }
+
+  export type ContactScoreOrderByWithRelationInput = {
+    id?: SortOrder
+    contact_uuid?: SortOrder
+    scoring_instruction_uuid?: SortOrder
+    score?: SortOrder
+    updated_at?: SortOrder
+    contact?: ContactOrderByWithRelationInput
+    scoring_instruction?: ScoringInstructionOrderByWithRelationInput
+  }
+
+  export type ContactScoreWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    contact_uuid_scoring_instruction_uuid?: ContactScoreContact_uuidScoring_instruction_uuidCompoundUniqueInput
+    AND?: ContactScoreWhereInput | ContactScoreWhereInput[]
+    OR?: ContactScoreWhereInput[]
+    NOT?: ContactScoreWhereInput | ContactScoreWhereInput[]
+    contact_uuid?: StringFilter<"ContactScore"> | string
+    scoring_instruction_uuid?: StringFilter<"ContactScore"> | string
+    score?: IntFilter<"ContactScore"> | number
+    updated_at?: DateTimeFilter<"ContactScore"> | Date | string
+    contact?: XOR<ContactScalarRelationFilter, ContactWhereInput>
+    scoring_instruction?: XOR<ScoringInstructionScalarRelationFilter, ScoringInstructionWhereInput>
+  }, "id" | "contact_uuid_scoring_instruction_uuid">
+
+  export type ContactScoreOrderByWithAggregationInput = {
+    id?: SortOrder
+    contact_uuid?: SortOrder
+    scoring_instruction_uuid?: SortOrder
+    score?: SortOrder
+    updated_at?: SortOrder
+    _count?: ContactScoreCountOrderByAggregateInput
+    _avg?: ContactScoreAvgOrderByAggregateInput
+    _max?: ContactScoreMaxOrderByAggregateInput
+    _min?: ContactScoreMinOrderByAggregateInput
+    _sum?: ContactScoreSumOrderByAggregateInput
+  }
+
+  export type ContactScoreScalarWhereWithAggregatesInput = {
+    AND?: ContactScoreScalarWhereWithAggregatesInput | ContactScoreScalarWhereWithAggregatesInput[]
+    OR?: ContactScoreScalarWhereWithAggregatesInput[]
+    NOT?: ContactScoreScalarWhereWithAggregatesInput | ContactScoreScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"ContactScore"> | number
+    contact_uuid?: StringWithAggregatesFilter<"ContactScore"> | string
+    scoring_instruction_uuid?: StringWithAggregatesFilter<"ContactScore"> | string
+    score?: IntWithAggregatesFilter<"ContactScore"> | number
+    updated_at?: DateTimeWithAggregatesFilter<"ContactScore"> | Date | string
   }
 
   export type ContactTagWhereInput = {
@@ -22627,6 +26554,7 @@ export namespace Prisma {
     interactions?: InteractionCreateNestedManyWithoutUserInput
     sender_profiles?: SenderProfileCreateNestedManyWithoutUserInput
     marketing_campaigns?: MarketingCampaignCreateNestedManyWithoutUserInput
+    scoring_instructions?: ScoringInstructionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -22645,6 +26573,7 @@ export namespace Prisma {
     interactions?: InteractionUncheckedCreateNestedManyWithoutUserInput
     sender_profiles?: SenderProfileUncheckedCreateNestedManyWithoutUserInput
     marketing_campaigns?: MarketingCampaignUncheckedCreateNestedManyWithoutUserInput
+    scoring_instructions?: ScoringInstructionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -22662,6 +26591,7 @@ export namespace Prisma {
     interactions?: InteractionUpdateManyWithoutUserNestedInput
     sender_profiles?: SenderProfileUpdateManyWithoutUserNestedInput
     marketing_campaigns?: MarketingCampaignUpdateManyWithoutUserNestedInput
+    scoring_instructions?: ScoringInstructionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -22680,6 +26610,7 @@ export namespace Prisma {
     interactions?: InteractionUncheckedUpdateManyWithoutUserNestedInput
     sender_profiles?: SenderProfileUncheckedUpdateManyWithoutUserNestedInput
     marketing_campaigns?: MarketingCampaignUncheckedUpdateManyWithoutUserNestedInput
+    scoring_instructions?: ScoringInstructionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -22723,7 +26654,6 @@ export namespace Prisma {
     enabled?: boolean
     cron_schedule?: string | null
     channels?: FilterCreatechannelsInput | $Enums.Channel[]
-    scoring_instructions?: string | null
     outreach_instructions?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -22731,6 +26661,7 @@ export namespace Prisma {
     raw_leads?: RawLeadCreateNestedManyWithoutFilterInput
     contacts?: ContactCreateNestedManyWithoutFilterInput
     jobs?: FilterJobCreateNestedManyWithoutFilterInput
+    filter_scoring_instructions?: FilterScoringInstructionCreateNestedManyWithoutFilterInput
   }
 
   export type FilterUncheckedCreateInput = {
@@ -22744,13 +26675,13 @@ export namespace Prisma {
     enabled?: boolean
     cron_schedule?: string | null
     channels?: FilterCreatechannelsInput | $Enums.Channel[]
-    scoring_instructions?: string | null
     outreach_instructions?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     raw_leads?: RawLeadUncheckedCreateNestedManyWithoutFilterInput
     contacts?: ContactUncheckedCreateNestedManyWithoutFilterInput
     jobs?: FilterJobUncheckedCreateNestedManyWithoutFilterInput
+    filter_scoring_instructions?: FilterScoringInstructionUncheckedCreateNestedManyWithoutFilterInput
   }
 
   export type FilterUpdateInput = {
@@ -22762,7 +26693,6 @@ export namespace Prisma {
     enabled?: BoolFieldUpdateOperationsInput | boolean
     cron_schedule?: NullableStringFieldUpdateOperationsInput | string | null
     channels?: FilterUpdatechannelsInput | $Enums.Channel[]
-    scoring_instructions?: NullableStringFieldUpdateOperationsInput | string | null
     outreach_instructions?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22770,6 +26700,7 @@ export namespace Prisma {
     raw_leads?: RawLeadUpdateManyWithoutFilterNestedInput
     contacts?: ContactUpdateManyWithoutFilterNestedInput
     jobs?: FilterJobUpdateManyWithoutFilterNestedInput
+    filter_scoring_instructions?: FilterScoringInstructionUpdateManyWithoutFilterNestedInput
   }
 
   export type FilterUncheckedUpdateInput = {
@@ -22783,13 +26714,13 @@ export namespace Prisma {
     enabled?: BoolFieldUpdateOperationsInput | boolean
     cron_schedule?: NullableStringFieldUpdateOperationsInput | string | null
     channels?: FilterUpdatechannelsInput | $Enums.Channel[]
-    scoring_instructions?: NullableStringFieldUpdateOperationsInput | string | null
     outreach_instructions?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     raw_leads?: RawLeadUncheckedUpdateManyWithoutFilterNestedInput
     contacts?: ContactUncheckedUpdateManyWithoutFilterNestedInput
     jobs?: FilterJobUncheckedUpdateManyWithoutFilterNestedInput
+    filter_scoring_instructions?: FilterScoringInstructionUncheckedUpdateManyWithoutFilterNestedInput
   }
 
   export type FilterCreateManyInput = {
@@ -22803,7 +26734,6 @@ export namespace Prisma {
     enabled?: boolean
     cron_schedule?: string | null
     channels?: FilterCreatechannelsInput | $Enums.Channel[]
-    scoring_instructions?: string | null
     outreach_instructions?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -22818,7 +26748,6 @@ export namespace Prisma {
     enabled?: BoolFieldUpdateOperationsInput | boolean
     cron_schedule?: NullableStringFieldUpdateOperationsInput | string | null
     channels?: FilterUpdatechannelsInput | $Enums.Channel[]
-    scoring_instructions?: NullableStringFieldUpdateOperationsInput | string | null
     outreach_instructions?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22835,10 +26764,123 @@ export namespace Prisma {
     enabled?: BoolFieldUpdateOperationsInput | boolean
     cron_schedule?: NullableStringFieldUpdateOperationsInput | string | null
     channels?: FilterUpdatechannelsInput | $Enums.Channel[]
-    scoring_instructions?: NullableStringFieldUpdateOperationsInput | string | null
     outreach_instructions?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ScoringInstructionCreateInput = {
+    uuid?: string
+    name: string
+    instructions: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    user: UserCreateNestedOneWithoutScoring_instructionsInput
+    filter_links?: FilterScoringInstructionCreateNestedManyWithoutScoring_instructionInput
+    contact_scores?: ContactScoreCreateNestedManyWithoutScoring_instructionInput
+  }
+
+  export type ScoringInstructionUncheckedCreateInput = {
+    id?: number
+    uuid?: string
+    user_uuid: string
+    name: string
+    instructions: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    filter_links?: FilterScoringInstructionUncheckedCreateNestedManyWithoutScoring_instructionInput
+    contact_scores?: ContactScoreUncheckedCreateNestedManyWithoutScoring_instructionInput
+  }
+
+  export type ScoringInstructionUpdateInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    instructions?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutScoring_instructionsNestedInput
+    filter_links?: FilterScoringInstructionUpdateManyWithoutScoring_instructionNestedInput
+    contact_scores?: ContactScoreUpdateManyWithoutScoring_instructionNestedInput
+  }
+
+  export type ScoringInstructionUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    instructions?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    filter_links?: FilterScoringInstructionUncheckedUpdateManyWithoutScoring_instructionNestedInput
+    contact_scores?: ContactScoreUncheckedUpdateManyWithoutScoring_instructionNestedInput
+  }
+
+  export type ScoringInstructionCreateManyInput = {
+    id?: number
+    uuid?: string
+    user_uuid: string
+    name: string
+    instructions: string
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type ScoringInstructionUpdateManyMutationInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    instructions?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ScoringInstructionUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    instructions?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FilterScoringInstructionCreateInput = {
+    created_at?: Date | string
+    filter: FilterCreateNestedOneWithoutFilter_scoring_instructionsInput
+    scoring_instruction: ScoringInstructionCreateNestedOneWithoutFilter_linksInput
+  }
+
+  export type FilterScoringInstructionUncheckedCreateInput = {
+    filter_uuid: string
+    scoring_instruction_uuid: string
+    created_at?: Date | string
+  }
+
+  export type FilterScoringInstructionUpdateInput = {
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    filter?: FilterUpdateOneRequiredWithoutFilter_scoring_instructionsNestedInput
+    scoring_instruction?: ScoringInstructionUpdateOneRequiredWithoutFilter_linksNestedInput
+  }
+
+  export type FilterScoringInstructionUncheckedUpdateInput = {
+    filter_uuid?: StringFieldUpdateOperationsInput | string
+    scoring_instruction_uuid?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FilterScoringInstructionCreateManyInput = {
+    filter_uuid: string
+    scoring_instruction_uuid: string
+    created_at?: Date | string
+  }
+
+  export type FilterScoringInstructionUpdateManyMutationInput = {
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FilterScoringInstructionUncheckedUpdateManyInput = {
+    filter_uuid?: StringFieldUpdateOperationsInput | string
+    scoring_instruction_uuid?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type RawLeadCreateInput = {
@@ -23180,7 +27222,6 @@ export namespace Prisma {
   export type ContactCreateInput = {
     uuid?: string
     status?: $Enums.LeadStatus
-    score?: number | null
     notes?: string | null
     name?: string | null
     email?: string | null
@@ -23204,6 +27245,7 @@ export namespace Prisma {
     interactions?: InteractionCreateNestedManyWithoutContactInput
     outreach_messages?: OutreachMessageCreateNestedManyWithoutContactInput
     campaign_contacts?: MarketingCampaignContactCreateNestedManyWithoutContactInput
+    contact_scores?: ContactScoreCreateNestedManyWithoutContactInput
   }
 
   export type ContactUncheckedCreateInput = {
@@ -23213,7 +27255,6 @@ export namespace Prisma {
     lead_uuid: string
     filter_uuid?: string | null
     status?: $Enums.LeadStatus
-    score?: number | null
     notes?: string | null
     name?: string | null
     email?: string | null
@@ -23234,12 +27275,12 @@ export namespace Prisma {
     interactions?: InteractionUncheckedCreateNestedManyWithoutContactInput
     outreach_messages?: OutreachMessageUncheckedCreateNestedManyWithoutContactInput
     campaign_contacts?: MarketingCampaignContactUncheckedCreateNestedManyWithoutContactInput
+    contact_scores?: ContactScoreUncheckedCreateNestedManyWithoutContactInput
   }
 
   export type ContactUpdateInput = {
     uuid?: StringFieldUpdateOperationsInput | string
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
-    score?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -23263,6 +27304,7 @@ export namespace Prisma {
     interactions?: InteractionUpdateManyWithoutContactNestedInput
     outreach_messages?: OutreachMessageUpdateManyWithoutContactNestedInput
     campaign_contacts?: MarketingCampaignContactUpdateManyWithoutContactNestedInput
+    contact_scores?: ContactScoreUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateInput = {
@@ -23272,7 +27314,6 @@ export namespace Prisma {
     lead_uuid?: StringFieldUpdateOperationsInput | string
     filter_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
-    score?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -23293,6 +27334,7 @@ export namespace Prisma {
     interactions?: InteractionUncheckedUpdateManyWithoutContactNestedInput
     outreach_messages?: OutreachMessageUncheckedUpdateManyWithoutContactNestedInput
     campaign_contacts?: MarketingCampaignContactUncheckedUpdateManyWithoutContactNestedInput
+    contact_scores?: ContactScoreUncheckedUpdateManyWithoutContactNestedInput
   }
 
   export type ContactCreateManyInput = {
@@ -23302,7 +27344,6 @@ export namespace Prisma {
     lead_uuid: string
     filter_uuid?: string | null
     status?: $Enums.LeadStatus
-    score?: number | null
     notes?: string | null
     name?: string | null
     email?: string | null
@@ -23324,7 +27365,6 @@ export namespace Prisma {
   export type ContactUpdateManyMutationInput = {
     uuid?: StringFieldUpdateOperationsInput | string
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
-    score?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -23350,7 +27390,6 @@ export namespace Prisma {
     lead_uuid?: StringFieldUpdateOperationsInput | string
     filter_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
-    score?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -23366,6 +27405,57 @@ export namespace Prisma {
     unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
     last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ContactScoreCreateInput = {
+    score: number
+    updated_at?: Date | string
+    contact: ContactCreateNestedOneWithoutContact_scoresInput
+    scoring_instruction: ScoringInstructionCreateNestedOneWithoutContact_scoresInput
+  }
+
+  export type ContactScoreUncheckedCreateInput = {
+    id?: number
+    contact_uuid: string
+    scoring_instruction_uuid: string
+    score: number
+    updated_at?: Date | string
+  }
+
+  export type ContactScoreUpdateInput = {
+    score?: IntFieldUpdateOperationsInput | number
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    contact?: ContactUpdateOneRequiredWithoutContact_scoresNestedInput
+    scoring_instruction?: ScoringInstructionUpdateOneRequiredWithoutContact_scoresNestedInput
+  }
+
+  export type ContactScoreUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    contact_uuid?: StringFieldUpdateOperationsInput | string
+    scoring_instruction_uuid?: StringFieldUpdateOperationsInput | string
+    score?: IntFieldUpdateOperationsInput | number
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ContactScoreCreateManyInput = {
+    id?: number
+    contact_uuid: string
+    scoring_instruction_uuid: string
+    score: number
+    updated_at?: Date | string
+  }
+
+  export type ContactScoreUpdateManyMutationInput = {
+    score?: IntFieldUpdateOperationsInput | number
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ContactScoreUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    contact_uuid?: StringFieldUpdateOperationsInput | string
+    scoring_instruction_uuid?: StringFieldUpdateOperationsInput | string
+    score?: IntFieldUpdateOperationsInput | number
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -24466,6 +28556,12 @@ export namespace Prisma {
     none?: MarketingCampaignWhereInput
   }
 
+  export type ScoringInstructionListRelationFilter = {
+    every?: ScoringInstructionWhereInput
+    some?: ScoringInstructionWhereInput
+    none?: ScoringInstructionWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -24496,6 +28592,10 @@ export namespace Prisma {
   }
 
   export type MarketingCampaignOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ScoringInstructionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -24684,11 +28784,21 @@ export namespace Prisma {
     none?: FilterJobWhereInput
   }
 
+  export type FilterScoringInstructionListRelationFilter = {
+    every?: FilterScoringInstructionWhereInput
+    some?: FilterScoringInstructionWhereInput
+    none?: FilterScoringInstructionWhereInput
+  }
+
   export type RawLeadOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
   export type FilterJobOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type FilterScoringInstructionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -24703,7 +28813,6 @@ export namespace Prisma {
     enabled?: SortOrder
     cron_schedule?: SortOrder
     channels?: SortOrder
-    scoring_instructions?: SortOrder
     outreach_instructions?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -24721,7 +28830,6 @@ export namespace Prisma {
     source_type?: SortOrder
     enabled?: SortOrder
     cron_schedule?: SortOrder
-    scoring_instructions?: SortOrder
     outreach_instructions?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -24735,7 +28843,6 @@ export namespace Prisma {
     source_type?: SortOrder
     enabled?: SortOrder
     cron_schedule?: SortOrder
-    scoring_instructions?: SortOrder
     outreach_instructions?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -24789,6 +28896,87 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
+  export type ContactScoreListRelationFilter = {
+    every?: ContactScoreWhereInput
+    some?: ContactScoreWhereInput
+    none?: ContactScoreWhereInput
+  }
+
+  export type ContactScoreOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ScoringInstructionCountOrderByAggregateInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    user_uuid?: SortOrder
+    name?: SortOrder
+    instructions?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type ScoringInstructionAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type ScoringInstructionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    user_uuid?: SortOrder
+    name?: SortOrder
+    instructions?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type ScoringInstructionMinOrderByAggregateInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    user_uuid?: SortOrder
+    name?: SortOrder
+    instructions?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type ScoringInstructionSumOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type FilterScalarRelationFilter = {
+    is?: FilterWhereInput
+    isNot?: FilterWhereInput
+  }
+
+  export type ScoringInstructionScalarRelationFilter = {
+    is?: ScoringInstructionWhereInput
+    isNot?: ScoringInstructionWhereInput
+  }
+
+  export type FilterScoringInstructionFilter_uuidScoring_instruction_uuidCompoundUniqueInput = {
+    filter_uuid: string
+    scoring_instruction_uuid: string
+  }
+
+  export type FilterScoringInstructionCountOrderByAggregateInput = {
+    filter_uuid?: SortOrder
+    scoring_instruction_uuid?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type FilterScoringInstructionMaxOrderByAggregateInput = {
+    filter_uuid?: SortOrder
+    scoring_instruction_uuid?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type FilterScoringInstructionMinOrderByAggregateInput = {
+    filter_uuid?: SortOrder
+    scoring_instruction_uuid?: SortOrder
+    created_at?: SortOrder
+  }
+
   export type DateTimeNullableFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
@@ -24798,11 +28986,6 @@ export namespace Prisma {
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
-  export type FilterScalarRelationFilter = {
-    is?: FilterWhereInput
-    isNot?: FilterWhereInput
   }
 
   export type LeadNullableScalarRelationFilter = {
@@ -25172,7 +29355,6 @@ export namespace Prisma {
     lead_uuid?: SortOrder
     filter_uuid?: SortOrder
     status?: SortOrder
-    score?: SortOrder
     notes?: SortOrder
     name?: SortOrder
     email?: SortOrder
@@ -25193,7 +29375,6 @@ export namespace Prisma {
 
   export type ContactAvgOrderByAggregateInput = {
     id?: SortOrder
-    score?: SortOrder
   }
 
   export type ContactMaxOrderByAggregateInput = {
@@ -25203,7 +29384,6 @@ export namespace Prisma {
     lead_uuid?: SortOrder
     filter_uuid?: SortOrder
     status?: SortOrder
-    score?: SortOrder
     notes?: SortOrder
     name?: SortOrder
     email?: SortOrder
@@ -25229,7 +29409,6 @@ export namespace Prisma {
     lead_uuid?: SortOrder
     filter_uuid?: SortOrder
     status?: SortOrder
-    score?: SortOrder
     notes?: SortOrder
     name?: SortOrder
     email?: SortOrder
@@ -25250,7 +29429,6 @@ export namespace Prisma {
 
   export type ContactSumOrderByAggregateInput = {
     id?: SortOrder
-    score?: SortOrder
   }
 
   export type EnumLeadStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -25266,6 +29444,45 @@ export namespace Prisma {
   export type ContactScalarRelationFilter = {
     is?: ContactWhereInput
     isNot?: ContactWhereInput
+  }
+
+  export type ContactScoreContact_uuidScoring_instruction_uuidCompoundUniqueInput = {
+    contact_uuid: string
+    scoring_instruction_uuid: string
+  }
+
+  export type ContactScoreCountOrderByAggregateInput = {
+    id?: SortOrder
+    contact_uuid?: SortOrder
+    scoring_instruction_uuid?: SortOrder
+    score?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type ContactScoreAvgOrderByAggregateInput = {
+    id?: SortOrder
+    score?: SortOrder
+  }
+
+  export type ContactScoreMaxOrderByAggregateInput = {
+    id?: SortOrder
+    contact_uuid?: SortOrder
+    scoring_instruction_uuid?: SortOrder
+    score?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type ContactScoreMinOrderByAggregateInput = {
+    id?: SortOrder
+    contact_uuid?: SortOrder
+    scoring_instruction_uuid?: SortOrder
+    score?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type ContactScoreSumOrderByAggregateInput = {
+    id?: SortOrder
+    score?: SortOrder
   }
 
   export type ContactTagContact_uuidTagCompoundUniqueInput = {
@@ -26021,6 +30238,13 @@ export namespace Prisma {
     connect?: MarketingCampaignWhereUniqueInput | MarketingCampaignWhereUniqueInput[]
   }
 
+  export type ScoringInstructionCreateNestedManyWithoutUserInput = {
+    create?: XOR<ScoringInstructionCreateWithoutUserInput, ScoringInstructionUncheckedCreateWithoutUserInput> | ScoringInstructionCreateWithoutUserInput[] | ScoringInstructionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ScoringInstructionCreateOrConnectWithoutUserInput | ScoringInstructionCreateOrConnectWithoutUserInput[]
+    createMany?: ScoringInstructionCreateManyUserInputEnvelope
+    connect?: ScoringInstructionWhereUniqueInput | ScoringInstructionWhereUniqueInput[]
+  }
+
   export type FilterUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<FilterCreateWithoutUserInput, FilterUncheckedCreateWithoutUserInput> | FilterCreateWithoutUserInput[] | FilterUncheckedCreateWithoutUserInput[]
     connectOrCreate?: FilterCreateOrConnectWithoutUserInput | FilterCreateOrConnectWithoutUserInput[]
@@ -26068,6 +30292,13 @@ export namespace Prisma {
     connectOrCreate?: MarketingCampaignCreateOrConnectWithoutUserInput | MarketingCampaignCreateOrConnectWithoutUserInput[]
     createMany?: MarketingCampaignCreateManyUserInputEnvelope
     connect?: MarketingCampaignWhereUniqueInput | MarketingCampaignWhereUniqueInput[]
+  }
+
+  export type ScoringInstructionUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<ScoringInstructionCreateWithoutUserInput, ScoringInstructionUncheckedCreateWithoutUserInput> | ScoringInstructionCreateWithoutUserInput[] | ScoringInstructionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ScoringInstructionCreateOrConnectWithoutUserInput | ScoringInstructionCreateOrConnectWithoutUserInput[]
+    createMany?: ScoringInstructionCreateManyUserInputEnvelope
+    connect?: ScoringInstructionWhereUniqueInput | ScoringInstructionWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -26184,6 +30415,20 @@ export namespace Prisma {
     deleteMany?: MarketingCampaignScalarWhereInput | MarketingCampaignScalarWhereInput[]
   }
 
+  export type ScoringInstructionUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ScoringInstructionCreateWithoutUserInput, ScoringInstructionUncheckedCreateWithoutUserInput> | ScoringInstructionCreateWithoutUserInput[] | ScoringInstructionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ScoringInstructionCreateOrConnectWithoutUserInput | ScoringInstructionCreateOrConnectWithoutUserInput[]
+    upsert?: ScoringInstructionUpsertWithWhereUniqueWithoutUserInput | ScoringInstructionUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ScoringInstructionCreateManyUserInputEnvelope
+    set?: ScoringInstructionWhereUniqueInput | ScoringInstructionWhereUniqueInput[]
+    disconnect?: ScoringInstructionWhereUniqueInput | ScoringInstructionWhereUniqueInput[]
+    delete?: ScoringInstructionWhereUniqueInput | ScoringInstructionWhereUniqueInput[]
+    connect?: ScoringInstructionWhereUniqueInput | ScoringInstructionWhereUniqueInput[]
+    update?: ScoringInstructionUpdateWithWhereUniqueWithoutUserInput | ScoringInstructionUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ScoringInstructionUpdateManyWithWhereWithoutUserInput | ScoringInstructionUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ScoringInstructionScalarWhereInput | ScoringInstructionScalarWhereInput[]
+  }
+
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -26290,6 +30535,20 @@ export namespace Prisma {
     deleteMany?: MarketingCampaignScalarWhereInput | MarketingCampaignScalarWhereInput[]
   }
 
+  export type ScoringInstructionUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ScoringInstructionCreateWithoutUserInput, ScoringInstructionUncheckedCreateWithoutUserInput> | ScoringInstructionCreateWithoutUserInput[] | ScoringInstructionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ScoringInstructionCreateOrConnectWithoutUserInput | ScoringInstructionCreateOrConnectWithoutUserInput[]
+    upsert?: ScoringInstructionUpsertWithWhereUniqueWithoutUserInput | ScoringInstructionUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ScoringInstructionCreateManyUserInputEnvelope
+    set?: ScoringInstructionWhereUniqueInput | ScoringInstructionWhereUniqueInput[]
+    disconnect?: ScoringInstructionWhereUniqueInput | ScoringInstructionWhereUniqueInput[]
+    delete?: ScoringInstructionWhereUniqueInput | ScoringInstructionWhereUniqueInput[]
+    connect?: ScoringInstructionWhereUniqueInput | ScoringInstructionWhereUniqueInput[]
+    update?: ScoringInstructionUpdateWithWhereUniqueWithoutUserInput | ScoringInstructionUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ScoringInstructionUpdateManyWithWhereWithoutUserInput | ScoringInstructionUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ScoringInstructionScalarWhereInput | ScoringInstructionScalarWhereInput[]
+  }
+
   export type FilterCreateenrichment_sourcesInput = {
     set: $Enums.EnrichmentSource[]
   }
@@ -26325,6 +30584,13 @@ export namespace Prisma {
     connect?: FilterJobWhereUniqueInput | FilterJobWhereUniqueInput[]
   }
 
+  export type FilterScoringInstructionCreateNestedManyWithoutFilterInput = {
+    create?: XOR<FilterScoringInstructionCreateWithoutFilterInput, FilterScoringInstructionUncheckedCreateWithoutFilterInput> | FilterScoringInstructionCreateWithoutFilterInput[] | FilterScoringInstructionUncheckedCreateWithoutFilterInput[]
+    connectOrCreate?: FilterScoringInstructionCreateOrConnectWithoutFilterInput | FilterScoringInstructionCreateOrConnectWithoutFilterInput[]
+    createMany?: FilterScoringInstructionCreateManyFilterInputEnvelope
+    connect?: FilterScoringInstructionWhereUniqueInput | FilterScoringInstructionWhereUniqueInput[]
+  }
+
   export type RawLeadUncheckedCreateNestedManyWithoutFilterInput = {
     create?: XOR<RawLeadCreateWithoutFilterInput, RawLeadUncheckedCreateWithoutFilterInput> | RawLeadCreateWithoutFilterInput[] | RawLeadUncheckedCreateWithoutFilterInput[]
     connectOrCreate?: RawLeadCreateOrConnectWithoutFilterInput | RawLeadCreateOrConnectWithoutFilterInput[]
@@ -26344,6 +30610,13 @@ export namespace Prisma {
     connectOrCreate?: FilterJobCreateOrConnectWithoutFilterInput | FilterJobCreateOrConnectWithoutFilterInput[]
     createMany?: FilterJobCreateManyFilterInputEnvelope
     connect?: FilterJobWhereUniqueInput | FilterJobWhereUniqueInput[]
+  }
+
+  export type FilterScoringInstructionUncheckedCreateNestedManyWithoutFilterInput = {
+    create?: XOR<FilterScoringInstructionCreateWithoutFilterInput, FilterScoringInstructionUncheckedCreateWithoutFilterInput> | FilterScoringInstructionCreateWithoutFilterInput[] | FilterScoringInstructionUncheckedCreateWithoutFilterInput[]
+    connectOrCreate?: FilterScoringInstructionCreateOrConnectWithoutFilterInput | FilterScoringInstructionCreateOrConnectWithoutFilterInput[]
+    createMany?: FilterScoringInstructionCreateManyFilterInputEnvelope
+    connect?: FilterScoringInstructionWhereUniqueInput | FilterScoringInstructionWhereUniqueInput[]
   }
 
   export type EnumSourceTypeFieldUpdateOperationsInput = {
@@ -26414,6 +30687,20 @@ export namespace Prisma {
     deleteMany?: FilterJobScalarWhereInput | FilterJobScalarWhereInput[]
   }
 
+  export type FilterScoringInstructionUpdateManyWithoutFilterNestedInput = {
+    create?: XOR<FilterScoringInstructionCreateWithoutFilterInput, FilterScoringInstructionUncheckedCreateWithoutFilterInput> | FilterScoringInstructionCreateWithoutFilterInput[] | FilterScoringInstructionUncheckedCreateWithoutFilterInput[]
+    connectOrCreate?: FilterScoringInstructionCreateOrConnectWithoutFilterInput | FilterScoringInstructionCreateOrConnectWithoutFilterInput[]
+    upsert?: FilterScoringInstructionUpsertWithWhereUniqueWithoutFilterInput | FilterScoringInstructionUpsertWithWhereUniqueWithoutFilterInput[]
+    createMany?: FilterScoringInstructionCreateManyFilterInputEnvelope
+    set?: FilterScoringInstructionWhereUniqueInput | FilterScoringInstructionWhereUniqueInput[]
+    disconnect?: FilterScoringInstructionWhereUniqueInput | FilterScoringInstructionWhereUniqueInput[]
+    delete?: FilterScoringInstructionWhereUniqueInput | FilterScoringInstructionWhereUniqueInput[]
+    connect?: FilterScoringInstructionWhereUniqueInput | FilterScoringInstructionWhereUniqueInput[]
+    update?: FilterScoringInstructionUpdateWithWhereUniqueWithoutFilterInput | FilterScoringInstructionUpdateWithWhereUniqueWithoutFilterInput[]
+    updateMany?: FilterScoringInstructionUpdateManyWithWhereWithoutFilterInput | FilterScoringInstructionUpdateManyWithWhereWithoutFilterInput[]
+    deleteMany?: FilterScoringInstructionScalarWhereInput | FilterScoringInstructionScalarWhereInput[]
+  }
+
   export type RawLeadUncheckedUpdateManyWithoutFilterNestedInput = {
     create?: XOR<RawLeadCreateWithoutFilterInput, RawLeadUncheckedCreateWithoutFilterInput> | RawLeadCreateWithoutFilterInput[] | RawLeadUncheckedCreateWithoutFilterInput[]
     connectOrCreate?: RawLeadCreateOrConnectWithoutFilterInput | RawLeadCreateOrConnectWithoutFilterInput[]
@@ -26454,6 +30741,146 @@ export namespace Prisma {
     update?: FilterJobUpdateWithWhereUniqueWithoutFilterInput | FilterJobUpdateWithWhereUniqueWithoutFilterInput[]
     updateMany?: FilterJobUpdateManyWithWhereWithoutFilterInput | FilterJobUpdateManyWithWhereWithoutFilterInput[]
     deleteMany?: FilterJobScalarWhereInput | FilterJobScalarWhereInput[]
+  }
+
+  export type FilterScoringInstructionUncheckedUpdateManyWithoutFilterNestedInput = {
+    create?: XOR<FilterScoringInstructionCreateWithoutFilterInput, FilterScoringInstructionUncheckedCreateWithoutFilterInput> | FilterScoringInstructionCreateWithoutFilterInput[] | FilterScoringInstructionUncheckedCreateWithoutFilterInput[]
+    connectOrCreate?: FilterScoringInstructionCreateOrConnectWithoutFilterInput | FilterScoringInstructionCreateOrConnectWithoutFilterInput[]
+    upsert?: FilterScoringInstructionUpsertWithWhereUniqueWithoutFilterInput | FilterScoringInstructionUpsertWithWhereUniqueWithoutFilterInput[]
+    createMany?: FilterScoringInstructionCreateManyFilterInputEnvelope
+    set?: FilterScoringInstructionWhereUniqueInput | FilterScoringInstructionWhereUniqueInput[]
+    disconnect?: FilterScoringInstructionWhereUniqueInput | FilterScoringInstructionWhereUniqueInput[]
+    delete?: FilterScoringInstructionWhereUniqueInput | FilterScoringInstructionWhereUniqueInput[]
+    connect?: FilterScoringInstructionWhereUniqueInput | FilterScoringInstructionWhereUniqueInput[]
+    update?: FilterScoringInstructionUpdateWithWhereUniqueWithoutFilterInput | FilterScoringInstructionUpdateWithWhereUniqueWithoutFilterInput[]
+    updateMany?: FilterScoringInstructionUpdateManyWithWhereWithoutFilterInput | FilterScoringInstructionUpdateManyWithWhereWithoutFilterInput[]
+    deleteMany?: FilterScoringInstructionScalarWhereInput | FilterScoringInstructionScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutScoring_instructionsInput = {
+    create?: XOR<UserCreateWithoutScoring_instructionsInput, UserUncheckedCreateWithoutScoring_instructionsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutScoring_instructionsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type FilterScoringInstructionCreateNestedManyWithoutScoring_instructionInput = {
+    create?: XOR<FilterScoringInstructionCreateWithoutScoring_instructionInput, FilterScoringInstructionUncheckedCreateWithoutScoring_instructionInput> | FilterScoringInstructionCreateWithoutScoring_instructionInput[] | FilterScoringInstructionUncheckedCreateWithoutScoring_instructionInput[]
+    connectOrCreate?: FilterScoringInstructionCreateOrConnectWithoutScoring_instructionInput | FilterScoringInstructionCreateOrConnectWithoutScoring_instructionInput[]
+    createMany?: FilterScoringInstructionCreateManyScoring_instructionInputEnvelope
+    connect?: FilterScoringInstructionWhereUniqueInput | FilterScoringInstructionWhereUniqueInput[]
+  }
+
+  export type ContactScoreCreateNestedManyWithoutScoring_instructionInput = {
+    create?: XOR<ContactScoreCreateWithoutScoring_instructionInput, ContactScoreUncheckedCreateWithoutScoring_instructionInput> | ContactScoreCreateWithoutScoring_instructionInput[] | ContactScoreUncheckedCreateWithoutScoring_instructionInput[]
+    connectOrCreate?: ContactScoreCreateOrConnectWithoutScoring_instructionInput | ContactScoreCreateOrConnectWithoutScoring_instructionInput[]
+    createMany?: ContactScoreCreateManyScoring_instructionInputEnvelope
+    connect?: ContactScoreWhereUniqueInput | ContactScoreWhereUniqueInput[]
+  }
+
+  export type FilterScoringInstructionUncheckedCreateNestedManyWithoutScoring_instructionInput = {
+    create?: XOR<FilterScoringInstructionCreateWithoutScoring_instructionInput, FilterScoringInstructionUncheckedCreateWithoutScoring_instructionInput> | FilterScoringInstructionCreateWithoutScoring_instructionInput[] | FilterScoringInstructionUncheckedCreateWithoutScoring_instructionInput[]
+    connectOrCreate?: FilterScoringInstructionCreateOrConnectWithoutScoring_instructionInput | FilterScoringInstructionCreateOrConnectWithoutScoring_instructionInput[]
+    createMany?: FilterScoringInstructionCreateManyScoring_instructionInputEnvelope
+    connect?: FilterScoringInstructionWhereUniqueInput | FilterScoringInstructionWhereUniqueInput[]
+  }
+
+  export type ContactScoreUncheckedCreateNestedManyWithoutScoring_instructionInput = {
+    create?: XOR<ContactScoreCreateWithoutScoring_instructionInput, ContactScoreUncheckedCreateWithoutScoring_instructionInput> | ContactScoreCreateWithoutScoring_instructionInput[] | ContactScoreUncheckedCreateWithoutScoring_instructionInput[]
+    connectOrCreate?: ContactScoreCreateOrConnectWithoutScoring_instructionInput | ContactScoreCreateOrConnectWithoutScoring_instructionInput[]
+    createMany?: ContactScoreCreateManyScoring_instructionInputEnvelope
+    connect?: ContactScoreWhereUniqueInput | ContactScoreWhereUniqueInput[]
+  }
+
+  export type UserUpdateOneRequiredWithoutScoring_instructionsNestedInput = {
+    create?: XOR<UserCreateWithoutScoring_instructionsInput, UserUncheckedCreateWithoutScoring_instructionsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutScoring_instructionsInput
+    upsert?: UserUpsertWithoutScoring_instructionsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutScoring_instructionsInput, UserUpdateWithoutScoring_instructionsInput>, UserUncheckedUpdateWithoutScoring_instructionsInput>
+  }
+
+  export type FilterScoringInstructionUpdateManyWithoutScoring_instructionNestedInput = {
+    create?: XOR<FilterScoringInstructionCreateWithoutScoring_instructionInput, FilterScoringInstructionUncheckedCreateWithoutScoring_instructionInput> | FilterScoringInstructionCreateWithoutScoring_instructionInput[] | FilterScoringInstructionUncheckedCreateWithoutScoring_instructionInput[]
+    connectOrCreate?: FilterScoringInstructionCreateOrConnectWithoutScoring_instructionInput | FilterScoringInstructionCreateOrConnectWithoutScoring_instructionInput[]
+    upsert?: FilterScoringInstructionUpsertWithWhereUniqueWithoutScoring_instructionInput | FilterScoringInstructionUpsertWithWhereUniqueWithoutScoring_instructionInput[]
+    createMany?: FilterScoringInstructionCreateManyScoring_instructionInputEnvelope
+    set?: FilterScoringInstructionWhereUniqueInput | FilterScoringInstructionWhereUniqueInput[]
+    disconnect?: FilterScoringInstructionWhereUniqueInput | FilterScoringInstructionWhereUniqueInput[]
+    delete?: FilterScoringInstructionWhereUniqueInput | FilterScoringInstructionWhereUniqueInput[]
+    connect?: FilterScoringInstructionWhereUniqueInput | FilterScoringInstructionWhereUniqueInput[]
+    update?: FilterScoringInstructionUpdateWithWhereUniqueWithoutScoring_instructionInput | FilterScoringInstructionUpdateWithWhereUniqueWithoutScoring_instructionInput[]
+    updateMany?: FilterScoringInstructionUpdateManyWithWhereWithoutScoring_instructionInput | FilterScoringInstructionUpdateManyWithWhereWithoutScoring_instructionInput[]
+    deleteMany?: FilterScoringInstructionScalarWhereInput | FilterScoringInstructionScalarWhereInput[]
+  }
+
+  export type ContactScoreUpdateManyWithoutScoring_instructionNestedInput = {
+    create?: XOR<ContactScoreCreateWithoutScoring_instructionInput, ContactScoreUncheckedCreateWithoutScoring_instructionInput> | ContactScoreCreateWithoutScoring_instructionInput[] | ContactScoreUncheckedCreateWithoutScoring_instructionInput[]
+    connectOrCreate?: ContactScoreCreateOrConnectWithoutScoring_instructionInput | ContactScoreCreateOrConnectWithoutScoring_instructionInput[]
+    upsert?: ContactScoreUpsertWithWhereUniqueWithoutScoring_instructionInput | ContactScoreUpsertWithWhereUniqueWithoutScoring_instructionInput[]
+    createMany?: ContactScoreCreateManyScoring_instructionInputEnvelope
+    set?: ContactScoreWhereUniqueInput | ContactScoreWhereUniqueInput[]
+    disconnect?: ContactScoreWhereUniqueInput | ContactScoreWhereUniqueInput[]
+    delete?: ContactScoreWhereUniqueInput | ContactScoreWhereUniqueInput[]
+    connect?: ContactScoreWhereUniqueInput | ContactScoreWhereUniqueInput[]
+    update?: ContactScoreUpdateWithWhereUniqueWithoutScoring_instructionInput | ContactScoreUpdateWithWhereUniqueWithoutScoring_instructionInput[]
+    updateMany?: ContactScoreUpdateManyWithWhereWithoutScoring_instructionInput | ContactScoreUpdateManyWithWhereWithoutScoring_instructionInput[]
+    deleteMany?: ContactScoreScalarWhereInput | ContactScoreScalarWhereInput[]
+  }
+
+  export type FilterScoringInstructionUncheckedUpdateManyWithoutScoring_instructionNestedInput = {
+    create?: XOR<FilterScoringInstructionCreateWithoutScoring_instructionInput, FilterScoringInstructionUncheckedCreateWithoutScoring_instructionInput> | FilterScoringInstructionCreateWithoutScoring_instructionInput[] | FilterScoringInstructionUncheckedCreateWithoutScoring_instructionInput[]
+    connectOrCreate?: FilterScoringInstructionCreateOrConnectWithoutScoring_instructionInput | FilterScoringInstructionCreateOrConnectWithoutScoring_instructionInput[]
+    upsert?: FilterScoringInstructionUpsertWithWhereUniqueWithoutScoring_instructionInput | FilterScoringInstructionUpsertWithWhereUniqueWithoutScoring_instructionInput[]
+    createMany?: FilterScoringInstructionCreateManyScoring_instructionInputEnvelope
+    set?: FilterScoringInstructionWhereUniqueInput | FilterScoringInstructionWhereUniqueInput[]
+    disconnect?: FilterScoringInstructionWhereUniqueInput | FilterScoringInstructionWhereUniqueInput[]
+    delete?: FilterScoringInstructionWhereUniqueInput | FilterScoringInstructionWhereUniqueInput[]
+    connect?: FilterScoringInstructionWhereUniqueInput | FilterScoringInstructionWhereUniqueInput[]
+    update?: FilterScoringInstructionUpdateWithWhereUniqueWithoutScoring_instructionInput | FilterScoringInstructionUpdateWithWhereUniqueWithoutScoring_instructionInput[]
+    updateMany?: FilterScoringInstructionUpdateManyWithWhereWithoutScoring_instructionInput | FilterScoringInstructionUpdateManyWithWhereWithoutScoring_instructionInput[]
+    deleteMany?: FilterScoringInstructionScalarWhereInput | FilterScoringInstructionScalarWhereInput[]
+  }
+
+  export type ContactScoreUncheckedUpdateManyWithoutScoring_instructionNestedInput = {
+    create?: XOR<ContactScoreCreateWithoutScoring_instructionInput, ContactScoreUncheckedCreateWithoutScoring_instructionInput> | ContactScoreCreateWithoutScoring_instructionInput[] | ContactScoreUncheckedCreateWithoutScoring_instructionInput[]
+    connectOrCreate?: ContactScoreCreateOrConnectWithoutScoring_instructionInput | ContactScoreCreateOrConnectWithoutScoring_instructionInput[]
+    upsert?: ContactScoreUpsertWithWhereUniqueWithoutScoring_instructionInput | ContactScoreUpsertWithWhereUniqueWithoutScoring_instructionInput[]
+    createMany?: ContactScoreCreateManyScoring_instructionInputEnvelope
+    set?: ContactScoreWhereUniqueInput | ContactScoreWhereUniqueInput[]
+    disconnect?: ContactScoreWhereUniqueInput | ContactScoreWhereUniqueInput[]
+    delete?: ContactScoreWhereUniqueInput | ContactScoreWhereUniqueInput[]
+    connect?: ContactScoreWhereUniqueInput | ContactScoreWhereUniqueInput[]
+    update?: ContactScoreUpdateWithWhereUniqueWithoutScoring_instructionInput | ContactScoreUpdateWithWhereUniqueWithoutScoring_instructionInput[]
+    updateMany?: ContactScoreUpdateManyWithWhereWithoutScoring_instructionInput | ContactScoreUpdateManyWithWhereWithoutScoring_instructionInput[]
+    deleteMany?: ContactScoreScalarWhereInput | ContactScoreScalarWhereInput[]
+  }
+
+  export type FilterCreateNestedOneWithoutFilter_scoring_instructionsInput = {
+    create?: XOR<FilterCreateWithoutFilter_scoring_instructionsInput, FilterUncheckedCreateWithoutFilter_scoring_instructionsInput>
+    connectOrCreate?: FilterCreateOrConnectWithoutFilter_scoring_instructionsInput
+    connect?: FilterWhereUniqueInput
+  }
+
+  export type ScoringInstructionCreateNestedOneWithoutFilter_linksInput = {
+    create?: XOR<ScoringInstructionCreateWithoutFilter_linksInput, ScoringInstructionUncheckedCreateWithoutFilter_linksInput>
+    connectOrCreate?: ScoringInstructionCreateOrConnectWithoutFilter_linksInput
+    connect?: ScoringInstructionWhereUniqueInput
+  }
+
+  export type FilterUpdateOneRequiredWithoutFilter_scoring_instructionsNestedInput = {
+    create?: XOR<FilterCreateWithoutFilter_scoring_instructionsInput, FilterUncheckedCreateWithoutFilter_scoring_instructionsInput>
+    connectOrCreate?: FilterCreateOrConnectWithoutFilter_scoring_instructionsInput
+    upsert?: FilterUpsertWithoutFilter_scoring_instructionsInput
+    connect?: FilterWhereUniqueInput
+    update?: XOR<XOR<FilterUpdateToOneWithWhereWithoutFilter_scoring_instructionsInput, FilterUpdateWithoutFilter_scoring_instructionsInput>, FilterUncheckedUpdateWithoutFilter_scoring_instructionsInput>
+  }
+
+  export type ScoringInstructionUpdateOneRequiredWithoutFilter_linksNestedInput = {
+    create?: XOR<ScoringInstructionCreateWithoutFilter_linksInput, ScoringInstructionUncheckedCreateWithoutFilter_linksInput>
+    connectOrCreate?: ScoringInstructionCreateOrConnectWithoutFilter_linksInput
+    upsert?: ScoringInstructionUpsertWithoutFilter_linksInput
+    connect?: ScoringInstructionWhereUniqueInput
+    update?: XOR<XOR<ScoringInstructionUpdateToOneWithWhereWithoutFilter_linksInput, ScoringInstructionUpdateWithoutFilter_linksInput>, ScoringInstructionUncheckedUpdateWithoutFilter_linksInput>
   }
 
   export type FilterCreateNestedOneWithoutRaw_leadsInput = {
@@ -26686,6 +31113,13 @@ export namespace Prisma {
     connect?: MarketingCampaignContactWhereUniqueInput | MarketingCampaignContactWhereUniqueInput[]
   }
 
+  export type ContactScoreCreateNestedManyWithoutContactInput = {
+    create?: XOR<ContactScoreCreateWithoutContactInput, ContactScoreUncheckedCreateWithoutContactInput> | ContactScoreCreateWithoutContactInput[] | ContactScoreUncheckedCreateWithoutContactInput[]
+    connectOrCreate?: ContactScoreCreateOrConnectWithoutContactInput | ContactScoreCreateOrConnectWithoutContactInput[]
+    createMany?: ContactScoreCreateManyContactInputEnvelope
+    connect?: ContactScoreWhereUniqueInput | ContactScoreWhereUniqueInput[]
+  }
+
   export type ContactTagUncheckedCreateNestedManyWithoutContactInput = {
     create?: XOR<ContactTagCreateWithoutContactInput, ContactTagUncheckedCreateWithoutContactInput> | ContactTagCreateWithoutContactInput[] | ContactTagUncheckedCreateWithoutContactInput[]
     connectOrCreate?: ContactTagCreateOrConnectWithoutContactInput | ContactTagCreateOrConnectWithoutContactInput[]
@@ -26712,6 +31146,13 @@ export namespace Prisma {
     connectOrCreate?: MarketingCampaignContactCreateOrConnectWithoutContactInput | MarketingCampaignContactCreateOrConnectWithoutContactInput[]
     createMany?: MarketingCampaignContactCreateManyContactInputEnvelope
     connect?: MarketingCampaignContactWhereUniqueInput | MarketingCampaignContactWhereUniqueInput[]
+  }
+
+  export type ContactScoreUncheckedCreateNestedManyWithoutContactInput = {
+    create?: XOR<ContactScoreCreateWithoutContactInput, ContactScoreUncheckedCreateWithoutContactInput> | ContactScoreCreateWithoutContactInput[] | ContactScoreUncheckedCreateWithoutContactInput[]
+    connectOrCreate?: ContactScoreCreateOrConnectWithoutContactInput | ContactScoreCreateOrConnectWithoutContactInput[]
+    createMany?: ContactScoreCreateManyContactInputEnvelope
+    connect?: ContactScoreWhereUniqueInput | ContactScoreWhereUniqueInput[]
   }
 
   export type EnumLeadStatusFieldUpdateOperationsInput = {
@@ -26800,6 +31241,20 @@ export namespace Prisma {
     deleteMany?: MarketingCampaignContactScalarWhereInput | MarketingCampaignContactScalarWhereInput[]
   }
 
+  export type ContactScoreUpdateManyWithoutContactNestedInput = {
+    create?: XOR<ContactScoreCreateWithoutContactInput, ContactScoreUncheckedCreateWithoutContactInput> | ContactScoreCreateWithoutContactInput[] | ContactScoreUncheckedCreateWithoutContactInput[]
+    connectOrCreate?: ContactScoreCreateOrConnectWithoutContactInput | ContactScoreCreateOrConnectWithoutContactInput[]
+    upsert?: ContactScoreUpsertWithWhereUniqueWithoutContactInput | ContactScoreUpsertWithWhereUniqueWithoutContactInput[]
+    createMany?: ContactScoreCreateManyContactInputEnvelope
+    set?: ContactScoreWhereUniqueInput | ContactScoreWhereUniqueInput[]
+    disconnect?: ContactScoreWhereUniqueInput | ContactScoreWhereUniqueInput[]
+    delete?: ContactScoreWhereUniqueInput | ContactScoreWhereUniqueInput[]
+    connect?: ContactScoreWhereUniqueInput | ContactScoreWhereUniqueInput[]
+    update?: ContactScoreUpdateWithWhereUniqueWithoutContactInput | ContactScoreUpdateWithWhereUniqueWithoutContactInput[]
+    updateMany?: ContactScoreUpdateManyWithWhereWithoutContactInput | ContactScoreUpdateManyWithWhereWithoutContactInput[]
+    deleteMany?: ContactScoreScalarWhereInput | ContactScoreScalarWhereInput[]
+  }
+
   export type ContactTagUncheckedUpdateManyWithoutContactNestedInput = {
     create?: XOR<ContactTagCreateWithoutContactInput, ContactTagUncheckedCreateWithoutContactInput> | ContactTagCreateWithoutContactInput[] | ContactTagUncheckedCreateWithoutContactInput[]
     connectOrCreate?: ContactTagCreateOrConnectWithoutContactInput | ContactTagCreateOrConnectWithoutContactInput[]
@@ -26854,6 +31309,48 @@ export namespace Prisma {
     update?: MarketingCampaignContactUpdateWithWhereUniqueWithoutContactInput | MarketingCampaignContactUpdateWithWhereUniqueWithoutContactInput[]
     updateMany?: MarketingCampaignContactUpdateManyWithWhereWithoutContactInput | MarketingCampaignContactUpdateManyWithWhereWithoutContactInput[]
     deleteMany?: MarketingCampaignContactScalarWhereInput | MarketingCampaignContactScalarWhereInput[]
+  }
+
+  export type ContactScoreUncheckedUpdateManyWithoutContactNestedInput = {
+    create?: XOR<ContactScoreCreateWithoutContactInput, ContactScoreUncheckedCreateWithoutContactInput> | ContactScoreCreateWithoutContactInput[] | ContactScoreUncheckedCreateWithoutContactInput[]
+    connectOrCreate?: ContactScoreCreateOrConnectWithoutContactInput | ContactScoreCreateOrConnectWithoutContactInput[]
+    upsert?: ContactScoreUpsertWithWhereUniqueWithoutContactInput | ContactScoreUpsertWithWhereUniqueWithoutContactInput[]
+    createMany?: ContactScoreCreateManyContactInputEnvelope
+    set?: ContactScoreWhereUniqueInput | ContactScoreWhereUniqueInput[]
+    disconnect?: ContactScoreWhereUniqueInput | ContactScoreWhereUniqueInput[]
+    delete?: ContactScoreWhereUniqueInput | ContactScoreWhereUniqueInput[]
+    connect?: ContactScoreWhereUniqueInput | ContactScoreWhereUniqueInput[]
+    update?: ContactScoreUpdateWithWhereUniqueWithoutContactInput | ContactScoreUpdateWithWhereUniqueWithoutContactInput[]
+    updateMany?: ContactScoreUpdateManyWithWhereWithoutContactInput | ContactScoreUpdateManyWithWhereWithoutContactInput[]
+    deleteMany?: ContactScoreScalarWhereInput | ContactScoreScalarWhereInput[]
+  }
+
+  export type ContactCreateNestedOneWithoutContact_scoresInput = {
+    create?: XOR<ContactCreateWithoutContact_scoresInput, ContactUncheckedCreateWithoutContact_scoresInput>
+    connectOrCreate?: ContactCreateOrConnectWithoutContact_scoresInput
+    connect?: ContactWhereUniqueInput
+  }
+
+  export type ScoringInstructionCreateNestedOneWithoutContact_scoresInput = {
+    create?: XOR<ScoringInstructionCreateWithoutContact_scoresInput, ScoringInstructionUncheckedCreateWithoutContact_scoresInput>
+    connectOrCreate?: ScoringInstructionCreateOrConnectWithoutContact_scoresInput
+    connect?: ScoringInstructionWhereUniqueInput
+  }
+
+  export type ContactUpdateOneRequiredWithoutContact_scoresNestedInput = {
+    create?: XOR<ContactCreateWithoutContact_scoresInput, ContactUncheckedCreateWithoutContact_scoresInput>
+    connectOrCreate?: ContactCreateOrConnectWithoutContact_scoresInput
+    upsert?: ContactUpsertWithoutContact_scoresInput
+    connect?: ContactWhereUniqueInput
+    update?: XOR<XOR<ContactUpdateToOneWithWhereWithoutContact_scoresInput, ContactUpdateWithoutContact_scoresInput>, ContactUncheckedUpdateWithoutContact_scoresInput>
+  }
+
+  export type ScoringInstructionUpdateOneRequiredWithoutContact_scoresNestedInput = {
+    create?: XOR<ScoringInstructionCreateWithoutContact_scoresInput, ScoringInstructionUncheckedCreateWithoutContact_scoresInput>
+    connectOrCreate?: ScoringInstructionCreateOrConnectWithoutContact_scoresInput
+    upsert?: ScoringInstructionUpsertWithoutContact_scoresInput
+    connect?: ScoringInstructionWhereUniqueInput
+    update?: XOR<XOR<ScoringInstructionUpdateToOneWithWhereWithoutContact_scoresInput, ScoringInstructionUpdateWithoutContact_scoresInput>, ScoringInstructionUncheckedUpdateWithoutContact_scoresInput>
   }
 
   export type ContactCreateNestedOneWithoutTagsInput = {
@@ -27823,13 +32320,13 @@ export namespace Prisma {
     enabled?: boolean
     cron_schedule?: string | null
     channels?: FilterCreatechannelsInput | $Enums.Channel[]
-    scoring_instructions?: string | null
     outreach_instructions?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     raw_leads?: RawLeadCreateNestedManyWithoutFilterInput
     contacts?: ContactCreateNestedManyWithoutFilterInput
     jobs?: FilterJobCreateNestedManyWithoutFilterInput
+    filter_scoring_instructions?: FilterScoringInstructionCreateNestedManyWithoutFilterInput
   }
 
   export type FilterUncheckedCreateWithoutUserInput = {
@@ -27842,13 +32339,13 @@ export namespace Prisma {
     enabled?: boolean
     cron_schedule?: string | null
     channels?: FilterCreatechannelsInput | $Enums.Channel[]
-    scoring_instructions?: string | null
     outreach_instructions?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     raw_leads?: RawLeadUncheckedCreateNestedManyWithoutFilterInput
     contacts?: ContactUncheckedCreateNestedManyWithoutFilterInput
     jobs?: FilterJobUncheckedCreateNestedManyWithoutFilterInput
+    filter_scoring_instructions?: FilterScoringInstructionUncheckedCreateNestedManyWithoutFilterInput
   }
 
   export type FilterCreateOrConnectWithoutUserInput = {
@@ -27864,7 +32361,6 @@ export namespace Prisma {
   export type ContactCreateWithoutUserInput = {
     uuid?: string
     status?: $Enums.LeadStatus
-    score?: number | null
     notes?: string | null
     name?: string | null
     email?: string | null
@@ -27887,6 +32383,7 @@ export namespace Prisma {
     interactions?: InteractionCreateNestedManyWithoutContactInput
     outreach_messages?: OutreachMessageCreateNestedManyWithoutContactInput
     campaign_contacts?: MarketingCampaignContactCreateNestedManyWithoutContactInput
+    contact_scores?: ContactScoreCreateNestedManyWithoutContactInput
   }
 
   export type ContactUncheckedCreateWithoutUserInput = {
@@ -27895,7 +32392,6 @@ export namespace Prisma {
     lead_uuid: string
     filter_uuid?: string | null
     status?: $Enums.LeadStatus
-    score?: number | null
     notes?: string | null
     name?: string | null
     email?: string | null
@@ -27916,6 +32412,7 @@ export namespace Prisma {
     interactions?: InteractionUncheckedCreateNestedManyWithoutContactInput
     outreach_messages?: OutreachMessageUncheckedCreateNestedManyWithoutContactInput
     campaign_contacts?: MarketingCampaignContactUncheckedCreateNestedManyWithoutContactInput
+    contact_scores?: ContactScoreUncheckedCreateNestedManyWithoutContactInput
   }
 
   export type ContactCreateOrConnectWithoutUserInput = {
@@ -28191,6 +32688,37 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ScoringInstructionCreateWithoutUserInput = {
+    uuid?: string
+    name: string
+    instructions: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    filter_links?: FilterScoringInstructionCreateNestedManyWithoutScoring_instructionInput
+    contact_scores?: ContactScoreCreateNestedManyWithoutScoring_instructionInput
+  }
+
+  export type ScoringInstructionUncheckedCreateWithoutUserInput = {
+    id?: number
+    uuid?: string
+    name: string
+    instructions: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    filter_links?: FilterScoringInstructionUncheckedCreateNestedManyWithoutScoring_instructionInput
+    contact_scores?: ContactScoreUncheckedCreateNestedManyWithoutScoring_instructionInput
+  }
+
+  export type ScoringInstructionCreateOrConnectWithoutUserInput = {
+    where: ScoringInstructionWhereUniqueInput
+    create: XOR<ScoringInstructionCreateWithoutUserInput, ScoringInstructionUncheckedCreateWithoutUserInput>
+  }
+
+  export type ScoringInstructionCreateManyUserInputEnvelope = {
+    data: ScoringInstructionCreateManyUserInput | ScoringInstructionCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type FilterUpsertWithWhereUniqueWithoutUserInput = {
     where: FilterWhereUniqueInput
     update: XOR<FilterUpdateWithoutUserInput, FilterUncheckedUpdateWithoutUserInput>
@@ -28221,7 +32749,6 @@ export namespace Prisma {
     enabled?: BoolFilter<"Filter"> | boolean
     cron_schedule?: StringNullableFilter<"Filter"> | string | null
     channels?: EnumChannelNullableListFilter<"Filter">
-    scoring_instructions?: StringNullableFilter<"Filter"> | string | null
     outreach_instructions?: StringNullableFilter<"Filter"> | string | null
     created_at?: DateTimeFilter<"Filter"> | Date | string
     updated_at?: DateTimeFilter<"Filter"> | Date | string
@@ -28253,7 +32780,6 @@ export namespace Prisma {
     lead_uuid?: StringFilter<"Contact"> | string
     filter_uuid?: StringNullableFilter<"Contact"> | string | null
     status?: EnumLeadStatusFilter<"Contact"> | $Enums.LeadStatus
-    score?: IntNullableFilter<"Contact"> | number | null
     notes?: StringNullableFilter<"Contact"> | string | null
     name?: StringNullableFilter<"Contact"> | string | null
     email?: StringNullableFilter<"Contact"> | string | null
@@ -28476,6 +33002,35 @@ export namespace Prisma {
     updated_at?: DateTimeFilter<"MarketingCampaign"> | Date | string
   }
 
+  export type ScoringInstructionUpsertWithWhereUniqueWithoutUserInput = {
+    where: ScoringInstructionWhereUniqueInput
+    update: XOR<ScoringInstructionUpdateWithoutUserInput, ScoringInstructionUncheckedUpdateWithoutUserInput>
+    create: XOR<ScoringInstructionCreateWithoutUserInput, ScoringInstructionUncheckedCreateWithoutUserInput>
+  }
+
+  export type ScoringInstructionUpdateWithWhereUniqueWithoutUserInput = {
+    where: ScoringInstructionWhereUniqueInput
+    data: XOR<ScoringInstructionUpdateWithoutUserInput, ScoringInstructionUncheckedUpdateWithoutUserInput>
+  }
+
+  export type ScoringInstructionUpdateManyWithWhereWithoutUserInput = {
+    where: ScoringInstructionScalarWhereInput
+    data: XOR<ScoringInstructionUpdateManyMutationInput, ScoringInstructionUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type ScoringInstructionScalarWhereInput = {
+    AND?: ScoringInstructionScalarWhereInput | ScoringInstructionScalarWhereInput[]
+    OR?: ScoringInstructionScalarWhereInput[]
+    NOT?: ScoringInstructionScalarWhereInput | ScoringInstructionScalarWhereInput[]
+    id?: IntFilter<"ScoringInstruction"> | number
+    uuid?: StringFilter<"ScoringInstruction"> | string
+    user_uuid?: StringFilter<"ScoringInstruction"> | string
+    name?: StringFilter<"ScoringInstruction"> | string
+    instructions?: StringFilter<"ScoringInstruction"> | string
+    created_at?: DateTimeFilter<"ScoringInstruction"> | Date | string
+    updated_at?: DateTimeFilter<"ScoringInstruction"> | Date | string
+  }
+
   export type UserCreateWithoutFiltersInput = {
     uuid?: string
     email: string
@@ -28490,6 +33045,7 @@ export namespace Prisma {
     interactions?: InteractionCreateNestedManyWithoutUserInput
     sender_profiles?: SenderProfileCreateNestedManyWithoutUserInput
     marketing_campaigns?: MarketingCampaignCreateNestedManyWithoutUserInput
+    scoring_instructions?: ScoringInstructionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutFiltersInput = {
@@ -28507,6 +33063,7 @@ export namespace Prisma {
     interactions?: InteractionUncheckedCreateNestedManyWithoutUserInput
     sender_profiles?: SenderProfileUncheckedCreateNestedManyWithoutUserInput
     marketing_campaigns?: MarketingCampaignUncheckedCreateNestedManyWithoutUserInput
+    scoring_instructions?: ScoringInstructionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutFiltersInput = {
@@ -28548,7 +33105,6 @@ export namespace Prisma {
   export type ContactCreateWithoutFilterInput = {
     uuid?: string
     status?: $Enums.LeadStatus
-    score?: number | null
     notes?: string | null
     name?: string | null
     email?: string | null
@@ -28571,6 +33127,7 @@ export namespace Prisma {
     interactions?: InteractionCreateNestedManyWithoutContactInput
     outreach_messages?: OutreachMessageCreateNestedManyWithoutContactInput
     campaign_contacts?: MarketingCampaignContactCreateNestedManyWithoutContactInput
+    contact_scores?: ContactScoreCreateNestedManyWithoutContactInput
   }
 
   export type ContactUncheckedCreateWithoutFilterInput = {
@@ -28579,7 +33136,6 @@ export namespace Prisma {
     user_uuid: string
     lead_uuid: string
     status?: $Enums.LeadStatus
-    score?: number | null
     notes?: string | null
     name?: string | null
     email?: string | null
@@ -28600,6 +33156,7 @@ export namespace Prisma {
     interactions?: InteractionUncheckedCreateNestedManyWithoutContactInput
     outreach_messages?: OutreachMessageUncheckedCreateNestedManyWithoutContactInput
     campaign_contacts?: MarketingCampaignContactUncheckedCreateNestedManyWithoutContactInput
+    contact_scores?: ContactScoreUncheckedCreateNestedManyWithoutContactInput
   }
 
   export type ContactCreateOrConnectWithoutFilterInput = {
@@ -28649,6 +33206,26 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type FilterScoringInstructionCreateWithoutFilterInput = {
+    created_at?: Date | string
+    scoring_instruction: ScoringInstructionCreateNestedOneWithoutFilter_linksInput
+  }
+
+  export type FilterScoringInstructionUncheckedCreateWithoutFilterInput = {
+    scoring_instruction_uuid: string
+    created_at?: Date | string
+  }
+
+  export type FilterScoringInstructionCreateOrConnectWithoutFilterInput = {
+    where: FilterScoringInstructionWhereUniqueInput
+    create: XOR<FilterScoringInstructionCreateWithoutFilterInput, FilterScoringInstructionUncheckedCreateWithoutFilterInput>
+  }
+
+  export type FilterScoringInstructionCreateManyFilterInputEnvelope = {
+    data: FilterScoringInstructionCreateManyFilterInput | FilterScoringInstructionCreateManyFilterInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserUpsertWithoutFiltersInput = {
     update: XOR<UserUpdateWithoutFiltersInput, UserUncheckedUpdateWithoutFiltersInput>
     create: XOR<UserCreateWithoutFiltersInput, UserUncheckedCreateWithoutFiltersInput>
@@ -28674,6 +33251,7 @@ export namespace Prisma {
     interactions?: InteractionUpdateManyWithoutUserNestedInput
     sender_profiles?: SenderProfileUpdateManyWithoutUserNestedInput
     marketing_campaigns?: MarketingCampaignUpdateManyWithoutUserNestedInput
+    scoring_instructions?: ScoringInstructionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFiltersInput = {
@@ -28691,6 +33269,7 @@ export namespace Prisma {
     interactions?: InteractionUncheckedUpdateManyWithoutUserNestedInput
     sender_profiles?: SenderProfileUncheckedUpdateManyWithoutUserNestedInput
     marketing_campaigns?: MarketingCampaignUncheckedUpdateManyWithoutUserNestedInput
+    scoring_instructions?: ScoringInstructionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type RawLeadUpsertWithWhereUniqueWithoutFilterInput = {
@@ -28773,6 +33352,351 @@ export namespace Prisma {
     updated_at?: DateTimeFilter<"FilterJob"> | Date | string
   }
 
+  export type FilterScoringInstructionUpsertWithWhereUniqueWithoutFilterInput = {
+    where: FilterScoringInstructionWhereUniqueInput
+    update: XOR<FilterScoringInstructionUpdateWithoutFilterInput, FilterScoringInstructionUncheckedUpdateWithoutFilterInput>
+    create: XOR<FilterScoringInstructionCreateWithoutFilterInput, FilterScoringInstructionUncheckedCreateWithoutFilterInput>
+  }
+
+  export type FilterScoringInstructionUpdateWithWhereUniqueWithoutFilterInput = {
+    where: FilterScoringInstructionWhereUniqueInput
+    data: XOR<FilterScoringInstructionUpdateWithoutFilterInput, FilterScoringInstructionUncheckedUpdateWithoutFilterInput>
+  }
+
+  export type FilterScoringInstructionUpdateManyWithWhereWithoutFilterInput = {
+    where: FilterScoringInstructionScalarWhereInput
+    data: XOR<FilterScoringInstructionUpdateManyMutationInput, FilterScoringInstructionUncheckedUpdateManyWithoutFilterInput>
+  }
+
+  export type FilterScoringInstructionScalarWhereInput = {
+    AND?: FilterScoringInstructionScalarWhereInput | FilterScoringInstructionScalarWhereInput[]
+    OR?: FilterScoringInstructionScalarWhereInput[]
+    NOT?: FilterScoringInstructionScalarWhereInput | FilterScoringInstructionScalarWhereInput[]
+    filter_uuid?: StringFilter<"FilterScoringInstruction"> | string
+    scoring_instruction_uuid?: StringFilter<"FilterScoringInstruction"> | string
+    created_at?: DateTimeFilter<"FilterScoringInstruction"> | Date | string
+  }
+
+  export type UserCreateWithoutScoring_instructionsInput = {
+    uuid?: string
+    email: string
+    phone?: string | null
+    password: string
+    role?: $Enums.AuthRole
+    created_at?: Date | string
+    updated_at?: Date | string
+    filters?: FilterCreateNestedManyWithoutUserInput
+    contacts?: ContactCreateNestedManyWithoutUserInput
+    outreach_messages?: OutreachMessageCreateNestedManyWithoutUserInput
+    outreach_sequences?: OutreachSequenceCreateNestedManyWithoutUserInput
+    interactions?: InteractionCreateNestedManyWithoutUserInput
+    sender_profiles?: SenderProfileCreateNestedManyWithoutUserInput
+    marketing_campaigns?: MarketingCampaignCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutScoring_instructionsInput = {
+    id?: number
+    uuid?: string
+    email: string
+    phone?: string | null
+    password: string
+    role?: $Enums.AuthRole
+    created_at?: Date | string
+    updated_at?: Date | string
+    filters?: FilterUncheckedCreateNestedManyWithoutUserInput
+    contacts?: ContactUncheckedCreateNestedManyWithoutUserInput
+    outreach_messages?: OutreachMessageUncheckedCreateNestedManyWithoutUserInput
+    outreach_sequences?: OutreachSequenceUncheckedCreateNestedManyWithoutUserInput
+    interactions?: InteractionUncheckedCreateNestedManyWithoutUserInput
+    sender_profiles?: SenderProfileUncheckedCreateNestedManyWithoutUserInput
+    marketing_campaigns?: MarketingCampaignUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutScoring_instructionsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutScoring_instructionsInput, UserUncheckedCreateWithoutScoring_instructionsInput>
+  }
+
+  export type FilterScoringInstructionCreateWithoutScoring_instructionInput = {
+    created_at?: Date | string
+    filter: FilterCreateNestedOneWithoutFilter_scoring_instructionsInput
+  }
+
+  export type FilterScoringInstructionUncheckedCreateWithoutScoring_instructionInput = {
+    filter_uuid: string
+    created_at?: Date | string
+  }
+
+  export type FilterScoringInstructionCreateOrConnectWithoutScoring_instructionInput = {
+    where: FilterScoringInstructionWhereUniqueInput
+    create: XOR<FilterScoringInstructionCreateWithoutScoring_instructionInput, FilterScoringInstructionUncheckedCreateWithoutScoring_instructionInput>
+  }
+
+  export type FilterScoringInstructionCreateManyScoring_instructionInputEnvelope = {
+    data: FilterScoringInstructionCreateManyScoring_instructionInput | FilterScoringInstructionCreateManyScoring_instructionInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ContactScoreCreateWithoutScoring_instructionInput = {
+    score: number
+    updated_at?: Date | string
+    contact: ContactCreateNestedOneWithoutContact_scoresInput
+  }
+
+  export type ContactScoreUncheckedCreateWithoutScoring_instructionInput = {
+    id?: number
+    contact_uuid: string
+    score: number
+    updated_at?: Date | string
+  }
+
+  export type ContactScoreCreateOrConnectWithoutScoring_instructionInput = {
+    where: ContactScoreWhereUniqueInput
+    create: XOR<ContactScoreCreateWithoutScoring_instructionInput, ContactScoreUncheckedCreateWithoutScoring_instructionInput>
+  }
+
+  export type ContactScoreCreateManyScoring_instructionInputEnvelope = {
+    data: ContactScoreCreateManyScoring_instructionInput | ContactScoreCreateManyScoring_instructionInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithoutScoring_instructionsInput = {
+    update: XOR<UserUpdateWithoutScoring_instructionsInput, UserUncheckedUpdateWithoutScoring_instructionsInput>
+    create: XOR<UserCreateWithoutScoring_instructionsInput, UserUncheckedCreateWithoutScoring_instructionsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutScoring_instructionsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutScoring_instructionsInput, UserUncheckedUpdateWithoutScoring_instructionsInput>
+  }
+
+  export type UserUpdateWithoutScoring_instructionsInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    filters?: FilterUpdateManyWithoutUserNestedInput
+    contacts?: ContactUpdateManyWithoutUserNestedInput
+    outreach_messages?: OutreachMessageUpdateManyWithoutUserNestedInput
+    outreach_sequences?: OutreachSequenceUpdateManyWithoutUserNestedInput
+    interactions?: InteractionUpdateManyWithoutUserNestedInput
+    sender_profiles?: SenderProfileUpdateManyWithoutUserNestedInput
+    marketing_campaigns?: MarketingCampaignUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutScoring_instructionsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    filters?: FilterUncheckedUpdateManyWithoutUserNestedInput
+    contacts?: ContactUncheckedUpdateManyWithoutUserNestedInput
+    outreach_messages?: OutreachMessageUncheckedUpdateManyWithoutUserNestedInput
+    outreach_sequences?: OutreachSequenceUncheckedUpdateManyWithoutUserNestedInput
+    interactions?: InteractionUncheckedUpdateManyWithoutUserNestedInput
+    sender_profiles?: SenderProfileUncheckedUpdateManyWithoutUserNestedInput
+    marketing_campaigns?: MarketingCampaignUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type FilterScoringInstructionUpsertWithWhereUniqueWithoutScoring_instructionInput = {
+    where: FilterScoringInstructionWhereUniqueInput
+    update: XOR<FilterScoringInstructionUpdateWithoutScoring_instructionInput, FilterScoringInstructionUncheckedUpdateWithoutScoring_instructionInput>
+    create: XOR<FilterScoringInstructionCreateWithoutScoring_instructionInput, FilterScoringInstructionUncheckedCreateWithoutScoring_instructionInput>
+  }
+
+  export type FilterScoringInstructionUpdateWithWhereUniqueWithoutScoring_instructionInput = {
+    where: FilterScoringInstructionWhereUniqueInput
+    data: XOR<FilterScoringInstructionUpdateWithoutScoring_instructionInput, FilterScoringInstructionUncheckedUpdateWithoutScoring_instructionInput>
+  }
+
+  export type FilterScoringInstructionUpdateManyWithWhereWithoutScoring_instructionInput = {
+    where: FilterScoringInstructionScalarWhereInput
+    data: XOR<FilterScoringInstructionUpdateManyMutationInput, FilterScoringInstructionUncheckedUpdateManyWithoutScoring_instructionInput>
+  }
+
+  export type ContactScoreUpsertWithWhereUniqueWithoutScoring_instructionInput = {
+    where: ContactScoreWhereUniqueInput
+    update: XOR<ContactScoreUpdateWithoutScoring_instructionInput, ContactScoreUncheckedUpdateWithoutScoring_instructionInput>
+    create: XOR<ContactScoreCreateWithoutScoring_instructionInput, ContactScoreUncheckedCreateWithoutScoring_instructionInput>
+  }
+
+  export type ContactScoreUpdateWithWhereUniqueWithoutScoring_instructionInput = {
+    where: ContactScoreWhereUniqueInput
+    data: XOR<ContactScoreUpdateWithoutScoring_instructionInput, ContactScoreUncheckedUpdateWithoutScoring_instructionInput>
+  }
+
+  export type ContactScoreUpdateManyWithWhereWithoutScoring_instructionInput = {
+    where: ContactScoreScalarWhereInput
+    data: XOR<ContactScoreUpdateManyMutationInput, ContactScoreUncheckedUpdateManyWithoutScoring_instructionInput>
+  }
+
+  export type ContactScoreScalarWhereInput = {
+    AND?: ContactScoreScalarWhereInput | ContactScoreScalarWhereInput[]
+    OR?: ContactScoreScalarWhereInput[]
+    NOT?: ContactScoreScalarWhereInput | ContactScoreScalarWhereInput[]
+    id?: IntFilter<"ContactScore"> | number
+    contact_uuid?: StringFilter<"ContactScore"> | string
+    scoring_instruction_uuid?: StringFilter<"ContactScore"> | string
+    score?: IntFilter<"ContactScore"> | number
+    updated_at?: DateTimeFilter<"ContactScore"> | Date | string
+  }
+
+  export type FilterCreateWithoutFilter_scoring_instructionsInput = {
+    uuid?: string
+    name: string
+    source_type: $Enums.SourceType
+    query_config: JsonNullValueInput | InputJsonValue
+    enrichment_sources?: FilterCreateenrichment_sourcesInput | $Enums.EnrichmentSource[]
+    enabled?: boolean
+    cron_schedule?: string | null
+    channels?: FilterCreatechannelsInput | $Enums.Channel[]
+    outreach_instructions?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    user: UserCreateNestedOneWithoutFiltersInput
+    raw_leads?: RawLeadCreateNestedManyWithoutFilterInput
+    contacts?: ContactCreateNestedManyWithoutFilterInput
+    jobs?: FilterJobCreateNestedManyWithoutFilterInput
+  }
+
+  export type FilterUncheckedCreateWithoutFilter_scoring_instructionsInput = {
+    id?: number
+    uuid?: string
+    user_uuid: string
+    name: string
+    source_type: $Enums.SourceType
+    query_config: JsonNullValueInput | InputJsonValue
+    enrichment_sources?: FilterCreateenrichment_sourcesInput | $Enums.EnrichmentSource[]
+    enabled?: boolean
+    cron_schedule?: string | null
+    channels?: FilterCreatechannelsInput | $Enums.Channel[]
+    outreach_instructions?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    raw_leads?: RawLeadUncheckedCreateNestedManyWithoutFilterInput
+    contacts?: ContactUncheckedCreateNestedManyWithoutFilterInput
+    jobs?: FilterJobUncheckedCreateNestedManyWithoutFilterInput
+  }
+
+  export type FilterCreateOrConnectWithoutFilter_scoring_instructionsInput = {
+    where: FilterWhereUniqueInput
+    create: XOR<FilterCreateWithoutFilter_scoring_instructionsInput, FilterUncheckedCreateWithoutFilter_scoring_instructionsInput>
+  }
+
+  export type ScoringInstructionCreateWithoutFilter_linksInput = {
+    uuid?: string
+    name: string
+    instructions: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    user: UserCreateNestedOneWithoutScoring_instructionsInput
+    contact_scores?: ContactScoreCreateNestedManyWithoutScoring_instructionInput
+  }
+
+  export type ScoringInstructionUncheckedCreateWithoutFilter_linksInput = {
+    id?: number
+    uuid?: string
+    user_uuid: string
+    name: string
+    instructions: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    contact_scores?: ContactScoreUncheckedCreateNestedManyWithoutScoring_instructionInput
+  }
+
+  export type ScoringInstructionCreateOrConnectWithoutFilter_linksInput = {
+    where: ScoringInstructionWhereUniqueInput
+    create: XOR<ScoringInstructionCreateWithoutFilter_linksInput, ScoringInstructionUncheckedCreateWithoutFilter_linksInput>
+  }
+
+  export type FilterUpsertWithoutFilter_scoring_instructionsInput = {
+    update: XOR<FilterUpdateWithoutFilter_scoring_instructionsInput, FilterUncheckedUpdateWithoutFilter_scoring_instructionsInput>
+    create: XOR<FilterCreateWithoutFilter_scoring_instructionsInput, FilterUncheckedCreateWithoutFilter_scoring_instructionsInput>
+    where?: FilterWhereInput
+  }
+
+  export type FilterUpdateToOneWithWhereWithoutFilter_scoring_instructionsInput = {
+    where?: FilterWhereInput
+    data: XOR<FilterUpdateWithoutFilter_scoring_instructionsInput, FilterUncheckedUpdateWithoutFilter_scoring_instructionsInput>
+  }
+
+  export type FilterUpdateWithoutFilter_scoring_instructionsInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    source_type?: EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
+    query_config?: JsonNullValueInput | InputJsonValue
+    enrichment_sources?: FilterUpdateenrichment_sourcesInput | $Enums.EnrichmentSource[]
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    cron_schedule?: NullableStringFieldUpdateOperationsInput | string | null
+    channels?: FilterUpdatechannelsInput | $Enums.Channel[]
+    outreach_instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutFiltersNestedInput
+    raw_leads?: RawLeadUpdateManyWithoutFilterNestedInput
+    contacts?: ContactUpdateManyWithoutFilterNestedInput
+    jobs?: FilterJobUpdateManyWithoutFilterNestedInput
+  }
+
+  export type FilterUncheckedUpdateWithoutFilter_scoring_instructionsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    source_type?: EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
+    query_config?: JsonNullValueInput | InputJsonValue
+    enrichment_sources?: FilterUpdateenrichment_sourcesInput | $Enums.EnrichmentSource[]
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    cron_schedule?: NullableStringFieldUpdateOperationsInput | string | null
+    channels?: FilterUpdatechannelsInput | $Enums.Channel[]
+    outreach_instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    raw_leads?: RawLeadUncheckedUpdateManyWithoutFilterNestedInput
+    contacts?: ContactUncheckedUpdateManyWithoutFilterNestedInput
+    jobs?: FilterJobUncheckedUpdateManyWithoutFilterNestedInput
+  }
+
+  export type ScoringInstructionUpsertWithoutFilter_linksInput = {
+    update: XOR<ScoringInstructionUpdateWithoutFilter_linksInput, ScoringInstructionUncheckedUpdateWithoutFilter_linksInput>
+    create: XOR<ScoringInstructionCreateWithoutFilter_linksInput, ScoringInstructionUncheckedCreateWithoutFilter_linksInput>
+    where?: ScoringInstructionWhereInput
+  }
+
+  export type ScoringInstructionUpdateToOneWithWhereWithoutFilter_linksInput = {
+    where?: ScoringInstructionWhereInput
+    data: XOR<ScoringInstructionUpdateWithoutFilter_linksInput, ScoringInstructionUncheckedUpdateWithoutFilter_linksInput>
+  }
+
+  export type ScoringInstructionUpdateWithoutFilter_linksInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    instructions?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutScoring_instructionsNestedInput
+    contact_scores?: ContactScoreUpdateManyWithoutScoring_instructionNestedInput
+  }
+
+  export type ScoringInstructionUncheckedUpdateWithoutFilter_linksInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    instructions?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    contact_scores?: ContactScoreUncheckedUpdateManyWithoutScoring_instructionNestedInput
+  }
+
   export type FilterCreateWithoutRaw_leadsInput = {
     uuid?: string
     name: string
@@ -28782,13 +33706,13 @@ export namespace Prisma {
     enabled?: boolean
     cron_schedule?: string | null
     channels?: FilterCreatechannelsInput | $Enums.Channel[]
-    scoring_instructions?: string | null
     outreach_instructions?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutFiltersInput
     contacts?: ContactCreateNestedManyWithoutFilterInput
     jobs?: FilterJobCreateNestedManyWithoutFilterInput
+    filter_scoring_instructions?: FilterScoringInstructionCreateNestedManyWithoutFilterInput
   }
 
   export type FilterUncheckedCreateWithoutRaw_leadsInput = {
@@ -28802,12 +33726,12 @@ export namespace Prisma {
     enabled?: boolean
     cron_schedule?: string | null
     channels?: FilterCreatechannelsInput | $Enums.Channel[]
-    scoring_instructions?: string | null
     outreach_instructions?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     contacts?: ContactUncheckedCreateNestedManyWithoutFilterInput
     jobs?: FilterJobUncheckedCreateNestedManyWithoutFilterInput
+    filter_scoring_instructions?: FilterScoringInstructionUncheckedCreateNestedManyWithoutFilterInput
   }
 
   export type FilterCreateOrConnectWithoutRaw_leadsInput = {
@@ -28885,13 +33809,13 @@ export namespace Prisma {
     enabled?: BoolFieldUpdateOperationsInput | boolean
     cron_schedule?: NullableStringFieldUpdateOperationsInput | string | null
     channels?: FilterUpdatechannelsInput | $Enums.Channel[]
-    scoring_instructions?: NullableStringFieldUpdateOperationsInput | string | null
     outreach_instructions?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutFiltersNestedInput
     contacts?: ContactUpdateManyWithoutFilterNestedInput
     jobs?: FilterJobUpdateManyWithoutFilterNestedInput
+    filter_scoring_instructions?: FilterScoringInstructionUpdateManyWithoutFilterNestedInput
   }
 
   export type FilterUncheckedUpdateWithoutRaw_leadsInput = {
@@ -28905,12 +33829,12 @@ export namespace Prisma {
     enabled?: BoolFieldUpdateOperationsInput | boolean
     cron_schedule?: NullableStringFieldUpdateOperationsInput | string | null
     channels?: FilterUpdatechannelsInput | $Enums.Channel[]
-    scoring_instructions?: NullableStringFieldUpdateOperationsInput | string | null
     outreach_instructions?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     contacts?: ContactUncheckedUpdateManyWithoutFilterNestedInput
     jobs?: FilterJobUncheckedUpdateManyWithoutFilterNestedInput
+    filter_scoring_instructions?: FilterScoringInstructionUncheckedUpdateManyWithoutFilterNestedInput
   }
 
   export type LeadUpsertWithoutRaw_leadInput = {
@@ -28998,7 +33922,6 @@ export namespace Prisma {
   export type ContactCreateWithoutLeadInput = {
     uuid?: string
     status?: $Enums.LeadStatus
-    score?: number | null
     notes?: string | null
     name?: string | null
     email?: string | null
@@ -29021,6 +33944,7 @@ export namespace Prisma {
     interactions?: InteractionCreateNestedManyWithoutContactInput
     outreach_messages?: OutreachMessageCreateNestedManyWithoutContactInput
     campaign_contacts?: MarketingCampaignContactCreateNestedManyWithoutContactInput
+    contact_scores?: ContactScoreCreateNestedManyWithoutContactInput
   }
 
   export type ContactUncheckedCreateWithoutLeadInput = {
@@ -29029,7 +33953,6 @@ export namespace Prisma {
     user_uuid: string
     filter_uuid?: string | null
     status?: $Enums.LeadStatus
-    score?: number | null
     notes?: string | null
     name?: string | null
     email?: string | null
@@ -29050,6 +33973,7 @@ export namespace Prisma {
     interactions?: InteractionUncheckedCreateNestedManyWithoutContactInput
     outreach_messages?: OutreachMessageUncheckedCreateNestedManyWithoutContactInput
     campaign_contacts?: MarketingCampaignContactUncheckedCreateNestedManyWithoutContactInput
+    contact_scores?: ContactScoreUncheckedCreateNestedManyWithoutContactInput
   }
 
   export type ContactCreateOrConnectWithoutLeadInput = {
@@ -29301,6 +34225,7 @@ export namespace Prisma {
     interactions?: InteractionCreateNestedManyWithoutUserInput
     sender_profiles?: SenderProfileCreateNestedManyWithoutUserInput
     marketing_campaigns?: MarketingCampaignCreateNestedManyWithoutUserInput
+    scoring_instructions?: ScoringInstructionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutContactsInput = {
@@ -29318,6 +34243,7 @@ export namespace Prisma {
     interactions?: InteractionUncheckedCreateNestedManyWithoutUserInput
     sender_profiles?: SenderProfileUncheckedCreateNestedManyWithoutUserInput
     marketing_campaigns?: MarketingCampaignUncheckedCreateNestedManyWithoutUserInput
+    scoring_instructions?: ScoringInstructionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutContactsInput = {
@@ -29384,13 +34310,13 @@ export namespace Prisma {
     enabled?: boolean
     cron_schedule?: string | null
     channels?: FilterCreatechannelsInput | $Enums.Channel[]
-    scoring_instructions?: string | null
     outreach_instructions?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutFiltersInput
     raw_leads?: RawLeadCreateNestedManyWithoutFilterInput
     jobs?: FilterJobCreateNestedManyWithoutFilterInput
+    filter_scoring_instructions?: FilterScoringInstructionCreateNestedManyWithoutFilterInput
   }
 
   export type FilterUncheckedCreateWithoutContactsInput = {
@@ -29404,12 +34330,12 @@ export namespace Prisma {
     enabled?: boolean
     cron_schedule?: string | null
     channels?: FilterCreatechannelsInput | $Enums.Channel[]
-    scoring_instructions?: string | null
     outreach_instructions?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     raw_leads?: RawLeadUncheckedCreateNestedManyWithoutFilterInput
     jobs?: FilterJobUncheckedCreateNestedManyWithoutFilterInput
+    filter_scoring_instructions?: FilterScoringInstructionUncheckedCreateNestedManyWithoutFilterInput
   }
 
   export type FilterCreateOrConnectWithoutContactsInput = {
@@ -29567,6 +34493,29 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ContactScoreCreateWithoutContactInput = {
+    score: number
+    updated_at?: Date | string
+    scoring_instruction: ScoringInstructionCreateNestedOneWithoutContact_scoresInput
+  }
+
+  export type ContactScoreUncheckedCreateWithoutContactInput = {
+    id?: number
+    scoring_instruction_uuid: string
+    score: number
+    updated_at?: Date | string
+  }
+
+  export type ContactScoreCreateOrConnectWithoutContactInput = {
+    where: ContactScoreWhereUniqueInput
+    create: XOR<ContactScoreCreateWithoutContactInput, ContactScoreUncheckedCreateWithoutContactInput>
+  }
+
+  export type ContactScoreCreateManyContactInputEnvelope = {
+    data: ContactScoreCreateManyContactInput | ContactScoreCreateManyContactInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserUpsertWithoutContactsInput = {
     update: XOR<UserUpdateWithoutContactsInput, UserUncheckedUpdateWithoutContactsInput>
     create: XOR<UserCreateWithoutContactsInput, UserUncheckedCreateWithoutContactsInput>
@@ -29592,6 +34541,7 @@ export namespace Prisma {
     interactions?: InteractionUpdateManyWithoutUserNestedInput
     sender_profiles?: SenderProfileUpdateManyWithoutUserNestedInput
     marketing_campaigns?: MarketingCampaignUpdateManyWithoutUserNestedInput
+    scoring_instructions?: ScoringInstructionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutContactsInput = {
@@ -29609,6 +34559,7 @@ export namespace Prisma {
     interactions?: InteractionUncheckedUpdateManyWithoutUserNestedInput
     sender_profiles?: SenderProfileUncheckedUpdateManyWithoutUserNestedInput
     marketing_campaigns?: MarketingCampaignUncheckedUpdateManyWithoutUserNestedInput
+    scoring_instructions?: ScoringInstructionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type LeadUpsertWithoutContactsInput = {
@@ -29687,13 +34638,13 @@ export namespace Prisma {
     enabled?: BoolFieldUpdateOperationsInput | boolean
     cron_schedule?: NullableStringFieldUpdateOperationsInput | string | null
     channels?: FilterUpdatechannelsInput | $Enums.Channel[]
-    scoring_instructions?: NullableStringFieldUpdateOperationsInput | string | null
     outreach_instructions?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutFiltersNestedInput
     raw_leads?: RawLeadUpdateManyWithoutFilterNestedInput
     jobs?: FilterJobUpdateManyWithoutFilterNestedInput
+    filter_scoring_instructions?: FilterScoringInstructionUpdateManyWithoutFilterNestedInput
   }
 
   export type FilterUncheckedUpdateWithoutContactsInput = {
@@ -29707,12 +34658,12 @@ export namespace Prisma {
     enabled?: BoolFieldUpdateOperationsInput | boolean
     cron_schedule?: NullableStringFieldUpdateOperationsInput | string | null
     channels?: FilterUpdatechannelsInput | $Enums.Channel[]
-    scoring_instructions?: NullableStringFieldUpdateOperationsInput | string | null
     outreach_instructions?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     raw_leads?: RawLeadUncheckedUpdateManyWithoutFilterNestedInput
     jobs?: FilterJobUncheckedUpdateManyWithoutFilterNestedInput
+    filter_scoring_instructions?: FilterScoringInstructionUncheckedUpdateManyWithoutFilterNestedInput
   }
 
   export type ContactTagUpsertWithWhereUniqueWithoutContactInput = {
@@ -29806,10 +34757,213 @@ export namespace Prisma {
     updated_at?: DateTimeFilter<"MarketingCampaignContact"> | Date | string
   }
 
+  export type ContactScoreUpsertWithWhereUniqueWithoutContactInput = {
+    where: ContactScoreWhereUniqueInput
+    update: XOR<ContactScoreUpdateWithoutContactInput, ContactScoreUncheckedUpdateWithoutContactInput>
+    create: XOR<ContactScoreCreateWithoutContactInput, ContactScoreUncheckedCreateWithoutContactInput>
+  }
+
+  export type ContactScoreUpdateWithWhereUniqueWithoutContactInput = {
+    where: ContactScoreWhereUniqueInput
+    data: XOR<ContactScoreUpdateWithoutContactInput, ContactScoreUncheckedUpdateWithoutContactInput>
+  }
+
+  export type ContactScoreUpdateManyWithWhereWithoutContactInput = {
+    where: ContactScoreScalarWhereInput
+    data: XOR<ContactScoreUpdateManyMutationInput, ContactScoreUncheckedUpdateManyWithoutContactInput>
+  }
+
+  export type ContactCreateWithoutContact_scoresInput = {
+    uuid?: string
+    status?: $Enums.LeadStatus
+    notes?: string | null
+    name?: string | null
+    email?: string | null
+    phone?: string | null
+    company?: string | null
+    website?: string | null
+    linkedin_url?: string | null
+    title?: string | null
+    location?: string | null
+    industry?: string | null
+    description?: string | null
+    unsubscribed_at?: Date | string | null
+    unsubscribe_token?: string | null
+    last_interaction_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    user: UserCreateNestedOneWithoutContactsInput
+    lead: LeadCreateNestedOneWithoutContactsInput
+    filter?: FilterCreateNestedOneWithoutContactsInput
+    tags?: ContactTagCreateNestedManyWithoutContactInput
+    interactions?: InteractionCreateNestedManyWithoutContactInput
+    outreach_messages?: OutreachMessageCreateNestedManyWithoutContactInput
+    campaign_contacts?: MarketingCampaignContactCreateNestedManyWithoutContactInput
+  }
+
+  export type ContactUncheckedCreateWithoutContact_scoresInput = {
+    id?: number
+    uuid?: string
+    user_uuid: string
+    lead_uuid: string
+    filter_uuid?: string | null
+    status?: $Enums.LeadStatus
+    notes?: string | null
+    name?: string | null
+    email?: string | null
+    phone?: string | null
+    company?: string | null
+    website?: string | null
+    linkedin_url?: string | null
+    title?: string | null
+    location?: string | null
+    industry?: string | null
+    description?: string | null
+    unsubscribed_at?: Date | string | null
+    unsubscribe_token?: string | null
+    last_interaction_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    tags?: ContactTagUncheckedCreateNestedManyWithoutContactInput
+    interactions?: InteractionUncheckedCreateNestedManyWithoutContactInput
+    outreach_messages?: OutreachMessageUncheckedCreateNestedManyWithoutContactInput
+    campaign_contacts?: MarketingCampaignContactUncheckedCreateNestedManyWithoutContactInput
+  }
+
+  export type ContactCreateOrConnectWithoutContact_scoresInput = {
+    where: ContactWhereUniqueInput
+    create: XOR<ContactCreateWithoutContact_scoresInput, ContactUncheckedCreateWithoutContact_scoresInput>
+  }
+
+  export type ScoringInstructionCreateWithoutContact_scoresInput = {
+    uuid?: string
+    name: string
+    instructions: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    user: UserCreateNestedOneWithoutScoring_instructionsInput
+    filter_links?: FilterScoringInstructionCreateNestedManyWithoutScoring_instructionInput
+  }
+
+  export type ScoringInstructionUncheckedCreateWithoutContact_scoresInput = {
+    id?: number
+    uuid?: string
+    user_uuid: string
+    name: string
+    instructions: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    filter_links?: FilterScoringInstructionUncheckedCreateNestedManyWithoutScoring_instructionInput
+  }
+
+  export type ScoringInstructionCreateOrConnectWithoutContact_scoresInput = {
+    where: ScoringInstructionWhereUniqueInput
+    create: XOR<ScoringInstructionCreateWithoutContact_scoresInput, ScoringInstructionUncheckedCreateWithoutContact_scoresInput>
+  }
+
+  export type ContactUpsertWithoutContact_scoresInput = {
+    update: XOR<ContactUpdateWithoutContact_scoresInput, ContactUncheckedUpdateWithoutContact_scoresInput>
+    create: XOR<ContactCreateWithoutContact_scoresInput, ContactUncheckedCreateWithoutContact_scoresInput>
+    where?: ContactWhereInput
+  }
+
+  export type ContactUpdateToOneWithWhereWithoutContact_scoresInput = {
+    where?: ContactWhereInput
+    data: XOR<ContactUpdateWithoutContact_scoresInput, ContactUncheckedUpdateWithoutContact_scoresInput>
+  }
+
+  export type ContactUpdateWithoutContact_scoresInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
+    last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutContactsNestedInput
+    lead?: LeadUpdateOneRequiredWithoutContactsNestedInput
+    filter?: FilterUpdateOneWithoutContactsNestedInput
+    tags?: ContactTagUpdateManyWithoutContactNestedInput
+    interactions?: InteractionUpdateManyWithoutContactNestedInput
+    outreach_messages?: OutreachMessageUpdateManyWithoutContactNestedInput
+    campaign_contacts?: MarketingCampaignContactUpdateManyWithoutContactNestedInput
+  }
+
+  export type ContactUncheckedUpdateWithoutContact_scoresInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    lead_uuid?: StringFieldUpdateOperationsInput | string
+    filter_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
+    last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    tags?: ContactTagUncheckedUpdateManyWithoutContactNestedInput
+    interactions?: InteractionUncheckedUpdateManyWithoutContactNestedInput
+    outreach_messages?: OutreachMessageUncheckedUpdateManyWithoutContactNestedInput
+    campaign_contacts?: MarketingCampaignContactUncheckedUpdateManyWithoutContactNestedInput
+  }
+
+  export type ScoringInstructionUpsertWithoutContact_scoresInput = {
+    update: XOR<ScoringInstructionUpdateWithoutContact_scoresInput, ScoringInstructionUncheckedUpdateWithoutContact_scoresInput>
+    create: XOR<ScoringInstructionCreateWithoutContact_scoresInput, ScoringInstructionUncheckedCreateWithoutContact_scoresInput>
+    where?: ScoringInstructionWhereInput
+  }
+
+  export type ScoringInstructionUpdateToOneWithWhereWithoutContact_scoresInput = {
+    where?: ScoringInstructionWhereInput
+    data: XOR<ScoringInstructionUpdateWithoutContact_scoresInput, ScoringInstructionUncheckedUpdateWithoutContact_scoresInput>
+  }
+
+  export type ScoringInstructionUpdateWithoutContact_scoresInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    instructions?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutScoring_instructionsNestedInput
+    filter_links?: FilterScoringInstructionUpdateManyWithoutScoring_instructionNestedInput
+  }
+
+  export type ScoringInstructionUncheckedUpdateWithoutContact_scoresInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    instructions?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    filter_links?: FilterScoringInstructionUncheckedUpdateManyWithoutScoring_instructionNestedInput
+  }
+
   export type ContactCreateWithoutTagsInput = {
     uuid?: string
     status?: $Enums.LeadStatus
-    score?: number | null
     notes?: string | null
     name?: string | null
     email?: string | null
@@ -29832,6 +34986,7 @@ export namespace Prisma {
     interactions?: InteractionCreateNestedManyWithoutContactInput
     outreach_messages?: OutreachMessageCreateNestedManyWithoutContactInput
     campaign_contacts?: MarketingCampaignContactCreateNestedManyWithoutContactInput
+    contact_scores?: ContactScoreCreateNestedManyWithoutContactInput
   }
 
   export type ContactUncheckedCreateWithoutTagsInput = {
@@ -29841,7 +34996,6 @@ export namespace Prisma {
     lead_uuid: string
     filter_uuid?: string | null
     status?: $Enums.LeadStatus
-    score?: number | null
     notes?: string | null
     name?: string | null
     email?: string | null
@@ -29861,6 +35015,7 @@ export namespace Prisma {
     interactions?: InteractionUncheckedCreateNestedManyWithoutContactInput
     outreach_messages?: OutreachMessageUncheckedCreateNestedManyWithoutContactInput
     campaign_contacts?: MarketingCampaignContactUncheckedCreateNestedManyWithoutContactInput
+    contact_scores?: ContactScoreUncheckedCreateNestedManyWithoutContactInput
   }
 
   export type ContactCreateOrConnectWithoutTagsInput = {
@@ -29882,7 +35037,6 @@ export namespace Prisma {
   export type ContactUpdateWithoutTagsInput = {
     uuid?: StringFieldUpdateOperationsInput | string
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
-    score?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -29905,6 +35059,7 @@ export namespace Prisma {
     interactions?: InteractionUpdateManyWithoutContactNestedInput
     outreach_messages?: OutreachMessageUpdateManyWithoutContactNestedInput
     campaign_contacts?: MarketingCampaignContactUpdateManyWithoutContactNestedInput
+    contact_scores?: ContactScoreUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateWithoutTagsInput = {
@@ -29914,7 +35069,6 @@ export namespace Prisma {
     lead_uuid?: StringFieldUpdateOperationsInput | string
     filter_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
-    score?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -29934,12 +35088,12 @@ export namespace Prisma {
     interactions?: InteractionUncheckedUpdateManyWithoutContactNestedInput
     outreach_messages?: OutreachMessageUncheckedUpdateManyWithoutContactNestedInput
     campaign_contacts?: MarketingCampaignContactUncheckedUpdateManyWithoutContactNestedInput
+    contact_scores?: ContactScoreUncheckedUpdateManyWithoutContactNestedInput
   }
 
   export type ContactCreateWithoutInteractionsInput = {
     uuid?: string
     status?: $Enums.LeadStatus
-    score?: number | null
     notes?: string | null
     name?: string | null
     email?: string | null
@@ -29962,6 +35116,7 @@ export namespace Prisma {
     tags?: ContactTagCreateNestedManyWithoutContactInput
     outreach_messages?: OutreachMessageCreateNestedManyWithoutContactInput
     campaign_contacts?: MarketingCampaignContactCreateNestedManyWithoutContactInput
+    contact_scores?: ContactScoreCreateNestedManyWithoutContactInput
   }
 
   export type ContactUncheckedCreateWithoutInteractionsInput = {
@@ -29971,7 +35126,6 @@ export namespace Prisma {
     lead_uuid: string
     filter_uuid?: string | null
     status?: $Enums.LeadStatus
-    score?: number | null
     notes?: string | null
     name?: string | null
     email?: string | null
@@ -29991,6 +35145,7 @@ export namespace Prisma {
     tags?: ContactTagUncheckedCreateNestedManyWithoutContactInput
     outreach_messages?: OutreachMessageUncheckedCreateNestedManyWithoutContactInput
     campaign_contacts?: MarketingCampaignContactUncheckedCreateNestedManyWithoutContactInput
+    contact_scores?: ContactScoreUncheckedCreateNestedManyWithoutContactInput
   }
 
   export type ContactCreateOrConnectWithoutInteractionsInput = {
@@ -30012,6 +35167,7 @@ export namespace Prisma {
     outreach_sequences?: OutreachSequenceCreateNestedManyWithoutUserInput
     sender_profiles?: SenderProfileCreateNestedManyWithoutUserInput
     marketing_campaigns?: MarketingCampaignCreateNestedManyWithoutUserInput
+    scoring_instructions?: ScoringInstructionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutInteractionsInput = {
@@ -30029,6 +35185,7 @@ export namespace Prisma {
     outreach_sequences?: OutreachSequenceUncheckedCreateNestedManyWithoutUserInput
     sender_profiles?: SenderProfileUncheckedCreateNestedManyWithoutUserInput
     marketing_campaigns?: MarketingCampaignUncheckedCreateNestedManyWithoutUserInput
+    scoring_instructions?: ScoringInstructionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutInteractionsInput = {
@@ -30180,7 +35337,6 @@ export namespace Prisma {
   export type ContactUpdateWithoutInteractionsInput = {
     uuid?: StringFieldUpdateOperationsInput | string
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
-    score?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30203,6 +35359,7 @@ export namespace Prisma {
     tags?: ContactTagUpdateManyWithoutContactNestedInput
     outreach_messages?: OutreachMessageUpdateManyWithoutContactNestedInput
     campaign_contacts?: MarketingCampaignContactUpdateManyWithoutContactNestedInput
+    contact_scores?: ContactScoreUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateWithoutInteractionsInput = {
@@ -30212,7 +35369,6 @@ export namespace Prisma {
     lead_uuid?: StringFieldUpdateOperationsInput | string
     filter_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
-    score?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30232,6 +35388,7 @@ export namespace Prisma {
     tags?: ContactTagUncheckedUpdateManyWithoutContactNestedInput
     outreach_messages?: OutreachMessageUncheckedUpdateManyWithoutContactNestedInput
     campaign_contacts?: MarketingCampaignContactUncheckedUpdateManyWithoutContactNestedInput
+    contact_scores?: ContactScoreUncheckedUpdateManyWithoutContactNestedInput
   }
 
   export type UserUpsertWithoutInteractionsInput = {
@@ -30259,6 +35416,7 @@ export namespace Prisma {
     outreach_sequences?: OutreachSequenceUpdateManyWithoutUserNestedInput
     sender_profiles?: SenderProfileUpdateManyWithoutUserNestedInput
     marketing_campaigns?: MarketingCampaignUpdateManyWithoutUserNestedInput
+    scoring_instructions?: ScoringInstructionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutInteractionsInput = {
@@ -30276,6 +35434,7 @@ export namespace Prisma {
     outreach_sequences?: OutreachSequenceUncheckedUpdateManyWithoutUserNestedInput
     sender_profiles?: SenderProfileUncheckedUpdateManyWithoutUserNestedInput
     marketing_campaigns?: MarketingCampaignUncheckedUpdateManyWithoutUserNestedInput
+    scoring_instructions?: ScoringInstructionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type OutreachMessageUpsertWithoutInteractionInput = {
@@ -30434,6 +35593,7 @@ export namespace Prisma {
     interactions?: InteractionCreateNestedManyWithoutUserInput
     sender_profiles?: SenderProfileCreateNestedManyWithoutUserInput
     marketing_campaigns?: MarketingCampaignCreateNestedManyWithoutUserInput
+    scoring_instructions?: ScoringInstructionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOutreach_messagesInput = {
@@ -30451,6 +35611,7 @@ export namespace Prisma {
     interactions?: InteractionUncheckedCreateNestedManyWithoutUserInput
     sender_profiles?: SenderProfileUncheckedCreateNestedManyWithoutUserInput
     marketing_campaigns?: MarketingCampaignUncheckedCreateNestedManyWithoutUserInput
+    scoring_instructions?: ScoringInstructionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOutreach_messagesInput = {
@@ -30461,7 +35622,6 @@ export namespace Prisma {
   export type ContactCreateWithoutOutreach_messagesInput = {
     uuid?: string
     status?: $Enums.LeadStatus
-    score?: number | null
     notes?: string | null
     name?: string | null
     email?: string | null
@@ -30484,6 +35644,7 @@ export namespace Prisma {
     tags?: ContactTagCreateNestedManyWithoutContactInput
     interactions?: InteractionCreateNestedManyWithoutContactInput
     campaign_contacts?: MarketingCampaignContactCreateNestedManyWithoutContactInput
+    contact_scores?: ContactScoreCreateNestedManyWithoutContactInput
   }
 
   export type ContactUncheckedCreateWithoutOutreach_messagesInput = {
@@ -30493,7 +35654,6 @@ export namespace Prisma {
     lead_uuid: string
     filter_uuid?: string | null
     status?: $Enums.LeadStatus
-    score?: number | null
     notes?: string | null
     name?: string | null
     email?: string | null
@@ -30513,6 +35673,7 @@ export namespace Prisma {
     tags?: ContactTagUncheckedCreateNestedManyWithoutContactInput
     interactions?: InteractionUncheckedCreateNestedManyWithoutContactInput
     campaign_contacts?: MarketingCampaignContactUncheckedCreateNestedManyWithoutContactInput
+    contact_scores?: ContactScoreUncheckedCreateNestedManyWithoutContactInput
   }
 
   export type ContactCreateOrConnectWithoutOutreach_messagesInput = {
@@ -30655,6 +35816,7 @@ export namespace Prisma {
     interactions?: InteractionUpdateManyWithoutUserNestedInput
     sender_profiles?: SenderProfileUpdateManyWithoutUserNestedInput
     marketing_campaigns?: MarketingCampaignUpdateManyWithoutUserNestedInput
+    scoring_instructions?: ScoringInstructionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOutreach_messagesInput = {
@@ -30672,6 +35834,7 @@ export namespace Prisma {
     interactions?: InteractionUncheckedUpdateManyWithoutUserNestedInput
     sender_profiles?: SenderProfileUncheckedUpdateManyWithoutUserNestedInput
     marketing_campaigns?: MarketingCampaignUncheckedUpdateManyWithoutUserNestedInput
+    scoring_instructions?: ScoringInstructionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ContactUpsertWithoutOutreach_messagesInput = {
@@ -30688,7 +35851,6 @@ export namespace Prisma {
   export type ContactUpdateWithoutOutreach_messagesInput = {
     uuid?: StringFieldUpdateOperationsInput | string
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
-    score?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30711,6 +35873,7 @@ export namespace Prisma {
     tags?: ContactTagUpdateManyWithoutContactNestedInput
     interactions?: InteractionUpdateManyWithoutContactNestedInput
     campaign_contacts?: MarketingCampaignContactUpdateManyWithoutContactNestedInput
+    contact_scores?: ContactScoreUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateWithoutOutreach_messagesInput = {
@@ -30720,7 +35883,6 @@ export namespace Prisma {
     lead_uuid?: StringFieldUpdateOperationsInput | string
     filter_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
-    score?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30740,6 +35902,7 @@ export namespace Prisma {
     tags?: ContactTagUncheckedUpdateManyWithoutContactNestedInput
     interactions?: InteractionUncheckedUpdateManyWithoutContactNestedInput
     campaign_contacts?: MarketingCampaignContactUncheckedUpdateManyWithoutContactNestedInput
+    contact_scores?: ContactScoreUncheckedUpdateManyWithoutContactNestedInput
   }
 
   export type MarketingCampaignUpsertWithoutOutreach_messagesInput = {
@@ -30878,6 +36041,7 @@ export namespace Prisma {
     interactions?: InteractionCreateNestedManyWithoutUserInput
     sender_profiles?: SenderProfileCreateNestedManyWithoutUserInput
     marketing_campaigns?: MarketingCampaignCreateNestedManyWithoutUserInput
+    scoring_instructions?: ScoringInstructionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOutreach_sequencesInput = {
@@ -30895,6 +36059,7 @@ export namespace Prisma {
     interactions?: InteractionUncheckedCreateNestedManyWithoutUserInput
     sender_profiles?: SenderProfileUncheckedCreateNestedManyWithoutUserInput
     marketing_campaigns?: MarketingCampaignUncheckedCreateNestedManyWithoutUserInput
+    scoring_instructions?: ScoringInstructionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOutreach_sequencesInput = {
@@ -30927,6 +36092,7 @@ export namespace Prisma {
     interactions?: InteractionUpdateManyWithoutUserNestedInput
     sender_profiles?: SenderProfileUpdateManyWithoutUserNestedInput
     marketing_campaigns?: MarketingCampaignUpdateManyWithoutUserNestedInput
+    scoring_instructions?: ScoringInstructionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOutreach_sequencesInput = {
@@ -30944,6 +36110,7 @@ export namespace Prisma {
     interactions?: InteractionUncheckedUpdateManyWithoutUserNestedInput
     sender_profiles?: SenderProfileUncheckedUpdateManyWithoutUserNestedInput
     marketing_campaigns?: MarketingCampaignUncheckedUpdateManyWithoutUserNestedInput
+    scoring_instructions?: ScoringInstructionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type FilterCreateWithoutJobsInput = {
@@ -30955,13 +36122,13 @@ export namespace Prisma {
     enabled?: boolean
     cron_schedule?: string | null
     channels?: FilterCreatechannelsInput | $Enums.Channel[]
-    scoring_instructions?: string | null
     outreach_instructions?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutFiltersInput
     raw_leads?: RawLeadCreateNestedManyWithoutFilterInput
     contacts?: ContactCreateNestedManyWithoutFilterInput
+    filter_scoring_instructions?: FilterScoringInstructionCreateNestedManyWithoutFilterInput
   }
 
   export type FilterUncheckedCreateWithoutJobsInput = {
@@ -30975,12 +36142,12 @@ export namespace Prisma {
     enabled?: boolean
     cron_schedule?: string | null
     channels?: FilterCreatechannelsInput | $Enums.Channel[]
-    scoring_instructions?: string | null
     outreach_instructions?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     raw_leads?: RawLeadUncheckedCreateNestedManyWithoutFilterInput
     contacts?: ContactUncheckedCreateNestedManyWithoutFilterInput
+    filter_scoring_instructions?: FilterScoringInstructionUncheckedCreateNestedManyWithoutFilterInput
   }
 
   export type FilterCreateOrConnectWithoutJobsInput = {
@@ -31008,13 +36175,13 @@ export namespace Prisma {
     enabled?: BoolFieldUpdateOperationsInput | boolean
     cron_schedule?: NullableStringFieldUpdateOperationsInput | string | null
     channels?: FilterUpdatechannelsInput | $Enums.Channel[]
-    scoring_instructions?: NullableStringFieldUpdateOperationsInput | string | null
     outreach_instructions?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutFiltersNestedInput
     raw_leads?: RawLeadUpdateManyWithoutFilterNestedInput
     contacts?: ContactUpdateManyWithoutFilterNestedInput
+    filter_scoring_instructions?: FilterScoringInstructionUpdateManyWithoutFilterNestedInput
   }
 
   export type FilterUncheckedUpdateWithoutJobsInput = {
@@ -31028,12 +36195,12 @@ export namespace Prisma {
     enabled?: BoolFieldUpdateOperationsInput | boolean
     cron_schedule?: NullableStringFieldUpdateOperationsInput | string | null
     channels?: FilterUpdatechannelsInput | $Enums.Channel[]
-    scoring_instructions?: NullableStringFieldUpdateOperationsInput | string | null
     outreach_instructions?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     raw_leads?: RawLeadUncheckedUpdateManyWithoutFilterNestedInput
     contacts?: ContactUncheckedUpdateManyWithoutFilterNestedInput
+    filter_scoring_instructions?: FilterScoringInstructionUncheckedUpdateManyWithoutFilterNestedInput
   }
 
   export type UserCreateWithoutSender_profilesInput = {
@@ -31050,6 +36217,7 @@ export namespace Prisma {
     outreach_sequences?: OutreachSequenceCreateNestedManyWithoutUserInput
     interactions?: InteractionCreateNestedManyWithoutUserInput
     marketing_campaigns?: MarketingCampaignCreateNestedManyWithoutUserInput
+    scoring_instructions?: ScoringInstructionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSender_profilesInput = {
@@ -31067,6 +36235,7 @@ export namespace Prisma {
     outreach_sequences?: OutreachSequenceUncheckedCreateNestedManyWithoutUserInput
     interactions?: InteractionUncheckedCreateNestedManyWithoutUserInput
     marketing_campaigns?: MarketingCampaignUncheckedCreateNestedManyWithoutUserInput
+    scoring_instructions?: ScoringInstructionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSender_profilesInput = {
@@ -31182,6 +36351,7 @@ export namespace Prisma {
     outreach_sequences?: OutreachSequenceUpdateManyWithoutUserNestedInput
     interactions?: InteractionUpdateManyWithoutUserNestedInput
     marketing_campaigns?: MarketingCampaignUpdateManyWithoutUserNestedInput
+    scoring_instructions?: ScoringInstructionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSender_profilesInput = {
@@ -31199,6 +36369,7 @@ export namespace Prisma {
     outreach_sequences?: OutreachSequenceUncheckedUpdateManyWithoutUserNestedInput
     interactions?: InteractionUncheckedUpdateManyWithoutUserNestedInput
     marketing_campaigns?: MarketingCampaignUncheckedUpdateManyWithoutUserNestedInput
+    scoring_instructions?: ScoringInstructionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type MarketingCampaignUpsertWithWhereUniqueWithoutSender_profileInput = {
@@ -31231,6 +36402,7 @@ export namespace Prisma {
     outreach_sequences?: OutreachSequenceCreateNestedManyWithoutUserInput
     interactions?: InteractionCreateNestedManyWithoutUserInput
     sender_profiles?: SenderProfileCreateNestedManyWithoutUserInput
+    scoring_instructions?: ScoringInstructionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutMarketing_campaignsInput = {
@@ -31248,6 +36420,7 @@ export namespace Prisma {
     outreach_sequences?: OutreachSequenceUncheckedCreateNestedManyWithoutUserInput
     interactions?: InteractionUncheckedCreateNestedManyWithoutUserInput
     sender_profiles?: SenderProfileUncheckedCreateNestedManyWithoutUserInput
+    scoring_instructions?: ScoringInstructionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutMarketing_campaignsInput = {
@@ -31463,6 +36636,7 @@ export namespace Prisma {
     outreach_sequences?: OutreachSequenceUpdateManyWithoutUserNestedInput
     interactions?: InteractionUpdateManyWithoutUserNestedInput
     sender_profiles?: SenderProfileUpdateManyWithoutUserNestedInput
+    scoring_instructions?: ScoringInstructionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMarketing_campaignsInput = {
@@ -31480,6 +36654,7 @@ export namespace Prisma {
     outreach_sequences?: OutreachSequenceUncheckedUpdateManyWithoutUserNestedInput
     interactions?: InteractionUncheckedUpdateManyWithoutUserNestedInput
     sender_profiles?: SenderProfileUncheckedUpdateManyWithoutUserNestedInput
+    scoring_instructions?: ScoringInstructionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type SenderProfileUpsertWithoutMarketing_campaignsInput = {
@@ -31671,7 +36846,6 @@ export namespace Prisma {
   export type ContactCreateWithoutCampaign_contactsInput = {
     uuid?: string
     status?: $Enums.LeadStatus
-    score?: number | null
     notes?: string | null
     name?: string | null
     email?: string | null
@@ -31694,6 +36868,7 @@ export namespace Prisma {
     tags?: ContactTagCreateNestedManyWithoutContactInput
     interactions?: InteractionCreateNestedManyWithoutContactInput
     outreach_messages?: OutreachMessageCreateNestedManyWithoutContactInput
+    contact_scores?: ContactScoreCreateNestedManyWithoutContactInput
   }
 
   export type ContactUncheckedCreateWithoutCampaign_contactsInput = {
@@ -31703,7 +36878,6 @@ export namespace Prisma {
     lead_uuid: string
     filter_uuid?: string | null
     status?: $Enums.LeadStatus
-    score?: number | null
     notes?: string | null
     name?: string | null
     email?: string | null
@@ -31723,6 +36897,7 @@ export namespace Prisma {
     tags?: ContactTagUncheckedCreateNestedManyWithoutContactInput
     interactions?: InteractionUncheckedCreateNestedManyWithoutContactInput
     outreach_messages?: OutreachMessageUncheckedCreateNestedManyWithoutContactInput
+    contact_scores?: ContactScoreUncheckedCreateNestedManyWithoutContactInput
   }
 
   export type ContactCreateOrConnectWithoutCampaign_contactsInput = {
@@ -31828,7 +37003,6 @@ export namespace Prisma {
   export type ContactUpdateWithoutCampaign_contactsInput = {
     uuid?: StringFieldUpdateOperationsInput | string
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
-    score?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31851,6 +37025,7 @@ export namespace Prisma {
     tags?: ContactTagUpdateManyWithoutContactNestedInput
     interactions?: InteractionUpdateManyWithoutContactNestedInput
     outreach_messages?: OutreachMessageUpdateManyWithoutContactNestedInput
+    contact_scores?: ContactScoreUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateWithoutCampaign_contactsInput = {
@@ -31860,7 +37035,6 @@ export namespace Prisma {
     lead_uuid?: StringFieldUpdateOperationsInput | string
     filter_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
-    score?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31880,6 +37054,7 @@ export namespace Prisma {
     tags?: ContactTagUncheckedUpdateManyWithoutContactNestedInput
     interactions?: InteractionUncheckedUpdateManyWithoutContactNestedInput
     outreach_messages?: OutreachMessageUncheckedUpdateManyWithoutContactNestedInput
+    contact_scores?: ContactScoreUncheckedUpdateManyWithoutContactNestedInput
   }
 
   export type FilterCreateManyUserInput = {
@@ -31892,7 +37067,6 @@ export namespace Prisma {
     enabled?: boolean
     cron_schedule?: string | null
     channels?: FilterCreatechannelsInput | $Enums.Channel[]
-    scoring_instructions?: string | null
     outreach_instructions?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -31904,7 +37078,6 @@ export namespace Prisma {
     lead_uuid: string
     filter_uuid?: string | null
     status?: $Enums.LeadStatus
-    score?: number | null
     notes?: string | null
     name?: string | null
     email?: string | null
@@ -32027,6 +37200,15 @@ export namespace Prisma {
     updated_at?: Date | string
   }
 
+  export type ScoringInstructionCreateManyUserInput = {
+    id?: number
+    uuid?: string
+    name: string
+    instructions: string
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
   export type FilterUpdateWithoutUserInput = {
     uuid?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -32036,13 +37218,13 @@ export namespace Prisma {
     enabled?: BoolFieldUpdateOperationsInput | boolean
     cron_schedule?: NullableStringFieldUpdateOperationsInput | string | null
     channels?: FilterUpdatechannelsInput | $Enums.Channel[]
-    scoring_instructions?: NullableStringFieldUpdateOperationsInput | string | null
     outreach_instructions?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     raw_leads?: RawLeadUpdateManyWithoutFilterNestedInput
     contacts?: ContactUpdateManyWithoutFilterNestedInput
     jobs?: FilterJobUpdateManyWithoutFilterNestedInput
+    filter_scoring_instructions?: FilterScoringInstructionUpdateManyWithoutFilterNestedInput
   }
 
   export type FilterUncheckedUpdateWithoutUserInput = {
@@ -32055,13 +37237,13 @@ export namespace Prisma {
     enabled?: BoolFieldUpdateOperationsInput | boolean
     cron_schedule?: NullableStringFieldUpdateOperationsInput | string | null
     channels?: FilterUpdatechannelsInput | $Enums.Channel[]
-    scoring_instructions?: NullableStringFieldUpdateOperationsInput | string | null
     outreach_instructions?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     raw_leads?: RawLeadUncheckedUpdateManyWithoutFilterNestedInput
     contacts?: ContactUncheckedUpdateManyWithoutFilterNestedInput
     jobs?: FilterJobUncheckedUpdateManyWithoutFilterNestedInput
+    filter_scoring_instructions?: FilterScoringInstructionUncheckedUpdateManyWithoutFilterNestedInput
   }
 
   export type FilterUncheckedUpdateManyWithoutUserInput = {
@@ -32074,7 +37256,6 @@ export namespace Prisma {
     enabled?: BoolFieldUpdateOperationsInput | boolean
     cron_schedule?: NullableStringFieldUpdateOperationsInput | string | null
     channels?: FilterUpdatechannelsInput | $Enums.Channel[]
-    scoring_instructions?: NullableStringFieldUpdateOperationsInput | string | null
     outreach_instructions?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32083,7 +37264,6 @@ export namespace Prisma {
   export type ContactUpdateWithoutUserInput = {
     uuid?: StringFieldUpdateOperationsInput | string
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
-    score?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32106,6 +37286,7 @@ export namespace Prisma {
     interactions?: InteractionUpdateManyWithoutContactNestedInput
     outreach_messages?: OutreachMessageUpdateManyWithoutContactNestedInput
     campaign_contacts?: MarketingCampaignContactUpdateManyWithoutContactNestedInput
+    contact_scores?: ContactScoreUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateWithoutUserInput = {
@@ -32114,7 +37295,6 @@ export namespace Prisma {
     lead_uuid?: StringFieldUpdateOperationsInput | string
     filter_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
-    score?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32135,6 +37315,7 @@ export namespace Prisma {
     interactions?: InteractionUncheckedUpdateManyWithoutContactNestedInput
     outreach_messages?: OutreachMessageUncheckedUpdateManyWithoutContactNestedInput
     campaign_contacts?: MarketingCampaignContactUncheckedUpdateManyWithoutContactNestedInput
+    contact_scores?: ContactScoreUncheckedUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateManyWithoutUserInput = {
@@ -32143,7 +37324,6 @@ export namespace Prisma {
     lead_uuid?: StringFieldUpdateOperationsInput | string
     filter_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
-    score?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32479,6 +37659,36 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ScoringInstructionUpdateWithoutUserInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    instructions?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    filter_links?: FilterScoringInstructionUpdateManyWithoutScoring_instructionNestedInput
+    contact_scores?: ContactScoreUpdateManyWithoutScoring_instructionNestedInput
+  }
+
+  export type ScoringInstructionUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    instructions?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    filter_links?: FilterScoringInstructionUncheckedUpdateManyWithoutScoring_instructionNestedInput
+    contact_scores?: ContactScoreUncheckedUpdateManyWithoutScoring_instructionNestedInput
+  }
+
+  export type ScoringInstructionUncheckedUpdateManyWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    instructions?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type RawLeadCreateManyFilterInput = {
     id?: number
     uuid?: string
@@ -32495,7 +37705,6 @@ export namespace Prisma {
     user_uuid: string
     lead_uuid: string
     status?: $Enums.LeadStatus
-    score?: number | null
     notes?: string | null
     name?: string | null
     email?: string | null
@@ -32526,6 +37735,11 @@ export namespace Prisma {
     completed_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
+  }
+
+  export type FilterScoringInstructionCreateManyFilterInput = {
+    scoring_instruction_uuid: string
+    created_at?: Date | string
   }
 
   export type RawLeadUpdateWithoutFilterInput = {
@@ -32562,7 +37776,6 @@ export namespace Prisma {
   export type ContactUpdateWithoutFilterInput = {
     uuid?: StringFieldUpdateOperationsInput | string
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
-    score?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32585,6 +37798,7 @@ export namespace Prisma {
     interactions?: InteractionUpdateManyWithoutContactNestedInput
     outreach_messages?: OutreachMessageUpdateManyWithoutContactNestedInput
     campaign_contacts?: MarketingCampaignContactUpdateManyWithoutContactNestedInput
+    contact_scores?: ContactScoreUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateWithoutFilterInput = {
@@ -32593,7 +37807,6 @@ export namespace Prisma {
     user_uuid?: StringFieldUpdateOperationsInput | string
     lead_uuid?: StringFieldUpdateOperationsInput | string
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
-    score?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32614,6 +37827,7 @@ export namespace Prisma {
     interactions?: InteractionUncheckedUpdateManyWithoutContactNestedInput
     outreach_messages?: OutreachMessageUncheckedUpdateManyWithoutContactNestedInput
     campaign_contacts?: MarketingCampaignContactUncheckedUpdateManyWithoutContactNestedInput
+    contact_scores?: ContactScoreUncheckedUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateManyWithoutFilterInput = {
@@ -32622,7 +37836,6 @@ export namespace Prisma {
     user_uuid?: StringFieldUpdateOperationsInput | string
     lead_uuid?: StringFieldUpdateOperationsInput | string
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
-    score?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32682,13 +37895,74 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type FilterScoringInstructionUpdateWithoutFilterInput = {
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    scoring_instruction?: ScoringInstructionUpdateOneRequiredWithoutFilter_linksNestedInput
+  }
+
+  export type FilterScoringInstructionUncheckedUpdateWithoutFilterInput = {
+    scoring_instruction_uuid?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FilterScoringInstructionUncheckedUpdateManyWithoutFilterInput = {
+    scoring_instruction_uuid?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FilterScoringInstructionCreateManyScoring_instructionInput = {
+    filter_uuid: string
+    created_at?: Date | string
+  }
+
+  export type ContactScoreCreateManyScoring_instructionInput = {
+    id?: number
+    contact_uuid: string
+    score: number
+    updated_at?: Date | string
+  }
+
+  export type FilterScoringInstructionUpdateWithoutScoring_instructionInput = {
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    filter?: FilterUpdateOneRequiredWithoutFilter_scoring_instructionsNestedInput
+  }
+
+  export type FilterScoringInstructionUncheckedUpdateWithoutScoring_instructionInput = {
+    filter_uuid?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FilterScoringInstructionUncheckedUpdateManyWithoutScoring_instructionInput = {
+    filter_uuid?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ContactScoreUpdateWithoutScoring_instructionInput = {
+    score?: IntFieldUpdateOperationsInput | number
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    contact?: ContactUpdateOneRequiredWithoutContact_scoresNestedInput
+  }
+
+  export type ContactScoreUncheckedUpdateWithoutScoring_instructionInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    contact_uuid?: StringFieldUpdateOperationsInput | string
+    score?: IntFieldUpdateOperationsInput | number
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ContactScoreUncheckedUpdateManyWithoutScoring_instructionInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    contact_uuid?: StringFieldUpdateOperationsInput | string
+    score?: IntFieldUpdateOperationsInput | number
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ContactCreateManyLeadInput = {
     id?: number
     uuid?: string
     user_uuid: string
     filter_uuid?: string | null
     status?: $Enums.LeadStatus
-    score?: number | null
     notes?: string | null
     name?: string | null
     email?: string | null
@@ -32724,7 +37998,6 @@ export namespace Prisma {
   export type ContactUpdateWithoutLeadInput = {
     uuid?: StringFieldUpdateOperationsInput | string
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
-    score?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32747,6 +38020,7 @@ export namespace Prisma {
     interactions?: InteractionUpdateManyWithoutContactNestedInput
     outreach_messages?: OutreachMessageUpdateManyWithoutContactNestedInput
     campaign_contacts?: MarketingCampaignContactUpdateManyWithoutContactNestedInput
+    contact_scores?: ContactScoreUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateWithoutLeadInput = {
@@ -32755,7 +38029,6 @@ export namespace Prisma {
     user_uuid?: StringFieldUpdateOperationsInput | string
     filter_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
-    score?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32776,6 +38049,7 @@ export namespace Prisma {
     interactions?: InteractionUncheckedUpdateManyWithoutContactNestedInput
     outreach_messages?: OutreachMessageUncheckedUpdateManyWithoutContactNestedInput
     campaign_contacts?: MarketingCampaignContactUncheckedUpdateManyWithoutContactNestedInput
+    contact_scores?: ContactScoreUncheckedUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateManyWithoutLeadInput = {
@@ -32784,7 +38058,6 @@ export namespace Prisma {
     user_uuid?: StringFieldUpdateOperationsInput | string
     filter_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
-    score?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32897,6 +38170,13 @@ export namespace Prisma {
     sent_at?: Date | string | null
     delivered_at?: Date | string | null
     created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type ContactScoreCreateManyContactInput = {
+    id?: number
+    scoring_instruction_uuid: string
+    score: number
     updated_at?: Date | string
   }
 
@@ -33063,6 +38343,26 @@ export namespace Prisma {
     sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     delivered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ContactScoreUpdateWithoutContactInput = {
+    score?: IntFieldUpdateOperationsInput | number
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    scoring_instruction?: ScoringInstructionUpdateOneRequiredWithoutContact_scoresNestedInput
+  }
+
+  export type ContactScoreUncheckedUpdateWithoutContactInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    scoring_instruction_uuid?: StringFieldUpdateOperationsInput | string
+    score?: IntFieldUpdateOperationsInput | number
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ContactScoreUncheckedUpdateManyWithoutContactInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    scoring_instruction_uuid?: StringFieldUpdateOperationsInput | string
+    score?: IntFieldUpdateOperationsInput | number
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

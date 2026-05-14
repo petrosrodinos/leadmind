@@ -28,6 +28,7 @@ import { UpdateContactDto } from './dto/update-contact.dto';
 import { UpdateStatusDto } from './dto/update-status.dto';
 import { UpdateTagsDto } from './dto/update-tags.dto';
 import { EnrichContactDto } from './dto/enrich-contact.dto';
+import { TriggerScoreDto } from './dto/trigger-score.dto';
 
 @ApiTags('contacts')
 @ApiBearerAuth()
@@ -155,8 +156,12 @@ export class ContactsController {
     @Post(':uuid/score')
     @ApiOperation({ summary: 'Trigger AI scoring for the contact' })
     @ApiResponse({ status: 201 })
-    triggerScore(@CurrentUser('uuid') user_uuid: string, @Param('uuid') uuid: string) {
-        return this.contactsService.triggerScore(user_uuid, uuid);
+    triggerScore(
+        @CurrentUser('uuid') user_uuid: string,
+        @Param('uuid') uuid: string,
+        @Body() dto: TriggerScoreDto,
+    ) {
+        return this.contactsService.triggerScore(user_uuid, uuid, dto);
     }
 
     @Post(':uuid/draft-messages')

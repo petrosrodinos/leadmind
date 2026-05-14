@@ -7,7 +7,7 @@ import { useFilters, useLatestFilterJob } from "@/features/filters/hooks/use-fil
 import { JobStatus, type Filter } from "@/features/filters/interfaces/filter.interface";
 import { useDashboardPendingDrafts, useDashboardStats, useDashboardTopContacts } from "@/features/dashboard/hooks/use-dashboard";
 import type { DashboardPendingDraftGroup, DashboardStats } from "@/features/dashboard/interfaces/dashboard.interface";
-import { ScoreBadge, StatusChip } from "@/pages/dashboard/pages/leads/components/badges";
+import { ContactScoresCompact, StatusChip } from "@/pages/dashboard/pages/leads/components/badges";
 import { Routes } from "@/routes/routes";
 import { useAuthStore } from "@/stores/auth";
 import { cn } from "@/lib/utils";
@@ -50,13 +50,29 @@ export default function DashboardHome() {
 
   return (
     <div className="space-y-6">
-      <HeroBanner greeting={greeting} name={name} newThisWeek={stats?.new_this_week ?? 0} />
+      <HeroBanner greeting={greeting} name={name} newThisWeek={stats?.new_this_week ?? 0} statsLoading={statsLoading} />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <KpiCard label="Total contacts" value={statsLoading ? "—" : total.toLocaleString()} icon={Users} accent="accent" href={Routes.dashboard.contacts} />
-        <KpiCard label="New this week" value={statsLoading ? "—" : (stats?.new_this_week ?? 0).toLocaleString()} icon={TrendingUp} accent="success" delta={!statsLoading && total > 0 && stats ? `${Math.round((stats.new_this_week / total) * 100)}% of total` : undefined} />
-        <KpiCard label="Conversion rate" value={statsLoading ? "—" : `${(stats?.conversion_rate ?? 0).toFixed(1)}%`} icon={CheckCircle2} accent="warning" delta={!statsLoading ? `${byStatus[LeadStatus.CONVERTED]} converted` : undefined} />
-        <KpiCard label="Pending drafts" value={statsLoading ? "—" : (stats?.pending_drafts ?? 0).toLocaleString()} icon={Send} accent="fuchsia" href={Routes.dashboard.contacts} />
+        <KpiCard label="Total contacts" value={total.toLocaleString()} icon={Users} accent="accent" href={Routes.dashboard.contacts} valueLoading={statsLoading} />
+        <KpiCard
+          label="New this week"
+          value={(stats?.new_this_week ?? 0).toLocaleString()}
+          icon={TrendingUp}
+          accent="success"
+          delta={!statsLoading && total > 0 && stats ? `${Math.round((stats.new_this_week / total) * 100)}% of total` : undefined}
+          valueLoading={statsLoading}
+          deltaLoading={statsLoading}
+        />
+        <KpiCard
+          label="Conversion rate"
+          value={`${(stats?.conversion_rate ?? 0).toFixed(1)}%`}
+          icon={CheckCircle2}
+          accent="warning"
+          delta={`${byStatus[LeadStatus.CONVERTED]} converted`}
+          valueLoading={statsLoading}
+          deltaLoading={statsLoading}
+        />
+        <KpiCard label="Pending drafts" value={(stats?.pending_drafts ?? 0).toLocaleString()} icon={Send} accent="fuchsia" href={Routes.dashboard.contacts} valueLoading={statsLoading} />
       </div>
 
       <PipelineDistribution stats={stats} isLoading={statsLoading} />
@@ -71,7 +87,7 @@ export default function DashboardHome() {
   );
 }
 
-function HeroBanner({ greeting, name, newThisWeek }: { greeting: string; name: string; newThisWeek: number }) {
+function HeroBanner({ greeting, name, newThisWeek, statsLoading }: { greeting: string; name: string; newThisWeek: number; statsLoading: boolean }) {
   return (
     <div className="relative overflow-hidden rounded-2xl border border-border bg-surface p-6 sm:p-8">
       <div aria-hidden className="absolute -top-24 -right-16 size-72 rounded-full bg-accent/20 blur-3xl" />
@@ -80,7 +96,14 @@ function HeroBanner({ greeting, name, newThisWeek }: { greeting: string; name: s
         <div className="space-y-1">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">{greeting}</p>
           <h1 className="text-2xl sm:text-3xl font-semibold text-foreground">{name}, here&apos;s your pipeline at a glance</h1>
-          <p className="text-sm text-muted">{newThisWeek > 0 ? `You added ${newThisWeek} new ${newThisWeek === 1 ? "contact" : "contacts"} this week. Keep the momentum.` : "Hunt for leads, score them with AI, and keep the deals moving."}</p>
+          {statsLoading ? (
+            <div className="pt-1 space-y-2 max-w-lg" aria-busy aria-label="Loading summary">
+              <div className="h-4 w-full max-w-md rounded-md bg-surface-secondary animate-pulse" />
+              <div className="h-4 w-[85%] max-w-sm rounded-md bg-surface-secondary animate-pulse" />
+            </div>
+          ) : (
+            <p className="text-sm text-muted">{newThisWeek > 0 ? `You added ${newThisWeek} new ${newThisWeek === 1 ? "contact" : "contacts"} this week. Keep the momentum.` : "Hunt for leads, score them with AI, and keep the deals moving."}</p>
+          )}
         </div>
         <HeroActions />
       </div>
@@ -123,7 +146,25 @@ const KPI_TONE: Record<"accent" | "success" | "warning" | "fuchsia", { ring: str
   },
 };
 
-function KpiCard({ label, value, icon: Icon, accent, delta, href }: { label: string; value: string; icon: React.ComponentType<{ className?: string }>; accent: keyof typeof KPI_TONE; delta?: string; href?: string }) {
+function KpiCard({
+  label,
+  value,
+  icon: Icon,
+  accent,
+  delta,
+  href,
+  valueLoading,
+  deltaLoading,
+}: {
+  label: string;
+  value: string;
+  icon: React.ComponentType<{ className?: string }>;
+  accent: keyof typeof KPI_TONE;
+  delta?: string;
+  href?: string;
+  valueLoading?: boolean;
+  deltaLoading?: boolean;
+}) {
   const tone = KPI_TONE[accent];
   const inner = (
     <div className="bg-surface rounded-xl border border-border p-5 flex flex-col gap-3 hover:border-accent/40 transition-colors h-full">
@@ -133,11 +174,15 @@ function KpiCard({ label, value, icon: Icon, accent, delta, href }: { label: str
           <Icon className="size-4" />
         </span>
       </div>
-      <div className="flex items-baseline gap-2">
-        <p className="text-3xl font-bold text-foreground tabular-nums">{value}</p>
-        {href && <ArrowUpRight className="size-4 text-muted ml-auto" aria-hidden />}
+      <div className="flex items-baseline gap-2 min-h-[2.25rem]">
+        {valueLoading ? (
+          <div className="h-9 w-[7rem] max-w-[55%] rounded-md bg-surface-secondary animate-pulse" aria-hidden />
+        ) : (
+          <p className="text-3xl font-bold text-foreground tabular-nums">{value}</p>
+        )}
+        {href && <ArrowUpRight className="size-4 text-muted ml-auto shrink-0" aria-hidden />}
       </div>
-      {delta && <p className="text-xs text-muted">{delta}</p>}
+      {deltaLoading ? <div className="h-3.5 w-28 rounded bg-surface-secondary animate-pulse" aria-hidden /> : delta ? <p className="text-xs text-muted">{delta}</p> : null}
     </div>
   );
 
@@ -179,7 +224,23 @@ function PipelineDistribution({ stats, isLoading }: { stats: DashboardStats | un
       </div>
 
       {isLoading ? (
-        <div className="mt-5 h-3 w-full rounded-full bg-surface-secondary animate-pulse" />
+        <div className="mt-5 space-y-4" aria-busy aria-label="Loading pipeline">
+          <div className="h-3 w-full rounded-full bg-surface-secondary animate-pulse" />
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2 min-w-0 flex-1">
+                  <div className="size-2 rounded-full shrink-0 bg-surface-secondary animate-pulse" />
+                  <div className="h-3.5 flex-1 max-w-[6rem] rounded bg-surface-secondary animate-pulse" />
+                </div>
+                <div className="flex items-baseline gap-1.5 shrink-0">
+                  <div className="h-4 w-6 rounded bg-surface-secondary animate-pulse" />
+                  <div className="h-3 w-8 rounded bg-surface-secondary animate-pulse" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       ) : total === 0 ? (
         <p className="mt-5 text-sm text-muted italic">Nothing in the pipeline yet — adopt a lead from the directory to start.</p>
       ) : (
@@ -232,11 +293,21 @@ function TopContactsCard({ contacts, isLoading }: { contacts: Contact[]; isLoadi
       </div>
 
       {isLoading ? (
-        <div className="space-y-2">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="h-14 rounded-lg bg-surface-secondary animate-pulse" />
+        <ul className="divide-y divide-border" aria-busy aria-label="Loading contacts">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <li key={i} className="py-3 -mx-2 px-2">
+              <div className="flex items-center gap-3">
+                <div className="size-9 shrink-0 rounded-full bg-surface-secondary animate-pulse" />
+                <div className="min-w-0 flex-1 space-y-2">
+                  <div className="h-4 w-[40%] min-w-[8rem] max-w-full rounded-md bg-surface-secondary animate-pulse" />
+                  <div className="h-3 w-[28%] min-w-[5rem] max-w-full rounded-md bg-surface-secondary animate-pulse" />
+                </div>
+                <div className="hidden sm:block h-6 w-16 shrink-0 rounded-full bg-surface-secondary animate-pulse" />
+                <div className="h-7 w-20 shrink-0 rounded-md bg-surface-secondary animate-pulse" />
+              </div>
+            </li>
           ))}
-        </div>
+        </ul>
       ) : contacts.length === 0 ? (
         <EmptyState icon={Users} title="No scored contacts yet" body="Run AI scoring on a contact to see them here." />
       ) : (
@@ -252,7 +323,7 @@ function TopContactsCard({ contacts, isLoading }: { contacts: Contact[]; isLoadi
                 <div className="hidden sm:block">
                   <StatusChip status={c.status} />
                 </div>
-                <ScoreBadge score={c.score} />
+                <ContactScoresCompact contact={c} />
               </Link>
             </li>
           ))}
@@ -279,11 +350,22 @@ function PendingDraftsCard({ items, isLoading }: { items: DashboardPendingDraftG
       </div>
 
       {isLoading ? (
-        <div className="space-y-2">
+        <ul className="space-y-2" aria-busy aria-label="Loading drafts">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="h-12 rounded-lg bg-surface-secondary animate-pulse" />
+            <li key={i}>
+              <div className="flex items-center gap-3 rounded-lg border border-border bg-surface-secondary/40 p-3">
+                <div className="min-w-0 flex-1 space-y-2">
+                  <div className="h-4 w-[45%] min-w-[7rem] max-w-full rounded-md bg-surface-secondary animate-pulse" />
+                  <div className="h-3 w-24 max-w-full rounded-md bg-surface-secondary animate-pulse" />
+                </div>
+                <div className="flex gap-1 shrink-0">
+                  <div className="size-6 rounded-md bg-surface-secondary animate-pulse" />
+                  <div className="size-6 rounded-md bg-surface-secondary animate-pulse" />
+                </div>
+              </div>
+            </li>
           ))}
-        </div>
+        </ul>
       ) : items.length === 0 ? (
         <EmptyState icon={Inbox} title="No pending drafts" body="Generate drafts from a contact's detail page." />
       ) : (
@@ -342,11 +424,20 @@ function FiltersCard({ filters, isLoading }: { filters: Filter[]; isLoading: boo
       </div>
 
       {isLoading ? (
-        <div className="grid gap-2 md:grid-cols-2">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="h-16 rounded-lg bg-surface-secondary animate-pulse" />
+        <ul className="grid gap-2 md:grid-cols-2" aria-busy aria-label="Loading filters">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <li key={i}>
+              <div className="flex items-center gap-3 rounded-lg border border-border p-3 h-full min-h-[4.5rem]">
+                <div className="size-9 shrink-0 rounded-lg bg-surface-secondary animate-pulse" />
+                <div className="min-w-0 flex-1 space-y-2 py-0.5">
+                  <div className="h-4 w-[55%] min-w-[6rem] max-w-full rounded-md bg-surface-secondary animate-pulse" />
+                  <div className="h-3 w-[70%] min-w-[8rem] max-w-full rounded-md bg-surface-secondary animate-pulse" />
+                </div>
+                <div className="h-6 w-16 shrink-0 rounded-full bg-surface-secondary animate-pulse self-center" />
+              </div>
+            </li>
           ))}
-        </div>
+        </ul>
       ) : filters.length === 0 ? (
         <EmptyState
           icon={FilterIcon}

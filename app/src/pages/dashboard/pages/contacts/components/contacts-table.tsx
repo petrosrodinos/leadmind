@@ -9,7 +9,7 @@ import type { Contact } from "@/features/contacts/interfaces/contact.interface";
 import { LeadStatus } from "@/features/contacts/interfaces/contact.interface";
 import { useDeleteContact, useUpdateContactStatus } from "@/features/contacts/hooks/use-contacts";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
-import { ScoreBadge } from "@/pages/dashboard/pages/leads/components/badges";
+import { ContactScoresCompact } from "@/pages/dashboard/pages/leads/components/badges";
 import { STATUS_OPTIONS } from "@/features/contacts/constants/contacts.constants";
 
 const lastInteractionAt = (contact: Contact): string | null => {
@@ -101,10 +101,10 @@ export function ContactsTable({ contacts, isLoading, isFetching, page, pageSize,
           );
         },
       }),
-      columnHelper.accessor("score", {
+      columnHelper.display({
         id: "score",
         header: "Score",
-        cell: (info) => <ScoreBadge score={info.getValue()} />,
+        cell: (info) => <ContactScoresCompact contact={info.row.original} />,
       }),
       columnHelper.accessor("tags", {
         id: "tags",

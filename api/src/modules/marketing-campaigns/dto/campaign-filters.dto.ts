@@ -5,20 +5,17 @@ import {
     IsBoolean,
     IsDateString,
     IsEnum,
-    IsInt,
     IsOptional,
     IsString,
     IsUUID,
-    Max,
-    Min,
+    ValidateNested,
 } from 'class-validator';
 import { LeadStatus } from '@/generated/prisma';
+import {
+    ContactScoreRuleItemDto,
+    ScoreRulesQueryTransform,
+} from '@/modules/scoring-instructions/dto/contact-score-rule.dto';
 
-/**
- * Shape stored in MarketingCampaign.filters_snapshot.
- * Mirrors ListContactsDto + campaign-specific extras (channel eligibility, exclusions,
- * last-interaction window, unsubscribe inclusion).
- */
 export class CampaignFiltersDto {
     @ApiPropertyOptional({ enum: LeadStatus })
     @IsOptional()
@@ -37,13 +34,15 @@ export class CampaignFiltersDto {
     @IsString({ each: true })
     tags?: string[];
 
-    @ApiPropertyOptional({ minimum: 1, maximum: 10 })
+    @ApiPropertyOptional({
+        description: 'JSON array of { scoring_instruction_uuid, min } (AND)',
+    })
     @IsOptional()
-    @Type(() => Number)
-    @IsInt()
-    @Min(1)
-    @Max(10)
-    min_score?: number;
+    @ScoreRulesQueryTransform
+    @IsArray()
+    @ValidateNested({ each: true })
+    @Type(() => ContactScoreRuleItemDto)
+    score_rules?: ContactScoreRuleItemDto[];
 
     @ApiPropertyOptional()
     @IsOptional()

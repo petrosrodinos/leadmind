@@ -9,6 +9,7 @@ import {
     TextArea,
 } from "@heroui/react";
 import { Save } from "lucide-react";
+import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import {
     useCreateSenderProfile,
     useUpdateSenderProfile,
@@ -449,14 +450,14 @@ export function SenderProfileFormModal({
                             <Button slot="close" variant="secondary" type="button">
                                 Cancel
                             </Button>
-                            <Button
+                            <ActionButtonWithPending
                                 type="submit"
                                 isDisabled={isPending}
                                 isPending={isPending}
+                                idleLeading={<Save className="size-4" />}
                             >
-                                <Save className="size-4" />
                                 {isEdit ? "Save changes" : "Create profile"}
-                            </Button>
+                            </ActionButtonWithPending>
                         </Modal.Footer>
                     </form>
                 </Modal.Dialog>

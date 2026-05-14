@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Button, Input, Label, Modal, TextArea, TextField } from "@heroui/react";
+import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import { Send, Save } from "lucide-react";
 import {
     Channel,
@@ -128,23 +129,23 @@ function MessageForm({ message, contact_uuid, onClose }: MessageFormProps) {
                 <Button slot="close" variant="secondary">
                     Cancel
                 </Button>
-                <Button
+                <ActionButtonWithPending
                     variant="tertiary"
                     isDisabled={!dirty || update.isPending}
                     isPending={update.isPending}
                     onPress={handleSave}
+                    idleLeading={<Save className="size-4" />}
                 >
-                    <Save className="size-4" />
                     Save draft
-                </Button>
-                <Button
+                </ActionButtonWithPending>
+                <ActionButtonWithPending
                     isDisabled={send.isPending || update.isPending}
                     isPending={send.isPending}
                     onPress={handleSend}
+                    idleLeading={<Send className="size-4" />}
                 >
-                    <Send className="size-4" />
                     Send
-                </Button>
+                </ActionButtonWithPending>
             </Modal.Footer>
         </>
     );

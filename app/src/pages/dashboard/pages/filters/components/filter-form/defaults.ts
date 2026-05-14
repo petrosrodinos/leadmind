@@ -15,11 +15,11 @@ export function buildDefaults(initial?: Filter): FilterFormValues {
         ? initial.channels
         : [Channel.EMAIL]) as Channel[];
     const cron_schedule = initial?.cron_schedule ?? "";
-    const scoring_instructions = initial?.scoring_instructions ?? "";
+    const scoring_instruction_uuids = (initial?.scoring_instructions ?? []).map((s) => s.uuid);
     const outreach_instructions = initial?.outreach_instructions ?? "";
     const enabled = initial?.enabled ?? true;
     const name = initial?.name ?? "";
-    const cfg = (initial?.query_config ?? {}) as Record<string, any>;
+    const cfg = (initial?.query_config ?? {}) as Record<string, unknown>;
     const enrichment_sources = (
         initial?.enrichment_sources?.length ? initial.enrichment_sources : []
     ) as EnrichmentSource[];
@@ -44,7 +44,7 @@ export function buildDefaults(initial?: Filter): FilterFormValues {
             enabled,
             cron_schedule,
             channels,
-            scoring_instructions,
+            scoring_instruction_uuids,
             outreach_instructions,
             enrichment_sources,
         };
@@ -61,7 +61,7 @@ export function buildDefaults(initial?: Filter): FilterFormValues {
             enabled,
             cron_schedule,
             channels,
-            scoring_instructions,
+            scoring_instruction_uuids,
             outreach_instructions,
             enrichment_sources,
         };
@@ -89,7 +89,7 @@ export function buildDefaults(initial?: Filter): FilterFormValues {
             enabled,
             cron_schedule,
             channels,
-            scoring_instructions,
+            scoring_instruction_uuids,
             outreach_instructions,
             enrichment_sources,
         };
@@ -106,7 +106,7 @@ export function buildDefaults(initial?: Filter): FilterFormValues {
         enabled,
         cron_schedule,
         channels,
-        scoring_instructions,
+        scoring_instruction_uuids,
         outreach_instructions,
         enrichment_sources,
     };

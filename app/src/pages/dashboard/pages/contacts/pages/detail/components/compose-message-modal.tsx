@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Button, Modal } from "@heroui/react";
+import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import { Save, Send } from "lucide-react";
 import {
     Channel,
@@ -150,23 +151,23 @@ function ComposeForm({ contact_uuid, onClose }: ComposeFormProps) {
                     <Button slot="close" variant="secondary" type="button">
                         Cancel
                     </Button>
-                    <Button
+                    <ActionButtonWithPending
                         variant="tertiary"
                         isDisabled={contentEmpty || isPending}
                         isPending={createDraft.isPending}
                         onPress={handleSaveDraft}
+                        idleLeading={<Save className="size-4" />}
                     >
-                        <Save className="size-4" />
                         Save draft
-                    </Button>
-                    <Button
+                    </ActionButtonWithPending>
+                    <ActionButtonWithPending
                         isDisabled={contentEmpty || isPending}
                         isPending={createAndSend.isPending}
                         onPress={handleSend}
+                        idleLeading={<Send className="size-4" />}
                     >
-                        <Send className="size-4" />
                         Send
-                    </Button>
+                    </ActionButtonWithPending>
                 </Modal.Footer>
             </div>
         </>

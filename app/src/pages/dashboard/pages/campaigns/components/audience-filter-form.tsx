@@ -4,6 +4,7 @@ import { LeadStatus } from "@/features/contacts/interfaces/contact.interface";
 import { useFilters } from "@/features/filters/hooks/use-filters";
 import { useContactTags } from "@/features/contacts/hooks/use-contacts";
 import { MultiSelect } from "@/components/ui/multi-select";
+import { ScoreRulesFilter } from "@/pages/dashboard/components/score-rules-filter";
 
 interface AudienceFilterFormProps {
     value: CampaignFilters;
@@ -102,30 +103,22 @@ export function AudienceFilterForm({
                 </Select>
             </div>
 
-            <TextField name="min_score" className="w-full">
-                <Label>Minimum score (1-10)</Label>
-                <Input
-                    type="number"
-                    min={1}
-                    max={10}
-                    placeholder="Any"
-                    value={value.min_score ?? ""}
-                    onChange={(e) => {
-                        const n = Number(e.target.value);
-                        onChange({
-                            min_score: Number.isFinite(n) && n > 0 ? n : undefined,
-                        });
-                    }}
+            <div className="sm:col-span-2">
+                <ScoreRulesFilter
+                    value={value.score_rules ?? []}
+                    onChange={(next) =>
+                        onChange({ score_rules: next.length > 0 ? next : undefined })
+                    }
                     disabled={disabled}
                 />
-            </TextField>
+            </div>
 
             <div>
                 <Label className="mb-1 block">Tags</Label>
                 <MultiSelect
                     options={availableTags}
                     value={value.tags ?? []}
-                    onChange={(next) => onChange({ tags: next.length ? next : undefined })}
+                    onChange={(next: string[]) => onChange({ tags: next.length ? next : undefined })}
                     placeholder="Any tags"
                     disabled={disabled}
                     aria-label="Filter by tags"

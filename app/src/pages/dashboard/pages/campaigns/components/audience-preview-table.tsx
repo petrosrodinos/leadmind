@@ -1,5 +1,6 @@
 import { Chip } from "@heroui/react";
 import type { Contact, Channel } from "@/features/contacts/interfaces/contact.interface";
+import { ContactScoresCompact } from "@/pages/dashboard/pages/leads/components/badges";
 
 interface AudiencePreviewTableProps {
     rows: Contact[];
@@ -62,11 +63,7 @@ export function AudiencePreviewTable({
                                     {c.company ?? "—"}
                                 </td>
                                 <td className="px-3 py-2 align-top">
-                                    {c.score != null ? (
-                                        <span className="font-medium">{c.score}/10</span>
-                                    ) : (
-                                        <span className="text-muted">—</span>
-                                    )}
+                                    <ContactScoresCompact contact={c} />
                                 </td>
                                 <td className="px-3 py-2 align-top">
                                     <div className="flex flex-wrap gap-1">

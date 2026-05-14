@@ -126,13 +126,27 @@ export interface Interaction {
     updated_at: string;
 }
 
+export interface ContactScoreRule {
+    scoring_instruction_uuid: string;
+    min: number;
+}
+
+export interface ContactScoreRow {
+    scoring_instruction_uuid: string;
+    score: number;
+    scoring_instruction?: {
+        uuid: string;
+        name: string;
+    };
+}
+
 export interface Contact {
     uuid: string;
     user_uuid: string;
     lead_uuid: string;
     filter_uuid: string | null;
     status: LeadStatus;
-    score: number | null;
+    contact_scores?: ContactScoreRow[];
     notes: string | null;
     name: string | null;
     email: string | null;
@@ -151,7 +165,11 @@ export interface Contact {
     filter?: {
         uuid: string;
         enrichment_sources: EnrichmentSource[];
-        scoring_instructions: string | null;
+        scoring_instructions: Array<{
+            uuid: string;
+            name: string;
+            instructions: string;
+        }>;
         outreach_instructions: string | null;
     } | null;
     outreach_messages?: OutreachMessage[];
@@ -163,7 +181,7 @@ export interface ListContactsQuery {
     limit?: number;
     search?: string;
     status?: LeadStatus;
-    min_score?: number;
+    score_rules?: ContactScoreRule[];
     tags?: string[];
     source_type?: SourceType;
     filter_uuid?: string;

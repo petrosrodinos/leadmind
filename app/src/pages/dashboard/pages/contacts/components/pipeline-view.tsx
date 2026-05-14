@@ -11,7 +11,7 @@ import {
     type Contact,
 } from "@/features/contacts/interfaces/contact.interface";
 import { useUpdateContactStatus } from "@/features/contacts/hooks/use-contacts";
-import { ScoreBadge } from "@/pages/dashboard/pages/leads/components/badges";
+import { ContactScoresCompact } from "@/pages/dashboard/pages/leads/components/badges";
 import { cn } from "@/lib/utils";
 
 interface PipelineViewProps {
@@ -145,7 +145,7 @@ export function PipelineView({ contacts, isLoading, onCardClick }: PipelineViewP
                                                                     </p>
                                                                 )}
                                                             </div>
-                                                            <ScoreBadge score={contact.score} />
+                                                            <ContactScoresCompact contact={contact} />
                                                         </div>
                                                         {contact.tags.length > 0 && (
                                                             <div className="flex flex-wrap gap-1 mt-2">

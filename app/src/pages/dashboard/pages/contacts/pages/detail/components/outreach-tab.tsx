@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Button, Chip } from "@heroui/react";
+import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import { Pencil, Plus, RefreshCcw, Send, Trash } from "lucide-react";
 import type { Contact } from "@/features/contacts/interfaces/contact.interface";
 import { MsgStatus, type OutreachMessage } from "@/features/contacts/interfaces/contact.interface";
@@ -73,10 +74,9 @@ export function OutreachTab({ contact, highlightUuid, onHighlightConsumed }: Out
               <Plus className="size-3.5" />
               New message
             </Button>
-            <Button size="sm" variant="secondary" isDisabled={redraft.isPending} isPending={redraft.isPending} onPress={() => redraft.mutate(contact.uuid)}>
-              <RefreshCcw className="size-3.5" />
+            <ActionButtonWithPending size="sm" variant="secondary" isDisabled={redraft.isPending} isPending={redraft.isPending} onPress={() => redraft.mutate(contact.uuid)} idleLeading={<RefreshCcw className="size-3.5" />}>
               Redraft messages
-            </Button>
+            </ActionButtonWithPending>
           </div>
         }
         emptyText="No pending drafts. Click New message to write one, or Redraft messages to generate filter-based drafts."
@@ -105,18 +105,28 @@ export function OutreachTab({ contact, highlightUuid, onHighlightConsumed }: Out
                     <Button size="sm" variant="tertiary" onPress={() => setEditingMessage(m)} aria-label="Edit draft">
                       <Pencil className="size-3.5 text-blue-400" />
                     </Button>
-                    <Button
+                    <ActionButtonWithPending
                       size="sm"
                       variant="tertiary"
                       isDisabled={sendMessage.isPending}
+                      isPending={sendMessage.isPending}
                       onPress={() => setDraftPendingSend(m)}
                       aria-label="Send draft"
+                      idleLeading={<Send className="size-3.5 text-emerald-400" />}
                     >
-                      <Send className="size-3.5 text-emerald-400" />
-                    </Button>
-                    <Button size="sm" variant="tertiary" isDisabled={deleteMessage.isPending} onPress={() => setDraftPendingDelete(m)} aria-label="Delete draft">
-                      <Trash className="size-3.5 text-red-400" />
-                    </Button>
+                      {null}
+                    </ActionButtonWithPending>
+                    <ActionButtonWithPending
+                      size="sm"
+                      variant="tertiary"
+                      isDisabled={deleteMessage.isPending}
+                      isPending={deleteMessage.isPending}
+                      onPress={() => setDraftPendingDelete(m)}
+                      aria-label="Delete draft"
+                      idleLeading={<Trash className="size-3.5 text-red-400" />}
+                    >
+                      {null}
+                    </ActionButtonWithPending>
                   </div>
                 </div>
                 <MessageBodyPreview channel={m.channel} content={m.content} />

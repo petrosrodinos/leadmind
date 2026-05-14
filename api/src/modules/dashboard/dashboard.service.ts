@@ -5,28 +5,32 @@ import { DashboardStats } from './interfaces/dashboard.interface';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
+function maxContactScore(c: { contact_scores?: { score: number }[] }): number {
+    if (!c.contact_scores?.length) return 0;
+    return Math.max(...c.contact_scores.map((s) => s.score));
+}
+
 @Injectable()
 export class DashboardService {
-    constructor(private readonly prisma: PrismaService) { }
+    constructor(private readonly prisma: PrismaService) {}
 
     async getStats(user_uuid: string): Promise<DashboardStats> {
         const since = new Date(Date.now() - 7 * DAY_MS);
 
-        const [statusGroups, newThisWeek, pendingDrafts, activeFilters] =
-            await Promise.all([
-                this.prisma.contact.groupBy({
-                    by: ['status'],
-                    where: { user_uuid },
-                    _count: { _all: true },
-                }),
-                this.prisma.contact.count({
-                    where: { user_uuid, created_at: { gte: since } },
-                }),
-                this.prisma.outreachMessage.count({
-                    where: { user_uuid, status: MsgStatus.PENDING },
-                }),
-                this.prisma.filter.count({ where: { user_uuid, enabled: true } }),
-            ]);
+        const [statusGroups, newThisWeek, pendingDrafts, activeFilters] = await Promise.all([
+            this.prisma.contact.groupBy({
+                by: ['status'],
+                where: { user_uuid },
+                _count: { _all: true },
+            }),
+            this.prisma.contact.count({
+                where: { user_uuid, created_at: { gte: since } },
+            }),
+            this.prisma.outreachMessage.count({
+                where: { user_uuid, status: MsgStatus.PENDING },
+            }),
+            this.prisma.filter.count({ where: { user_uuid, enabled: true } }),
+        ]);
 
         const by_status: Record<LeadStatus, number> = {
             [LeadStatus.NEW]: 0,
@@ -65,12 +69,15 @@ export class DashboardService {
 
     async getTopContacts(user_uuid: string, limit: number) {
         const contacts = await this.prisma.contact.findMany({
-            where: { user_uuid, score: { not: null } },
-            include: { lead: true, tags: true },
-            orderBy: [{ score: 'desc' }, { updated_at: 'desc' }],
-            take: limit,
+            where: { user_uuid, contact_scores: { some: {} } },
+            include: { lead: true, tags: true, contact_scores: true },
+            orderBy: { updated_at: 'desc' },
+            take: Math.max(limit * 20, 80),
         });
-        return contacts.map((c) => ({
+        const sorted = [...contacts]
+            .sort((a, b) => maxContactScore(b) - maxContactScore(a))
+            .slice(0, limit);
+        return sorted.map((c) => ({
             ...c,
             tags: c.tags.map((t) => t.tag),
         }));
@@ -82,7 +89,7 @@ export class DashboardService {
             orderBy: { created_at: 'desc' },
             include: {
                 contact: {
-                    include: { lead: true, tags: true },
+                    include: { lead: true, tags: true, contact_scores: true },
                 },
             },
         });
@@ -92,10 +99,7 @@ export class DashboardService {
         type ContactRow = DraftRow['contact'];
         type ContactWithTags = Omit<ContactRow, 'tags'> & { tags: string[] };
 
-        const byContact = new Map<
-            string,
-            { contact: ContactWithTags; drafts: Message[] }
-        >();
+        const byContact = new Map<string, { contact: ContactWithTags; drafts: Message[] }>();
 
         for (const d of drafts) {
             const { contact, ...message } = d;
@@ -112,7 +116,7 @@ export class DashboardService {
         }
 
         return Array.from(byContact.values())
-            .sort((a, b) => (b.contact.score ?? 0) - (a.contact.score ?? 0))
+            .sort((a, b) => maxContactScore(b.contact) - maxContactScore(a.contact))
             .slice(0, limit);
     }
 }

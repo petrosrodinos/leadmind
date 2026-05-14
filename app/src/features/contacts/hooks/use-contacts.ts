@@ -42,9 +42,16 @@ export const contactsQueryKeys = {
     tags: ["contact-tags"] as const,
 };
 
+function contactNeedsScoring(c: Contact): boolean {
+    const defs = c.filter?.scoring_instructions ?? [];
+    if (defs.length === 0) return false;
+    const scored = new Set((c.contact_scores ?? []).map((s) => s.scoring_instruction_uuid));
+    return defs.some((d) => !scored.has(d.uuid));
+}
+
 const anyContactProcessing = (page: PaginatedContacts | undefined): boolean => {
     if (!page) return false;
-    return page.data.some((c) => c.score == null);
+    return page.data.some((c) => contactNeedsScoring(c));
 };
 
 export function useContactTags() {
@@ -73,7 +80,7 @@ export function useContact(uuid: string | null | undefined) {
             const c = q.state.data as Contact | undefined;
             if (!c) return false;
             const drafting = c.outreach_messages?.length === 0;
-            const scoring = c.score == null;
+            const scoring = contactNeedsScoring(c);
             return drafting || scoring ? 30_000 : false;
         },
     });
@@ -286,26 +293,29 @@ function ensureContactCanRescore(contact: Contact): void {
     if (!contact.filter) {
         throw new Error("This contact has no filter. Assign a filter before rescoring.");
     }
-    const ai = contact.filter.scoring_instructions;
-    if (ai == null || !ai.trim()) {
-        throw new Error("Add scoring instructions on the filter before rescoring.");
+    const defs = contact.filter.scoring_instructions ?? [];
+    if (defs.length === 0) {
+        throw new Error("Attach scoring instructions to the filter before rescoring.");
     }
 }
 
 export function useRescoreContact() {
     const qc = useQueryClient();
     return useMutation({
-        mutationFn: (contact: Contact) => {
-            ensureContactCanRescore(contact);
-            return triggerContactScore(contact.uuid);
+        mutationFn: (vars: { contact: Contact; scoring_instruction_uuids?: string[] }) => {
+            ensureContactCanRescore(vars.contact);
+            return triggerContactScore(
+                vars.contact.uuid,
+                vars.scoring_instruction_uuids,
+            );
         },
-        onSuccess: (_data, contact) => {
+        onSuccess: (_data, vars) => {
             toast({
                 title: "Rescore queued",
                 description: "We'll refresh the AI score shortly.",
                 duration: 2500,
             });
-            qc.invalidateQueries({ queryKey: contactsQueryKeys.detail(contact.uuid) });
+            qc.invalidateQueries({ queryKey: contactsQueryKeys.detail(vars.contact.uuid) });
         },
         onError: (error: Error) => {
             toast({

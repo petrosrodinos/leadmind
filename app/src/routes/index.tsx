@@ -11,8 +11,10 @@ import LeadsDirectoryPage from "@/pages/dashboard/pages/leads-directory";
 import LeadDirectoryDetailPage from "@/pages/dashboard/pages/leads-directory/pages/detail";
 import LeadsPage from "@/pages/dashboard/pages/leads";
 import FiltersPage from "@/pages/dashboard/pages/filters";
+import DashboardFiltersLayout from "@/pages/dashboard/pages/filters/layout";
 import NewFilterPage from "@/pages/dashboard/pages/filters/pages/new";
 import FilterDetailPage from "@/pages/dashboard/pages/filters/pages/detail";
+import ScoringInstructionsPage from "@/pages/dashboard/pages/filters/pages/scoring-instructions";
 import ContactsPage from "@/pages/dashboard/pages/contacts";
 import ContactDetailPage from "@/pages/dashboard/pages/contacts/pages/detail";
 import SenderProfilesPage from "@/pages/dashboard/pages/sender-profiles";
@@ -68,12 +70,15 @@ export default function AppRoutes() {
         <Route path="campaigns/new" element={<NewCampaignPage />} />
         <Route path="campaigns/:uuid" element={<CampaignDetailPage />} />
         <Route path="campaigns/:uuid/edit" element={<EditCampaignPage />} />
-        <Route path="filters" element={<FiltersPage />} />
-        <Route path="filters/new" element={<NewFilterPage />} />
-        <Route path="filters/:uuid/contacts" element={<NavigateToFilterTab tab={FilterDetailTabIds.CONTACTS} />} />
-        <Route path="filters/:uuid/jobs" element={<NavigateToFilterTab tab={FilterDetailTabIds.JOBS} />} />
-        <Route path="filters/:uuid/filter" element={<NavigateToFilterTab tab={FilterDetailTabIds.FILTER} />} />
-        <Route path="filters/:uuid" element={<FilterDetailPage />} />
+        <Route path="filters" element={<DashboardFiltersLayout />}>
+          <Route index element={<FiltersPage />} />
+          <Route path="new" element={<NewFilterPage />} />
+          <Route path="scoring-instructions" element={<ScoringInstructionsPage />} />
+          <Route path=":uuid/contacts" element={<NavigateToFilterTab tab={FilterDetailTabIds.CONTACTS} />} />
+          <Route path=":uuid/jobs" element={<NavigateToFilterTab tab={FilterDetailTabIds.JOBS} />} />
+          <Route path=":uuid/filter" element={<NavigateToFilterTab tab={FilterDetailTabIds.FILTER} />} />
+          <Route path=":uuid" element={<FilterDetailPage />} />
+        </Route>
       </Route>
 
       {/* Landing page */}

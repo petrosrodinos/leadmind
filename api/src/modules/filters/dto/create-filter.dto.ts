@@ -11,6 +11,7 @@ import {
     IsObject,
     IsOptional,
     IsString,
+    IsUUID,
     MaxLength,
 } from 'class-validator';
 import { Channel, EnrichmentSource, SourceType } from '@/generated/prisma';
@@ -54,11 +55,11 @@ export class CreateFilterDto {
     @IsEnum(EnrichmentSource, { each: true })
     enrichment_sources?: EnrichmentSource[];
 
-    @ApiPropertyOptional({ maxLength: 2000 })
+    @ApiPropertyOptional({ type: [String], description: 'Scoring instruction UUIDs to attach' })
     @IsOptional()
-    @IsString()
-    @MaxLength(2000)
-    scoring_instructions?: string;
+    @IsArray()
+    @IsUUID('all', { each: true })
+    scoring_instruction_uuids?: string[];
 
     @ApiPropertyOptional({ maxLength: 2000 })
     @IsOptional()

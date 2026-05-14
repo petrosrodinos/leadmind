@@ -1,4 +1,4 @@
-import type { Channel, Contact, LeadStatus } from "@/features/contacts/interfaces/contact.interface";
+import type { Channel, Contact, ContactScoreRule, LeadStatus } from "@/features/contacts/interfaces/contact.interface";
 
 export const CampaignType = {
     STANDARD: "STANDARD",
@@ -39,7 +39,7 @@ export type CampaignContactStatuses =
 export interface CampaignFilters {
     status?: LeadStatus;
     tags?: string[];
-    min_score?: number;
+    score_rules?: ContactScoreRule[];
     search?: string;
     filter_uuid?: string;
     lead_uuid?: string;

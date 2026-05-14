@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Button, Chip, Input, Label, ListBox, Select, TextArea } from "@heroui/react";
+import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import {
     AtSign,
     Briefcase,
@@ -273,14 +274,14 @@ function EditForm({ contact, onDone }: { contact: Contact; onDone: () => void })
                         <X className="size-3.5" />
                         Cancel
                     </Button>
-                    <Button
+                    <ActionButtonWithPending
                         size="sm"
                         isDisabled={!dirty || updateProfile.isPending}
                         isPending={updateProfile.isPending}
                         onPress={handleSave}
                     >
                         Save changes
-                    </Button>
+                    </ActionButtonWithPending>
                 </div>
             </div>
 

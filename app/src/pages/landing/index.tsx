@@ -98,7 +98,8 @@ const STEPS: { num: string; icon: typeof Filter; variant: Variant; title: string
 /* ─── Root ────────────────────────────────────────────────────────────────── */
 
 export default function LandingPage() {
-  const { isLoggedIn } = useAuthStore();
+  const { isLoggedIn: rawLoggedIn } = useAuthStore();
+  const isLoggedIn = Boolean(rawLoggedIn);
   const { isDark, toggle } = useLandingTheme();
 
   useEffect(() => {

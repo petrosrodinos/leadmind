@@ -16,7 +16,14 @@ export class CampaignContactResolverService {
      * service's filter builder so the campaign audience matches the same UX as the contact list.
      */
     buildWhereInput(user_uuid: string, filters: CampaignFiltersDto): Prisma.ContactWhereInput {
-        const base = this.contactsService.buildWhereInput(user_uuid, filters);
+        const base = this.contactsService.buildWhereInput(user_uuid, {
+            status: filters.status,
+            tags: filters.tags,
+            search: filters.search,
+            filter_uuid: filters.filter_uuid,
+            lead_uuid: filters.lead_uuid,
+            score_rules: filters.score_rules,
+        });
 
         const extras: Prisma.ContactWhereInput = {};
         const and: Prisma.ContactWhereInput[] = [];

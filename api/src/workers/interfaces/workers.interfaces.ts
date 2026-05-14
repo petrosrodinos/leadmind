@@ -7,6 +7,7 @@ export interface ContactJobData {
     action?: AiProcessAction;
     enrichment_sources?: EnrichmentSource[];
     force_enrichment?: boolean;
+    scoring_instruction_uuids?: string[];
 }
 
 export interface LeadJobData {

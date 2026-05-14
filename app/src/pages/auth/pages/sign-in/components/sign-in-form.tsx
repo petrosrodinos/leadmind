@@ -1,7 +1,8 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@/lib/utils";
-import { Form, Button, Label, Input, FieldError } from "@heroui/react";
+import { Form, Label, Input, FieldError } from "@heroui/react";
+import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import { SignInSchema, type SignInFormValues } from "../../../validation-schemas/auth";
 import { useSignin } from "@/features/auth/hooks/use-auth";
 
@@ -51,7 +52,7 @@ export function SignInForm({ className }: SignInFormProps) {
         {errors.password && <FieldError>{errors.password.message}</FieldError>}
       </div>
 
-      <Button
+      <ActionButtonWithPending
         type="submit"
         isDisabled={isPending}
         isPending={isPending}
@@ -59,7 +60,7 @@ export function SignInForm({ className }: SignInFormProps) {
         className="mt-2"
       >
         Login
-      </Button>
+      </ActionButtonWithPending>
     </Form>
   );
 }

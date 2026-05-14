@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { Button } from "@heroui/react";
+import { Button, Spinner } from "@heroui/react";
+import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import { ArrowLeft, ArrowRight, Save, Send, Sparkles } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { isEmailHtmlEmpty } from "@/lib/sanitize-html";
@@ -202,13 +203,14 @@ export function CampaignWizard({ campaign }: CampaignWizardProps) {
                 </Button>
                 <div className="flex items-center gap-2">
                     {isDraft && (
-                        <Button
+                        <ActionButtonWithPending
                             variant="secondary"
                             onPress={handleSaveAndClose}
                             isPending={updateMutation.isPending && !startMutation.isPending}
+                            idleLeading={<Save className="size-4" />}
                         >
-                            <Save className="size-4" /> Save & close
-                        </Button>
+                            Save & close
+                        </ActionButtonWithPending>
                     )}
                     {!isLastStep ? (
                         <Button
@@ -218,7 +220,13 @@ export function CampaignWizard({ campaign }: CampaignWizardProps) {
                             }
                             isPending={updateMutation.isPending}
                         >
-                            Next <ArrowRight className="size-4" />
+                            {({ isPending: p }) => (
+                                <>
+                                    {p ? <Spinner color="current" size="sm" className="shrink-0" /> : null}
+                                    Next
+                                    {!p ? <ArrowRight className="size-4" /> : null}
+                                </>
+                            )}
                         </Button>
                     ) : (
                         <Button

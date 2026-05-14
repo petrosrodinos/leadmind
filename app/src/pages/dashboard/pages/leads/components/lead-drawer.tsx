@@ -1,6 +1,7 @@
 import { type ReactNode, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Button, Chip, Drawer } from "@heroui/react";
+import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import { ExternalLink, Mail, MessageCircle, RefreshCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Channel, MsgStatus } from "@/features/contacts/interfaces/contact.interface";
@@ -8,7 +9,7 @@ import { SourceBadge } from "@/components/ui/source-badge";
 import { useContact } from "@/features/contacts/hooks/use-contacts";
 import { useSendOutreachMessage } from "@/features/outreach/hooks/use-outreach";
 import { Routes } from "@/routes/routes";
-import { ScoreBadge, StatusChip } from "./badges";
+import { ContactScoresCompact, StatusChip } from "./badges";
 
 const channelIcon = (channel: Channel) => {
   if (channel === Channel.EMAIL) return Mail;
@@ -59,7 +60,7 @@ export function LeadDrawer({ contactUuid, isOpen, onOpenChange }: LeadDrawerProp
                 {/* Quick state */}
                 <div className="flex items-center gap-2 flex-wrap">
                   <StatusChip status={contact.status} />
-                  <ScoreBadge score={contact.score} />
+                  <ContactScoresCompact contact={contact} />
                   {contact.tags.map((tag) => (
                     <Chip key={tag} size="sm" variant="soft">
                       <Chip.Label>{tag}</Chip.Label>
@@ -128,20 +129,21 @@ export function LeadDrawer({ contactUuid, isOpen, onOpenChange }: LeadDrawerProp
                           {m.subject && <span className="text-sm font-medium text-foreground truncate">{m.subject}</span>}
                           <div className="ml-auto flex items-center gap-2 shrink-0">
                             {m.status === MsgStatus.FAILED ? (
-                              <Button
+                              <ActionButtonWithPending
                                 size="sm"
                                 variant="secondary"
                                 isDisabled={sendMessage.isPending}
+                                isPending={sendMessage.isPending}
                                 onPress={() =>
                                   sendMessage.mutate({
                                     uuid: m.uuid,
                                     contact_uuid: contact.uuid,
                                   })
                                 }
+                                idleLeading={<RefreshCcw className="size-3.5" />}
                               >
-                                <RefreshCcw className="size-3.5" />
                                 Resend
-                              </Button>
+                              </ActionButtonWithPending>
                             ) : null}
                             <span className="text-xs text-muted whitespace-nowrap">
                               {m.sent_at ? new Date(m.sent_at).toLocaleString() : "—"}

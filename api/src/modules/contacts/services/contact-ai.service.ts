@@ -1,5 +1,5 @@
 import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
-import { Channel, Contact, Filter, Lead, MsgStatus, OutreachMessage } from '@/generated/prisma';
+import { Channel, Contact, Filter, Lead, MsgStatus, OutreachMessage, Prisma } from '@/generated/prisma';
 import { AiDraftMessageDto } from '../dto/ai-draft-message.dto';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { AiService } from '@/integrations/ai/services/ai.service';
@@ -16,6 +16,12 @@ import { generateWithCampaignPrompt, parseEmailDraft } from '@/shared/utils/outr
 import { CONTACT_AI_SCORE_SCHEMA, type ContactAiScoreResult } from '../schemas/contact-ai-score.schema';
 import { sanitizeEmailHtml } from '@/shared/utils/sanitize-html.util';
 
+const filterForScoreInclude = {
+    filter_scoring_instructions: { include: { scoring_instruction: true } },
+} satisfies Prisma.FilterInclude;
+
+export type FilterForScore = Prisma.FilterGetPayload<{ include: typeof filterForScoreInclude }>;
+
 @Injectable()
 export class ContactAiService {
     private readonly logger = new Logger(ContactAiService.name);
@@ -26,42 +32,75 @@ export class ContactAiService {
         private readonly elasticsearchService: ElasticsearchService,
     ) { }
 
-    async scoreContact(contact: Contact, lead: Lead, filter: Filter): Promise<number> {
-        if (contact.score != null) {
-            return contact.score;
+    async scoreContact(
+        contact: Contact,
+        lead: Lead,
+        filter: FilterForScore,
+        opts?: { onlyInstructionUuids?: string[] },
+    ): Promise<void> {
+        const linksAll = filter.filter_scoring_instructions ?? [];
+        const only = opts?.onlyInstructionUuids?.filter(Boolean);
+        const links =
+            only && only.length > 0
+                ? linksAll.filter((l) => only.includes(l.scoring_instruction.uuid))
+                : linksAll;
+        if (links.length === 0) {
+            this.logger.warn(`Contact ${contact.uuid}: filter has no scoring instructions, skipping score`);
+            return;
         }
 
-        if (!filter.scoring_instructions) {
-            this.logger.warn(`Contact ${contact.uuid}: filter has no scoring_instructions, skipping score`);
-            return 0;
+        const existingRows = await this.prisma.contactScore.findMany({
+            where: { contact_uuid: contact.uuid },
+            select: { scoring_instruction_uuid: true },
+        });
+        const done = new Set(existingRows.map((r) => r.scoring_instruction_uuid));
+
+        for (const link of links) {
+            const instr = link.scoring_instruction;
+            if (done.has(instr.uuid)) continue;
+
+            const { response, usage } = await this.aiService.generateObjectWithSchema<ContactAiScoreResult>({
+                provider: AiProviders.openai,
+                model: AiModels.openai.gpt4oMini,
+                schema: CONTACT_AI_SCORE_SCHEMA,
+                prompt: buildScorePrompt(contact, lead, instr.instructions),
+                system: AiScoringSystemPrompt,
+            });
+
+            await this.prisma.contactScore.upsert({
+                where: {
+                    contact_uuid_scoring_instruction_uuid: {
+                        contact_uuid: contact.uuid,
+                        scoring_instruction_uuid: instr.uuid,
+                    },
+                },
+                create: {
+                    contact_uuid: contact.uuid,
+                    scoring_instruction_uuid: instr.uuid,
+                    score: response.score,
+                },
+                update: { score: response.score },
+            });
+            done.add(instr.uuid);
+
+            this.logger.log(
+                `Contact ${contact.uuid} / ${instr.uuid}: scored ${response.score}/10 (${usage.totalTokens} tokens, $${usage.totalCost.toFixed(5)})`,
+            );
         }
-
-        const { response, usage } = await this.aiService.generateObjectWithSchema<ContactAiScoreResult>({
-            provider: AiProviders.openai,
-            model: AiModels.openai.gpt4oMini,
-            schema: CONTACT_AI_SCORE_SCHEMA,
-            prompt: buildScorePrompt(contact, lead, filter.scoring_instructions),
-            system: AiScoringSystemPrompt,
-        });
-
-        await this.prisma.contact.update({
-            where: { uuid: contact.uuid },
-            data: { score: response.score },
-        });
 
         const fresh = await this.prisma.contact.findUnique({
             where: { uuid: contact.uuid },
-            include: { lead: true, tags: true },
+            include: {
+                lead: true,
+                tags: true,
+                contact_scores: {
+                    include: { scoring_instruction: { select: { uuid: true, name: true } } },
+                },
+            },
         });
         if (fresh) {
             await this.elasticsearchService.indexContact(fresh);
         }
-
-        this.logger.log(
-            `Contact ${contact.uuid}: scored ${response.score}/10 (${usage.totalTokens} tokens, $${usage.totalCost.toFixed(5)})`,
-        );
-
-        return response.score;
     }
 
     async draftOutreachMessages(

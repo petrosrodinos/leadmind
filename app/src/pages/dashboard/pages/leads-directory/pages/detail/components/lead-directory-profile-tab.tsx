@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Button, Input, Label, TextArea } from "@heroui/react";
+import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import { AtSign, Briefcase, Building2, CalendarClock, ExternalLink, Globe, Pencil, Tag, X } from "lucide-react";
 import type { Lead } from "@/features/leads/interfaces/lead.interface";
 import type { UpdateLeadPayload } from "@/features/leads/interfaces/lead.interface";
@@ -258,14 +259,14 @@ function EditForm({ lead, onDone }: { lead: Lead; onDone: () => void }) {
                         <X className="size-3.5" />
                         Cancel
                     </Button>
-                    <Button
+                    <ActionButtonWithPending
                         size="sm"
                         isDisabled={!dirty || updateLead.isPending}
                         isPending={updateLead.isPending}
                         onPress={handleSave}
                     >
                         Save changes
-                    </Button>
+                    </ActionButtonWithPending>
                 </div>
             </div>
 

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { Button, Modal, Popover } from "@heroui/react";
+import { Modal, Popover } from "@heroui/react";
+import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import { Check, Sparkles, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -197,25 +198,25 @@ function EnrichmentRunPanel({
                     {selected.length}/{ENRICHMENT_SOURCE_OPTIONS.length}
                 </p>
                 <div className="flex items-center gap-1.5">
-                    <Button
+                    <ActionButtonWithPending
                         size="sm"
                         variant="tertiary"
                         onPress={onCancel}
                         isDisabled={isPending}
+                        idleLeading={<X className="size-3.5" />}
                     >
-                        <X className="size-3.5" />
                         Cancel
-                    </Button>
-                    <Button
+                    </ActionButtonWithPending>
+                    <ActionButtonWithPending
                         size="sm"
                         variant="secondary"
                         isDisabled={isPending || selected.length === 0}
                         isPending={isPending}
                         onPress={handleConfirm}
+                        idleLeading={<Sparkles className="size-3.5" />}
                     >
-                        <Sparkles className="size-3.5" />
                         Enrich
-                    </Button>
+                    </ActionButtonWithPending>
                 </div>
             </div>
         </>
@@ -272,15 +273,15 @@ export function EnrichmentActionPopover({
     return (
         <Popover isOpen={open} onOpenChange={setOpen}>
             <Popover.Trigger>
-                <Button
+                <ActionButtonWithPending
                     size={triggerSize}
                     variant={triggerVariant}
                     isDisabled={isPending}
                     isPending={isPending}
+                    idleLeading={<Sparkles className="size-3.5" />}
                 >
-                    <Sparkles className="size-3.5" />
                     Enrich
-                </Button>
+                </ActionButtonWithPending>
             </Popover.Trigger>
             <Popover.Content
                 placement={placement}

@@ -55,7 +55,11 @@ export interface Filter {
     enabled: boolean;
     cron_schedule: string | null;
     channels: Channel[];
-    scoring_instructions: string | null;
+    scoring_instructions: Array<{
+        uuid: string;
+        name: string;
+        instructions: string;
+    }>;
     outreach_instructions: string | null;
     created_at: string;
     updated_at: string;
@@ -83,7 +87,7 @@ export interface CreateFilterPayload {
     enabled?: boolean;
     cron_schedule?: string;
     channels: Channel[];
-    scoring_instructions?: string;
+    scoring_instruction_uuids?: string[];
     outreach_instructions?: string;
 }
 

@@ -1,6 +1,6 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { ChevronLeft, Send } from "lucide-react";
-import { Button } from "@heroui/react";
+import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import {
     useCampaign,
     useCampaignContacts,
@@ -56,13 +56,13 @@ export default function CampaignDetailPage() {
                 </div>
                 <div className="flex items-center gap-2">
                     {isPersonalized && isDraftsReady && (
-                        <Button
+                        <ActionButtonWithPending
                             onPress={() => sendDraftsMutation.mutate(campaign.uuid)}
                             isPending={sendDraftsMutation.isPending}
+                            idleLeading={<Send className="size-4" />}
                         >
-                            <Send className="size-4" />
                             Send Campaign
-                        </Button>
+                        </ActionButtonWithPending>
                     )}
                     <CampaignActionsDropdown
                         campaign={campaign}

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@heroui/react";
+import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import { ChevronLeft, Save } from "lucide-react";
 import { useCreateCampaign } from "@/features/marketing-campaigns/hooks/use-marketing-campaigns";
 import { Channel } from "@/features/contacts/interfaces/contact.interface";
@@ -65,14 +66,14 @@ export default function NewCampaignPage() {
                 <Link to={Routes.dashboard.campaigns}>
                     <Button variant="secondary">Cancel</Button>
                 </Link>
-                <Button
+                <ActionButtonWithPending
                     onPress={handleSave}
                     isDisabled={!canSave}
                     isPending={createMutation.isPending}
+                    idleLeading={<Save className="size-4" />}
                 >
-                    <Save className="size-4" />
                     Save & continue
-                </Button>
+                </ActionButtonWithPending>
             </div>
         </div>
     );

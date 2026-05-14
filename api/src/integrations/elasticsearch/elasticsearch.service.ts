@@ -5,7 +5,13 @@ import {
     OnModuleInit,
 } from '@nestjs/common';
 import { Client } from '@elastic/elasticsearch';
-import { Contact, ContactTag, Lead } from '@/generated/prisma';
+import {
+    Contact,
+    ContactScore,
+    ContactTag,
+    Lead,
+    ScoringInstruction,
+} from '@/generated/prisma';
 import { AiService } from '@/integrations/ai/services/ai.service';
 import {
     CONTACTS_INDEX,
@@ -19,6 +25,14 @@ import {
     SearchResult,
 } from './interfaces/elasticsearch.interfaces';
 
+type ContactForIndex = Contact & {
+    lead: Lead;
+    tags: ContactTag[];
+    contact_scores?: (ContactScore & {
+        scoring_instruction?: Pick<ScoringInstruction, 'uuid' | 'name'>;
+    })[];
+};
+
 @Injectable()
 export class ElasticsearchService implements OnModuleInit {
     private readonly logger = new Logger(ElasticsearchService.name);
@@ -26,7 +40,7 @@ export class ElasticsearchService implements OnModuleInit {
     constructor(
         @Inject(ELASTICSEARCH_CLIENT) private readonly client: Client | null,
         private readonly aiService: AiService,
-    ) { }
+    ) {}
 
     get enabled(): boolean {
         return this.client !== null;
@@ -84,14 +98,17 @@ export class ElasticsearchService implements OnModuleInit {
         }
     }
 
-    async indexContact(
-        contact: Contact & { lead: Lead; tags: ContactTag[] },
-    ): Promise<void> {
+    async indexContact(contact: ContactForIndex): Promise<void> {
         if (!this.client) return;
         try {
             const tags = contact.tags.map((t) => t.tag);
             const metadata = this.buildContactMetadata(contact, tags);
             const embedding = await this.embed(metadata);
+            const scores =
+                contact.contact_scores?.map((cs) => ({
+                    scoring_instruction_uuid: cs.scoring_instruction_uuid,
+                    score: cs.score,
+                })) ?? [];
             await this.client.index({
                 index: CONTACTS_INDEX,
                 id: contact.uuid,
@@ -100,7 +117,7 @@ export class ElasticsearchService implements OnModuleInit {
                     user_uuid: contact.user_uuid,
                     lead_uuid: contact.lead_uuid,
                     status: contact.status,
-                    score: contact.score,
+                    scores,
                     tags,
                     name: contact.name,
                     email: contact.email,
@@ -158,7 +175,28 @@ export class ElasticsearchService implements OnModuleInit {
 
         const filter: any[] = [{ term: { user_uuid: userUuid } }];
         if (query.status) filter.push({ term: { status: query.status } });
-        if (query.min_score != null) filter.push({ range: { score: { gte: query.min_score } } });
+        if (query.score_rules && query.score_rules.length > 0) {
+            for (const rule of query.score_rules) {
+                filter.push({
+                    nested: {
+                        path: 'scores',
+                        query: {
+                            bool: {
+                                must: [
+                                    {
+                                        term: {
+                                            'scores.scoring_instruction_uuid':
+                                                rule.scoring_instruction_uuid,
+                                        },
+                                    },
+                                    { range: { 'scores.score': { gte: rule.min } } },
+                                ],
+                            },
+                        },
+                    },
+                });
+            }
+        }
         if (query.tags && query.tags.length > 0) filter.push({ terms: { tags: query.tags } });
 
         return this.runSearch(CONTACTS_INDEX, query, filter);
@@ -241,13 +279,15 @@ export class ElasticsearchService implements OnModuleInit {
         return enrichmentSummary ? `Summary: ${enrichmentSummary}` : '';
     }
 
-    private buildContactMetadata(
-        contact: Contact & { lead: Lead },
-        tags: string[],
-    ): string {
+    private buildContactMetadata(contact: ContactForIndex, tags: string[]): string {
+        const scoreLines =
+            contact.contact_scores?.map((cs) => {
+                const label = cs.scoring_instruction?.name ?? cs.scoring_instruction_uuid;
+                return `Score (${label}): ${cs.score}`;
+            }) ?? [];
         const parts = [
             contact.status && `Status: ${contact.status}`,
-            contact.score != null && `Score: ${contact.score}`,
+            ...scoreLines,
             tags.length > 0 && `Tags: ${tags.join(', ')}`,
             contact.notes && `Notes: ${contact.notes}`,
             this.buildContactIdentityBlock(contact),

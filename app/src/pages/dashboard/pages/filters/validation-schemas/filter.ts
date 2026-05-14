@@ -61,7 +61,7 @@ const baseSchema = z.object({
     cron_schedule: z.string().optional(),
     enrichment_sources: enrichmentSourcesSchema,
     channels: channelSchema,
-    scoring_instructions: z.string().max(2000).optional(),
+    scoring_instruction_uuids: z.array(z.string().uuid()).optional(),
     outreach_instructions: z.string().max(2000).optional(),
 });
 

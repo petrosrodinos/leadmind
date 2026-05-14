@@ -6,9 +6,10 @@ import {
 } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
-import { Filter, SourceType } from '@/generated/prisma';
+import { Prisma, Filter, ScoringInstruction, SourceType } from '@/generated/prisma';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { FILTER_SCRAPE_QUEUE } from '@/core/queues/queues.constants';
+import { ScoringInstructionsService } from '@/modules/scoring-instructions/scoring-instructions.service';
 import { CreateFilterDto } from './dto/create-filter.dto';
 import { UpdateFilterDto } from './dto/update-filter.dto';
 import { ListJobsDto } from './dto/list-jobs.dto';
@@ -19,17 +20,41 @@ interface RepeatableJobMeta {
     cron_schedule: string;
 }
 
+const filterScoringInclude = {
+    filter_scoring_instructions: {
+        orderBy: { created_at: 'asc' as const },
+        include: { scoring_instruction: true },
+    },
+} satisfies Prisma.FilterInclude;
+
+type FilterWithScoring = Prisma.FilterGetPayload<{ include: typeof filterScoringInclude }>;
+
+export type FilterResponse = Omit<FilterWithScoring, 'filter_scoring_instructions'> & {
+    scoring_instructions: ScoringInstruction[];
+};
+
+function mapFilter(filter: FilterWithScoring): FilterResponse {
+    const { filter_scoring_instructions, ...rest } = filter;
+    return {
+        ...rest,
+        scoring_instructions: filter_scoring_instructions.map((l) => l.scoring_instruction),
+    };
+}
+
 @Injectable()
 export class FiltersService {
     private readonly logger = new Logger(FiltersService.name);
 
     constructor(
         private readonly prisma: PrismaService,
+        private readonly scoringInstructionsService: ScoringInstructionsService,
         @InjectQueue(FILTER_SCRAPE_QUEUE) private readonly scrapeQueue: Queue,
-    ) { }
+    ) {}
 
-    async create(user_uuid: string, dto: CreateFilterDto): Promise<Filter> {
+    async create(user_uuid: string, dto: CreateFilterDto): Promise<FilterResponse> {
         this.validateQueryConfig(dto.source_type, dto.query_config);
+        const uuids = dto.scoring_instruction_uuids ?? [];
+        await this.scoringInstructionsService.assertAllOwnedByUser(user_uuid, uuids);
 
         const filter = await this.prisma.filter.create({
             data: {
@@ -40,38 +65,47 @@ export class FiltersService {
                 enabled: dto.enabled ?? true,
                 cron_schedule: dto.cron_schedule,
                 channels: dto.channels,
-                scoring_instructions: dto.scoring_instructions,
                 outreach_instructions: dto.outreach_instructions,
                 ...(dto.enrichment_sources !== undefined
                     ? { enrichment_sources: dto.enrichment_sources }
                     : {}),
+                ...(uuids.length > 0 && {
+                    filter_scoring_instructions: {
+                        create: uuids.map((scoring_instruction_uuid) => ({ scoring_instruction_uuid })),
+                    },
+                }),
             },
+            include: filterScoringInclude,
         });
 
         if (filter.enabled && filter.cron_schedule) {
             await this.addRepeatable(filter.uuid, filter.cron_schedule);
         }
 
-        return filter;
+        return mapFilter(filter);
     }
 
-    async findAll(user_uuid: string): Promise<Filter[]> {
-        return this.prisma.filter.findMany({
+    async findAll(user_uuid: string): Promise<FilterResponse[]> {
+        const rows = await this.prisma.filter.findMany({
             where: { user_uuid },
             orderBy: { created_at: 'desc' },
+            include: filterScoringInclude,
         });
+        return rows.map(mapFilter);
     }
 
-    async findOne(user_uuid: string, uuid: string): Promise<Filter> {
+    async findOne(user_uuid: string, uuid: string): Promise<FilterResponse> {
         const filter = await this.prisma.filter.findFirst({
             where: { uuid, user_uuid },
+            include: filterScoringInclude,
         });
         if (!filter) throw new NotFoundException(`Filter ${uuid} not found`);
-        return filter;
+        return mapFilter(filter);
     }
 
-    async update(user_uuid: string, uuid: string, dto: UpdateFilterDto): Promise<Filter> {
-        const existing = await this.findOne(user_uuid, uuid);
+    async update(user_uuid: string, uuid: string, dto: UpdateFilterDto): Promise<FilterResponse> {
+        const existing = await this.prisma.filter.findFirst({ where: { uuid, user_uuid } });
+        if (!existing) throw new NotFoundException(`Filter ${uuid} not found`);
 
         const next_source_type = dto.source_type ?? existing.source_type;
         const next_query_config = dto.query_config ?? (existing.query_config as Record<string, any>);
@@ -79,30 +113,47 @@ export class FiltersService {
             this.validateQueryConfig(next_source_type, next_query_config);
         }
 
+        if (dto.scoring_instruction_uuids !== undefined) {
+            await this.scoringInstructionsService.assertAllOwnedByUser(
+                user_uuid,
+                dto.scoring_instruction_uuids,
+            );
+        }
+
+        const data: Prisma.FilterUpdateInput = {
+            ...(dto.name !== undefined && { name: dto.name }),
+            ...(dto.source_type !== undefined && { source_type: dto.source_type }),
+            ...(dto.query_config !== undefined && { query_config: dto.query_config }),
+            ...(dto.enabled !== undefined && { enabled: dto.enabled }),
+            ...(dto.cron_schedule !== undefined && { cron_schedule: dto.cron_schedule }),
+            ...(dto.channels !== undefined && { channels: dto.channels }),
+            ...(dto.outreach_instructions !== undefined && {
+                outreach_instructions: dto.outreach_instructions,
+            }),
+            ...(dto.enrichment_sources !== undefined && { enrichment_sources: dto.enrichment_sources }),
+            ...(dto.scoring_instruction_uuids !== undefined && {
+                filter_scoring_instructions: {
+                    deleteMany: {},
+                    create: dto.scoring_instruction_uuids.map((scoring_instruction_uuid) => ({
+                        scoring_instruction_uuid,
+                    })),
+                },
+            }),
+        };
+
         const updated = await this.prisma.filter.update({
             where: { uuid },
-            data: {
-                name: dto.name,
-                source_type: dto.source_type,
-                query_config: dto.query_config,
-                enabled: dto.enabled,
-                cron_schedule: dto.cron_schedule,
-                channels: dto.channels,
-                scoring_instructions: dto.scoring_instructions,
-                outreach_instructions: dto.outreach_instructions,
-                ...(dto.enrichment_sources !== undefined
-                    ? { enrichment_sources: dto.enrichment_sources }
-                    : {}),
-            },
+            data,
         });
 
         await this.syncRepeatable(existing, updated);
 
-        return updated;
+        return this.findOne(user_uuid, uuid);
     }
 
     async remove(user_uuid: string, uuid: string): Promise<{ uuid: string }> {
-        const existing = await this.findOne(user_uuid, uuid);
+        const existing = await this.prisma.filter.findFirst({ where: { uuid, user_uuid } });
+        if (!existing) throw new NotFoundException(`Filter ${uuid} not found`);
 
         if (existing.cron_schedule) {
             await this.removeRepeatable(existing.uuid, existing.cron_schedule);
@@ -118,7 +169,8 @@ export class FiltersService {
         filter_uuid: string;
         status: 'queued';
     }> {
-        const filter = await this.findOne(user_uuid, uuid);
+        const filter = await this.prisma.filter.findFirst({ where: { uuid, user_uuid } });
+        if (!filter) throw new NotFoundException(`Filter ${uuid} not found`);
 
         if (filter.source_type === SourceType.MANUAL) {
             throw new BadRequestException('MANUAL filters cannot be run');

@@ -13,6 +13,7 @@ import { ElasticsearchModule } from './integrations/elasticsearch/elasticsearch.
 import { QueuesModule } from './core/queues/queues.module';
 import { BullBoardModule } from './core/queues/bull-board.module';
 import { FiltersModule } from './modules/filters/filters.module';
+import { ScoringInstructionsModule } from './modules/scoring-instructions/scoring-instructions.module';
 import { LeadsModule } from './modules/leads/leads.module';
 import { ContactsModule } from './modules/contacts/contacts.module';
 import { SenderProfilesModule } from './modules/sender-profiles/sender-profiles.module';
@@ -38,6 +39,7 @@ import { WorkersModule } from './workers/workers.module';
     QueuesModule,
     BullBoardModule,
     FiltersModule,
+    ScoringInstructionsModule,
     LeadsModule,
     ContactsModule,
     SenderProfilesModule,

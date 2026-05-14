@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { Chip } from "@heroui/react";
-import { ArrowRight, CalendarDays, ExternalLink, Mail, Megaphone, MessageSquare, Phone, StickyNote, XCircle } from "lucide-react";
+import { ArrowRight, CalendarDays, ExternalLink, Mail, Megaphone, Phone, StickyNote, XCircle } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import {
     CallDirection,

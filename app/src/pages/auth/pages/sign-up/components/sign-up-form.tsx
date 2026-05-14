@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
-import { Form, Button, Label, Input, FieldError } from "@heroui/react";
+import { Form, Label, Input, FieldError } from "@heroui/react";
+import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import { SignUpSchema, type SignUpFormValues } from "../../../validation-schemas/auth";
 import { useSignup } from "@/features/auth/hooks/use-auth";
 
@@ -84,7 +85,7 @@ export function SignUpForm() {
         {errors.confirm_password && <FieldError>{errors.confirm_password.message}</FieldError>}
       </div>
 
-      <Button
+      <ActionButtonWithPending
         type="submit"
         isDisabled={isPending}
         isPending={isPending}
@@ -92,7 +93,7 @@ export function SignUpForm() {
         className="mt-2"
       >
         Create Account
-      </Button>
+      </ActionButtonWithPending>
     </Form>
   );
 }

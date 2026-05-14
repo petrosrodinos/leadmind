@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Chip, FieldError, Input, Label, ListBox, Modal, Select, TextArea } from "@heroui/react";
+import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import { Plus, X } from "lucide-react";
 import { useCreateContact } from "@/features/contacts/hooks/use-contacts";
 import type { CreateContactPayload } from "@/features/contacts/interfaces/contact.interface";
@@ -232,10 +233,14 @@ export function CreateContactModal({ isOpen, onOpenChange }: CreateContactModalP
               <Button slot="close" variant="secondary" type="button">
                 Cancel
               </Button>
-              <Button type="submit" isDisabled={createContact.isPending || filterOptions.length === 0} isPending={createContact.isPending}>
-                <Plus className="size-4" />
+              <ActionButtonWithPending
+                type="submit"
+                isDisabled={createContact.isPending || filterOptions.length === 0}
+                isPending={createContact.isPending}
+                idleLeading={<Plus className="size-4" />}
+              >
                 Add contact
-              </Button>
+              </ActionButtonWithPending>
             </Modal.Footer>
           </form>
         </Modal.Dialog>

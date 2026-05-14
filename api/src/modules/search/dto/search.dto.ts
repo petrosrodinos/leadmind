@@ -8,8 +8,13 @@ import {
     IsString,
     Max,
     Min,
+    ValidateNested,
 } from 'class-validator';
 import { LeadStatus, SourceType } from '@/generated/prisma';
+import {
+    ContactScoreRuleItemDto,
+    ScoreRulesQueryTransform,
+} from '@/modules/scoring-instructions/dto/contact-score-rule.dto';
 
 export class SearchDto {
     @ApiPropertyOptional({ description: 'Full-text query' })
@@ -22,13 +27,15 @@ export class SearchDto {
     @IsEnum(LeadStatus)
     status?: LeadStatus;
 
-    @ApiPropertyOptional({ minimum: 1, maximum: 10, description: 'Contacts only' })
+    @ApiPropertyOptional({
+        description: 'JSON array of { scoring_instruction_uuid, min } (contacts only, AND)',
+    })
     @IsOptional()
-    @Type(() => Number)
-    @IsInt()
-    @Min(1)
-    @Max(10)
-    min_score?: number;
+    @ScoreRulesQueryTransform
+    @IsArray()
+    @ValidateNested({ each: true })
+    @Type(() => ContactScoreRuleItemDto)
+    score_rules?: ContactScoreRuleItemDto[];
 
     @ApiPropertyOptional({ enum: SourceType })
     @IsOptional()

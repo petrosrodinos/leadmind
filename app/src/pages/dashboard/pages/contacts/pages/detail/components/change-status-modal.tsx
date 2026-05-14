@@ -1,5 +1,6 @@
 import type { LeadStatus } from "@/features/contacts/interfaces/contact.interface";
 import { Button, Label, Modal, TextArea } from "@heroui/react";
+import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 
 interface ChangeStatusModalProps {
   isOpen: boolean;
@@ -45,9 +46,9 @@ export function ChangeStatusModal({
             <Button size="sm" variant="tertiary" onPress={onCancel}>
               Cancel
             </Button>
-            <Button size="sm" variant="secondary" isDisabled={pendingStatus === null} isPending={isPending} onPress={onConfirm}>
+            <ActionButtonWithPending size="sm" variant="secondary" isDisabled={pendingStatus === null} isPending={isPending} onPress={onConfirm}>
               Save status
-            </Button>
+            </ActionButtonWithPending>
           </Modal.Footer>
         </Modal.Dialog>
       </Modal.Container>

@@ -142,10 +142,25 @@ exports.Prisma.FilterScalarFieldEnum = {
   enabled: 'enabled',
   cron_schedule: 'cron_schedule',
   channels: 'channels',
-  scoring_instructions: 'scoring_instructions',
   outreach_instructions: 'outreach_instructions',
   created_at: 'created_at',
   updated_at: 'updated_at'
+};
+
+exports.Prisma.ScoringInstructionScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  user_uuid: 'user_uuid',
+  name: 'name',
+  instructions: 'instructions',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.FilterScoringInstructionScalarFieldEnum = {
+  filter_uuid: 'filter_uuid',
+  scoring_instruction_uuid: 'scoring_instruction_uuid',
+  created_at: 'created_at'
 };
 
 exports.Prisma.RawLeadScalarFieldEnum = {
@@ -203,7 +218,6 @@ exports.Prisma.ContactScalarFieldEnum = {
   lead_uuid: 'lead_uuid',
   filter_uuid: 'filter_uuid',
   status: 'status',
-  score: 'score',
   notes: 'notes',
   name: 'name',
   email: 'email',
@@ -219,6 +233,14 @@ exports.Prisma.ContactScalarFieldEnum = {
   unsubscribe_token: 'unsubscribe_token',
   last_interaction_at: 'last_interaction_at',
   created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.ContactScoreScalarFieldEnum = {
+  id: 'id',
+  contact_uuid: 'contact_uuid',
+  scoring_instruction_uuid: 'scoring_instruction_uuid',
+  score: 'score',
   updated_at: 'updated_at'
 };
 
@@ -516,10 +538,13 @@ exports.CampaignContactStatus = exports.$Enums.CampaignContactStatus = {
 exports.Prisma.ModelName = {
   User: 'User',
   Filter: 'Filter',
+  ScoringInstruction: 'ScoringInstruction',
+  FilterScoringInstruction: 'FilterScoringInstruction',
   RawLead: 'RawLead',
   Lead: 'Lead',
   LeadEnrichment: 'LeadEnrichment',
   Contact: 'Contact',
+  ContactScore: 'ContactScore',
   ContactTag: 'ContactTag',
   Interaction: 'Interaction',
   OutreachMessage: 'OutreachMessage',

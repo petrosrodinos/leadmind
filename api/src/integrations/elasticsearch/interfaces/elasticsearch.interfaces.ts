@@ -1,9 +1,10 @@
 import { LeadStatus } from '@/generated/prisma';
+import { ContactScoreRuleItemDto } from '@/modules/scoring-instructions/dto/contact-score-rule.dto';
 
 export interface SearchQuery {
     q?: string;
     status?: LeadStatus;
-    min_score?: number;
+    score_rules?: ContactScoreRuleItemDto[];
     source_type?: string;
     tags?: string[];
     page?: number;

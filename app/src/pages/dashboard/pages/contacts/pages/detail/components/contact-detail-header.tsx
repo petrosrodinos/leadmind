@@ -1,7 +1,7 @@
 import { Button } from "@heroui/react";
 import { ArrowLeft, Trash } from "lucide-react";
 import type { Contact } from "@/features/contacts/interfaces/contact.interface";
-import { ScoreBadge, StatusChip } from "@/pages/dashboard/pages/leads/components/badges";
+import { ContactScoresCompact, StatusChip } from "@/pages/dashboard/pages/leads/components/badges";
 
 interface ContactDetailHeaderProps {
   isLoading: boolean;
@@ -33,7 +33,7 @@ export function ContactDetailHeader({ isLoading, contact, onBack, onDeletePress,
             {contact && (
               <div className="flex items-center gap-2 flex-wrap mt-1">
                 <StatusChip status={contact.status} />
-                <ScoreBadge score={contact.score} />
+                <ContactScoresCompact contact={contact} />
                 {contact.company && <span className="text-sm text-muted truncate">{contact.company}</span>}
               </div>
             )}

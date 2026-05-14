@@ -1,4 +1,5 @@
 import { useEffect, useMemo } from "react";
+import { Link } from "react-router-dom";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import type { Resolver, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,6 +15,7 @@ import {
     TextArea,
 } from "@heroui/react";
 import type { Key } from "@heroui/react";
+import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import { Channel } from "@/features/contacts/interfaces/contact.interface";
 import { SourceType } from "@/features/leads/interfaces/lead.interface";
 import type {
@@ -41,6 +43,8 @@ import { buildDefaults } from "./defaults";
 import { resetQueryConfigForSource } from "./empty-query-config";
 import { QueryConfigFields } from "./query-config-fields";
 import { serializeQueryConfig } from "./serialize-query-config";
+import { useScoringInstructions } from "@/features/scoring-instructions/hooks/use-scoring-instructions";
+import { Routes } from "@/routes/routes";
 
 interface FilterFormProps {
     initial?: Filter;
@@ -80,6 +84,7 @@ export function FilterForm({
 
     const sourceType = useWatch({ control, name: "source_type" });
     const cronValue = useWatch({ control, name: "cron_schedule" });
+    const { data: scoringList = [] } = useScoringInstructions();
 
     const handleSourceChange = (next: FilterFormValues["source_type"]) => {
         setValue("source_type", next, { shouldValidate: false });
@@ -103,7 +108,10 @@ export function FilterForm({
                 values.source_type === SourceType.MANUAL
                     ? undefined
                     : values.cron_schedule?.trim() || undefined,
-            scoring_instructions: values.scoring_instructions?.trim() || undefined,
+            scoring_instruction_uuids:
+                values.scoring_instruction_uuids && values.scoring_instruction_uuids.length > 0
+                    ? values.scoring_instruction_uuids
+                    : undefined,
             outreach_instructions: values.outreach_instructions?.trim() || undefined,
         };
         await onSubmit(payload);
@@ -259,15 +267,55 @@ export function FilterForm({
 
             <div className="grid gap-4 md:grid-cols-2">
                 <div className="flex flex-col gap-1.5">
-                    <Label htmlFor="filter-scoring">Scoring instructions (optional)</Label>
-                    <TextArea
-                        id="filter-scoring"
-                        rows={4}
-                        placeholder="Criteria for scoring leads 1–10…"
-                        {...register("scoring_instructions")}
+                    <Label>Scoring instructions</Label>
+                    <Controller
+                        control={control}
+                        name="scoring_instruction_uuids"
+                        render={({ field }) => (
+                            <Select
+                                className="w-full"
+                                placeholder="None selected"
+                                selectionMode="multiple"
+                                value={field.value as Key[]}
+                                onChange={(keys) =>
+                                    field.onChange((keys as Key[]).map(String))
+                                }
+                                isDisabled={isPending}
+                            >
+                                <Select.Trigger>
+                                    <Select.Value />
+                                    <Select.Indicator />
+                                </Select.Trigger>
+                                <Select.Popover>
+                                    <ListBox selectionMode="multiple">
+                                        {scoringList.map((opt) => (
+                                            <ListBox.Item
+                                                key={opt.uuid}
+                                                id={opt.uuid}
+                                                textValue={opt.name}
+                                            >
+                                                {opt.name}
+                                                <ListBox.ItemIndicator />
+                                            </ListBox.Item>
+                                        ))}
+                                    </ListBox>
+                                </Select.Popover>
+                            </Select>
+                        )}
                     />
-                    {errors.scoring_instructions && (
-                        <FieldError>{errors.scoring_instructions.message as string}</FieldError>
+                    <p className="text-xs text-muted">
+                        <Link
+                            to={Routes.dashboard.filters_scoring_instructions}
+                            className="text-accent underline-offset-2 hover:underline font-medium"
+                        >
+                            Scoring instructions
+                        </Link>{" "}
+                        — manage reusable prompts in the library. Each selected prompt gets its own 1–10 score on contacts from this filter.
+                    </p>
+                    {errors.scoring_instruction_uuids && (
+                        <FieldError>
+                            {errors.scoring_instruction_uuids.message as string}
+                        </FieldError>
                     )}
                 </div>
                 <div className="flex flex-col gap-1.5">
@@ -363,13 +411,13 @@ export function FilterForm({
                 <Button type="button" variant="secondary" onPress={onCancel}>
                     Cancel
                 </Button>
-                <Button
+                <ActionButtonWithPending
                     type="submit"
                     isDisabled={isPending || cronInvalid}
                     isPending={isPending}
                 >
                     {submitLabel}
-                </Button>
+                </ActionButtonWithPending>
             </div>
         </Form>
     );

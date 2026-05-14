@@ -21,8 +21,8 @@ export const listContacts = async (
 ): Promise<PaginatedContacts> => {
     try {
         const params: Record<string, unknown> = { ...query };
-        if (Array.isArray(query.tags)) {
-            params.tags = query.tags.length > 0 ? query.tags.join(",") : undefined;
+        if (query.score_rules && query.score_rules.length > 0) {
+            params.score_rules = JSON.stringify(query.score_rules);
         }
         const response = await axiosInstance.get(ApiRoutes.contacts.list, { params });
         return response.data;
@@ -122,9 +122,16 @@ export const updateContactNotes = async (
     return updateContact(uuid, { notes });
 };
 
-export const triggerContactScore = async (uuid: string): Promise<{ jobId: string }> => {
+export const triggerContactScore = async (
+    uuid: string,
+    scoring_instruction_uuids?: string[],
+): Promise<{ jobId: string }> => {
     try {
-        const response = await axiosInstance.post(ApiRoutes.contacts.score(uuid));
+        const body =
+            scoring_instruction_uuids && scoring_instruction_uuids.length > 0
+                ? { scoring_instruction_uuids }
+                : {};
+        const response = await axiosInstance.post(ApiRoutes.contacts.score(uuid), body);
         return response.data;
     } catch (error: any) {
         throw new Error(error?.response?.data?.message || "Failed to enqueue rescore.");

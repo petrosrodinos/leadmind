@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button, Input, Label, Modal, TextArea } from "@heroui/react";
+import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import {
   CallDirection,
   CallOutcome,
@@ -168,14 +169,15 @@ export function LogCallModal({ contactUuid, isOpen, onOpenChange }: LogCallModal
             <Button size="sm" variant="tertiary" onPress={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button
+            <ActionButtonWithPending
               size="sm"
               variant="secondary"
+              isDisabled={logCall.isPending}
               isPending={logCall.isPending}
               onPress={handleConfirm}
             >
               Save call
-            </Button>
+            </ActionButtonWithPending>
           </Modal.Footer>
         </Modal.Dialog>
       </Modal.Container>

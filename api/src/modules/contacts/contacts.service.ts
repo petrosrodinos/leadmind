@@ -1,5 +1,6 @@
 import { InjectQueue } from '@nestjs/bullmq';
 import {
+    BadRequestException,
     ConflictException,
     Injectable,
     NotFoundException,
@@ -23,6 +24,11 @@ import { AiDraftMessageDto } from './dto/ai-draft-message.dto';
 import { CreateContactDto } from './dto/create-contact.dto';
 import { EnrichContactDto } from './dto/enrich-contact.dto';
 import { ListContactsDto } from './dto/list-contacts.dto';
+
+export type ContactListFilterParams = Pick<
+    ListContactsDto,
+    'status' | 'tags' | 'search' | 'filter_uuid' | 'lead_uuid' | 'score_rules'
+>;
 import { LogCallDto } from './dto/log-call.dto';
 import { LogMeetingDto } from './dto/log-meeting.dto';
 import { UpdateContactDto } from './dto/update-contact.dto';
@@ -102,11 +108,24 @@ export class ContactsService {
         return this.findOne(user_uuid, contact.uuid);
     }
 
-    buildWhereInput(user_uuid: string, query: ListContactsDto): Prisma.ContactWhereInput {
+    buildWhereInput(user_uuid: string, query: ContactListFilterParams): Prisma.ContactWhereInput {
+        const scoreAnd =
+            query.score_rules && query.score_rules.length > 0
+                ? {
+                      AND: query.score_rules.map((rule) => ({
+                          contact_scores: {
+                              some: {
+                                  scoring_instruction_uuid: rule.scoring_instruction_uuid,
+                                  score: { gte: rule.min },
+                              },
+                          },
+                      })),
+                  }
+                : {};
         return {
             user_uuid,
             ...(query.status && { status: query.status }),
-            ...(query.min_score != null && { score: { gte: query.min_score } }),
+            ...scoreAnd,
             ...(query.filter_uuid && { filter_uuid: query.filter_uuid }),
             ...(query.lead_uuid && { lead_uuid: query.lead_uuid }),
             ...(query.tags && query.tags.length > 0
@@ -135,6 +154,9 @@ export class ContactsService {
                 include: {
                     tags: true,
                     lead: true,
+                    contact_scores: {
+                        include: { scoring_instruction: { select: { uuid: true, name: true } } },
+                    },
                 },
                 orderBy: { created_at: 'desc' },
                 skip,
@@ -161,7 +183,17 @@ export class ContactsService {
             include: {
                 tags: true,
                 lead: true,
-                filter: true,
+                filter: {
+                    include: {
+                        filter_scoring_instructions: {
+                            include: {
+                                scoring_instruction: {
+                                    select: { uuid: true, name: true, instructions: true },
+                                },
+                            },
+                        },
+                    },
+                },
                 interactions: {
                     orderBy: { created_at: 'desc' },
                     take: 20,
@@ -185,8 +217,21 @@ export class ContactsService {
         if (!contact) {
             throw new NotFoundException(`Contact ${uuid} not found`);
         }
+        const { filter: rawFilter, ...rest } = contact;
+        const filter = rawFilter
+            ? (() => {
+                  const { filter_scoring_instructions, ...frest } = rawFilter;
+                  return {
+                      ...frest,
+                      scoring_instructions: filter_scoring_instructions.map(
+                          (l) => l.scoring_instruction,
+                      ),
+                  };
+              })()
+            : null;
         return {
-            ...contact,
+            ...rest,
+            filter,
             tags: contact.tags.map((t) => t.tag),
         };
     }
@@ -403,13 +448,54 @@ export class ContactsService {
         }
     }
 
-    async triggerScore(user_uuid: string, uuid: string): Promise<{ jobId: string }> {
-        await this.requireOwnedContact(user_uuid, uuid);
-        const job = await this.aiProcessQueue.add(
-            `contact-score:${uuid}`,
-            { contact_uuid: uuid, action: 'score' as const },
-            { removeOnComplete: 100, removeOnFail: 100 },
-        );
+    async triggerScore(
+        user_uuid: string,
+        uuid: string,
+        dto?: { scoring_instruction_uuids?: string[] },
+    ): Promise<{ jobId: string }> {
+        const row = await this.prisma.contact.findFirst({
+            where: { uuid, user_uuid },
+            include: {
+                filter: {
+                    include: {
+                        filter_scoring_instructions: { select: { scoring_instruction_uuid: true } },
+                    },
+                },
+            },
+        });
+        if (!row) {
+            throw new NotFoundException(`Contact ${uuid} not found`);
+        }
+        const allowed =
+            row.filter?.filter_scoring_instructions.map((x) => x.scoring_instruction_uuid) ?? [];
+        if (allowed.length === 0) {
+            throw new BadRequestException('This filter has no scoring instructions to rescore.');
+        }
+        const requestedRaw = dto?.scoring_instruction_uuids?.filter(Boolean) ?? [];
+        const requested =
+            requestedRaw.length > 0 ? [...new Set(requestedRaw)] : allowed;
+        for (const id of requested) {
+            if (!allowed.includes(id)) {
+                throw new BadRequestException(
+                    `Scoring instruction ${id} is not attached to this contact's filter.`,
+                );
+            }
+        }
+        await this.prisma.contactScore.deleteMany({
+            where: { contact_uuid: uuid, scoring_instruction_uuid: { in: requested } },
+        });
+        const jobPayload: {
+            contact_uuid: string;
+            action: 'score';
+            scoring_instruction_uuids?: string[];
+        } = { contact_uuid: uuid, action: 'score' as const };
+        if (requested.length < allowed.length) {
+            jobPayload.scoring_instruction_uuids = requested;
+        }
+        const job = await this.aiProcessQueue.add(`contact-score:${uuid}`, jobPayload, {
+            removeOnComplete: 100,
+            removeOnFail: 100,
+        });
         return { jobId: String(job.id) };
     }
 
@@ -491,7 +577,13 @@ export class ContactsService {
     private async reindexContact(uuid: string): Promise<void> {
         const fresh = await this.prisma.contact.findUnique({
             where: { uuid },
-            include: { lead: true, tags: true },
+            include: {
+                lead: true,
+                tags: true,
+                contact_scores: {
+                    include: { scoring_instruction: { select: { uuid: true, name: true } } },
+                },
+            },
         });
         if (fresh) {
             await this.elasticsearchService.indexContact(fresh);

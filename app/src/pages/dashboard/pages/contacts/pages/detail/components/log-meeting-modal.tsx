@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button, Input, Label, Modal, TextArea } from "@heroui/react";
+import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import { useLogMeeting } from "@/features/contacts/hooks/use-contacts";
 import type { LogMeetingPayload } from "@/features/contacts/interfaces/contact.interface";
 
@@ -131,7 +132,7 @@ export function LogMeetingModal({ contactUuid, isOpen, onOpenChange }: LogMeetin
             <Button size="sm" variant="tertiary" onPress={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button
+            <ActionButtonWithPending
               size="sm"
               variant="secondary"
               isDisabled={!occurredAtValid}
@@ -139,7 +140,7 @@ export function LogMeetingModal({ contactUuid, isOpen, onOpenChange }: LogMeetin
               onPress={handleConfirm}
             >
               Save meeting
-            </Button>
+            </ActionButtonWithPending>
           </Modal.Footer>
         </Modal.Dialog>
       </Modal.Container>

@@ -17,6 +17,7 @@ export const Routes = {
         contacts_detail: "/dashboard/contacts/:uuid",
         filters: "/dashboard/filters",
         filters_new: "/dashboard/filters/new",
+        filters_scoring_instructions: "/dashboard/filters/scoring-instructions",
         filters_detail: "/dashboard/filters/:uuid",
         filters_detail_tab_query: "tab",
         map: "/dashboard/map",

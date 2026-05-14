@@ -1,5 +1,6 @@
 import { AlertDialog, Button } from "@heroui/react";
 import { AlertTriangle } from "lucide-react";
+import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 
 type ConfirmVariant = "danger" | "default";
 
@@ -56,14 +57,14 @@ export function ConfirmDialog({
                         >
                             {cancelLabel}
                         </Button>
-                        <Button
+                        <ActionButtonWithPending
                             variant={variant === "danger" ? "danger" : "primary"}
                             isDisabled={isPending}
                             isPending={isPending}
                             onPress={handleConfirm}
                         >
                             {confirmLabel}
-                        </Button>
+                        </ActionButtonWithPending>
                     </AlertDialog.Footer>
                 </AlertDialog.Dialog>
             </AlertDialog.Container>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button, Dropdown, ListBox, Select, TextArea, Tooltip } from "@heroui/react";
+import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import { CalendarDays, ChevronDown, Info, Phone, Sparkles } from "lucide-react";
 import type { Contact, LeadStatus } from "@/features/contacts/interfaces/contact.interface";
 import { STATUS_OPTIONS } from "@/features/contacts/constants/contacts.constants";
@@ -75,6 +76,9 @@ export function CrmTab({ contact, onNavigateToOutreach }: CrmTabProps) {
     );
   };
 
+  const scoringDefs = contact.filter?.scoring_instructions ?? [];
+  const canRescore = scoringDefs.length > 0;
+
   return (
     <div className="flex flex-col gap-5 max-w-3xl">
       <ChangeStatusModal
@@ -93,16 +97,44 @@ export function CrmTab({ contact, onNavigateToOutreach }: CrmTabProps) {
       <div className="rounded-2xl border border-border/80 bg-surface/80">
         <div className="flex items-center justify-between gap-2 border-b border-border/60 px-5 py-3.5">
           <h3 className="text-sm font-semibold text-foreground">CRM State</h3>
-          <Button
-            size="sm"
-            variant="tertiary"
-            isDisabled={rescore.isPending}
-            isPending={rescore.isPending}
-            onPress={() => rescore.mutate(contact)}
-          >
-            <Sparkles className="size-3.5" />
-            Rescore
-          </Button>
+          <Dropdown>
+            <Dropdown.Trigger>
+              <Button
+                size="sm"
+                variant="tertiary"
+                isDisabled={!canRescore || rescore.isPending}
+                isPending={rescore.isPending}
+              >
+                {({ isPending }) => (
+                  <>
+                    {!isPending ? <Sparkles className="size-3.5 shrink-0" /> : null}
+                    Rescore
+                    <ChevronDown className="size-3.5 shrink-0" />
+                  </>
+                )}
+              </Button>
+            </Dropdown.Trigger>
+            <Dropdown.Popover placement="bottom end">
+              <Dropdown.Menu
+                onAction={(key) => {
+                  if (key === "all") {
+                    rescore.mutate({ contact });
+                  } else {
+                    rescore.mutate({ contact, scoring_instruction_uuids: [String(key)] });
+                  }
+                }}
+              >
+                <Dropdown.Item id="all" textValue="All AI scores">
+                  All AI scores
+                </Dropdown.Item>
+                {scoringDefs.map((d) => (
+                  <Dropdown.Item key={d.uuid} id={d.uuid} textValue={d.name}>
+                    {d.name}
+                  </Dropdown.Item>
+                ))}
+              </Dropdown.Menu>
+            </Dropdown.Popover>
+          </Dropdown>
         </div>
 
         <div className="px-5 py-4 space-y-5">
@@ -137,22 +169,32 @@ export function CrmTab({ contact, onNavigateToOutreach }: CrmTabProps) {
               </Select>
             </div>
 
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center gap-1.5">
-                <p className={LABEL_CLASS}>AI Score</p>
-                {contact.filter?.scoring_instructions ? (
-                  <Tooltip>
-                    <Tooltip.Trigger>
-                      <Info className="size-3 text-muted cursor-default" />
-                    </Tooltip.Trigger>
-                    <Tooltip.Content className="max-w-xs text-xs whitespace-pre-line">
-                      {contact.filter.scoring_instructions}
-                    </Tooltip.Content>
-                  </Tooltip>
-                ) : null}
-              </div>
-              <div className="flex items-center h-full pt-0.5">
-                <ScoreBadge score={contact.score} />
+            <div className="flex flex-col gap-2 flex-1 min-w-[200px]">
+              <p className={LABEL_CLASS}>AI scores</p>
+              <div className="flex flex-col gap-2 pt-0.5">
+                {(contact.filter?.scoring_instructions ?? []).length === 0 ? (
+                  <span className="text-sm text-muted">No scoring instructions on this filter.</span>
+                ) : (
+                  (contact.filter?.scoring_instructions ?? []).map((def) => {
+                    const row = contact.contact_scores?.find((s) => s.scoring_instruction_uuid === def.uuid);
+                    return (
+                      <div key={def.uuid} className="flex items-center justify-between gap-3">
+                        <div className="min-w-0 flex items-center gap-1">
+                          <span className="text-sm text-foreground truncate">{def.name}</span>
+                          <Tooltip>
+                            <Tooltip.Trigger>
+                              <Info className="size-3 shrink-0 text-muted cursor-default" />
+                            </Tooltip.Trigger>
+                            <Tooltip.Content className="max-w-xs text-xs whitespace-pre-line">
+                              {def.instructions}
+                            </Tooltip.Content>
+                          </Tooltip>
+                        </div>
+                        <ScoreBadge score={row?.score ?? null} />
+                      </div>
+                    );
+                  })
+                )}
               </div>
             </div>
           </div>
@@ -185,7 +227,7 @@ export function CrmTab({ contact, onNavigateToOutreach }: CrmTabProps) {
             <span className="text-xs text-muted/50 transition-opacity duration-150" style={{ opacity: notesDirty ? 1 : 0 }}>
               Unsaved changes
             </span>
-            <Button
+            <ActionButtonWithPending
               size="sm"
               variant="secondary"
               isDisabled={!notesDirty || updateNotes.isPending}
@@ -193,7 +235,7 @@ export function CrmTab({ contact, onNavigateToOutreach }: CrmTabProps) {
               onPress={() => updateNotes.mutate({ uuid: contact.uuid, notes })}
             >
               Save notes
-            </Button>
+            </ActionButtonWithPending>
           </div>
         </div>
       </div>
@@ -203,7 +245,7 @@ export function CrmTab({ contact, onNavigateToOutreach }: CrmTabProps) {
         <div className="flex items-center justify-between gap-2 border-b border-border/60 px-5 py-3.5">
           <h3 className="text-sm font-semibold text-foreground">Activity</h3>
           <Dropdown>
-            <Dropdown.Trigger asChild>
+            <Dropdown.Trigger>
               <Button size="sm" variant="tertiary">
                 Log activity
                 <ChevronDown className="size-3.5" />

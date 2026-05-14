@@ -52,7 +52,14 @@ export class AiProcessWorker extends WorkerHost {
     private async processContactJob(data: ContactJobData): Promise<void> {
         const contact = await this.prisma.contact.findUnique({
             where: { uuid: data.contact_uuid },
-            include: { lead: true, filter: true },
+            include: {
+                lead: true,
+                filter: {
+                    include: {
+                        filter_scoring_instructions: { include: { scoring_instruction: true } },
+                    },
+                },
+            },
         });
         if (!contact) {
             this.logger.warn(`Contact ${data.contact_uuid} not found — skipping`);
@@ -78,7 +85,14 @@ export class AiProcessWorker extends WorkerHost {
             try {
                 const fresh_lead = await this.prisma.lead.findUnique({ where: { uuid: lead.uuid } });
                 if (fresh_lead) {
-                    await this.contactAiService.scoreContact(contact, fresh_lead, filter);
+                    await this.contactAiService.scoreContact(
+                        contact,
+                        fresh_lead,
+                        filter,
+                        data.scoring_instruction_uuids?.length
+                            ? { onlyInstructionUuids: data.scoring_instruction_uuids }
+                            : undefined,
+                    );
                 }
             } catch (error) {
                 this.logger.error(`Contact ${contact.uuid} score step failed: ${this.errMsg(error)}`);
