@@ -44,7 +44,10 @@ import { resetQueryConfigForSource } from "./empty-query-config";
 import { QueryConfigFields } from "./query-config-fields";
 import { serializeQueryConfig } from "./serialize-query-config";
 import { useScoringInstructions } from "@/features/scoring-instructions/hooks/use-scoring-instructions";
+import { RoleTypes } from "@/features/user/interfaces/user.interface";
+import { cn } from "@/lib/utils";
 import { Routes } from "@/routes/routes";
+import { useAuthStore } from "@/stores/auth";
 
 interface FilterFormProps {
     initial?: Filter;
@@ -61,6 +64,10 @@ export function FilterForm({
     isPending,
     submitLabel,
 }: FilterFormProps) {
+    const { role } = useAuthStore();
+    const canEditOutreachInstructions =
+        role === RoleTypes.ADMIN || role === RoleTypes.SUPER_ADMIN;
+
     const defaults = useMemo(() => buildDefaults(initial), [initial?.uuid]);
 
     const form = useForm<FilterFormValues>({
@@ -112,7 +119,12 @@ export function FilterForm({
                 values.scoring_instruction_uuids && values.scoring_instruction_uuids.length > 0
                     ? values.scoring_instruction_uuids
                     : undefined,
-            outreach_instructions: values.outreach_instructions?.trim() || undefined,
+            ...(canEditOutreachInstructions
+                ? {
+                      outreach_instructions:
+                          values.outreach_instructions?.trim() || undefined,
+                  }
+                : {}),
         };
         await onSubmit(payload);
     };
@@ -265,7 +277,12 @@ export function FilterForm({
                 )}
             </div>
 
-            <div className="grid gap-4 md:grid-cols-2">
+            <div
+                className={cn(
+                    "grid gap-4",
+                    canEditOutreachInstructions && "md:grid-cols-2",
+                )}
+            >
                 <div className="flex flex-col gap-1.5">
                     <Label>Scoring instructions</Label>
                     <Controller
@@ -318,18 +335,24 @@ export function FilterForm({
                         </FieldError>
                     )}
                 </div>
-                <div className="flex flex-col gap-1.5">
-                    <Label htmlFor="filter-outreach">Outreach instructions (optional)</Label>
-                    <TextArea
-                        id="filter-outreach"
-                        rows={4}
-                        placeholder="Goals and tone for drafts — one draft per selected channel…"
-                        {...register("outreach_instructions")}
-                    />
-                    {errors.outreach_instructions && (
-                        <FieldError>{errors.outreach_instructions.message as string}</FieldError>
-                    )}
-                </div>
+                {canEditOutreachInstructions ? (
+                    <div className="flex flex-col gap-1.5">
+                        <Label htmlFor="filter-outreach">
+                            Outreach instructions (optional)
+                        </Label>
+                        <TextArea
+                            id="filter-outreach"
+                            rows={4}
+                            placeholder="Goals and tone for drafts — one draft per selected channel…"
+                            {...register("outreach_instructions")}
+                        />
+                        {errors.outreach_instructions && (
+                            <FieldError>
+                                {errors.outreach_instructions.message as string}
+                            </FieldError>
+                        )}
+                    </div>
+                ) : null}
             </div>
 
             {sourceType !== SourceType.MANUAL && (
