@@ -183,6 +183,9 @@ export class ContactsService {
             include: {
                 tags: true,
                 lead: true,
+                contact_scores: {
+                    include: { scoring_instruction: { select: { uuid: true, name: true } } },
+                },
                 filter: {
                     include: {
                         filter_scoring_instructions: {

@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { Button, Dropdown, ListBox, Select, TextArea, Tooltip } from "@heroui/react";
+import { Button, Checkbox, Dropdown, ListBox, Popover, Select, TextArea, Tooltip } from "@heroui/react";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import { CalendarDays, ChevronDown, Info, Phone, Sparkles } from "lucide-react";
 import type { Contact, LeadStatus } from "@/features/contacts/interfaces/contact.interface";
 import { STATUS_OPTIONS } from "@/features/contacts/constants/contacts.constants";
 import { useContactTags, useRescoreContact, useUpdateContactNotes, useUpdateContactStatus, useUpdateContactTags } from "@/features/contacts/hooks/use-contacts";
+import { cn } from "@/lib/utils";
 import { ScoreBadge } from "@/pages/dashboard/pages/leads/components/badges";
 import { InteractionTimeline } from "@/pages/dashboard/pages/contacts/components/interaction-timeline";
 import { ChangeStatusModal } from "./change-status-modal";
@@ -32,6 +33,8 @@ export function CrmTab({ contact, onNavigateToOutreach }: CrmTabProps) {
   const [statusNote, setStatusNote] = useState("");
   const [logCallOpen, setLogCallOpen] = useState(false);
   const [logMeetingOpen, setLogMeetingOpen] = useState(false);
+  const [rescoreOpen, setRescoreOpen] = useState(false);
+  const [rescoreSelected, setRescoreSelected] = useState<string[]>([]);
 
   useEffect(() => {
     const t = window.setTimeout(() => {
@@ -79,6 +82,26 @@ export function CrmTab({ contact, onNavigateToOutreach }: CrmTabProps) {
   const scoringDefs = contact.filter?.scoring_instructions ?? [];
   const canRescore = scoringDefs.length > 0;
 
+  const handleRescoreOpenChange = (next: boolean) => {
+    setRescoreOpen(next);
+    if (next) {
+      setRescoreSelected(scoringDefs.map((d) => d.uuid));
+    }
+  };
+
+  const applyRescore = () => {
+    if (rescoreSelected.length === 0) return;
+    const allSelected = rescoreSelected.length === scoringDefs.length;
+    rescore.mutate(
+      allSelected ? { contact } : { contact, scoring_instruction_uuids: rescoreSelected },
+      {
+        onSuccess: () => {
+          setRescoreOpen(false);
+        },
+      },
+    );
+  };
+
   return (
     <div className="flex flex-col gap-5 max-w-3xl">
       <ChangeStatusModal
@@ -97,8 +120,8 @@ export function CrmTab({ contact, onNavigateToOutreach }: CrmTabProps) {
       <div className="rounded-2xl border border-border/80 bg-surface/80">
         <div className="flex items-center justify-between gap-2 border-b border-border/60 px-5 py-3.5">
           <h3 className="text-sm font-semibold text-foreground">CRM State</h3>
-          <Dropdown>
-            <Dropdown.Trigger>
+          <Popover isOpen={rescoreOpen} onOpenChange={handleRescoreOpenChange}>
+            <Popover.Trigger>
               <Button
                 size="sm"
                 variant="tertiary"
@@ -113,28 +136,77 @@ export function CrmTab({ contact, onNavigateToOutreach }: CrmTabProps) {
                   </>
                 )}
               </Button>
-            </Dropdown.Trigger>
-            <Dropdown.Popover placement="bottom end">
-              <Dropdown.Menu
-                onAction={(key) => {
-                  if (key === "all") {
-                    rescore.mutate({ contact });
-                  } else {
-                    rescore.mutate({ contact, scoring_instruction_uuids: [String(key)] });
-                  }
-                }}
-              >
-                <Dropdown.Item id="all" textValue="All AI scores">
-                  All AI scores
-                </Dropdown.Item>
-                {scoringDefs.map((d) => (
-                  <Dropdown.Item key={d.uuid} id={d.uuid} textValue={d.name}>
-                    {d.name}
-                  </Dropdown.Item>
-                ))}
-              </Dropdown.Menu>
-            </Dropdown.Popover>
-          </Dropdown>
+            </Popover.Trigger>
+            <Popover.Content
+              placement="bottom end"
+              className={cn(
+                "w-[min(100vw-1.25rem,18rem)] p-0 overflow-hidden rounded-xl",
+                "border border-border bg-surface shadow-lg",
+              )}
+            >
+              <Popover.Dialog className="outline-none">
+                <div className="flex items-center gap-2.5 border-b border-border/60 px-3 py-2.5">
+                  <span
+                    className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-accent/12 text-accent ring-1 ring-accent/20"
+                    aria-hidden
+                  >
+                    <Sparkles className="size-3.5" strokeWidth={1.75} />
+                  </span>
+                  <div className="min-w-0 leading-snug">
+                    <p className="text-sm font-semibold text-foreground">Rescore</p>
+                    <p className="text-xs text-muted mt-0.5">Choose prompts to re-run, then Apply.</p>
+                  </div>
+                </div>
+                <div className="max-h-56 overflow-y-auto px-3 py-2 space-y-1">
+                  {scoringDefs.map((d) => (
+                    <Checkbox
+                      key={d.uuid}
+                      isSelected={rescoreSelected.includes(d.uuid)}
+                      onChange={(selected) =>
+                        setRescoreSelected((prev) =>
+                          selected
+                            ? [...new Set([...prev, d.uuid])]
+                            : prev.filter((id) => id !== d.uuid),
+                        )
+                      }
+                      className="flex w-full cursor-pointer items-center gap-2.5 rounded-lg border border-transparent px-2 py-2 text-left outline-none transition-colors hover:border-border/60 hover:bg-surface-secondary/70 focus-visible:ring-2 focus-visible:ring-accent/35 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                    >
+                      <Checkbox.Control className="shrink-0">
+                        <Checkbox.Indicator />
+                      </Checkbox.Control>
+                      <Checkbox.Content className="min-w-0 text-sm font-medium text-foreground leading-snug">
+                        {d.name}
+                      </Checkbox.Content>
+                    </Checkbox>
+                  ))}
+                </div>
+                <div className="flex items-center justify-between gap-2 border-t border-border/60 bg-surface-secondary/50 px-3 py-2.5">
+                  <span className="text-xs text-muted tabular-nums">
+                    {rescoreSelected.length} of {scoringDefs.length} selected
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      size="sm"
+                      variant="tertiary"
+                      onPress={() => setRescoreOpen(false)}
+                      isDisabled={rescore.isPending}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      isDisabled={rescoreSelected.length === 0 || rescore.isPending}
+                      isPending={rescore.isPending}
+                      onPress={applyRescore}
+                    >
+                      Apply
+                    </Button>
+                  </div>
+                </div>
+              </Popover.Dialog>
+            </Popover.Content>
+          </Popover>
         </div>
 
         <div className="px-5 py-4 space-y-5">
