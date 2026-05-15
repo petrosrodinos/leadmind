@@ -337,14 +337,22 @@ export function useBulkTriggerContactScore() {
         mutationFn: (payload: BulkTriggerContactScorePayload) => triggerContactsBulkScore(payload),
         onSuccess: (data, vars) => {
             const skip = data.skipped_contacts > 0 ? ` (${data.skipped_contacts} skipped — no matching rules on their filter.)` : "";
-            toast({
-                title: "Scoring queued",
-                description: `${data.queued} job${data.queued === 1 ? "" : "s"} enqueued.${skip}`,
-                duration: 3500,
-            });
-            qc.invalidateQueries({ queryKey: contactsQueryKeys.all });
-            for (const uuid of vars.contact_uuids) {
-                qc.invalidateQueries({ queryKey: contactsQueryKeys.detail(uuid) });
+            if (data.is_batch) {
+                toast({
+                    title: "Batch scoring submitted",
+                    description: `${data.queued} request${data.queued === 1 ? "" : "s"} queued for batch processing — results available within 24h (50% cheaper).${skip}`,
+                    duration: 5000,
+                });
+            } else {
+                toast({
+                    title: "Scoring queued",
+                    description: `${data.queued} job${data.queued === 1 ? "" : "s"} enqueued.${skip}`,
+                    duration: 3500,
+                });
+                qc.invalidateQueries({ queryKey: contactsQueryKeys.all });
+                for (const uuid of vars.contact_uuids) {
+                    qc.invalidateQueries({ queryKey: contactsQueryKeys.detail(uuid) });
+                }
             }
         },
         onError: (error: Error) => {

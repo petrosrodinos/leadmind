@@ -25,6 +25,7 @@ import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { MarketingCampaignsModule } from './modules/marketing-campaigns/marketing-campaigns.module';
 import { WebhooksModule } from './modules/webhooks/webhooks.module';
 import { WorkersModule } from './workers/workers.module';
+import { AdminModule } from './modules/admin/admin.module';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { WorkersModule } from './workers/workers.module';
     MarketingCampaignsModule,
     WebhooksModule,
     WorkersModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [AppService],

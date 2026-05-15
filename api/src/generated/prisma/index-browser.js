@@ -389,6 +389,24 @@ exports.Prisma.MarketingCampaignContactScalarFieldEnum = {
   updated_at: 'updated_at'
 };
 
+exports.Prisma.OpenAiBatchJobScalarFieldEnum = {
+  id: 'id',
+  batch_id: 'batch_id',
+  user_uuid: 'user_uuid',
+  type: 'type',
+  status: 'status',
+  total_requests: 'total_requests',
+  completed_requests: 'completed_requests',
+  failed_requests: 'failed_requests',
+  input_file_id: 'input_file_id',
+  output_file_id: 'output_file_id',
+  error_file_id: 'error_file_id',
+  expires_at: 'expires_at',
+  finished_at: 'finished_at',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -538,6 +556,20 @@ exports.CampaignContactStatus = exports.$Enums.CampaignContactStatus = {
   UNSUBSCRIBED: 'UNSUBSCRIBED'
 };
 
+exports.OpenAiBatchJobType = exports.$Enums.OpenAiBatchJobType = {
+  CONTACT_SCORE: 'CONTACT_SCORE',
+  LEAD_ENRICH: 'LEAD_ENRICH',
+  MESSAGE_CREATE: 'MESSAGE_CREATE'
+};
+
+exports.OpenAiBatchStatus = exports.$Enums.OpenAiBatchStatus = {
+  IN_PROGRESS: 'IN_PROGRESS',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+  EXPIRED: 'EXPIRED',
+  CANCELLED: 'CANCELLED'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Filter: 'Filter',
@@ -555,7 +587,8 @@ exports.Prisma.ModelName = {
   FilterJob: 'FilterJob',
   SenderProfile: 'SenderProfile',
   MarketingCampaign: 'MarketingCampaign',
-  MarketingCampaignContact: 'MarketingCampaignContact'
+  MarketingCampaignContact: 'MarketingCampaignContact',
+  OpenAiBatchJob: 'OpenAiBatchJob'
 };
 
 /**

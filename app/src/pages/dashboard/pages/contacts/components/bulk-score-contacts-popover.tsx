@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Label, Popover } from "@heroui/react";
+import { Checkbox, Label, Popover } from "@heroui/react";
 import { Gauge } from "lucide-react";
 import { MultiSelect, type MultiSelectOption } from "@/components/ui/multi-select";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
@@ -18,6 +18,7 @@ export function BulkScoreContactsPopover({ selectedContactUuids, onScoringComple
     const [open, setOpen] = useState(false);
     const [filterUuids, setFilterUuids] = useState<string[]>([]);
     const [ruleUuids, setRuleUuids] = useState<string[]>([]);
+    const [useBatch, setUseBatch] = useState(false);
 
     const selectedFilters = useMemo(
         () => filters.filter((f: Filter) => filterUuids.includes(f.uuid)),
@@ -54,12 +55,14 @@ export function BulkScoreContactsPopover({ selectedContactUuids, onScoringComple
                 contact_uuids: selectedContactUuids,
                 filter_uuids: filterUuids,
                 scoring_instruction_uuids: ruleUuids,
+                use_batch: useBatch,
             },
             {
                 onSuccess: () => {
                     setOpen(false);
                     setFilterUuids([]);
                     setRuleUuids([]);
+                    setUseBatch(false);
                     onScoringComplete?.();
                 },
             },
@@ -116,6 +119,18 @@ export function BulkScoreContactsPopover({ selectedContactUuids, onScoringComple
                             }
                             disabled={filterUuids.length === 0 || ruleOptions.length === 0}
                         />
+                    </div>
+                    <div>
+                        <Checkbox
+                            isSelected={useBatch}
+                            onChange={(checked: boolean) => setUseBatch(checked)}
+                            isDisabled={bulkScore.isPending}
+                        >
+                            <Checkbox.Control>
+                                <Checkbox.Indicator />
+                            </Checkbox.Control>
+                            <span className="text-xs text-muted">Use OpenAI Batch API (50% cheaper, results within 24h)</span>
+                        </Checkbox>
                     </div>
                     <div className="flex justify-end gap-1.5 pt-1 border-t border-border/60">
                         <ActionButtonWithPending size="sm" variant="tertiary" onPress={() => setOpen(false)} isDisabled={bulkScore.isPending}>

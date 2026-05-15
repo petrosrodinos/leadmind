@@ -1,6 +1,7 @@
 import { Routes as ReactRoutes, Route, Navigate, useParams } from "react-router-dom";
 import { FilterDetailTabIds, Routes } from "@/routes/routes";
 import ProtectedRoute from "@/routes/protected-route";
+import { RoleTypes } from "@/features/user/interfaces/user.interface";
 import LandingPage from "@/pages/landing";
 import SignIn from "@/pages/auth/pages/sign-in";
 import SignUp from "@/pages/auth/pages/sign-up";
@@ -22,6 +23,7 @@ import CampaignsPage from "@/pages/dashboard/pages/campaigns";
 import NewCampaignPage from "@/pages/dashboard/pages/campaigns/pages/new";
 import EditCampaignPage from "@/pages/dashboard/pages/campaigns/pages/edit";
 import CampaignDetailPage from "@/pages/dashboard/pages/campaigns/pages/detail";
+import AdminBatchJobsPage from "@/pages/dashboard/pages/admin/batch-jobs";
 
 function NavigateToFilterTab({ tab }: { tab: (typeof FilterDetailTabIds)[keyof typeof FilterDetailTabIds] }) {
   const { uuid } = useParams<{ uuid: string }>();
@@ -79,6 +81,14 @@ export default function AppRoutes() {
           <Route path=":uuid/filter" element={<NavigateToFilterTab tab={FilterDetailTabIds.FILTER} />} />
           <Route path=":uuid" element={<FilterDetailPage />} />
         </Route>
+        <Route
+          path="admin/batch-jobs"
+          element={
+            <ProtectedRoute requiredRoles={[RoleTypes.ADMIN]}>
+              <AdminBatchJobsPage />
+            </ProtectedRoute>
+          }
+        />
       </Route>
 
       {/* Landing page */}

@@ -1,9 +1,11 @@
-import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
-import { Channel, Contact, Filter, Lead, MsgStatus, OutreachMessage, Prisma } from '@/generated/prisma';
+import { BadRequestException, ForbiddenException, Injectable, Logger } from '@nestjs/common';
+import { Channel, Contact, Filter, Lead, MsgStatus, OpenAiBatchJobType, OpenAiBatchStatus, OutreachMessage, Prisma } from '@/generated/prisma';
 import { AiDraftMessageDto } from '../dto/ai-draft-message.dto';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { AiService } from '@/integrations/ai/services/ai.service';
+import { OpenAiBatchService } from '@/integrations/ai/services/openai-batch.service';
 import { AiModels, AiProviders } from '@/integrations/ai/interfaces/ai.interface';
+import { OpenAiBatchRequest } from '@/integrations/ai/interfaces/openai-batch.interface';
 import { ElasticsearchService } from '@/integrations/elasticsearch/elasticsearch.service';
 import {
     AiScoringSystemPrompt,
@@ -22,6 +24,11 @@ const filterForScoreInclude = {
 
 export type FilterForScore = Prisma.FilterGetPayload<{ include: typeof filterForScoreInclude }>;
 
+export interface ContactBatchScoringItem {
+    contact_uuid: string;
+    instruction_uuids: string[];
+}
+
 @Injectable()
 export class ContactAiService {
     private readonly logger = new Logger(ContactAiService.name);
@@ -29,6 +36,7 @@ export class ContactAiService {
     constructor(
         private readonly prisma: PrismaService,
         private readonly aiService: AiService,
+        private readonly openAiBatchService: OpenAiBatchService,
         private readonly elasticsearchService: ElasticsearchService,
     ) { }
 
@@ -101,6 +109,152 @@ export class ContactAiService {
         if (fresh) {
             await this.elasticsearchService.indexContact(fresh);
         }
+    }
+
+    async submitBatchScore(
+        user_uuid: string,
+        plan: ContactBatchScoringItem[],
+    ): Promise<{ batch_id: string; queued: number }> {
+        const allInstrUuids = [...new Set(plan.flatMap((p) => p.instruction_uuids))];
+        const contactUuids = plan.map((p) => p.contact_uuid);
+
+        const [instructions, contacts, existingScores] = await Promise.all([
+            this.prisma.scoringInstruction.findMany({
+                where: { uuid: { in: allInstrUuids } },
+                select: { uuid: true, instructions: true },
+            }),
+            this.prisma.contact.findMany({
+                where: { uuid: { in: contactUuids } },
+                include: { lead: true },
+            }),
+            this.prisma.contactScore.findMany({
+                where: { contact_uuid: { in: contactUuids } },
+                select: { contact_uuid: true, scoring_instruction_uuid: true },
+            }),
+        ]);
+
+        const instrMap = new Map(instructions.map((i) => [i.uuid, i.instructions]));
+        const contactMap = new Map(contacts.map((c) => [c.uuid, c]));
+        const scoredPairs = new Set(
+            existingScores.map((s) => `${s.contact_uuid}|${s.scoring_instruction_uuid}`),
+        );
+
+        const requests: OpenAiBatchRequest[] = [];
+        for (const item of plan) {
+            const contact = contactMap.get(item.contact_uuid);
+            if (!contact) continue;
+
+            for (const instrUuid of item.instruction_uuids) {
+                if (scoredPairs.has(`${item.contact_uuid}|${instrUuid}`)) continue;
+                const instrText = instrMap.get(instrUuid);
+                if (!instrText) continue;
+
+                requests.push({
+                    custom_id: `contact_score|${item.contact_uuid}|${instrUuid}`,
+                    model: AiModels.openai.gpt4oMini,
+                    messages: [
+                        { role: 'system', content: AiScoringSystemPrompt },
+                        { role: 'user', content: buildScorePrompt(contact, contact.lead, instrText) },
+                    ],
+                    response_format: { type: 'json_object' },
+                });
+            }
+        }
+
+        if (requests.length === 0) {
+            throw new BadRequestException('All selected contacts are already scored for the chosen rules.');
+        }
+
+        const result = await this.openAiBatchService.createBatch(requests);
+
+        await this.prisma.openAiBatchJob.create({
+            data: {
+                batch_id: result.batch_id,
+                user_uuid,
+                type: OpenAiBatchJobType.CONTACT_SCORE,
+                status: OpenAiBatchStatus.IN_PROGRESS,
+                total_requests: requests.length,
+                input_file_id: result.input_file_id,
+                expires_at: result.expires_at,
+            },
+        });
+
+        this.logger.log(`Batch scoring submitted: ${result.batch_id} (${requests.length} requests)`);
+        return { batch_id: result.batch_id, queued: requests.length };
+    }
+
+    async processBatchScoreResults(batchId: string): Promise<void> {
+        const job = await this.prisma.openAiBatchJob.findUnique({ where: { batch_id: batchId } });
+        if (!job) {
+            this.logger.warn(`No OpenAiBatchJob found for batch_id: ${batchId}`);
+            return;
+        }
+
+        const batchStatus = await this.openAiBatchService.getBatchStatus(batchId);
+        if (!batchStatus.output_file_id) {
+            this.logger.warn(`Batch ${batchId} has no output file yet`);
+            return;
+        }
+
+        const results = await this.openAiBatchService.getBatchResults(batchStatus.output_file_id);
+        const updatedContactUuids = new Set<string>();
+
+        for (const result of results) {
+            if (!result.content || result.error) {
+                this.logger.warn(`Batch result ${result.custom_id} failed: ${result.error}`);
+                continue;
+            }
+
+            const parts = result.custom_id.split('|');
+            if (parts.length !== 3 || parts[0] !== 'contact_score') continue;
+            const [, contact_uuid, scoring_instruction_uuid] = parts;
+
+            try {
+                const parsed = JSON.parse(result.content);
+                const score = Number(parsed.score);
+                if (!Number.isFinite(score)) continue;
+
+                await this.prisma.contactScore.upsert({
+                    where: { contact_uuid_scoring_instruction_uuid: { contact_uuid, scoring_instruction_uuid } },
+                    create: { contact_uuid, scoring_instruction_uuid, score },
+                    update: { score },
+                });
+                updatedContactUuids.add(contact_uuid);
+            } catch {
+                this.logger.warn(`Failed to parse batch result for ${result.custom_id}`);
+            }
+        }
+
+        await this.prisma.openAiBatchJob.update({
+            where: { batch_id: batchId },
+            data: {
+                status: OpenAiBatchStatus.COMPLETED,
+                finished_at: new Date(),
+                output_file_id: batchStatus.output_file_id,
+                error_file_id: batchStatus.error_file_id,
+                completed_requests: batchStatus.completed_requests,
+                failed_requests: batchStatus.failed_requests,
+                total_requests: batchStatus.total_requests,
+            },
+        });
+
+        for (const contact_uuid of updatedContactUuids) {
+            const fresh = await this.prisma.contact.findUnique({
+                where: { uuid: contact_uuid },
+                include: {
+                    lead: true,
+                    tags: true,
+                    contact_scores: {
+                        include: { scoring_instruction: { select: { uuid: true, name: true } } },
+                    },
+                },
+            });
+            if (fresh) {
+                await this.elasticsearchService.indexContact(fresh);
+            }
+        }
+
+        this.logger.log(`Batch ${batchId} processed: ${updatedContactUuids.size} contacts updated`);
     }
 
     async draftOutreachMessages(

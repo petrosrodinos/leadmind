@@ -95,6 +95,9 @@ export const ApiRoutes = {
         update: (uuid: string) => `/sender-profiles/${uuid}`,
         remove: (uuid: string) => `/sender-profiles/${uuid}`,
     },
+    admin: {
+        batch_jobs: "/admin/batch-jobs",
+    },
     marketing_campaigns: {
         prefix: "/marketing-campaigns",
         list: "/marketing-campaigns",

@@ -485,7 +485,10 @@ export class ContactsService {
     async triggerBulkScore(
         user_uuid: string,
         dto: BulkTriggerScoreDto,
-    ): Promise<{ jobIds: string[]; queued: number; skipped_contacts: number }> {
+    ): Promise<
+        | { jobIds: string[]; queued: number; skipped_contacts: number; is_batch: false }
+        | { batch_id: string; queued: number; skipped_contacts: number; is_batch: true }
+    > {
         const contactUuids = [...new Set(dto.contact_uuids)];
         const filterUuids = [...new Set(dto.filter_uuids)];
         const ruleUuids = [...new Set(dto.scoring_instruction_uuids)];
@@ -533,6 +536,7 @@ export class ContactsService {
         }
 
         const jobIds: string[] = [];
+        const batchPlan: Array<{ contact_uuid: string; instruction_uuids: string[] }> = [];
         let skipped_contacts = 0;
 
         for (const c of contacts) {
@@ -543,14 +547,29 @@ export class ContactsService {
                 skipped_contacts += 1;
                 continue;
             }
-            const job = await enqueueContactScoreJob(
-                this.aiProcessQueue,
-                this.prisma,
-                c.uuid,
-                allowed,
-                perContactRequested,
-            );
-            jobIds.push(job.jobId);
+
+            if (dto.use_batch) {
+                batchPlan.push({ contact_uuid: c.uuid, instruction_uuids: perContactRequested });
+            } else {
+                const job = await enqueueContactScoreJob(
+                    this.aiProcessQueue,
+                    this.prisma,
+                    c.uuid,
+                    allowed,
+                    perContactRequested,
+                );
+                jobIds.push(job.jobId);
+            }
+        }
+
+        if (dto.use_batch) {
+            if (batchPlan.length === 0) {
+                throw new BadRequestException(
+                    'None of the selected contacts use any of the chosen scoring rules on their filter.',
+                );
+            }
+            const { batch_id, queued } = await this.contactAiService.submitBatchScore(user_uuid, batchPlan);
+            return { batch_id, queued, skipped_contacts, is_batch: true as const };
         }
 
         if (jobIds.length === 0) {
@@ -559,7 +578,7 @@ export class ContactsService {
             );
         }
 
-        return { jobIds, queued: jobIds.length, skipped_contacts };
+        return { jobIds, queued: jobIds.length, skipped_contacts, is_batch: false as const };
     }
 
     async triggerDraftMessages(

@@ -98,6 +98,11 @@ export type MarketingCampaign = $Result.DefaultSelection<Prisma.$MarketingCampai
  * 
  */
 export type MarketingCampaignContact = $Result.DefaultSelection<Prisma.$MarketingCampaignContactPayload>
+/**
+ * Model OpenAiBatchJob
+ * 
+ */
+export type OpenAiBatchJob = $Result.DefaultSelection<Prisma.$OpenAiBatchJobPayload>
 
 /**
  * Enums
@@ -261,6 +266,26 @@ export const CampaignContactStatus: {
 
 export type CampaignContactStatus = (typeof CampaignContactStatus)[keyof typeof CampaignContactStatus]
 
+
+export const OpenAiBatchJobType: {
+  CONTACT_SCORE: 'CONTACT_SCORE',
+  LEAD_ENRICH: 'LEAD_ENRICH',
+  MESSAGE_CREATE: 'MESSAGE_CREATE'
+};
+
+export type OpenAiBatchJobType = (typeof OpenAiBatchJobType)[keyof typeof OpenAiBatchJobType]
+
+
+export const OpenAiBatchStatus: {
+  IN_PROGRESS: 'IN_PROGRESS',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+  EXPIRED: 'EXPIRED',
+  CANCELLED: 'CANCELLED'
+};
+
+export type OpenAiBatchStatus = (typeof OpenAiBatchStatus)[keyof typeof OpenAiBatchStatus]
+
 }
 
 export type AuthRole = $Enums.AuthRole
@@ -314,6 +339,14 @@ export const CampaignStatus: typeof $Enums.CampaignStatus
 export type CampaignContactStatus = $Enums.CampaignContactStatus
 
 export const CampaignContactStatus: typeof $Enums.CampaignContactStatus
+
+export type OpenAiBatchJobType = $Enums.OpenAiBatchJobType
+
+export const OpenAiBatchJobType: typeof $Enums.OpenAiBatchJobType
+
+export type OpenAiBatchStatus = $Enums.OpenAiBatchStatus
+
+export const OpenAiBatchStatus: typeof $Enums.OpenAiBatchStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -601,6 +634,16 @@ export class PrismaClient<
     * ```
     */
   get marketingCampaignContact(): Prisma.MarketingCampaignContactDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.openAiBatchJob`: Exposes CRUD operations for the **OpenAiBatchJob** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more OpenAiBatchJobs
+    * const openAiBatchJobs = await prisma.openAiBatchJob.findMany()
+    * ```
+    */
+  get openAiBatchJob(): Prisma.OpenAiBatchJobDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1051,7 +1094,8 @@ export namespace Prisma {
     FilterJob: 'FilterJob',
     SenderProfile: 'SenderProfile',
     MarketingCampaign: 'MarketingCampaign',
-    MarketingCampaignContact: 'MarketingCampaignContact'
+    MarketingCampaignContact: 'MarketingCampaignContact',
+    OpenAiBatchJob: 'OpenAiBatchJob'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1067,7 +1111,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "filter" | "scoringInstruction" | "filterScoringInstruction" | "rawLead" | "lead" | "leadEnrichment" | "contact" | "contactScore" | "contactTag" | "interaction" | "outreachMessage" | "outreachSequence" | "filterJob" | "senderProfile" | "marketingCampaign" | "marketingCampaignContact"
+      modelProps: "user" | "filter" | "scoringInstruction" | "filterScoringInstruction" | "rawLead" | "lead" | "leadEnrichment" | "contact" | "contactScore" | "contactTag" | "interaction" | "outreachMessage" | "outreachSequence" | "filterJob" | "senderProfile" | "marketingCampaign" | "marketingCampaignContact" | "openAiBatchJob"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2329,6 +2373,80 @@ export namespace Prisma {
           }
         }
       }
+      OpenAiBatchJob: {
+        payload: Prisma.$OpenAiBatchJobPayload<ExtArgs>
+        fields: Prisma.OpenAiBatchJobFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.OpenAiBatchJobFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OpenAiBatchJobPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.OpenAiBatchJobFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OpenAiBatchJobPayload>
+          }
+          findFirst: {
+            args: Prisma.OpenAiBatchJobFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OpenAiBatchJobPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.OpenAiBatchJobFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OpenAiBatchJobPayload>
+          }
+          findMany: {
+            args: Prisma.OpenAiBatchJobFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OpenAiBatchJobPayload>[]
+          }
+          create: {
+            args: Prisma.OpenAiBatchJobCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OpenAiBatchJobPayload>
+          }
+          createMany: {
+            args: Prisma.OpenAiBatchJobCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.OpenAiBatchJobCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OpenAiBatchJobPayload>[]
+          }
+          delete: {
+            args: Prisma.OpenAiBatchJobDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OpenAiBatchJobPayload>
+          }
+          update: {
+            args: Prisma.OpenAiBatchJobUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OpenAiBatchJobPayload>
+          }
+          deleteMany: {
+            args: Prisma.OpenAiBatchJobDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.OpenAiBatchJobUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.OpenAiBatchJobUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OpenAiBatchJobPayload>[]
+          }
+          upsert: {
+            args: Prisma.OpenAiBatchJobUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OpenAiBatchJobPayload>
+          }
+          aggregate: {
+            args: Prisma.OpenAiBatchJobAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateOpenAiBatchJob>
+          }
+          groupBy: {
+            args: Prisma.OpenAiBatchJobGroupByArgs<ExtArgs>
+            result: $Utils.Optional<OpenAiBatchJobGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.OpenAiBatchJobCountArgs<ExtArgs>
+            result: $Utils.Optional<OpenAiBatchJobCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2454,6 +2572,7 @@ export namespace Prisma {
     senderProfile?: SenderProfileOmit
     marketingCampaign?: MarketingCampaignOmit
     marketingCampaignContact?: MarketingCampaignContactOmit
+    openAiBatchJob?: OpenAiBatchJobOmit
   }
 
   /* Types for Logging */
@@ -2542,6 +2661,7 @@ export namespace Prisma {
     sender_profiles: number
     marketing_campaigns: number
     scoring_instructions: number
+    openai_batch_jobs: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2553,6 +2673,7 @@ export namespace Prisma {
     sender_profiles?: boolean | UserCountOutputTypeCountSender_profilesArgs
     marketing_campaigns?: boolean | UserCountOutputTypeCountMarketing_campaignsArgs
     scoring_instructions?: boolean | UserCountOutputTypeCountScoring_instructionsArgs
+    openai_batch_jobs?: boolean | UserCountOutputTypeCountOpenai_batch_jobsArgs
   }
 
   // Custom InputTypes
@@ -2620,6 +2741,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountScoring_instructionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ScoringInstructionWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountOpenai_batch_jobsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OpenAiBatchJobWhereInput
   }
 
 
@@ -3142,6 +3270,7 @@ export namespace Prisma {
     sender_profiles?: boolean | User$sender_profilesArgs<ExtArgs>
     marketing_campaigns?: boolean | User$marketing_campaignsArgs<ExtArgs>
     scoring_instructions?: boolean | User$scoring_instructionsArgs<ExtArgs>
+    openai_batch_jobs?: boolean | User$openai_batch_jobsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -3188,6 +3317,7 @@ export namespace Prisma {
     sender_profiles?: boolean | User$sender_profilesArgs<ExtArgs>
     marketing_campaigns?: boolean | User$marketing_campaignsArgs<ExtArgs>
     scoring_instructions?: boolean | User$scoring_instructionsArgs<ExtArgs>
+    openai_batch_jobs?: boolean | User$openai_batch_jobsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -3204,6 +3334,7 @@ export namespace Prisma {
       sender_profiles: Prisma.$SenderProfilePayload<ExtArgs>[]
       marketing_campaigns: Prisma.$MarketingCampaignPayload<ExtArgs>[]
       scoring_instructions: Prisma.$ScoringInstructionPayload<ExtArgs>[]
+      openai_batch_jobs: Prisma.$OpenAiBatchJobPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -3616,6 +3747,7 @@ export namespace Prisma {
     sender_profiles<T extends User$sender_profilesArgs<ExtArgs> = {}>(args?: Subset<T, User$sender_profilesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SenderProfilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     marketing_campaigns<T extends User$marketing_campaignsArgs<ExtArgs> = {}>(args?: Subset<T, User$marketing_campaignsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketingCampaignPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     scoring_instructions<T extends User$scoring_instructionsArgs<ExtArgs> = {}>(args?: Subset<T, User$scoring_instructionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ScoringInstructionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    openai_batch_jobs<T extends User$openai_batch_jobsArgs<ExtArgs> = {}>(args?: Subset<T, User$openai_batch_jobsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OpenAiBatchJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4230,6 +4362,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ScoringInstructionScalarFieldEnum | ScoringInstructionScalarFieldEnum[]
+  }
+
+  /**
+   * User.openai_batch_jobs
+   */
+  export type User$openai_batch_jobsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OpenAiBatchJob
+     */
+    select?: OpenAiBatchJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OpenAiBatchJob
+     */
+    omit?: OpenAiBatchJobOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OpenAiBatchJobInclude<ExtArgs> | null
+    where?: OpenAiBatchJobWhereInput
+    orderBy?: OpenAiBatchJobOrderByWithRelationInput | OpenAiBatchJobOrderByWithRelationInput[]
+    cursor?: OpenAiBatchJobWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OpenAiBatchJobScalarFieldEnum | OpenAiBatchJobScalarFieldEnum[]
   }
 
   /**
@@ -24132,6 +24288,1236 @@ export namespace Prisma {
 
 
   /**
+   * Model OpenAiBatchJob
+   */
+
+  export type AggregateOpenAiBatchJob = {
+    _count: OpenAiBatchJobCountAggregateOutputType | null
+    _avg: OpenAiBatchJobAvgAggregateOutputType | null
+    _sum: OpenAiBatchJobSumAggregateOutputType | null
+    _min: OpenAiBatchJobMinAggregateOutputType | null
+    _max: OpenAiBatchJobMaxAggregateOutputType | null
+  }
+
+  export type OpenAiBatchJobAvgAggregateOutputType = {
+    total_requests: number | null
+    completed_requests: number | null
+    failed_requests: number | null
+  }
+
+  export type OpenAiBatchJobSumAggregateOutputType = {
+    total_requests: number | null
+    completed_requests: number | null
+    failed_requests: number | null
+  }
+
+  export type OpenAiBatchJobMinAggregateOutputType = {
+    id: string | null
+    batch_id: string | null
+    user_uuid: string | null
+    type: $Enums.OpenAiBatchJobType | null
+    status: $Enums.OpenAiBatchStatus | null
+    total_requests: number | null
+    completed_requests: number | null
+    failed_requests: number | null
+    input_file_id: string | null
+    output_file_id: string | null
+    error_file_id: string | null
+    expires_at: Date | null
+    finished_at: Date | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type OpenAiBatchJobMaxAggregateOutputType = {
+    id: string | null
+    batch_id: string | null
+    user_uuid: string | null
+    type: $Enums.OpenAiBatchJobType | null
+    status: $Enums.OpenAiBatchStatus | null
+    total_requests: number | null
+    completed_requests: number | null
+    failed_requests: number | null
+    input_file_id: string | null
+    output_file_id: string | null
+    error_file_id: string | null
+    expires_at: Date | null
+    finished_at: Date | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type OpenAiBatchJobCountAggregateOutputType = {
+    id: number
+    batch_id: number
+    user_uuid: number
+    type: number
+    status: number
+    total_requests: number
+    completed_requests: number
+    failed_requests: number
+    input_file_id: number
+    output_file_id: number
+    error_file_id: number
+    expires_at: number
+    finished_at: number
+    created_at: number
+    updated_at: number
+    _all: number
+  }
+
+
+  export type OpenAiBatchJobAvgAggregateInputType = {
+    total_requests?: true
+    completed_requests?: true
+    failed_requests?: true
+  }
+
+  export type OpenAiBatchJobSumAggregateInputType = {
+    total_requests?: true
+    completed_requests?: true
+    failed_requests?: true
+  }
+
+  export type OpenAiBatchJobMinAggregateInputType = {
+    id?: true
+    batch_id?: true
+    user_uuid?: true
+    type?: true
+    status?: true
+    total_requests?: true
+    completed_requests?: true
+    failed_requests?: true
+    input_file_id?: true
+    output_file_id?: true
+    error_file_id?: true
+    expires_at?: true
+    finished_at?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type OpenAiBatchJobMaxAggregateInputType = {
+    id?: true
+    batch_id?: true
+    user_uuid?: true
+    type?: true
+    status?: true
+    total_requests?: true
+    completed_requests?: true
+    failed_requests?: true
+    input_file_id?: true
+    output_file_id?: true
+    error_file_id?: true
+    expires_at?: true
+    finished_at?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type OpenAiBatchJobCountAggregateInputType = {
+    id?: true
+    batch_id?: true
+    user_uuid?: true
+    type?: true
+    status?: true
+    total_requests?: true
+    completed_requests?: true
+    failed_requests?: true
+    input_file_id?: true
+    output_file_id?: true
+    error_file_id?: true
+    expires_at?: true
+    finished_at?: true
+    created_at?: true
+    updated_at?: true
+    _all?: true
+  }
+
+  export type OpenAiBatchJobAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which OpenAiBatchJob to aggregate.
+     */
+    where?: OpenAiBatchJobWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OpenAiBatchJobs to fetch.
+     */
+    orderBy?: OpenAiBatchJobOrderByWithRelationInput | OpenAiBatchJobOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: OpenAiBatchJobWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OpenAiBatchJobs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OpenAiBatchJobs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned OpenAiBatchJobs
+    **/
+    _count?: true | OpenAiBatchJobCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: OpenAiBatchJobAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: OpenAiBatchJobSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: OpenAiBatchJobMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: OpenAiBatchJobMaxAggregateInputType
+  }
+
+  export type GetOpenAiBatchJobAggregateType<T extends OpenAiBatchJobAggregateArgs> = {
+        [P in keyof T & keyof AggregateOpenAiBatchJob]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateOpenAiBatchJob[P]>
+      : GetScalarType<T[P], AggregateOpenAiBatchJob[P]>
+  }
+
+
+
+
+  export type OpenAiBatchJobGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OpenAiBatchJobWhereInput
+    orderBy?: OpenAiBatchJobOrderByWithAggregationInput | OpenAiBatchJobOrderByWithAggregationInput[]
+    by: OpenAiBatchJobScalarFieldEnum[] | OpenAiBatchJobScalarFieldEnum
+    having?: OpenAiBatchJobScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: OpenAiBatchJobCountAggregateInputType | true
+    _avg?: OpenAiBatchJobAvgAggregateInputType
+    _sum?: OpenAiBatchJobSumAggregateInputType
+    _min?: OpenAiBatchJobMinAggregateInputType
+    _max?: OpenAiBatchJobMaxAggregateInputType
+  }
+
+  export type OpenAiBatchJobGroupByOutputType = {
+    id: string
+    batch_id: string
+    user_uuid: string
+    type: $Enums.OpenAiBatchJobType
+    status: $Enums.OpenAiBatchStatus
+    total_requests: number
+    completed_requests: number
+    failed_requests: number
+    input_file_id: string | null
+    output_file_id: string | null
+    error_file_id: string | null
+    expires_at: Date | null
+    finished_at: Date | null
+    created_at: Date
+    updated_at: Date
+    _count: OpenAiBatchJobCountAggregateOutputType | null
+    _avg: OpenAiBatchJobAvgAggregateOutputType | null
+    _sum: OpenAiBatchJobSumAggregateOutputType | null
+    _min: OpenAiBatchJobMinAggregateOutputType | null
+    _max: OpenAiBatchJobMaxAggregateOutputType | null
+  }
+
+  type GetOpenAiBatchJobGroupByPayload<T extends OpenAiBatchJobGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<OpenAiBatchJobGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof OpenAiBatchJobGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], OpenAiBatchJobGroupByOutputType[P]>
+            : GetScalarType<T[P], OpenAiBatchJobGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type OpenAiBatchJobSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    batch_id?: boolean
+    user_uuid?: boolean
+    type?: boolean
+    status?: boolean
+    total_requests?: boolean
+    completed_requests?: boolean
+    failed_requests?: boolean
+    input_file_id?: boolean
+    output_file_id?: boolean
+    error_file_id?: boolean
+    expires_at?: boolean
+    finished_at?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["openAiBatchJob"]>
+
+  export type OpenAiBatchJobSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    batch_id?: boolean
+    user_uuid?: boolean
+    type?: boolean
+    status?: boolean
+    total_requests?: boolean
+    completed_requests?: boolean
+    failed_requests?: boolean
+    input_file_id?: boolean
+    output_file_id?: boolean
+    error_file_id?: boolean
+    expires_at?: boolean
+    finished_at?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["openAiBatchJob"]>
+
+  export type OpenAiBatchJobSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    batch_id?: boolean
+    user_uuid?: boolean
+    type?: boolean
+    status?: boolean
+    total_requests?: boolean
+    completed_requests?: boolean
+    failed_requests?: boolean
+    input_file_id?: boolean
+    output_file_id?: boolean
+    error_file_id?: boolean
+    expires_at?: boolean
+    finished_at?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["openAiBatchJob"]>
+
+  export type OpenAiBatchJobSelectScalar = {
+    id?: boolean
+    batch_id?: boolean
+    user_uuid?: boolean
+    type?: boolean
+    status?: boolean
+    total_requests?: boolean
+    completed_requests?: boolean
+    failed_requests?: boolean
+    input_file_id?: boolean
+    output_file_id?: boolean
+    error_file_id?: boolean
+    expires_at?: boolean
+    finished_at?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }
+
+  export type OpenAiBatchJobOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "batch_id" | "user_uuid" | "type" | "status" | "total_requests" | "completed_requests" | "failed_requests" | "input_file_id" | "output_file_id" | "error_file_id" | "expires_at" | "finished_at" | "created_at" | "updated_at", ExtArgs["result"]["openAiBatchJob"]>
+  export type OpenAiBatchJobInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type OpenAiBatchJobIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type OpenAiBatchJobIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $OpenAiBatchJobPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "OpenAiBatchJob"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      batch_id: string
+      user_uuid: string
+      type: $Enums.OpenAiBatchJobType
+      status: $Enums.OpenAiBatchStatus
+      total_requests: number
+      completed_requests: number
+      failed_requests: number
+      input_file_id: string | null
+      output_file_id: string | null
+      error_file_id: string | null
+      expires_at: Date | null
+      finished_at: Date | null
+      created_at: Date
+      updated_at: Date
+    }, ExtArgs["result"]["openAiBatchJob"]>
+    composites: {}
+  }
+
+  type OpenAiBatchJobGetPayload<S extends boolean | null | undefined | OpenAiBatchJobDefaultArgs> = $Result.GetResult<Prisma.$OpenAiBatchJobPayload, S>
+
+  type OpenAiBatchJobCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<OpenAiBatchJobFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: OpenAiBatchJobCountAggregateInputType | true
+    }
+
+  export interface OpenAiBatchJobDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['OpenAiBatchJob'], meta: { name: 'OpenAiBatchJob' } }
+    /**
+     * Find zero or one OpenAiBatchJob that matches the filter.
+     * @param {OpenAiBatchJobFindUniqueArgs} args - Arguments to find a OpenAiBatchJob
+     * @example
+     * // Get one OpenAiBatchJob
+     * const openAiBatchJob = await prisma.openAiBatchJob.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends OpenAiBatchJobFindUniqueArgs>(args: SelectSubset<T, OpenAiBatchJobFindUniqueArgs<ExtArgs>>): Prisma__OpenAiBatchJobClient<$Result.GetResult<Prisma.$OpenAiBatchJobPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one OpenAiBatchJob that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {OpenAiBatchJobFindUniqueOrThrowArgs} args - Arguments to find a OpenAiBatchJob
+     * @example
+     * // Get one OpenAiBatchJob
+     * const openAiBatchJob = await prisma.openAiBatchJob.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends OpenAiBatchJobFindUniqueOrThrowArgs>(args: SelectSubset<T, OpenAiBatchJobFindUniqueOrThrowArgs<ExtArgs>>): Prisma__OpenAiBatchJobClient<$Result.GetResult<Prisma.$OpenAiBatchJobPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first OpenAiBatchJob that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OpenAiBatchJobFindFirstArgs} args - Arguments to find a OpenAiBatchJob
+     * @example
+     * // Get one OpenAiBatchJob
+     * const openAiBatchJob = await prisma.openAiBatchJob.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends OpenAiBatchJobFindFirstArgs>(args?: SelectSubset<T, OpenAiBatchJobFindFirstArgs<ExtArgs>>): Prisma__OpenAiBatchJobClient<$Result.GetResult<Prisma.$OpenAiBatchJobPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first OpenAiBatchJob that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OpenAiBatchJobFindFirstOrThrowArgs} args - Arguments to find a OpenAiBatchJob
+     * @example
+     * // Get one OpenAiBatchJob
+     * const openAiBatchJob = await prisma.openAiBatchJob.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends OpenAiBatchJobFindFirstOrThrowArgs>(args?: SelectSubset<T, OpenAiBatchJobFindFirstOrThrowArgs<ExtArgs>>): Prisma__OpenAiBatchJobClient<$Result.GetResult<Prisma.$OpenAiBatchJobPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more OpenAiBatchJobs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OpenAiBatchJobFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all OpenAiBatchJobs
+     * const openAiBatchJobs = await prisma.openAiBatchJob.findMany()
+     * 
+     * // Get first 10 OpenAiBatchJobs
+     * const openAiBatchJobs = await prisma.openAiBatchJob.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const openAiBatchJobWithIdOnly = await prisma.openAiBatchJob.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends OpenAiBatchJobFindManyArgs>(args?: SelectSubset<T, OpenAiBatchJobFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OpenAiBatchJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a OpenAiBatchJob.
+     * @param {OpenAiBatchJobCreateArgs} args - Arguments to create a OpenAiBatchJob.
+     * @example
+     * // Create one OpenAiBatchJob
+     * const OpenAiBatchJob = await prisma.openAiBatchJob.create({
+     *   data: {
+     *     // ... data to create a OpenAiBatchJob
+     *   }
+     * })
+     * 
+     */
+    create<T extends OpenAiBatchJobCreateArgs>(args: SelectSubset<T, OpenAiBatchJobCreateArgs<ExtArgs>>): Prisma__OpenAiBatchJobClient<$Result.GetResult<Prisma.$OpenAiBatchJobPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many OpenAiBatchJobs.
+     * @param {OpenAiBatchJobCreateManyArgs} args - Arguments to create many OpenAiBatchJobs.
+     * @example
+     * // Create many OpenAiBatchJobs
+     * const openAiBatchJob = await prisma.openAiBatchJob.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends OpenAiBatchJobCreateManyArgs>(args?: SelectSubset<T, OpenAiBatchJobCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many OpenAiBatchJobs and returns the data saved in the database.
+     * @param {OpenAiBatchJobCreateManyAndReturnArgs} args - Arguments to create many OpenAiBatchJobs.
+     * @example
+     * // Create many OpenAiBatchJobs
+     * const openAiBatchJob = await prisma.openAiBatchJob.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many OpenAiBatchJobs and only return the `id`
+     * const openAiBatchJobWithIdOnly = await prisma.openAiBatchJob.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends OpenAiBatchJobCreateManyAndReturnArgs>(args?: SelectSubset<T, OpenAiBatchJobCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OpenAiBatchJobPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a OpenAiBatchJob.
+     * @param {OpenAiBatchJobDeleteArgs} args - Arguments to delete one OpenAiBatchJob.
+     * @example
+     * // Delete one OpenAiBatchJob
+     * const OpenAiBatchJob = await prisma.openAiBatchJob.delete({
+     *   where: {
+     *     // ... filter to delete one OpenAiBatchJob
+     *   }
+     * })
+     * 
+     */
+    delete<T extends OpenAiBatchJobDeleteArgs>(args: SelectSubset<T, OpenAiBatchJobDeleteArgs<ExtArgs>>): Prisma__OpenAiBatchJobClient<$Result.GetResult<Prisma.$OpenAiBatchJobPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one OpenAiBatchJob.
+     * @param {OpenAiBatchJobUpdateArgs} args - Arguments to update one OpenAiBatchJob.
+     * @example
+     * // Update one OpenAiBatchJob
+     * const openAiBatchJob = await prisma.openAiBatchJob.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends OpenAiBatchJobUpdateArgs>(args: SelectSubset<T, OpenAiBatchJobUpdateArgs<ExtArgs>>): Prisma__OpenAiBatchJobClient<$Result.GetResult<Prisma.$OpenAiBatchJobPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more OpenAiBatchJobs.
+     * @param {OpenAiBatchJobDeleteManyArgs} args - Arguments to filter OpenAiBatchJobs to delete.
+     * @example
+     * // Delete a few OpenAiBatchJobs
+     * const { count } = await prisma.openAiBatchJob.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends OpenAiBatchJobDeleteManyArgs>(args?: SelectSubset<T, OpenAiBatchJobDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more OpenAiBatchJobs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OpenAiBatchJobUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many OpenAiBatchJobs
+     * const openAiBatchJob = await prisma.openAiBatchJob.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends OpenAiBatchJobUpdateManyArgs>(args: SelectSubset<T, OpenAiBatchJobUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more OpenAiBatchJobs and returns the data updated in the database.
+     * @param {OpenAiBatchJobUpdateManyAndReturnArgs} args - Arguments to update many OpenAiBatchJobs.
+     * @example
+     * // Update many OpenAiBatchJobs
+     * const openAiBatchJob = await prisma.openAiBatchJob.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more OpenAiBatchJobs and only return the `id`
+     * const openAiBatchJobWithIdOnly = await prisma.openAiBatchJob.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends OpenAiBatchJobUpdateManyAndReturnArgs>(args: SelectSubset<T, OpenAiBatchJobUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OpenAiBatchJobPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one OpenAiBatchJob.
+     * @param {OpenAiBatchJobUpsertArgs} args - Arguments to update or create a OpenAiBatchJob.
+     * @example
+     * // Update or create a OpenAiBatchJob
+     * const openAiBatchJob = await prisma.openAiBatchJob.upsert({
+     *   create: {
+     *     // ... data to create a OpenAiBatchJob
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the OpenAiBatchJob we want to update
+     *   }
+     * })
+     */
+    upsert<T extends OpenAiBatchJobUpsertArgs>(args: SelectSubset<T, OpenAiBatchJobUpsertArgs<ExtArgs>>): Prisma__OpenAiBatchJobClient<$Result.GetResult<Prisma.$OpenAiBatchJobPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of OpenAiBatchJobs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OpenAiBatchJobCountArgs} args - Arguments to filter OpenAiBatchJobs to count.
+     * @example
+     * // Count the number of OpenAiBatchJobs
+     * const count = await prisma.openAiBatchJob.count({
+     *   where: {
+     *     // ... the filter for the OpenAiBatchJobs we want to count
+     *   }
+     * })
+    **/
+    count<T extends OpenAiBatchJobCountArgs>(
+      args?: Subset<T, OpenAiBatchJobCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], OpenAiBatchJobCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a OpenAiBatchJob.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OpenAiBatchJobAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends OpenAiBatchJobAggregateArgs>(args: Subset<T, OpenAiBatchJobAggregateArgs>): Prisma.PrismaPromise<GetOpenAiBatchJobAggregateType<T>>
+
+    /**
+     * Group by OpenAiBatchJob.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OpenAiBatchJobGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends OpenAiBatchJobGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: OpenAiBatchJobGroupByArgs['orderBy'] }
+        : { orderBy?: OpenAiBatchJobGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, OpenAiBatchJobGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetOpenAiBatchJobGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the OpenAiBatchJob model
+   */
+  readonly fields: OpenAiBatchJobFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for OpenAiBatchJob.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__OpenAiBatchJobClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the OpenAiBatchJob model
+   */
+  interface OpenAiBatchJobFieldRefs {
+    readonly id: FieldRef<"OpenAiBatchJob", 'String'>
+    readonly batch_id: FieldRef<"OpenAiBatchJob", 'String'>
+    readonly user_uuid: FieldRef<"OpenAiBatchJob", 'String'>
+    readonly type: FieldRef<"OpenAiBatchJob", 'OpenAiBatchJobType'>
+    readonly status: FieldRef<"OpenAiBatchJob", 'OpenAiBatchStatus'>
+    readonly total_requests: FieldRef<"OpenAiBatchJob", 'Int'>
+    readonly completed_requests: FieldRef<"OpenAiBatchJob", 'Int'>
+    readonly failed_requests: FieldRef<"OpenAiBatchJob", 'Int'>
+    readonly input_file_id: FieldRef<"OpenAiBatchJob", 'String'>
+    readonly output_file_id: FieldRef<"OpenAiBatchJob", 'String'>
+    readonly error_file_id: FieldRef<"OpenAiBatchJob", 'String'>
+    readonly expires_at: FieldRef<"OpenAiBatchJob", 'DateTime'>
+    readonly finished_at: FieldRef<"OpenAiBatchJob", 'DateTime'>
+    readonly created_at: FieldRef<"OpenAiBatchJob", 'DateTime'>
+    readonly updated_at: FieldRef<"OpenAiBatchJob", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * OpenAiBatchJob findUnique
+   */
+  export type OpenAiBatchJobFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OpenAiBatchJob
+     */
+    select?: OpenAiBatchJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OpenAiBatchJob
+     */
+    omit?: OpenAiBatchJobOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OpenAiBatchJobInclude<ExtArgs> | null
+    /**
+     * Filter, which OpenAiBatchJob to fetch.
+     */
+    where: OpenAiBatchJobWhereUniqueInput
+  }
+
+  /**
+   * OpenAiBatchJob findUniqueOrThrow
+   */
+  export type OpenAiBatchJobFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OpenAiBatchJob
+     */
+    select?: OpenAiBatchJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OpenAiBatchJob
+     */
+    omit?: OpenAiBatchJobOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OpenAiBatchJobInclude<ExtArgs> | null
+    /**
+     * Filter, which OpenAiBatchJob to fetch.
+     */
+    where: OpenAiBatchJobWhereUniqueInput
+  }
+
+  /**
+   * OpenAiBatchJob findFirst
+   */
+  export type OpenAiBatchJobFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OpenAiBatchJob
+     */
+    select?: OpenAiBatchJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OpenAiBatchJob
+     */
+    omit?: OpenAiBatchJobOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OpenAiBatchJobInclude<ExtArgs> | null
+    /**
+     * Filter, which OpenAiBatchJob to fetch.
+     */
+    where?: OpenAiBatchJobWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OpenAiBatchJobs to fetch.
+     */
+    orderBy?: OpenAiBatchJobOrderByWithRelationInput | OpenAiBatchJobOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for OpenAiBatchJobs.
+     */
+    cursor?: OpenAiBatchJobWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OpenAiBatchJobs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OpenAiBatchJobs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OpenAiBatchJobs.
+     */
+    distinct?: OpenAiBatchJobScalarFieldEnum | OpenAiBatchJobScalarFieldEnum[]
+  }
+
+  /**
+   * OpenAiBatchJob findFirstOrThrow
+   */
+  export type OpenAiBatchJobFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OpenAiBatchJob
+     */
+    select?: OpenAiBatchJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OpenAiBatchJob
+     */
+    omit?: OpenAiBatchJobOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OpenAiBatchJobInclude<ExtArgs> | null
+    /**
+     * Filter, which OpenAiBatchJob to fetch.
+     */
+    where?: OpenAiBatchJobWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OpenAiBatchJobs to fetch.
+     */
+    orderBy?: OpenAiBatchJobOrderByWithRelationInput | OpenAiBatchJobOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for OpenAiBatchJobs.
+     */
+    cursor?: OpenAiBatchJobWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OpenAiBatchJobs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OpenAiBatchJobs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OpenAiBatchJobs.
+     */
+    distinct?: OpenAiBatchJobScalarFieldEnum | OpenAiBatchJobScalarFieldEnum[]
+  }
+
+  /**
+   * OpenAiBatchJob findMany
+   */
+  export type OpenAiBatchJobFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OpenAiBatchJob
+     */
+    select?: OpenAiBatchJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OpenAiBatchJob
+     */
+    omit?: OpenAiBatchJobOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OpenAiBatchJobInclude<ExtArgs> | null
+    /**
+     * Filter, which OpenAiBatchJobs to fetch.
+     */
+    where?: OpenAiBatchJobWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OpenAiBatchJobs to fetch.
+     */
+    orderBy?: OpenAiBatchJobOrderByWithRelationInput | OpenAiBatchJobOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing OpenAiBatchJobs.
+     */
+    cursor?: OpenAiBatchJobWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OpenAiBatchJobs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OpenAiBatchJobs.
+     */
+    skip?: number
+    distinct?: OpenAiBatchJobScalarFieldEnum | OpenAiBatchJobScalarFieldEnum[]
+  }
+
+  /**
+   * OpenAiBatchJob create
+   */
+  export type OpenAiBatchJobCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OpenAiBatchJob
+     */
+    select?: OpenAiBatchJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OpenAiBatchJob
+     */
+    omit?: OpenAiBatchJobOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OpenAiBatchJobInclude<ExtArgs> | null
+    /**
+     * The data needed to create a OpenAiBatchJob.
+     */
+    data: XOR<OpenAiBatchJobCreateInput, OpenAiBatchJobUncheckedCreateInput>
+  }
+
+  /**
+   * OpenAiBatchJob createMany
+   */
+  export type OpenAiBatchJobCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many OpenAiBatchJobs.
+     */
+    data: OpenAiBatchJobCreateManyInput | OpenAiBatchJobCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * OpenAiBatchJob createManyAndReturn
+   */
+  export type OpenAiBatchJobCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OpenAiBatchJob
+     */
+    select?: OpenAiBatchJobSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the OpenAiBatchJob
+     */
+    omit?: OpenAiBatchJobOmit<ExtArgs> | null
+    /**
+     * The data used to create many OpenAiBatchJobs.
+     */
+    data: OpenAiBatchJobCreateManyInput | OpenAiBatchJobCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OpenAiBatchJobIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * OpenAiBatchJob update
+   */
+  export type OpenAiBatchJobUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OpenAiBatchJob
+     */
+    select?: OpenAiBatchJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OpenAiBatchJob
+     */
+    omit?: OpenAiBatchJobOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OpenAiBatchJobInclude<ExtArgs> | null
+    /**
+     * The data needed to update a OpenAiBatchJob.
+     */
+    data: XOR<OpenAiBatchJobUpdateInput, OpenAiBatchJobUncheckedUpdateInput>
+    /**
+     * Choose, which OpenAiBatchJob to update.
+     */
+    where: OpenAiBatchJobWhereUniqueInput
+  }
+
+  /**
+   * OpenAiBatchJob updateMany
+   */
+  export type OpenAiBatchJobUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update OpenAiBatchJobs.
+     */
+    data: XOR<OpenAiBatchJobUpdateManyMutationInput, OpenAiBatchJobUncheckedUpdateManyInput>
+    /**
+     * Filter which OpenAiBatchJobs to update
+     */
+    where?: OpenAiBatchJobWhereInput
+    /**
+     * Limit how many OpenAiBatchJobs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * OpenAiBatchJob updateManyAndReturn
+   */
+  export type OpenAiBatchJobUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OpenAiBatchJob
+     */
+    select?: OpenAiBatchJobSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the OpenAiBatchJob
+     */
+    omit?: OpenAiBatchJobOmit<ExtArgs> | null
+    /**
+     * The data used to update OpenAiBatchJobs.
+     */
+    data: XOR<OpenAiBatchJobUpdateManyMutationInput, OpenAiBatchJobUncheckedUpdateManyInput>
+    /**
+     * Filter which OpenAiBatchJobs to update
+     */
+    where?: OpenAiBatchJobWhereInput
+    /**
+     * Limit how many OpenAiBatchJobs to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OpenAiBatchJobIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * OpenAiBatchJob upsert
+   */
+  export type OpenAiBatchJobUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OpenAiBatchJob
+     */
+    select?: OpenAiBatchJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OpenAiBatchJob
+     */
+    omit?: OpenAiBatchJobOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OpenAiBatchJobInclude<ExtArgs> | null
+    /**
+     * The filter to search for the OpenAiBatchJob to update in case it exists.
+     */
+    where: OpenAiBatchJobWhereUniqueInput
+    /**
+     * In case the OpenAiBatchJob found by the `where` argument doesn't exist, create a new OpenAiBatchJob with this data.
+     */
+    create: XOR<OpenAiBatchJobCreateInput, OpenAiBatchJobUncheckedCreateInput>
+    /**
+     * In case the OpenAiBatchJob was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<OpenAiBatchJobUpdateInput, OpenAiBatchJobUncheckedUpdateInput>
+  }
+
+  /**
+   * OpenAiBatchJob delete
+   */
+  export type OpenAiBatchJobDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OpenAiBatchJob
+     */
+    select?: OpenAiBatchJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OpenAiBatchJob
+     */
+    omit?: OpenAiBatchJobOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OpenAiBatchJobInclude<ExtArgs> | null
+    /**
+     * Filter which OpenAiBatchJob to delete.
+     */
+    where: OpenAiBatchJobWhereUniqueInput
+  }
+
+  /**
+   * OpenAiBatchJob deleteMany
+   */
+  export type OpenAiBatchJobDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which OpenAiBatchJobs to delete
+     */
+    where?: OpenAiBatchJobWhereInput
+    /**
+     * Limit how many OpenAiBatchJobs to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * OpenAiBatchJob without action
+   */
+  export type OpenAiBatchJobDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OpenAiBatchJob
+     */
+    select?: OpenAiBatchJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OpenAiBatchJob
+     */
+    omit?: OpenAiBatchJobOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OpenAiBatchJobInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -24465,6 +25851,27 @@ export namespace Prisma {
   export type MarketingCampaignContactScalarFieldEnum = (typeof MarketingCampaignContactScalarFieldEnum)[keyof typeof MarketingCampaignContactScalarFieldEnum]
 
 
+  export const OpenAiBatchJobScalarFieldEnum: {
+    id: 'id',
+    batch_id: 'batch_id',
+    user_uuid: 'user_uuid',
+    type: 'type',
+    status: 'status',
+    total_requests: 'total_requests',
+    completed_requests: 'completed_requests',
+    failed_requests: 'failed_requests',
+    input_file_id: 'input_file_id',
+    output_file_id: 'output_file_id',
+    error_file_id: 'error_file_id',
+    expires_at: 'expires_at',
+    finished_at: 'finished_at',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
+  };
+
+  export type OpenAiBatchJobScalarFieldEnum = (typeof OpenAiBatchJobScalarFieldEnum)[keyof typeof OpenAiBatchJobScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -24778,6 +26185,34 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'OpenAiBatchJobType'
+   */
+  export type EnumOpenAiBatchJobTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OpenAiBatchJobType'>
+    
+
+
+  /**
+   * Reference to a field of type 'OpenAiBatchJobType[]'
+   */
+  export type ListEnumOpenAiBatchJobTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OpenAiBatchJobType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'OpenAiBatchStatus'
+   */
+  export type EnumOpenAiBatchStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OpenAiBatchStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'OpenAiBatchStatus[]'
+   */
+  export type ListEnumOpenAiBatchStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OpenAiBatchStatus[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -24814,6 +26249,7 @@ export namespace Prisma {
     sender_profiles?: SenderProfileListRelationFilter
     marketing_campaigns?: MarketingCampaignListRelationFilter
     scoring_instructions?: ScoringInstructionListRelationFilter
+    openai_batch_jobs?: OpenAiBatchJobListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -24833,6 +26269,7 @@ export namespace Prisma {
     sender_profiles?: SenderProfileOrderByRelationAggregateInput
     marketing_campaigns?: MarketingCampaignOrderByRelationAggregateInput
     scoring_instructions?: ScoringInstructionOrderByRelationAggregateInput
+    openai_batch_jobs?: OpenAiBatchJobOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -24855,6 +26292,7 @@ export namespace Prisma {
     sender_profiles?: SenderProfileListRelationFilter
     marketing_campaigns?: MarketingCampaignListRelationFilter
     scoring_instructions?: ScoringInstructionListRelationFilter
+    openai_batch_jobs?: OpenAiBatchJobListRelationFilter
   }, "id" | "uuid" | "email" | "phone">
 
   export type UserOrderByWithAggregationInput = {
@@ -26542,6 +27980,113 @@ export namespace Prisma {
     updated_at?: DateTimeWithAggregatesFilter<"MarketingCampaignContact"> | Date | string
   }
 
+  export type OpenAiBatchJobWhereInput = {
+    AND?: OpenAiBatchJobWhereInput | OpenAiBatchJobWhereInput[]
+    OR?: OpenAiBatchJobWhereInput[]
+    NOT?: OpenAiBatchJobWhereInput | OpenAiBatchJobWhereInput[]
+    id?: StringFilter<"OpenAiBatchJob"> | string
+    batch_id?: StringFilter<"OpenAiBatchJob"> | string
+    user_uuid?: StringFilter<"OpenAiBatchJob"> | string
+    type?: EnumOpenAiBatchJobTypeFilter<"OpenAiBatchJob"> | $Enums.OpenAiBatchJobType
+    status?: EnumOpenAiBatchStatusFilter<"OpenAiBatchJob"> | $Enums.OpenAiBatchStatus
+    total_requests?: IntFilter<"OpenAiBatchJob"> | number
+    completed_requests?: IntFilter<"OpenAiBatchJob"> | number
+    failed_requests?: IntFilter<"OpenAiBatchJob"> | number
+    input_file_id?: StringNullableFilter<"OpenAiBatchJob"> | string | null
+    output_file_id?: StringNullableFilter<"OpenAiBatchJob"> | string | null
+    error_file_id?: StringNullableFilter<"OpenAiBatchJob"> | string | null
+    expires_at?: DateTimeNullableFilter<"OpenAiBatchJob"> | Date | string | null
+    finished_at?: DateTimeNullableFilter<"OpenAiBatchJob"> | Date | string | null
+    created_at?: DateTimeFilter<"OpenAiBatchJob"> | Date | string
+    updated_at?: DateTimeFilter<"OpenAiBatchJob"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type OpenAiBatchJobOrderByWithRelationInput = {
+    id?: SortOrder
+    batch_id?: SortOrder
+    user_uuid?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    total_requests?: SortOrder
+    completed_requests?: SortOrder
+    failed_requests?: SortOrder
+    input_file_id?: SortOrderInput | SortOrder
+    output_file_id?: SortOrderInput | SortOrder
+    error_file_id?: SortOrderInput | SortOrder
+    expires_at?: SortOrderInput | SortOrder
+    finished_at?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type OpenAiBatchJobWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    batch_id?: string
+    AND?: OpenAiBatchJobWhereInput | OpenAiBatchJobWhereInput[]
+    OR?: OpenAiBatchJobWhereInput[]
+    NOT?: OpenAiBatchJobWhereInput | OpenAiBatchJobWhereInput[]
+    user_uuid?: StringFilter<"OpenAiBatchJob"> | string
+    type?: EnumOpenAiBatchJobTypeFilter<"OpenAiBatchJob"> | $Enums.OpenAiBatchJobType
+    status?: EnumOpenAiBatchStatusFilter<"OpenAiBatchJob"> | $Enums.OpenAiBatchStatus
+    total_requests?: IntFilter<"OpenAiBatchJob"> | number
+    completed_requests?: IntFilter<"OpenAiBatchJob"> | number
+    failed_requests?: IntFilter<"OpenAiBatchJob"> | number
+    input_file_id?: StringNullableFilter<"OpenAiBatchJob"> | string | null
+    output_file_id?: StringNullableFilter<"OpenAiBatchJob"> | string | null
+    error_file_id?: StringNullableFilter<"OpenAiBatchJob"> | string | null
+    expires_at?: DateTimeNullableFilter<"OpenAiBatchJob"> | Date | string | null
+    finished_at?: DateTimeNullableFilter<"OpenAiBatchJob"> | Date | string | null
+    created_at?: DateTimeFilter<"OpenAiBatchJob"> | Date | string
+    updated_at?: DateTimeFilter<"OpenAiBatchJob"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "batch_id">
+
+  export type OpenAiBatchJobOrderByWithAggregationInput = {
+    id?: SortOrder
+    batch_id?: SortOrder
+    user_uuid?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    total_requests?: SortOrder
+    completed_requests?: SortOrder
+    failed_requests?: SortOrder
+    input_file_id?: SortOrderInput | SortOrder
+    output_file_id?: SortOrderInput | SortOrder
+    error_file_id?: SortOrderInput | SortOrder
+    expires_at?: SortOrderInput | SortOrder
+    finished_at?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    _count?: OpenAiBatchJobCountOrderByAggregateInput
+    _avg?: OpenAiBatchJobAvgOrderByAggregateInput
+    _max?: OpenAiBatchJobMaxOrderByAggregateInput
+    _min?: OpenAiBatchJobMinOrderByAggregateInput
+    _sum?: OpenAiBatchJobSumOrderByAggregateInput
+  }
+
+  export type OpenAiBatchJobScalarWhereWithAggregatesInput = {
+    AND?: OpenAiBatchJobScalarWhereWithAggregatesInput | OpenAiBatchJobScalarWhereWithAggregatesInput[]
+    OR?: OpenAiBatchJobScalarWhereWithAggregatesInput[]
+    NOT?: OpenAiBatchJobScalarWhereWithAggregatesInput | OpenAiBatchJobScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"OpenAiBatchJob"> | string
+    batch_id?: StringWithAggregatesFilter<"OpenAiBatchJob"> | string
+    user_uuid?: StringWithAggregatesFilter<"OpenAiBatchJob"> | string
+    type?: EnumOpenAiBatchJobTypeWithAggregatesFilter<"OpenAiBatchJob"> | $Enums.OpenAiBatchJobType
+    status?: EnumOpenAiBatchStatusWithAggregatesFilter<"OpenAiBatchJob"> | $Enums.OpenAiBatchStatus
+    total_requests?: IntWithAggregatesFilter<"OpenAiBatchJob"> | number
+    completed_requests?: IntWithAggregatesFilter<"OpenAiBatchJob"> | number
+    failed_requests?: IntWithAggregatesFilter<"OpenAiBatchJob"> | number
+    input_file_id?: StringNullableWithAggregatesFilter<"OpenAiBatchJob"> | string | null
+    output_file_id?: StringNullableWithAggregatesFilter<"OpenAiBatchJob"> | string | null
+    error_file_id?: StringNullableWithAggregatesFilter<"OpenAiBatchJob"> | string | null
+    expires_at?: DateTimeNullableWithAggregatesFilter<"OpenAiBatchJob"> | Date | string | null
+    finished_at?: DateTimeNullableWithAggregatesFilter<"OpenAiBatchJob"> | Date | string | null
+    created_at?: DateTimeWithAggregatesFilter<"OpenAiBatchJob"> | Date | string
+    updated_at?: DateTimeWithAggregatesFilter<"OpenAiBatchJob"> | Date | string
+  }
+
   export type UserCreateInput = {
     uuid?: string
     email: string
@@ -26558,6 +28103,7 @@ export namespace Prisma {
     sender_profiles?: SenderProfileCreateNestedManyWithoutUserInput
     marketing_campaigns?: MarketingCampaignCreateNestedManyWithoutUserInput
     scoring_instructions?: ScoringInstructionCreateNestedManyWithoutUserInput
+    openai_batch_jobs?: OpenAiBatchJobCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -26577,6 +28123,7 @@ export namespace Prisma {
     sender_profiles?: SenderProfileUncheckedCreateNestedManyWithoutUserInput
     marketing_campaigns?: MarketingCampaignUncheckedCreateNestedManyWithoutUserInput
     scoring_instructions?: ScoringInstructionUncheckedCreateNestedManyWithoutUserInput
+    openai_batch_jobs?: OpenAiBatchJobUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -26595,6 +28142,7 @@ export namespace Prisma {
     sender_profiles?: SenderProfileUpdateManyWithoutUserNestedInput
     marketing_campaigns?: MarketingCampaignUpdateManyWithoutUserNestedInput
     scoring_instructions?: ScoringInstructionUpdateManyWithoutUserNestedInput
+    openai_batch_jobs?: OpenAiBatchJobUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -26614,6 +28162,7 @@ export namespace Prisma {
     sender_profiles?: SenderProfileUncheckedUpdateManyWithoutUserNestedInput
     marketing_campaigns?: MarketingCampaignUncheckedUpdateManyWithoutUserNestedInput
     scoring_instructions?: ScoringInstructionUncheckedUpdateManyWithoutUserNestedInput
+    openai_batch_jobs?: OpenAiBatchJobUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -28458,6 +30007,131 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type OpenAiBatchJobCreateInput = {
+    id?: string
+    batch_id: string
+    type: $Enums.OpenAiBatchJobType
+    status?: $Enums.OpenAiBatchStatus
+    total_requests?: number
+    completed_requests?: number
+    failed_requests?: number
+    input_file_id?: string | null
+    output_file_id?: string | null
+    error_file_id?: string | null
+    expires_at?: Date | string | null
+    finished_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    user: UserCreateNestedOneWithoutOpenai_batch_jobsInput
+  }
+
+  export type OpenAiBatchJobUncheckedCreateInput = {
+    id?: string
+    batch_id: string
+    user_uuid: string
+    type: $Enums.OpenAiBatchJobType
+    status?: $Enums.OpenAiBatchStatus
+    total_requests?: number
+    completed_requests?: number
+    failed_requests?: number
+    input_file_id?: string | null
+    output_file_id?: string | null
+    error_file_id?: string | null
+    expires_at?: Date | string | null
+    finished_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type OpenAiBatchJobUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    batch_id?: StringFieldUpdateOperationsInput | string
+    type?: EnumOpenAiBatchJobTypeFieldUpdateOperationsInput | $Enums.OpenAiBatchJobType
+    status?: EnumOpenAiBatchStatusFieldUpdateOperationsInput | $Enums.OpenAiBatchStatus
+    total_requests?: IntFieldUpdateOperationsInput | number
+    completed_requests?: IntFieldUpdateOperationsInput | number
+    failed_requests?: IntFieldUpdateOperationsInput | number
+    input_file_id?: NullableStringFieldUpdateOperationsInput | string | null
+    output_file_id?: NullableStringFieldUpdateOperationsInput | string | null
+    error_file_id?: NullableStringFieldUpdateOperationsInput | string | null
+    expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    finished_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutOpenai_batch_jobsNestedInput
+  }
+
+  export type OpenAiBatchJobUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    batch_id?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    type?: EnumOpenAiBatchJobTypeFieldUpdateOperationsInput | $Enums.OpenAiBatchJobType
+    status?: EnumOpenAiBatchStatusFieldUpdateOperationsInput | $Enums.OpenAiBatchStatus
+    total_requests?: IntFieldUpdateOperationsInput | number
+    completed_requests?: IntFieldUpdateOperationsInput | number
+    failed_requests?: IntFieldUpdateOperationsInput | number
+    input_file_id?: NullableStringFieldUpdateOperationsInput | string | null
+    output_file_id?: NullableStringFieldUpdateOperationsInput | string | null
+    error_file_id?: NullableStringFieldUpdateOperationsInput | string | null
+    expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    finished_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OpenAiBatchJobCreateManyInput = {
+    id?: string
+    batch_id: string
+    user_uuid: string
+    type: $Enums.OpenAiBatchJobType
+    status?: $Enums.OpenAiBatchStatus
+    total_requests?: number
+    completed_requests?: number
+    failed_requests?: number
+    input_file_id?: string | null
+    output_file_id?: string | null
+    error_file_id?: string | null
+    expires_at?: Date | string | null
+    finished_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type OpenAiBatchJobUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    batch_id?: StringFieldUpdateOperationsInput | string
+    type?: EnumOpenAiBatchJobTypeFieldUpdateOperationsInput | $Enums.OpenAiBatchJobType
+    status?: EnumOpenAiBatchStatusFieldUpdateOperationsInput | $Enums.OpenAiBatchStatus
+    total_requests?: IntFieldUpdateOperationsInput | number
+    completed_requests?: IntFieldUpdateOperationsInput | number
+    failed_requests?: IntFieldUpdateOperationsInput | number
+    input_file_id?: NullableStringFieldUpdateOperationsInput | string | null
+    output_file_id?: NullableStringFieldUpdateOperationsInput | string | null
+    error_file_id?: NullableStringFieldUpdateOperationsInput | string | null
+    expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    finished_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OpenAiBatchJobUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    batch_id?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    type?: EnumOpenAiBatchJobTypeFieldUpdateOperationsInput | $Enums.OpenAiBatchJobType
+    status?: EnumOpenAiBatchStatusFieldUpdateOperationsInput | $Enums.OpenAiBatchStatus
+    total_requests?: IntFieldUpdateOperationsInput | number
+    completed_requests?: IntFieldUpdateOperationsInput | number
+    failed_requests?: IntFieldUpdateOperationsInput | number
+    input_file_id?: NullableStringFieldUpdateOperationsInput | string | null
+    output_file_id?: NullableStringFieldUpdateOperationsInput | string | null
+    error_file_id?: NullableStringFieldUpdateOperationsInput | string | null
+    expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    finished_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -28565,6 +30239,12 @@ export namespace Prisma {
     none?: ScoringInstructionWhereInput
   }
 
+  export type OpenAiBatchJobListRelationFilter = {
+    every?: OpenAiBatchJobWhereInput
+    some?: OpenAiBatchJobWhereInput
+    none?: OpenAiBatchJobWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -28599,6 +30279,10 @@ export namespace Prisma {
   }
 
   export type ScoringInstructionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type OpenAiBatchJobOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -30192,6 +31876,106 @@ export namespace Prisma {
     _max?: NestedEnumCampaignContactStatusFilter<$PrismaModel>
   }
 
+  export type EnumOpenAiBatchJobTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.OpenAiBatchJobType | EnumOpenAiBatchJobTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.OpenAiBatchJobType[] | ListEnumOpenAiBatchJobTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.OpenAiBatchJobType[] | ListEnumOpenAiBatchJobTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumOpenAiBatchJobTypeFilter<$PrismaModel> | $Enums.OpenAiBatchJobType
+  }
+
+  export type EnumOpenAiBatchStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.OpenAiBatchStatus | EnumOpenAiBatchStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.OpenAiBatchStatus[] | ListEnumOpenAiBatchStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.OpenAiBatchStatus[] | ListEnumOpenAiBatchStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumOpenAiBatchStatusFilter<$PrismaModel> | $Enums.OpenAiBatchStatus
+  }
+
+  export type OpenAiBatchJobCountOrderByAggregateInput = {
+    id?: SortOrder
+    batch_id?: SortOrder
+    user_uuid?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    total_requests?: SortOrder
+    completed_requests?: SortOrder
+    failed_requests?: SortOrder
+    input_file_id?: SortOrder
+    output_file_id?: SortOrder
+    error_file_id?: SortOrder
+    expires_at?: SortOrder
+    finished_at?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type OpenAiBatchJobAvgOrderByAggregateInput = {
+    total_requests?: SortOrder
+    completed_requests?: SortOrder
+    failed_requests?: SortOrder
+  }
+
+  export type OpenAiBatchJobMaxOrderByAggregateInput = {
+    id?: SortOrder
+    batch_id?: SortOrder
+    user_uuid?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    total_requests?: SortOrder
+    completed_requests?: SortOrder
+    failed_requests?: SortOrder
+    input_file_id?: SortOrder
+    output_file_id?: SortOrder
+    error_file_id?: SortOrder
+    expires_at?: SortOrder
+    finished_at?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type OpenAiBatchJobMinOrderByAggregateInput = {
+    id?: SortOrder
+    batch_id?: SortOrder
+    user_uuid?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    total_requests?: SortOrder
+    completed_requests?: SortOrder
+    failed_requests?: SortOrder
+    input_file_id?: SortOrder
+    output_file_id?: SortOrder
+    error_file_id?: SortOrder
+    expires_at?: SortOrder
+    finished_at?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type OpenAiBatchJobSumOrderByAggregateInput = {
+    total_requests?: SortOrder
+    completed_requests?: SortOrder
+    failed_requests?: SortOrder
+  }
+
+  export type EnumOpenAiBatchJobTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.OpenAiBatchJobType | EnumOpenAiBatchJobTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.OpenAiBatchJobType[] | ListEnumOpenAiBatchJobTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.OpenAiBatchJobType[] | ListEnumOpenAiBatchJobTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumOpenAiBatchJobTypeWithAggregatesFilter<$PrismaModel> | $Enums.OpenAiBatchJobType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumOpenAiBatchJobTypeFilter<$PrismaModel>
+    _max?: NestedEnumOpenAiBatchJobTypeFilter<$PrismaModel>
+  }
+
+  export type EnumOpenAiBatchStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.OpenAiBatchStatus | EnumOpenAiBatchStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.OpenAiBatchStatus[] | ListEnumOpenAiBatchStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.OpenAiBatchStatus[] | ListEnumOpenAiBatchStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumOpenAiBatchStatusWithAggregatesFilter<$PrismaModel> | $Enums.OpenAiBatchStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumOpenAiBatchStatusFilter<$PrismaModel>
+    _max?: NestedEnumOpenAiBatchStatusFilter<$PrismaModel>
+  }
+
   export type FilterCreateNestedManyWithoutUserInput = {
     create?: XOR<FilterCreateWithoutUserInput, FilterUncheckedCreateWithoutUserInput> | FilterCreateWithoutUserInput[] | FilterUncheckedCreateWithoutUserInput[]
     connectOrCreate?: FilterCreateOrConnectWithoutUserInput | FilterCreateOrConnectWithoutUserInput[]
@@ -30248,6 +32032,13 @@ export namespace Prisma {
     connect?: ScoringInstructionWhereUniqueInput | ScoringInstructionWhereUniqueInput[]
   }
 
+  export type OpenAiBatchJobCreateNestedManyWithoutUserInput = {
+    create?: XOR<OpenAiBatchJobCreateWithoutUserInput, OpenAiBatchJobUncheckedCreateWithoutUserInput> | OpenAiBatchJobCreateWithoutUserInput[] | OpenAiBatchJobUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: OpenAiBatchJobCreateOrConnectWithoutUserInput | OpenAiBatchJobCreateOrConnectWithoutUserInput[]
+    createMany?: OpenAiBatchJobCreateManyUserInputEnvelope
+    connect?: OpenAiBatchJobWhereUniqueInput | OpenAiBatchJobWhereUniqueInput[]
+  }
+
   export type FilterUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<FilterCreateWithoutUserInput, FilterUncheckedCreateWithoutUserInput> | FilterCreateWithoutUserInput[] | FilterUncheckedCreateWithoutUserInput[]
     connectOrCreate?: FilterCreateOrConnectWithoutUserInput | FilterCreateOrConnectWithoutUserInput[]
@@ -30302,6 +32093,13 @@ export namespace Prisma {
     connectOrCreate?: ScoringInstructionCreateOrConnectWithoutUserInput | ScoringInstructionCreateOrConnectWithoutUserInput[]
     createMany?: ScoringInstructionCreateManyUserInputEnvelope
     connect?: ScoringInstructionWhereUniqueInput | ScoringInstructionWhereUniqueInput[]
+  }
+
+  export type OpenAiBatchJobUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<OpenAiBatchJobCreateWithoutUserInput, OpenAiBatchJobUncheckedCreateWithoutUserInput> | OpenAiBatchJobCreateWithoutUserInput[] | OpenAiBatchJobUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: OpenAiBatchJobCreateOrConnectWithoutUserInput | OpenAiBatchJobCreateOrConnectWithoutUserInput[]
+    createMany?: OpenAiBatchJobCreateManyUserInputEnvelope
+    connect?: OpenAiBatchJobWhereUniqueInput | OpenAiBatchJobWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -30432,6 +32230,20 @@ export namespace Prisma {
     deleteMany?: ScoringInstructionScalarWhereInput | ScoringInstructionScalarWhereInput[]
   }
 
+  export type OpenAiBatchJobUpdateManyWithoutUserNestedInput = {
+    create?: XOR<OpenAiBatchJobCreateWithoutUserInput, OpenAiBatchJobUncheckedCreateWithoutUserInput> | OpenAiBatchJobCreateWithoutUserInput[] | OpenAiBatchJobUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: OpenAiBatchJobCreateOrConnectWithoutUserInput | OpenAiBatchJobCreateOrConnectWithoutUserInput[]
+    upsert?: OpenAiBatchJobUpsertWithWhereUniqueWithoutUserInput | OpenAiBatchJobUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: OpenAiBatchJobCreateManyUserInputEnvelope
+    set?: OpenAiBatchJobWhereUniqueInput | OpenAiBatchJobWhereUniqueInput[]
+    disconnect?: OpenAiBatchJobWhereUniqueInput | OpenAiBatchJobWhereUniqueInput[]
+    delete?: OpenAiBatchJobWhereUniqueInput | OpenAiBatchJobWhereUniqueInput[]
+    connect?: OpenAiBatchJobWhereUniqueInput | OpenAiBatchJobWhereUniqueInput[]
+    update?: OpenAiBatchJobUpdateWithWhereUniqueWithoutUserInput | OpenAiBatchJobUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: OpenAiBatchJobUpdateManyWithWhereWithoutUserInput | OpenAiBatchJobUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: OpenAiBatchJobScalarWhereInput | OpenAiBatchJobScalarWhereInput[]
+  }
+
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -30550,6 +32362,20 @@ export namespace Prisma {
     update?: ScoringInstructionUpdateWithWhereUniqueWithoutUserInput | ScoringInstructionUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: ScoringInstructionUpdateManyWithWhereWithoutUserInput | ScoringInstructionUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: ScoringInstructionScalarWhereInput | ScoringInstructionScalarWhereInput[]
+  }
+
+  export type OpenAiBatchJobUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<OpenAiBatchJobCreateWithoutUserInput, OpenAiBatchJobUncheckedCreateWithoutUserInput> | OpenAiBatchJobCreateWithoutUserInput[] | OpenAiBatchJobUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: OpenAiBatchJobCreateOrConnectWithoutUserInput | OpenAiBatchJobCreateOrConnectWithoutUserInput[]
+    upsert?: OpenAiBatchJobUpsertWithWhereUniqueWithoutUserInput | OpenAiBatchJobUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: OpenAiBatchJobCreateManyUserInputEnvelope
+    set?: OpenAiBatchJobWhereUniqueInput | OpenAiBatchJobWhereUniqueInput[]
+    disconnect?: OpenAiBatchJobWhereUniqueInput | OpenAiBatchJobWhereUniqueInput[]
+    delete?: OpenAiBatchJobWhereUniqueInput | OpenAiBatchJobWhereUniqueInput[]
+    connect?: OpenAiBatchJobWhereUniqueInput | OpenAiBatchJobWhereUniqueInput[]
+    update?: OpenAiBatchJobUpdateWithWhereUniqueWithoutUserInput | OpenAiBatchJobUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: OpenAiBatchJobUpdateManyWithWhereWithoutUserInput | OpenAiBatchJobUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: OpenAiBatchJobScalarWhereInput | OpenAiBatchJobScalarWhereInput[]
   }
 
   export type FilterCreateenrichment_sourcesInput = {
@@ -31819,6 +33645,28 @@ export namespace Prisma {
     update?: XOR<XOR<ContactUpdateToOneWithWhereWithoutCampaign_contactsInput, ContactUpdateWithoutCampaign_contactsInput>, ContactUncheckedUpdateWithoutCampaign_contactsInput>
   }
 
+  export type UserCreateNestedOneWithoutOpenai_batch_jobsInput = {
+    create?: XOR<UserCreateWithoutOpenai_batch_jobsInput, UserUncheckedCreateWithoutOpenai_batch_jobsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutOpenai_batch_jobsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumOpenAiBatchJobTypeFieldUpdateOperationsInput = {
+    set?: $Enums.OpenAiBatchJobType
+  }
+
+  export type EnumOpenAiBatchStatusFieldUpdateOperationsInput = {
+    set?: $Enums.OpenAiBatchStatus
+  }
+
+  export type UserUpdateOneRequiredWithoutOpenai_batch_jobsNestedInput = {
+    create?: XOR<UserCreateWithoutOpenai_batch_jobsInput, UserUncheckedCreateWithoutOpenai_batch_jobsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutOpenai_batch_jobsInput
+    upsert?: UserUpsertWithoutOpenai_batch_jobsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutOpenai_batch_jobsInput, UserUpdateWithoutOpenai_batch_jobsInput>, UserUncheckedUpdateWithoutOpenai_batch_jobsInput>
+  }
+
   export type NestedIntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -32314,6 +34162,40 @@ export namespace Prisma {
     _max?: NestedEnumCampaignContactStatusFilter<$PrismaModel>
   }
 
+  export type NestedEnumOpenAiBatchJobTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.OpenAiBatchJobType | EnumOpenAiBatchJobTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.OpenAiBatchJobType[] | ListEnumOpenAiBatchJobTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.OpenAiBatchJobType[] | ListEnumOpenAiBatchJobTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumOpenAiBatchJobTypeFilter<$PrismaModel> | $Enums.OpenAiBatchJobType
+  }
+
+  export type NestedEnumOpenAiBatchStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.OpenAiBatchStatus | EnumOpenAiBatchStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.OpenAiBatchStatus[] | ListEnumOpenAiBatchStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.OpenAiBatchStatus[] | ListEnumOpenAiBatchStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumOpenAiBatchStatusFilter<$PrismaModel> | $Enums.OpenAiBatchStatus
+  }
+
+  export type NestedEnumOpenAiBatchJobTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.OpenAiBatchJobType | EnumOpenAiBatchJobTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.OpenAiBatchJobType[] | ListEnumOpenAiBatchJobTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.OpenAiBatchJobType[] | ListEnumOpenAiBatchJobTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumOpenAiBatchJobTypeWithAggregatesFilter<$PrismaModel> | $Enums.OpenAiBatchJobType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumOpenAiBatchJobTypeFilter<$PrismaModel>
+    _max?: NestedEnumOpenAiBatchJobTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumOpenAiBatchStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.OpenAiBatchStatus | EnumOpenAiBatchStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.OpenAiBatchStatus[] | ListEnumOpenAiBatchStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.OpenAiBatchStatus[] | ListEnumOpenAiBatchStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumOpenAiBatchStatusWithAggregatesFilter<$PrismaModel> | $Enums.OpenAiBatchStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumOpenAiBatchStatusFilter<$PrismaModel>
+    _max?: NestedEnumOpenAiBatchStatusFilter<$PrismaModel>
+  }
+
   export type FilterCreateWithoutUserInput = {
     uuid?: string
     name: string
@@ -32722,6 +34604,50 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type OpenAiBatchJobCreateWithoutUserInput = {
+    id?: string
+    batch_id: string
+    type: $Enums.OpenAiBatchJobType
+    status?: $Enums.OpenAiBatchStatus
+    total_requests?: number
+    completed_requests?: number
+    failed_requests?: number
+    input_file_id?: string | null
+    output_file_id?: string | null
+    error_file_id?: string | null
+    expires_at?: Date | string | null
+    finished_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type OpenAiBatchJobUncheckedCreateWithoutUserInput = {
+    id?: string
+    batch_id: string
+    type: $Enums.OpenAiBatchJobType
+    status?: $Enums.OpenAiBatchStatus
+    total_requests?: number
+    completed_requests?: number
+    failed_requests?: number
+    input_file_id?: string | null
+    output_file_id?: string | null
+    error_file_id?: string | null
+    expires_at?: Date | string | null
+    finished_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type OpenAiBatchJobCreateOrConnectWithoutUserInput = {
+    where: OpenAiBatchJobWhereUniqueInput
+    create: XOR<OpenAiBatchJobCreateWithoutUserInput, OpenAiBatchJobUncheckedCreateWithoutUserInput>
+  }
+
+  export type OpenAiBatchJobCreateManyUserInputEnvelope = {
+    data: OpenAiBatchJobCreateManyUserInput | OpenAiBatchJobCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type FilterUpsertWithWhereUniqueWithoutUserInput = {
     where: FilterWhereUniqueInput
     update: XOR<FilterUpdateWithoutUserInput, FilterUncheckedUpdateWithoutUserInput>
@@ -33034,6 +34960,43 @@ export namespace Prisma {
     updated_at?: DateTimeFilter<"ScoringInstruction"> | Date | string
   }
 
+  export type OpenAiBatchJobUpsertWithWhereUniqueWithoutUserInput = {
+    where: OpenAiBatchJobWhereUniqueInput
+    update: XOR<OpenAiBatchJobUpdateWithoutUserInput, OpenAiBatchJobUncheckedUpdateWithoutUserInput>
+    create: XOR<OpenAiBatchJobCreateWithoutUserInput, OpenAiBatchJobUncheckedCreateWithoutUserInput>
+  }
+
+  export type OpenAiBatchJobUpdateWithWhereUniqueWithoutUserInput = {
+    where: OpenAiBatchJobWhereUniqueInput
+    data: XOR<OpenAiBatchJobUpdateWithoutUserInput, OpenAiBatchJobUncheckedUpdateWithoutUserInput>
+  }
+
+  export type OpenAiBatchJobUpdateManyWithWhereWithoutUserInput = {
+    where: OpenAiBatchJobScalarWhereInput
+    data: XOR<OpenAiBatchJobUpdateManyMutationInput, OpenAiBatchJobUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type OpenAiBatchJobScalarWhereInput = {
+    AND?: OpenAiBatchJobScalarWhereInput | OpenAiBatchJobScalarWhereInput[]
+    OR?: OpenAiBatchJobScalarWhereInput[]
+    NOT?: OpenAiBatchJobScalarWhereInput | OpenAiBatchJobScalarWhereInput[]
+    id?: StringFilter<"OpenAiBatchJob"> | string
+    batch_id?: StringFilter<"OpenAiBatchJob"> | string
+    user_uuid?: StringFilter<"OpenAiBatchJob"> | string
+    type?: EnumOpenAiBatchJobTypeFilter<"OpenAiBatchJob"> | $Enums.OpenAiBatchJobType
+    status?: EnumOpenAiBatchStatusFilter<"OpenAiBatchJob"> | $Enums.OpenAiBatchStatus
+    total_requests?: IntFilter<"OpenAiBatchJob"> | number
+    completed_requests?: IntFilter<"OpenAiBatchJob"> | number
+    failed_requests?: IntFilter<"OpenAiBatchJob"> | number
+    input_file_id?: StringNullableFilter<"OpenAiBatchJob"> | string | null
+    output_file_id?: StringNullableFilter<"OpenAiBatchJob"> | string | null
+    error_file_id?: StringNullableFilter<"OpenAiBatchJob"> | string | null
+    expires_at?: DateTimeNullableFilter<"OpenAiBatchJob"> | Date | string | null
+    finished_at?: DateTimeNullableFilter<"OpenAiBatchJob"> | Date | string | null
+    created_at?: DateTimeFilter<"OpenAiBatchJob"> | Date | string
+    updated_at?: DateTimeFilter<"OpenAiBatchJob"> | Date | string
+  }
+
   export type UserCreateWithoutFiltersInput = {
     uuid?: string
     email: string
@@ -33049,6 +35012,7 @@ export namespace Prisma {
     sender_profiles?: SenderProfileCreateNestedManyWithoutUserInput
     marketing_campaigns?: MarketingCampaignCreateNestedManyWithoutUserInput
     scoring_instructions?: ScoringInstructionCreateNestedManyWithoutUserInput
+    openai_batch_jobs?: OpenAiBatchJobCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutFiltersInput = {
@@ -33067,6 +35031,7 @@ export namespace Prisma {
     sender_profiles?: SenderProfileUncheckedCreateNestedManyWithoutUserInput
     marketing_campaigns?: MarketingCampaignUncheckedCreateNestedManyWithoutUserInput
     scoring_instructions?: ScoringInstructionUncheckedCreateNestedManyWithoutUserInput
+    openai_batch_jobs?: OpenAiBatchJobUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutFiltersInput = {
@@ -33255,6 +35220,7 @@ export namespace Prisma {
     sender_profiles?: SenderProfileUpdateManyWithoutUserNestedInput
     marketing_campaigns?: MarketingCampaignUpdateManyWithoutUserNestedInput
     scoring_instructions?: ScoringInstructionUpdateManyWithoutUserNestedInput
+    openai_batch_jobs?: OpenAiBatchJobUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFiltersInput = {
@@ -33273,6 +35239,7 @@ export namespace Prisma {
     sender_profiles?: SenderProfileUncheckedUpdateManyWithoutUserNestedInput
     marketing_campaigns?: MarketingCampaignUncheckedUpdateManyWithoutUserNestedInput
     scoring_instructions?: ScoringInstructionUncheckedUpdateManyWithoutUserNestedInput
+    openai_batch_jobs?: OpenAiBatchJobUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type RawLeadUpsertWithWhereUniqueWithoutFilterInput = {
@@ -33395,6 +35362,7 @@ export namespace Prisma {
     interactions?: InteractionCreateNestedManyWithoutUserInput
     sender_profiles?: SenderProfileCreateNestedManyWithoutUserInput
     marketing_campaigns?: MarketingCampaignCreateNestedManyWithoutUserInput
+    openai_batch_jobs?: OpenAiBatchJobCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutScoring_instructionsInput = {
@@ -33413,6 +35381,7 @@ export namespace Prisma {
     interactions?: InteractionUncheckedCreateNestedManyWithoutUserInput
     sender_profiles?: SenderProfileUncheckedCreateNestedManyWithoutUserInput
     marketing_campaigns?: MarketingCampaignUncheckedCreateNestedManyWithoutUserInput
+    openai_batch_jobs?: OpenAiBatchJobUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutScoring_instructionsInput = {
@@ -33489,6 +35458,7 @@ export namespace Prisma {
     interactions?: InteractionUpdateManyWithoutUserNestedInput
     sender_profiles?: SenderProfileUpdateManyWithoutUserNestedInput
     marketing_campaigns?: MarketingCampaignUpdateManyWithoutUserNestedInput
+    openai_batch_jobs?: OpenAiBatchJobUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutScoring_instructionsInput = {
@@ -33507,6 +35477,7 @@ export namespace Prisma {
     interactions?: InteractionUncheckedUpdateManyWithoutUserNestedInput
     sender_profiles?: SenderProfileUncheckedUpdateManyWithoutUserNestedInput
     marketing_campaigns?: MarketingCampaignUncheckedUpdateManyWithoutUserNestedInput
+    openai_batch_jobs?: OpenAiBatchJobUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type FilterScoringInstructionUpsertWithWhereUniqueWithoutScoring_instructionInput = {
@@ -34229,6 +36200,7 @@ export namespace Prisma {
     sender_profiles?: SenderProfileCreateNestedManyWithoutUserInput
     marketing_campaigns?: MarketingCampaignCreateNestedManyWithoutUserInput
     scoring_instructions?: ScoringInstructionCreateNestedManyWithoutUserInput
+    openai_batch_jobs?: OpenAiBatchJobCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutContactsInput = {
@@ -34247,6 +36219,7 @@ export namespace Prisma {
     sender_profiles?: SenderProfileUncheckedCreateNestedManyWithoutUserInput
     marketing_campaigns?: MarketingCampaignUncheckedCreateNestedManyWithoutUserInput
     scoring_instructions?: ScoringInstructionUncheckedCreateNestedManyWithoutUserInput
+    openai_batch_jobs?: OpenAiBatchJobUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutContactsInput = {
@@ -34545,6 +36518,7 @@ export namespace Prisma {
     sender_profiles?: SenderProfileUpdateManyWithoutUserNestedInput
     marketing_campaigns?: MarketingCampaignUpdateManyWithoutUserNestedInput
     scoring_instructions?: ScoringInstructionUpdateManyWithoutUserNestedInput
+    openai_batch_jobs?: OpenAiBatchJobUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutContactsInput = {
@@ -34563,6 +36537,7 @@ export namespace Prisma {
     sender_profiles?: SenderProfileUncheckedUpdateManyWithoutUserNestedInput
     marketing_campaigns?: MarketingCampaignUncheckedUpdateManyWithoutUserNestedInput
     scoring_instructions?: ScoringInstructionUncheckedUpdateManyWithoutUserNestedInput
+    openai_batch_jobs?: OpenAiBatchJobUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type LeadUpsertWithoutContactsInput = {
@@ -35171,6 +37146,7 @@ export namespace Prisma {
     sender_profiles?: SenderProfileCreateNestedManyWithoutUserInput
     marketing_campaigns?: MarketingCampaignCreateNestedManyWithoutUserInput
     scoring_instructions?: ScoringInstructionCreateNestedManyWithoutUserInput
+    openai_batch_jobs?: OpenAiBatchJobCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutInteractionsInput = {
@@ -35189,6 +37165,7 @@ export namespace Prisma {
     sender_profiles?: SenderProfileUncheckedCreateNestedManyWithoutUserInput
     marketing_campaigns?: MarketingCampaignUncheckedCreateNestedManyWithoutUserInput
     scoring_instructions?: ScoringInstructionUncheckedCreateNestedManyWithoutUserInput
+    openai_batch_jobs?: OpenAiBatchJobUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutInteractionsInput = {
@@ -35420,6 +37397,7 @@ export namespace Prisma {
     sender_profiles?: SenderProfileUpdateManyWithoutUserNestedInput
     marketing_campaigns?: MarketingCampaignUpdateManyWithoutUserNestedInput
     scoring_instructions?: ScoringInstructionUpdateManyWithoutUserNestedInput
+    openai_batch_jobs?: OpenAiBatchJobUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutInteractionsInput = {
@@ -35438,6 +37416,7 @@ export namespace Prisma {
     sender_profiles?: SenderProfileUncheckedUpdateManyWithoutUserNestedInput
     marketing_campaigns?: MarketingCampaignUncheckedUpdateManyWithoutUserNestedInput
     scoring_instructions?: ScoringInstructionUncheckedUpdateManyWithoutUserNestedInput
+    openai_batch_jobs?: OpenAiBatchJobUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type OutreachMessageUpsertWithoutInteractionInput = {
@@ -35597,6 +37576,7 @@ export namespace Prisma {
     sender_profiles?: SenderProfileCreateNestedManyWithoutUserInput
     marketing_campaigns?: MarketingCampaignCreateNestedManyWithoutUserInput
     scoring_instructions?: ScoringInstructionCreateNestedManyWithoutUserInput
+    openai_batch_jobs?: OpenAiBatchJobCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOutreach_messagesInput = {
@@ -35615,6 +37595,7 @@ export namespace Prisma {
     sender_profiles?: SenderProfileUncheckedCreateNestedManyWithoutUserInput
     marketing_campaigns?: MarketingCampaignUncheckedCreateNestedManyWithoutUserInput
     scoring_instructions?: ScoringInstructionUncheckedCreateNestedManyWithoutUserInput
+    openai_batch_jobs?: OpenAiBatchJobUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOutreach_messagesInput = {
@@ -35820,6 +37801,7 @@ export namespace Prisma {
     sender_profiles?: SenderProfileUpdateManyWithoutUserNestedInput
     marketing_campaigns?: MarketingCampaignUpdateManyWithoutUserNestedInput
     scoring_instructions?: ScoringInstructionUpdateManyWithoutUserNestedInput
+    openai_batch_jobs?: OpenAiBatchJobUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOutreach_messagesInput = {
@@ -35838,6 +37820,7 @@ export namespace Prisma {
     sender_profiles?: SenderProfileUncheckedUpdateManyWithoutUserNestedInput
     marketing_campaigns?: MarketingCampaignUncheckedUpdateManyWithoutUserNestedInput
     scoring_instructions?: ScoringInstructionUncheckedUpdateManyWithoutUserNestedInput
+    openai_batch_jobs?: OpenAiBatchJobUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ContactUpsertWithoutOutreach_messagesInput = {
@@ -36045,6 +38028,7 @@ export namespace Prisma {
     sender_profiles?: SenderProfileCreateNestedManyWithoutUserInput
     marketing_campaigns?: MarketingCampaignCreateNestedManyWithoutUserInput
     scoring_instructions?: ScoringInstructionCreateNestedManyWithoutUserInput
+    openai_batch_jobs?: OpenAiBatchJobCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOutreach_sequencesInput = {
@@ -36063,6 +38047,7 @@ export namespace Prisma {
     sender_profiles?: SenderProfileUncheckedCreateNestedManyWithoutUserInput
     marketing_campaigns?: MarketingCampaignUncheckedCreateNestedManyWithoutUserInput
     scoring_instructions?: ScoringInstructionUncheckedCreateNestedManyWithoutUserInput
+    openai_batch_jobs?: OpenAiBatchJobUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOutreach_sequencesInput = {
@@ -36096,6 +38081,7 @@ export namespace Prisma {
     sender_profiles?: SenderProfileUpdateManyWithoutUserNestedInput
     marketing_campaigns?: MarketingCampaignUpdateManyWithoutUserNestedInput
     scoring_instructions?: ScoringInstructionUpdateManyWithoutUserNestedInput
+    openai_batch_jobs?: OpenAiBatchJobUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOutreach_sequencesInput = {
@@ -36114,6 +38100,7 @@ export namespace Prisma {
     sender_profiles?: SenderProfileUncheckedUpdateManyWithoutUserNestedInput
     marketing_campaigns?: MarketingCampaignUncheckedUpdateManyWithoutUserNestedInput
     scoring_instructions?: ScoringInstructionUncheckedUpdateManyWithoutUserNestedInput
+    openai_batch_jobs?: OpenAiBatchJobUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type FilterCreateWithoutJobsInput = {
@@ -36221,6 +38208,7 @@ export namespace Prisma {
     interactions?: InteractionCreateNestedManyWithoutUserInput
     marketing_campaigns?: MarketingCampaignCreateNestedManyWithoutUserInput
     scoring_instructions?: ScoringInstructionCreateNestedManyWithoutUserInput
+    openai_batch_jobs?: OpenAiBatchJobCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSender_profilesInput = {
@@ -36239,6 +38227,7 @@ export namespace Prisma {
     interactions?: InteractionUncheckedCreateNestedManyWithoutUserInput
     marketing_campaigns?: MarketingCampaignUncheckedCreateNestedManyWithoutUserInput
     scoring_instructions?: ScoringInstructionUncheckedCreateNestedManyWithoutUserInput
+    openai_batch_jobs?: OpenAiBatchJobUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSender_profilesInput = {
@@ -36355,6 +38344,7 @@ export namespace Prisma {
     interactions?: InteractionUpdateManyWithoutUserNestedInput
     marketing_campaigns?: MarketingCampaignUpdateManyWithoutUserNestedInput
     scoring_instructions?: ScoringInstructionUpdateManyWithoutUserNestedInput
+    openai_batch_jobs?: OpenAiBatchJobUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSender_profilesInput = {
@@ -36373,6 +38363,7 @@ export namespace Prisma {
     interactions?: InteractionUncheckedUpdateManyWithoutUserNestedInput
     marketing_campaigns?: MarketingCampaignUncheckedUpdateManyWithoutUserNestedInput
     scoring_instructions?: ScoringInstructionUncheckedUpdateManyWithoutUserNestedInput
+    openai_batch_jobs?: OpenAiBatchJobUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type MarketingCampaignUpsertWithWhereUniqueWithoutSender_profileInput = {
@@ -36406,6 +38397,7 @@ export namespace Prisma {
     interactions?: InteractionCreateNestedManyWithoutUserInput
     sender_profiles?: SenderProfileCreateNestedManyWithoutUserInput
     scoring_instructions?: ScoringInstructionCreateNestedManyWithoutUserInput
+    openai_batch_jobs?: OpenAiBatchJobCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutMarketing_campaignsInput = {
@@ -36424,6 +38416,7 @@ export namespace Prisma {
     interactions?: InteractionUncheckedCreateNestedManyWithoutUserInput
     sender_profiles?: SenderProfileUncheckedCreateNestedManyWithoutUserInput
     scoring_instructions?: ScoringInstructionUncheckedCreateNestedManyWithoutUserInput
+    openai_batch_jobs?: OpenAiBatchJobUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutMarketing_campaignsInput = {
@@ -36640,6 +38633,7 @@ export namespace Prisma {
     interactions?: InteractionUpdateManyWithoutUserNestedInput
     sender_profiles?: SenderProfileUpdateManyWithoutUserNestedInput
     scoring_instructions?: ScoringInstructionUpdateManyWithoutUserNestedInput
+    openai_batch_jobs?: OpenAiBatchJobUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMarketing_campaignsInput = {
@@ -36658,6 +38652,7 @@ export namespace Prisma {
     interactions?: InteractionUncheckedUpdateManyWithoutUserNestedInput
     sender_profiles?: SenderProfileUncheckedUpdateManyWithoutUserNestedInput
     scoring_instructions?: ScoringInstructionUncheckedUpdateManyWithoutUserNestedInput
+    openai_batch_jobs?: OpenAiBatchJobUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type SenderProfileUpsertWithoutMarketing_campaignsInput = {
@@ -37060,6 +39055,96 @@ export namespace Prisma {
     contact_scores?: ContactScoreUncheckedUpdateManyWithoutContactNestedInput
   }
 
+  export type UserCreateWithoutOpenai_batch_jobsInput = {
+    uuid?: string
+    email: string
+    phone?: string | null
+    password: string
+    role?: $Enums.AuthRole
+    created_at?: Date | string
+    updated_at?: Date | string
+    filters?: FilterCreateNestedManyWithoutUserInput
+    contacts?: ContactCreateNestedManyWithoutUserInput
+    outreach_messages?: OutreachMessageCreateNestedManyWithoutUserInput
+    outreach_sequences?: OutreachSequenceCreateNestedManyWithoutUserInput
+    interactions?: InteractionCreateNestedManyWithoutUserInput
+    sender_profiles?: SenderProfileCreateNestedManyWithoutUserInput
+    marketing_campaigns?: MarketingCampaignCreateNestedManyWithoutUserInput
+    scoring_instructions?: ScoringInstructionCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutOpenai_batch_jobsInput = {
+    id?: number
+    uuid?: string
+    email: string
+    phone?: string | null
+    password: string
+    role?: $Enums.AuthRole
+    created_at?: Date | string
+    updated_at?: Date | string
+    filters?: FilterUncheckedCreateNestedManyWithoutUserInput
+    contacts?: ContactUncheckedCreateNestedManyWithoutUserInput
+    outreach_messages?: OutreachMessageUncheckedCreateNestedManyWithoutUserInput
+    outreach_sequences?: OutreachSequenceUncheckedCreateNestedManyWithoutUserInput
+    interactions?: InteractionUncheckedCreateNestedManyWithoutUserInput
+    sender_profiles?: SenderProfileUncheckedCreateNestedManyWithoutUserInput
+    marketing_campaigns?: MarketingCampaignUncheckedCreateNestedManyWithoutUserInput
+    scoring_instructions?: ScoringInstructionUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutOpenai_batch_jobsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutOpenai_batch_jobsInput, UserUncheckedCreateWithoutOpenai_batch_jobsInput>
+  }
+
+  export type UserUpsertWithoutOpenai_batch_jobsInput = {
+    update: XOR<UserUpdateWithoutOpenai_batch_jobsInput, UserUncheckedUpdateWithoutOpenai_batch_jobsInput>
+    create: XOR<UserCreateWithoutOpenai_batch_jobsInput, UserUncheckedCreateWithoutOpenai_batch_jobsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutOpenai_batch_jobsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutOpenai_batch_jobsInput, UserUncheckedUpdateWithoutOpenai_batch_jobsInput>
+  }
+
+  export type UserUpdateWithoutOpenai_batch_jobsInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    filters?: FilterUpdateManyWithoutUserNestedInput
+    contacts?: ContactUpdateManyWithoutUserNestedInput
+    outreach_messages?: OutreachMessageUpdateManyWithoutUserNestedInput
+    outreach_sequences?: OutreachSequenceUpdateManyWithoutUserNestedInput
+    interactions?: InteractionUpdateManyWithoutUserNestedInput
+    sender_profiles?: SenderProfileUpdateManyWithoutUserNestedInput
+    marketing_campaigns?: MarketingCampaignUpdateManyWithoutUserNestedInput
+    scoring_instructions?: ScoringInstructionUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutOpenai_batch_jobsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    filters?: FilterUncheckedUpdateManyWithoutUserNestedInput
+    contacts?: ContactUncheckedUpdateManyWithoutUserNestedInput
+    outreach_messages?: OutreachMessageUncheckedUpdateManyWithoutUserNestedInput
+    outreach_sequences?: OutreachSequenceUncheckedUpdateManyWithoutUserNestedInput
+    interactions?: InteractionUncheckedUpdateManyWithoutUserNestedInput
+    sender_profiles?: SenderProfileUncheckedUpdateManyWithoutUserNestedInput
+    marketing_campaigns?: MarketingCampaignUncheckedUpdateManyWithoutUserNestedInput
+    scoring_instructions?: ScoringInstructionUncheckedUpdateManyWithoutUserNestedInput
+  }
+
   export type FilterCreateManyUserInput = {
     id?: number
     uuid?: string
@@ -37208,6 +39293,23 @@ export namespace Prisma {
     uuid?: string
     name: string
     instructions: string
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type OpenAiBatchJobCreateManyUserInput = {
+    id?: string
+    batch_id: string
+    type: $Enums.OpenAiBatchJobType
+    status?: $Enums.OpenAiBatchStatus
+    total_requests?: number
+    completed_requests?: number
+    failed_requests?: number
+    input_file_id?: string | null
+    output_file_id?: string | null
+    error_file_id?: string | null
+    expires_at?: Date | string | null
+    finished_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -37688,6 +39790,57 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     instructions?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OpenAiBatchJobUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    batch_id?: StringFieldUpdateOperationsInput | string
+    type?: EnumOpenAiBatchJobTypeFieldUpdateOperationsInput | $Enums.OpenAiBatchJobType
+    status?: EnumOpenAiBatchStatusFieldUpdateOperationsInput | $Enums.OpenAiBatchStatus
+    total_requests?: IntFieldUpdateOperationsInput | number
+    completed_requests?: IntFieldUpdateOperationsInput | number
+    failed_requests?: IntFieldUpdateOperationsInput | number
+    input_file_id?: NullableStringFieldUpdateOperationsInput | string | null
+    output_file_id?: NullableStringFieldUpdateOperationsInput | string | null
+    error_file_id?: NullableStringFieldUpdateOperationsInput | string | null
+    expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    finished_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OpenAiBatchJobUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    batch_id?: StringFieldUpdateOperationsInput | string
+    type?: EnumOpenAiBatchJobTypeFieldUpdateOperationsInput | $Enums.OpenAiBatchJobType
+    status?: EnumOpenAiBatchStatusFieldUpdateOperationsInput | $Enums.OpenAiBatchStatus
+    total_requests?: IntFieldUpdateOperationsInput | number
+    completed_requests?: IntFieldUpdateOperationsInput | number
+    failed_requests?: IntFieldUpdateOperationsInput | number
+    input_file_id?: NullableStringFieldUpdateOperationsInput | string | null
+    output_file_id?: NullableStringFieldUpdateOperationsInput | string | null
+    error_file_id?: NullableStringFieldUpdateOperationsInput | string | null
+    expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    finished_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OpenAiBatchJobUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    batch_id?: StringFieldUpdateOperationsInput | string
+    type?: EnumOpenAiBatchJobTypeFieldUpdateOperationsInput | $Enums.OpenAiBatchJobType
+    status?: EnumOpenAiBatchStatusFieldUpdateOperationsInput | $Enums.OpenAiBatchStatus
+    total_requests?: IntFieldUpdateOperationsInput | number
+    completed_requests?: IntFieldUpdateOperationsInput | number
+    failed_requests?: IntFieldUpdateOperationsInput | number
+    input_file_id?: NullableStringFieldUpdateOperationsInput | string | null
+    output_file_id?: NullableStringFieldUpdateOperationsInput | string | null
+    error_file_id?: NullableStringFieldUpdateOperationsInput | string | null
+    expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    finished_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }

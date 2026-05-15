@@ -1,7 +1,9 @@
 import { NavLink } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, Users, Globe, Filter, IdCard, Megaphone } from "lucide-react";
+import { LayoutDashboard, Users, Globe, Filter, IdCard, Megaphone, Layers } from "lucide-react";
 import { Routes } from "@/routes/routes";
+import { useAuthStore } from "@/stores/auth";
+import { RoleTypes } from "@/features/user/interfaces/user.interface";
 
 interface SidebarContentProps {
   collapsed: boolean;
@@ -9,18 +11,22 @@ interface SidebarContentProps {
 }
 
 const navItems = [
-  { label: "Dashboard", icon: LayoutDashboard, href: Routes.dashboard.root, end: true },
-  { label: "Filters", icon: Filter, href: Routes.dashboard.filters, end: false },
-  { label: "Contacts", icon: Users, href: Routes.dashboard.contacts, end: false },
-  { label: "Leads Directory", icon: Globe, href: Routes.dashboard.leads_directory, end: false },
-  { label: "Sender Profiles", icon: IdCard, href: Routes.dashboard.sender_profiles, end: false },
-  { label: "Campaigns", icon: Megaphone, href: Routes.dashboard.campaigns, end: false },
+  { label: "Dashboard", icon: LayoutDashboard, href: Routes.dashboard.root, end: true, adminOnly: false },
+  { label: "Filters", icon: Filter, href: Routes.dashboard.filters, end: false, adminOnly: false },
+  { label: "Contacts", icon: Users, href: Routes.dashboard.contacts, end: false, adminOnly: false },
+  { label: "Leads Directory", icon: Globe, href: Routes.dashboard.leads_directory, end: false, adminOnly: false },
+  { label: "Sender Profiles", icon: IdCard, href: Routes.dashboard.sender_profiles, end: false, adminOnly: false },
+  { label: "Campaigns", icon: Megaphone, href: Routes.dashboard.campaigns, end: false, adminOnly: false },
+  { label: "Batch Jobs", icon: Layers, href: Routes.dashboard.admin_batch_jobs, end: false, adminOnly: true },
 ];
 
 export default function SidebarContent({ collapsed, onNavigate }: SidebarContentProps) {
+  const { role } = useAuthStore();
+  const isSuperAdmin = role === RoleTypes.SUPER_ADMIN;
+
   return (
     <ul className="space-y-0.5">
-      {navItems.map(({ label, icon: Icon, href, end }) => (
+      {navItems.filter((item) => !item.adminOnly || isSuperAdmin).map(({ label, icon: Icon, href, end }) => (
         <li key={href}>
           <NavLink
             to={href}

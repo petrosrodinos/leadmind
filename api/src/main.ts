@@ -8,7 +8,7 @@ import { BULL_BOARD_ADAPTER } from './core/queues/queues.constants';
 import { bullBoardAuthMiddleware } from './core/queues/bull-board.middleware';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { rawBody: true });
 
   app.useGlobalPipes(
     new ValidationPipe({

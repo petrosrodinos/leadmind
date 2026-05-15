@@ -1,18 +1,22 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from '@/core/databases/prisma/prisma.module';
+import { AiIntegrationModule } from '@/integrations/ai/ai.module';
 import { MarketingCampaignsModule } from '@/modules/marketing-campaigns/marketing-campaigns.module';
+import { ContactsModule } from '@/modules/contacts/contacts.module';
 import { ResendWebhookController } from './resend-webhook.controller';
 import { TwilioWebhookController } from './twilio-webhook.controller';
 import { UnsubscribeController } from './unsubscribe.controller';
+import { OpenAiWebhookController } from './openai-webhook.controller';
 import { WebhookEventService } from './services/webhook-event.service';
 
 @Module({
-    imports: [ConfigModule, PrismaModule, MarketingCampaignsModule],
+    imports: [ConfigModule, PrismaModule, AiIntegrationModule, MarketingCampaignsModule, ContactsModule],
     controllers: [
         ResendWebhookController,
         TwilioWebhookController,
         UnsubscribeController,
+        OpenAiWebhookController,
     ],
     providers: [WebhookEventService],
     exports: [WebhookEventService],

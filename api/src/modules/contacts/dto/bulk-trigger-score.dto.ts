@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { ArrayMinSize, IsArray, IsUUID } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ArrayMinSize, IsArray, IsBoolean, IsOptional, IsUUID } from 'class-validator';
 
 export class BulkTriggerScoreDto {
     @ApiProperty({ type: [String] })
@@ -19,4 +19,9 @@ export class BulkTriggerScoreDto {
     @ArrayMinSize(1)
     @IsUUID('4', { each: true })
     scoring_instruction_uuids: string[];
+
+    @ApiPropertyOptional()
+    @IsOptional()
+    @IsBoolean()
+    use_batch?: boolean;
 }

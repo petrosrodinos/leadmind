@@ -261,10 +261,9 @@ export interface BulkTriggerContactScorePayload {
     contact_uuids: string[];
     filter_uuids: string[];
     scoring_instruction_uuids: string[];
+    use_batch?: boolean;
 }
 
-export interface BulkTriggerContactScoreResult {
-    jobIds: string[];
-    queued: number;
-    skipped_contacts: number;
-}
+export type BulkTriggerContactScoreResult =
+    | { jobIds: string[]; queued: number; skipped_contacts: number; is_batch: false }
+    | { batch_id: string; queued: number; skipped_contacts: number; is_batch: true };
