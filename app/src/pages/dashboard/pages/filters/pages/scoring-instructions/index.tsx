@@ -8,7 +8,7 @@ import {
 } from "@/features/scoring-instructions/hooks/use-scoring-instructions";
 import type { ScoringInstruction } from "@/features/scoring-instructions/interfaces/scoring-instruction.interface";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
-import { ScoringInstructionModal } from "@/features/scoring-instructions/components/scoring-instruction-modal";
+import { ScoringInstructionModal } from "@/pages/dashboard/pages/filters/components/scoring-instruction-modal";
 
 const ScoringInstructionsPage: FC = () => {
     const { data: rows = [], isLoading, refetch } = useScoringInstructions();

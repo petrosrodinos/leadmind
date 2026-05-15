@@ -6,12 +6,12 @@ import { ActionButtonWithPending } from "@/components/ui/action-button-with-pend
 import {
     useCreateScoringInstruction,
     useUpdateScoringInstruction,
-} from "../hooks/use-scoring-instructions";
-import type { ScoringInstruction } from "../interfaces/scoring-instruction.interface";
+} from "@/features/scoring-instructions/hooks/use-scoring-instructions";
+import type { ScoringInstruction } from "@/features/scoring-instructions/interfaces/scoring-instruction.interface";
 import {
     scoringInstructionFormSchema,
     type ScoringInstructionFormValues,
-} from "../validation-schemas/scoring-instruction.schema";
+} from "@/features/scoring-instructions/validation-schemas/scoring-instruction.schema";
 
 interface ScoringInstructionModalProps {
     isOpen: boolean;

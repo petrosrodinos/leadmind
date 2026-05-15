@@ -43,7 +43,7 @@ import { resetQueryConfigForSource } from "./empty-query-config";
 import { QueryConfigFields } from "./query-config-fields";
 import { serializeQueryConfig } from "./serialize-query-config";
 import { useScoringInstructions } from "@/features/scoring-instructions/hooks/use-scoring-instructions";
-import { ScoringInstructionModal } from "@/features/scoring-instructions/components/scoring-instruction-modal";
+import { ScoringInstructionModal } from "@/pages/dashboard/pages/filters/components/scoring-instruction-modal";
 import { RoleTypes } from "@/features/user/interfaces/user.interface";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/stores/auth";
