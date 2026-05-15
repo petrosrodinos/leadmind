@@ -27,24 +27,64 @@ export default function DashboardHome() {
   const total = stats?.total_contacts ?? 0;
 
   return (
-    <div className="mx-auto flex w-full max-w-[1540px] flex-col gap-5">
-      <DashboardHero greeting={greeting} name={name} newThisWeek={stats?.new_this_week ?? 0} statsLoading={statsLoading} />
+    <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-6">
+      {/* Page header */}
+      <DashboardHero
+        greeting={greeting}
+        name={name}
+        newThisWeek={stats?.new_this_week ?? 0}
+        statsLoading={statsLoading}
+      />
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <DashboardKpiCard label="Total contacts" value={total.toLocaleString()} helper="All time" icon={Users} tone="accent" href={Routes.dashboard.contacts} valueLoading={statsLoading} />
-        <DashboardKpiCard label="New this week" value={(stats?.new_this_week ?? 0).toLocaleString()} helper="New contacts added" icon={TrendingUp} tone="success" valueLoading={statsLoading} />
-        <DashboardKpiCard label="Conversion rate" value={`${(stats?.conversion_rate ?? 0).toFixed(1)}%`} helper={`${byStatus[LeadStatus.CONVERTED]} converted`} icon={CheckCircle2} tone="warning" valueLoading={statsLoading} />
-        <DashboardKpiCard label="Pending drafts" value={(stats?.pending_drafts ?? 0).toLocaleString()} helper="Waiting to send" icon={Send} tone="draft" href={Routes.dashboard.contacts} valueLoading={statsLoading} />
+      {/* KPI row */}
+      <div className="grid grid-cols-2 xl:grid-cols-4 gap-3">
+        <DashboardKpiCard
+          label="Total contacts"
+          value={total.toLocaleString()}
+          helper="All time"
+          icon={Users}
+          tone="accent"
+          href={Routes.dashboard.contacts}
+          valueLoading={statsLoading}
+        />
+        <DashboardKpiCard
+          label="New this week"
+          value={(stats?.new_this_week ?? 0).toLocaleString()}
+          helper="Added recently"
+          icon={TrendingUp}
+          tone="success"
+          valueLoading={statsLoading}
+        />
+        <DashboardKpiCard
+          label="Conversion rate"
+          value={`${(stats?.conversion_rate ?? 0).toFixed(1)}%`}
+          helper={`${byStatus[LeadStatus.CONVERTED]} converted`}
+          icon={CheckCircle2}
+          tone="warning"
+          valueLoading={statsLoading}
+        />
+        <DashboardKpiCard
+          label="Pending drafts"
+          value={(stats?.pending_drafts ?? 0).toLocaleString()}
+          helper="Waiting to send"
+          icon={Send}
+          tone="draft"
+          href={Routes.dashboard.contacts}
+          valueLoading={statsLoading}
+        />
       </div>
 
+      {/* Pipeline — full width */}
       <DashboardPipelineDistribution stats={stats} isLoading={statsLoading} />
 
-      <div className="grid gap-4 lg:grid-cols-2">
+      {/* Bottom: contacts (main) + sidebar (drafts + filters) */}
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_320px]">
         <DashboardTopContactsCard contacts={topContacts} isLoading={topLoading} />
-        <DashboardPendingDraftsCard items={pendingGroups} isLoading={draftsLoading} />
+        <div className="flex flex-col gap-6">
+          <DashboardPendingDraftsCard items={pendingGroups} isLoading={draftsLoading} />
+          <DashboardFiltersCard filters={filters} isLoading={filtersLoading} />
+        </div>
       </div>
-
-      <DashboardFiltersCard filters={filters} isLoading={filtersLoading} />
     </div>
   );
 }

@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&display=swap');
+
 /* ─── Animations ──────────────────────────────────────────────────────────── */
 
 @keyframes lf-float {
@@ -31,28 +33,28 @@
 
 .lf-root {
   /* Base */
-  --lf-bg:          oklch(0.064 0.007 243);
-  --lf-sur:         oklch(0.112 0.008 243);
-  --lf-inset:       oklch(0.040 0.005 243);
-  --lf-tx:          oklch(0.932 0.004 243);
-  --lf-mu:          oklch(0.520 0.012 243);
+  --lf-bg:          oklch(0.064 0.006 192);
+  --lf-sur:         oklch(0.112 0.007 192);
+  --lf-inset:       oklch(0.040 0.004 192);
+  --lf-tx:          oklch(0.932 0.004 192);
+  --lf-mu:          oklch(0.520 0.010 192);
 
-  /* Accent (blue) */
-  --lf-acc:         oklch(0.620 0.220 240);
-  --lf-acc-h:       oklch(0.678 0.220 240);
-  --lf-acc-lt:      oklch(0.660 0.200 240);
-  --lf-acc-bg:      oklch(0.620 0.220 240 / 0.12);
-  --lf-acc-bd-xs:   oklch(0.620 0.220 240 / 0.08);
-  --lf-acc-bd-sm:   oklch(0.620 0.220 240 / 0.14);
-  --lf-acc-bd:      oklch(0.620 0.220 240 / 0.22);
-  --lf-acc-bd-lg:   oklch(0.620 0.220 240 / 0.40);
-  --lf-acc-wm:      oklch(0.620 0.220 240 / 0.06);
-  --lf-acc-glow:    oklch(0.620 0.220 240 / 0.09);
-  --lf-acc-sh-sm:   0 0 20px oklch(0.620 0.220 240 / 0.28);
-  --lf-acc-sh-md:   0 0 36px oklch(0.620 0.220 240 / 0.30);
-  --lf-acc-sh-lg:   0 0 48px oklch(0.620 0.220 240 / 0.36);
-  --lf-acc-sh-h:    0 0 64px oklch(0.620 0.220 240 / 0.52);
-  --lf-acc-step:    0 0 30px oklch(0.620 0.220 240 / 0.15);
+  /* Accent — teal */
+  --lf-acc:         oklch(0.720 0.110 192);
+  --lf-acc-h:       oklch(0.760 0.100 192);
+  --lf-acc-lt:      oklch(0.740 0.105 192);
+  --lf-acc-bg:      oklch(0.720 0.110 192 / 0.12);
+  --lf-acc-bd-xs:   oklch(0.720 0.110 192 / 0.08);
+  --lf-acc-bd-sm:   oklch(0.720 0.110 192 / 0.14);
+  --lf-acc-bd:      oklch(0.720 0.110 192 / 0.22);
+  --lf-acc-bd-lg:   oklch(0.720 0.110 192 / 0.40);
+  --lf-acc-wm:      oklch(0.720 0.110 192 / 0.06);
+  --lf-acc-glow:    oklch(0.720 0.110 192 / 0.09);
+  --lf-acc-sh-sm:   0 0 20px oklch(0.720 0.110 192 / 0.28);
+  --lf-acc-sh-md:   0 0 36px oklch(0.720 0.110 192 / 0.30);
+  --lf-acc-sh-lg:   0 0 48px oklch(0.720 0.110 192 / 0.36);
+  --lf-acc-sh-h:    0 0 64px oklch(0.720 0.110 192 / 0.52);
+  --lf-acc-step:    0 0 30px oklch(0.720 0.110 192 / 0.15);
 
   /* Violet */
   --lf-vio:         oklch(0.600 0.220 290);
@@ -86,25 +88,25 @@
   --lf-shimmer:     oklch(1 0 0 / 0.06);
 
   /* Structure */
-  --lf-nav-bg:      oklch(0.064 0.007 243 / 0.80);
-  --lf-nav-bd:      oklch(0.620 0.220 240 / 0.08);
-  --lf-grid:        oklch(0.620 0.220 240 / 0.04);
-  --lf-hero-glow:   oklch(0.620 0.220 240 / 0.14);
-  --lf-scan:        oklch(0.620 0.220 240 / 0.90);
-  --lf-stats-bg:    oklch(0.112 0.008 243 / 0.85);
-  --lf-stats-bd:    oklch(0.620 0.220 240 / 0.12);
+  --lf-nav-bg:      oklch(0.064 0.006 192 / 0.80);
+  --lf-nav-bd:      oklch(0.720 0.110 192 / 0.08);
+  --lf-grid:        oklch(0.720 0.110 192 / 0.04);
+  --lf-hero-glow:   oklch(0.720 0.110 192 / 0.14);
+  --lf-scan:        oklch(0.720 0.110 192 / 0.90);
+  --lf-stats-bg:    oklch(0.112 0.007 192 / 0.85);
+  --lf-stats-bd:    oklch(0.720 0.110 192 / 0.12);
   --lf-term-sh:     0 32px 80px oklch(0 0 0 / 0.55), 0 1px 0 oklch(1 0 0 / 0.04) inset;
   --lf-float-sh:    0 12px 40px oklch(0 0 0 / 0.40);
-  --lf-hover-sh:    0 24px 64px oklch(0 0 0 / 0.45), 0 0 40px oklch(0.620 0.220 240 / 0.12);
-  --lf-foot-bd:     oklch(0.620 0.220 240 / 0.08);
+  --lf-hover-sh:    0 24px 64px oklch(0 0 0 / 0.45), 0 0 40px oklch(0.720 0.110 192 / 0.12);
+  --lf-foot-bd:     oklch(0.720 0.110 192 / 0.08);
 
   /* CTA */
-  --lf-cta-from:    oklch(0.112 0.008 243);
-  --lf-cta-mid:     oklch(0.120 0.012 258);
-  --lf-cta-bd:      oklch(0.620 0.220 240 / 0.22);
-  --lf-cta-glow:    oklch(0.620 0.220 240 / 0.18);
+  --lf-cta-from:    oklch(0.112 0.007 192);
+  --lf-cta-mid:     oklch(0.120 0.011 205);
+  --lf-cta-bd:      oklch(0.720 0.110 192 / 0.22);
+  --lf-cta-glow:    oklch(0.720 0.110 192 / 0.18);
 
-  /* Source badges */
+  /* Source badges — LinkedIn keeps blue (brand color), Google Maps stays amber */
   --lf-li-c:        oklch(0.660 0.200 240);
   --lf-li-bg:       oklch(0.400 0.220 234 / 0.18);
   --lf-li-bd:       oklch(0.400 0.220 234 / 0.30);
@@ -117,27 +119,27 @@
 
 .lf-root.lf-light {
   /* Base */
-  --lf-bg:          oklch(0.973 0.003 243);
-  --lf-sur:         oklch(0.997 0.001 243);
-  --lf-inset:       oklch(0.948 0.006 243);
-  --lf-tx:          oklch(0.176 0.012 243);
-  --lf-mu:          oklch(0.462 0.014 243);
+  --lf-bg:          oklch(0.973 0.002 192);
+  --lf-sur:         oklch(0.997 0.001 192);
+  --lf-inset:       oklch(0.948 0.004 192);
+  --lf-tx:          oklch(0.176 0.010 192);
+  --lf-mu:          oklch(0.462 0.012 192);
 
-  /* Accent (deeper blue for white bg contrast) */
-  --lf-acc:         oklch(0.460 0.244 240);
-  --lf-acc-h:       oklch(0.400 0.244 240);
-  --lf-acc-lt:      oklch(0.460 0.244 240);
-  --lf-acc-bg:      oklch(0.460 0.244 240 / 0.09);
-  --lf-acc-bd-xs:   oklch(0.460 0.244 240 / 0.10);
-  --lf-acc-bd-sm:   oklch(0.460 0.244 240 / 0.17);
-  --lf-acc-bd:      oklch(0.460 0.244 240 / 0.25);
-  --lf-acc-bd-lg:   oklch(0.460 0.244 240 / 0.44);
-  --lf-acc-wm:      oklch(0.460 0.244 240 / 0.07);
-  --lf-acc-glow:    oklch(0.460 0.244 240 / 0.06);
-  --lf-acc-sh-sm:   0 2px 8px oklch(0.460 0.244 240 / 0.18);
-  --lf-acc-sh-md:   0 4px 16px oklch(0.460 0.244 240 / 0.20);
-  --lf-acc-sh-lg:   0 6px 24px oklch(0.460 0.244 240 / 0.26);
-  --lf-acc-sh-h:    0 8px 32px oklch(0.460 0.244 240 / 0.36);
+  /* Accent — deeper teal for white bg */
+  --lf-acc:         oklch(0.540 0.120 192);
+  --lf-acc-h:       oklch(0.480 0.120 192);
+  --lf-acc-lt:      oklch(0.540 0.120 192);
+  --lf-acc-bg:      oklch(0.540 0.120 192 / 0.09);
+  --lf-acc-bd-xs:   oklch(0.540 0.120 192 / 0.10);
+  --lf-acc-bd-sm:   oklch(0.540 0.120 192 / 0.17);
+  --lf-acc-bd:      oklch(0.540 0.120 192 / 0.25);
+  --lf-acc-bd-lg:   oklch(0.540 0.120 192 / 0.44);
+  --lf-acc-wm:      oklch(0.540 0.120 192 / 0.07);
+  --lf-acc-glow:    oklch(0.540 0.120 192 / 0.06);
+  --lf-acc-sh-sm:   0 2px 8px oklch(0.540 0.120 192 / 0.18);
+  --lf-acc-sh-md:   0 4px 16px oklch(0.540 0.120 192 / 0.20);
+  --lf-acc-sh-lg:   0 6px 24px oklch(0.540 0.120 192 / 0.26);
+  --lf-acc-sh-h:    0 8px 32px oklch(0.540 0.120 192 / 0.36);
   --lf-acc-step:    none;
 
   /* Violet */
@@ -162,33 +164,33 @@
   /* Yellow */
   --lf-ylw:         oklch(0.560 0.148 88);
 
-  /* Surfaces (invert the white-on-dark approach) */
-  --lf-row-bg:      oklch(0.966 0.004 243);
-  --lf-row-bd:      oklch(0.886 0.007 243);
-  --lf-ghost:       oklch(0.952 0.006 243);
-  --lf-ghost-h:     oklch(0.938 0.008 243);
-  --lf-ghost-bd:    oklch(0.870 0.009 243);
-  --lf-ghost-bd2:   oklch(0.852 0.010 243);
-  --lf-shimmer:     oklch(0.902 0.006 243);
+  /* Surfaces */
+  --lf-row-bg:      oklch(0.966 0.003 192);
+  --lf-row-bd:      oklch(0.886 0.006 192);
+  --lf-ghost:       oklch(0.952 0.004 192);
+  --lf-ghost-h:     oklch(0.938 0.006 192);
+  --lf-ghost-bd:    oklch(0.870 0.007 192);
+  --lf-ghost-bd2:   oklch(0.852 0.008 192);
+  --lf-shimmer:     oklch(0.902 0.005 192);
 
   /* Structure */
-  --lf-nav-bg:      oklch(0.973 0.003 243 / 0.88);
-  --lf-nav-bd:      oklch(0.870 0.009 243);
-  --lf-grid:        oklch(0.460 0.244 240 / 0.05);
-  --lf-hero-glow:   oklch(0.460 0.244 240 / 0.07);
-  --lf-scan:        oklch(0.460 0.244 240 / 0.50);
-  --lf-stats-bg:    oklch(0.997 0.001 243);
-  --lf-stats-bd:    oklch(0.870 0.009 243);
-  --lf-term-sh:     0 4px 24px oklch(0.300 0.050 243 / 0.10), 0 1px 4px oklch(0.300 0.050 243 / 0.08);
-  --lf-float-sh:    0 4px 16px oklch(0.300 0.050 243 / 0.12), 0 1px 4px oklch(0.300 0.050 243 / 0.06);
-  --lf-hover-sh:    0 8px 32px oklch(0.300 0.050 243 / 0.12), 0 2px 8px oklch(0.300 0.050 243 / 0.06);
-  --lf-foot-bd:     oklch(0.870 0.009 243);
+  --lf-nav-bg:      oklch(0.973 0.002 192 / 0.88);
+  --lf-nav-bd:      oklch(0.870 0.007 192);
+  --lf-grid:        oklch(0.540 0.120 192 / 0.05);
+  --lf-hero-glow:   oklch(0.540 0.120 192 / 0.07);
+  --lf-scan:        oklch(0.540 0.120 192 / 0.50);
+  --lf-stats-bg:    oklch(0.997 0.001 192);
+  --lf-stats-bd:    oklch(0.870 0.007 192);
+  --lf-term-sh:     0 4px 24px oklch(0.300 0.040 192 / 0.10), 0 1px 4px oklch(0.300 0.040 192 / 0.08);
+  --lf-float-sh:    0 4px 16px oklch(0.300 0.040 192 / 0.12), 0 1px 4px oklch(0.300 0.040 192 / 0.06);
+  --lf-hover-sh:    0 8px 32px oklch(0.300 0.040 192 / 0.12), 0 2px 8px oklch(0.300 0.040 192 / 0.06);
+  --lf-foot-bd:     oklch(0.870 0.007 192);
 
   /* CTA */
-  --lf-cta-from:    oklch(0.962 0.006 243);
-  --lf-cta-mid:     oklch(0.952 0.010 253);
-  --lf-cta-bd:      oklch(0.460 0.244 240 / 0.22);
-  --lf-cta-glow:    oklch(0.460 0.244 240 / 0.08);
+  --lf-cta-from:    oklch(0.962 0.004 192);
+  --lf-cta-mid:     oklch(0.952 0.008 205);
+  --lf-cta-bd:      oklch(0.540 0.120 192 / 0.22);
+  --lf-cta-glow:    oklch(0.540 0.120 192 / 0.08);
 
   /* Source badges */
   --lf-li-c:        oklch(0.416 0.240 240);

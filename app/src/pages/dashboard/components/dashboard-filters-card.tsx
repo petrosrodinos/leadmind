@@ -1,12 +1,13 @@
 import { Button, Chip } from "@heroui/react";
 import { formatDistanceToNow } from "date-fns";
-import { Filter as FilterIcon, MoreVertical, Plus } from "lucide-react";
+import { Filter as FilterIcon, Plus } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useLatestFilterJob } from "@/features/filters/hooks/use-filters";
 import { JobStatus, type Filter } from "@/features/filters/interfaces/filter.interface";
 import { Routes } from "@/routes/routes";
 import { DashboardPanelHeader } from "./dashboard-panel-header";
 import { DashboardEmptyState } from "./dashboard-shared";
+import { cn } from "@/lib/utils";
 
 interface DashboardFiltersCardProps {
   filters: Filter[];
@@ -17,18 +18,33 @@ export function DashboardFiltersCard({ filters, isLoading }: DashboardFiltersCar
   const navigate = useNavigate();
 
   return (
-    <section className="overflow-hidden rounded-2xl border border-border bg-surface">
-      <DashboardPanelHeader icon={FilterIcon} title="Your filters" subtitle="Saved hunts that pull leads automatically." actionLabel="View all" onAction={() => navigate(Routes.dashboard.filters)}>
-        <Button size="sm" className="rounded-full px-5" onPress={() => navigate(Routes.dashboard.filters_new)}>
-          <Plus className="size-3.5" />
-          New filter
+    <section className="overflow-hidden rounded-xl border border-border/60 bg-surface">
+      <DashboardPanelHeader
+        title="Your filters"
+        subtitle="Scheduled lead sources"
+        actionLabel="View all"
+        onAction={() => navigate(Routes.dashboard.filters)}
+      >
+        <Button
+          size="sm"
+          className="h-7 text-xs"
+          onPress={() => navigate(Routes.dashboard.filters_new)}
+        >
+          <Plus className="size-3" />
+          New
         </Button>
       </DashboardPanelHeader>
 
       {isLoading ? (
-        <ul className="grid gap-3 px-5 pb-5 md:grid-cols-2" aria-busy aria-label="Loading filters">
-          {Array.from({ length: 2 }).map((_, i) => (
-            <li key={i} className="h-[72px] rounded-xl border border-border bg-surface-secondary/30 animate-pulse" />
+        <ul className="divide-y divide-border/40" aria-busy>
+          {Array.from({ length: 3 }).map((_, i) => (
+            <li key={i} className="flex items-center gap-3 px-5 py-3.5">
+              <div className="size-2 rounded-full bg-surface-secondary animate-pulse shrink-0" />
+              <div className="flex-1 space-y-1.5">
+                <div className="h-3.5 w-32 rounded bg-surface-secondary animate-pulse" />
+                <div className="h-2.5 w-20 rounded bg-surface-secondary/70 animate-pulse" />
+              </div>
+            </li>
           ))}
         </ul>
       ) : filters.length === 0 ? (
@@ -44,7 +60,7 @@ export function DashboardFiltersCard({ filters, isLoading }: DashboardFiltersCar
           }
         />
       ) : (
-        <ul className="grid gap-3 px-5 pb-5 md:grid-cols-2">
+        <ul className="divide-y divide-border/40">
           {filters.slice(0, 6).map((f) => (
             <DashboardFilterRow key={f.uuid} filter={f} />
           ))}
@@ -57,33 +73,35 @@ export function DashboardFiltersCard({ filters, isLoading }: DashboardFiltersCar
 function DashboardFilterRow({ filter }: { filter: Filter }) {
   const { lastJob } = useLatestFilterJob(filter.uuid);
   const status = lastJob?.status;
-  const tone = status === JobStatus.RUNNING || status === JobStatus.PENDING ? "warning" : status === JobStatus.FAILED ? "danger" : status === JobStatus.COMPLETED ? "success" : "default";
+  const isRunning = status === JobStatus.RUNNING || status === JobStatus.PENDING;
+  const isFailed = status === JobStatus.FAILED;
+  const isCompleted = status === JobStatus.COMPLETED;
+  const tone = isRunning ? "warning" : isFailed ? "danger" : isCompleted ? "success" : "default";
+  const dotColor = isRunning ? "bg-warning" : isFailed ? "bg-danger" : isCompleted ? "bg-success" : "bg-muted/30";
 
   const ts = lastJob?.completed_at ?? lastJob?.started_at ?? lastJob?.created_at;
   const subtitle = ts
-    ? `${status?.toLowerCase() ?? "No status"} - ${formatDistanceToNow(new Date(ts), {
-        addSuffix: true,
-      })}`
-    : filter.enabled
-      ? "Never run"
-      : "Disabled";
+    ? `${status?.toLowerCase() ?? ""} · ${formatDistanceToNow(new Date(ts), { addSuffix: true })}`
+    : filter.enabled ? "Never run" : "Disabled";
 
   return (
     <li>
-      <Link to={Routes.dashboard.filters_detail.replace(":uuid", filter.uuid)} className="flex min-h-[72px] items-center gap-3 rounded-xl border border-border p-3 transition-colors hover:border-accent/40">
-        <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl border border-accent/10 bg-accent/10 text-accent">
-          <FilterIcon className="size-5" />
-        </span>
+      <Link
+        to={Routes.dashboard.filters_detail.replace(":uuid", filter.uuid)}
+        className="flex items-center gap-3 px-5 py-3.5 hover:bg-surface-secondary/40 transition-colors"
+      >
+        <span className={cn("size-2 rounded-full shrink-0", dotColor, isRunning && "animate-pulse")} />
         <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-semibold text-foreground">{filter.name}</p>
+          <p className="truncate text-sm font-medium text-foreground">{filter.name}</p>
           <p className="truncate text-xs text-muted">{subtitle}</p>
         </div>
         {status && (
           <Chip size="sm" variant="soft" color={tone as any}>
-            <Chip.Label>{lastJob?.leads_found != null ? `${lastJob.leads_found} leads` : status}</Chip.Label>
+            <Chip.Label className="text-[10px]">
+              {lastJob?.leads_found != null ? `${lastJob.leads_found} leads` : status}
+            </Chip.Label>
           </Chip>
         )}
-        <MoreVertical className="size-4 shrink-0 text-muted" aria-hidden />
       </Link>
     </li>
   );

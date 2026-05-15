@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "@heroui/styles";
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
 
 html,
 body {
@@ -20,20 +21,20 @@ body {
    so they correctly override these per-theme.
 ───────────────────────────────────────────────────────────────────────────── */
 :root {
-  --text:          oklch(0.55 0.012 240);
-  --text-h:        oklch(0.935 0.006 240);
-  --bg:            oklch(0.135 0.006 240);
-  --border:        oklch(0.280 0.010 240);
-  --accent:        oklch(0.62 0.22 240);
-  --accent-bg:     oklch(0.62 0.22 240 / 0.15);
-  --accent-border: oklch(0.62 0.22 240 / 0.45);
-  --social-bg:     oklch(0.200 0.007 240 / 0.5);
+  --text:          oklch(0.55 0.012 192);
+  --text-h:        oklch(0.935 0.006 192);
+  --bg:            oklch(0.135 0.004 192);
+  --border:        oklch(0.280 0.008 192);
+  --accent:        oklch(0.72 0.11 192);
+  --accent-bg:     oklch(0.72 0.11 192 / 0.15);
+  --accent-border: oklch(0.72 0.11 192 / 0.45);
+  --social-bg:     oklch(0.200 0.005 192 / 0.5);
   --shadow:
     oklch(0 0 0 / 0.4) 0 10px 15px -3px,
     oklch(0 0 0 / 0.25) 0 4px 6px -2px;
 
-  --sans:    system-ui, "Segoe UI", Roboto, sans-serif;
-  --heading: system-ui, "Segoe UI", Roboto, sans-serif;
+  --sans:    "DM Sans", system-ui, "Segoe UI", sans-serif;
+  --heading: "DM Sans", system-ui, "Segoe UI", sans-serif;
   --mono:    ui-monospace, Consolas, monospace;
 
   font: 18px/145% var(--sans);
@@ -57,48 +58,46 @@ body {
 ───────────────────────────────────────────────────────────────────────────── */
 
 [data-theme="dark"] {
-  --accent:            oklch(0.62 0.22 240);
+  --accent:            oklch(0.72 0.11 192);
   --accent-foreground: oklch(0.98 0 0);
 
-  --background: oklch(0.135 0.006 240);
+  --background: oklch(0.118 0.004 192);
 
-  --surface:            oklch(0.200 0.007 240);
-  --surface-foreground: oklch(0.935 0.006 240);
-  --surface-secondary:  oklch(0.238 0.007 240);
-  --surface-tertiary:   oklch(0.272 0.006 240);
+  --surface:            oklch(0.172 0.005 192);
+  --surface-foreground: oklch(0.935 0.004 192);
+  --surface-secondary:  oklch(0.208 0.005 192);
+  --surface-tertiary:   oklch(0.240 0.005 192);
 
-  --overlay:            oklch(0.215 0.007 240);
-  --overlay-foreground: oklch(0.935 0.006 240);
+  --overlay:            oklch(0.185 0.005 192);
+  --overlay-foreground: oklch(0.935 0.004 192);
 
-  --field-background:  oklch(0.208 0.007 240);
-  --field-border:      oklch(0.310 0.012 240);
-  --field-placeholder: oklch(0.46 0.012 240);
+  --field-background:  oklch(0.180 0.005 192);
+  --field-border:      oklch(0.290 0.008 192);
+  --field-placeholder: oklch(0.46 0.008 192);
 
   --focus: var(--accent);
-  --link:  oklch(0.74 0.18 240);
+  --link:  oklch(0.82 0.09 192);
 }
 
 [data-theme="light"] {
   color-scheme: light;
 
-  --accent:            oklch(0.50 0.24 240);
+  --accent:            oklch(0.54 0.12 192);
   --accent-foreground: oklch(0.98 0 0);
 
-  /* Restore light borders & backgrounds overridden by :root */
-  --border:    oklch(0.88 0.006 240);
-  --separator: oklch(0.90 0.005 240);
+  --border:    oklch(0.88 0.004 192);
+  --separator: oklch(0.90 0.003 192);
 
-  --field-border: oklch(0.82 0.008 240);
+  --field-border: oklch(0.82 0.006 192);
 
-  /* Reset legacy vars for light mode */
-  --text:          oklch(0.42 0.010 240);
-  --text-h:        oklch(0.15 0.010 240);
-  --bg:            oklch(0.985 0.004 240);
-  --border:        oklch(0.88 0.006 240);
+  --text:          oklch(0.42 0.008 192);
+  --text-h:        oklch(0.15 0.008 192);
+  --bg:            oklch(0.985 0.002 192);
+  --border:        oklch(0.88 0.004 192);
   --shadow:
     oklch(0 0 0 / 0.08) 0 10px 15px -3px,
     oklch(0 0 0 / 0.05) 0 4px 6px -2px;
 
   --focus: var(--accent);
-  --link:  oklch(0.48 0.22 240);
+  --link:  oklch(0.50 0.12 192);
 }

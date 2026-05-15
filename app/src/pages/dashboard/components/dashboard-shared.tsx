@@ -3,13 +3,13 @@ import { cn } from "@/lib/utils";
 
 export function DashboardListSkeleton() {
   return (
-    <ul className="space-y-3 px-5 pb-5" aria-busy aria-label="Loading rows">
+    <ul className="divide-y divide-border/40" aria-busy aria-label="Loading rows">
       {Array.from({ length: 3 }).map((_, i) => (
-        <li key={i} className="flex items-center gap-3">
-          <div className="size-10 shrink-0 rounded-xl bg-surface-secondary animate-pulse" />
-          <div className="min-w-0 flex-1 space-y-2">
-            <div className="h-4 w-[45%] min-w-[8rem] rounded-md bg-surface-secondary animate-pulse" />
-            <div className="h-3 w-[30%] min-w-[5rem] rounded-md bg-surface-secondary animate-pulse" />
+        <li key={i} className="flex items-center gap-3 px-5 py-3.5">
+          <div className="size-8 shrink-0 rounded-full bg-surface-secondary animate-pulse" />
+          <div className="min-w-0 flex-1 space-y-1.5">
+            <div className="h-3.5 w-[44%] min-w-[7rem] rounded bg-surface-secondary animate-pulse" />
+            <div className="h-2.5 w-[28%] min-w-[4rem] rounded bg-surface-secondary/70 animate-pulse" />
           </div>
         </li>
       ))}
@@ -27,7 +27,11 @@ export function DashboardAvatar({ name }: { name: string | null }) {
       .join("")
       .toUpperCase() || "?";
 
-  return <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl bg-accent/15 text-xs font-semibold text-accent">{initials}</span>;
+  return (
+    <span className="inline-flex size-8 shrink-0 items-center justify-center rounded-full bg-accent/12 text-[11px] font-semibold text-accent">
+      {initials}
+    </span>
+  );
 }
 
 interface DashboardEmptyStateProps {
@@ -38,15 +42,14 @@ interface DashboardEmptyStateProps {
   dotted?: boolean;
 }
 
-export function DashboardEmptyState({ icon: Icon, title, body, action, dotted }: DashboardEmptyStateProps) {
+export function DashboardEmptyState({ icon: Icon, title, body, action }: DashboardEmptyStateProps) {
   return (
-    <div className={cn("relative flex min-h-[168px] flex-col items-center justify-center gap-2 px-5 pb-9 pt-5 text-center", dotted && "overflow-hidden")}>
-      {dotted && <div aria-hidden className="absolute inset-x-0 bottom-0 h-24 bg-[radial-gradient(color-mix(in_oklch,var(--accent)_25%,transparent)_1px,transparent_1px)] [background-size:16px_16px] opacity-20" />}
-      <span className="relative inline-flex size-12 items-center justify-center rounded-full bg-accent/10 text-accent">
-        <Icon className="size-5" />
+    <div className="flex min-h-[130px] flex-col items-center justify-center gap-2 px-5 pb-6 pt-5 text-center">
+      <span className="inline-flex size-10 items-center justify-center rounded-full bg-surface-secondary text-muted">
+        <Icon className="size-4" />
       </span>
-      <p className="relative text-sm font-semibold text-foreground">{title}</p>
-      <p className="relative max-w-xs text-xs text-muted">{body}</p>
+      <p className="text-sm font-medium text-foreground">{title}</p>
+      <p className="max-w-xs text-xs text-muted">{body}</p>
       {action}
     </div>
   );

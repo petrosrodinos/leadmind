@@ -118,7 +118,7 @@ export default function LandingPage() {
   return (
     <div
       className={`lf-root min-h-screen${isDark ? "" : " lf-light"}`}
-      style={{ backgroundColor: "var(--lf-bg)", fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", color: "var(--lf-tx)" }}
+      style={{ backgroundColor: "var(--lf-bg)", fontFamily: "'DM Sans', system-ui, sans-serif", color: "var(--lf-tx)" }}
     >
       {/* Fixed ambient layer */}
       <div className="lf-grid-bg fixed inset-0 pointer-events-none z-0" />
