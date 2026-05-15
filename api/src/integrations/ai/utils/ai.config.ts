@@ -6,12 +6,12 @@ import { AIModelInfo, AiModels, AiProvider, AiProviders } from '../interfaces/ai
 import {
     DEFAULT_LEAD_ENRICHMENT_AI_PROVIDER,
     isLeadEnrichmentAiProvider,
-    LEAD_ENRICHMENT_AI_PROVIDER_ENV_KEY,
+    LEAD_ENRICHMENT_AI_PROVIDER,
 } from '../constants/lead-enrichment-ai.constants';
 
 @Injectable()
 export class AiConfig {
-    constructor(private readonly configService: ConfigService) {}
+    constructor(private readonly configService: ConfigService) { }
 
     private readonly supportedModels: AIModelInfo[] = [
         { provider: AiProviders.openai, model: AiModels.openai.gpt4o },
@@ -31,7 +31,7 @@ export class AiConfig {
     ];
 
     resolveLeadEnrichmentAiProvider(): AiProvider {
-        const raw = this.configService.get<string>(LEAD_ENRICHMENT_AI_PROVIDER_ENV_KEY)?.trim().toLowerCase();
+        const raw = LEAD_ENRICHMENT_AI_PROVIDER;
         if (isLeadEnrichmentAiProvider(raw)) {
             return raw;
         }

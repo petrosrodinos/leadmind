@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { Button, Chip } from "@heroui/react";
-import { ChevronDown, ChevronUp } from "lucide-react";
-import { useCampaignDraftMessages } from "@/features/marketing-campaigns/hooks/use-marketing-campaigns";
+import { ChevronDown, ChevronUp, Pencil, Trash2 } from "lucide-react";
+import { useCampaignDraftMessages, useDeleteCampaignDraftMessage } from "@/features/marketing-campaigns/hooks/use-marketing-campaigns";
 import type { DraftMessage } from "@/features/marketing-campaigns/interfaces/campaign.interface";
 import { CampaignContactStatuses } from "@/features/marketing-campaigns/interfaces/campaign.interface";
+import { MsgStatus } from "@/features/contacts/interfaces/contact.interface";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { EditCampaignDraftMessageModal } from "./edit-campaign-draft-message-modal";
 
 interface DraftedMessagesTableProps {
     campaignUuid: string;
@@ -18,6 +21,7 @@ function DraftedMessagesTableSkeleton() {
                         <th className="px-4 py-3 text-left text-xs font-medium text-muted uppercase tracking-wide">Contact</th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-muted uppercase tracking-wide">Subject / Preview</th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-muted uppercase tracking-wide">Status</th>
+                        <th className="px-4 py-3 text-right text-xs font-medium text-muted uppercase tracking-wide w-28">Actions</th>
                         <th className="px-4 py-3 w-10" />
                     </tr>
                 </thead>
@@ -36,6 +40,9 @@ function DraftedMessagesTableSkeleton() {
                                 <div className="h-6 w-20 rounded-full bg-surface-secondary" />
                             </td>
                             <td className="px-4 py-3">
+                                <div className="h-8 w-20 rounded bg-surface-secondary ms-auto" />
+                            </td>
+                            <td className="px-4 py-3">
                                 <div className="h-4 w-4 rounded bg-surface-secondary mx-auto" />
                             </td>
                         </tr>
@@ -49,6 +56,9 @@ function DraftedMessagesTableSkeleton() {
 export function DraftedMessagesTable({ campaignUuid }: DraftedMessagesTableProps) {
     const [page, setPage] = useState(1);
     const { data, isLoading } = useCampaignDraftMessages(campaignUuid, { page, limit: 20 });
+    const [editMsg, setEditMsg] = useState<DraftMessage | null>(null);
+    const [deleteMsg, setDeleteMsg] = useState<DraftMessage | null>(null);
+    const deleteMu = useDeleteCampaignDraftMessage();
 
     if (isLoading) {
         return <DraftedMessagesTableSkeleton />;
@@ -60,6 +70,37 @@ export function DraftedMessagesTable({ campaignUuid }: DraftedMessagesTableProps
 
     return (
         <div className="space-y-2">
+            {editMsg ? (
+                <EditCampaignDraftMessageModal
+                    key={editMsg.uuid}
+                    msg={editMsg}
+                    campaignUuid={campaignUuid}
+                    onClose={() => setEditMsg(null)}
+                />
+            ) : null}
+
+            <ConfirmDialog
+                isOpen={deleteMsg !== null}
+                onOpenChange={(open) => {
+                    if (!open) setDeleteMsg(null);
+                }}
+                title="Remove this message?"
+                description="This deletes the row from this campaign. If it was already sent, the email may still have reached the recipient."
+                confirmLabel="Delete"
+                cancelLabel="Cancel"
+                variant="danger"
+                isPending={deleteMu.isPending}
+                onConfirm={async () => {
+                    if (!deleteMsg) return;
+                    await deleteMu.mutateAsync({
+                        campaignUuid,
+                        messageUuid: deleteMsg.uuid,
+                        contactUuid: deleteMsg.contact_uuid,
+                    });
+                    setDeleteMsg(null);
+                }}
+            />
+
             <div className="rounded-xl border border-border overflow-hidden">
                 <table className="w-full text-sm">
                     <thead>
@@ -67,12 +108,19 @@ export function DraftedMessagesTable({ campaignUuid }: DraftedMessagesTableProps
                             <th className="px-4 py-3 text-left text-xs font-medium text-muted uppercase tracking-wide">Contact</th>
                             <th className="px-4 py-3 text-left text-xs font-medium text-muted uppercase tracking-wide">Subject / Preview</th>
                             <th className="px-4 py-3 text-left text-xs font-medium text-muted uppercase tracking-wide">Status</th>
+                            <th className="px-4 py-3 text-right text-xs font-medium text-muted uppercase tracking-wide w-28">Actions</th>
                             <th className="px-4 py-3 w-10" />
                         </tr>
                     </thead>
                     <tbody>
                         {data.data.map((msg) => (
-                            <DraftRow key={msg.uuid} msg={msg} />
+                            <DraftRow
+                                key={msg.uuid}
+                                msg={msg}
+                                isDeletePending={deleteMu.isPending}
+                                onEdit={() => setEditMsg(msg)}
+                                onDelete={() => setDeleteMsg(msg)}
+                            />
                         ))}
                     </tbody>
                 </table>
@@ -95,10 +143,18 @@ export function DraftedMessagesTable({ campaignUuid }: DraftedMessagesTableProps
     );
 }
 
-function DraftRow({ msg }: { msg: DraftMessage }) {
+interface DraftRowProps {
+    msg: DraftMessage;
+    isDeletePending: boolean;
+    onEdit: () => void;
+    onDelete: () => void;
+}
+
+function DraftRow({ msg, isDeletePending, onEdit, onDelete }: DraftRowProps) {
     const [expanded, setExpanded] = useState(false);
     const contactName = msg.contact.name || msg.contact.email || msg.contact.phone || msg.contact_uuid.slice(0, 8);
     const preview = stripHtml(msg.content).slice(0, 120);
+    const canMutate = msg.status === MsgStatus.PENDING;
 
     return (
         <>
@@ -121,13 +177,36 @@ function DraftRow({ msg }: { msg: DraftMessage }) {
                 <td className="px-4 py-3">
                     <StatusChip status={msg.status} />
                 </td>
+                <td className="px-4 py-3 text-right" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()} role="presentation">
+                    <div className="flex justify-end gap-1">
+                        <Button
+                            size="sm"
+                            variant="tertiary"
+                            isDisabled={!canMutate}
+                            onPress={onEdit}
+                            aria-label="Edit draft"
+                        >
+                            <Pencil className="size-3.5" />
+                        </Button>
+                        <Button
+                            size="sm"
+                            variant="tertiary"
+                            className="text-danger"
+                            isDisabled={isDeletePending}
+                            onPress={onDelete}
+                            aria-label="Remove message"
+                        >
+                            <Trash2 className="size-3.5" />
+                        </Button>
+                    </div>
+                </td>
                 <td className="px-4 py-3">
                     {expanded ? <ChevronUp className="size-4 text-muted" /> : <ChevronDown className="size-4 text-muted" />}
                 </td>
             </tr>
             {expanded && (
                 <tr className="border-b border-border last:border-0 bg-surface-secondary/20">
-                    <td colSpan={4} className="px-4 py-4">
+                    <td colSpan={5} className="px-4 py-4">
                         {msg.subject && (
                             <div className="mb-2">
                                 <span className="text-xs text-muted uppercase tracking-wide">Subject</span>

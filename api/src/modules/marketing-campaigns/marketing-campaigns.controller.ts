@@ -170,4 +170,16 @@ export class MarketingCampaignsController {
     ) {
         return this.service.listDraftMessages(user_uuid, uuid, query);
     }
+
+    @Delete(':uuid/draft-messages/:message_uuid')
+    @ApiOperation({ summary: 'Delete a campaign outreach row (any status, e.g. remove bad or sent rows from the list)' })
+    @ApiResponse({ status: 200 })
+    @ApiResponse({ status: 404 })
+    deleteDraftMessage(
+        @CurrentUser('uuid') user_uuid: string,
+        @Param('uuid', ParseUUIDPipe) uuid: string,
+        @Param('message_uuid', ParseUUIDPipe) message_uuid: string,
+    ) {
+        return this.service.deleteDraftMessage(user_uuid, uuid, message_uuid);
+    }
 }

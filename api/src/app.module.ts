@@ -9,6 +9,7 @@ import { RedisCacheModule } from './modules/internal/redis-cache/redis-cache.mod
 import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule } from './shared/config/env/env.module';
 import { ApifyModule } from './integrations/apify/apify.module';
+import { GemiModule } from './integrations/gemi/gemi.module';
 import { ElasticsearchModule } from './integrations/elasticsearch/elasticsearch.module';
 import { QueuesModule } from './core/queues/queues.module';
 import { BullBoardModule } from './core/queues/bull-board.module';
@@ -35,6 +36,7 @@ import { WorkersModule } from './workers/workers.module';
     // GraphQLModule,
     AuthModule,
     ApifyModule,
+    GemiModule,
     ElasticsearchModule,
     QueuesModule,
     BullBoardModule,

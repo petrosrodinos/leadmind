@@ -212,3 +212,17 @@ export async function listCampaignDraftMessages(
         unwrap(error, "Failed to load draft messages.");
     }
 }
+
+export async function deleteCampaignDraftMessage(
+    campaignUuid: string,
+    messageUuid: string,
+): Promise<{ deleted: true }> {
+    try {
+        const response = await axiosInstance.delete(
+            ApiRoutes.marketing_campaigns.delete_draft_message(campaignUuid, messageUuid),
+        );
+        return response.data;
+    } catch (error: any) {
+        unwrap(error, "Failed to delete campaign message.");
+    }
+}

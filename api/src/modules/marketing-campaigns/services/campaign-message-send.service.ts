@@ -1,4 +1,11 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { InjectQueue } from '@nestjs/bullmq';
+import {
+    ConflictException,
+    Injectable,
+    Logger,
+    NotFoundException,
+} from '@nestjs/common';
+import { Queue } from 'bullmq';
 import {
     CampaignContactStatus,
     CampaignStatus,
@@ -8,6 +15,7 @@ import {
     Prisma,
 } from '@/generated/prisma';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
+import { MARKETING_MESSAGE_SEND_QUEUE } from '@/core/queues/queues.constants';
 import { sanitizeEmailHtml } from '@/shared/utils/sanitize-html.util';
 import { MessageSendService } from '@/modules/outreach/services/message-send.service';
 
@@ -23,6 +31,8 @@ export class CampaignMessageSendService {
     constructor(
         private readonly prisma: PrismaService,
         private readonly messageSendService: MessageSendService,
+        @InjectQueue(MARKETING_MESSAGE_SEND_QUEUE)
+        private readonly messageSendQueue: Queue,
     ) { }
 
     async sendByMcc(mcc_uuid: string): Promise<SendResult> {
@@ -183,6 +193,208 @@ export class CampaignMessageSendService {
             this.logger.error(`MCC ${mcc.uuid} send failed: ${error_message}`);
             return { status: 'failed', reason: error_message };
         }
+    }
+
+    async removeCampaignOutreachMessage(
+        user_uuid: string,
+        campaign_uuid: string,
+        message_uuid: string,
+    ): Promise<{ deleted: true }> {
+        const message = await this.prisma.outreachMessage.findFirst({
+            where: { uuid: message_uuid, campaign_uuid, user_uuid },
+        });
+        if (!message) {
+            throw new NotFoundException('Message not found on this campaign');
+        }
+
+        const mcc = await this.prisma.marketingCampaignContact.findUnique({
+            where: {
+                campaign_uuid_contact_uuid_channel: {
+                    campaign_uuid,
+                    contact_uuid: message.contact_uuid,
+                    channel: message.channel,
+                },
+            },
+        });
+
+        if (mcc?.status === CampaignContactStatus.UNSUBSCRIBED) {
+            throw new ConflictException(
+                'This campaign message cannot be removed in its current state.',
+            );
+        }
+
+        if (mcc?.status === CampaignContactStatus.QUEUED) {
+            try {
+                const job = await this.messageSendQueue.getJob(`mcc-${mcc.uuid}`);
+                if (job) await job.remove();
+            } catch (e) {
+                this.logger.warn(
+                    `removeCampaignOutreachMessage job remove ${mcc.uuid}: ${e instanceof Error ? e.message : String(e)}`,
+                );
+            }
+        }
+
+        await this.prisma.$transaction(async (tx) => {
+            const m = await tx.outreachMessage.findFirst({
+                where: { uuid: message_uuid, campaign_uuid, user_uuid },
+            });
+            if (!m) {
+                throw new NotFoundException('Message not found on this campaign');
+            }
+
+            const c = await tx.marketingCampaign.findFirst({
+                where: { uuid: campaign_uuid, user_uuid },
+            });
+            if (!c) {
+                throw new NotFoundException('Message not found on this campaign');
+            }
+
+            const row = await tx.marketingCampaignContact.findUnique({
+                where: {
+                    campaign_uuid_contact_uuid_channel: {
+                        campaign_uuid,
+                        contact_uuid: m.contact_uuid,
+                        channel: m.channel,
+                    },
+                },
+            });
+
+            await tx.interaction.deleteMany({ where: { outreach_message_uuid: message_uuid } });
+            await tx.outreachMessage.delete({ where: { uuid: message_uuid } });
+
+            if (!row) {
+                return;
+            }
+
+            if (row.status === CampaignContactStatus.PENDING) {
+                await tx.marketingCampaignContact.delete({ where: { uuid: row.uuid } });
+                await tx.marketingCampaign.update({
+                    where: { uuid: campaign_uuid },
+                    data: {
+                        total_messages: Math.max(0, c.total_messages - 1),
+                        selected_contact_count: Math.max(0, c.selected_contact_count - 1),
+                    },
+                });
+                return;
+            }
+
+            if (row.status === CampaignContactStatus.QUEUED) {
+                await tx.marketingCampaignContact.delete({ where: { uuid: row.uuid } });
+                await tx.marketingCampaign.update({
+                    where: { uuid: campaign_uuid },
+                    data: {
+                        total_messages: Math.max(0, c.total_messages - 1),
+                        selected_contact_count: Math.max(0, c.selected_contact_count - 1),
+                        queued_count: Math.max(0, c.queued_count - 1),
+                    },
+                });
+                return;
+            }
+
+            if (row.status === CampaignContactStatus.FAILED) {
+                await tx.marketingCampaignContact.update({
+                    where: { uuid: row.uuid },
+                    data: {
+                        status: CampaignContactStatus.SKIPPED,
+                        error_message: null,
+                        sent_at: null,
+                        delivered_at: null,
+                    },
+                });
+                await tx.marketingCampaign.update({
+                    where: { uuid: campaign_uuid },
+                    data: {
+                        failed_count: Math.max(0, c.failed_count - 1),
+                        skipped_count: c.skipped_count + 1,
+                        queued_count: c.queued_count + 1,
+                    },
+                });
+                return;
+            }
+
+            if (row.status === CampaignContactStatus.SKIPPED) {
+                return;
+            }
+
+            if (row.status === CampaignContactStatus.BOUNCED) {
+                await tx.marketingCampaignContact.update({
+                    where: { uuid: row.uuid },
+                    data: {
+                        status: CampaignContactStatus.SKIPPED,
+                        error_message: null,
+                        sent_at: null,
+                        delivered_at: null,
+                    },
+                });
+                await tx.marketingCampaign.update({
+                    where: { uuid: campaign_uuid },
+                    data: {
+                        sent_count: Math.max(0, c.sent_count - 1),
+                        delivered_count: Math.max(0, c.delivered_count - 1),
+                        bounced_count: Math.max(0, c.bounced_count - 1),
+                        skipped_count: c.skipped_count + 1,
+                    },
+                });
+                return;
+            }
+
+            if (
+                row.status === CampaignContactStatus.SENT ||
+                row.status === CampaignContactStatus.DELIVERED ||
+                row.status === CampaignContactStatus.OPENED ||
+                row.status === CampaignContactStatus.CLICKED ||
+                row.status === CampaignContactStatus.REPLIED
+            ) {
+                const extraDelivered = row.status !== CampaignContactStatus.SENT ? 1 : 0;
+                let openedCut = 0;
+                let clickedCut = 0;
+                let repliedCut = 0;
+                if (
+                    row.status === CampaignContactStatus.OPENED ||
+                    row.status === CampaignContactStatus.CLICKED ||
+                    row.status === CampaignContactStatus.REPLIED
+                ) {
+                    openedCut = 1;
+                }
+                if (
+                    row.status === CampaignContactStatus.CLICKED ||
+                    row.status === CampaignContactStatus.REPLIED
+                ) {
+                    clickedCut = 1;
+                }
+                if (row.status === CampaignContactStatus.REPLIED) {
+                    repliedCut = 1;
+                }
+
+                await tx.marketingCampaignContact.update({
+                    where: { uuid: row.uuid },
+                    data: {
+                        status: CampaignContactStatus.SKIPPED,
+                        error_message: null,
+                        sent_at: null,
+                        delivered_at: null,
+                    },
+                });
+
+                await tx.marketingCampaign.update({
+                    where: { uuid: campaign_uuid },
+                    data: {
+                        sent_count: Math.max(0, c.sent_count - 1),
+                        delivered_count: Math.max(
+                            0,
+                            c.delivered_count - 1 - extraDelivered,
+                        ),
+                        skipped_count: c.skipped_count + 1,
+                        opened_count: Math.max(0, c.opened_count - openedCut),
+                        clicked_count: Math.max(0, c.clicked_count - clickedCut),
+                        replied_count: Math.max(0, c.replied_count - repliedCut),
+                    },
+                });
+            }
+        });
+
+        await this.checkCompletion(campaign_uuid);
+        return { deleted: true };
     }
 
     private async markSkipped(

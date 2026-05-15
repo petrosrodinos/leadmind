@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bullmq';
 import { PrismaModule } from '@/core/databases/prisma/prisma.module';
 import { ApifyModule } from '@/integrations/apify/apify.module';
+import { GemiModule } from '@/integrations/gemi/gemi.module';
 import { LeadsModule } from '@/modules/leads/leads.module';
 import { ContactsModule } from '@/modules/contacts/contacts.module';
 import { OutreachModule } from '@/modules/outreach/outreach.module';
@@ -25,6 +26,7 @@ import { MarketingMessageSendWorker } from './marketing-message-send.worker';
     imports: [
         PrismaModule,
         ApifyModule,
+        GemiModule,
         LeadsModule,
         ContactsModule,
         OutreachModule,

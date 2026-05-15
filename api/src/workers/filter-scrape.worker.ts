@@ -1,9 +1,10 @@
 import { Processor, WorkerHost, InjectQueue } from '@nestjs/bullmq';
 import { Logger } from '@nestjs/common';
 import { Job, Queue } from 'bullmq';
-import { Filter, JobStatus, JobTrigger, Prisma } from '@/generated/prisma';
+import { Filter, JobStatus, JobTrigger, Prisma, SourceType } from '@/generated/prisma';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { ApifyService } from '@/integrations/apify/apify.service';
+import { GemiService } from '@/integrations/gemi/gemi.service';
 import { ElasticsearchService } from '@/integrations/elasticsearch/elasticsearch.service';
 import { NormalizedLead } from '@/integrations/apify/interfaces/apify.interfaces';
 import { contactProfileFromLead } from '@/modules/contacts/utils/contact-profile.utils';
@@ -21,6 +22,7 @@ export class FilterScrapeWorker extends WorkerHost {
     constructor(
         private readonly prisma: PrismaService,
         private readonly apifyService: ApifyService,
+        private readonly gemiService: GemiService,
         private readonly elasticsearchService: ElasticsearchService,
         @InjectQueue(AI_PROCESS_QUEUE) private readonly aiProcessQueue: Queue,
     ) {
@@ -46,10 +48,12 @@ export class FilterScrapeWorker extends WorkerHost {
         });
 
         try {
-            const normalized_leads = await this.apifyService.scrapeLeads(
-                filter.source_type,
-                filter.query_config as Record<string, any>,
-            );
+            const normalized_leads = filter.source_type === SourceType.GEMI
+                ? await this.gemiService.scrapeLeads(filter.query_config as Record<string, any>)
+                : await this.apifyService.scrapeLeads(
+                    filter.source_type,
+                    filter.query_config as Record<string, any>,
+                );
 
             const new_contact_uuids = await this.persistLeads(filter, normalized_leads);
 

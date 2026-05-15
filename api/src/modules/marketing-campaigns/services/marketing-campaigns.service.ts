@@ -31,6 +31,7 @@ import { CampaignFiltersDto } from '../dto/campaign-filters.dto';
 import { PreviewContactsDto } from '../dto/preview-contacts.dto';
 import { CampaignContactResolverService } from './campaign-contact-resolver.service';
 import { CampaignAiService } from './campaign-ai.service';
+import { CampaignMessageSendService } from './campaign-message-send.service';
 import { ContactAiService } from '@/modules/contacts/services/contact-ai.service';
 
 @Injectable()
@@ -41,6 +42,7 @@ export class MarketingCampaignsService {
         private readonly prisma: PrismaService,
         private readonly resolver: CampaignContactResolverService,
         private readonly aiService: CampaignAiService,
+        private readonly campaignMessageSend: CampaignMessageSendService,
         private readonly contactAiService: ContactAiService,
         @InjectQueue(MARKETING_CAMPAIGN_DISPATCH_QUEUE)
         private readonly dispatchQueue: Queue,
@@ -436,6 +438,19 @@ export class MarketingCampaignsService {
         ]);
 
         return { data, total, page, limit, totalPages: Math.ceil(total / limit) };
+    }
+
+    async deleteDraftMessage(
+        user_uuid: string,
+        campaign_uuid: string,
+        message_uuid: string,
+    ): Promise<{ deleted: true }> {
+        await this.requireOwned(user_uuid, campaign_uuid);
+        return this.campaignMessageSend.removeCampaignOutreachMessage(
+            user_uuid,
+            campaign_uuid,
+            message_uuid,
+        );
     }
 
     async schedule(

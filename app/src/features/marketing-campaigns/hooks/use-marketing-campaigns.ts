@@ -3,6 +3,7 @@ import {
     cancelCampaign,
     createCampaign,
     deleteCampaign,
+    deleteCampaignDraftMessage,
     duplicateCampaign,
     generateCampaignMessage,
     getCampaign,
@@ -28,6 +29,7 @@ import type {
 } from "../interfaces/campaign.interface";
 import { CampaignStatuses as CS, CampaignType } from "../interfaces/campaign.interface";
 import { toast } from "@/hooks/use-toast";
+import { contactsQueryKeys } from "@/features/contacts/hooks/use-contacts";
 
 export const campaignsQueryKeys = {
     all: ["marketing-campaigns"] as const,
@@ -294,5 +296,33 @@ export function useCampaignDraftMessages(uuid: string | null | undefined, query:
         queryFn: () => listCampaignDraftMessages(uuid as string, query),
         enabled: !!uuid,
         placeholderData: (prev) => prev,
+    });
+}
+
+export function useDeleteCampaignDraftMessage() {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: (vars: { campaignUuid: string; messageUuid: string; contactUuid?: string }) =>
+            deleteCampaignDraftMessage(vars.campaignUuid, vars.messageUuid),
+        onSuccess: (_data, vars) => {
+            qc.invalidateQueries({ queryKey: ["marketing-campaigns", "draft-messages", vars.campaignUuid] });
+            qc.invalidateQueries({ queryKey: ["marketing-campaigns", "contacts", vars.campaignUuid] });
+            qc.invalidateQueries({ queryKey: campaignsQueryKeys.detail(vars.campaignUuid) });
+            qc.invalidateQueries({ queryKey: campaignsQueryKeys.all });
+            if (vars.contactUuid) {
+                qc.invalidateQueries({ queryKey: contactsQueryKeys.detail(vars.contactUuid) });
+                qc.invalidateQueries({ queryKey: contactsQueryKeys.messages(vars.contactUuid) });
+            }
+            qc.invalidateQueries({ queryKey: contactsQueryKeys.all });
+            toast({ title: "Message removed", duration: 1500 });
+        },
+        onError: (error: Error) => {
+            toast({
+                title: "Could not remove message",
+                description: error.message,
+                duration: 3000,
+                variant: "error",
+            });
+        },
     });
 }

@@ -1,6 +1,6 @@
 import { AiModels, AiProviders, type AiProvider } from '../interfaces/ai.interface';
 
-export const LEAD_ENRICHMENT_AI_PROVIDER_ENV_KEY = 'LEAD_ENRICHMENT_AI_PROVIDER';
+export const LEAD_ENRICHMENT_AI_PROVIDER = 'claude';
 
 export type LeadEnrichmentAiProvider = typeof AiProviders.perplexity | typeof AiProviders.claude;
 

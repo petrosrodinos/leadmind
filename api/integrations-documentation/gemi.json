@@ -1,0 +1,1248 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Ανοικτά δεδομένα απο το Γενικό Εμπορικό Μητρώο. Δείτε σχετικά το [https://opendata.businessportal.gr](https://opendata.businessportal.gr).\nΜε το API μπορείτε:\n* να αναζητήσετε επιχειρήσεις του **ΓΕΜΗ**\n* και να λάβετε τα πλήρη δημόσια στοιχεία κάθε επιχείρησης καθώς και τα δημόσια έγγραφά της",
+    "version": "1.0.0",
+    "title": "ΓΕΜΗ Open Data",
+    "termsOfService": "https://opendata.businessportal.gr",
+    "contact": {
+      "email": "support@uhc.gr"
+    },
+    "license": {
+      "name": "ODC-BY-1.0",
+      "url": "http://www.opendefinition.org/licenses/odc-by"
+    }
+  },
+  "host": "opendata-api.businessportal.gr",
+  "basePath": "/api/opendata/v1",
+  "tags": [
+    {
+      "name": "Companies",
+      "description": "Επιχειρήσεις μέλη ΓΕΜΗ"
+    },
+    {
+      "name": "Metadata",
+      "description": "Metadata και συστημικά δεδομένα\nΠαραμετρικά αρχεία που αφορούν κριτήρια ή αναφορές από τα αποτελέσματα του API.\nΠροτείνεται να αποθηκεύονται τακτικά στο σύστημά σας, μιας και αλλάζουν σπάνια\n"
+    },
+    {
+      "name": "CompanyDocuments",
+      "description": "Έγγραφα εταιρειών ΓΕΜΗ"
+    }
+  ],
+  "schemes": ["https"],
+  "paths": {
+    "/metadata/activities": {
+      "get": {
+        "tags": ["Metadata"],
+        "summary": "Δραστηριότητες",
+        "description": "Δραστηριότητες (ΚΑΔ)",
+        "operationId": "listActivities",
+        "produces": ["application/json"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Επιτυχία",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Activity"
+              }
+            }
+          },
+          "503": {
+            "description": "Υπερφορτωμένο ή μη διαθέσιμο σύστημα"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ],
+        "x-swagger-router-controller": "Metadata"
+      }
+    },
+    "/metadata/prefectures": {
+      "get": {
+        "tags": ["Metadata"],
+        "summary": "Νομοί",
+        "description": "Νομοί",
+        "operationId": "listPrefectures",
+        "produces": ["application/json"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Επιτυχία",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Prefecture"
+              }
+            }
+          },
+          "503": {
+            "description": "Υπερφορτωμένο ή μη διαθέσιμο σύστημα"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ],
+        "x-swagger-router-controller": "Metadata"
+      }
+    },
+    "/metadata/municipalities": {
+      "get": {
+        "tags": ["Metadata"],
+        "summary": "Δήμοι",
+        "description": "Δήμοι",
+        "operationId": "listMunicipalities",
+        "produces": ["application/json"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Επιτυχία",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Municipality"
+              }
+            }
+          },
+          "503": {
+            "description": "Υπερφορτωμένο ή μη διαθέσιμο σύστημα"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ],
+        "x-swagger-router-controller": "Metadata"
+      }
+    },
+    "/metadata/companyStatuses": {
+      "get": {
+        "tags": ["Metadata"],
+        "summary": "Καταστάσεις Επιχείρησης",
+        "description": "Καταστάσεις Επιχείρησης",
+        "operationId": "listCompanyStatuses",
+        "produces": ["application/json"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Επιτυχία",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/CompanyStatus"
+              }
+            }
+          },
+          "503": {
+            "description": "Υπερφορτωμένο ή μη διαθέσιμο σύστημα"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ],
+        "x-swagger-router-controller": "Metadata"
+      }
+    },
+    "/metadata/legalTypes": {
+      "get": {
+        "tags": ["Metadata"],
+        "summary": "Νομικές μορφές",
+        "description": "Νομικές μορφές",
+        "operationId": "listLegalTypes",
+        "produces": ["application/json"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Επιτυχία",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/LegalType"
+              }
+            }
+          },
+          "503": {
+            "description": "Υπερφορτωμένο ή μη διαθέσιμο σύστημα"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ],
+        "x-swagger-router-controller": "Metadata"
+      }
+    },
+    "/metadata/gemiOffices": {
+      "get": {
+        "tags": ["Metadata"],
+        "summary": "Τοπικές Υπηρεσίες ΓΕΜΗ",
+        "description": "Τοπικές Υπηρεσίες ΓΕΜΗ",
+        "operationId": "listGemiOffices",
+        "produces": ["application/json"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Επιτυχία",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/GemiOffice"
+              }
+            }
+          },
+          "503": {
+            "description": "Υπερφορτωμένο ή μη διαθέσιμο σύστημα"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ],
+        "x-swagger-router-controller": "Metadata"
+      }
+    },
+    "/metadata/assemblySubjects": {
+      "get": {
+        "tags": ["Metadata"],
+        "summary": "Θέματα Αποφάσεων ΓΕΜΗ",
+        "description": "Θέματα Αποφάσεων ΓΕΜΗ",
+        "operationId": "listAssemblySubjects",
+        "produces": ["application/json"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Επιτυχία",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/AssemblySubject"
+              }
+            }
+          },
+          "503": {
+            "description": "Υπερφορτωμένο ή μη διαθέσιμο σύστημα"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ],
+        "x-swagger-router-controller": "Metadata"
+      }
+    },
+    "/downloadFile": {
+      "get": {
+        "tags": ["DownloadFile"],
+        "summary": "Λήψη Αρχείων API",
+        "description": "Επιστρέφει HTTP Status Code 200 και υπάρχει διαθέσιμο στο attachment το αρχείο",
+        "operationId": "downloadFile",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "key",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "default": "assemblyDecision"
+          },
+          {
+            "name": "elementId",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Επιτυχία"
+          },
+          "503": {
+            "description": "Υπερφορτωμένο ή μη διαθέσιμο σύστημα"
+          }
+        },
+        "x-swagger-router-controller": "DownloadFile"
+      }
+    },
+    "/health": {
+      "get": {
+        "tags": ["Misc"],
+        "summary": "Kατάσταση API",
+        "description": "Επιστρέφει HTTP Status Code 200 αν το API Gateway λειτουργεί κανονικά",
+        "operationId": "health",
+        "produces": ["application/json"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Επιτυχία"
+          },
+          "503": {
+            "description": "Υπερφορτωμένο ή μη διαθέσιμο σύστημα"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ],
+        "x-swagger-router-controller": "Misc"
+      }
+    },
+    "/companies/{arGemi}": {
+      "get": {
+        "tags": ["Companies"],
+        "summary": "Στοιχεία Επιχείρησης με βάση τον Αριθμό ΓΕΜΗ",
+        "description": "Επιστρέφει τα στοιχεία της Επιχείρησης",
+        "operationId": "getCompanyByArGemi",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "arGemi",
+            "in": "path",
+            "description": "ο Αριθμός ΓΕΜΗ της Επιχείρησης",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Επιτυχία",
+            "schema": {
+              "$ref": "#/definitions/Company"
+            }
+          },
+          "400": {
+            "description": "Πρόβλημα με τα στοιχεία που έστειλε ο API client",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ErrorEntry"
+              }
+            }
+          },
+          "404": {
+            "description": "Δεν βρέθηκε εταιρεία"
+          },
+          "500": {
+            "description": "Internal Error",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ErrorEntry"
+              }
+            }
+          },
+          "503": {
+            "description": "Υπερφορτωμένο ή μη διαθέσιμο σύστημα"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ],
+        "x-swagger-router-controller": "Companies"
+      }
+    },
+    "/companies": {
+      "get": {
+        "tags": ["Companies"],
+        "summary": "Αναζήτηση εταιρειών με κριτήρια",
+        "description": "Επιστρέφει τις Επιχειρήσεις που πληρούν τα κριτήρια αναζήτησης.\n- Πρέπει να εισαχθεί τουλάχιστον ένα κριτήριο.\n- Λογικό AND αν εισαχθούν πάνω από ένα κριτήρια.\n - Κριτήρια τύπου array εισάγονται με κόμμα (π.χ. 1,2,3)",
+        "operationId": "getCompaniesByCriteria",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "arGemi",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Αριθμός ΓΕΜΗ της Επιχείρησης"
+          },
+          {
+            "name": "afm",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "ΑΦΜ της Επιχείρησης. Αρχικά 0 πρέπει να εισάγονται ώστε πάντα να είναι 9-ψήφιος αριθμός",
+            "minLength": 9,
+            "maxLength": 9
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Λεκτικό αναζήτησης τόσο για επωνυμία όσο και διακριτικό τίτλο.",
+            "minLength": 3
+          },
+          {
+            "name": "legalTypes",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "description": "μία ή περισσότερες νομικές μορφές (id's)",
+            "items": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "gemiOffices",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "description": "μία ή περισσότερες ΤΥ ΓΕΜΗ (id's)",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "municipalities",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "description": "ένας ή περισσότεροι Δήμοι (id's)",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "prefectures",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "description": "ένας ή περισσότεροι Νομοί (id's)",
+            "items": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "statuses",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "description": "μία ή περισσότερες καταστάσεις επιχείρησης (id's)",
+            "items": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "isActive",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "description": "ενεργή ή μη εταιρεία"
+          },
+          {
+            "name": "activities",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "description": "μία ή περισσότερες δραστηριότητες (id's)",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "resultsSortBy",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Πεδίο βάσει του οποίου θα γίνει η ταξινόμηση. Το + υποδηλώνει αύξουσα σειρά, το - φθίνουσα",
+            "default": "+arGemi",
+            "enum": [
+              "+coName",
+              "-coName",
+              "+afm",
+              "-afm",
+              "+arGemi",
+              "-arGemi",
+              "+incorporationDate",
+              "-incorporationDate"
+            ]
+          },
+          {
+            "name": "resultsOffset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "description": "Θέση απο την οποία να επιστραφούν αποτελέσματα για το τρέχον request, αρχίζει απο 0",
+            "default": 0,
+            "minimum": 0
+          },
+          {
+            "name": "resultsSize",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "description": "Πλήθος αποτελεσμάτων που ζητούνται στο τρέχον request. Μέγιστο 200.",
+            "default": 10,
+            "minimum": 1,
+            "maximum": 200
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Επιτυχία",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "searchMetadata": {
+                  "type": "object",
+                  "properties": {
+                    "totalCount": {
+                      "type": "integer",
+                      "description": "πλήθος επιχειρήσεων που πληρούν τα κριτήρια"
+                    },
+                    "resultsOffset": {
+                      "type": "integer",
+                      "description": "Offset αποτελεσμάτων σε αυτό το result"
+                    },
+                    "resultsSize": {
+                      "type": "string",
+                      "description": "αποτελέσματα που έρχονται σε αυτό το result"
+                    }
+                  }
+                },
+                "searchResults": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Company"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Πρόβλημα με τα στοιχεία που έστειλε ο API client",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ErrorEntry"
+              }
+            }
+          },
+          "404": {
+            "description": "Δεν βρέθηκε εταιρεία"
+          },
+          "500": {
+            "description": "Internal Error",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ErrorEntry"
+              }
+            }
+          },
+          "503": {
+            "description": "Υπερφορτωμένο ή μη διαθέσιμο σύστημα"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ],
+        "x-swagger-router-controller": "Companies"
+      }
+    },
+    "/companies/{arGemi}/documents": {
+      "get": {
+        "tags": ["Companies", "CompanyDocuments"],
+        "summary": "Δημόσια έγγραφα Επιχείρησης",
+        "description": "Επιστρέφει τα δημόσια έγγραφα της Επιχείρησης (καταστατικό, ανακοινώσεις ΓΕΜΗ κοκ)",
+        "operationId": "getCompanyDocumentsByArGemi",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "arGemi",
+            "in": "path",
+            "description": "ο Αριθμός ΓΕΜΗ της Επιχείρησης",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Επιτυχία",
+            "schema": {
+              "$ref": "#/definitions/CompanyDocumentSet"
+            }
+          },
+          "400": {
+            "description": "Πρόβλημα με τα στοιχεία που έστειλε ο API client",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ErrorEntry"
+              }
+            }
+          },
+          "404": {
+            "description": "Δεν βρέθηκαν αποτελέσματα"
+          },
+          "500": {
+            "description": "Internal Error",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ErrorEntry"
+              }
+            }
+          },
+          "503": {
+            "description": "Υπερφορτωμένο ή μη διαθέσιμο σύστημα"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ],
+        "x-swagger-router-controller": "Companies"
+      }
+    }
+  },
+  "securityDefinitions": {
+    "api_key": {
+      "type": "apiKey",
+      "name": "api_key",
+      "in": "header"
+    }
+  },
+  "definitions": {
+    "Company": {
+      "type": "object",
+      "properties": {
+        "arGemi": {
+          "type": "integer",
+          "description": "Αριθμός ΓΕΜΗ"
+        },
+        "afm": {
+          "type": "string",
+          "description": "ΑΦΜ"
+        },
+        "coNameEl": {
+          "type": "string",
+          "description": "Επωνυμία (Ελληνικά)"
+        },
+        "coNamesEn": {
+          "type": "array",
+          "description": "Επωνυμίες (με Λατινικούς χαρακτήρες)",
+          "items": {
+            "type": "string"
+          }
+        },
+        "coTitlesEl": {
+          "type": "array",
+          "description": "Διακριτικοί τίτλοι(Ελληνικά)",
+          "items": {
+            "type": "string"
+          }
+        },
+        "coTitlesEn": {
+          "type": "array",
+          "description": "Διακριτικοί τίτλοι (με Λατινικούς χαρακτήρες)",
+          "items": {
+            "type": "string"
+          }
+        },
+        "municipality": {
+          "description": "Δήμος",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "description": "κωδικός"
+            },
+            "descr": {
+              "type": "string",
+              "description": "περιγραφή"
+            }
+          }
+        },
+        "prefecture": {
+          "description": "Νομός",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "description": "κωδικός"
+            },
+            "descr": {
+              "type": "string",
+              "description": "περιγραφή"
+            }
+          }
+        },
+        "city": {
+          "type": "string",
+          "description": "Πόλη"
+        },
+        "street": {
+          "type": "string",
+          "description": "Διεύθυνση: Οδός"
+        },
+        "streetNumber": {
+          "type": "string",
+          "description": "Διεύθυνση: Αριθμός"
+        },
+        "zipCode": {
+          "type": "string",
+          "description": "ΤΚ"
+        },
+        "poBox": {
+          "type": "string",
+          "description": "Ταχυδρομική θυρίδα"
+        },
+        "url": {
+          "type": "string",
+          "description": "Web site"
+        },
+        "email": {
+          "type": "string",
+          "description": "Email Επιχείρησης"
+        },
+        "isBranch": {
+          "type": "boolean",
+          "description": "Αν true, τότε η εταιρεία είναι Υποκατάστημα\n Αν false, τότε είναι Μητρική\n",
+          "default": false
+        },
+        "objective": {
+          "type": "string",
+          "description": "Σκοπός εταιρείας"
+        },
+        "legalType": {
+          "description": "Νομική μορφή",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "description": "κωδικός"
+            },
+            "descr": {
+              "type": "string",
+              "description": "περιγραφή"
+            }
+          }
+        },
+        "gemiOffice": {
+          "description": "Τοπική υπηρεσία ΓΕΜΗ",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "description": "κωδικός"
+            },
+            "descr": {
+              "type": "string",
+              "description": "περιγραφή"
+            }
+          }
+        },
+        "assemblySubjects": {
+          "description": "Θέματα Αποφάσεων ΓΕΜΗ",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "description": "κωδικός"
+            },
+            "descr": {
+              "type": "string",
+              "description": "περιγραφή"
+            }
+          }
+        },
+        "incorporationDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Ημερομηνία σύστασης / ίδρυσης"
+        },
+        "lastStatusChange": {
+          "type": "string",
+          "format": "date",
+          "description": "Ημερομηνία αλλαγής κατάστασης"
+        },
+        "status": {
+          "description": "Κατάσταση Επιχείρησης",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "description": "κωδικός"
+            },
+            "descr": {
+              "type": "string",
+              "description": "περιγραφή"
+            }
+          }
+        },
+        "autoRegistered": {
+          "type": "boolean",
+          "description": "Αν false, τότε η εταιρεία δεν έχει ολοκληρώσει την αυτοαπογραφή της.\nΣε αυτή την περίπτωση τα δεδομένα που επιστρέφονται είναι ελλειπή\n",
+          "default": true
+        },
+        "activities": {
+          "type": "array",
+          "description": "Δραστηριότητες Επιχείρησης",
+          "items": {
+            "$ref": "#/definitions/CompanyActivity"
+          }
+        },
+        "persons": {
+          "type": "array",
+          "description": "Πρόσωπα Επιχείρησης",
+          "items": {
+            "$ref": "#/definitions/CompanyPerson"
+          }
+        },
+        "capital": {
+          "type": "array",
+          "description": "Στοιχεία Κεφαλαίου Επιχείρησης",
+          "items": {
+            "type": "object",
+            "properties": {
+              "capitalStock": {
+                "type": "number",
+                "description": "Κεφάλαιο"
+              },
+              "currency": {
+                "type": "string",
+                "description": "Νόμισμα"
+              },
+              "ecsokefalaiikes": {
+                "type": "number",
+                "description": "Εξωλογιστικά Κεφάλαια"
+              },
+              "eggiitikes": {
+                "type": "number",
+                "description": "Εγγυητικά Κεφάλαια"
+              }
+            }
+          }
+        },
+        "stocks": {
+          "type": "array",
+          "description": "Στοιχεία Μετοχών Επιχείρησης",
+          "items": {
+            "type": "object",
+            "properties": {
+              "stockTypeId": {
+                "type": "number",
+                "description": "Τύπος Μετοχής ID"
+              },
+              "amount": {
+                "type": "number",
+                "description": "Ποσότητα"
+              },
+              "nominalPrice": {
+                "type": "number",
+                "description": "Ονομαστική Τιμή"
+              },
+              "stockType": {
+                "type": "string",
+                "description": "Τύπος Μετοχής"
+              }
+            }
+          }
+        },
+        "branch": {
+          "type": "array",
+          "description": "Στοιχεία Υποκαταστήματος",
+          "items": {
+            "type": "integer"
+          }
+        }
+      },
+      "description": "Τα δημόσια στοιχεία μιας Επιχείρησης - μέλος του ΓΕΜΗ"
+    },
+    "CompanyDocumentSet": {
+      "type": "object",
+      "properties": {
+        "decision": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CompanyDocumentDecision"
+          }
+        },
+        "publication": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CompanyDocumentPublication"
+          }
+        }
+      }
+    },
+    "CompanyDocumentDecision": {
+      "type": "object",
+      "properties": {
+        "dateAssemblyDecided": {
+          "type": "string",
+          "format": "date",
+          "description": "Ημ/νία απόφασης Οργάνου"
+        },
+        "assembly": {
+          "type": "string",
+          "description": "Είδος οργάνου"
+        },
+        "summary": {
+          "type": "string",
+          "description": "περίληψη θέματος"
+        },
+        "kak": {
+          "type": "string",
+          "description": "Κωδικός Αριθμός Καταχώρισης"
+        },
+        "decisionSubject": {
+          "type": "string",
+          "description": "Θέμα Απόφασης"
+        },
+        "decisionSubjectID": {
+          "type": "string",
+          "description": "Κωδικός Θέματος Απόφασης"
+        },
+        "dateAnnounced": {
+          "type": "string",
+          "format": "date",
+          "description": "Ημ/νια Ανακοίνωσης"
+        },
+        "assemblyDecisionUrl": {
+          "type": "string",
+          "description": "Αρχείο Ανακοίνωσης"
+        },
+        "dateRegistrated": {
+          "type": "string",
+          "format": "date",
+          "description": "Ημ/νια Ολοκλήρωσης Καταχώρισης"
+        },
+        "applicationStatusId": {
+          "type": "string",
+          "description": "Κωδικός Κατάστασης Αίτησης"
+        },
+        "applicationStatusDescription": {
+          "type": "string",
+          "description": "Περιγραφή Κατάστασης Αίτησης"
+        },
+        "referenceKak": {
+          "type": "string",
+          "description": "Κωδικός Αριθμός Καταχώρισης Που Οδηγεί Σε Διόρθωση/Ανάκληση"
+        }
+      },
+      "description": "Έγγραφα Ανακοίνωσης ΓΕΜΗ"
+    },
+    "CompanyDocumentPublication": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "description": "url εγγράφου ΥΜΣ"
+        },
+        "kad": {
+          "type": "string",
+          "description": "Κωδικός Αριθμός Δημοσίευσης ΥΜΣ"
+        }
+      },
+      "description": "Έγγραφα Σύστασης από ΥΜΣ"
+    },
+    "CompanyPerson": {
+      "type": "object",
+      "properties": {
+        "personName": {
+          "type": "string",
+          "description": "στοιχεία φυσικού προσώπου"
+        },
+        "businessName": {
+          "type": "string",
+          "description": "στοιχεία νομικού προσώπου"
+        },
+        "role": {
+          "type": "string",
+          "description": "ρόλος προσώπου στην εταιρεία"
+        },
+        "dtFrom": {
+          "type": "string",
+          "format": "date",
+          "description": "ημερομηνία ισχύος του ρόλου από"
+        },
+        "dtTo": {
+          "type": "string",
+          "format": "date",
+          "description": "ημερομηνία ισχύος του ρόλου έως"
+        },
+        "isRepresentativeAlone": {
+          "type": "boolean",
+          "description": "Εκπροσώπηση μεμονωμένα"
+        },
+        "isRepresentativeInCommon": {
+          "type": "boolean",
+          "description": "Εκπροσώπηση από κοινού"
+        },
+        "percentage": {
+          "type": "string",
+          "description": "Ποσοστό"
+        },
+        "category": {
+          "type": "string",
+          "description": "Κατηγορία"
+        }
+      },
+      "description": "Στοιχεία συσχετισμού φυσικών και νομικών προσώπων με την εταιρεία\nΜόνο ένα από τα `personName` και `businessName` είναι μη κενά σε κάθε αντικείμενο, υποδηλώνοντας φυσικό ή νομικό πρόσωπο αντίστοιχα\n"
+    },
+    "CompanyActivity": {
+      "type": "object",
+      "properties": {
+        "activity": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "κωδικός δραστηριότητας (ΚΑΔ)"
+            },
+            "descr": {
+              "type": "string",
+              "description": "περιγραφή δραστηριότητας (ΚΑΔ)"
+            },
+            "kadVersion": {
+              "type": "string",
+              "description": "ΚΑΔ version 2008 ή 2026"
+            }
+          }
+        },
+        "type": {
+          "type": "string",
+          "description": "τύπος δραστηριότητας για την εταιρεία"
+        },
+        "dtFrom": {
+          "type": "string",
+          "format": "date",
+          "description": "ημερομηνία ισχύος από"
+        },
+        "dtTo": {
+          "type": "string",
+          "format": "date",
+          "description": "ημερομηνία ισχύος έως"
+        }
+      }
+    },
+    "Activity": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "κωδικός"
+        },
+        "descr": {
+          "type": "string",
+          "description": "περιγραφή"
+        },
+        "descrEn": {
+          "type": "string",
+          "description": "περιγραφή (αγγλικά)"
+        },
+        "lastUpdated": {
+          "type": "string",
+          "description": "ημερομηνία τελευταίας ενημέρωσης"
+        },
+        "kadVersion": {
+          "type": "string",
+          "description": "ΚΑΔ version 2008 ή 2026"
+        }
+      }
+    },
+    "CompanyStatus": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "κωδικός"
+        },
+        "descr": {
+          "type": "string",
+          "description": "περιγραφή"
+        },
+        "descrEn": {
+          "type": "string",
+          "description": "περιγραφή (αγγλικά)"
+        },
+        "isActive": {
+          "type": "boolean",
+          "description": "Αν η επιχείρηση είναι ενεργή. \nΕπειδή υπάρχουν διάφορες καταστάσεις μη ενεργής επιχείρησης, συνίσταται η εξέταση του `isActive` για το αν η επιχείρηση είναι ενεργή ή όχι\n"
+        },
+        "lastUpdated": {
+          "type": "string",
+          "description": "ημερομηνία τελευταίας ενημέρωσης"
+        }
+      }
+    },
+    "LegalType": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "κωδικός"
+        },
+        "descr": {
+          "type": "string",
+          "description": "περιγραφή"
+        },
+        "descrEn": {
+          "type": "string",
+          "description": "περιγραφή (αγγλικά)"
+        },
+        "lastUpdated": {
+          "type": "string",
+          "description": "ημερομηνία τελευταίας ενημέρωσης"
+        }
+      },
+      "description": "Νομική μορφή"
+    },
+    "GemiOffice": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "κωδικός"
+        },
+        "descr": {
+          "type": "string",
+          "description": "περιγραφή"
+        },
+        "descrEn": {
+          "type": "string",
+          "description": "περιγραφή (αγγλικά)"
+        },
+        "lastUpdated": {
+          "type": "string",
+          "description": "ημερομηνία τελευταίας ενημέρωσης"
+        },
+        "address": {
+          "type": "string",
+          "description": "στοιχεία διεύθυνσης και επικοινωνίας"
+        },
+        "city": {
+          "type": "string",
+          "description": "πόλη"
+        },
+        "zipCode": {
+          "type": "string",
+          "description": "ΤΚ"
+        },
+        "phone": {
+          "type": "string",
+          "description": "τηλέφωνο"
+        },
+        "fax": {
+          "type": "string",
+          "description": "fax"
+        },
+        "url": {
+          "type": "string",
+          "description": "web site"
+        }
+      },
+      "description": "Αρμόδια Τοπική Υπηρεσία ΓΕΜΗ (Επιμελητήρια, ΓΓΕ)"
+    },
+    "Municipality": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "κωδικός"
+        },
+        "prefectureId": {
+          "type": "string",
+          "description": "κωδικός νομού"
+        },
+        "descr": {
+          "type": "string",
+          "description": "περιγραφή"
+        },
+        "descrEn": {
+          "type": "string",
+          "description": "περιγραφή (αγγλικά)"
+        },
+        "lastUpdated": {
+          "type": "string",
+          "description": "ημερομηνία τελευταίας ενημέρωσης"
+        }
+      },
+      "description": "Δήμος"
+    },
+    "Prefecture": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "κωδικός"
+        },
+        "descr": {
+          "type": "string",
+          "description": "περιγραφή"
+        },
+        "descrEn": {
+          "type": "string",
+          "description": "περιγραφή (αγγλικά)"
+        },
+        "lastUpdated": {
+          "type": "string",
+          "description": "ημερομηνία τελευταίας ενημέρωσης"
+        }
+      },
+      "description": "Νομός"
+    },
+    "AssemblySubject": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "κωδικός"
+        },
+        "descr": {
+          "type": "string",
+          "description": "περιγραφή"
+        },
+        "descrEn": {
+          "type": "string",
+          "description": "περιγραφή (αγγλικά)"
+        },
+        "lastUpdated": {
+          "type": "string",
+          "description": "ημερομηνία τελευταίας ενημέρωσης"
+        }
+      },
+      "description": "Θέμα Απόφασης"
+    },
+    "ErrorEntry": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "κωδικός"
+        },
+        "message": {
+          "type": "string",
+          "description": "περιγραφή"
+        }
+      },
+      "description": "Σφάλμα που επιστρέφει το σύστημα"
+    }
+  },
+  "externalDocs": {
+    "description": "Σχετικά με το ΓΕΜΗ",
+    "url": "http://www.businessportal.gr"
+  }
+}

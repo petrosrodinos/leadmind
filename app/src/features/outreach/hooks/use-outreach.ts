@@ -15,13 +15,21 @@ import { toast } from "@/hooks/use-toast";
 
 interface MessageMutationContext {
     contact_uuid?: string;
+    campaign_uuid?: string;
 }
 
-const invalidateContact = (qc: ReturnType<typeof useQueryClient>, contact_uuid?: string) => {
+const invalidateAfterMessageChange = (
+    qc: ReturnType<typeof useQueryClient>,
+    vars: MessageMutationContext,
+) => {
     qc.invalidateQueries({ queryKey: contactsQueryKeys.all });
-    if (contact_uuid) {
-        qc.invalidateQueries({ queryKey: contactsQueryKeys.detail(contact_uuid) });
-        qc.invalidateQueries({ queryKey: contactsQueryKeys.messages(contact_uuid) });
+    if (vars.contact_uuid) {
+        qc.invalidateQueries({ queryKey: contactsQueryKeys.detail(vars.contact_uuid) });
+        qc.invalidateQueries({ queryKey: contactsQueryKeys.messages(vars.contact_uuid) });
+    }
+    if (vars.campaign_uuid) {
+        qc.invalidateQueries({ queryKey: ["marketing-campaigns", "draft-messages", vars.campaign_uuid] });
+        qc.invalidateQueries({ queryKey: ["marketing-campaigns", "detail", vars.campaign_uuid] });
     }
 };
 
@@ -31,7 +39,7 @@ export function useUpdateOutreachMessage() {
         mutationFn: (vars: { uuid: string; payload: UpdateMessagePayload } & MessageMutationContext) =>
             updateOutreachMessage(vars.uuid, vars.payload),
         onSuccess: (_data, vars) => {
-            invalidateContact(qc, vars.contact_uuid);
+            invalidateAfterMessageChange(qc, vars);
             toast({ title: "Draft saved", duration: 1500 });
         },
         onError: (error: Error) => {
@@ -51,7 +59,7 @@ export function useSendOutreachMessage() {
         mutationFn: (vars: { uuid: string } & MessageMutationContext) =>
             sendOutreachMessage(vars.uuid),
         onSuccess: (_data, vars) => {
-            invalidateContact(qc, vars.contact_uuid);
+            invalidateAfterMessageChange(qc, vars);
             toast({
                 title: "Message queued for send",
                 description: "We'll update its status when delivery completes.",
@@ -74,7 +82,7 @@ export function useCreateDraftMessage() {
     return useMutation({
         mutationFn: (payload: CreateMessagePayload) => createDraftMessage(payload),
         onSuccess: (_data, payload) => {
-            invalidateContact(qc, payload.contact_uuid);
+            invalidateAfterMessageChange(qc, { contact_uuid: payload.contact_uuid });
             toast({ title: "Draft saved", duration: 1500 });
         },
         onError: (error: Error) => {
@@ -93,7 +101,7 @@ export function useCreateAndSendMessage() {
     return useMutation({
         mutationFn: (payload: CreateMessagePayload) => createAndSendMessage(payload),
         onSuccess: (_data, payload) => {
-            invalidateContact(qc, payload.contact_uuid);
+            invalidateAfterMessageChange(qc, { contact_uuid: payload.contact_uuid });
             toast({
                 title: "Message queued for send",
                 description: "We'll update its status when delivery completes.",
@@ -117,7 +125,7 @@ export function useDeleteOutreachMessage() {
         mutationFn: (vars: { uuid: string } & MessageMutationContext) =>
             deleteOutreachMessage(vars.uuid),
         onSuccess: (_data, vars) => {
-            invalidateContact(qc, vars.contact_uuid);
+            invalidateAfterMessageChange(qc, vars);
             toast({ title: "Draft deleted", duration: 1500 });
         },
         onError: (error: Error) => {
