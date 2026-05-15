@@ -5,7 +5,26 @@ import { splitCsv } from "./helpers";
 export function serializeQueryConfig(values: FilterFormValues): Record<string, unknown> {
     let cfg: Record<string, unknown> = { ...(values.query_config as object) };
 
-    if (values.source_type === SourceType.GENERIC_LEAD) {
+    if (values.source_type === SourceType.GEMI) {
+        const cs = values.query_config as Record<string, any>;
+        const out: Record<string, unknown> = {};
+        if (cs.name?.trim()) out.name = cs.name.trim();
+        const activities = splitCsv(cs.activities);
+        if (activities) out.activities = activities;
+        if (Array.isArray(cs.prefectures) && cs.prefectures.length > 0) {
+            out.prefectures = (cs.prefectures as string[]).map(Number);
+        }
+        if (Array.isArray(cs.legalTypes) && cs.legalTypes.length > 0) {
+            out.legalTypes = (cs.legalTypes as string[]).map(Number);
+        }
+        if (Array.isArray(cs.statuses) && cs.statuses.length > 0) {
+            out.statuses = (cs.statuses as string[]).map(Number);
+        }
+        if (cs.isActive === "true") out.isActive = true;
+        else if (cs.isActive === "false") out.isActive = false;
+        if (cs.maxLeads != null && cs.maxLeads !== "") out.maxLeads = Number(cs.maxLeads);
+        cfg = out;
+    } else if (values.source_type === SourceType.GENERIC_LEAD) {
         const cs = values.query_config as Record<string, any>;
         const arrayKeys = [
             "industries",

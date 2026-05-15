@@ -47,6 +47,16 @@ const genericLeadConfigSchema = z.object({
     limit: z.coerce.number().int().positive().optional(),
 });
 
+const gemiConfigSchema = z.object({
+    name: z.string().optional(),
+    activities: z.string().optional(),
+    prefectures: z.array(z.string()).optional(),
+    legalTypes: z.array(z.string()).optional(),
+    statuses: z.array(z.string()).optional(),
+    isActive: z.enum(["", "true", "false"]).optional(),
+    maxLeads: z.coerce.number().int().positive().optional(),
+});
+
 const manualConfigSchema = z.record(z.string(), z.string());
 
 const channelSchema = z
@@ -77,6 +87,10 @@ export const FilterFormSchema = z.discriminatedUnion("source_type", [
     baseSchema.extend({
         source_type: z.literal(SourceType.GENERIC_LEAD),
         query_config: genericLeadConfigSchema,
+    }),
+    baseSchema.extend({
+        source_type: z.literal(SourceType.GEMI),
+        query_config: gemiConfigSchema,
     }),
     baseSchema.extend({
         source_type: z.literal(SourceType.MANUAL),

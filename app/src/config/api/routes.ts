@@ -74,6 +74,11 @@ export const ApiRoutes = {
         run: (uuid: string) => `/filters/${uuid}/run`,
         jobs: (uuid: string) => `/filters/${uuid}/jobs`,
     },
+    gemi: {
+        prefectures: "/gemi/prefectures",
+        legal_types: "/gemi/legal-types",
+        statuses: "/gemi/statuses",
+    },
     scoring_instructions: {
         prefix: "/scoring-instructions",
         list: "/scoring-instructions",

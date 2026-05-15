@@ -37,11 +37,23 @@ export interface GoogleMapsQueryConfig {
     limit?: number;
 }
 
+export interface GemiQueryConfig {
+    name?: string;
+    activities?: string[];
+    legalTypes?: number[];
+    municipalities?: string[];
+    prefectures?: number[];
+    statuses?: number[];
+    isActive?: boolean;
+    maxLeads?: number;
+}
+
 export type ManualQueryConfig = Record<string, never>;
 
 export type QueryConfig =
     | LinkedInQueryConfig
     | GoogleMapsQueryConfig
+    | GemiQueryConfig
     | ManualQueryConfig
     | Record<string, unknown>;
 

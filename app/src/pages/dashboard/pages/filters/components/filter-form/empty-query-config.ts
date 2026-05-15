@@ -37,11 +37,22 @@ export const EMPTY_GENERIC_LEAD_QUERY = {
     limit: 100,
 };
 
+export const EMPTY_GEMI_QUERY = {
+    name: "",
+    activities: "",
+    prefectures: [],
+    legalTypes: [],
+    statuses: [],
+    isActive: "" as const,
+    maxLeads: 100,
+};
+
 export function resetQueryConfigForSource(
     next: FilterFormValues["source_type"],
 ): unknown {
     if (next === SourceType.LINKEDIN) return EMPTY_LINKEDIN_QUERY;
     if (next === SourceType.GOOGLE_MAPS) return EMPTY_GOOGLE_MAPS_QUERY;
     if (next === SourceType.GENERIC_LEAD) return EMPTY_GENERIC_LEAD_QUERY;
+    if (next === SourceType.GEMI) return EMPTY_GEMI_QUERY;
     return {};
 }

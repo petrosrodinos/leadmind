@@ -10,6 +10,7 @@ export function buildDefaults(initial?: Filter): FilterFormValues {
         | typeof SourceType.LINKEDIN
         | typeof SourceType.GOOGLE_MAPS
         | typeof SourceType.GENERIC_LEAD
+        | typeof SourceType.GEMI
         | typeof SourceType.MANUAL) ?? SourceType.LINKEDIN;
     const channels = (initial?.channels?.length
         ? initial.channels
@@ -85,6 +86,30 @@ export function buildDefaults(initial?: Filter): FilterFormValues {
                 first_name: typeof cfg.first_name === "string" ? cfg.first_name : "",
                 last_name: typeof cfg.last_name === "string" ? cfg.last_name : "",
                 limit: typeof cfg.limit === "number" ? cfg.limit : 100,
+            },
+            enabled,
+            cron_schedule,
+            channels,
+            scoring_instruction_uuids,
+            outreach_instructions,
+            enrichment_sources,
+        };
+    }
+    if (source_type === SourceType.GEMI) {
+        const isActiveRaw = cfg.isActive;
+        const isActive =
+            isActiveRaw === true ? "true" : isActiveRaw === false ? "false" : ("" as const);
+        return {
+            name,
+            source_type: SourceType.GEMI,
+            query_config: {
+                name: typeof cfg.name === "string" ? cfg.name : "",
+                activities: Array.isArray(cfg.activities) ? (cfg.activities as string[]).join(", ") : "",
+                prefectures: Array.isArray(cfg.prefectures) ? (cfg.prefectures as (string | number)[]).map(String) : [],
+                legalTypes: Array.isArray(cfg.legalTypes) ? (cfg.legalTypes as (string | number)[]).map(String) : [],
+                statuses: Array.isArray(cfg.statuses) ? (cfg.statuses as (string | number)[]).map(String) : [],
+                isActive,
+                maxLeads: typeof cfg.maxLeads === "number" ? cfg.maxLeads : 100,
             },
             enabled,
             cron_schedule,
