@@ -149,7 +149,10 @@ export type Channel = (typeof Channel)[keyof typeof Channel]
 export const LeadStatus: {
   NEW: 'NEW',
   CONTACTED: 'CONTACTED',
+  QUALIFIED: 'QUALIFIED',
+  NURTURING: 'NURTURING',
   CONVERTED: 'CONVERTED',
+  LOST: 'LOST',
   ARCHIVED: 'ARCHIVED'
 };
 

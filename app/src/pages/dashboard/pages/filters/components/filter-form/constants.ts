@@ -1,6 +1,6 @@
 import { tryDescribeCronExpression } from "@/lib/cron";
 import { Channel } from "@/features/contacts/interfaces/contact.interface";
-import { SourceType } from "@/features/leads/interfaces/lead.interface";
+export { SOURCE_OPTIONS } from "@/features/filters/constants/source-options";
 import {
     REVENUES,
     REVENUE_LABELS,
@@ -20,12 +20,6 @@ export const REVENUE_OPTIONS = REVENUES.map((v) => ({
     label: REVENUE_LABELS[v],
 }));
 
-export const SOURCE_OPTIONS: Array<{ id: SourceType; label: string }> = [
-    { id: SourceType.LINKEDIN, label: "LinkedIn" },
-    { id: SourceType.GOOGLE_MAPS, label: "Google Maps" },
-    { id: SourceType.GENERIC_LEAD, label: "Generic Lead Finder" },
-    { id: SourceType.MANUAL, label: "Manual" },
-];
 
 export const CHANNEL_OPTIONS: Array<{ id: Channel; label: string }> = [
     { id: Channel.EMAIL, label: "Email" },

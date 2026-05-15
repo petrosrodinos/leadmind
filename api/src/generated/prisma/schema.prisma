@@ -465,7 +465,10 @@ enum Channel {
 enum LeadStatus {
   NEW
   CONTACTED
+  QUALIFIED
+  NURTURING
   CONVERTED
+  LOST
   ARCHIVED
 }
 

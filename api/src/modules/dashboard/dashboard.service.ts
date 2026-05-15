@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { LeadStatus, MsgStatus } from '@/generated/prisma';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
+import { emptyLeadStatusCounts } from '@/modules/contacts/constants/lead-status.constants';
 import { DashboardStats } from './interfaces/dashboard.interface';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -32,25 +33,18 @@ export class DashboardService {
             this.prisma.filter.count({ where: { user_uuid, enabled: true } }),
         ]);
 
-        const by_status: Record<LeadStatus, number> = {
-            [LeadStatus.NEW]: 0,
-            [LeadStatus.CONTACTED]: 0,
-            [LeadStatus.CONVERTED]: 0,
-            [LeadStatus.ARCHIVED]: 0,
-        };
+        const by_status = emptyLeadStatusCounts();
         for (const row of statusGroups) {
             by_status[row.status] = row._count._all;
         }
 
-        const total_contacts =
-            by_status[LeadStatus.NEW] +
-            by_status[LeadStatus.CONTACTED] +
-            by_status[LeadStatus.CONVERTED] +
-            by_status[LeadStatus.ARCHIVED];
+        const total_contacts = Object.values(by_status).reduce((sum, n) => sum + n, 0);
 
         const considered =
             by_status[LeadStatus.NEW] +
             by_status[LeadStatus.CONTACTED] +
+            by_status[LeadStatus.QUALIFIED] +
+            by_status[LeadStatus.NURTURING] +
             by_status[LeadStatus.CONVERTED];
         const conversion_rate =
             considered > 0

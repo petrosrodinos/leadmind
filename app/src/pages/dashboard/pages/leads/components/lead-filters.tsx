@@ -3,7 +3,7 @@ import { Search } from "lucide-react";
 import { LeadStatus } from "@/features/contacts/interfaces/contact.interface";
 import type { ContactScoreRule } from "@/features/contacts/interfaces/contact.interface";
 import type { SourceType } from "@/features/leads/interfaces/lead.interface";
-import { SOURCE_OPTIONS } from "@/features/leads/constants/source-options";
+import { SOURCE_OPTIONS } from "@/features/filters/constants/source-options";
 import { useFilters } from "@/features/filters/hooks/use-filters";
 import { useContactTags } from "@/features/contacts/hooks/use-contacts";
 import { MultiSelect } from "@/components/ui/multi-select";

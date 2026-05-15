@@ -1,9 +1,8 @@
 import { Button } from "@heroui/react";
 import { ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { LeadStatus } from "@/features/contacts/interfaces/contact.interface";
 import type { DashboardStats } from "@/features/dashboard/interfaces/dashboard.interface";
-import { STATUS_LABEL } from "@/features/contacts/constants/contacts.constants";
+import { LEAD_STATUS_VALUES, STATUS_LABEL } from "@/features/contacts/constants/contacts.constants";
 import { Routes } from "@/routes/routes";
 import { cn } from "@/lib/utils";
 import { EMPTY_BY_STATUS, STATUS_BAR_COLOR } from "./dashboard.constants";
@@ -15,7 +14,7 @@ interface DashboardPipelineDistributionProps {
 
 export function DashboardPipelineDistribution({ stats, isLoading }: DashboardPipelineDistributionProps) {
   const navigate = useNavigate();
-  const statuses: LeadStatus[] = [LeadStatus.NEW, LeadStatus.CONTACTED, LeadStatus.CONVERTED, LeadStatus.ARCHIVED];
+  const statuses = LEAD_STATUS_VALUES;
   const byStatus = stats?.by_status ?? EMPTY_BY_STATUS;
   const total = stats?.total_contacts ?? 0;
 

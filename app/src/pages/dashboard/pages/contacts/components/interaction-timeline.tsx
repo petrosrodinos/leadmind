@@ -12,6 +12,7 @@ import {
     type InteractionStatusChange,
     type MeetingMetadata,
 } from "@/features/contacts/interfaces/contact.interface";
+import { isLeadStatus } from "@/features/contacts/constants/contacts.constants";
 import { useContactInteractions } from "@/features/contacts/hooks/use-contacts";
 import { StatusChip } from "@/pages/dashboard/pages/leads/components/badges";
 import { cn } from "@/lib/utils";
@@ -123,9 +124,6 @@ function formatOccurredAt(iso: string): string {
     });
 }
 
-function isLeadStatus(v: unknown): v is LeadStatus {
-    return typeof v === "string" && (Object.values(LeadStatus) as string[]).includes(v);
-}
 
 function parseStatusChange(raw: Interaction["status_change"]): InteractionStatusChange | null {
     if (!raw || typeof raw !== "object") return null;

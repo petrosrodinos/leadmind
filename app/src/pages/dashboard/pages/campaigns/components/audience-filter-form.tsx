@@ -1,6 +1,7 @@
 import { Input, Label, ListBox, Select, Switch, TextField } from "@heroui/react";
 import type { CampaignFilters } from "@/features/marketing-campaigns/interfaces/campaign.interface";
-import { LeadStatus } from "@/features/contacts/interfaces/contact.interface";
+import type { LeadStatus } from "@/features/contacts/interfaces/contact.interface";
+import { STATUS_OPTIONS } from "@/features/contacts/constants/contacts.constants";
 import { useFilters } from "@/features/filters/hooks/use-filters";
 import { useContactTags } from "@/features/contacts/hooks/use-contacts";
 import { MultiSelect } from "@/components/ui/multi-select";
@@ -92,9 +93,9 @@ export function AudienceFilterForm({
                                 Any status
                                 <ListBox.ItemIndicator />
                             </ListBox.Item>
-                            {Object.values(LeadStatus).map((s) => (
-                                <ListBox.Item key={s} id={s} textValue={s}>
-                                    {s}
+                            {STATUS_OPTIONS.map((opt) => (
+                                <ListBox.Item key={opt.id} id={opt.id} textValue={opt.label}>
+                                    {opt.label}
                                     <ListBox.ItemIndicator />
                                 </ListBox.Item>
                             ))}

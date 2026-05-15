@@ -6,10 +6,12 @@ import {
     Droppable,
     type DropResult,
 } from "@hello-pangea/dnd";
+import { LeadStatus, type Contact } from "@/features/contacts/interfaces/contact.interface";
 import {
-    LeadStatus,
-    type Contact,
-} from "@/features/contacts/interfaces/contact.interface";
+    emptyContactsByStatus,
+    isLeadStatus,
+    PIPELINE_STATUS_OPTIONS,
+} from "@/features/contacts/constants/contacts.constants";
 import { useUpdateContactStatus } from "@/features/contacts/hooks/use-contacts";
 import { ContactScoresCompact } from "@/pages/dashboard/pages/leads/components/badges";
 import { cn } from "@/lib/utils";
@@ -20,23 +22,13 @@ interface PipelineViewProps {
     onCardClick: (contact: Contact) => void;
 }
 
-const COLUMNS: Array<{ id: LeadStatus; label: string; tone: string }> = [
-    { id: LeadStatus.NEW, label: "New", tone: "bg-surface-secondary" },
-    { id: LeadStatus.CONTACTED, label: "Contacted", tone: "bg-warning-soft/30" },
-    { id: LeadStatus.CONVERTED, label: "Converted", tone: "bg-success-soft/30" },
-    { id: LeadStatus.ARCHIVED, label: "Archived", tone: "bg-danger-soft/20" },
-];
+const PIPELINE_GRID_CLASS = "grid gap-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5";
 
 export function PipelineView({ contacts, isLoading, onCardClick }: PipelineViewProps) {
     const updateStatus = useUpdateContactStatus();
 
     const grouped = useMemo(() => {
-        const map: Record<LeadStatus, Contact[]> = {
-            [LeadStatus.NEW]: [],
-            [LeadStatus.CONTACTED]: [],
-            [LeadStatus.CONVERTED]: [],
-            [LeadStatus.ARCHIVED]: [],
-        };
+        const map = emptyContactsByStatus<Contact>();
         for (const c of contacts) {
             (map[c.status] ?? map[LeadStatus.NEW]).push(c);
         }
@@ -47,15 +39,15 @@ export function PipelineView({ contacts, isLoading, onCardClick }: PipelineViewP
         const { source, destination, draggableId } = result;
         if (!destination) return;
         if (source.droppableId === destination.droppableId) return;
-        const nextStatus = destination.droppableId as LeadStatus;
-        if (!Object.values(LeadStatus).includes(nextStatus)) return;
+        const nextStatus = destination.droppableId;
+        if (!isLeadStatus(nextStatus)) return;
         updateStatus.mutate({ uuid: draggableId, status: nextStatus });
     };
 
     if (isLoading) {
         return (
-            <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-                {COLUMNS.map((col) => (
+            <div className={PIPELINE_GRID_CLASS}>
+                {PIPELINE_STATUS_OPTIONS.map((col) => (
                     <div
                         key={col.id}
                         className="rounded-xl border border-border bg-surface p-3 min-h-72"
@@ -77,8 +69,8 @@ export function PipelineView({ contacts, isLoading, onCardClick }: PipelineViewP
 
     return (
         <DragDropContext onDragEnd={handleDragEnd}>
-            <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-                {COLUMNS.map((col) => {
+            <div className={PIPELINE_GRID_CLASS}>
+                {PIPELINE_STATUS_OPTIONS.map((col) => {
                     const items = grouped[col.id] ?? [];
                     return (
                         <div
@@ -102,7 +94,7 @@ export function PipelineView({ contacts, isLoading, onCardClick }: PipelineViewP
                                         {...provided.droppableProps}
                                         className={cn(
                                             "flex-1 p-2 space-y-2 transition-colors",
-                                            col.tone,
+                                            col.pipelineTone,
                                             snapshot.isDraggingOver && "bg-accent/10",
                                         )}
                                     >
@@ -124,7 +116,6 @@ export function PipelineView({ contacts, isLoading, onCardClick }: PipelineViewP
                                                         {...dragProvided.dragHandleProps}
                                                         onClick={(e) => {
                                                             if (dragSnapshot.isDragging) return;
-                                                            // Avoid click after drag end
                                                             if ((e.target as HTMLElement).closest("button")) return;
                                                             onCardClick(contact);
                                                         }}

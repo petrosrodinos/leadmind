@@ -7,7 +7,8 @@ import { PipelineView } from "./components/pipeline-view";
 import { NewContactModal } from "./components/new-contact-modal";
 import { BulkScoreContactsPopover } from "./components/bulk-score-contacts-popover";
 import { LeadFilters } from "@/pages/dashboard/pages/leads/components/lead-filters";
-import { LeadStatus } from "@/features/contacts/interfaces/contact.interface";
+import type { LeadStatus } from "@/features/contacts/interfaces/contact.interface";
+import { isLeadStatus } from "@/features/contacts/constants/contacts.constants";
 import { SourceType } from "@/features/leads/interfaces/lead.interface";
 import { useContacts } from "@/features/contacts/hooks/use-contacts";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
@@ -21,7 +22,6 @@ const VIEW_STORAGE_KEY = "contacts.view";
 type View = "table" | "pipeline";
 
 const isView = (v: string | null): v is View => v === "table" || v === "pipeline";
-const isLeadStatus = (s: string | null): s is LeadStatus => !!s && (Object.values(LeadStatus) as string[]).includes(s);
 const isSourceType = (s: string | null): s is SourceType => !!s && (Object.values(SourceType) as string[]).includes(s);
 
 export default function ContactsPage() {

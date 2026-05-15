@@ -4,7 +4,10 @@ import type { EnrichmentSource } from "@/features/lead-enrichment/constants/enri
 export const LeadStatus = {
     NEW: "NEW",
     CONTACTED: "CONTACTED",
+    QUALIFIED: "QUALIFIED",
+    NURTURING: "NURTURING",
     CONVERTED: "CONVERTED",
+    LOST: "LOST",
     ARCHIVED: "ARCHIVED",
 } as const;
 

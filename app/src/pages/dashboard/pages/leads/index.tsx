@@ -5,7 +5,8 @@ import { Plus } from "lucide-react";
 import { LeadsTable } from "./components/leads-table";
 import { LeadFilters } from "./components/lead-filters";
 import { CreateContactModal } from "./components/create-contact-modal";
-import { LeadStatus } from "@/features/contacts/interfaces/contact.interface";
+import type { LeadStatus } from "@/features/contacts/interfaces/contact.interface";
+import { isLeadStatus } from "@/features/contacts/constants/contacts.constants";
 import { SourceType } from "@/features/leads/interfaces/lead.interface";
 import { useContacts } from "@/features/contacts/hooks/use-contacts";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
@@ -13,9 +14,6 @@ import { Routes } from "@/routes/routes";
 import { parseScoreRulesParam, serializeScoreRulesParam } from "@/lib/contact-score-rules";
 
 const PAGE_SIZE = 20;
-
-const isLeadStatus = (s: string | null): s is LeadStatus =>
-    !!s && (Object.values(LeadStatus) as string[]).includes(s);
 
 const isSourceType = (s: string | null): s is SourceType =>
     !!s && (Object.values(SourceType) as string[]).includes(s);

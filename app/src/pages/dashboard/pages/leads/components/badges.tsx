@@ -1,18 +1,11 @@
 import { Chip } from "@heroui/react";
 import type { Contact, ContactScoreRow } from "@/features/contacts/interfaces/contact.interface";
-import { LeadStatus } from "@/features/contacts/interfaces/contact.interface";
-import { STATUS_LABEL } from "@/features/contacts/constants/contacts.constants";
-
-const STATUS_COLOR: Record<LeadStatus, "default" | "success" | "warning" | "danger"> = {
-  [LeadStatus.NEW]: "default",
-  [LeadStatus.CONTACTED]: "warning",
-  [LeadStatus.CONVERTED]: "success",
-  [LeadStatus.ARCHIVED]: "danger",
-};
+import type { LeadStatus } from "@/features/contacts/interfaces/contact.interface";
+import { STATUS_CHIP_COLOR, STATUS_LABEL } from "@/features/contacts/constants/contacts.constants";
 
 export function StatusChip({ status }: { status: LeadStatus }) {
   return (
-    <Chip size="sm" variant="soft" color={STATUS_COLOR[status]}>
+    <Chip size="sm" variant="soft" color={STATUS_CHIP_COLOR[status]}>
       <Chip.Label>{STATUS_LABEL[status]}</Chip.Label>
     </Chip>
   );

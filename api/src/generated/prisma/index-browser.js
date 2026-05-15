@@ -452,7 +452,10 @@ exports.Channel = exports.$Enums.Channel = {
 exports.LeadStatus = exports.$Enums.LeadStatus = {
   NEW: 'NEW',
   CONTACTED: 'CONTACTED',
+  QUALIFIED: 'QUALIFIED',
+  NURTURING: 'NURTURING',
   CONVERTED: 'CONVERTED',
+  LOST: 'LOST',
   ARCHIVED: 'ARCHIVED'
 };
 
