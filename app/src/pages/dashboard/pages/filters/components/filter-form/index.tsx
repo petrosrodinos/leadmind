@@ -1,5 +1,4 @@
-import { useEffect, useMemo } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import type { Resolver, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -44,9 +43,9 @@ import { resetQueryConfigForSource } from "./empty-query-config";
 import { QueryConfigFields } from "./query-config-fields";
 import { serializeQueryConfig } from "./serialize-query-config";
 import { useScoringInstructions } from "@/features/scoring-instructions/hooks/use-scoring-instructions";
+import { ScoringInstructionModal } from "@/features/scoring-instructions/components/scoring-instruction-modal";
 import { RoleTypes } from "@/features/user/interfaces/user.interface";
 import { cn } from "@/lib/utils";
-import { Routes } from "@/routes/routes";
 import { useAuthStore } from "@/stores/auth";
 
 interface FilterFormProps {
@@ -78,6 +77,7 @@ export function FilterForm({
     const { role } = useAuthStore();
     const canEditOutreachInstructions =
         role === RoleTypes.ADMIN || role === RoleTypes.SUPER_ADMIN;
+    const [siModalOpen, setSiModalOpen] = useState(false);
 
     const defaults = useMemo(() => buildDefaults(initial), [initial?.uuid]);
 
@@ -369,14 +369,14 @@ export function FilterForm({
                             )}
                         />
                         <p className="text-xs text-muted">
-                            Manage reusable prompts in the{" "}
-                            <Link
-                                to={Routes.dashboard.filters_scoring_instructions}
+                            Each selected prompt scores contacts 1–10.{" "}
+                            <button
+                                type="button"
                                 className="text-accent underline-offset-2 hover:underline font-medium"
+                                onClick={() => setSiModalOpen(true)}
                             >
-                                scoring library
-                            </Link>
-                            . Each selected prompt scores contacts 1–10.
+                                + New scoring instruction
+                            </button>
                         </p>
                         {errors.scoring_instruction_uuids && (
                             <FieldError>
@@ -469,6 +469,11 @@ export function FilterForm({
                     {submitLabel}
                 </ActionButtonWithPending>
             </div>
+
+            <ScoringInstructionModal
+                isOpen={siModalOpen}
+                onOpenChange={setSiModalOpen}
+            />
         </Form>
     );
 }
