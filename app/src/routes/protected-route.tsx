@@ -19,15 +19,15 @@ export default function ProtectedRoute({
 }: ProtectedRouteProps) {
   const { isLoggedIn, role } = useAuthStore();
 
-  if (!isLoggedIn && loggedIn) {
+  if (!isLoggedIn && loggedIn === true) {
     return <Navigate to={fallbackPath} replace />;
   }
 
-  if (isLoggedIn && !loggedIn) {
+  if (isLoggedIn && loggedIn === false) {
     return <Navigate to={Routes.dashboard.root} replace />;
   }
 
-  if (requiredRoles && !requiredRoles.includes(role || RoleTypes.USER)) {
+  if (requiredRoles && role !== RoleTypes.SUPER_ADMIN && !requiredRoles.includes(role || RoleTypes.USER)) {
     return <Navigate to={fallbackPath} replace />;
   }
 

@@ -32,6 +32,7 @@ export class GemiService {
         const max_leads = query.maxLeads ?? GEMI_DEFAULT_MAX_LEADS;
         const all_companies: GemiCompany[] = [];
         let offset = 0;
+        let total_count: number | undefined;
 
         while (all_companies.length < max_leads) {
             const page_size = Math.min(GEMI_MAX_PAGE_SIZE, max_leads - all_companies.length);
@@ -40,16 +41,29 @@ export class GemiService {
 
             if (!searchResults?.length) break;
 
-            all_companies.push(...searchResults);
+            total_count = searchMetadata.totalCount;
+            const remaining = Math.min(
+                max_leads - all_companies.length,
+                total_count - all_companies.length,
+            );
+            const page_companies = searchResults.slice(0, Math.max(0, remaining));
+            all_companies.push(...page_companies);
+
             this.logger.debug(
-                `GEMI page offset=${offset}: got ${searchResults.length}, total=${searchMetadata.totalCount}`,
+                `GEMI page offset=${offset}: got ${page_companies.length}, total=${total_count}`,
             );
 
-            if (all_companies.length >= searchMetadata.totalCount) break;
+            if (all_companies.length >= total_count || page_companies.length < searchResults.length) {
+                break;
+            }
+
             offset += searchResults.length;
         }
 
-        this.logger.log(`GEMI scrape complete — ${all_companies.length} companies fetched`);
+        const total = total_count ?? all_companies.length;
+        this.logger.log(
+            `GEMI scrape complete — ${all_companies.length} of ${total} matching companies fetched`,
+        );
         return all_companies.map(GemiService.normalize);
     }
 

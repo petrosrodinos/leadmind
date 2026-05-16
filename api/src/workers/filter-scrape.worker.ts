@@ -15,6 +15,11 @@ interface FilterScrapeJobData {
     manual?: boolean;
 }
 
+interface PersistLeadsResult {
+    new_contact_uuids: string[];
+    leads_processed: number;
+}
+
 @Processor(FILTER_SCRAPE_QUEUE, { concurrency: 3 })
 export class FilterScrapeWorker extends WorkerHost {
     private readonly logger = new Logger(FilterScrapeWorker.name);
@@ -38,6 +43,15 @@ export class FilterScrapeWorker extends WorkerHost {
             return null;
         }
 
+        await this.prisma.filterJob.updateMany({
+            where: { filter_uuid: filter.uuid, status: JobStatus.RUNNING },
+            data: {
+                status: JobStatus.FAILED,
+                error: 'Superseded by a newer run',
+                completed_at: new Date(),
+            },
+        });
+
         const filter_job = await this.prisma.filterJob.create({
             data: {
                 filter_uuid: filter.uuid,
@@ -47,6 +61,11 @@ export class FilterScrapeWorker extends WorkerHost {
             },
         });
 
+        let status: JobStatus = JobStatus.COMPLETED;
+        let leads_found = 0;
+        let new_contacts = 0;
+        let error_message: string | undefined;
+
         try {
             const normalized_leads = filter.source_type === SourceType.GEMI
                 ? await this.gemiService.scrapeLeads(filter.query_config as Record<string, any>)
@@ -55,7 +74,12 @@ export class FilterScrapeWorker extends WorkerHost {
                     filter.query_config as Record<string, any>,
                 );
 
-            const new_contact_uuids = await this.persistLeads(filter, normalized_leads);
+            const { new_contact_uuids, leads_processed } = await this.persistLeads(
+                filter,
+                normalized_leads,
+            );
+            leads_found = leads_processed;
+            new_contacts = new_contact_uuids.length;
 
             for (const contact_uuid of new_contact_uuids) {
                 await this.aiProcessQueue.add(
@@ -68,44 +92,40 @@ export class FilterScrapeWorker extends WorkerHost {
                 );
             }
 
-            await this.prisma.filterJob.update({
-                where: { uuid: filter_job.uuid },
-                data: {
-                    status: JobStatus.COMPLETED,
-                    leads_found: new_contact_uuids.length,
-                    completed_at: new Date(),
-                    duration: Date.now() - filter_job.started_at.getTime(),
-                },
-            });
-
             this.logger.log(
-                `Filter ${filter.uuid} scrape complete — ${new_contact_uuids.length} new contacts`,
+                `Filter ${filter.uuid} scrape complete — ${leads_found} leads processed, ${new_contacts} new contacts`,
             );
 
-            return { filter_job_uuid: filter_job.uuid, new_contacts: new_contact_uuids.length };
+            return { filter_job_uuid: filter_job.uuid, new_contacts };
         } catch (error) {
-            const message = error instanceof Error ? error.message : 'Unknown error';
-            this.logger.error(`Filter ${filter.uuid} scrape failed: ${message}`);
-
+            status = JobStatus.FAILED;
+            error_message = (error instanceof Error ? error.message : 'Unknown error').slice(0, 1000);
+            this.logger.error(`Filter ${filter.uuid} scrape failed: ${error_message}`);
+            throw error;
+        } finally {
             await this.prisma.filterJob.update({
                 where: { uuid: filter_job.uuid },
                 data: {
-                    status: JobStatus.FAILED,
-                    error: message.slice(0, 1000),
+                    status,
+                    leads_found,
+                    error: error_message,
                     completed_at: new Date(),
                     duration: Date.now() - filter_job.started_at.getTime(),
                 },
             });
-
-            throw error;
         }
     }
 
-    private async persistLeads(filter: Filter, normalized_leads: NormalizedLead[]): Promise<string[]> {
+    private async persistLeads(
+        filter: Filter,
+        normalized_leads: NormalizedLead[],
+    ): Promise<PersistLeadsResult> {
         const new_contact_uuids: string[] = [];
+        let leads_processed = 0;
 
         for (const normalized of normalized_leads) {
             if (!normalized.email && !normalized.phone) continue;
+            leads_processed++;
 
             const raw_lead = await this.prisma.rawLead.create({
                 data: {
@@ -170,7 +190,7 @@ export class FilterScrapeWorker extends WorkerHost {
             });
         }
 
-        return new_contact_uuids;
+        return { new_contact_uuids, leads_processed };
     }
 
     private async reindexContactsForLead(lead_uuid: string): Promise<void> {

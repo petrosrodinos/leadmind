@@ -29,7 +29,8 @@ export class GemiClient {
     private readonly api_key: string;
 
     constructor(private readonly configService: ConfigService) {
-        this.api_key = this.configService.get<string>('GEMI_API_KEY') ?? '';
+        const raw = this.configService.get<string>('GEMI_API_KEY');
+        this.api_key = typeof raw === 'string' ? raw.trim() : '';
         this.http = axios.create({
             baseURL: GEMI_API_BASE_URL,
             timeout: GEMI_REQUEST_TIMEOUT_MS,
@@ -97,6 +98,11 @@ export class GemiClient {
     // ── Files ─────────────────────────────────────────────────────────────────
 
     async downloadFile(key: string, element_id: number): Promise<Buffer> {
+        if (!this.api_key) {
+            throw new InternalServerErrorException(
+                'GEMI_API_KEY is missing or empty. Set it in your environment file or unset a conflicting shell variable.',
+            );
+        }
         let last_error: unknown;
         for (let attempt = 0; attempt <= GEMI_MAX_RETRIES; attempt++) {
             try {
@@ -121,6 +127,7 @@ export class GemiClient {
     // ── Misc ──────────────────────────────────────────────────────────────────
 
     async health(): Promise<boolean> {
+        if (!this.api_key) return false;
         try {
             await this.http.get('/health', { headers: { api_key: this.api_key } });
             return true;
@@ -132,6 +139,11 @@ export class GemiClient {
     // ── Internal ──────────────────────────────────────────────────────────────
 
     private async get<T>(path: string, params?: Record<string, any>): Promise<T> {
+        if (!this.api_key) {
+            throw new InternalServerErrorException(
+                'GEMI_API_KEY is missing or empty. Set it in your environment file or unset a conflicting shell variable.',
+            );
+        }
         let last_error: unknown;
         for (let attempt = 0; attempt <= GEMI_MAX_RETRIES; attempt++) {
             try {
@@ -159,6 +171,17 @@ export class GemiClient {
     }
 
     private errorMessage(error: unknown): string {
+        if (error instanceof AxiosError) {
+            const base = error.message;
+            const data = error.response?.data;
+            if (data && typeof data === 'object' && 'message' in data) {
+                const msg = (data as { message: unknown }).message;
+                if (typeof msg === 'string' && msg.length) {
+                    return `${base} (${msg})`;
+                }
+            }
+            return base;
+        }
         return error instanceof Error ? error.message : 'Unknown error';
     }
 

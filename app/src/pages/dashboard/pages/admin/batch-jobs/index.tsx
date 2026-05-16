@@ -141,70 +141,89 @@ export default function AdminBatchJobsPage() {
                 </div>
             </div>
 
-            {/* Table */}
             <div className="rounded-xl border border-border overflow-hidden">
-                <Table aria-label="OpenAI Batch Jobs" isStriped>
-                    <Table.Header>
-                        <Table.Column>Batch ID</Table.Column>
-                        <Table.Column>Type</Table.Column>
-                        <Table.Column>Status</Table.Column>
-                        <Table.Column>Requests</Table.Column>
-                        <Table.Column>Duration</Table.Column>
-                        <Table.Column>User</Table.Column>
-                        <Table.Column>Expires</Table.Column>
-                        <Table.Column>Created</Table.Column>
-                    </Table.Header>
-                    <Table.Body
-                        items={data?.data ?? []}
-                        isLoading={isLoading}
-                        emptyContent={isLoading ? "Loading…" : "No batch jobs found."}
-                    >
-                        {(job: OpenAiBatchJob) => (
-                            <Table.Row key={job.id}>
-                                <Table.Cell>
-                                    <span
-                                        className="font-mono text-[11px] text-muted truncate max-w-[140px] block"
-                                        title={job.batch_id}
-                                    >
-                                        {job.batch_id.slice(0, 20)}…
-                                    </span>
-                                </Table.Cell>
-                                <Table.Cell>
-                                    <span className="text-xs text-foreground">{TYPE_LABELS[job.type]}</span>
-                                </Table.Cell>
-                                <Table.Cell>
-                                    <StatusChip status={job.status} />
-                                </Table.Cell>
-                                <Table.Cell>
-                                    <div className="text-xs leading-snug">
-                                        <span className="text-foreground font-medium">{job.total_requests}</span>
-                                        <span className="text-muted"> total</span>
-                                        {(job.completed_requests > 0 || job.failed_requests > 0) && (
-                                            <div className="text-muted mt-0.5">
-                                                <span className="text-[color:var(--success,#22c55e)]">{job.completed_requests} ok</span>
-                                                {" · "}
-                                                <span className="text-[color:var(--danger,#ef4444)]">{job.failed_requests} fail</span>
-                                            </div>
-                                        )}
-                                    </div>
-                                </Table.Cell>
-                                <Table.Cell>
-                                    <span className="text-xs text-foreground tabular-nums">
-                                        {formatDuration(job.created_at, job.finished_at)}
-                                    </span>
-                                </Table.Cell>
-                                <Table.Cell>
-                                    <span className="text-xs text-muted">{job.user.email}</span>
-                                </Table.Cell>
-                                <Table.Cell>
-                                    <span className="text-xs text-muted tabular-nums">{formatDate(job.expires_at)}</span>
-                                </Table.Cell>
-                                <Table.Cell>
-                                    <span className="text-xs text-muted tabular-nums">{formatDate(job.created_at)}</span>
-                                </Table.Cell>
-                            </Table.Row>
-                        )}
-                    </Table.Body>
+                <Table>
+                    <Table.ScrollContainer>
+                        <Table.Content aria-label="OpenAI Batch Jobs" className="min-w-[960px]">
+                            <Table.Header>
+                                <Table.Column id="batch_id" isRowHeader>
+                                    Batch ID
+                                </Table.Column>
+                                <Table.Column id="type">Type</Table.Column>
+                                <Table.Column id="status">Status</Table.Column>
+                                <Table.Column id="requests">Requests</Table.Column>
+                                <Table.Column id="duration">Duration</Table.Column>
+                                <Table.Column id="user">User</Table.Column>
+                                <Table.Column id="expires">Expires</Table.Column>
+                                <Table.Column id="created">Created</Table.Column>
+                            </Table.Header>
+                            <Table.Body
+                                renderEmptyState={() =>
+                                    isLoading ? null : (
+                                        <div className="flex items-center justify-center py-12 text-center text-sm text-muted">
+                                            No batch jobs found.
+                                        </div>
+                                    )
+                                }
+                            >
+                                {isLoading
+                                    ? Array.from({ length: 5 }).map((_, i) => (
+                                          <Table.Row key={`sk-${i}`} id={`sk-${i}`}>
+                                              {Array.from({ length: 8 }).map((__, j) => (
+                                                  <Table.Cell key={j}>
+                                                      <div className="h-4 w-3/4 rounded bg-surface-secondary animate-pulse" />
+                                                  </Table.Cell>
+                                              ))}
+                                          </Table.Row>
+                                      ))
+                                    : (data?.data ?? []).map((job: OpenAiBatchJob) => (
+                                          <Table.Row key={job.id} id={job.id}>
+                                              <Table.Cell>
+                                                  <span
+                                                      className="font-mono text-[11px] text-muted truncate max-w-[140px] block"
+                                                      title={job.batch_id}
+                                                  >
+                                                      {job.batch_id.slice(0, 20)}…
+                                                  </span>
+                                              </Table.Cell>
+                                              <Table.Cell>
+                                                  <span className="text-xs text-foreground">{TYPE_LABELS[job.type]}</span>
+                                              </Table.Cell>
+                                              <Table.Cell>
+                                                  <StatusChip status={job.status} />
+                                              </Table.Cell>
+                                              <Table.Cell>
+                                                  <div className="text-xs leading-snug">
+                                                      <span className="text-foreground font-medium">{job.total_requests}</span>
+                                                      <span className="text-muted"> total</span>
+                                                      {(job.completed_requests > 0 || job.failed_requests > 0) && (
+                                                          <div className="text-muted mt-0.5">
+                                                              <span className="text-[color:var(--success,#22c55e)]">{job.completed_requests} ok</span>
+                                                              {" · "}
+                                                              <span className="text-[color:var(--danger,#ef4444)]">{job.failed_requests} fail</span>
+                                                          </div>
+                                                      )}
+                                                  </div>
+                                              </Table.Cell>
+                                              <Table.Cell>
+                                                  <span className="text-xs text-foreground tabular-nums">
+                                                      {formatDuration(job.created_at, job.finished_at)}
+                                                  </span>
+                                              </Table.Cell>
+                                              <Table.Cell>
+                                                  <span className="text-xs text-muted">{job.user.email}</span>
+                                              </Table.Cell>
+                                              <Table.Cell>
+                                                  <span className="text-xs text-muted tabular-nums">{formatDate(job.expires_at)}</span>
+                                              </Table.Cell>
+                                              <Table.Cell>
+                                                  <span className="text-xs text-muted tabular-nums">{formatDate(job.created_at)}</span>
+                                              </Table.Cell>
+                                          </Table.Row>
+                                      ))}
+                            </Table.Body>
+                        </Table.Content>
+                    </Table.ScrollContainer>
                 </Table>
             </div>
 

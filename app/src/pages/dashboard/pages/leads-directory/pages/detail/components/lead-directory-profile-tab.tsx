@@ -11,6 +11,7 @@ import { EnrichmentSnapshotPanel } from "@/components/ui/enrichment-snapshot-pan
 import { SourceBadge } from "@/components/ui/source-badge";
 import { OverviewUrlField } from "@/components/ui/overview-url-field";
 import { SectionCard, Row, ProfileValue } from "@/components/ui/profile-section";
+import { GemiLeadSourcePanel } from "@/components/ui/gemi-lead-source-panel";
 import { initialsFromName, formatShortDate, normalizeUrl } from "@/lib/profile";
 
 interface LeadDirectoryProfileTabProps {
@@ -214,6 +215,8 @@ function DetailPanel({ lead, isAdmin, onEdit }: { lead: Lead; isAdmin: boolean; 
                     <ProfileValue value={lead.description} emptyLabel="No description on file." />
                 </Row>
             </SectionCard>
+
+            <GemiLeadSourcePanel lead={lead} />
 
         </div>
     );

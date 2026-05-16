@@ -150,17 +150,17 @@ export function FilterForm({
         >
             {/* ── General ── */}
             <div className="p-6 flex flex-col gap-5 border-b border-border/60">
-                <div className="flex flex-col gap-1.5">
-                    <Label htmlFor="filter-name">Filter name</Label>
-                    <Input
-                        id="filter-name"
-                        placeholder="e.g. Boston SaaS founders"
-                        {...register("name")}
-                    />
-                    {errors.name && <FieldError>{errors.name.message}</FieldError>}
-                </div>
-
                 <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="flex flex-col gap-1.5">
+                        <Label htmlFor="filter-name">Filter name</Label>
+                        <Input
+                            id="filter-name"
+                            placeholder="e.g. Boston SaaS founders"
+                            {...register("name")}
+                        />
+                        {errors.name && <FieldError>{errors.name.message}</FieldError>}
+                    </div>
+
                     <div className="flex flex-col gap-1.5">
                         <Label>Source type</Label>
                         <Controller
@@ -193,28 +193,6 @@ export function FilterForm({
                                         </ListBox>
                                     </Select.Popover>
                                 </Select>
-                            )}
-                        />
-                    </div>
-
-                    <div className="flex items-center justify-between gap-3 rounded-lg border border-border/60 bg-surface-secondary/50 px-4 py-2.5">
-                        <div className="flex flex-col">
-                            <span className="text-sm font-medium text-foreground">Enabled</span>
-                            <span className="text-xs text-muted">Runs on schedule when on</span>
-                        </div>
-                        <Controller
-                            control={control}
-                            name="enabled"
-                            render={({ field }) => (
-                                <Switch
-                                    isSelected={field.value}
-                                    onChange={field.onChange}
-                                    aria-label="Enabled"
-                                >
-                                    <Switch.Control>
-                                        <Switch.Thumb />
-                                    </Switch.Control>
-                                </Switch>
                             )}
                         />
                     </div>
@@ -282,56 +260,6 @@ export function FilterForm({
                     </div>
 
                     <div className="flex flex-col gap-1.5">
-                        <Label>Channels</Label>
-                        <Controller
-                            control={control}
-                            name="channels"
-                            render={({ field }) => (
-                                <Select
-                                    className="w-full"
-                                    placeholder="Select channels"
-                                    selectionMode="multiple"
-                                    value={field.value as Key[]}
-                                    onChange={(keys) =>
-                                        field.onChange((keys as Key[]).map(String) as Channel[])
-                                    }
-                                >
-                                    <Select.Trigger>
-                                        <Select.Value />
-                                        <Select.Indicator />
-                                    </Select.Trigger>
-                                    <Select.Popover>
-                                        <ListBox selectionMode="multiple">
-                                            {CHANNEL_OPTIONS.map((opt) => (
-                                                <ListBox.Item
-                                                    key={opt.id}
-                                                    id={opt.id}
-                                                    textValue={opt.label}
-                                                >
-                                                    {opt.label}
-                                                    <ListBox.ItemIndicator />
-                                                </ListBox.Item>
-                                            ))}
-                                        </ListBox>
-                                    </Select.Popover>
-                                </Select>
-                            )}
-                        />
-                        {errors.channels && (
-                            <FieldError>{errors.channels.message as string}</FieldError>
-                        )}
-                    </div>
-                </div>
-                <p className="text-xs text-muted">
-                    Each selected channel gets its own AI draft. Pick every channel you plan to reach this segment on.
-                </p>
-            </div>
-
-            {/* ── AI & outreach ── */}
-            <div className="p-6 flex flex-col gap-4 border-b border-border/60">
-                <SectionDivider title="AI & outreach" />
-                <div className={cn("grid gap-4", canEditOutreachInstructions && "sm:grid-cols-2")}>
-                    <div className="flex flex-col gap-1.5">
                         <Label>Scoring instructions</Label>
                         <Controller
                             control={control}
@@ -384,8 +312,54 @@ export function FilterForm({
                             </FieldError>
                         )}
                     </div>
+                </div>
+            </div>
 
-                    {canEditOutreachInstructions && (
+            {canEditOutreachInstructions && (
+                <div className="p-6 flex flex-col gap-4 border-b border-border/60">
+                    <SectionDivider title="Channels & outreach" />
+                    <div className="grid gap-4 sm:grid-cols-2">
+                        <div className="flex flex-col gap-1.5">
+                            <Label>Channels</Label>
+                            <Controller
+                                control={control}
+                                name="channels"
+                                render={({ field }) => (
+                                    <Select
+                                        className="w-full"
+                                        placeholder="Select channels"
+                                        selectionMode="multiple"
+                                        value={field.value as Key[]}
+                                        onChange={(keys) =>
+                                            field.onChange((keys as Key[]).map(String) as Channel[])
+                                        }
+                                    >
+                                        <Select.Trigger>
+                                            <Select.Value />
+                                            <Select.Indicator />
+                                        </Select.Trigger>
+                                        <Select.Popover>
+                                            <ListBox selectionMode="multiple">
+                                                {CHANNEL_OPTIONS.map((opt) => (
+                                                    <ListBox.Item
+                                                        key={opt.id}
+                                                        id={opt.id}
+                                                        textValue={opt.label}
+                                                    >
+                                                        {opt.label}
+                                                        <ListBox.ItemIndicator />
+                                                    </ListBox.Item>
+                                                ))}
+                                            </ListBox>
+                                        </Select.Popover>
+                                    </Select>
+                                )}
+                            />
+                            {errors.channels && (
+                                <FieldError>{errors.channels.message as string}</FieldError>
+                            )}
+                        </div>
+
                         <div className="flex flex-col gap-1.5">
                             <Label htmlFor="filter-outreach">
                                 Outreach instructions
@@ -403,58 +377,89 @@ export function FilterForm({
                                 </FieldError>
                             )}
                         </div>
-                    )}
-                </div>
-            </div>
-
-            {/* ── Schedule ── */}
-            {sourceType !== SourceType.MANUAL && (
-                <div className="p-6 flex flex-col gap-4 border-b border-border/60">
-                    <SectionDivider title="Schedule" />
-                    <div className="flex flex-col gap-1.5">
-                        <Label>Cron schedule</Label>
-                        <Controller
-                            control={control}
-                            name="cron_schedule"
-                            render={({ field }) => (
-                                <Select
-                                    className="w-full"
-                                    value={cronToSelectId(field.value)}
-                                    onChange={(v) => field.onChange(selectIdToCron(String(v)))}
-                                >
-                                    <Select.Trigger>
-                                        <Select.Value />
-                                        <Select.Indicator />
-                                    </Select.Trigger>
-                                    <Select.Popover>
-                                        <ListBox>
-                                            <ListBox.Item id={CRON_NONE} textValue="No schedule">
-                                                No schedule (manual runs only)
-                                                <ListBox.ItemIndicator />
-                                            </ListBox.Item>
-                                            {CRON_PRESETS.map((opt) => (
-                                                <ListBox.Item
-                                                    key={opt.id}
-                                                    id={opt.id}
-                                                    textValue={opt.label}
-                                                >
-                                                    {opt.label}
-                                                    <ListBox.ItemIndicator />
-                                                </ListBox.Item>
-                                            ))}
-                                        </ListBox>
-                                    </Select.Popover>
-                                </Select>
-                            )}
-                        />
-                        {cronHint && (
-                            <p className={cronInvalid ? "text-xs text-danger" : "text-xs text-muted"}>
-                                {cronHint}
-                            </p>
-                        )}
                     </div>
+                    <p className="text-xs text-muted">
+                        Each selected channel gets its own AI draft. Pick every channel you plan to reach this segment on.
+                    </p>
                 </div>
             )}
+
+            {/* ── Schedule ── */}
+            <div className="p-6 flex flex-col gap-4 border-b border-border/60">
+                {sourceType !== SourceType.MANUAL && (
+                    <>
+                        <SectionDivider title="Schedule" />
+                        <div className="flex flex-col gap-1.5">
+                            <Label>Cron schedule</Label>
+                            <Controller
+                                control={control}
+                                name="cron_schedule"
+                                render={({ field }) => (
+                                    <Select
+                                        className="w-full"
+                                        value={cronToSelectId(field.value)}
+                                        onChange={(v) => field.onChange(selectIdToCron(String(v)))}
+                                    >
+                                        <Select.Trigger>
+                                            <Select.Value />
+                                            <Select.Indicator />
+                                        </Select.Trigger>
+                                        <Select.Popover>
+                                            <ListBox>
+                                                <ListBox.Item id={CRON_NONE} textValue="No schedule">
+                                                    No schedule (manual runs only)
+                                                    <ListBox.ItemIndicator />
+                                                </ListBox.Item>
+                                                {CRON_PRESETS.map((opt) => (
+                                                    <ListBox.Item
+                                                        key={opt.id}
+                                                        id={opt.id}
+                                                        textValue={opt.label}
+                                                    >
+                                                        {opt.label}
+                                                        <ListBox.ItemIndicator />
+                                                    </ListBox.Item>
+                                                ))}
+                                            </ListBox>
+                                        </Select.Popover>
+                                    </Select>
+                                )}
+                            />
+                            {cronHint && (
+                                <p className={cronInvalid ? "text-xs text-danger" : "text-xs text-muted"}>
+                                    {cronHint}
+                                </p>
+                            )}
+                        </div>
+                    </>
+                )}
+                <div
+                    className={cn(
+                        "flex items-center justify-between gap-3 rounded-lg border border-border/60 bg-surface-secondary/50 px-4 py-2.5",
+                        sourceType !== SourceType.MANUAL && "mt-4 border-t border-border/60 pt-4",
+                    )}
+                >
+                    <div className="flex flex-col">
+                        <span className="text-sm font-medium text-foreground">Enabled</span>
+                        <span className="text-xs text-muted">Runs on schedule when on</span>
+                    </div>
+                    <Controller
+                        control={control}
+                        name="enabled"
+                        render={({ field }) => (
+                            <Switch
+                                isSelected={field.value}
+                                onChange={field.onChange}
+                                aria-label="Enabled"
+                            >
+                                <Switch.Control>
+                                    <Switch.Thumb />
+                                </Switch.Control>
+                            </Switch>
+                        )}
+                    />
+                </div>
+            </div>
 
             {/* ── Actions ── */}
             <div className="flex items-center justify-end gap-2 px-6 py-4 bg-surface-secondary/30">

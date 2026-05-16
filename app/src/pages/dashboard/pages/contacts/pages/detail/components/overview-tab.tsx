@@ -20,6 +20,7 @@ import { SourceBadge } from "@/components/ui/source-badge";
 import { OverviewUrlField } from "@/components/ui/overview-url-field";
 import { EnrichmentSnapshotPanel } from "@/components/ui/enrichment-snapshot-panel";
 import { SectionCard, Row, ProfileValue } from "@/components/ui/profile-section";
+import { GemiLeadSourcePanel } from "@/components/ui/gemi-lead-source-panel";
 import { initialsFromName, formatShortDate, normalizeUrl } from "@/lib/profile";
 import { StatusChip } from "@/pages/dashboard/pages/leads/components/badges";
 import type { ProfileDraft } from "../types";
@@ -220,6 +221,8 @@ function DetailPanel({ contact, onEdit }: { contact: Contact; onEdit: () => void
                     </Row>
                 ) : null}
             </SectionCard>
+
+            <GemiLeadSourcePanel lead={contact.lead} />
         </div>
     );
 }
