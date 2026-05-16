@@ -61,9 +61,14 @@ function FilterSelect({
     onChange: (key: string) => void;
 }) {
     return (
-        <Select aria-label={label} value={value} onChange={onChange}>
+        <Select
+            aria-label={label}
+            placeholder={label}
+            value={value || null}
+            onChange={(v) => onChange(v != null ? String(v) : "")}
+        >
             <Select.Trigger className="min-w-36 h-8 text-xs">
-                <Select.Value placeholder={label} />
+                <Select.Value />
                 <Select.Indicator />
             </Select.Trigger>
             <Select.Popover>

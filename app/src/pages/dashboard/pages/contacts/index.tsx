@@ -7,7 +7,6 @@ import { PipelineView } from "./components/pipeline-view";
 import { NewContactModal } from "./components/new-contact-modal";
 import { BulkScoreContactsPopover } from "./components/bulk-score-contacts-popover";
 import { LeadFilters } from "@/pages/dashboard/pages/leads/components/lead-filters";
-import type { LeadStatus } from "@/features/contacts/interfaces/contact.interface";
 import { isLeadStatus } from "@/features/contacts/constants/contacts.constants";
 import { SourceType } from "@/features/leads/interfaces/lead.interface";
 import { useContacts } from "@/features/contacts/hooks/use-contacts";

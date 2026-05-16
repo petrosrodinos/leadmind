@@ -97,5 +97,11 @@ export function emptyByStatus(): Record<LeadStatus, number> {
 export const EMPTY_BY_STATUS = emptyByStatus();
 
 export function emptyContactsByStatus<T>(): Record<LeadStatus, T[]> {
-    return Object.fromEntries(LEAD_STATUS_VALUES.map((s) => [s, []])) as Record<LeadStatus, T[]>;
+    return LEAD_STATUS_VALUES.reduce(
+        (acc, status) => {
+            acc[status] = [];
+            return acc;
+        },
+        {} as Record<LeadStatus, T[]>,
+    );
 }

@@ -1,5 +1,4 @@
 import type { ComponentType } from "react";
-import { cn } from "@/lib/utils";
 
 export function DashboardListSkeleton() {
   return (

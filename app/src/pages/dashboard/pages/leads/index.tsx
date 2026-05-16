@@ -5,7 +5,6 @@ import { Plus } from "lucide-react";
 import { LeadsTable } from "./components/leads-table";
 import { LeadFilters } from "./components/lead-filters";
 import { CreateContactModal } from "./components/create-contact-modal";
-import type { LeadStatus } from "@/features/contacts/interfaces/contact.interface";
 import { isLeadStatus } from "@/features/contacts/constants/contacts.constants";
 import { SourceType } from "@/features/leads/interfaces/lead.interface";
 import { useContacts } from "@/features/contacts/hooks/use-contacts";

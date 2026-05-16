@@ -6,7 +6,6 @@ import {
     CallDirection,
     CallOutcome,
     InteractionType,
-    LeadStatus,
     type CallMetadata,
     type Interaction,
     type InteractionStatusChange,
@@ -130,6 +129,7 @@ function parseStatusChange(raw: Interaction["status_change"]): InteractionStatus
     const o = raw as unknown as Record<string, unknown>;
     const from = o.from;
     const to = o.to;
+    if (typeof from !== "string" || typeof to !== "string") return null;
     if (!isLeadStatus(from) || !isLeadStatus(to)) return null;
     return { from, to };
 }
