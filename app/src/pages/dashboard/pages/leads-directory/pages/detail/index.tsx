@@ -19,8 +19,7 @@ import { Routes } from "@/routes/routes";
 import { EnrichmentRunModal } from "@/components/ui/enrichment-action-popover";
 import { EnrichmentSnapshotPanel } from "@/components/ui/enrichment-snapshot-panel";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
-import { useAuthStore } from "@/stores/auth";
-import { RoleTypes } from "@/features/user/interfaces/user.interface";
+import { usePermission } from "@/hooks/use-permission";
 import { LeadDirectoryProfileTab } from "./components/lead-directory-profile-tab";
 
 const ENRICHMENT_PAGE_SIZE = 10;
@@ -37,8 +36,7 @@ export default function LeadDirectoryDetailPage() {
   const enrich = useEnrichLead();
   const addToCrm = useAddLeadToCrm();
   const deleteLeadMu = useDeleteLead();
-  const { role } = useAuthStore();
-  const canAdminDelete = role === RoleTypes.ADMIN || role === RoleTypes.SUPER_ADMIN;
+  const canDeleteLead = usePermission("lead_delete");
   const [activeTab, setActiveTab] = useState<string>("profile");
   const [adopted, setAdopted] = useState(false);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
@@ -146,7 +144,7 @@ export default function LeadDirectoryDetailPage() {
                       </span>
                     )}
                   </Dropdown.Item>
-                  {canAdminDelete ? (
+                  {canDeleteLead ? (
                     <Dropdown.Item id="delete" variant="danger" textValue="Delete lead" isDisabled={deleteLeadMu.isPending}>
                       <span className="flex items-center gap-2.5 antialiased">
                         <Trash2 className="size-4 shrink-0 text-red-500" strokeWidth={2} />
@@ -175,7 +173,7 @@ export default function LeadDirectoryDetailPage() {
         )}
       </div>
 
-      {lead && canAdminDelete ? (
+      {lead && canDeleteLead ? (
         <ConfirmDialog
           isOpen={confirmDeleteOpen}
           onOpenChange={setConfirmDeleteOpen}

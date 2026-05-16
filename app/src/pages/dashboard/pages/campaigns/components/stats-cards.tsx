@@ -1,5 +1,4 @@
-import { useAuthStore } from "@/stores/auth";
-import { RoleTypes } from "@/features/user/interfaces/user.interface";
+import { usePermission } from "@/hooks/use-permission";
 import type { MarketingCampaign } from "@/features/marketing-campaigns/interfaces/campaign.interface";
 
 interface StatTile {
@@ -9,8 +8,7 @@ interface StatTile {
 }
 
 export function StatsCards({ campaign }: { campaign: MarketingCampaign }) {
-    const { role } = useAuthStore();
-    const isAdmin = role === RoleTypes.ADMIN || role === RoleTypes.SUPER_ADMIN;
+    const canViewExtendedStats = usePermission("campaign_extended_stats");
 
     const tiles: StatTile[] = [
         { label: "Contacts", value: campaign.selected_contact_count, accent: "neutral" },
@@ -19,7 +17,7 @@ export function StatsCards({ campaign }: { campaign: MarketingCampaign }) {
         { label: "Delivered", value: campaign.delivered_count, accent: "success" },
         { label: "Opened", value: campaign.opened_count, accent: "success" },
         { label: "Failed", value: campaign.failed_count, accent: "error" },
-        ...(isAdmin ? [
+        ...(canViewExtendedStats ? [
             { label: "Clicked", value: campaign.clicked_count, accent: "success" as const },
             { label: "Replied", value: campaign.replied_count, accent: "success" as const },
             { label: "Skipped", value: campaign.skipped_count, accent: "neutral" as const },

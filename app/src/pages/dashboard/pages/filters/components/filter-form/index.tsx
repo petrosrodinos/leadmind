@@ -44,9 +44,8 @@ import { QueryConfigFields } from "./query-config-fields";
 import { serializeQueryConfig } from "./serialize-query-config";
 import { useScoringInstructions } from "@/features/scoring-instructions/hooks/use-scoring-instructions";
 import { ScoringInstructionModal } from "@/pages/dashboard/pages/filters/components/scoring-instruction-modal";
-import { RoleTypes } from "@/features/user/interfaces/user.interface";
 import { cn } from "@/lib/utils";
-import { useAuthStore } from "@/stores/auth";
+import { usePermission } from "@/hooks/use-permission";
 
 interface FilterFormProps {
     initial?: Filter;
@@ -74,9 +73,7 @@ export function FilterForm({
     isPending,
     submitLabel,
 }: FilterFormProps) {
-    const { role } = useAuthStore();
-    const canEditOutreachInstructions =
-        role === RoleTypes.ADMIN || role === RoleTypes.SUPER_ADMIN;
+    const canEditOutreachInstructions = usePermission("filter_outreach_instructions_edit");
     const [siModalOpen, setSiModalOpen] = useState(false);
 
     const defaults = useMemo(() => buildDefaults(initial), [initial?.uuid]);

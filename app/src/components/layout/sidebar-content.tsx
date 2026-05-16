@@ -4,8 +4,7 @@ import { Disclosure } from "@heroui/react";
 import { cn } from "@/lib/utils";
 import { LayoutDashboard, Users, Globe, Filter, IdCard, Megaphone, Layers, ShieldCheck, ChevronDown } from "lucide-react";
 import { Routes } from "@/routes/routes";
-import { useAuthStore } from "@/stores/auth";
-import { RoleTypes } from "@/features/user/interfaces/user.interface";
+import { usePermission } from "@/hooks/use-permission";
 
 interface SidebarContentProps {
   collapsed: boolean;
@@ -95,9 +94,8 @@ function NavItem({
 }
 
 export default function SidebarContent({ collapsed, onNavigate }: SidebarContentProps) {
-  const { role } = useAuthStore();
   const { pathname } = useLocation();
-  const isAdmin = role === RoleTypes.ADMIN || role === RoleTypes.SUPER_ADMIN;
+  const canViewAdminNav = usePermission("admin_nav");
   const prevPathname = useRef(pathname);
   const [adminOpen, setAdminOpen] = useState(() => pathMatchesAnyAdminRoute(pathname));
 
@@ -112,7 +110,7 @@ export default function SidebarContent({ collapsed, onNavigate }: SidebarContent
 
   return (
     <div className="flex flex-col gap-4">
-      {isAdmin && (
+      {canViewAdminNav && (
         <Disclosure
           isExpanded={adminOpen}
           onExpandedChange={setAdminOpen}

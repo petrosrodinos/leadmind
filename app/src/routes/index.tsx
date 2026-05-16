@@ -1,7 +1,7 @@
 import { Routes as ReactRoutes, Route, Navigate, useParams } from "react-router-dom";
 import { FilterDetailTabIds, Routes } from "@/routes/routes";
 import ProtectedRoute from "@/routes/protected-route";
-import { RoleTypes } from "@/features/user/interfaces/user.interface";
+import { Permissions } from "@/config/permissions";
 import LandingPage from "@/pages/landing";
 import SignIn from "@/pages/auth/pages/sign-in";
 import SignUp from "@/pages/auth/pages/sign-up";
@@ -84,7 +84,7 @@ export default function AppRoutes() {
         <Route
           path="admin/batch-jobs"
           element={
-            <ProtectedRoute requiredRoles={[RoleTypes.ADMIN]}>
+            <ProtectedRoute requiredRoles={Permissions.admin_batch_jobs}>
               <AdminBatchJobsPage />
             </ProtectedRoute>
           }

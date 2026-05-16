@@ -41,7 +41,7 @@ export default function DashboardLayout() {
             {/* Header — matches desktop sidebar header */}
             <Drawer.Header className="border-b border-border h-[54px] px-3 shrink-0 flex items-center gap-2">
               <NavLink
-                to={Routes.dashboard.root}
+                to={Routes.root}
                 onClick={drawerState.close}
                 className="flex items-center gap-2.5 flex-1 min-w-0 rounded-xl px-2 py-1.5 hover:bg-surface-secondary transition-colors duration-200"
               >

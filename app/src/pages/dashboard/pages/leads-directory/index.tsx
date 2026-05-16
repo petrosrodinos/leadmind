@@ -12,8 +12,7 @@ import { useLeads } from "@/features/leads/hooks/use-leads";
 import { useAddLeadToCrm } from "@/features/contacts/hooks/use-contacts";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { Routes } from "@/routes/routes";
-import { useAuthStore } from "@/stores/auth";
-import { RoleTypes } from "@/features/user/interfaces/user.interface";
+import { usePermission } from "@/hooks/use-permission";
 import { EnrichmentRunModal } from "@/components/ui/enrichment-action-popover";
 import { useEnrichLeadsBulk } from "@/features/lead-enrichment/hooks/use-lead-enrichment";
 
@@ -23,8 +22,7 @@ const columnHelper = createColumnHelper<Lead>();
 
 export default function LeadsDirectoryPage() {
   const navigate = useNavigate();
-  const { role } = useAuthStore();
-  const isAdmin = role === RoleTypes.ADMIN || role === RoleTypes.SUPER_ADMIN;
+  const canBulkEnrich = usePermission("lead_enrichment_bulk");
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [sourceType, setSourceType] = useState<SourceType | undefined>(undefined);
@@ -207,7 +205,7 @@ export default function LeadsDirectoryPage() {
             </Select.Popover>
           </Select>
         </div>
-        {isAdmin ? (
+        {canBulkEnrich ? (
           <div className="w-full sm:w-auto sm:ms-auto shrink-0">
             <Label className="mb-1 block opacity-0 pointer-events-none select-none" aria-hidden>
               Enrich
@@ -225,7 +223,7 @@ export default function LeadsDirectoryPage() {
         ) : null}
       </div>
 
-      {isAdmin ? (
+                {canBulkEnrich ? (
         <EnrichmentRunModal
           isOpen={enrichModalOpen}
           onOpenChange={setEnrichModalOpen}
@@ -251,8 +249,8 @@ export default function LeadsDirectoryPage() {
           <Table.ScrollContainer>
             <Table.Content
               aria-label="Public leads directory"
-              className={isAdmin ? "min-w-[960px]" : "min-w-[900px]"}
-              {...(isAdmin
+              className={canBulkEnrich ? "min-w-[960px]" : "min-w-[900px]"}
+              {...(canBulkEnrich
                 ? {
                     selectionMode: "multiple" as const,
                     selectionBehavior: "toggle" as const,
@@ -266,7 +264,7 @@ export default function LeadsDirectoryPage() {
               }}
             >
               <Table.Header>
-                {isAdmin ? (
+                {canBulkEnrich ? (
                   <Table.Column className="pr-0 w-10">
                     <Checkbox aria-label="Select all on this page" slot="selection">
                       <Checkbox.Control>
@@ -285,7 +283,7 @@ export default function LeadsDirectoryPage() {
                 {isLoading
                   ? Array.from({ length: 5 }).map((_, i) => (
                       <Table.Row key={`sk-${i}`} id={`sk-${i}`}>
-                        {isAdmin ? (
+                        {canBulkEnrich ? (
                           <Table.Cell className="pr-0">
                             <div className="h-4 w-4 rounded bg-surface-secondary animate-pulse" />
                           </Table.Cell>
@@ -299,7 +297,7 @@ export default function LeadsDirectoryPage() {
                     ))
                   : table.getRowModel().rows.map((row) => (
                       <Table.Row key={row.id} id={row.id} className="cursor-pointer">
-                        {isAdmin ? (
+                        {canBulkEnrich ? (
                           <Table.Cell className="pr-0">
                             <Checkbox aria-label={`Select ${row.original.name ?? "lead"}`} slot="selection">
                               <Checkbox.Control>

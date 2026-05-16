@@ -49,9 +49,9 @@ export default function Sidebar() {
         {collapsed ? (
           <div className="flex flex-col items-center justify-center w-full gap-1.5 py-0.5">
             <NavLink
-              to={Routes.dashboard.root}
-              aria-label="Dashboard"
-              title="Dashboard"
+              to={Routes.root}
+              aria-label={environments.APP_NAME}
+              title={environments.APP_NAME}
               className="rounded-xl p-1 transition-colors duration-200 hover:bg-surface-secondary"
             >
               <AppLogo className="h-7 w-7" />
@@ -67,7 +67,7 @@ export default function Sidebar() {
         ) : (
           <>
             <NavLink
-              to={Routes.dashboard.root}
+              to={Routes.root}
               className="flex items-center gap-2.5 flex-1 min-w-0 rounded-xl px-2 py-1.5 hover:bg-surface-secondary transition-colors duration-200"
             >
               <AppLogo className="h-7 w-7 shrink-0" />

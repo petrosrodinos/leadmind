@@ -5,8 +5,7 @@ import { AtSign, Briefcase, Building2, CalendarClock, ExternalLink, Globe, Penci
 import type { Lead } from "@/features/leads/interfaces/lead.interface";
 import type { UpdateLeadPayload } from "@/features/leads/interfaces/lead.interface";
 import { useUpdateLead } from "@/features/leads/hooks/use-leads";
-import { useAuthStore } from "@/stores/auth";
-import { RoleTypes } from "@/features/user/interfaces/user.interface";
+import { usePermission } from "@/hooks/use-permission";
 import { EnrichmentSnapshotPanel } from "@/components/ui/enrichment-snapshot-panel";
 import { SourceBadge } from "@/components/ui/source-badge";
 import { OverviewUrlField } from "@/components/ui/overview-url-field";
@@ -47,8 +46,7 @@ function draftFromLead(lead: Lead): LeadDraft {
 }
 
 export function LeadDirectoryProfileTab({ lead }: LeadDirectoryProfileTabProps) {
-    const { role } = useAuthStore();
-    const isAdmin = role === RoleTypes.ADMIN || role === RoleTypes.SUPER_ADMIN;
+    const canEditLead = usePermission("lead_edit");
     const [editing, setEditing] = useState(false);
 
     return (
@@ -58,7 +56,7 @@ export function LeadDirectoryProfileTab({ lead }: LeadDirectoryProfileTabProps) 
                 {editing ? (
                     <EditForm lead={lead} onDone={() => setEditing(false)} />
                 ) : (
-                    <DetailPanel lead={lead} isAdmin={isAdmin} onEdit={() => setEditing(true)} />
+                    <DetailPanel lead={lead} canEdit={canEditLead} onEdit={() => setEditing(true)} />
                 )}
             </div>
         </div>
@@ -147,13 +145,13 @@ function IdentitySidebar({ lead }: { lead: Lead }) {
     );
 }
 
-function DetailPanel({ lead, isAdmin, onEdit }: { lead: Lead; isAdmin: boolean; onEdit: () => void }) {
+function DetailPanel({ lead, canEdit, onEdit }: { lead: Lead; canEdit: boolean; onEdit: () => void }) {
     const websiteHref = lead.website?.trim() ? normalizeUrl(lead.website.trim()) : undefined;
     const linkedinHref = lead.linkedin_url?.trim() || undefined;
 
     return (
         <div className="space-y-4">
-            {isAdmin ? (
+            {canEdit ? (
                 <div className="flex justify-end">
                     <Button size="sm" variant="secondary" onPress={onEdit}>
                         <Pencil className="size-3.5" />
