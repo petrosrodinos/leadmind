@@ -10,7 +10,6 @@ import { FilterDetailTabIds, Routes } from "@/routes/routes";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { FilterDetailHeaderActionsSkeleton, FilterDetailHeaderSkeleton } from "@/pages/dashboard/pages/filters/components/filter-detail-header-skeleton";
 import { FilterRunLeadingVisual } from "@/pages/dashboard/pages/filters/components/filter-run-controls";
-import { usePermission } from "@/hooks/use-permission";
 import FilterContactsPage from "@/pages/dashboard/pages/filters/pages/contacts";
 import { FilterEditPanel } from "@/pages/dashboard/pages/filters/pages/edit";
 import FilterJobsPage from "@/pages/dashboard/pages/filters/pages/jobs";
@@ -20,6 +19,12 @@ const CHANNEL_LABEL: Record<Channel, string> = {
   [Channel.SMS]: "SMS",
   [Channel.LINKEDIN]: "LinkedIn",
 };
+
+const TABS = [
+  { id: FilterDetailTabIds.FILTER, label: "Filter" },
+  { id: FilterDetailTabIds.CONTACTS, label: "Contacts" },
+  { id: FilterDetailTabIds.JOBS, label: "Jobs" },
+] as const;
 
 export default function FilterDetailPage() {
   const { uuid } = useParams<{ uuid: string }>();
@@ -32,11 +37,7 @@ export default function FilterDetailPage() {
   const { isActive: isJobActive } = useLatestFilterJob(uuid);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
 
-  const canViewFilterJobsTab = usePermission("filter_jobs_tab");
-
-  const TABS: Array<{ id: string; label: string }> = [{ id: FilterDetailTabIds.FILTER, label: "Filter" }, { id: FilterDetailTabIds.CONTACTS, label: "Contacts" }, ...(canViewFilterJobsTab ? [{ id: FilterDetailTabIds.JOBS, label: "Jobs" }] : [])];
-
-  const allowedTabIds = new Set(TABS.map((t) => t.id));
+  const allowedTabIds = new Set<string>(TABS.map((t) => t.id));
   const rawTab = searchParams.get(Routes.dashboard.filters_detail_tab_query);
   const currentTab = rawTab && allowedTabIds.has(rawTab) ? rawTab : FilterDetailTabIds.FILTER;
 
