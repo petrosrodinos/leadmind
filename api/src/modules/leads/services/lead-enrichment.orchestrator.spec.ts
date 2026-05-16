@@ -87,6 +87,7 @@ describe('LeadEnrichmentOrchestrator', () => {
             { fetchProfile: jest.fn() } as any,
             { crawlSinglePage: jest.fn() } as any,
             googleSearch as any,
+            { getCompanyDocuments: jest.fn().mockResolvedValue(null) } as any,
             summaryService as any,
         );
 

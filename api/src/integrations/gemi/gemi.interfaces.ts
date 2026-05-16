@@ -69,6 +69,8 @@ export interface GemiCompany {
     poBox?: string;
     url?: string;
     email?: string;
+    phone?: string;
+    fax?: string | null;
     isBranch?: boolean;
     objective?: string;
     legalType?: GemiCodedValue;

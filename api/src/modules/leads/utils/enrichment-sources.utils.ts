@@ -1,5 +1,5 @@
 import { EnrichmentSource } from '@/generated/prisma';
-import { DEFAULT_ENRICHMENT_SOURCES, SOURCE_ORDER } from '../constants/enrichment.constants';
+import { DEFAULT_ENRICHMENT_SOURCES } from '../constants/enrichment.constants';
 
 export function normalizeEnrichmentSources(
     sources: EnrichmentSource[] | null | undefined,
@@ -7,7 +7,7 @@ export function normalizeEnrichmentSources(
 ): EnrichmentSource[] {
     const input = sources === undefined || sources === null ? fallback : sources;
     const wanted = new Set(input);
-    return SOURCE_ORDER.filter((source) => wanted.has(source));
+    return DEFAULT_ENRICHMENT_SOURCES.filter((source) => wanted.has(source));
 }
 
 export function resolveLeadEnrichmentSources(sources: EnrichmentSource[] | null | undefined): EnrichmentSource[] {

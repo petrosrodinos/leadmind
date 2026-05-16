@@ -16,6 +16,7 @@ export type EnrichmentActionMode = "contact" | "lead";
 export interface EnrichmentActionPopoverProps {
     mode: EnrichmentActionMode;
     initialSources?: EnrichmentSource[];
+    sourceOptions?: EnrichmentSourceOption[];
     isPending: boolean;
     onEnrich: (sources: EnrichmentSource[]) => void;
     placement?: "bottom start" | "bottom end" | "top start" | "top end";
@@ -28,6 +29,7 @@ export interface EnrichmentRunModalProps {
     onOpenChange: (open: boolean) => void;
     mode: EnrichmentActionMode;
     initialSources?: EnrichmentSource[];
+    sourceOptions?: EnrichmentSourceOption[];
     isPending: boolean;
     onEnrich: (sources: EnrichmentSource[]) => void;
     contextHint?: string;
@@ -51,7 +53,13 @@ const SOURCE_META: Record<EnrichmentSource, { hint: string; iconWrap: string }> 
         hint: "AI summary",
         iconWrap: "bg-accent/18 text-accent ring-1 ring-accent/35",
     },
+    [EnrichmentSourceEnum.GEMI]: {
+        hint: "Registry refresh",
+        iconWrap: "bg-amber-500/15 text-amber-200 ring-1 ring-amber-400/30",
+    },
 };
+
+type EnrichmentSourceOption = { id: EnrichmentSource; label: string };
 
 function baselineSources(
     mode: EnrichmentActionMode,
@@ -67,6 +75,7 @@ function EnrichmentRunPanel({
     isActive,
     mode,
     initialSources,
+    sourceOptions = ENRICHMENT_SOURCE_OPTIONS,
     isPending,
     onCancel,
     onConfirm,
@@ -75,6 +84,7 @@ function EnrichmentRunPanel({
     isActive: boolean;
     mode: EnrichmentActionMode;
     initialSources?: EnrichmentSource[];
+    sourceOptions?: EnrichmentSourceOption[];
     isPending: boolean;
     onCancel: () => void;
     onConfirm: (sources: EnrichmentSource[]) => void;
@@ -131,7 +141,7 @@ function EnrichmentRunPanel({
             </div>
 
             <div className="px-2.5 py-2 space-y-1">
-                {ENRICHMENT_SOURCE_OPTIONS.map((opt) => {
+                {sourceOptions.map((opt) => {
                     const meta = SOURCE_META[opt.id];
                     const Icon = ENRICHMENT_SOURCE_ICON[opt.id];
                     const isOn = selected.includes(opt.id);
@@ -198,7 +208,7 @@ function EnrichmentRunPanel({
 
             <div className="flex items-center justify-between gap-2 px-2.5 py-2 border-t border-border/50 bg-surface-secondary/35">
                 <p className="text-[10px] text-muted tabular-nums">
-                    {selected.length}/{ENRICHMENT_SOURCE_OPTIONS.length}
+                    {selected.length}/{sourceOptions.length}
                 </p>
                 <div className="flex items-center gap-1.5">
                     <ActionButtonWithPending
@@ -231,6 +241,7 @@ export function EnrichmentRunModal({
     onOpenChange,
     mode,
     initialSources,
+    sourceOptions,
     isPending,
     onEnrich,
     contextHint,
@@ -250,6 +261,7 @@ export function EnrichmentRunModal({
                         isActive={isOpen}
                         mode={mode}
                         initialSources={initialSources}
+                        sourceOptions={sourceOptions}
                         isPending={isPending}
                         contextHint={contextHint}
                         onCancel={() => onOpenChange(false)}
@@ -267,6 +279,7 @@ export function EnrichmentRunModal({
 export function EnrichmentActionPopover({
     mode,
     initialSources,
+    sourceOptions,
     isPending,
     onEnrich,
     placement = "bottom end",
@@ -301,6 +314,7 @@ export function EnrichmentActionPopover({
                         isActive={open}
                         mode={mode}
                         initialSources={initialSources}
+                        sourceOptions={sourceOptions}
                         isPending={isPending}
                         onCancel={() => setOpen(false)}
                         onConfirm={(sources) => {

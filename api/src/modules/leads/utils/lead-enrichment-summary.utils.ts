@@ -1,5 +1,5 @@
 import { EnrichmentSource, LeadEnrichment, Prisma } from '@/generated/prisma';
-import { SOURCE_ORDER } from '../constants/enrichment.constants';
+import { DEFAULT_ENRICHMENT_SOURCES } from '../constants/enrichment.constants';
 
 const MAX_ENRICHMENT_SUMMARY_LENGTH = 32000;
 const MAX_SOURCE_CONTEXT_PAYLOAD_LENGTH = 4000;
@@ -56,6 +56,18 @@ export function fallbackBlockText(
             }
         }
     }
+    if (source === EnrichmentSource.GEMI) {
+        const company = o.company;
+        if (company && typeof company === 'object' && !Array.isArray(company)) {
+            const c = company as Record<string, unknown>;
+            const parts = [c.coNameEl, c.status && typeof c.status === 'object' && 'descr' in c.status ? (c.status as { descr?: string }).descr : null, c.city]
+                .map((x) => (typeof x === 'string' ? x.trim() : ''))
+                .filter(Boolean);
+            if (parts.length) {
+                return parts.join(' · ');
+            }
+        }
+    }
     return '(enriched)';
 }
 
@@ -72,7 +84,7 @@ export function latestEnrichmentBySource(rows: LeadEnrichment[]): Map<Enrichment
 export function buildDeterministicLeadEnrichmentSummary(rows: LeadEnrichment[]): string | null {
     const latestBySource = latestEnrichmentBySource(rows);
     const parts: string[] = [];
-    for (const src of SOURCE_ORDER) {
+    for (const src of DEFAULT_ENRICHMENT_SOURCES) {
         const row = latestBySource.get(src);
         if (!row) {
             continue;
@@ -105,7 +117,7 @@ export function coerceLeadEnrichmentMetadata(raw: unknown): Prisma.InputJsonValu
 export function formatLeadEnrichmentRowsForSummary(rows: LeadEnrichment[]): string {
     const latestBySource = latestEnrichmentBySource(rows);
     const blocks: string[] = [];
-    for (const src of SOURCE_ORDER) {
+    for (const src of DEFAULT_ENRICHMENT_SOURCES) {
         const row = latestBySource.get(src);
         if (!row) {
             continue;

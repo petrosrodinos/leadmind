@@ -135,7 +135,8 @@ export const EnrichmentSource: {
   LINKEDIN: 'LINKEDIN',
   WEBSITE: 'WEBSITE',
   GOOGLE_SEARCH: 'GOOGLE_SEARCH',
-  AI: 'AI'
+  AI: 'AI',
+  GEMI: 'GEMI'
 };
 
 export type EnrichmentSource = (typeof EnrichmentSource)[keyof typeof EnrichmentSource]

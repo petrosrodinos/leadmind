@@ -18,6 +18,7 @@ describe('enrichment source utilities', () => {
 
     it('uses default lead sources only when manual sources are missing', () => {
         expect(resolveLeadEnrichmentSources(undefined)).toEqual([
+            EnrichmentSource.GEMI,
             EnrichmentSource.LINKEDIN,
             EnrichmentSource.WEBSITE,
             EnrichmentSource.GOOGLE_SEARCH,

@@ -3,9 +3,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Button, Dropdown, Input, Label, ListBox, Pagination, Select, Tabs } from "@heroui/react";
 import { ArrowLeft, Check, MoreVertical, Plus, Search, Sparkles, Trash2 } from "lucide-react";
 import type { Lead } from "@/features/leads/interfaces/lead.interface";
+import { SourceType } from "@/features/leads/interfaces/lead.interface";
 import { EnrichmentSourceBadge } from "@/components/ui/enrichment-source-badge";
 import { SourceBadge } from "@/components/ui/source-badge";
-import { ENRICHMENT_SOURCE_OPTIONS, type EnrichmentSource } from "@/features/lead-enrichment/constants/enrichment-sources";
+import {
+  defaultEnrichmentSourcesForLead,
+  enrichmentSourceOptionsForLead,
+  type EnrichmentSource,
+} from "@/features/lead-enrichment/constants/enrichment-sources";
 import { useEnrichLead, useLeadEnrichments } from "@/features/lead-enrichment/hooks/use-lead-enrichment";
 import { useLead, useDeleteLead } from "@/features/leads/hooks/use-leads";
 import { useAddLeadToCrm } from "@/features/contacts/hooks/use-contacts";
@@ -38,6 +43,16 @@ export default function LeadDirectoryDetailPage() {
   const [adopted, setAdopted] = useState(false);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [enrichModalOpen, setEnrichModalOpen] = useState(false);
+
+  const enrichmentSourceOptions = useMemo(
+    () => enrichmentSourceOptionsForLead(lead?.source_type),
+    [lead?.source_type],
+  );
+
+  const defaultEnrichmentSources = useMemo(
+    () => defaultEnrichmentSourcesForLead(lead?.source_type),
+    [lead?.source_type],
+  );
 
   const handleConfirmDelete = async () => {
     if (!uuid) return;
@@ -146,7 +161,14 @@ export default function LeadDirectoryDetailPage() {
               isOpen={enrichModalOpen}
               onOpenChange={setEnrichModalOpen}
               mode="lead"
+              sourceOptions={enrichmentSourceOptions}
+              initialSources={defaultEnrichmentSources}
               isPending={enrich.isPending}
+              contextHint={
+                lead.source_type === SourceType.GEMI
+                  ? "Uses registry data on file, fetches public GEMI documents, then runs with your other selected sources."
+                  : undefined
+              }
               onEnrich={(sources) => enrich.mutate({ uuid: lead.uuid, sources })}
             />
           </>
@@ -203,6 +225,10 @@ function EnrichmentTabContent({ leadUuid, lead }: { leadUuid: string; lead: Lead
   const [sourceFilter, setSourceFilter] = useState<EnrichmentSource | null>(null);
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebouncedValue(search, 300);
+  const enrichmentSourceOptions = useMemo(
+    () => enrichmentSourceOptionsForLead(lead.source_type),
+    [lead.source_type],
+  );
 
   const listQuery = useMemo(
     () => ({
@@ -256,7 +282,7 @@ function EnrichmentTabContent({ leadUuid, lead }: { leadUuid: string; lead: Lead
                     All sources
                     <ListBox.ItemIndicator />
                   </ListBox.Item>
-                  {ENRICHMENT_SOURCE_OPTIONS.map((opt) => (
+                  {enrichmentSourceOptions.map((opt) => (
                     <ListBox.Item key={opt.id} id={opt.id} textValue={opt.label}>
                       {opt.label}
                       <ListBox.ItemIndicator />

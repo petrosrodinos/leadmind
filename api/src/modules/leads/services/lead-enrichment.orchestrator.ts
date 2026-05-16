@@ -6,7 +6,15 @@ import { LinkedInProfileAdapter } from '@/integrations/apify/linkedin-profile/li
 import { WebsiteContentCrawlerAdapter } from '@/integrations/apify/website-content-crawler/website-content-crawler.adapter';
 import { plainTextFromCrawledPage } from '@/integrations/apify/website-content-crawler/crawl-page-text.utils';
 import { GoogleSearchAdapter } from '@/integrations/apify/google-search/google-search.adapter';
+import { GemiService } from '@/integrations/gemi/gemi.service';
+import { GemiCompany } from '@/integrations/gemi/gemi.interfaces';
 import { LeadAiService } from '../utils/lead-ai.service';
+import {
+    buildGemiDocumentsEnrichmentSummary,
+    extractArGemiFromLead,
+    isGemiActivityActive,
+    parseGemiCompanyFromLead,
+} from '../utils/gemi-enrichment.utils';
 import {
     isLinkedInCompanyUrl,
     isLinkedInProfileUrl,
@@ -31,6 +39,7 @@ export class LeadEnrichmentOrchestrator {
         private readonly linkedInProfile: LinkedInProfileAdapter,
         private readonly websiteCrawler: WebsiteContentCrawlerAdapter,
         private readonly googleSearch: GoogleSearchAdapter,
+        private readonly gemiService: GemiService,
         private readonly summaryService: LeadEnrichmentSummaryService,
     ) {}
 
@@ -124,6 +133,8 @@ export class LeadEnrichmentOrchestrator {
                 return this.executeGoogleSearch(lead);
             case EnrichmentSource.AI:
                 return this.executeAiSearch(lead, force);
+            case EnrichmentSource.GEMI:
+                return this.executeGemi(lead);
             default: {
                 const _e: never = source;
                 throw new Error(`Unsupported enrichment source: ${_e}`);
@@ -333,6 +344,79 @@ export class LeadEnrichmentOrchestrator {
         return result;
     }
 
+    private async executeGemi(lead: Lead): Promise<LeadEnrichmentSourceResult> {
+        const company = parseGemiCompanyFromLead(lead);
+        if (!company) {
+            throw new Error('Lead has no GEMI company data in raw_data');
+        }
+        const ar_gemi = extractArGemiFromLead(lead);
+        if (ar_gemi == null) {
+            throw new Error('Lead has no GEMI registry number (arGemi) in raw_data');
+        }
+        const documents = await this.gemiService.getCompanyDocuments(ar_gemi).catch(() => null);
+        const summary = buildGemiDocumentsEnrichmentSummary(company, documents != null);
+        const lead_update = this.buildLeadUpdateFromGemi(lead, company);
+        return {
+            source: EnrichmentSource.GEMI,
+            source_url: String(ar_gemi),
+            summary,
+            payload: {
+                fetched_at: new Date().toISOString(),
+                ar_gemi,
+                company: company as Record<string, unknown>,
+                ...(documents ? { documents } : {}),
+            } as Prisma.InputJsonValue,
+            metadata: {
+                legal_type: company.legalType?.descr ?? null,
+                status: company.status?.descr ?? null,
+                activity_count: company.activities?.length ?? 0,
+                active_activity_count:
+                    company.activities?.filter(isGemiActivityActive).length ?? 0,
+                documents_fetched: documents != null,
+            },
+            ...(Object.keys(lead_update).length > 0 ? { lead_update } : {}),
+        };
+    }
+
+    private buildLeadUpdateFromGemi(lead: Lead, company: GemiCompany): Prisma.LeadUpdateInput {
+        const data: Prisma.LeadUpdateInput = {};
+        const take = (current: string | null | undefined, next: unknown): string | undefined => {
+            if (typeof next !== 'string' || !next.trim()) {
+                return undefined;
+            }
+            if (String(current ?? '').trim()) {
+                return undefined;
+            }
+            return next.trim();
+        };
+        const first_person = company.persons?.find((p) => p.personName);
+        const primary_activity =
+            company.activities?.find((a) => isGemiActivityActive(a))?.activity ??
+            company.activities?.[0]?.activity;
+        const location_parts = [company.city, company.prefecture?.descr].filter(Boolean);
+        const n = take(lead.name, first_person?.personName);
+        if (n) data.name = n;
+        const e = take(lead.email, company.email);
+        if (e) data.email = e;
+        const ph = take(lead.phone, company.phone);
+        if (ph) data.phone = ph;
+        const c = take(lead.company, company.coNameEl ?? company.coNamesEn?.[0]);
+        if (c) data.company = c;
+        const w = take(lead.website, company.url);
+        if (w) data.website = w;
+        const t = take(lead.title, first_person?.role);
+        if (t) data.title = t;
+        const loc = take(lead.location, location_parts.join(', ') || undefined);
+        if (loc) data.location = loc;
+        const ind = take(lead.industry, primary_activity?.descr);
+        if (ind) data.industry = ind;
+        const desc = take(lead.description, company.objective);
+        if (desc) {
+            data.description = desc.slice(0, 8000);
+        }
+        return data;
+    }
+
     private buildFailedAttempt(
         lead: Lead,
         source: EnrichmentSource,
@@ -372,6 +456,10 @@ export class LeadEnrichmentOrchestrator {
         }
         if (source === EnrichmentSource.AI) {
             return lead.website?.trim() ? normalizeWebsiteUrl(lead.website.trim()) : null;
+        }
+        if (source === EnrichmentSource.GEMI) {
+            const ar = extractArGemiFromLead(lead);
+            return ar != null ? String(ar) : null;
         }
         return lead.linkedin_url?.trim() || lead.website?.trim() || null;
     }

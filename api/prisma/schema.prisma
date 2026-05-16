@@ -454,6 +454,7 @@ enum EnrichmentSource {
   WEBSITE
   GOOGLE_SEARCH
   AI
+  GEMI
 }
 
 enum Channel {

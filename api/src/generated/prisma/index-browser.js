@@ -457,7 +457,8 @@ exports.EnrichmentSource = exports.$Enums.EnrichmentSource = {
   LINKEDIN: 'LINKEDIN',
   WEBSITE: 'WEBSITE',
   GOOGLE_SEARCH: 'GOOGLE_SEARCH',
-  AI: 'AI'
+  AI: 'AI',
+  GEMI: 'GEMI'
 };
 
 exports.Channel = exports.$Enums.Channel = {
