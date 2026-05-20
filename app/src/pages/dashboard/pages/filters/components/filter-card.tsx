@@ -1,15 +1,13 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Chip, Switch } from "@heroui/react";
-import { Calendar, History as HistoryIcon, Pencil, Trash } from "lucide-react";
+import { Chip, Switch } from "@heroui/react";
+import { Calendar } from "lucide-react";
 import { SourceBadge } from "@/components/ui/source-badge";
 import { Channel } from "@/features/contacts/interfaces/contact.interface";
 import { JobStatus, type Filter, type FilterJob } from "@/features/filters/interfaces/filter.interface";
 import { SourceType } from "@/features/leads/interfaces/lead.interface";
-import { useDeleteFilter, useFilterJobs, useRunFilter, useUpdateFilter } from "@/features/filters/hooks/use-filters";
+import { useFilterJobs, useRunFilter, useUpdateFilter } from "@/features/filters/hooks/use-filters";
 import { humanizeCron } from "@/lib/cron";
-import { FilterDetailTabIds, Routes } from "@/routes/routes";
-import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { Routes } from "@/routes/routes";
 import { FilterRunButton } from "@/pages/dashboard/pages/filters/components/filter-run-controls";
 
 const CHANNEL_LABEL: Record<Channel, string> = {
@@ -33,13 +31,10 @@ export function FilterCard({ filter }: FilterCardProps) {
   const navigate = useNavigate();
   const updateFilter = useUpdateFilter();
   const runFilter = useRunFilter();
-  const deleteFilter = useDeleteFilter();
 
   const { data: jobsPage } = useFilterJobs(filter.uuid, { page: 1, limit: 1 });
   const lastJob: FilterJob | undefined = jobsPage?.items[0];
   const isJobActive = lastJob?.status === JobStatus.RUNNING || lastJob?.status === JobStatus.PENDING;
-
-  const [confirmOpen, setConfirmOpen] = useState(false);
 
   const isManual = filter.source_type === SourceType.MANUAL;
   const isStarting = runFilter.isPending && !isJobActive;
@@ -47,11 +42,6 @@ export function FilterCard({ filter }: FilterCardProps) {
 
   const handleToggle = (next: boolean) => {
     updateFilter.mutate({ uuid: filter.uuid, payload: { enabled: next } });
-  };
-
-  const handleConfirmDelete = async () => {
-    await deleteFilter.mutateAsync(filter.uuid);
-    setConfirmOpen(false);
   };
 
   const goToDetail = () => navigate(Routes.dashboard.filters_detail.replace(":uuid", filter.uuid));
@@ -108,42 +98,9 @@ export function FilterCard({ filter }: FilterCardProps) {
         </div>
       )}
 
-      <div onClick={stopBubble} className="flex flex-wrap items-center gap-2 mt-auto pt-1">
+      <div onClick={stopBubble} className="mt-auto pt-1">
         <FilterRunButton onPress={() => runFilter.mutate(filter.uuid)} isStarting={isStarting} isJobRunning={isJobRunning} isManual={isManual} filterEnabled={filter.enabled} />
-        <Button
-          size="sm"
-          variant="secondary"
-          onPress={() => {
-            const pathname = Routes.dashboard.filters_detail.replace(":uuid", filter.uuid);
-            const sp = new URLSearchParams();
-            sp.set(Routes.dashboard.filters_detail_tab_query, FilterDetailTabIds.FILTER);
-            navigate({ pathname, search: sp.toString() });
-          }}
-          aria-label="Edit filter"
-        >
-          <Pencil className="size-3.5" />
-          <span className="hidden @[20rem]:inline">Edit</span>
-        </Button>
-        <Button
-          size="sm"
-          variant="tertiary"
-          onPress={() => {
-            const pathname = Routes.dashboard.filters_detail.replace(":uuid", filter.uuid);
-            const sp = new URLSearchParams();
-            sp.set(Routes.dashboard.filters_detail_tab_query, FilterDetailTabIds.JOBS);
-            navigate({ pathname, search: sp.toString() });
-          }}
-          aria-label="View job history"
-        >
-          <HistoryIcon className="size-3.5" />
-          <span className="hidden @[22rem]:inline">History</span>
-        </Button>
-        <Button size="sm" variant="tertiary" className="ml-auto text-danger" isDisabled={deleteFilter.isPending} onPress={() => setConfirmOpen(true)} aria-label="Delete filter">
-          <Trash className="size-3.5" />
-        </Button>
       </div>
-
-      <ConfirmDialog isOpen={confirmOpen} onOpenChange={setConfirmOpen} title={`Delete filter "${filter.name}"?`} description="This will permanently delete the filter and unschedule any future runs. Contacts already created from this filter are kept." confirmLabel="Delete" cancelLabel="Cancel" variant="danger" isPending={deleteFilter.isPending} onConfirm={handleConfirmDelete} />
     </div>
   );
 }

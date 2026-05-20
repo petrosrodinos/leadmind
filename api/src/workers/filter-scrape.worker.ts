@@ -144,7 +144,9 @@ export class FilterScrapeWorker extends WorkerHost {
 
             const dedup_where = normalized.email
                 ? { email: normalized.email }
-                : { linkedin_url: normalized.linkedin_url };
+                : normalized.phone
+                    ? { phone: normalized.phone }
+                    : { linkedin_url: normalized.linkedin_url };
 
             const lead_data = this.mapToLead(normalized);
 

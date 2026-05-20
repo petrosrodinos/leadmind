@@ -1,10 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ApifyAdapter, ApifyRunInput, NormalizedLead } from '../interfaces/apify.interfaces';
 import { GoogleMapsQueryConfig, GoogleMapsRawItem } from './google-maps.interfaces';
 
 @Injectable()
 export class GoogleMapsAdapter
     implements ApifyAdapter<GoogleMapsQueryConfig, GoogleMapsRawItem> {
+
+    private readonly logger = new Logger(GoogleMapsAdapter.name);
 
     buildInput(query_config: GoogleMapsQueryConfig): ApifyRunInput {
         const { query, location, limit, language, categories } = query_config;
@@ -22,9 +24,17 @@ export class GoogleMapsAdapter
     }
 
     normalize(raw_items: GoogleMapsRawItem[]): NormalizedLead[] {
-        return raw_items
+        const leads = raw_items
             .map((item) => this.mapItem(item))
-            .filter((lead) => Boolean(lead.email || lead.linkedin_url));
+            .filter((lead) => Boolean(lead.email || lead.phone || lead.linkedin_url));
+
+        if (raw_items.length > 0 && leads.length === 0) {
+            this.logger.warn(
+                `Google Maps Apify returned ${raw_items.length} items but none mapped to email, phone, or LinkedIn URL`,
+            );
+        }
+
+        return leads;
     }
 
     private mapItem(item: GoogleMapsRawItem): NormalizedLead {
