@@ -10,13 +10,13 @@ import { ListBatchJobsDto } from './dto/list-batch-jobs.dto';
 @ApiTags('admin')
 @ApiBearerAuth()
 @UseGuards(JwtGuard, RolesGuard)
-@Roles(AuthRole.SUPER_ADMIN)
+@Roles(AuthRole.ADMIN)
 @Controller('admin')
 export class AdminController {
     constructor(private readonly adminService: AdminService) { }
 
     @Get('batch-jobs')
-    @ApiOperation({ summary: 'List all OpenAI batch jobs (super-admin only)' })
+    @ApiOperation({ summary: 'List all OpenAI batch jobs (admin only)' })
     listBatchJobs(@Query() query: ListBatchJobsDto) {
         return this.adminService.listBatchJobs(query);
     }

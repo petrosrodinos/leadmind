@@ -28,7 +28,7 @@ import { ListContactsDto } from './dto/list-contacts.dto';
 
 export type ContactListFilterParams = Pick<
     ListContactsDto,
-    'status' | 'tags' | 'search' | 'filter_uuid' | 'lead_uuid' | 'score_rules'
+    'status' | 'tags' | 'search' | 'filter_uuid' | 'lead_uuid' | 'score_rules' | 'source_type'
 >;
 import { LogCallDto } from './dto/log-call.dto';
 import { LogMeetingDto } from './dto/log-meeting.dto';
@@ -130,6 +130,7 @@ export class ContactsService {
             ...scoreAnd,
             ...(query.filter_uuid && { filter_uuid: query.filter_uuid }),
             ...(query.lead_uuid && { lead_uuid: query.lead_uuid }),
+            ...(query.source_type && { lead: { source_type: query.source_type } }),
             ...(query.tags && query.tags.length > 0
                 ? { tags: { some: { tag: { in: query.tags } } } }
                 : {}),

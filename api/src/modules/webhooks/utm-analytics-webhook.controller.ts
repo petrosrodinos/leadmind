@@ -22,8 +22,15 @@ export class UtmAnalyticsWebhookController {
         summary: 'Record website or booking page visits tagged with campaign UTM parameters',
     })
     async handle(@Body() body: UtmAnalyticsWebhookDto): Promise<{ ok: true; matched: boolean; campaign_uuid?: string }> {
+        this.logger.log(
+            `Received UTM analytics: destination=${body.destination} campaign_uuid=${body.campaign_uuid ?? 'none'} utm_campaign=${body.utm_campaign ?? 'none'} contact_uuid=${body.contact_uuid ?? 'none'}`,
+        );
         try {
-            return await this.campaignUtmAnalyticsService.ingest(body);
+            const result = await this.campaignUtmAnalyticsService.ingest(body);
+            this.logger.log(
+                `UTM analytics result: matched=${result.matched} campaign_uuid=${result.campaign_uuid ?? 'none'}`,
+            );
+            return result;
         } catch (error) {
             this.logger.error(
                 `Failed processing UTM analytics: ${error instanceof Error ? error.message : error}`,

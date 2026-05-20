@@ -95,15 +95,34 @@ export class WebhookEventService {
     }
 
     async ingest(event: WebhookEvent): Promise<void> {
-        const message = await this.prisma.outreachMessage.findFirst({
+        const outreach_message_uuid = event.metadata?.outreach_message_uuid as string | undefined;
+        this.logger.log(
+            `[ingest] kind=${event.kind} provider_message_id=${event.provider_message_id} outreach_message_uuid=${outreach_message_uuid ?? 'none'}`,
+        );
+
+        let message = await this.prisma.outreachMessage.findFirst({
             where: { provider_message_id: event.provider_message_id },
         });
+
+        if (!message && outreach_message_uuid) {
+            this.logger.warn(
+                `[ingest] provider_message_id lookup missed — falling back to outreach_message_uuid=${outreach_message_uuid}`,
+            );
+            message = await this.prisma.outreachMessage.findUnique({
+                where: { uuid: outreach_message_uuid },
+            });
+        }
+
         if (!message) {
             this.logger.warn(
-                `Webhook event ${event.kind} — no OutreachMessage with provider_message_id=${event.provider_message_id}`,
+                `[ingest] No OutreachMessage found for kind=${event.kind} provider_message_id=${event.provider_message_id}`,
             );
             return;
         }
+
+        this.logger.log(
+            `[ingest] Matched message uuid=${message.uuid} status=${message.status} campaign_uuid=${message.campaign_uuid ?? 'none'}`,
+        );
 
         const now = new Date();
         const updates: Prisma.OutreachMessageUpdateInput = {};
@@ -211,7 +230,6 @@ export class WebhookEventService {
         }
 
         if (message.campaign_uuid && mccStatus && counterField) {
-            // Only update MCC if forward progression; same-or-later wins
             const existingMcc = await this.prisma.marketingCampaignContact.findUnique({
                 where: {
                     campaign_uuid_contact_uuid_channel: {
@@ -221,7 +239,20 @@ export class WebhookEventService {
                     },
                 },
             });
-            if (existingMcc && this.canProgressMcc(existingMcc.status, mccStatus)) {
+
+            if (!existingMcc) {
+                this.logger.warn(
+                    `[ingest] No MCC found for campaign=${message.campaign_uuid} contact=${message.contact_uuid} channel=${message.channel} — skipping counter update`,
+                );
+            } else if (!this.canProgressMcc(existingMcc.status, mccStatus)) {
+                this.logger.log(
+                    `[ingest] MCC progression blocked: ${existingMcc.status} → ${mccStatus} (kind=${event.kind}) — skipping counter`,
+                );
+            } else {
+                this.logger.log(
+                    `[ingest] MCC progressing: ${existingMcc.status} → ${mccStatus}, incrementing ${counterField}`,
+                );
+
                 ops.push(
                     this.prisma.marketingCampaignContact.update({
                         where: { uuid: existingMcc.uuid },
@@ -230,8 +261,6 @@ export class WebhookEventService {
                             ...(event.kind === 'delivered' && { delivered_at: now }),
                         },
                     }),
-                );
-                ops.push(
                     this.prisma.marketingCampaign.update({
                         where: { uuid: message.campaign_uuid },
                         data: { [counterField]: { increment: 1 } },
@@ -250,6 +279,9 @@ export class WebhookEventService {
         }
 
         await this.prisma.$transaction(ops);
+        this.logger.log(
+            `[ingest] Transaction committed: kind=${event.kind} message=${message.uuid}`,
+        );
 
         if (message.campaign_uuid) {
             await this.campaignSendService.checkCompletion(message.campaign_uuid);

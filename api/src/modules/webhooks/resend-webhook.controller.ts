@@ -26,7 +26,15 @@ interface ResendWebhookBody {
         link?: string;
         bounce?: { reason?: string };
         click?: { link?: string };
+        headers?: Array<{ name: string; value: string }>;
     };
+}
+
+function parseHeader(
+    headers: Array<{ name: string; value: string }> | undefined,
+    name: string,
+): string | undefined {
+    return headers?.find((h) => h.name.toLowerCase() === name.toLowerCase())?.value;
 }
 
 function parseFromAddress(from: string | undefined): string | null {
@@ -57,6 +65,10 @@ export class ResendWebhookController {
         @Headers('svix-signature') svixSignature: string,
         @Body() body: ResendWebhookBody,
     ): Promise<{ ok: true }> {
+        this.logger.log(
+            `Received Resend webhook: type=${body.type} email_id=${body.data?.email_id ?? 'none'}`,
+        );
+
         const secret = this.configService.get<string>('RESEND_WEBHOOK_SECRET');
         if (secret) {
             const raw = req.rawBody ? req.rawBody.toString('utf8') : JSON.stringify(body);
@@ -66,6 +78,7 @@ export class ResendWebhookController {
                 secret,
             );
             if (!ok) {
+                this.logger.error('Resend webhook signature verification failed — rejecting');
                 throw new UnauthorizedException('Invalid svix signature');
             }
         } else {
@@ -91,6 +104,7 @@ export class ResendWebhookController {
 
         try {
             await this.webhookEventService.ingest(event);
+            this.logger.log(`Resend event ${body.type} processed successfully`);
         } catch (error) {
             this.logger.error(
                 `Failed processing Resend event ${body.type}: ${error instanceof Error ? error.message : error}`,
@@ -135,34 +149,38 @@ export class ResendWebhookController {
         const provider_message_id = body.data?.email_id;
         if (!provider_message_id) return null;
 
+        const outreach_message_uuid = parseHeader(body.data?.headers, 'X-Message-Uuid');
+
         switch (body.type) {
             case 'email.delivered':
                 return {
                     kind: 'delivered',
                     channel: 'email',
                     provider_message_id,
+                    metadata: { outreach_message_uuid },
                 };
             case 'email.opened':
-                return { kind: 'opened', provider_message_id };
+                return { kind: 'opened', provider_message_id, metadata: { outreach_message_uuid } };
             case 'email.clicked':
                 return {
                     kind: 'clicked',
                     provider_message_id,
-                    metadata: { link: body.data?.click?.link },
+                    metadata: { link: body.data?.click?.link, outreach_message_uuid },
                 };
             case 'email.bounced':
                 return {
                     kind: 'bounced',
                     provider_message_id,
-                    metadata: { reason: body.data?.bounce?.reason },
+                    metadata: { reason: body.data?.bounce?.reason, outreach_message_uuid },
                 };
             case 'email.complained':
-                return { kind: 'complained', provider_message_id };
+                return { kind: 'complained', provider_message_id, metadata: { outreach_message_uuid } };
             case 'email.failed':
                 return {
                     kind: 'failed',
                     channel: 'email',
                     provider_message_id,
+                    metadata: { outreach_message_uuid },
                 };
             default:
                 return null;

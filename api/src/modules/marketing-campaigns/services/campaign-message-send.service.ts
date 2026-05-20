@@ -151,7 +151,6 @@ export class CampaignMessageSendService {
                     where: { uuid: mcc.campaign_uuid },
                     data: {
                         sent_count: { increment: 1 },
-                        delivered_count: { increment: 1 },
                         queued_count: { decrement: 1 },
                     },
                 }),

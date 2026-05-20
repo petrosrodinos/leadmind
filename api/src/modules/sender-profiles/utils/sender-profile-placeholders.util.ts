@@ -72,7 +72,7 @@ export function senderProfileToPlaceholders(
         email: profile.email ?? '',
         phone: profile.phone ?? '',
         website: websiteWithUtm,
-        website_display: stripProtocol(websiteWithUtm || rawWebsite),
+        website_display: stripProtocol(rawWebsite),
         address: profile.address ?? '',
         city: profile.city ?? '',
         country: profile.country ?? '',

@@ -10,7 +10,7 @@ import {
     Min,
     ValidateNested,
 } from 'class-validator';
-import { LeadStatus } from '@/generated/prisma';
+import { LeadStatus, SourceType } from '@/generated/prisma';
 import {
     ContactScoreRuleItemDto,
     ScoreRulesQueryTransform,
@@ -60,6 +60,11 @@ export class ListContactsDto {
     @IsOptional()
     @IsString()
     lead_uuid?: string;
+
+    @ApiPropertyOptional({ enum: SourceType })
+    @IsOptional()
+    @IsEnum(SourceType)
+    source_type?: SourceType;
 
     @ApiPropertyOptional({ default: 1, minimum: 1 })
     @IsOptional()

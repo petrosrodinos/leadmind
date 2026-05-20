@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { ChevronDown } from "lucide-react";
 import type { MarketingCampaign } from "@/features/marketing-campaigns/interfaces/campaign.interface";
 import {
     campaignHasEmail,
@@ -13,6 +15,7 @@ interface RateRow {
 }
 
 export function CampaignAnalytics({ campaign }: { campaign: MarketingCampaign }) {
+    const [open, setOpen] = useState(true);
     const hasEmail = campaignHasEmail(campaign);
     const rates = getCampaignEngagementRates(campaign);
     const hasSends = campaign.sent_count > 0;
@@ -88,19 +91,30 @@ export function CampaignAnalytics({ campaign }: { campaign: MarketingCampaign })
 
     return (
         <section className="space-y-3">
-            <div>
-                <h2 className="text-sm font-semibold text-foreground">Engagement analytics</h2>
-                <p className="text-xs text-muted">
-                    {hasEmail
-                        ? "Rates use delivered as the baseline for opens, clicks, and replies."
-                        : "Delivery and issue rates use sent messages as the baseline."}
-                </p>
-            </div>
-            <div className="rounded-xl border border-border bg-surface p-4 space-y-4">
-                {rows.map((row) => (
-                    <RateBar key={row.label} row={row} maxCount={Math.max(campaign.sent_count, 1)} />
-                ))}
-            </div>
+            <button
+                type="button"
+                onClick={() => setOpen((o) => !o)}
+                className="flex w-full items-start justify-between gap-2 text-left"
+            >
+                <div>
+                    <h2 className="text-sm font-semibold text-foreground">Engagement analytics</h2>
+                    <p className="text-xs text-muted">
+                        {hasEmail
+                            ? "Rates use delivered as the baseline for opens, clicks, and replies."
+                            : "Delivery and issue rates use sent messages as the baseline."}
+                    </p>
+                </div>
+                <ChevronDown
+                    className={`mt-0.5 size-4 shrink-0 text-muted transition-transform ${open ? "rotate-180" : ""}`}
+                />
+            </button>
+            {open && (
+                <div className="rounded-xl border border-border bg-surface p-4 space-y-4">
+                    {rows.map((row) => (
+                        <RateBar key={row.label} row={row} maxCount={Math.max(campaign.sent_count, 1)} />
+                    ))}
+                </div>
+            )}
         </section>
     );
 }
