@@ -341,11 +341,13 @@ model SenderProfile {
   email                String?
   phone                String?
   website              String?
+  website_utm          Json?
   address              String?
   city                 String?
   country              String?
   logo_url             String?
   booking_url          String?
+  booking_utm          Json?
   sender_id            String?
   signature            String?  @db.Text
   business_description String?  @db.Text

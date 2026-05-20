@@ -17,7 +17,98 @@ import {
 import type {
     CreateSenderProfilePayload,
     SenderProfile,
+    UtmParams,
 } from "@/features/sender-profiles/interfaces/sender-profile.interface";
+
+type UtmPrefix = "website" | "booking";
+
+const UTM_KEYS = ["source", "medium", "campaign", "term", "content"] as const;
+type UtmKey = (typeof UTM_KEYS)[number];
+type UtmFormKey = `${UtmPrefix}_utm_${UtmKey}`;
+
+function utmFormKey(prefix: UtmPrefix, key: UtmKey): UtmFormKey {
+    return `${prefix}_utm_${key}`;
+}
+
+function utmFromProfile(utm: UtmParams | null | undefined, prefix: UtmPrefix): Pick<FormState, UtmFormKey> {
+    return {
+        [utmFormKey(prefix, "source")]: utm?.source ?? "",
+        [utmFormKey(prefix, "medium")]: utm?.medium ?? "",
+        [utmFormKey(prefix, "campaign")]: utm?.campaign ?? "",
+        [utmFormKey(prefix, "term")]: utm?.term ?? "",
+        [utmFormKey(prefix, "content")]: utm?.content ?? "",
+    } as Pick<FormState, UtmFormKey>;
+}
+
+function buildUtmPayload(
+    form: FormState,
+    prefix: UtmPrefix,
+    isEdit: boolean,
+): UtmParams | null | undefined {
+    const utm: UtmParams = {
+        source: form[utmFormKey(prefix, "source")].trim(),
+        medium: form[utmFormKey(prefix, "medium")].trim(),
+        campaign: form[utmFormKey(prefix, "campaign")].trim(),
+        term: form[utmFormKey(prefix, "term")].trim(),
+        content: form[utmFormKey(prefix, "content")].trim(),
+    };
+    const hasAny = Object.values(utm).some(Boolean);
+    if (!hasAny) {
+        return isEdit ? null : undefined;
+    }
+    return Object.fromEntries(
+        Object.entries(utm).filter(([, value]) => Boolean(value)),
+    ) as UtmParams;
+}
+
+function UtmFieldsGroup({
+    prefix,
+    title,
+    form,
+    set,
+}: {
+    prefix: UtmPrefix;
+    title: string;
+    form: FormState;
+    set: <K extends keyof FormState>(key: K, value: FormState[K]) => void;
+}) {
+    const labels: Record<UtmKey, string> = {
+        source: "Source",
+        medium: "Medium",
+        campaign: "Campaign",
+        term: "Term",
+        content: "Content",
+    };
+    const placeholders: Record<UtmKey, string> = {
+        source: "email",
+        medium: "outreach",
+        campaign: "spring-launch",
+        term: "ceo",
+        content: "cta-footer",
+    };
+
+    return (
+        <div className="rounded-lg border border-border bg-surface-secondary/30 p-3 space-y-3">
+            <p className="text-xs font-medium text-foreground">{title}</p>
+            <div className="grid gap-3 sm:grid-cols-2">
+                {UTM_KEYS.map((key) => {
+                    const field = utmFormKey(prefix, key);
+                    return (
+                        <div key={field} className="flex flex-col gap-1.5">
+                            <Label htmlFor={`sp-${field}`}>{labels[key]}</Label>
+                            <Input
+                                id={`sp-${field}`}
+                                placeholder={placeholders[key]}
+                                value={form[field]}
+                                onChange={(e) => set(field, e.target.value)}
+                            />
+                        </div>
+                    );
+                })}
+            </div>
+        </div>
+    );
+}
 
 interface SenderProfileFormModalProps {
     isOpen: boolean;
@@ -25,9 +116,32 @@ interface SenderProfileFormModalProps {
     profile?: SenderProfile | null;
 }
 
-type FormState = Required<{
-    [K in keyof Omit<CreateSenderProfilePayload, "is_default">]: string;
-}> & { is_default: boolean };
+type FormState = {
+    name: string;
+    company_name: string;
+    title: string;
+    first_name: string;
+    last_name: string;
+    email: string;
+    phone: string;
+    website: string;
+    address: string;
+    city: string;
+    country: string;
+    logo_url: string;
+    booking_url: string;
+    sender_id: string;
+    signature: string;
+    business_description: string;
+    is_default: boolean;
+} & Record<UtmFormKey, string>;
+
+const emptyUtmFields = (): Record<UtmFormKey, string> =>
+    Object.fromEntries(
+        (["website", "booking"] as UtmPrefix[]).flatMap((prefix) =>
+            UTM_KEYS.map((key) => [utmFormKey(prefix, key), ""]),
+        ),
+    ) as Record<UtmFormKey, string>;
 
 const emptyForm = (): FormState => ({
     name: "",
@@ -47,6 +161,7 @@ const emptyForm = (): FormState => ({
     signature: "",
     business_description: "",
     is_default: false,
+    ...emptyUtmFields(),
 });
 
 const fromProfile = (p: SenderProfile): FormState => ({
@@ -67,6 +182,8 @@ const fromProfile = (p: SenderProfile): FormState => ({
     signature: p.signature ?? "",
     business_description: p.business_description ?? "",
     is_default: p.is_default,
+    ...utmFromProfile(p.website_utm, "website"),
+    ...utmFromProfile(p.booking_utm, "booking"),
 });
 
 export function SenderProfileFormModal({
@@ -131,6 +248,15 @@ export function SenderProfileFormModal({
             if (v) {
                 (payload as unknown as Record<string, unknown>)[key] = v;
             }
+        }
+
+        const websiteUtm = buildUtmPayload(form, "website", isEdit);
+        if (websiteUtm !== undefined) {
+            payload.website_utm = websiteUtm;
+        }
+        const bookingUtm = buildUtmPayload(form, "booking", isEdit);
+        if (bookingUtm !== undefined) {
+            payload.booking_utm = bookingUtm;
         }
 
         try {
@@ -276,7 +402,7 @@ export function SenderProfileFormModal({
                                             onChange={(e) => set("phone", e.target.value)}
                                         />
                                     </div>
-                                    <div className="flex flex-col gap-1.5 sm:col-span-2">
+                                    <div className="flex flex-col gap-1.5 sm:col-span-2 space-y-3">
                                         <Label htmlFor="sp-website">Website</Label>
                                         <Input
                                             id="sp-website"
@@ -284,8 +410,14 @@ export function SenderProfileFormModal({
                                             value={form.website}
                                             onChange={(e) => set("website", e.target.value)}
                                         />
+                                        <UtmFieldsGroup
+                                            prefix="website"
+                                            title="Website UTM tracking (optional)"
+                                            form={form}
+                                            set={set}
+                                        />
                                     </div>
-                                    <div className="flex flex-col gap-1.5 sm:col-span-2">
+                                    <div className="flex flex-col gap-1.5 sm:col-span-2 space-y-3">
                                         <Label htmlFor="sp-booking">Booking URL</Label>
                                         <Input
                                             id="sp-booking"
@@ -299,6 +431,12 @@ export function SenderProfileFormModal({
                                             Calendly / Cal.com / similar link used by the AI as the
                                             "book a call" CTA in outreach.
                                         </p>
+                                        <UtmFieldsGroup
+                                            prefix="booking"
+                                            title="Booking URL UTM tracking (optional)"
+                                            form={form}
+                                            set={set}
+                                        />
                                     </div>
                                 </div>
                             </section>

@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma, SenderProfile } from '@/generated/prisma';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
+import { normalizeUtmParamsInput } from '@/shared/utils/utm-params.util';
 import { CreateSenderProfileDto } from './dto/create-sender-profile.dto';
 import { UpdateSenderProfileDto } from './dto/update-sender-profile.dto';
 
@@ -19,11 +20,13 @@ export class SenderProfilesService {
             email: dto.email,
             phone: dto.phone,
             website: dto.website,
+            website_utm: this.utmJsonValue(dto.website_utm),
             address: dto.address,
             city: dto.city,
             country: dto.country,
             logo_url: dto.logo_url,
             booking_url: dto.booking_url,
+            booking_utm: this.utmJsonValue(dto.booking_utm),
             sender_id: dto.sender_id,
             signature: dto.signature,
             business_description: dto.business_description,
@@ -83,20 +86,27 @@ export class SenderProfilesService {
             'email',
             'phone',
             'website',
+            'website_utm',
             'address',
             'city',
             'country',
             'logo_url',
             'booking_url',
+            'booking_utm',
             'sender_id',
             'signature',
             'business_description',
             'is_default',
         ];
         for (const key of writable) {
-            if (dto[key] !== undefined) {
-                (data as Record<string, unknown>)[key] = dto[key];
+            if (dto[key] === undefined) {
+                continue;
             }
+            if (key === 'website_utm' || key === 'booking_utm') {
+                (data as Record<string, unknown>)[key] = this.utmJsonValue(dto[key]);
+                continue;
+            }
+            (data as Record<string, unknown>)[key] = dto[key];
         }
 
         if (dto.is_default === true) {
@@ -123,6 +133,19 @@ export class SenderProfilesService {
         await this.requireOwnedProfile(user_uuid, uuid);
         await this.prisma.senderProfile.delete({ where: { uuid } });
         return { uuid };
+    }
+
+    private utmJsonValue(
+        input?: CreateSenderProfileDto['website_utm'],
+    ): Prisma.InputJsonValue | typeof Prisma.JsonNull | undefined {
+        const normalized = normalizeUtmParamsInput(input);
+        if (normalized === undefined) {
+            return undefined;
+        }
+        if (normalized === null) {
+            return Prisma.JsonNull;
+        }
+        return normalized as Prisma.InputJsonValue;
     }
 
     private async requireOwnedProfile(

@@ -20253,11 +20253,13 @@ export namespace Prisma {
     email: number
     phone: number
     website: number
+    website_utm: number
     address: number
     city: number
     country: number
     logo_url: number
     booking_url: number
+    booking_utm: number
     sender_id: number
     signature: number
     business_description: number
@@ -20338,11 +20340,13 @@ export namespace Prisma {
     email?: true
     phone?: true
     website?: true
+    website_utm?: true
     address?: true
     city?: true
     country?: true
     logo_url?: true
     booking_url?: true
+    booking_utm?: true
     sender_id?: true
     signature?: true
     business_description?: true
@@ -20450,11 +20454,13 @@ export namespace Prisma {
     email: string | null
     phone: string | null
     website: string | null
+    website_utm: JsonValue | null
     address: string | null
     city: string | null
     country: string | null
     logo_url: string | null
     booking_url: string | null
+    booking_utm: JsonValue | null
     sender_id: string | null
     signature: string | null
     business_description: string | null
@@ -20494,11 +20500,13 @@ export namespace Prisma {
     email?: boolean
     phone?: boolean
     website?: boolean
+    website_utm?: boolean
     address?: boolean
     city?: boolean
     country?: boolean
     logo_url?: boolean
     booking_url?: boolean
+    booking_utm?: boolean
     sender_id?: boolean
     signature?: boolean
     business_description?: boolean
@@ -20522,11 +20530,13 @@ export namespace Prisma {
     email?: boolean
     phone?: boolean
     website?: boolean
+    website_utm?: boolean
     address?: boolean
     city?: boolean
     country?: boolean
     logo_url?: boolean
     booking_url?: boolean
+    booking_utm?: boolean
     sender_id?: boolean
     signature?: boolean
     business_description?: boolean
@@ -20548,11 +20558,13 @@ export namespace Prisma {
     email?: boolean
     phone?: boolean
     website?: boolean
+    website_utm?: boolean
     address?: boolean
     city?: boolean
     country?: boolean
     logo_url?: boolean
     booking_url?: boolean
+    booking_utm?: boolean
     sender_id?: boolean
     signature?: boolean
     business_description?: boolean
@@ -20574,11 +20586,13 @@ export namespace Prisma {
     email?: boolean
     phone?: boolean
     website?: boolean
+    website_utm?: boolean
     address?: boolean
     city?: boolean
     country?: boolean
     logo_url?: boolean
     booking_url?: boolean
+    booking_utm?: boolean
     sender_id?: boolean
     signature?: boolean
     business_description?: boolean
@@ -20587,7 +20601,7 @@ export namespace Prisma {
     updated_at?: boolean
   }
 
-  export type SenderProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "name" | "company_name" | "title" | "first_name" | "last_name" | "email" | "phone" | "website" | "address" | "city" | "country" | "logo_url" | "booking_url" | "sender_id" | "signature" | "business_description" | "is_default" | "created_at" | "updated_at", ExtArgs["result"]["senderProfile"]>
+  export type SenderProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "name" | "company_name" | "title" | "first_name" | "last_name" | "email" | "phone" | "website" | "website_utm" | "address" | "city" | "country" | "logo_url" | "booking_url" | "booking_utm" | "sender_id" | "signature" | "business_description" | "is_default" | "created_at" | "updated_at", ExtArgs["result"]["senderProfile"]>
   export type SenderProfileInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     marketing_campaigns?: boolean | SenderProfile$marketing_campaignsArgs<ExtArgs>
@@ -20618,11 +20632,13 @@ export namespace Prisma {
       email: string | null
       phone: string | null
       website: string | null
+      website_utm: Prisma.JsonValue | null
       address: string | null
       city: string | null
       country: string | null
       logo_url: string | null
       booking_url: string | null
+      booking_utm: Prisma.JsonValue | null
       sender_id: string | null
       signature: string | null
       business_description: string | null
@@ -21065,11 +21081,13 @@ export namespace Prisma {
     readonly email: FieldRef<"SenderProfile", 'String'>
     readonly phone: FieldRef<"SenderProfile", 'String'>
     readonly website: FieldRef<"SenderProfile", 'String'>
+    readonly website_utm: FieldRef<"SenderProfile", 'Json'>
     readonly address: FieldRef<"SenderProfile", 'String'>
     readonly city: FieldRef<"SenderProfile", 'String'>
     readonly country: FieldRef<"SenderProfile", 'String'>
     readonly logo_url: FieldRef<"SenderProfile", 'String'>
     readonly booking_url: FieldRef<"SenderProfile", 'String'>
+    readonly booking_utm: FieldRef<"SenderProfile", 'Json'>
     readonly sender_id: FieldRef<"SenderProfile", 'String'>
     readonly signature: FieldRef<"SenderProfile", 'String'>
     readonly business_description: FieldRef<"SenderProfile", 'String'>
@@ -25781,11 +25799,13 @@ export namespace Prisma {
     email: 'email',
     phone: 'phone',
     website: 'website',
+    website_utm: 'website_utm',
     address: 'address',
     city: 'city',
     country: 'country',
     logo_url: 'logo_url',
     booking_url: 'booking_url',
+    booking_utm: 'booking_utm',
     sender_id: 'sender_id',
     signature: 'signature',
     business_description: 'business_description',
@@ -27556,11 +27576,13 @@ export namespace Prisma {
     email?: StringNullableFilter<"SenderProfile"> | string | null
     phone?: StringNullableFilter<"SenderProfile"> | string | null
     website?: StringNullableFilter<"SenderProfile"> | string | null
+    website_utm?: JsonNullableFilter<"SenderProfile">
     address?: StringNullableFilter<"SenderProfile"> | string | null
     city?: StringNullableFilter<"SenderProfile"> | string | null
     country?: StringNullableFilter<"SenderProfile"> | string | null
     logo_url?: StringNullableFilter<"SenderProfile"> | string | null
     booking_url?: StringNullableFilter<"SenderProfile"> | string | null
+    booking_utm?: JsonNullableFilter<"SenderProfile">
     sender_id?: StringNullableFilter<"SenderProfile"> | string | null
     signature?: StringNullableFilter<"SenderProfile"> | string | null
     business_description?: StringNullableFilter<"SenderProfile"> | string | null
@@ -27583,11 +27605,13 @@ export namespace Prisma {
     email?: SortOrderInput | SortOrder
     phone?: SortOrderInput | SortOrder
     website?: SortOrderInput | SortOrder
+    website_utm?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
     city?: SortOrderInput | SortOrder
     country?: SortOrderInput | SortOrder
     logo_url?: SortOrderInput | SortOrder
     booking_url?: SortOrderInput | SortOrder
+    booking_utm?: SortOrderInput | SortOrder
     sender_id?: SortOrderInput | SortOrder
     signature?: SortOrderInput | SortOrder
     business_description?: SortOrderInput | SortOrder
@@ -27613,11 +27637,13 @@ export namespace Prisma {
     email?: StringNullableFilter<"SenderProfile"> | string | null
     phone?: StringNullableFilter<"SenderProfile"> | string | null
     website?: StringNullableFilter<"SenderProfile"> | string | null
+    website_utm?: JsonNullableFilter<"SenderProfile">
     address?: StringNullableFilter<"SenderProfile"> | string | null
     city?: StringNullableFilter<"SenderProfile"> | string | null
     country?: StringNullableFilter<"SenderProfile"> | string | null
     logo_url?: StringNullableFilter<"SenderProfile"> | string | null
     booking_url?: StringNullableFilter<"SenderProfile"> | string | null
+    booking_utm?: JsonNullableFilter<"SenderProfile">
     sender_id?: StringNullableFilter<"SenderProfile"> | string | null
     signature?: StringNullableFilter<"SenderProfile"> | string | null
     business_description?: StringNullableFilter<"SenderProfile"> | string | null
@@ -27640,11 +27666,13 @@ export namespace Prisma {
     email?: SortOrderInput | SortOrder
     phone?: SortOrderInput | SortOrder
     website?: SortOrderInput | SortOrder
+    website_utm?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
     city?: SortOrderInput | SortOrder
     country?: SortOrderInput | SortOrder
     logo_url?: SortOrderInput | SortOrder
     booking_url?: SortOrderInput | SortOrder
+    booking_utm?: SortOrderInput | SortOrder
     sender_id?: SortOrderInput | SortOrder
     signature?: SortOrderInput | SortOrder
     business_description?: SortOrderInput | SortOrder
@@ -27673,11 +27701,13 @@ export namespace Prisma {
     email?: StringNullableWithAggregatesFilter<"SenderProfile"> | string | null
     phone?: StringNullableWithAggregatesFilter<"SenderProfile"> | string | null
     website?: StringNullableWithAggregatesFilter<"SenderProfile"> | string | null
+    website_utm?: JsonNullableWithAggregatesFilter<"SenderProfile">
     address?: StringNullableWithAggregatesFilter<"SenderProfile"> | string | null
     city?: StringNullableWithAggregatesFilter<"SenderProfile"> | string | null
     country?: StringNullableWithAggregatesFilter<"SenderProfile"> | string | null
     logo_url?: StringNullableWithAggregatesFilter<"SenderProfile"> | string | null
     booking_url?: StringNullableWithAggregatesFilter<"SenderProfile"> | string | null
+    booking_utm?: JsonNullableWithAggregatesFilter<"SenderProfile">
     sender_id?: StringNullableWithAggregatesFilter<"SenderProfile"> | string | null
     signature?: StringNullableWithAggregatesFilter<"SenderProfile"> | string | null
     business_description?: StringNullableWithAggregatesFilter<"SenderProfile"> | string | null
@@ -29498,11 +29528,13 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    website_utm?: NullableJsonNullValueInput | InputJsonValue
     address?: string | null
     city?: string | null
     country?: string | null
     logo_url?: string | null
     booking_url?: string | null
+    booking_utm?: NullableJsonNullValueInput | InputJsonValue
     sender_id?: string | null
     signature?: string | null
     business_description?: string | null
@@ -29525,11 +29557,13 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    website_utm?: NullableJsonNullValueInput | InputJsonValue
     address?: string | null
     city?: string | null
     country?: string | null
     logo_url?: string | null
     booking_url?: string | null
+    booking_utm?: NullableJsonNullValueInput | InputJsonValue
     sender_id?: string | null
     signature?: string | null
     business_description?: string | null
@@ -29549,11 +29583,13 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    website_utm?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     logo_url?: NullableStringFieldUpdateOperationsInput | string | null
     booking_url?: NullableStringFieldUpdateOperationsInput | string | null
+    booking_utm?: NullableJsonNullValueInput | InputJsonValue
     sender_id?: NullableStringFieldUpdateOperationsInput | string | null
     signature?: NullableStringFieldUpdateOperationsInput | string | null
     business_description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -29576,11 +29612,13 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    website_utm?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     logo_url?: NullableStringFieldUpdateOperationsInput | string | null
     booking_url?: NullableStringFieldUpdateOperationsInput | string | null
+    booking_utm?: NullableJsonNullValueInput | InputJsonValue
     sender_id?: NullableStringFieldUpdateOperationsInput | string | null
     signature?: NullableStringFieldUpdateOperationsInput | string | null
     business_description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -29602,11 +29640,13 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    website_utm?: NullableJsonNullValueInput | InputJsonValue
     address?: string | null
     city?: string | null
     country?: string | null
     logo_url?: string | null
     booking_url?: string | null
+    booking_utm?: NullableJsonNullValueInput | InputJsonValue
     sender_id?: string | null
     signature?: string | null
     business_description?: string | null
@@ -29625,11 +29665,13 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    website_utm?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     logo_url?: NullableStringFieldUpdateOperationsInput | string | null
     booking_url?: NullableStringFieldUpdateOperationsInput | string | null
+    booking_utm?: NullableJsonNullValueInput | InputJsonValue
     sender_id?: NullableStringFieldUpdateOperationsInput | string | null
     signature?: NullableStringFieldUpdateOperationsInput | string | null
     business_description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -29650,11 +29692,13 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    website_utm?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     logo_url?: NullableStringFieldUpdateOperationsInput | string | null
     booking_url?: NullableStringFieldUpdateOperationsInput | string | null
+    booking_utm?: NullableJsonNullValueInput | InputJsonValue
     sender_id?: NullableStringFieldUpdateOperationsInput | string | null
     signature?: NullableStringFieldUpdateOperationsInput | string | null
     business_description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31556,11 +31600,13 @@ export namespace Prisma {
     email?: SortOrder
     phone?: SortOrder
     website?: SortOrder
+    website_utm?: SortOrder
     address?: SortOrder
     city?: SortOrder
     country?: SortOrder
     logo_url?: SortOrder
     booking_url?: SortOrder
+    booking_utm?: SortOrder
     sender_id?: SortOrder
     signature?: SortOrder
     business_description?: SortOrder
@@ -34442,11 +34488,13 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    website_utm?: NullableJsonNullValueInput | InputJsonValue
     address?: string | null
     city?: string | null
     country?: string | null
     logo_url?: string | null
     booking_url?: string | null
+    booking_utm?: NullableJsonNullValueInput | InputJsonValue
     sender_id?: string | null
     signature?: string | null
     business_description?: string | null
@@ -34467,11 +34515,13 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    website_utm?: NullableJsonNullValueInput | InputJsonValue
     address?: string | null
     city?: string | null
     country?: string | null
     logo_url?: string | null
     booking_url?: string | null
+    booking_utm?: NullableJsonNullValueInput | InputJsonValue
     sender_id?: string | null
     signature?: string | null
     business_description?: string | null
@@ -34865,11 +34915,13 @@ export namespace Prisma {
     email?: StringNullableFilter<"SenderProfile"> | string | null
     phone?: StringNullableFilter<"SenderProfile"> | string | null
     website?: StringNullableFilter<"SenderProfile"> | string | null
+    website_utm?: JsonNullableFilter<"SenderProfile">
     address?: StringNullableFilter<"SenderProfile"> | string | null
     city?: StringNullableFilter<"SenderProfile"> | string | null
     country?: StringNullableFilter<"SenderProfile"> | string | null
     logo_url?: StringNullableFilter<"SenderProfile"> | string | null
     booking_url?: StringNullableFilter<"SenderProfile"> | string | null
+    booking_utm?: JsonNullableFilter<"SenderProfile">
     sender_id?: StringNullableFilter<"SenderProfile"> | string | null
     signature?: StringNullableFilter<"SenderProfile"> | string | null
     business_description?: StringNullableFilter<"SenderProfile"> | string | null
@@ -38435,11 +38487,13 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    website_utm?: NullableJsonNullValueInput | InputJsonValue
     address?: string | null
     city?: string | null
     country?: string | null
     logo_url?: string | null
     booking_url?: string | null
+    booking_utm?: NullableJsonNullValueInput | InputJsonValue
     sender_id?: string | null
     signature?: string | null
     business_description?: string | null
@@ -38461,11 +38515,13 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    website_utm?: NullableJsonNullValueInput | InputJsonValue
     address?: string | null
     city?: string | null
     country?: string | null
     logo_url?: string | null
     booking_url?: string | null
+    booking_utm?: NullableJsonNullValueInput | InputJsonValue
     sender_id?: string | null
     signature?: string | null
     business_description?: string | null
@@ -38677,11 +38733,13 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    website_utm?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     logo_url?: NullableStringFieldUpdateOperationsInput | string | null
     booking_url?: NullableStringFieldUpdateOperationsInput | string | null
+    booking_utm?: NullableJsonNullValueInput | InputJsonValue
     sender_id?: NullableStringFieldUpdateOperationsInput | string | null
     signature?: NullableStringFieldUpdateOperationsInput | string | null
     business_description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -38703,11 +38761,13 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    website_utm?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     logo_url?: NullableStringFieldUpdateOperationsInput | string | null
     booking_url?: NullableStringFieldUpdateOperationsInput | string | null
+    booking_utm?: NullableJsonNullValueInput | InputJsonValue
     sender_id?: NullableStringFieldUpdateOperationsInput | string | null
     signature?: NullableStringFieldUpdateOperationsInput | string | null
     business_description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -39242,11 +39302,13 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    website_utm?: NullableJsonNullValueInput | InputJsonValue
     address?: string | null
     city?: string | null
     country?: string | null
     logo_url?: string | null
     booking_url?: string | null
+    booking_utm?: NullableJsonNullValueInput | InputJsonValue
     sender_id?: string | null
     signature?: string | null
     business_description?: string | null
@@ -39595,11 +39657,13 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    website_utm?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     logo_url?: NullableStringFieldUpdateOperationsInput | string | null
     booking_url?: NullableStringFieldUpdateOperationsInput | string | null
+    booking_utm?: NullableJsonNullValueInput | InputJsonValue
     sender_id?: NullableStringFieldUpdateOperationsInput | string | null
     signature?: NullableStringFieldUpdateOperationsInput | string | null
     business_description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -39620,11 +39684,13 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    website_utm?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     logo_url?: NullableStringFieldUpdateOperationsInput | string | null
     booking_url?: NullableStringFieldUpdateOperationsInput | string | null
+    booking_utm?: NullableJsonNullValueInput | InputJsonValue
     sender_id?: NullableStringFieldUpdateOperationsInput | string | null
     signature?: NullableStringFieldUpdateOperationsInput | string | null
     business_description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -39645,11 +39711,13 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    website_utm?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     logo_url?: NullableStringFieldUpdateOperationsInput | string | null
     booking_url?: NullableStringFieldUpdateOperationsInput | string | null
+    booking_utm?: NullableJsonNullValueInput | InputJsonValue
     sender_id?: NullableStringFieldUpdateOperationsInput | string | null
     signature?: NullableStringFieldUpdateOperationsInput | string | null
     business_description?: NullableStringFieldUpdateOperationsInput | string | null

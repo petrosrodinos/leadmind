@@ -1,5 +1,6 @@
 import { SenderProfile } from '@/generated/prisma';
 import type { PlaceholderVars } from '@/shared/utils/placeholder-render.util';
+import { appendUtmParams, parseUtmParams } from '@/shared/utils/utm-params.util';
 
 export const SENDER_PROFILE_PLACEHOLDER_KEYS = [
     'first_name',
@@ -40,6 +41,14 @@ export function senderProfileToPlaceholders(profile: SenderProfile | null | unde
     const full = [first, last].filter(Boolean).join(' ').trim();
     const rawWebsite = profile.website ?? '';
     const rawBookingUrl = profile.booking_url ?? '';
+    const websiteWithUtm = appendUtmParams(
+        ensureProtocol(rawWebsite),
+        parseUtmParams(profile.website_utm),
+    );
+    const bookingWithUtm = appendUtmParams(
+        ensureProtocol(rawBookingUrl),
+        parseUtmParams(profile.booking_utm),
+    );
 
     return {
         first_name: first,
@@ -49,12 +58,12 @@ export function senderProfileToPlaceholders(profile: SenderProfile | null | unde
         company_name: profile.company_name ?? '',
         email: profile.email ?? '',
         phone: profile.phone ?? '',
-        website: ensureProtocol(rawWebsite),
-        website_display: stripProtocol(rawWebsite),
+        website: websiteWithUtm,
+        website_display: stripProtocol(websiteWithUtm || rawWebsite),
         address: profile.address ?? '',
         city: profile.city ?? '',
         country: profile.country ?? '',
-        booking_url: ensureProtocol(rawBookingUrl),
+        booking_url: bookingWithUtm,
         signature: profile.signature ?? '',
         sender_id: profile.sender_id ?? '',
     };

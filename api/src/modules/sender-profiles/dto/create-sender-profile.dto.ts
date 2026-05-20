@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
     IsBoolean,
     IsEmail,
@@ -7,7 +8,9 @@ import {
     IsUrl,
     Matches,
     MaxLength,
+    ValidateNested,
 } from 'class-validator';
+import { UtmParamsDto } from './utm-params.dto';
 
 export class CreateSenderProfileDto {
     @ApiProperty({ maxLength: 120 })
@@ -57,6 +60,14 @@ export class CreateSenderProfileDto {
     @MaxLength(500)
     website?: string;
 
+    @ApiPropertyOptional({
+        description: 'Optional UTM query params appended to website links in outreach.',
+    })
+    @IsOptional()
+    @ValidateNested()
+    @Type(() => UtmParamsDto)
+    website_utm?: UtmParamsDto;
+
     @ApiPropertyOptional({ maxLength: 300 })
     @IsOptional()
     @IsString()
@@ -89,6 +100,14 @@ export class CreateSenderProfileDto {
     @IsUrl({ require_protocol: false })
     @MaxLength(500)
     booking_url?: string;
+
+    @ApiPropertyOptional({
+        description: 'Optional UTM query params appended to booking links in outreach.',
+    })
+    @IsOptional()
+    @ValidateNested()
+    @Type(() => UtmParamsDto)
+    booking_utm?: UtmParamsDto;
 
     @ApiPropertyOptional({
         maxLength: 11,
