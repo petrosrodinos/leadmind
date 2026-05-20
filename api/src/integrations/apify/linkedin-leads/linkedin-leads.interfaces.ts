@@ -12,6 +12,24 @@ export interface LinkedInLeadsQueryConfig {
 }
 
 export interface LinkedInLeadsRawItem {
+    Name?: string;
+    'First Name'?: string;
+    'Last Name'?: string;
+    Email?: string;
+    'Email Domain'?: string;
+    'Job Title'?: string;
+    Seniority?: string;
+    Department?: string;
+    City?: string;
+    State?: string;
+    Country?: string;
+    LinkedIn?: string;
+    'Company Name'?: string;
+    'Company Domain'?: string;
+    'Company Industry'?: string;
+    'Company Sub Industry'?: string;
+    'Company Location'?: string;
+    'Company LinkedIn'?: string;
     firstName?: string;
     lastName?: string;
     fullName?: string;

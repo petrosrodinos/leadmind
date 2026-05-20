@@ -39,7 +39,7 @@ export const EMPTY_GENERIC_LEAD_QUERY = {
 
 export const EMPTY_GEMI_QUERY = {
     name: "",
-    activities: "",
+    activities: [],
     prefectures: [],
     legalTypes: [],
     statuses: [],

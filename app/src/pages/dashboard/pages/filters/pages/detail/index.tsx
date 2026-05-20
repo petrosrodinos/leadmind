@@ -1,7 +1,8 @@
 import { useState, type Key } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Button, Chip, Dropdown, Tabs } from "@heroui/react";
-import { ArrowLeft, MoreVertical, Pause, Play, Trash } from "lucide-react";
+import { ArrowLeft, MoreVertical, Pause, Play, Trash2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { Channel } from "@/features/contacts/interfaces/contact.interface";
 import { SourceBadge } from "@/components/ui/source-badge";
 import { SourceType } from "@/features/leads/interfaces/lead.interface";
@@ -120,33 +121,68 @@ export default function FilterDetailPage() {
                 <Chip.Label>{filter.enabled ? "Enabled" : "Disabled"}</Chip.Label>
               </Chip>
               <Dropdown>
-                <Dropdown.Trigger aria-label="Filter actions" className="inline-flex items-center justify-center size-9 rounded-lg border border-border bg-surface hover:bg-surface-secondary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent">
+                <Dropdown.Trigger
+                  aria-label="Filter actions"
+                  className="inline-flex items-center justify-center size-9 rounded-lg border border-border bg-surface hover:bg-surface-secondary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent shrink-0"
+                >
                   <MoreVertical className="size-4" />
                 </Dropdown.Trigger>
-                <Dropdown.Popover placement="bottom end">
-                  <Dropdown.Menu onAction={handleAction}>
-                    <Dropdown.Item id="run" isDisabled={runDisabled} textValue={runBusy ? (runStarting ? "Starting filter run" : "Filter run in progress") : "Run now"}>
-                      <span className="flex items-center gap-2">
-                        <FilterRunLeadingVisual isStarting={runStarting} isJobRunning={runJobRunning} iconClassName="size-4" />
-                        {runBusy ? (runStarting ? "Starting…" : "Running…") : "Run now"}
+                <Dropdown.Popover
+                  placement="bottom end"
+                  className="rounded-xl border border-border bg-surface p-1 shadow-xl outline-none backdrop-blur-none [backdrop-filter:none]"
+                >
+                  <Dropdown.Menu
+                    className="min-w-[11rem] bg-transparent p-0 outline-none backdrop-blur-none [backdrop-filter:none]"
+                    onAction={handleAction}
+                  >
+                    <Dropdown.Item
+                      id="run"
+                      isDisabled={runDisabled}
+                      textValue={runBusy ? (runStarting ? "Starting filter run" : "Filter run in progress") : "Run now"}
+                    >
+                      <span
+                        className={cn(
+                          "flex items-center gap-2.5 antialiased",
+                          runJobRunning && "text-warning",
+                          runStarting && !runJobRunning && "text-accent",
+                          !runBusy && "text-sky-400",
+                        )}
+                      >
+                        <FilterRunLeadingVisual
+                          isStarting={runStarting}
+                          isJobRunning={runJobRunning}
+                          iconClassName={cn(
+                            "size-4 shrink-0",
+                            !runBusy && "text-sky-500",
+                          )}
+                        />
+                        <span className="font-medium">
+                          {runBusy ? (runStarting ? "Starting…" : "Running…") : "Run now"}
+                        </span>
                       </span>
                     </Dropdown.Item>
-                    <Dropdown.Item id="toggle" isDisabled={toggleDisabled} textValue={filter.enabled ? "Disable" : "Enable"}>
+                    <Dropdown.Item
+                      id="toggle"
+                      isDisabled={toggleDisabled}
+                      textValue={filter.enabled ? "Disable" : "Enable"}
+                    >
                       {filter.enabled ? (
-                        <>
-                          <Pause className="size-4" />
-                          Disable
-                        </>
+                        <span className="flex items-center gap-2.5 antialiased">
+                          <Pause className="size-4 shrink-0 text-amber-500" strokeWidth={2} />
+                          <span className="font-medium text-amber-400">Disable</span>
+                        </span>
                       ) : (
-                        <>
-                          <Play className="size-4" />
-                          Enable
-                        </>
+                        <span className="flex items-center gap-2.5 antialiased">
+                          <Play className="size-4 shrink-0 text-emerald-500" strokeWidth={2} />
+                          <span className="font-medium text-emerald-400">Enable</span>
+                        </span>
                       )}
                     </Dropdown.Item>
                     <Dropdown.Item id="delete" variant="danger" textValue="Delete">
-                      <Trash className="size-4" />
-                      Delete
+                      <span className="flex items-center gap-2.5 antialiased">
+                        <Trash2 className="size-4 shrink-0 text-red-500" strokeWidth={2} />
+                        <span className="font-medium text-red-400">Delete</span>
+                      </span>
                     </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown.Popover>

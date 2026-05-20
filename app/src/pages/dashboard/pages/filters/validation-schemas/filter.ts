@@ -49,7 +49,7 @@ const genericLeadConfigSchema = z.object({
 
 const gemiConfigSchema = z.object({
     name: z.string().optional(),
-    activities: z.string().optional(),
+    activities: z.array(z.string()).optional(),
     prefectures: z.array(z.string()).optional(),
     legalTypes: z.array(z.string()).optional(),
     statuses: z.array(z.string()).optional(),

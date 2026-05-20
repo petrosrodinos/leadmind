@@ -1,6 +1,7 @@
 import { Controller } from "react-hook-form";
 import { Input, Label, ListBox, Select } from "@heroui/react";
 import { MultiSelect } from "@/components/ui/multi-select";
+import { KAD_2025_OPTIONS } from "@/features/gemi/constants/kad-2025.options";
 import { useGemiPrefectures, useGemiLegalTypes, useGemiStatuses } from "@/features/gemi/hooks/use-gemi-metadata";
 import type { FilterQueryFieldsProps } from "./types";
 import type { MultiSelectOption } from "@/components/ui/multi-select";
@@ -31,14 +32,22 @@ export function GemiQueryFields({ register, control }: FilterQueryFieldsProps) {
                 </div>
 
                 <div className="flex flex-col gap-1.5 sm:col-span-2">
-                    <Label htmlFor="cfg-gemi-activities">Activities (ΚΑΔ codes)</Label>
-                    <Input
-                        id="cfg-gemi-activities"
-                        placeholder="47.11, 56.10, 62.01"
-                        {...register("query_config.activities" as const)}
+                    <Label>Activities (ΚΑΔ 2025)</Label>
+                    <Controller
+                        control={control}
+                        name="query_config.activities"
+                        render={({ field }) => (
+                            <MultiSelect
+                                options={KAD_2025_OPTIONS}
+                                value={(field.value as string[]) ?? []}
+                                onChange={field.onChange}
+                                placeholder="Any activity"
+                                aria-label="KAD 2025 activity codes"
+                            />
+                        )}
                     />
                     <p className="text-xs text-muted">
-                        Comma-separated ΚΑΔ activity codes. Leave blank to skip activity filtering.
+                        ΚΑΔ 2025 codes from the AADE registry ({KAD_2025_OPTIONS.length} available). Leave empty to skip activity filtering.
                     </p>
                 </div>
             </div>

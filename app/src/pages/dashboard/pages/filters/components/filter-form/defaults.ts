@@ -104,7 +104,7 @@ export function buildDefaults(initial?: Filter): FilterFormValues {
             source_type: SourceType.GEMI,
             query_config: {
                 name: typeof cfg.name === "string" ? cfg.name : "",
-                activities: Array.isArray(cfg.activities) ? (cfg.activities as string[]).join(", ") : "",
+                activities: Array.isArray(cfg.activities) ? (cfg.activities as string[]).map(String) : [],
                 prefectures: Array.isArray(cfg.prefectures) ? (cfg.prefectures as (string | number)[]).map(String) : [],
                 legalTypes: Array.isArray(cfg.legalTypes) ? (cfg.legalTypes as (string | number)[]).map(String) : [],
                 statuses: Array.isArray(cfg.statuses) ? (cfg.statuses as (string | number)[]).map(String) : [],

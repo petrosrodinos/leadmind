@@ -9,8 +9,9 @@ export function serializeQueryConfig(values: FilterFormValues): Record<string, u
         const cs = values.query_config as Record<string, any>;
         const out: Record<string, unknown> = {};
         if (cs.name?.trim()) out.name = cs.name.trim();
-        const activities = splitCsv(cs.activities);
-        if (activities) out.activities = activities;
+        if (Array.isArray(cs.activities) && cs.activities.length > 0) {
+            out.activities = cs.activities as string[];
+        }
         if (Array.isArray(cs.prefectures) && cs.prefectures.length > 0) {
             out.prefectures = (cs.prefectures as string[]).map(Number);
         }

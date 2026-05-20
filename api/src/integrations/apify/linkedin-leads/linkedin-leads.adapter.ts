@@ -107,37 +107,75 @@ export class LinkedInLeadsAdapter
     }
 
     normalize(raw_items: LinkedInLeadsRawItem[]): NormalizedLead[] {
-        return raw_items
+        const leads = raw_items
             .map((item) => this.mapItem(item))
             .filter((lead) => Boolean(lead.email || lead.linkedin_url));
+
+        if (raw_items.length > 0 && leads.length === 0) {
+            this.logger.warn(
+                `LinkedIn Apify returned ${raw_items.length} items but none mapped to email or LinkedIn URL`,
+            );
+        }
+
+        return leads;
+    }
+
+    private pickString(item: LinkedInLeadsRawItem, ...keys: string[]): string | undefined {
+        for (const key of keys) {
+            const value = item[key];
+            if (typeof value === 'string' && value.trim()) return value.trim();
+        }
+        return undefined;
     }
 
     private mapItem(item: LinkedInLeadsRawItem): NormalizedLead {
-        const name = item.fullName
-            || item.name
-            || [item.firstName, item.lastName].filter(Boolean).join(' ').trim()
+        const first = this.pickString(item, 'First Name', 'firstName');
+        const last = this.pickString(item, 'Last Name', 'lastName');
+        const name =
+            this.pickString(item, 'Name', 'fullName', 'name')
+            || [first, last].filter(Boolean).join(' ').trim()
             || undefined;
 
-        const email = item.email || item.workEmail || item.personalEmail || undefined;
-        const linkedin_url = item.linkedinUrl || item.linkedinProfileUrl || item.profileUrl || undefined;
-        const website = item.companyWebsite
-            || item.website
-            || (item.companyDomain ? `https://${item.companyDomain}` : undefined);
-        const location = item.location
-            || [item.city, item.state, item.country].filter(Boolean).join(', ')
+        const email = this.pickString(
+            item,
+            'Email',
+            'email',
+            'workEmail',
+            'personalEmail',
+        );
+        const linkedin_url = this.pickString(
+            item,
+            'LinkedIn',
+            'linkedinUrl',
+            'linkedinProfileUrl',
+            'profileUrl',
+        );
+        const company_domain = this.pickString(item, 'Company Domain', 'companyDomain');
+        const website =
+            this.pickString(item, 'companyWebsite', 'website')
+            || (company_domain ? `https://${company_domain.replace(/^https?:\/\//, '')}` : undefined);
+        const location =
+            this.pickString(item, 'location', 'Company Location')
+            || [this.pickString(item, 'City', 'city'), this.pickString(item, 'State', 'state'), this.pickString(item, 'Country', 'country')]
+                .filter(Boolean)
+                .join(', ')
             || undefined;
 
         return {
             name,
             email,
-            phone: item.phone || item.phoneNumber || undefined,
-            company: item.company || item.companyName || undefined,
+            phone: this.pickString(item, 'phone', 'phoneNumber') || undefined,
+            company: this.pickString(item, 'Company Name', 'company', 'companyName') || undefined,
             website,
             linkedin_url,
-            title: item.title || item.jobTitle || item.headline || undefined,
+            title: this.pickString(item, 'Job Title', 'title', 'jobTitle', 'headline') || undefined,
             location: location || undefined,
-            industry: item.industry || undefined,
-            description: item.summary || item.headline || undefined,
+            industry:
+                this.pickString(item, 'Company Industry', 'industry')
+                || undefined,
+            description:
+                this.pickString(item, 'Company Sub Industry', 'summary', 'headline')
+                || undefined,
             raw_data: item,
         };
     }
