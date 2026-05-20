@@ -1,20 +1,27 @@
 import { Injectable, Logger } from '@nestjs/common';
 import {
     CampaignContactStatus,
+    Channel,
     InteractionType,
+    MsgDirection,
     MsgStatus,
     Prisma,
 } from '@/generated/prisma';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
+import { ResendAdapter } from '@/integrations/notifications/resend/resend/resend.adapter';
 import { CampaignMessageSendService } from '@/modules/marketing-campaigns/services/campaign-message-send.service';
 
 export type WebhookEvent =
     | { kind: 'delivered'; channel: 'email' | 'sms'; provider_message_id: string; metadata?: any }
     | { kind: 'opened'; provider_message_id: string; metadata?: any }
     | { kind: 'clicked'; provider_message_id: string; metadata?: any }
+    | { kind: 'replied'; provider_message_id: string; metadata?: any }
     | { kind: 'bounced'; provider_message_id: string; metadata?: any }
     | { kind: 'failed'; channel: 'email' | 'sms'; provider_message_id: string; metadata?: any }
     | { kind: 'complained'; provider_message_id: string; metadata?: any };
+
+const RESEND_EMAIL_ID_PATTERN =
+    /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gi;
 
 const STATUS_RANK: Record<MsgStatus, number> = {
     [MsgStatus.PENDING]: 0,
@@ -36,8 +43,56 @@ export class WebhookEventService {
 
     constructor(
         private readonly prisma: PrismaService,
+        private readonly resendAdapter: ResendAdapter,
         private readonly campaignSendService: CampaignMessageSendService,
     ) { }
+
+    async resolveOutboundMessageIdFromReceived(
+        provider_received_id: string,
+        from: string,
+    ): Promise<string | null> {
+        const headerIds = await this.extractOutboundIdsFromReceivedEmail(provider_received_id);
+        for (const provider_message_id of headerIds) {
+            const message = await this.prisma.outreachMessage.findFirst({
+                where: { provider_message_id },
+                select: { provider_message_id: true },
+            });
+            if (message?.provider_message_id) {
+                return message.provider_message_id;
+            }
+        }
+
+        const normalizedFrom = from.trim().toLowerCase();
+        const contact = await this.prisma.contact.findFirst({
+            where: { email: { equals: normalizedFrom, mode: 'insensitive' } },
+            select: { uuid: true },
+        });
+        if (!contact) {
+            return null;
+        }
+
+        const message = await this.prisma.outreachMessage.findFirst({
+            where: {
+                contact_uuid: contact.uuid,
+                channel: Channel.EMAIL,
+                direction: MsgDirection.OUTBOUND,
+                provider_message_id: { not: null },
+                status: {
+                    in: [
+                        MsgStatus.SENT,
+                        MsgStatus.DELIVERED,
+                        MsgStatus.OPENED,
+                        MsgStatus.CLICKED,
+                        MsgStatus.REPLIED,
+                    ],
+                },
+            },
+            orderBy: { sent_at: 'desc' },
+            select: { provider_message_id: true },
+        });
+
+        return message?.provider_message_id ?? null;
+    }
 
     async ingest(event: WebhookEvent): Promise<void> {
         const message = await this.prisma.outreachMessage.findFirst({
@@ -94,6 +149,15 @@ export class WebhookEventService {
                 interactionType = InteractionType.LINK_CLICKED;
                 mccStatus = CampaignContactStatus.CLICKED;
                 counterField = 'clicked_count';
+                break;
+            case 'replied':
+                updates.replied_at = now;
+                if (this.canProgress(message.status, MsgStatus.REPLIED)) {
+                    updates.status = MsgStatus.REPLIED;
+                }
+                interactionType = InteractionType.REPLY_RECEIVED;
+                mccStatus = CampaignContactStatus.REPLIED;
+                counterField = 'replied_count';
                 break;
             case 'bounced':
                 updates.status = MsgStatus.BOUNCED;
@@ -176,10 +240,65 @@ export class WebhookEventService {
             }
         }
 
+        if (event.kind === 'replied') {
+            ops.push(
+                this.prisma.contact.update({
+                    where: { uuid: message.contact_uuid },
+                    data: { last_interaction_at: now },
+                }),
+            );
+        }
+
         await this.prisma.$transaction(ops);
 
         if (message.campaign_uuid) {
             await this.campaignSendService.checkCompletion(message.campaign_uuid);
+        }
+    }
+
+    private async extractOutboundIdsFromReceivedEmail(
+        provider_received_id: string,
+    ): Promise<string[]> {
+        try {
+            const result = await this.resendAdapter.getReceivedEmail(provider_received_id);
+            const email = result?.data;
+            if (!email) {
+                return [];
+            }
+
+            const headerValues: string[] = [];
+            const headers = email.headers ?? {};
+            for (const key of ['in-reply-to', 'references', 'message-id']) {
+                const value = headers[key] ?? headers[key.toLowerCase()];
+                if (typeof value === 'string') {
+                    headerValues.push(value);
+                }
+            }
+
+            const customMessageUuid = headers['x-message-uuid'] ?? headers['X-Message-Uuid'];
+            if (typeof customMessageUuid === 'string' && customMessageUuid.trim()) {
+                const byUuid = await this.prisma.outreachMessage.findUnique({
+                    where: { uuid: customMessageUuid.trim() },
+                    select: { provider_message_id: true },
+                });
+                if (byUuid?.provider_message_id) {
+                    return [byUuid.provider_message_id];
+                }
+            }
+
+            const ids = new Set<string>();
+            for (const value of headerValues) {
+                const matches = value.match(RESEND_EMAIL_ID_PATTERN) ?? [];
+                for (const match of matches) {
+                    ids.add(match.toLowerCase());
+                }
+            }
+            return [...ids];
+        } catch (error) {
+            this.logger.warn(
+                `Could not fetch received email ${provider_received_id}: ${error instanceof Error ? error.message : error}`,
+            );
+            return [];
         }
     }
 

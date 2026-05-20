@@ -12,6 +12,16 @@ export class ResendAdapter {
     this.emailFromAddresses = EmailConfig.email_addresses;
   }
 
+  public async getReceivedEmail(emailId: string) {
+    try {
+      const resendClient = this.resendConfig.getResendClient();
+      return await resendClient.emails.receiving.get(emailId);
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException('Failed to retrieve received email from Resend');
+    }
+  }
+
   public async sendEmail(createEmail: CreateEmail) {
     try {
       const resendClient = this.resendConfig.getResendClient();

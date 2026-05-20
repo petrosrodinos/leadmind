@@ -1,10 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import * as crypto from 'crypto';
 import { Channel, Contact, InteractionType, MsgStatus, OutreachMessage, Prisma } from '@/generated/prisma';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { ResendMailService } from '@/integrations/notifications/resend/services/mail.service';
 import { TwillioSmsService } from '@/integrations/notifications/twillio/services/sms.service';
+import { EmailConfig } from '@/shared/config/email';
 import { sanitizeEmailHtml } from '@/shared/utils/sanitize-html.util';
+import { SenderProfilesService } from '@/modules/sender-profiles/sender-profiles.service';
 import { OutreachRenderService } from './outreach-render.service';
 
 export interface DeliveredMessage {
@@ -17,9 +20,11 @@ export class MessageSendService {
 
     constructor(
         private readonly prisma: PrismaService,
+        private readonly configService: ConfigService,
         private readonly resendMailService: ResendMailService,
         private readonly twillioSmsService: TwillioSmsService,
         private readonly outreachRenderService: OutreachRenderService,
+        private readonly senderProfilesService: SenderProfilesService,
     ) { }
 
     async deliverOutreachMessage(
@@ -44,11 +49,13 @@ export class MessageSendService {
             if (message.campaign_uuid) {
                 headers['X-Campaign-Uuid'] = message.campaign_uuid;
             }
+            const replyTo = await this.resolveReplyTo(message);
             const result: any = await this.resendMailService.sendEmail({
                 to: message.contact.email,
                 subject: rendered.subject ?? 'Outreach message',
                 html,
                 headers,
+                replyTo,
             });
             const provider_message_id =
                 result?.data?.id ?? result?.id ?? null;
@@ -124,6 +131,30 @@ export class MessageSendService {
             });
             return reread?.unsubscribe_token ?? token;
         }
+    }
+
+    private async resolveReplyTo(message: OutreachMessage): Promise<string> {
+        const inbound = this.configService.get<string>('RESEND_INBOUND_REPLY_TO');
+        if (inbound?.trim()) {
+            return inbound.trim();
+        }
+
+        if (message.campaign_uuid) {
+            const campaign = await this.prisma.marketingCampaign.findUnique({
+                where: { uuid: message.campaign_uuid },
+                select: { sender_profile: { select: { email: true } } },
+            });
+            if (campaign?.sender_profile?.email?.trim()) {
+                return campaign.sender_profile.email.trim();
+            }
+        }
+
+        const defaultProfile = await this.senderProfilesService.findDefault(message.user_uuid);
+        if (defaultProfile?.email?.trim()) {
+            return defaultProfile.email.trim();
+        }
+
+        return EmailConfig.email_addresses.confirmation;
     }
 
     private async appendUnsubscribeFooter(contact_uuid: string, html: string): Promise<string> {

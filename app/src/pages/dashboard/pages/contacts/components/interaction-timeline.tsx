@@ -1,6 +1,19 @@
 import React, { useMemo } from "react";
 import { Chip } from "@heroui/react";
-import { ArrowRight, CalendarDays, ExternalLink, Mail, Megaphone, Phone, StickyNote, XCircle } from "lucide-react";
+import {
+    ArrowRight,
+    CalendarDays,
+    ExternalLink,
+    Mail,
+    MailOpen,
+    Megaphone,
+    MessageCircleReply,
+    MousePointerClick,
+    Phone,
+    StickyNote,
+    UserMinus,
+    XCircle,
+} from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import {
     CallDirection,
@@ -24,8 +37,15 @@ const ICONS: Record<InteractionType, React.ComponentType<{ className?: string }>
     [InteractionType.STATUS_CHANGE]: ArrowRight,
     [InteractionType.CAMPAIGN_EMAIL_SENT]: Megaphone,
     [InteractionType.CAMPAIGN_SMS_SENT]: Megaphone,
+    [InteractionType.EMAIL_DELIVERED]: Mail,
+    [InteractionType.SMS_DELIVERED]: Megaphone,
+    [InteractionType.EMAIL_OPENED]: MailOpen,
+    [InteractionType.LINK_CLICKED]: MousePointerClick,
+    [InteractionType.REPLY_RECEIVED]: MessageCircleReply,
+    [InteractionType.EMAIL_BOUNCED]: XCircle,
     [InteractionType.EMAIL_FAILED]: XCircle,
     [InteractionType.SMS_FAILED]: XCircle,
+    [InteractionType.UNSUBSCRIBED]: UserMinus,
 };
 
 const ICON_TONE: Record<InteractionType, string> = {
@@ -36,8 +56,15 @@ const ICON_TONE: Record<InteractionType, string> = {
     [InteractionType.STATUS_CHANGE]: "text-warning bg-warning-soft/40 border-warning/30",
     [InteractionType.CAMPAIGN_EMAIL_SENT]: "text-accent bg-accent/15 border-accent/30",
     [InteractionType.CAMPAIGN_SMS_SENT]: "text-accent bg-accent/15 border-accent/30",
+    [InteractionType.EMAIL_DELIVERED]: "text-accent bg-accent/15 border-accent/30",
+    [InteractionType.SMS_DELIVERED]: "text-accent bg-accent/15 border-accent/30",
+    [InteractionType.EMAIL_OPENED]: "text-success bg-success/10 border-success/30",
+    [InteractionType.LINK_CLICKED]: "text-accent bg-accent/15 border-accent/30",
+    [InteractionType.REPLY_RECEIVED]: "text-success bg-success/10 border-success/30",
+    [InteractionType.EMAIL_BOUNCED]: "text-danger bg-danger/10 border-danger/30",
     [InteractionType.EMAIL_FAILED]: "text-danger bg-danger/10 border-danger/30",
     [InteractionType.SMS_FAILED]: "text-danger bg-danger/10 border-danger/30",
+    [InteractionType.UNSUBSCRIBED]: "text-warning bg-warning-soft/40 border-warning/30",
 };
 
 const BADGE_COLOR: Record<InteractionType, "default" | "success" | "warning" | "danger"> = {
@@ -48,8 +75,15 @@ const BADGE_COLOR: Record<InteractionType, "default" | "success" | "warning" | "
     [InteractionType.STATUS_CHANGE]: "warning",
     [InteractionType.CAMPAIGN_EMAIL_SENT]: "success",
     [InteractionType.CAMPAIGN_SMS_SENT]: "success",
+    [InteractionType.EMAIL_DELIVERED]: "success",
+    [InteractionType.SMS_DELIVERED]: "success",
+    [InteractionType.EMAIL_OPENED]: "success",
+    [InteractionType.LINK_CLICKED]: "success",
+    [InteractionType.REPLY_RECEIVED]: "success",
+    [InteractionType.EMAIL_BOUNCED]: "danger",
     [InteractionType.EMAIL_FAILED]: "danger",
     [InteractionType.SMS_FAILED]: "danger",
+    [InteractionType.UNSUBSCRIBED]: "warning",
 };
 
 const BADGE_LABEL: Record<InteractionType, string> = {
@@ -60,8 +94,15 @@ const BADGE_LABEL: Record<InteractionType, string> = {
     [InteractionType.STATUS_CHANGE]: "Status change",
     [InteractionType.CAMPAIGN_EMAIL_SENT]: "Campaign email",
     [InteractionType.CAMPAIGN_SMS_SENT]: "Campaign SMS",
+    [InteractionType.EMAIL_DELIVERED]: "Email delivered",
+    [InteractionType.SMS_DELIVERED]: "SMS delivered",
+    [InteractionType.EMAIL_OPENED]: "Email opened",
+    [InteractionType.LINK_CLICKED]: "Link clicked",
+    [InteractionType.REPLY_RECEIVED]: "Reply received",
+    [InteractionType.EMAIL_BOUNCED]: "Email bounced",
     [InteractionType.EMAIL_FAILED]: "Email failed",
     [InteractionType.SMS_FAILED]: "SMS failed",
+    [InteractionType.UNSUBSCRIBED]: "Unsubscribed",
 };
 
 const CALL_OUTCOME_LABEL: Record<CallOutcome, string> = {

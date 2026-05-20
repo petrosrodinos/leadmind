@@ -22,6 +22,19 @@ describe('GoogleMapsAdapter', () => {
         });
     });
 
+    it('derives website from business email when no website is listed', () => {
+        const leads = adapter.normalize([
+            {
+                title: 'Logiq Dev',
+                email: 'info@logiqdev.com',
+                phone: '+30 281 0000000',
+            },
+        ]);
+
+        expect(leads).toHaveLength(1);
+        expect(leads[0].website).toBe('https://logiqdev.com');
+    });
+
     it('drops places with no email, phone, or LinkedIn URL', () => {
         const leads = adapter.normalize([
             {

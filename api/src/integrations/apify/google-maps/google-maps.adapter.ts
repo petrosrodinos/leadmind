@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ApifyAdapter, ApifyRunInput, NormalizedLead } from '../interfaces/apify.interfaces';
+import { websiteFromBusinessEmail } from '@/modules/leads/utils/lead-website.utils';
 import { GoogleMapsQueryConfig, GoogleMapsRawItem } from './google-maps.interfaces';
 
 @Injectable()
@@ -52,7 +53,7 @@ export class GoogleMapsAdapter
             email,
             phone,
             company: item.title || item.name || undefined,
-            website: item.website || item.url || undefined,
+            website: item.website || item.url || websiteFromBusinessEmail(email) || undefined,
             linkedin_url: undefined,
             title: undefined,
             location: location || undefined,

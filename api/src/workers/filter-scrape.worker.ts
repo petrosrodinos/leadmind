@@ -8,6 +8,7 @@ import { GemiService } from '@/integrations/gemi/gemi.service';
 import { ElasticsearchService } from '@/integrations/elasticsearch/elasticsearch.service';
 import { NormalizedLead } from '@/integrations/apify/interfaces/apify.interfaces';
 import { contactProfileFromLead } from '@/modules/contacts/utils/contact-profile.utils';
+import { resolveLeadWebsite } from '@/modules/leads/utils/lead-website.utils';
 import {
     AI_PROCESS_QUEUE,
     FILTER_SCRAPE_LOCK_DURATION_MS,
@@ -218,7 +219,7 @@ export class FilterScrapeWorker extends WorkerHost {
             email: normalized.email ?? null,
             phone: normalized.phone ?? null,
             company: normalized.company ?? null,
-            website: normalized.website ?? null,
+            website: resolveLeadWebsite(normalized.website, normalized.email),
             linkedin_url: normalized.linkedin_url ?? null,
             title: normalized.title ?? null,
             location: normalized.location ?? null,

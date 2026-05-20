@@ -29,6 +29,14 @@ interface ResendWebhookBody {
     };
 }
 
+function parseFromAddress(from: string | undefined): string | null {
+    if (!from?.trim()) {
+        return null;
+    }
+    const match = from.match(/<([^>]+)>/);
+    return (match?.[1] ?? from).trim().toLowerCase() || null;
+}
+
 @ApiTags('webhooks')
 @Controller('webhooks/resend')
 export class ResendWebhookController {
@@ -64,6 +72,17 @@ export class ResendWebhookController {
             this.logger.warn('RESEND_WEBHOOK_SECRET not configured — accepting webhook unverified');
         }
 
+        if (body.type === 'email.received') {
+            try {
+                await this.handleReceived(body);
+            } catch (error) {
+                this.logger.error(
+                    `Failed processing Resend event ${body.type}: ${error instanceof Error ? error.message : error}`,
+                );
+            }
+            return { ok: true };
+        }
+
         const event = this.toEvent(body);
         if (!event) {
             this.logger.warn(`Unhandled Resend event type: ${body.type}`);
@@ -79,6 +98,37 @@ export class ResendWebhookController {
             // Return 200 to prevent retry storms; we logged the error
         }
         return { ok: true };
+    }
+
+    private async handleReceived(body: ResendWebhookBody): Promise<void> {
+        const provider_received_id = body.data?.email_id;
+        const from = parseFromAddress(body.data?.from);
+        if (!provider_received_id || !from) {
+            this.logger.warn('email.received missing email_id or from');
+            return;
+        }
+
+        const provider_message_id =
+            await this.webhookEventService.resolveOutboundMessageIdFromReceived(
+                provider_received_id,
+                from,
+            );
+        if (!provider_message_id) {
+            this.logger.warn(
+                `email.received — no matching outbound message for received=${provider_received_id} from=${from}`,
+            );
+            return;
+        }
+
+        await this.webhookEventService.ingest({
+            kind: 'replied',
+            provider_message_id,
+            metadata: {
+                provider_received_id,
+                from,
+                subject: body.data?.subject,
+            },
+        });
     }
 
     private toEvent(body: ResendWebhookBody): WebhookEvent | null {

@@ -7,6 +7,6 @@ import { ResendMailService } from './services/mail.service';
 @Module({
   imports: [ConfigModule],
   providers: [ResendMailService, ResendConfig, ResendAdapter, Logger],
-  exports: [ResendMailService],
+  exports: [ResendMailService, ResendAdapter],
 })
 export class ResendModule {}
