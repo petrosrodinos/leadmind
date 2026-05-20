@@ -55,6 +55,18 @@ export function CampaignAnalytics({ campaign }: { campaign: MarketingCampaign })
 
     rows.push(
         {
+            label: "Website visits",
+            count: campaign.website_visit_count,
+            rate: rates.websiteVisitRate,
+            tone: "bg-accent",
+        },
+        {
+            label: "Booking visits",
+            count: campaign.booking_visit_count,
+            rate: rates.bookingVisitRate,
+            tone: "bg-accent/80",
+        },
+        {
             label: "Bounced",
             count: campaign.bounced_count,
             rate: rates.bounceRate,

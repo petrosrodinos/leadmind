@@ -80,6 +80,8 @@ export interface MarketingCampaign {
     opened_count: number;
     clicked_count: number;
     replied_count: number;
+    website_visit_count: number;
+    booking_visit_count: number;
     bounced_count: number;
     unsubscribed_count: number;
     created_at: string;

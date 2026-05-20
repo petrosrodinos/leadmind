@@ -69,6 +69,22 @@ export class SenderProfilesService {
         });
     }
 
+    async findForCampaign(user_uuid: string, campaign_uuid: string): Promise<SenderProfile | null> {
+        const campaign = await this.prisma.marketingCampaign.findFirst({
+            where: { uuid: campaign_uuid, user_uuid },
+            select: { sender_profile_uuid: true },
+        });
+        if (campaign?.sender_profile_uuid) {
+            const profile = await this.prisma.senderProfile.findFirst({
+                where: { uuid: campaign.sender_profile_uuid, user_uuid },
+            });
+            if (profile) {
+                return profile;
+            }
+        }
+        return this.findDefault(user_uuid);
+    }
+
     async update(
         user_uuid: string,
         uuid: string,

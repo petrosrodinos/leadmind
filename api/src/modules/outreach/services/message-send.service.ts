@@ -30,10 +30,14 @@ export class MessageSendService {
     async deliverOutreachMessage(
         message: OutreachMessage & { contact: Contact },
     ): Promise<DeliveredMessage> {
-        const rendered = await this.outreachRenderService.renderForUser(message.user_uuid, {
-            subject: message.subject,
-            content: message.content,
-        });
+        const rendered = await this.outreachRenderService.renderForOutreachMessage(
+            message.user_uuid,
+            {
+                subject: message.subject,
+                content: message.content,
+                campaign_uuid: message.campaign_uuid,
+            },
+        );
 
         if (message.channel === Channel.EMAIL) {
             if (!message.contact.email) {

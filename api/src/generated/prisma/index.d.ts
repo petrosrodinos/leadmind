@@ -220,6 +220,8 @@ export const InteractionType: {
   SMS_DELIVERED: 'SMS_DELIVERED',
   EMAIL_OPENED: 'EMAIL_OPENED',
   LINK_CLICKED: 'LINK_CLICKED',
+  WEBSITE_VISIT: 'WEBSITE_VISIT',
+  BOOKING_VISIT: 'BOOKING_VISIT',
   REPLY_RECEIVED: 'REPLY_RECEIVED',
   EMAIL_BOUNCED: 'EMAIL_BOUNCED',
   EMAIL_FAILED: 'EMAIL_FAILED',
@@ -21556,6 +21558,8 @@ export namespace Prisma {
     opened_count: number | null
     clicked_count: number | null
     replied_count: number | null
+    website_visit_count: number | null
+    booking_visit_count: number | null
     bounced_count: number | null
     unsubscribed_count: number | null
   }
@@ -21572,6 +21576,8 @@ export namespace Prisma {
     opened_count: number | null
     clicked_count: number | null
     replied_count: number | null
+    website_visit_count: number | null
+    booking_visit_count: number | null
     bounced_count: number | null
     unsubscribed_count: number | null
   }
@@ -21603,6 +21609,8 @@ export namespace Prisma {
     opened_count: number | null
     clicked_count: number | null
     replied_count: number | null
+    website_visit_count: number | null
+    booking_visit_count: number | null
     bounced_count: number | null
     unsubscribed_count: number | null
     created_at: Date | null
@@ -21636,6 +21644,8 @@ export namespace Prisma {
     opened_count: number | null
     clicked_count: number | null
     replied_count: number | null
+    website_visit_count: number | null
+    booking_visit_count: number | null
     bounced_count: number | null
     unsubscribed_count: number | null
     created_at: Date | null
@@ -21671,6 +21681,8 @@ export namespace Prisma {
     opened_count: number
     clicked_count: number
     replied_count: number
+    website_visit_count: number
+    booking_visit_count: number
     bounced_count: number
     unsubscribed_count: number
     created_at: number
@@ -21691,6 +21703,8 @@ export namespace Prisma {
     opened_count?: true
     clicked_count?: true
     replied_count?: true
+    website_visit_count?: true
+    booking_visit_count?: true
     bounced_count?: true
     unsubscribed_count?: true
   }
@@ -21707,6 +21721,8 @@ export namespace Prisma {
     opened_count?: true
     clicked_count?: true
     replied_count?: true
+    website_visit_count?: true
+    booking_visit_count?: true
     bounced_count?: true
     unsubscribed_count?: true
   }
@@ -21738,6 +21754,8 @@ export namespace Prisma {
     opened_count?: true
     clicked_count?: true
     replied_count?: true
+    website_visit_count?: true
+    booking_visit_count?: true
     bounced_count?: true
     unsubscribed_count?: true
     created_at?: true
@@ -21771,6 +21789,8 @@ export namespace Prisma {
     opened_count?: true
     clicked_count?: true
     replied_count?: true
+    website_visit_count?: true
+    booking_visit_count?: true
     bounced_count?: true
     unsubscribed_count?: true
     created_at?: true
@@ -21806,6 +21826,8 @@ export namespace Prisma {
     opened_count?: true
     clicked_count?: true
     replied_count?: true
+    website_visit_count?: true
+    booking_visit_count?: true
     bounced_count?: true
     unsubscribed_count?: true
     created_at?: true
@@ -21928,6 +21950,8 @@ export namespace Prisma {
     opened_count: number
     clicked_count: number
     replied_count: number
+    website_visit_count: number
+    booking_visit_count: number
     bounced_count: number
     unsubscribed_count: number
     created_at: Date
@@ -21982,6 +22006,8 @@ export namespace Prisma {
     opened_count?: boolean
     clicked_count?: boolean
     replied_count?: boolean
+    website_visit_count?: boolean
+    booking_visit_count?: boolean
     bounced_count?: boolean
     unsubscribed_count?: boolean
     created_at?: boolean
@@ -22023,6 +22049,8 @@ export namespace Prisma {
     opened_count?: boolean
     clicked_count?: boolean
     replied_count?: boolean
+    website_visit_count?: boolean
+    booking_visit_count?: boolean
     bounced_count?: boolean
     unsubscribed_count?: boolean
     created_at?: boolean
@@ -22060,6 +22088,8 @@ export namespace Prisma {
     opened_count?: boolean
     clicked_count?: boolean
     replied_count?: boolean
+    website_visit_count?: boolean
+    booking_visit_count?: boolean
     bounced_count?: boolean
     unsubscribed_count?: boolean
     created_at?: boolean
@@ -22097,13 +22127,15 @@ export namespace Prisma {
     opened_count?: boolean
     clicked_count?: boolean
     replied_count?: boolean
+    website_visit_count?: boolean
+    booking_visit_count?: boolean
     bounced_count?: boolean
     unsubscribed_count?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type MarketingCampaignOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "name" | "description" | "status" | "campaign_type" | "channels" | "filters_snapshot" | "email_subject" | "email_content" | "sms_content" | "ai_prompt" | "sender_profile_uuid" | "scheduled_at" | "started_at" | "completed_at" | "cancelled_at" | "selected_contact_count" | "total_messages" | "queued_count" | "sent_count" | "failed_count" | "skipped_count" | "delivered_count" | "opened_count" | "clicked_count" | "replied_count" | "bounced_count" | "unsubscribed_count" | "created_at" | "updated_at", ExtArgs["result"]["marketingCampaign"]>
+  export type MarketingCampaignOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "name" | "description" | "status" | "campaign_type" | "channels" | "filters_snapshot" | "email_subject" | "email_content" | "sms_content" | "ai_prompt" | "sender_profile_uuid" | "scheduled_at" | "started_at" | "completed_at" | "cancelled_at" | "selected_contact_count" | "total_messages" | "queued_count" | "sent_count" | "failed_count" | "skipped_count" | "delivered_count" | "opened_count" | "clicked_count" | "replied_count" | "website_visit_count" | "booking_visit_count" | "bounced_count" | "unsubscribed_count" | "created_at" | "updated_at", ExtArgs["result"]["marketingCampaign"]>
   export type MarketingCampaignInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     sender_profile?: boolean | MarketingCampaign$sender_profileArgs<ExtArgs>
@@ -22159,6 +22191,8 @@ export namespace Prisma {
       opened_count: number
       clicked_count: number
       replied_count: number
+      website_visit_count: number
+      booking_visit_count: number
       bounced_count: number
       unsubscribed_count: number
       created_at: Date
@@ -22619,6 +22653,8 @@ export namespace Prisma {
     readonly opened_count: FieldRef<"MarketingCampaign", 'Int'>
     readonly clicked_count: FieldRef<"MarketingCampaign", 'Int'>
     readonly replied_count: FieldRef<"MarketingCampaign", 'Int'>
+    readonly website_visit_count: FieldRef<"MarketingCampaign", 'Int'>
+    readonly booking_visit_count: FieldRef<"MarketingCampaign", 'Int'>
     readonly bounced_count: FieldRef<"MarketingCampaign", 'Int'>
     readonly unsubscribed_count: FieldRef<"MarketingCampaign", 'Int'>
     readonly created_at: FieldRef<"MarketingCampaign", 'DateTime'>
@@ -25846,6 +25882,8 @@ export namespace Prisma {
     opened_count: 'opened_count',
     clicked_count: 'clicked_count',
     replied_count: 'replied_count',
+    website_visit_count: 'website_visit_count',
+    booking_visit_count: 'booking_visit_count',
     bounced_count: 'bounced_count',
     unsubscribed_count: 'unsubscribed_count',
     created_at: 'created_at',
@@ -27748,6 +27786,8 @@ export namespace Prisma {
     opened_count?: IntFilter<"MarketingCampaign"> | number
     clicked_count?: IntFilter<"MarketingCampaign"> | number
     replied_count?: IntFilter<"MarketingCampaign"> | number
+    website_visit_count?: IntFilter<"MarketingCampaign"> | number
+    booking_visit_count?: IntFilter<"MarketingCampaign"> | number
     bounced_count?: IntFilter<"MarketingCampaign"> | number
     unsubscribed_count?: IntFilter<"MarketingCampaign"> | number
     created_at?: DateTimeFilter<"MarketingCampaign"> | Date | string
@@ -27788,6 +27828,8 @@ export namespace Prisma {
     opened_count?: SortOrder
     clicked_count?: SortOrder
     replied_count?: SortOrder
+    website_visit_count?: SortOrder
+    booking_visit_count?: SortOrder
     bounced_count?: SortOrder
     unsubscribed_count?: SortOrder
     created_at?: SortOrder
@@ -27831,6 +27873,8 @@ export namespace Prisma {
     opened_count?: IntFilter<"MarketingCampaign"> | number
     clicked_count?: IntFilter<"MarketingCampaign"> | number
     replied_count?: IntFilter<"MarketingCampaign"> | number
+    website_visit_count?: IntFilter<"MarketingCampaign"> | number
+    booking_visit_count?: IntFilter<"MarketingCampaign"> | number
     bounced_count?: IntFilter<"MarketingCampaign"> | number
     unsubscribed_count?: IntFilter<"MarketingCampaign"> | number
     created_at?: DateTimeFilter<"MarketingCampaign"> | Date | string
@@ -27871,6 +27915,8 @@ export namespace Prisma {
     opened_count?: SortOrder
     clicked_count?: SortOrder
     replied_count?: SortOrder
+    website_visit_count?: SortOrder
+    booking_visit_count?: SortOrder
     bounced_count?: SortOrder
     unsubscribed_count?: SortOrder
     created_at?: SortOrder
@@ -27914,6 +27960,8 @@ export namespace Prisma {
     opened_count?: IntWithAggregatesFilter<"MarketingCampaign"> | number
     clicked_count?: IntWithAggregatesFilter<"MarketingCampaign"> | number
     replied_count?: IntWithAggregatesFilter<"MarketingCampaign"> | number
+    website_visit_count?: IntWithAggregatesFilter<"MarketingCampaign"> | number
+    booking_visit_count?: IntWithAggregatesFilter<"MarketingCampaign"> | number
     bounced_count?: IntWithAggregatesFilter<"MarketingCampaign"> | number
     unsubscribed_count?: IntWithAggregatesFilter<"MarketingCampaign"> | number
     created_at?: DateTimeWithAggregatesFilter<"MarketingCampaign"> | Date | string
@@ -29733,6 +29781,8 @@ export namespace Prisma {
     opened_count?: number
     clicked_count?: number
     replied_count?: number
+    website_visit_count?: number
+    booking_visit_count?: number
     bounced_count?: number
     unsubscribed_count?: number
     created_at?: Date | string
@@ -29773,6 +29823,8 @@ export namespace Prisma {
     opened_count?: number
     clicked_count?: number
     replied_count?: number
+    website_visit_count?: number
+    booking_visit_count?: number
     bounced_count?: number
     unsubscribed_count?: number
     created_at?: Date | string
@@ -29808,6 +29860,8 @@ export namespace Prisma {
     opened_count?: IntFieldUpdateOperationsInput | number
     clicked_count?: IntFieldUpdateOperationsInput | number
     replied_count?: IntFieldUpdateOperationsInput | number
+    website_visit_count?: IntFieldUpdateOperationsInput | number
+    booking_visit_count?: IntFieldUpdateOperationsInput | number
     bounced_count?: IntFieldUpdateOperationsInput | number
     unsubscribed_count?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29848,6 +29902,8 @@ export namespace Prisma {
     opened_count?: IntFieldUpdateOperationsInput | number
     clicked_count?: IntFieldUpdateOperationsInput | number
     replied_count?: IntFieldUpdateOperationsInput | number
+    website_visit_count?: IntFieldUpdateOperationsInput | number
+    booking_visit_count?: IntFieldUpdateOperationsInput | number
     bounced_count?: IntFieldUpdateOperationsInput | number
     unsubscribed_count?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29886,6 +29942,8 @@ export namespace Prisma {
     opened_count?: number
     clicked_count?: number
     replied_count?: number
+    website_visit_count?: number
+    booking_visit_count?: number
     bounced_count?: number
     unsubscribed_count?: number
     created_at?: Date | string
@@ -29918,6 +29976,8 @@ export namespace Prisma {
     opened_count?: IntFieldUpdateOperationsInput | number
     clicked_count?: IntFieldUpdateOperationsInput | number
     replied_count?: IntFieldUpdateOperationsInput | number
+    website_visit_count?: IntFieldUpdateOperationsInput | number
+    booking_visit_count?: IntFieldUpdateOperationsInput | number
     bounced_count?: IntFieldUpdateOperationsInput | number
     unsubscribed_count?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29953,6 +30013,8 @@ export namespace Prisma {
     opened_count?: IntFieldUpdateOperationsInput | number
     clicked_count?: IntFieldUpdateOperationsInput | number
     replied_count?: IntFieldUpdateOperationsInput | number
+    website_visit_count?: IntFieldUpdateOperationsInput | number
+    booking_visit_count?: IntFieldUpdateOperationsInput | number
     bounced_count?: IntFieldUpdateOperationsInput | number
     unsubscribed_count?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31721,6 +31783,8 @@ export namespace Prisma {
     opened_count?: SortOrder
     clicked_count?: SortOrder
     replied_count?: SortOrder
+    website_visit_count?: SortOrder
+    booking_visit_count?: SortOrder
     bounced_count?: SortOrder
     unsubscribed_count?: SortOrder
     created_at?: SortOrder
@@ -31739,6 +31803,8 @@ export namespace Prisma {
     opened_count?: SortOrder
     clicked_count?: SortOrder
     replied_count?: SortOrder
+    website_visit_count?: SortOrder
+    booking_visit_count?: SortOrder
     bounced_count?: SortOrder
     unsubscribed_count?: SortOrder
   }
@@ -31770,6 +31836,8 @@ export namespace Prisma {
     opened_count?: SortOrder
     clicked_count?: SortOrder
     replied_count?: SortOrder
+    website_visit_count?: SortOrder
+    booking_visit_count?: SortOrder
     bounced_count?: SortOrder
     unsubscribed_count?: SortOrder
     created_at?: SortOrder
@@ -31803,6 +31871,8 @@ export namespace Prisma {
     opened_count?: SortOrder
     clicked_count?: SortOrder
     replied_count?: SortOrder
+    website_visit_count?: SortOrder
+    booking_visit_count?: SortOrder
     bounced_count?: SortOrder
     unsubscribed_count?: SortOrder
     created_at?: SortOrder
@@ -31821,6 +31891,8 @@ export namespace Prisma {
     opened_count?: SortOrder
     clicked_count?: SortOrder
     replied_count?: SortOrder
+    website_visit_count?: SortOrder
+    booking_visit_count?: SortOrder
     bounced_count?: SortOrder
     unsubscribed_count?: SortOrder
   }
@@ -34567,6 +34639,8 @@ export namespace Prisma {
     opened_count?: number
     clicked_count?: number
     replied_count?: number
+    website_visit_count?: number
+    booking_visit_count?: number
     bounced_count?: number
     unsubscribed_count?: number
     created_at?: Date | string
@@ -34605,6 +34679,8 @@ export namespace Prisma {
     opened_count?: number
     clicked_count?: number
     replied_count?: number
+    website_visit_count?: number
+    booking_visit_count?: number
     bounced_count?: number
     unsubscribed_count?: number
     created_at?: Date | string
@@ -34978,6 +35054,8 @@ export namespace Prisma {
     opened_count?: IntFilter<"MarketingCampaign"> | number
     clicked_count?: IntFilter<"MarketingCampaign"> | number
     replied_count?: IntFilter<"MarketingCampaign"> | number
+    website_visit_count?: IntFilter<"MarketingCampaign"> | number
+    booking_visit_count?: IntFilter<"MarketingCampaign"> | number
     bounced_count?: IntFilter<"MarketingCampaign"> | number
     unsubscribed_count?: IntFilter<"MarketingCampaign"> | number
     created_at?: DateTimeFilter<"MarketingCampaign"> | Date | string
@@ -37304,6 +37382,8 @@ export namespace Prisma {
     opened_count?: number
     clicked_count?: number
     replied_count?: number
+    website_visit_count?: number
+    booking_visit_count?: number
     bounced_count?: number
     unsubscribed_count?: number
     created_at?: Date | string
@@ -37343,6 +37423,8 @@ export namespace Prisma {
     opened_count?: number
     clicked_count?: number
     replied_count?: number
+    website_visit_count?: number
+    booking_visit_count?: number
     bounced_count?: number
     unsubscribed_count?: number
     created_at?: Date | string
@@ -37567,6 +37649,8 @@ export namespace Prisma {
     opened_count?: IntFieldUpdateOperationsInput | number
     clicked_count?: IntFieldUpdateOperationsInput | number
     replied_count?: IntFieldUpdateOperationsInput | number
+    website_visit_count?: IntFieldUpdateOperationsInput | number
+    booking_visit_count?: IntFieldUpdateOperationsInput | number
     bounced_count?: IntFieldUpdateOperationsInput | number
     unsubscribed_count?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -37606,6 +37690,8 @@ export namespace Prisma {
     opened_count?: IntFieldUpdateOperationsInput | number
     clicked_count?: IntFieldUpdateOperationsInput | number
     replied_count?: IntFieldUpdateOperationsInput | number
+    website_visit_count?: IntFieldUpdateOperationsInput | number
+    booking_visit_count?: IntFieldUpdateOperationsInput | number
     bounced_count?: IntFieldUpdateOperationsInput | number
     unsubscribed_count?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -37744,6 +37830,8 @@ export namespace Prisma {
     opened_count?: number
     clicked_count?: number
     replied_count?: number
+    website_visit_count?: number
+    booking_visit_count?: number
     bounced_count?: number
     unsubscribed_count?: number
     created_at?: Date | string
@@ -37783,6 +37871,8 @@ export namespace Prisma {
     opened_count?: number
     clicked_count?: number
     replied_count?: number
+    website_visit_count?: number
+    booking_visit_count?: number
     bounced_count?: number
     unsubscribed_count?: number
     created_at?: Date | string
@@ -37981,6 +38071,8 @@ export namespace Prisma {
     opened_count?: IntFieldUpdateOperationsInput | number
     clicked_count?: IntFieldUpdateOperationsInput | number
     replied_count?: IntFieldUpdateOperationsInput | number
+    website_visit_count?: IntFieldUpdateOperationsInput | number
+    booking_visit_count?: IntFieldUpdateOperationsInput | number
     bounced_count?: IntFieldUpdateOperationsInput | number
     unsubscribed_count?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -38020,6 +38112,8 @@ export namespace Prisma {
     opened_count?: IntFieldUpdateOperationsInput | number
     clicked_count?: IntFieldUpdateOperationsInput | number
     replied_count?: IntFieldUpdateOperationsInput | number
+    website_visit_count?: IntFieldUpdateOperationsInput | number
+    booking_visit_count?: IntFieldUpdateOperationsInput | number
     bounced_count?: IntFieldUpdateOperationsInput | number
     unsubscribed_count?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -38314,6 +38408,8 @@ export namespace Prisma {
     opened_count?: number
     clicked_count?: number
     replied_count?: number
+    website_visit_count?: number
+    booking_visit_count?: number
     bounced_count?: number
     unsubscribed_count?: number
     created_at?: Date | string
@@ -38352,6 +38448,8 @@ export namespace Prisma {
     opened_count?: number
     clicked_count?: number
     replied_count?: number
+    website_visit_count?: number
+    booking_visit_count?: number
     bounced_count?: number
     unsubscribed_count?: number
     created_at?: Date | string
@@ -38850,6 +38948,8 @@ export namespace Prisma {
     opened_count?: number
     clicked_count?: number
     replied_count?: number
+    website_visit_count?: number
+    booking_visit_count?: number
     bounced_count?: number
     unsubscribed_count?: number
     created_at?: Date | string
@@ -38889,6 +38989,8 @@ export namespace Prisma {
     opened_count?: number
     clicked_count?: number
     replied_count?: number
+    website_visit_count?: number
+    booking_visit_count?: number
     bounced_count?: number
     unsubscribed_count?: number
     created_at?: Date | string
@@ -39001,6 +39103,8 @@ export namespace Prisma {
     opened_count?: IntFieldUpdateOperationsInput | number
     clicked_count?: IntFieldUpdateOperationsInput | number
     replied_count?: IntFieldUpdateOperationsInput | number
+    website_visit_count?: IntFieldUpdateOperationsInput | number
+    booking_visit_count?: IntFieldUpdateOperationsInput | number
     bounced_count?: IntFieldUpdateOperationsInput | number
     unsubscribed_count?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -39040,6 +39144,8 @@ export namespace Prisma {
     opened_count?: IntFieldUpdateOperationsInput | number
     clicked_count?: IntFieldUpdateOperationsInput | number
     replied_count?: IntFieldUpdateOperationsInput | number
+    website_visit_count?: IntFieldUpdateOperationsInput | number
+    booking_visit_count?: IntFieldUpdateOperationsInput | number
     bounced_count?: IntFieldUpdateOperationsInput | number
     unsubscribed_count?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -39345,6 +39451,8 @@ export namespace Prisma {
     opened_count?: number
     clicked_count?: number
     replied_count?: number
+    website_visit_count?: number
+    booking_visit_count?: number
     bounced_count?: number
     unsubscribed_count?: number
     created_at?: Date | string
@@ -39752,6 +39860,8 @@ export namespace Prisma {
     opened_count?: IntFieldUpdateOperationsInput | number
     clicked_count?: IntFieldUpdateOperationsInput | number
     replied_count?: IntFieldUpdateOperationsInput | number
+    website_visit_count?: IntFieldUpdateOperationsInput | number
+    booking_visit_count?: IntFieldUpdateOperationsInput | number
     bounced_count?: IntFieldUpdateOperationsInput | number
     unsubscribed_count?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -39790,6 +39900,8 @@ export namespace Prisma {
     opened_count?: IntFieldUpdateOperationsInput | number
     clicked_count?: IntFieldUpdateOperationsInput | number
     replied_count?: IntFieldUpdateOperationsInput | number
+    website_visit_count?: IntFieldUpdateOperationsInput | number
+    booking_visit_count?: IntFieldUpdateOperationsInput | number
     bounced_count?: IntFieldUpdateOperationsInput | number
     unsubscribed_count?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -39827,6 +39939,8 @@ export namespace Prisma {
     opened_count?: IntFieldUpdateOperationsInput | number
     clicked_count?: IntFieldUpdateOperationsInput | number
     replied_count?: IntFieldUpdateOperationsInput | number
+    website_visit_count?: IntFieldUpdateOperationsInput | number
+    booking_visit_count?: IntFieldUpdateOperationsInput | number
     bounced_count?: IntFieldUpdateOperationsInput | number
     unsubscribed_count?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -40619,6 +40733,8 @@ export namespace Prisma {
     opened_count?: number
     clicked_count?: number
     replied_count?: number
+    website_visit_count?: number
+    booking_visit_count?: number
     bounced_count?: number
     unsubscribed_count?: number
     created_at?: Date | string
@@ -40651,6 +40767,8 @@ export namespace Prisma {
     opened_count?: IntFieldUpdateOperationsInput | number
     clicked_count?: IntFieldUpdateOperationsInput | number
     replied_count?: IntFieldUpdateOperationsInput | number
+    website_visit_count?: IntFieldUpdateOperationsInput | number
+    booking_visit_count?: IntFieldUpdateOperationsInput | number
     bounced_count?: IntFieldUpdateOperationsInput | number
     unsubscribed_count?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -40689,6 +40807,8 @@ export namespace Prisma {
     opened_count?: IntFieldUpdateOperationsInput | number
     clicked_count?: IntFieldUpdateOperationsInput | number
     replied_count?: IntFieldUpdateOperationsInput | number
+    website_visit_count?: IntFieldUpdateOperationsInput | number
+    booking_visit_count?: IntFieldUpdateOperationsInput | number
     bounced_count?: IntFieldUpdateOperationsInput | number
     unsubscribed_count?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -40726,6 +40846,8 @@ export namespace Prisma {
     opened_count?: IntFieldUpdateOperationsInput | number
     clicked_count?: IntFieldUpdateOperationsInput | number
     replied_count?: IntFieldUpdateOperationsInput | number
+    website_visit_count?: IntFieldUpdateOperationsInput | number
+    booking_visit_count?: IntFieldUpdateOperationsInput | number
     bounced_count?: IntFieldUpdateOperationsInput | number
     unsubscribed_count?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string

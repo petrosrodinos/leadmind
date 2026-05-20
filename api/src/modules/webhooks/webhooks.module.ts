@@ -9,7 +9,9 @@ import { ResendWebhookController } from './resend-webhook.controller';
 import { TwilioWebhookController } from './twilio-webhook.controller';
 import { UnsubscribeController } from './unsubscribe.controller';
 import { OpenAiWebhookController } from './openai-webhook.controller';
+import { UtmAnalyticsWebhookController } from './utm-analytics-webhook.controller';
 import { WebhookEventService } from './services/webhook-event.service';
+import { CampaignUtmAnalyticsService } from './services/campaign-utm-analytics.service';
 
 @Module({
     imports: [
@@ -25,8 +27,9 @@ import { WebhookEventService } from './services/webhook-event.service';
         TwilioWebhookController,
         UnsubscribeController,
         OpenAiWebhookController,
+        UtmAnalyticsWebhookController,
     ],
-    providers: [WebhookEventService],
-    exports: [WebhookEventService],
+    providers: [WebhookEventService, CampaignUtmAnalyticsService],
+    exports: [WebhookEventService, CampaignUtmAnalyticsService],
 })
 export class WebhooksModule { }

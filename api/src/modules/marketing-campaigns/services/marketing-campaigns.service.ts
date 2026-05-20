@@ -525,6 +525,8 @@ export class MarketingCampaignsService {
                 opened_count: 0,
                 clicked_count: 0,
                 replied_count: 0,
+                website_visit_count: 0,
+                booking_visit_count: 0,
                 bounced_count: 0,
                 unsubscribed_count: 0,
             },

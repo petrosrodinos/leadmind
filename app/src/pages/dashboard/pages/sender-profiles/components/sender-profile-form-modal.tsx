@@ -82,7 +82,7 @@ function UtmFieldsGroup({
     const placeholders: Record<UtmKey, string> = {
         source: "email",
         medium: "outreach",
-        campaign: "spring-launch",
+        campaign: "optional label",
         term: "ceo",
         content: "cta-footer",
     };
@@ -90,6 +90,10 @@ function UtmFieldsGroup({
     return (
         <div className="rounded-lg border border-border bg-surface-secondary/30 p-3 space-y-3">
             <p className="text-xs font-medium text-foreground">{title}</p>
+            <p className="text-xs text-muted">
+                Campaign ID is added automatically when a marketing campaign sends. Other
+                fields apply to every link.
+            </p>
             <div className="grid gap-3 sm:grid-cols-2">
                 {UTM_KEYS.map((key) => {
                     const field = utmFormKey(prefix, key);

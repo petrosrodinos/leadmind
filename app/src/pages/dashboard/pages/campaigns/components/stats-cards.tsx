@@ -73,6 +73,28 @@ export function StatsCards({ campaign }: { campaign: MarketingCampaign }) {
     }
 
     sections.push({
+        title: "Website & booking",
+        tiles: [
+            {
+                label: "Website visits",
+                value: campaign.website_visit_count,
+                sublabel: formatCampaignRate(
+                    campaignRate(campaign.website_visit_count, deliveredBase),
+                ),
+                accent: "primary",
+            },
+            {
+                label: "Booking visits",
+                value: campaign.booking_visit_count,
+                sublabel: formatCampaignRate(
+                    campaignRate(campaign.booking_visit_count, deliveredBase),
+                ),
+                accent: "primary",
+            },
+        ],
+    });
+
+    sections.push({
         title: "Issues",
         tiles: [
             {

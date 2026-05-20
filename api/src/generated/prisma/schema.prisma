@@ -392,6 +392,8 @@ model MarketingCampaign {
   opened_count           Int @default(0)
   clicked_count          Int @default(0)
   replied_count          Int @default(0)
+  website_visit_count    Int @default(0)
+  booking_visit_count    Int @default(0)
   bounced_count          Int @default(0)
   unsubscribed_count     Int @default(0)
 
@@ -519,6 +521,8 @@ enum InteractionType {
   SMS_DELIVERED
   EMAIL_OPENED
   LINK_CLICKED
+  WEBSITE_VISIT
+  BOOKING_VISIT
   REPLY_RECEIVED
   EMAIL_BOUNCED
   EMAIL_FAILED

@@ -1,6 +1,14 @@
 import { SenderProfile } from '@/generated/prisma';
 import type { PlaceholderVars } from '@/shared/utils/placeholder-render.util';
-import { appendUtmParams, parseUtmParams } from '@/shared/utils/utm-params.util';
+import {
+    appendUtmParams,
+    mergeOutboundUtmParams,
+    parseUtmParams,
+} from '@/shared/utils/utm-params.util';
+
+export type SenderProfilePlaceholderOptions = {
+    campaignUuid?: string | null;
+};
 
 export const SENDER_PROFILE_PLACEHOLDER_KEYS = [
     'first_name',
@@ -31,7 +39,10 @@ function stripProtocol(url: string): string {
     return url.replace(/^https?:\/\//i, '').replace(/\/$/, '');
 }
 
-export function senderProfileToPlaceholders(profile: SenderProfile | null | undefined): PlaceholderVars {
+export function senderProfileToPlaceholders(
+    profile: SenderProfile | null | undefined,
+    options?: SenderProfilePlaceholderOptions,
+): PlaceholderVars {
     if (!profile) {
         return Object.fromEntries(SENDER_PROFILE_PLACEHOLDER_KEYS.map((k) => [k, '']));
     }
@@ -41,14 +52,16 @@ export function senderProfileToPlaceholders(profile: SenderProfile | null | unde
     const full = [first, last].filter(Boolean).join(' ').trim();
     const rawWebsite = profile.website ?? '';
     const rawBookingUrl = profile.booking_url ?? '';
-    const websiteWithUtm = appendUtmParams(
-        ensureProtocol(rawWebsite),
+    const websiteUtm = mergeOutboundUtmParams(
         parseUtmParams(profile.website_utm),
+        options?.campaignUuid,
     );
-    const bookingWithUtm = appendUtmParams(
-        ensureProtocol(rawBookingUrl),
+    const bookingUtm = mergeOutboundUtmParams(
         parseUtmParams(profile.booking_utm),
+        options?.campaignUuid,
     );
+    const websiteWithUtm = appendUtmParams(ensureProtocol(rawWebsite), websiteUtm);
+    const bookingWithUtm = appendUtmParams(ensureProtocol(rawBookingUrl), bookingUtm);
 
     return {
         first_name: first,

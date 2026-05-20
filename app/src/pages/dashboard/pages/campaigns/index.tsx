@@ -141,6 +141,10 @@ function CampaignRow({ campaign }: { campaign: MarketingCampaign }) {
                         {campaign.opened_count > 0 && ` · ${campaign.opened_count} opened`}
                         {campaign.clicked_count > 0 && ` · ${campaign.clicked_count} clicked`}
                         {campaign.replied_count > 0 && ` · ${campaign.replied_count} replied`}
+                        {campaign.website_visit_count > 0 &&
+                            ` · ${campaign.website_visit_count} site visits`}
+                        {campaign.booking_visit_count > 0 &&
+                            ` · ${campaign.booking_visit_count} booking visits`}
                         {campaign.bounced_count > 0 && ` · ${campaign.bounced_count} bounced`}
                         {" · "}
                         {new Date(campaign.created_at).toLocaleDateString()}

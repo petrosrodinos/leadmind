@@ -24,6 +24,8 @@ export interface CampaignEngagementRates {
     openRate: number | null;
     clickRate: number | null;
     replyRate: number | null;
+    websiteVisitRate: number | null;
+    bookingVisitRate: number | null;
     bounceRate: number | null;
     unsubscribeRate: number | null;
     failureRate: number | null;
@@ -38,6 +40,8 @@ export function getCampaignEngagementRates(campaign: MarketingCampaign): Campaig
         openRate: campaignRate(campaign.opened_count, deliveredBase),
         clickRate: campaignRate(campaign.clicked_count, deliveredBase),
         replyRate: campaignRate(campaign.replied_count, deliveredBase),
+        websiteVisitRate: campaignRate(campaign.website_visit_count, deliveredBase),
+        bookingVisitRate: campaignRate(campaign.booking_visit_count, deliveredBase),
         bounceRate: campaignRate(campaign.bounced_count, sentBase),
         unsubscribeRate: campaignRate(campaign.unsubscribed_count, sentBase),
         failureRate: campaignRate(campaign.failed_count, campaign.total_messages),
