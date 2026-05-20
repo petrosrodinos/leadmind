@@ -122,7 +122,9 @@ export function FilterForm({
             cron_schedule:
                 values.source_type === SourceType.MANUAL
                     ? undefined
-                    : values.cron_schedule?.trim() || undefined,
+                    : values.cron_schedule?.trim()
+                      ? values.cron_schedule.trim()
+                      : null,
             scoring_instruction_uuids:
                 values.scoring_instruction_uuids && values.scoring_instruction_uuids.length > 0
                     ? values.scoring_instruction_uuids

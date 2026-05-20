@@ -97,7 +97,7 @@ export interface CreateFilterPayload {
     query_config: QueryConfig;
     enrichment_sources?: EnrichmentSource[];
     enabled?: boolean;
-    cron_schedule?: string;
+    cron_schedule?: string | null;
     channels: Channel[];
     scoring_instruction_uuids?: string[];
     outreach_instructions?: string;

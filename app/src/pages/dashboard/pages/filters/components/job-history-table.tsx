@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Chip, Table } from "@heroui/react";
 import { TablePagination } from "@/components/ui/table-pagination";
 import { Clock, Hand } from "lucide-react";
@@ -6,6 +7,7 @@ import {
     JobTrigger,
     type FilterJob,
 } from "@/features/filters/interfaces/filter.interface";
+import { JobErrorModal } from "@/pages/dashboard/pages/filters/components/job-error-modal";
 
 const JOB_STATUS_COLOR: Record<JobStatus, "default" | "success" | "warning" | "danger"> = {
     [JobStatus.PENDING]: "default",
@@ -49,8 +51,16 @@ export function JobHistoryTable({
     onPageChange,
 }: JobHistoryTableProps) {
     const totalPages = Math.max(1, Math.ceil(total / pageSize));
+    const [errorModalOpen, setErrorModalOpen] = useState(false);
+    const [selectedJob, setSelectedJob] = useState<FilterJob | null>(null);
+
+    const openErrorModal = (job: FilterJob) => {
+        setSelectedJob(job);
+        setErrorModalOpen(true);
+    };
 
     return (
+        <>
         <div className="bg-surface rounded-xl border border-border overflow-hidden">
             <Table>
                 <Table.ScrollContainer>
@@ -119,12 +129,13 @@ export function JobHistoryTable({
                                               </Table.Cell>
                                               <Table.Cell>
                                                   {job.error ? (
-                                                      <span
-                                                          className="text-danger text-xs truncate max-w-[280px] inline-block align-middle"
-                                                          title={job.error}
+                                                      <button
+                                                          type="button"
+                                                          onClick={() => openErrorModal(job)}
+                                                          className="text-danger text-xs truncate max-w-[280px] text-left hover:underline cursor-pointer"
                                                       >
                                                           {job.error}
-                                                      </span>
+                                                      </button>
                                                   ) : (
                                                       <span className="text-muted">—</span>
                                                   )}
@@ -140,5 +151,15 @@ export function JobHistoryTable({
                 </Table.Footer>
             </Table>
         </div>
+            <JobErrorModal
+                isOpen={errorModalOpen}
+                onOpenChange={(open) => {
+                    setErrorModalOpen(open);
+                    if (!open) setSelectedJob(null);
+                }}
+                error={selectedJob?.error ?? null}
+                startedAt={selectedJob?.started_at}
+            />
+        </>
     );
 }

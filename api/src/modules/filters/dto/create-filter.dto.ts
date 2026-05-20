@@ -13,6 +13,7 @@ import {
     IsString,
     IsUUID,
     MaxLength,
+    ValidateIf,
 } from 'class-validator';
 import { Channel, EnrichmentSource, SourceType } from '@/generated/prisma';
 import { IsCronExpression } from '../validators/is-cron-expression.validator';
@@ -36,11 +37,12 @@ export class CreateFilterDto {
     @IsBoolean()
     enabled?: boolean;
 
-    @ApiPropertyOptional({ example: '0 9 * * *' })
+    @ApiPropertyOptional({ example: '0 9 * * *', nullable: true })
     @IsOptional()
+    @ValidateIf((_, value) => value != null)
     @IsString()
     @IsCronExpression()
-    cron_schedule?: string;
+    cron_schedule?: string | null;
 
     @ApiProperty({ enum: Channel, isArray: true })
     @IsArray()

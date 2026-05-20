@@ -8,7 +8,11 @@ import { GemiService } from '@/integrations/gemi/gemi.service';
 import { ElasticsearchService } from '@/integrations/elasticsearch/elasticsearch.service';
 import { NormalizedLead } from '@/integrations/apify/interfaces/apify.interfaces';
 import { contactProfileFromLead } from '@/modules/contacts/utils/contact-profile.utils';
-import { AI_PROCESS_QUEUE, FILTER_SCRAPE_QUEUE } from '@/core/queues/queues.constants';
+import {
+    AI_PROCESS_QUEUE,
+    FILTER_SCRAPE_LOCK_DURATION_MS,
+    FILTER_SCRAPE_QUEUE,
+} from '@/core/queues/queues.constants';
 
 interface FilterScrapeJobData {
     filter_uuid: string;
@@ -20,7 +24,10 @@ interface PersistLeadsResult {
     leads_processed: number;
 }
 
-@Processor(FILTER_SCRAPE_QUEUE, { concurrency: 3 })
+@Processor(FILTER_SCRAPE_QUEUE, {
+    concurrency: 3,
+    lockDuration: FILTER_SCRAPE_LOCK_DURATION_MS,
+})
 export class FilterScrapeWorker extends WorkerHost {
     private readonly logger = new Logger(FilterScrapeWorker.name);
 
