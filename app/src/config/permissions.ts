@@ -7,7 +7,6 @@ export const Permissions = {
   lead_delete: [RoleTypes.ADMIN, RoleTypes.SUPER_ADMIN],
   lead_edit: [RoleTypes.ADMIN, RoleTypes.SUPER_ADMIN],
   filter_outreach_instructions_edit: [RoleTypes.ADMIN, RoleTypes.SUPER_ADMIN],
-  campaign_extended_stats: [RoleTypes.ADMIN, RoleTypes.SUPER_ADMIN],
 } as const satisfies Record<string, RoleType[]>;
 
 export type PermissionKey = keyof typeof Permissions;

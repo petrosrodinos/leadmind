@@ -137,7 +137,12 @@ function CampaignRow({ campaign }: { campaign: MarketingCampaign }) {
                     )}
                     <p className="text-xs text-muted mt-1">
                         {campaign.selected_contact_count} contacts · {campaign.sent_count} sent ·{" "}
-                        {campaign.delivered_count} delivered ·{" "}
+                        {campaign.delivered_count} delivered
+                        {campaign.opened_count > 0 && ` · ${campaign.opened_count} opened`}
+                        {campaign.clicked_count > 0 && ` · ${campaign.clicked_count} clicked`}
+                        {campaign.replied_count > 0 && ` · ${campaign.replied_count} replied`}
+                        {campaign.bounced_count > 0 && ` · ${campaign.bounced_count} bounced`}
+                        {" · "}
                         {new Date(campaign.created_at).toLocaleDateString()}
                     </p>
                 </div>

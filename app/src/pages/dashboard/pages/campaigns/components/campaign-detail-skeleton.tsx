@@ -17,12 +17,29 @@ export function CampaignDetailSkeleton() {
                 <div className="h-8 w-8 rounded-lg bg-surface-secondary shrink-0" />
             </div>
 
-            {/* stats grid */}
-            <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
-                {Array.from({ length: 12 }).map((_, i) => (
-                    <div key={i} className="rounded-xl border border-border bg-surface p-3 space-y-2">
-                        <div className="h-3 w-16 rounded bg-surface-secondary" />
-                        <div className="h-7 w-10 rounded bg-surface-secondary" />
+            <div className="space-y-4">
+                {Array.from({ length: 3 }).map((_, section) => (
+                    <div key={section} className="space-y-2">
+                        <div className="h-3 w-24 rounded bg-surface-secondary" />
+                        <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+                            {Array.from({ length: 3 }).map((_, i) => (
+                                <div
+                                    key={i}
+                                    className="rounded-xl border border-border bg-surface p-3 space-y-2"
+                                >
+                                    <div className="h-3 w-16 rounded bg-surface-secondary" />
+                                    <div className="h-7 w-10 rounded bg-surface-secondary" />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                ))}
+            </div>
+            <div className="rounded-xl border border-border bg-surface p-4 space-y-3">
+                {Array.from({ length: 5 }).map((_, i) => (
+                    <div key={i} className="space-y-1.5">
+                        <div className="h-3 w-full rounded bg-surface-secondary" />
+                        <div className="h-2 w-full rounded-full bg-surface-secondary" />
                     </div>
                 ))}
             </div>

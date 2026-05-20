@@ -221,7 +221,7 @@ export function SenderProfileFormModal({
             return;
         }
 
-        const stringKeys: (keyof Omit<CreateSenderProfilePayload, "is_default">)[] = [
+        const stringKeys = [
             "company_name",
             "title",
             "first_name",
@@ -237,7 +237,7 @@ export function SenderProfileFormModal({
             "sender_id",
             "signature",
             "business_description",
-        ];
+        ] as const satisfies readonly (keyof FormState)[];
 
         const payload: CreateSenderProfilePayload = {
             name,

@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { Label, ListBox, Select } from "@heroui/react";
 import { ChevronLeft, Send } from "lucide-react";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import {
@@ -6,20 +8,45 @@ import {
     useCampaignContacts,
     useSendPersonalizedDrafts,
 } from "@/features/marketing-campaigns/hooks/use-marketing-campaigns";
-import { CampaignType, CampaignStatuses } from "@/features/marketing-campaigns/interfaces/campaign.interface";
+import {
+    CampaignContactStatuses,
+    CampaignType,
+    CampaignStatuses,
+    type CampaignContactStatuses as CampaignContactStatus,
+} from "@/features/marketing-campaigns/interfaces/campaign.interface";
 import { Routes } from "@/routes/routes";
 import { CampaignStatusBadge } from "../../components/campaign-status-badge";
 import { StatsCards } from "../../components/stats-cards";
+import { CampaignAnalytics } from "../../components/campaign-analytics";
 import { RecipientsTable } from "../../components/recipients-table";
 import { CampaignActionsDropdown } from "../../components/campaign-actions-dropdown";
 import { CampaignDetailSkeleton } from "../../components/campaign-detail-skeleton";
 import { DraftedMessagesTable } from "../../components/drafted-messages-table";
 
+const RECIPIENT_STATUS_OPTIONS: { id: CampaignContactStatus | "ALL"; label: string }[] = [
+    { id: "ALL", label: "All statuses" },
+    { id: CampaignContactStatuses.PENDING, label: "Pending" },
+    { id: CampaignContactStatuses.QUEUED, label: "Queued" },
+    { id: CampaignContactStatuses.SENT, label: "Sent" },
+    { id: CampaignContactStatuses.DELIVERED, label: "Delivered" },
+    { id: CampaignContactStatuses.OPENED, label: "Opened" },
+    { id: CampaignContactStatuses.CLICKED, label: "Clicked" },
+    { id: CampaignContactStatuses.REPLIED, label: "Replied" },
+    { id: CampaignContactStatuses.FAILED, label: "Failed" },
+    { id: CampaignContactStatuses.SKIPPED, label: "Skipped" },
+    { id: CampaignContactStatuses.BOUNCED, label: "Bounced" },
+    { id: CampaignContactStatuses.UNSUBSCRIBED, label: "Unsubscribed" },
+];
+
 export default function CampaignDetailPage() {
     const { uuid } = useParams<{ uuid: string }>();
     const navigate = useNavigate();
+    const [recipientStatus, setRecipientStatus] = useState<CampaignContactStatus | "ALL">("ALL");
     const { data: campaign, isLoading } = useCampaign(uuid);
-    const { data: contactsPage } = useCampaignContacts(uuid, { limit: 100 });
+    const { data: contactsPage } = useCampaignContacts(uuid, {
+        limit: 100,
+        status: recipientStatus === "ALL" ? undefined : recipientStatus,
+    });
     const sendDraftsMutation = useSendPersonalizedDrafts();
 
     if (isLoading || !campaign) {
@@ -72,6 +99,7 @@ export default function CampaignDetailPage() {
             </header>
 
             <StatsCards campaign={campaign} />
+            <CampaignAnalytics campaign={campaign} />
 
             {isPersonalized && (isDraftsReady || campaign.status === CampaignStatuses.SENDING || campaign.status === CampaignStatuses.COMPLETED) ? (
                 <section className="space-y-3">
@@ -80,7 +108,34 @@ export default function CampaignDetailPage() {
                 </section>
             ) : (
                 <section className="space-y-3">
-                    <h2 className="text-sm font-semibold text-foreground">Recipients</h2>
+                    <div className="flex flex-wrap items-end justify-between gap-3">
+                        <h2 className="text-sm font-semibold text-foreground">Recipients</h2>
+                        <div className="w-52">
+                            <Label className="text-xs text-muted mb-1 block">Filter by status</Label>
+                            <Select
+                                aria-label="Filter recipients by status"
+                                selectedKey={recipientStatus}
+                                onSelectionChange={(key) =>
+                                    setRecipientStatus((key as CampaignContactStatus | "ALL") ?? "ALL")
+                                }
+                            >
+                                <Select.Trigger>
+                                    <Select.Value />
+                                    <Select.Indicator />
+                                </Select.Trigger>
+                                <Select.Popover>
+                                    <ListBox>
+                                        {RECIPIENT_STATUS_OPTIONS.map((option) => (
+                                            <ListBox.Item key={option.id} id={option.id} textValue={option.label}>
+                                                {option.label}
+                                                <ListBox.ItemIndicator />
+                                            </ListBox.Item>
+                                        ))}
+                                    </ListBox>
+                                </Select.Popover>
+                            </Select>
+                        </div>
+                    </div>
                     <RecipientsTable rows={contactsPage?.data ?? []} />
                     {contactsPage && contactsPage.total > (contactsPage.data?.length ?? 0) && (
                         <p className="text-xs text-muted text-center">
