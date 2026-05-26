@@ -8,6 +8,7 @@ export default () => ({
     REDIS_URL: process.env.REDIS_URL,
     CACHE_TTL_SECONDS: process.env.CACHE_TTL_SECONDS ? Number(process.env.CACHE_TTL_SECONDS) : undefined,
     JWT_SECRET: process.env.JWT_SECRET,
+    INTEGRATIONS_ENCRYPTION_KEY: process.env.INTEGRATIONS_ENCRYPTION_KEY,
     JWT_EXPIRATION_TIME: process.env.JWT_EXPIRATION_TIME,
     MAIL_PROVIDER: process.env.MAIL_PROVIDER,
     SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,

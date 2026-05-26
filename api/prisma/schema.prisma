@@ -32,6 +32,7 @@ model User {
   marketing_campaigns    MarketingCampaign[]
   scoring_instructions   ScoringInstruction[]
   openai_batch_jobs      OpenAiBatchJob[]
+  integrations           Integration[]
 
   @@index([email])
   @@index([phone])
@@ -592,4 +593,47 @@ enum OpenAiBatchStatus {
   FAILED
   EXPIRED
   CANCELLED
+}
+
+enum ExternalIntegrationProvider {
+  OPENAI
+  ANTHROPIC
+  RESEND
+  TWILIO
+  APIFY
+  HUBSPOT
+}
+
+model Integration {
+  id         Int                        @id @default(autoincrement())
+  uuid       String                     @unique @default(uuid())
+  user_uuid  String
+  provider   ExternalIntegrationProvider
+  title      String
+  created_at DateTime                   @default(now())
+  updated_at DateTime                   @updatedAt
+
+  user User @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
+  keys IntegrationKey[]
+
+  @@unique([user_uuid, provider])
+  @@index([user_uuid])
+  @@index([provider])
+  @@map("integrations")
+}
+
+model IntegrationKey {
+  id               Int      @id @default(autoincrement())
+  uuid             String   @unique @default(uuid())
+  integration_uuid String
+  title            String
+  secret           String   @db.Text
+  last4            String?
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
+
+  integration Integration @relation(fields: [integration_uuid], references: [uuid], onDelete: Cascade)
+
+  @@index([integration_uuid])
+  @@map("integration_keys")
 }

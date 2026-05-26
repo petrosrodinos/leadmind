@@ -24,6 +24,7 @@ export const Routes = {
         analytics: "/dashboard/analytics",
         settings: "/dashboard/settings",
         sender_profiles: "/dashboard/sender-profiles",
+        integrations: "/dashboard/integrations",
         campaigns: "/dashboard/campaigns",
         campaigns_new: "/dashboard/campaigns/new",
         campaigns_detail: "/dashboard/campaigns/:uuid",

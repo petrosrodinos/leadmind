@@ -411,6 +411,27 @@ exports.Prisma.OpenAiBatchJobScalarFieldEnum = {
   updated_at: 'updated_at'
 };
 
+exports.Prisma.IntegrationScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  user_uuid: 'user_uuid',
+  provider: 'provider',
+  title: 'title',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.IntegrationKeyScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  integration_uuid: 'integration_uuid',
+  title: 'title',
+  secret: 'secret',
+  last4: 'last4',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -577,6 +598,15 @@ exports.OpenAiBatchStatus = exports.$Enums.OpenAiBatchStatus = {
   CANCELLED: 'CANCELLED'
 };
 
+exports.ExternalIntegrationProvider = exports.$Enums.ExternalIntegrationProvider = {
+  OPENAI: 'OPENAI',
+  ANTHROPIC: 'ANTHROPIC',
+  RESEND: 'RESEND',
+  TWILIO: 'TWILIO',
+  APIFY: 'APIFY',
+  HUBSPOT: 'HUBSPOT'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Filter: 'Filter',
@@ -595,7 +625,9 @@ exports.Prisma.ModelName = {
   SenderProfile: 'SenderProfile',
   MarketingCampaign: 'MarketingCampaign',
   MarketingCampaignContact: 'MarketingCampaignContact',
-  OpenAiBatchJob: 'OpenAiBatchJob'
+  OpenAiBatchJob: 'OpenAiBatchJob',
+  Integration: 'Integration',
+  IntegrationKey: 'IntegrationKey'
 };
 
 /**

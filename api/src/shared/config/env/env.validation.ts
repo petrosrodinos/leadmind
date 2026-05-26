@@ -10,6 +10,7 @@ const EnvSchema = z.object({
     REDIS_URL: z.string().optional(),
     CACHE_TTL_SECONDS: z.coerce.number().optional(),
     JWT_SECRET: z.string(),
+    INTEGRATIONS_ENCRYPTION_KEY: z.string().optional(),
     JWT_EXPIRATION_TIME: z.string().optional(),
     MAIL_PROVIDER: z.enum(['sendgrid', 'resend']).default('resend'),
     SENDGRID_API_KEY: z.string().optional(),

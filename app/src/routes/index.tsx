@@ -19,6 +19,7 @@ import ScoringInstructionsPage from "@/pages/dashboard/pages/filters/pages/scori
 import ContactsPage from "@/pages/dashboard/pages/contacts";
 import ContactDetailPage from "@/pages/dashboard/pages/contacts/pages/detail";
 import SenderProfilesPage from "@/pages/dashboard/pages/sender-profiles";
+import IntegrationsPage from "@/pages/dashboard/pages/integrations";
 import CampaignsPage from "@/pages/dashboard/pages/campaigns";
 import NewCampaignPage from "@/pages/dashboard/pages/campaigns/pages/new";
 import EditCampaignPage from "@/pages/dashboard/pages/campaigns/pages/edit";
@@ -68,6 +69,7 @@ export default function AppRoutes() {
         <Route path="contacts" element={<ContactsPage />} />
         <Route path="contacts/:uuid" element={<ContactDetailPage />} />
         <Route path="sender-profiles" element={<SenderProfilesPage />} />
+        <Route path="integrations" element={<IntegrationsPage />} />
         <Route path="campaigns" element={<CampaignsPage />} />
         <Route path="campaigns/new" element={<NewCampaignPage />} />
         <Route path="campaigns/:uuid" element={<CampaignDetailPage />} />

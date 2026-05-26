@@ -95,6 +95,13 @@ export const ApiRoutes = {
         update: (uuid: string) => `/sender-profiles/${uuid}`,
         remove: (uuid: string) => `/sender-profiles/${uuid}`,
     },
+    integrations: {
+        prefix: "/integrations",
+        list: "/integrations",
+        createKey: (provider: string) => `/integrations/${provider}/keys`,
+        updateKey: (uuid: string) => `/integrations/keys/${uuid}`,
+        removeKey: (uuid: string) => `/integrations/keys/${uuid}`,
+    },
     admin: {
         batch_jobs: "/admin/batch-jobs",
     },
