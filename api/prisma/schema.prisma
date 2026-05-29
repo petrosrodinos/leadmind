@@ -32,7 +32,7 @@ model User {
   marketing_campaigns    MarketingCampaign[]
   scoring_instructions   ScoringInstruction[]
   openai_batch_jobs      OpenAiBatchJob[]
-  integration_credentials IntegrationCredential[]
+  integrations Integration[]
 
   @@index([email])
   @@index([phone])
@@ -604,22 +604,46 @@ enum ExternalIntegrationProvider {
   HUBSPOT
 }
 
-model IntegrationCredential {
+enum IntegrationKeyType {
+  API_KEY
+  WEBHOOK_SECRET
+  ACCOUNT_SID
+  AUTH_TOKEN
+  ACCESS_TOKEN
+}
+
+model Integration {
   id         Int                         @id @default(autoincrement())
   uuid       String                      @unique @default(uuid())
   user_uuid  String
   provider   ExternalIntegrationProvider
-  account    String                      @default("default")
-  kind       String
-  secret     String                      @db.Text
-  last4      String?
+  title      String
   created_at DateTime                    @default(now())
   updated_at DateTime                    @updatedAt
 
-  user User @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
+  user User             @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
+  keys IntegrationKey[]
 
-  @@unique([user_uuid, provider, account, kind])
+  @@unique([user_uuid, provider])
   @@index([user_uuid])
-  @@index([user_uuid, provider])
-  @@map("integration_credentials")
+  @@index([provider])
+  @@map("integrations")
+}
+
+model IntegrationKey {
+  id               Int                 @id @default(autoincrement())
+  uuid             String              @unique @default(uuid())
+  integration_uuid String
+  key_type         IntegrationKeyType
+  account          String              @default("1")
+  secret           String              @db.Text
+  last4            String?
+  created_at       DateTime            @default(now())
+  updated_at       DateTime            @updatedAt
+
+  integration Integration @relation(fields: [integration_uuid], references: [uuid], onDelete: Cascade)
+
+  @@unique([integration_uuid, key_type, account])
+  @@index([integration_uuid])
+  @@map("integration_keys")
 }

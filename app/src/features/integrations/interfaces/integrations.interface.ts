@@ -10,17 +10,27 @@ export const IntegrationProviders = {
 export type IntegrationProvider =
     (typeof IntegrationProviders)[keyof typeof IntegrationProviders];
 
-export interface IntegrationCredentialKind {
-    kind: string;
+export const IntegrationKeyTypes = {
+    API_KEY: "API_KEY",
+    WEBHOOK_SECRET: "WEBHOOK_SECRET",
+    ACCOUNT_SID: "ACCOUNT_SID",
+    AUTH_TOKEN: "AUTH_TOKEN",
+    ACCESS_TOKEN: "ACCESS_TOKEN",
+} as const;
+
+export type IntegrationKeyType =
+    (typeof IntegrationKeyTypes)[keyof typeof IntegrationKeyTypes];
+
+export interface IntegrationKeyTypeOption {
+    key_type: IntegrationKeyType;
     label: string;
     placeholder: string;
 }
 
-export interface IntegrationCredential {
+export interface IntegrationKey {
     uuid: string;
-    provider: IntegrationProvider;
+    key_type: IntegrationKeyType;
     account: string;
-    kind: string;
     label: string;
     env_name: string;
     last4: string | null;
@@ -30,19 +40,19 @@ export interface IntegrationCredential {
 
 export interface IntegrationProviderView {
     provider: IntegrationProvider;
+    uuid: string | null;
     label: string;
     description: string;
-    credentialKinds: IntegrationCredentialKind[];
-    credentials: IntegrationCredential[];
+    keyTypes: IntegrationKeyTypeOption[];
+    keys: IntegrationKey[];
 }
 
-export interface CreateIntegrationCredentialPayload {
-    provider: IntegrationProvider;
-    kind: string;
+export interface CreateIntegrationKeyPayload {
+    key_type: IntegrationKeyType;
     account: string;
     secret: string;
 }
 
-export interface UpdateIntegrationCredentialPayload {
+export interface UpdateIntegrationKeyPayload {
     secret: string;
 }

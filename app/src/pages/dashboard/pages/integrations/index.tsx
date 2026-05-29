@@ -11,9 +11,8 @@ import {
 } from "lucide-react";
 import { useIntegrations } from "@/features/integrations/hooks/use-integrations";
 import type { IntegrationProviderView } from "@/features/integrations/interfaces/integrations.interface";
-import { integrationProviderDefinitions } from "@/features/integrations/constants/integrations.catalog";
 import { IntegrationDetailModal } from "./components/integration-detail-modal";
-import { IntegrationCredentialFormModal } from "./components/integration-credential-form-modal";
+import { IntegrationKeyFormModal } from "./components/integration-key-form-modal";
 
 const providerIcons: Record<string, ComponentType<{ className?: string }>> = {
     OPENAI: Sparkles,
@@ -24,25 +23,87 @@ const providerIcons: Record<string, ComponentType<{ className?: string }>> = {
     HUBSPOT: Plug,
 };
 
+const FALLBACK_PROVIDERS: IntegrationProviderView[] = [
+    {
+        provider: "OPENAI",
+        uuid: null,
+        label: "OpenAI",
+        description: "GPT models for enrichment, scoring, and message drafting.",
+        keyTypes: [{ key_type: "API_KEY", label: "API key", placeholder: "sk-..." }],
+        keys: [],
+    },
+    {
+        provider: "ANTHROPIC",
+        uuid: null,
+        label: "Anthropic",
+        description: "Claude models for AI workflows.",
+        keyTypes: [{ key_type: "API_KEY", label: "API key", placeholder: "sk-ant-..." }],
+        keys: [],
+    },
+    {
+        provider: "RESEND",
+        uuid: null,
+        label: "Resend",
+        description: "Transactional email and inbound webhooks.",
+        keyTypes: [
+            { key_type: "API_KEY", label: "API key", placeholder: "re_..." },
+            {
+                key_type: "WEBHOOK_SECRET",
+                label: "Webhook secret",
+                placeholder: "whsec_...",
+            },
+        ],
+        keys: [],
+    },
+    {
+        provider: "TWILIO",
+        uuid: null,
+        label: "Twilio",
+        description: "SMS outreach credentials.",
+        keyTypes: [
+            { key_type: "ACCOUNT_SID", label: "Account SID", placeholder: "AC..." },
+            { key_type: "AUTH_TOKEN", label: "Auth token", placeholder: "Auth token" },
+        ],
+        keys: [],
+    },
+    {
+        provider: "APIFY",
+        uuid: null,
+        label: "Apify",
+        description: "Lead scraping from LinkedIn, Google Maps, and more.",
+        keyTypes: [{ key_type: "API_KEY", label: "API token", placeholder: "apify_api_..." }],
+        keys: [],
+    },
+    {
+        provider: "HUBSPOT",
+        uuid: null,
+        label: "HubSpot",
+        description: "CRM sync and marketing automation.",
+        keyTypes: [
+            {
+                key_type: "ACCESS_TOKEN",
+                label: "Access token",
+                placeholder: "pat-...",
+            },
+        ],
+        keys: [],
+    },
+];
+
 export default function IntegrationsPage() {
     const { data, isLoading } = useIntegrations();
     const [selected, setSelected] = useState<IntegrationProviderView | null>(null);
     const [detailOpen, setDetailOpen] = useState(false);
-    const [quickAddProvider, setQuickAddProvider] =
-        useState<IntegrationProviderView | null>(null);
+    const [quickAdd, setQuickAdd] = useState<IntegrationProviderView | null>(null);
 
-    const providers = data ?? integrationProviderDefinitions.map((definition) => ({
-        ...definition,
-        credentials: [],
-    }));
+    const providers = data ?? FALLBACK_PROVIDERS;
+
+    const resolveProvider = (provider: IntegrationProviderView) =>
+        data?.find((row) => row.provider === provider.provider) ?? provider;
 
     const openDetail = (providerView: IntegrationProviderView) => {
-        setSelected(providerView);
+        setSelected(resolveProvider(providerView));
         setDetailOpen(true);
-    };
-
-    const openQuickAdd = (providerView: IntegrationProviderView) => {
-        setQuickAddProvider(providerView);
     };
 
     return (
@@ -52,9 +113,10 @@ export default function IntegrationsPage() {
                     Integrations
                 </h1>
                 <p className="text-sm text-muted max-w-2xl">
-                    Store credentials per provider. Group related secrets under the
-                    same account, e.g. <span className="font-mono">RESEND_API_KEY_1</span>{" "}
-                    and <span className="font-mono">RESEND_WEBHOOK_SECRET_1</span>.
+                    Store keys per provider. Use the same account name for related
+                    secrets, e.g.{" "}
+                    <span className="font-mono">RESEND_API_KEY_1</span> and{" "}
+                    <span className="font-mono">RESEND_WEBHOOK_SECRET_1</span>.
                 </p>
             </header>
 
@@ -67,7 +129,9 @@ export default function IntegrationsPage() {
                             key={providerView.provider}
                             providerView={providerView}
                             onOpen={() => openDetail(providerView)}
-                            onQuickAdd={() => openQuickAdd(providerView)}
+                            onQuickAdd={() =>
+                                setQuickAdd(resolveProvider(providerView))
+                            }
                         />
                     ))}
                 </div>
@@ -79,22 +143,16 @@ export default function IntegrationsPage() {
                     setDetailOpen(open);
                     if (!open) setSelected(null);
                 }}
-                providerView={
-                    selected
-                        ? (data?.find(
-                              (row) => row.provider === selected.provider,
-                          ) ?? selected)
-                        : null
-                }
+                providerView={selected ? resolveProvider(selected) : null}
             />
 
-            {quickAddProvider && (
-                <IntegrationCredentialFormModal
-                    isOpen={!!quickAddProvider}
+            {quickAdd && (
+                <IntegrationKeyFormModal
+                    isOpen={!!quickAdd}
                     onOpenChange={(open) => {
-                        if (!open) setQuickAddProvider(null);
+                        if (!open) setQuickAdd(null);
                     }}
-                    provider={quickAddProvider.provider}
+                    providerView={quickAdd}
                 />
             )}
         </div>
@@ -111,11 +169,9 @@ function IntegrationCard({
     onQuickAdd: () => void;
 }) {
     const Icon = providerIcons[providerView.provider];
-    const credentialCount = providerView.credentials.length;
-    const accountCount = new Set(
-        providerView.credentials.map((row) => row.account),
-    ).size;
-    const configured = credentialCount > 0;
+    const keyCount = providerView.keys.length;
+    const accountCount = new Set(providerView.keys.map((row) => row.account)).size;
+    const configured = keyCount > 0;
 
     return (
         <article
@@ -158,13 +214,13 @@ function IntegrationCard({
             <div className="flex items-center justify-between gap-2 pt-1 border-t border-border">
                 <span className="text-xs text-muted flex items-center gap-1.5">
                     <KeyRound className="size-3.5" />
-                    {credentialCount === 0
-                        ? "No credentials"
-                        : `${credentialCount} credential${credentialCount === 1 ? "" : "s"} · ${accountCount} account${accountCount === 1 ? "" : "s"}`}
+                    {keyCount === 0
+                        ? "No keys"
+                        : `${keyCount} key${keyCount === 1 ? "" : "s"} · ${accountCount} account${accountCount === 1 ? "" : "s"}`}
                 </span>
                 <span onClick={(e) => e.stopPropagation()}>
                     <Button size="sm" variant="secondary" onPress={onQuickAdd}>
-                        Add credential
+                        Add key
                     </Button>
                 </span>
             </div>

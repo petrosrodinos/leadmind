@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, MaxLength, MinLength } from 'class-validator';
 
-export class UpdateIntegrationCredentialDto {
+export class UpdateIntegrationKeyDto {
     @ApiProperty()
     @IsString()
     @MinLength(1)

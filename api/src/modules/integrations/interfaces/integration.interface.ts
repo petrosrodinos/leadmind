@@ -1,11 +1,18 @@
-import { ExternalIntegrationProvider } from '@/generated/prisma';
-import { IntegrationCredentialKindDefinition } from '../integrations.catalog';
+import {
+    ExternalIntegrationProvider,
+    IntegrationKeyType,
+} from '@/generated/prisma';
 
-export interface IntegrationCredentialResponse {
+export interface IntegrationKeyTypeOption {
+    key_type: IntegrationKeyType;
+    label: string;
+    placeholder: string;
+}
+
+export interface IntegrationKeyResponse {
     uuid: string;
-    provider: ExternalIntegrationProvider;
+    key_type: IntegrationKeyType;
     account: string;
-    kind: string;
     label: string;
     env_name: string;
     last4: string | null;
@@ -13,10 +20,11 @@ export interface IntegrationCredentialResponse {
     updated_at: Date;
 }
 
-export interface IntegrationProviderResponse {
+export interface IntegrationResponse {
     provider: ExternalIntegrationProvider;
+    uuid: string | null;
     label: string;
     description: string;
-    credentialKinds: IntegrationCredentialKindDefinition[];
-    credentials: IntegrationCredentialResponse[];
+    keyTypes: IntegrationKeyTypeOption[];
+    keys: IntegrationKeyResponse[];
 }

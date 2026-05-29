@@ -98,9 +98,9 @@ export const ApiRoutes = {
     integrations: {
         prefix: "/integrations",
         list: "/integrations",
-        createCredential: "/integrations/credentials",
-        updateCredential: (uuid: string) => `/integrations/credentials/${uuid}`,
-        removeCredential: (uuid: string) => `/integrations/credentials/${uuid}`,
+        createKey: (provider: string) => `/integrations/${provider}/keys`,
+        updateKey: (uuid: string) => `/integrations/keys/${uuid}`,
+        removeKey: (uuid: string) => `/integrations/keys/${uuid}`,
     },
     admin: {
         batch_jobs: "/admin/batch-jobs",

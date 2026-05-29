@@ -1,65 +1,70 @@
-import {
-    Body,
-    Controller,
-    Delete,
-    Get,
-    Param,
-    Patch,
-    Post,
-    UseGuards,
-} from '@nestjs/common';
-import {
-    ApiBearerAuth,
-    ApiOperation,
-    ApiResponse,
-    ApiTags,
-} from '@nestjs/swagger';
-import { CurrentUser } from '@/shared/decorators/current-user.decorator';
-import { JwtGuard } from '@/shared/guards/jwt.guard';
-import { IntegrationsService } from './integrations.service';
-import { CreateIntegrationCredentialDto } from './dto/create-integration-credential.dto';
-import { UpdateIntegrationCredentialDto } from './dto/update-integration-credential.dto';
-
-@ApiTags('integrations')
-@ApiBearerAuth()
-@UseGuards(JwtGuard)
-@Controller('integrations')
-export class IntegrationsController {
-    constructor(private readonly integrationsService: IntegrationsService) {}
-
-    @Get()
-    @ApiOperation({ summary: 'List integration providers and stored credentials' })
-    findAll(@CurrentUser('uuid') user_uuid: string) {
-        return this.integrationsService.findAll(user_uuid);
-    }
-
-    @Post('credentials')
-    @ApiOperation({ summary: 'Store a credential for an integration provider' })
-    createCredential(
-        @CurrentUser('uuid') user_uuid: string,
-        @Body() dto: CreateIntegrationCredentialDto,
-    ) {
-        return this.integrationsService.createCredential(user_uuid, dto);
-    }
-
-    @Patch('credentials/:uuid')
-    @ApiOperation({ summary: 'Update a stored credential secret' })
-    @ApiResponse({ status: 404, description: 'Credential not found' })
-    updateCredential(
-        @CurrentUser('uuid') user_uuid: string,
-        @Param('uuid') uuid: string,
-        @Body() dto: UpdateIntegrationCredentialDto,
-    ) {
-        return this.integrationsService.updateCredential(user_uuid, uuid, dto);
-    }
-
-    @Delete('credentials/:uuid')
-    @ApiOperation({ summary: 'Delete a stored credential' })
-    @ApiResponse({ status: 404, description: 'Credential not found' })
-    removeCredential(
-        @CurrentUser('uuid') user_uuid: string,
-        @Param('uuid') uuid: string,
-    ) {
-        return this.integrationsService.removeCredential(user_uuid, uuid);
-    }
-}
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    Param,
+    ParseEnumPipe,
+    Patch,
+    Post,
+    UseGuards,
+} from '@nestjs/common';
+import {
+    ApiBearerAuth,
+    ApiOperation,
+    ApiResponse,
+    ApiTags,
+} from '@nestjs/swagger';
+import { ExternalIntegrationProvider } from '@/generated/prisma';
+import { CurrentUser } from '@/shared/decorators/current-user.decorator';
+import { JwtGuard } from '@/shared/guards/jwt.guard';
+import { IntegrationsService } from './integrations.service';
+import { CreateIntegrationKeyDto } from './dto/create-integration-key.dto';
+import { UpdateIntegrationKeyDto } from './dto/update-integration-key.dto';
+
+@ApiTags('integrations')
+@ApiBearerAuth()
+@UseGuards(JwtGuard)
+@Controller('integrations')
+export class IntegrationsController {
+    constructor(private readonly integrationsService: IntegrationsService) {}
+
+    @Get()
+    @ApiOperation({ summary: 'List integration providers and stored keys' })
+    findAll(@CurrentUser('uuid') user_uuid: string) {
+        return this.integrationsService.findAll(user_uuid);
+    }
+
+    @Post(':provider/keys')
+    @ApiOperation({ summary: 'Store a key for an integration provider' })
+    createKey(
+        @CurrentUser('uuid') user_uuid: string,
+        @Param('provider', new ParseEnumPipe(ExternalIntegrationProvider))
+        provider: ExternalIntegrationProvider,
+        @Body() dto: CreateIntegrationKeyDto,
+    ) {
+        return this.integrationsService.createKey(user_uuid, provider, dto);
+    }
+
+    @Patch('keys/:uuid')
+    @ApiOperation({ summary: 'Update a stored key secret' })
+    @ApiResponse({ status: 404, description: 'Key not found' })
+    updateKey(
+        @CurrentUser('uuid') user_uuid: string,
+        @Param('uuid') uuid: string,
+        @Body() dto: UpdateIntegrationKeyDto,
+    ) {
+        return this.integrationsService.updateKey(user_uuid, uuid, dto);
+    }
+
+    @Delete('keys/:uuid')
+    @ApiOperation({ summary: 'Delete a stored key' })
+    @ApiResponse({ status: 404, description: 'Key not found' })
+    removeKey(
+        @CurrentUser('uuid') user_uuid: string,
+        @Param('uuid') uuid: string,
+    ) {
+        return this.integrationsService.removeKey(user_uuid, uuid);
+    }
+}
+

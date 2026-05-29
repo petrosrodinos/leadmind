@@ -11,88 +11,83 @@ import {
 import { Save } from "lucide-react";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import {
-    useCreateIntegrationCredential,
-    useUpdateIntegrationCredential,
+    useCreateIntegrationKey,
+    useUpdateIntegrationKey,
 } from "@/features/integrations/hooks/use-integrations";
-import type {
-    IntegrationCredential,
-    IntegrationProvider,
-} from "@/features/integrations/interfaces/integrations.interface";
 import {
-    getCredentialKindDefinition,
-    getIntegrationProviderDefinition,
-} from "@/features/integrations/constants/integrations.catalog";
+    formatIntegrationKeyEnvName,
+    KEY_TYPE_PLACEHOLDERS,
+} from "@/features/integrations/constants/integration-key-types";
+import type {
+    IntegrationKey,
+    IntegrationKeyType,
+    IntegrationProviderView,
+} from "@/features/integrations/interfaces/integrations.interface";
 
-interface IntegrationCredentialFormModalProps {
+interface IntegrationKeyFormModalProps {
     isOpen: boolean;
     onOpenChange: (open: boolean) => void;
-    provider: IntegrationProvider;
-    credential?: IntegrationCredential | null;
+    providerView: IntegrationProviderView;
+    keyItem?: IntegrationKey | null;
+    initialKeyType?: IntegrationKeyType;
 }
 
-function buildEnvPreview(
-    provider: IntegrationProvider,
-    kind: string,
-    account: string,
-) {
-    const providerPart = provider;
-    const kindPart = kind.toUpperCase();
-    const accountPart =
-        account.trim() === "" || account.trim() === "default"
-            ? ""
-            : `_${account.trim().toUpperCase()}`;
-    return `${providerPart}_${kindPart}${accountPart}`;
-}
-
-export function IntegrationCredentialFormModal({
+export function IntegrationKeyFormModal({
     isOpen,
     onOpenChange,
-    provider,
-    credential,
-}: IntegrationCredentialFormModalProps) {
-    const definition = getIntegrationProviderDefinition(provider);
-    const createCredential = useCreateIntegrationCredential();
-    const updateCredential = useUpdateIntegrationCredential();
-    const isEdit = !!credential;
+    providerView,
+    keyItem,
+    initialKeyType,
+}: IntegrationKeyFormModalProps) {
+    const createKey = useCreateIntegrationKey(providerView.provider);
+    const updateKey = useUpdateIntegrationKey();
+    const isEdit = !!keyItem;
 
-    const defaultKind = definition.credentialKinds[0]?.kind ?? "api_key";
+    const defaultKeyType =
+        initialKeyType ??
+        keyItem?.key_type ??
+        providerView.keyTypes[0]?.key_type ??
+        "API_KEY";
 
-    const [kind, setKind] = useState(defaultKind);
-    const [account, setAccount] = useState("default");
+    const [keyType, setKeyType] = useState<IntegrationKeyType>(defaultKeyType);
+    const [account, setAccount] = useState("1");
     const [secret, setSecret] = useState("");
-    const [kindError, setKindError] = useState<string | null>(null);
+    const [keyTypeError, setKeyTypeError] = useState<string | null>(null);
     const [accountError, setAccountError] = useState<string | null>(null);
     const [secretError, setSecretError] = useState<string | null>(null);
 
-    const kindMeta = useMemo(
-        () => getCredentialKindDefinition(provider, kind),
-        [provider, kind],
+    const keyTypeMeta = useMemo(
+        () => providerView.keyTypes.find((row) => row.key_type === keyType),
+        [providerView.keyTypes, keyType],
     );
 
     useEffect(() => {
         if (!isOpen) return;
-        setKind(credential?.kind ?? defaultKind);
-        setAccount(credential?.account ?? "default");
+        setKeyType(keyItem?.key_type ?? initialKeyType ?? defaultKeyType);
+        setAccount(keyItem?.account ?? "1");
         setSecret("");
-        setKindError(null);
+        setKeyTypeError(null);
         setAccountError(null);
         setSecretError(null);
-    }, [isOpen, credential, defaultKind]);
+    }, [isOpen, keyItem, initialKeyType, defaultKeyType]);
 
-    const pending = createCredential.isPending || updateCredential.isPending;
-    const envPreview = buildEnvPreview(provider, kind, account);
+    const pending = createKey.isPending || updateKey.isPending;
+    const envPreview = formatIntegrationKeyEnvName(
+        providerView.provider,
+        keyType,
+        account,
+    );
 
     const handleSubmit = async () => {
-        const trimmedAccount = account.trim() || "default";
-        const trimmedKind = kind.trim();
+        const trimmedAccount = account.trim();
         const trimmedSecret = secret.trim();
         let valid = true;
 
-        if (!trimmedKind) {
-            setKindError("Credential type is required");
+        if (!keyType) {
+            setKeyTypeError("Credential type is required");
             valid = false;
         } else {
-            setKindError(null);
+            setKeyTypeError(null);
         }
 
         if (!/^[a-zA-Z0-9_-]+$/.test(trimmedAccount)) {
@@ -112,15 +107,14 @@ export function IntegrationCredentialFormModal({
         if (!valid) return;
 
         try {
-            if (isEdit && credential) {
-                await updateCredential.mutateAsync({
-                    uuid: credential.uuid,
+            if (isEdit && keyItem) {
+                await updateKey.mutateAsync({
+                    uuid: keyItem.uuid,
                     payload: { secret: trimmedSecret },
                 });
             } else {
-                await createCredential.mutateAsync({
-                    provider,
-                    kind: trimmedKind,
+                await createKey.mutateAsync({
+                    key_type: keyType,
                     account: trimmedAccount,
                     secret: trimmedSecret,
                 });
@@ -139,8 +133,8 @@ export function IntegrationCredentialFormModal({
                         <Modal.Header>
                             <Modal.Heading>
                                 {isEdit
-                                    ? `Update ${credential?.label ?? "credential"}`
-                                    : `Add ${definition.label} credential`}
+                                    ? `Update ${keyItem?.env_name ?? "key"}`
+                                    : `Add ${providerView.label} key`}
                             </Modal.Heading>
                         </Modal.Header>
                         <Modal.Body className="space-y-4">
@@ -148,9 +142,11 @@ export function IntegrationCredentialFormModal({
                                 <Select
                                     className="w-full"
                                     isDisabled={isEdit}
-                                    value={kind}
+                                    value={keyType}
                                     onChange={(value) =>
-                                        setKind(String(value ?? defaultKind))
+                                        setKeyType(
+                                            String(value ?? defaultKeyType) as IntegrationKeyType,
+                                        )
                                     }
                                 >
                                     <Label>Credential type</Label>
@@ -160,10 +156,10 @@ export function IntegrationCredentialFormModal({
                                     </Select.Trigger>
                                     <Select.Popover>
                                         <ListBox>
-                                            {definition.credentialKinds.map((row) => (
+                                            {providerView.keyTypes.map((row) => (
                                                 <ListBox.Item
-                                                    key={row.kind}
-                                                    id={row.kind}
+                                                    key={row.key_type}
+                                                    id={row.key_type}
                                                     textValue={row.label}
                                                 >
                                                     {row.label}
@@ -173,24 +169,34 @@ export function IntegrationCredentialFormModal({
                                         </ListBox>
                                     </Select.Popover>
                                 </Select>
-                                {kindError && <FieldError>{kindError}</FieldError>}
+                                {keyTypeError && (
+                                    <FieldError>{keyTypeError}</FieldError>
+                                )}
                             </div>
 
                             <div className="flex flex-col gap-1.5">
-                                <Label htmlFor="integration-credential-account">
+                                <Label htmlFor="integration-key-account">
                                     Account
                                 </Label>
                                 <Input
-                                    id="integration-credential-account"
+                                    id="integration-key-account"
                                     disabled={isEdit}
-                                    placeholder="default, 1, production"
+                                    placeholder="1, production, main"
                                     value={account}
                                     onChange={(e) => setAccount(e.target.value)}
                                 />
                                 <p className="text-xs text-muted">
-                                    Use the same account for credentials that belong
-                                    together, e.g. Resend API key and webhook secret both
-                                    on account <span className="font-mono">1</span>.
+                                    Use the same account for keys that belong
+                                    together. Example: account{" "}
+                                    <span className="font-mono">1</span> gives{" "}
+                                    <span className="font-mono">
+                                        RESEND_API_KEY_1
+                                    </span>{" "}
+                                    and{" "}
+                                    <span className="font-mono">
+                                        RESEND_WEBHOOK_SECRET_1
+                                    </span>
+                                    .
                                 </p>
                                 {accountError && (
                                     <FieldError>{accountError}</FieldError>
@@ -205,14 +211,17 @@ export function IntegrationCredentialFormModal({
                             </div>
 
                             <div className="flex flex-col gap-1.5">
-                                <Label htmlFor="integration-credential-secret">
-                                    {kindMeta?.label ?? "Secret"}
+                                <Label htmlFor="integration-key-secret">
+                                    {keyTypeMeta?.label ?? "Secret"}
                                 </Label>
                                 <Input
-                                    id="integration-credential-secret"
+                                    id="integration-key-secret"
                                     type="password"
                                     autoComplete="off"
-                                    placeholder={kindMeta?.placeholder}
+                                    placeholder={
+                                        keyTypeMeta?.placeholder ??
+                                        KEY_TYPE_PLACEHOLDERS[keyType]
+                                    }
                                     value={secret}
                                     onChange={(e) => setSecret(e.target.value)}
                                 />
@@ -233,7 +242,7 @@ export function IntegrationCredentialFormModal({
                                 onPress={handleSubmit}
                             >
                                 <Save className="size-4" />
-                                {isEdit ? "Save secret" : "Save credential"}
+                                {isEdit ? "Save secret" : "Save key"}
                             </ActionButtonWithPending>
                         </Modal.Footer>
                     </Modal.Dialog>

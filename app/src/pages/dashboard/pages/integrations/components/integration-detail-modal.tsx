@@ -2,13 +2,14 @@ import { useEffect, useMemo, useState } from "react";
 import { Button, Modal } from "@heroui/react";
 import { KeyRound, Pencil, Plus, Trash2 } from "lucide-react";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
-import { useDeleteIntegrationCredential } from "@/features/integrations/hooks/use-integrations";
+import { useDeleteIntegrationKey } from "@/features/integrations/hooks/use-integrations";
+import { groupKeysByAccount } from "@/features/integrations/constants/integration-key-types";
 import type {
-    IntegrationCredential,
+    IntegrationKey,
+    IntegrationKeyType,
     IntegrationProviderView,
 } from "@/features/integrations/interfaces/integrations.interface";
-import { groupCredentialsByAccount } from "@/features/integrations/constants/integrations.catalog";
-import { IntegrationCredentialFormModal } from "./integration-credential-form-modal";
+import { IntegrationKeyFormModal } from "./integration-key-form-modal";
 
 interface IntegrationDetailModalProps {
     isOpen: boolean;
@@ -21,47 +22,48 @@ export function IntegrationDetailModal({
     onOpenChange,
     providerView,
 }: IntegrationDetailModalProps) {
-    const deleteCredential = useDeleteIntegrationCredential();
+    const deleteKey = useDeleteIntegrationKey();
 
     const [formOpen, setFormOpen] = useState(false);
-    const [editingCredential, setEditingCredential] =
-        useState<IntegrationCredential | null>(null);
-    const [credentialToDelete, setCredentialToDelete] =
-        useState<IntegrationCredential | null>(null);
+    const [editingKey, setEditingKey] = useState<IntegrationKey | null>(null);
+    const [initialKeyType, setInitialKeyType] = useState<
+        IntegrationKeyType | undefined
+    >();
+    const [keyToDelete, setKeyToDelete] = useState<IntegrationKey | null>(null);
 
-    const groupedCredentials = useMemo(
-        () =>
-            providerView
-                ? groupCredentialsByAccount(providerView.credentials)
-                : [],
+    const groupedKeys = useMemo(
+        () => (providerView ? groupKeysByAccount(providerView.keys) : []),
         [providerView],
     );
 
     useEffect(() => {
         if (!isOpen) return;
-        setEditingCredential(null);
-        setCredentialToDelete(null);
+        setEditingKey(null);
+        setInitialKeyType(undefined);
+        setKeyToDelete(null);
     }, [isOpen]);
 
     if (!providerView) {
         return null;
     }
 
-    const openCreate = () => {
-        setEditingCredential(null);
+    const openCreate = (keyType?: IntegrationKeyType) => {
+        setEditingKey(null);
+        setInitialKeyType(keyType);
         setFormOpen(true);
     };
 
-    const openEdit = (credential: IntegrationCredential) => {
-        setEditingCredential(credential);
+    const openEdit = (key: IntegrationKey) => {
+        setEditingKey(key);
+        setInitialKeyType(undefined);
         setFormOpen(true);
     };
 
     const handleDelete = async () => {
-        if (!credentialToDelete) return;
+        if (!keyToDelete) return;
         try {
-            await deleteCredential.mutateAsync(credentialToDelete.uuid);
-            setCredentialToDelete(null);
+            await deleteKey.mutateAsync(keyToDelete.uuid);
+            setKeyToDelete(null);
         } catch {
         }
     };
@@ -80,24 +82,39 @@ export function IntegrationDetailModal({
                                 </p>
                             </Modal.Header>
                             <Modal.Body className="space-y-5">
-                                <div className="flex items-center justify-between gap-3">
+                                <div className="flex items-center justify-between gap-3 flex-wrap">
                                     <h3 className="text-sm font-semibold text-foreground">
-                                        Credentials
+                                        Keys
                                     </h3>
-                                    <Button size="sm" onPress={openCreate}>
-                                        <Plus className="size-4" />
-                                        Add credential
-                                    </Button>
+                                    <div className="flex items-center gap-2">
+                                        {providerView.keyTypes.some(
+                                            (row) => row.key_type === "WEBHOOK_SECRET",
+                                        ) && (
+                                            <Button
+                                                size="sm"
+                                                variant="secondary"
+                                                onPress={() =>
+                                                    openCreate("WEBHOOK_SECRET")
+                                                }
+                                            >
+                                                Add webhook secret
+                                            </Button>
+                                        )}
+                                        <Button size="sm" onPress={() => openCreate()}>
+                                            <Plus className="size-4" />
+                                            Add key
+                                        </Button>
+                                    </div>
                                 </div>
 
-                                {groupedCredentials.length === 0 ? (
+                                {groupedKeys.length === 0 ? (
                                     <div className="rounded-lg border border-dashed border-border p-6 text-center text-sm text-muted">
-                                        No credentials yet. Add one to connect{" "}
-                                        {providerView.label}.
+                                        No keys yet. Add an API key or webhook secret
+                                        for {providerView.label}.
                                     </div>
                                 ) : (
                                     <div className="space-y-4">
-                                        {groupedCredentials.map((group) => (
+                                        {groupedKeys.map((group) => (
                                             <section
                                                 key={group.account}
                                                 className="rounded-lg border border-border bg-surface-secondary/20"
@@ -111,20 +128,20 @@ export function IntegrationDetailModal({
                                                     </p>
                                                 </div>
                                                 <ul className="divide-y divide-border">
-                                                    {group.credentials.map((credential) => (
+                                                    {group.keys.map((key) => (
                                                         <li
-                                                            key={credential.uuid}
+                                                            key={key.uuid}
                                                             className="flex items-center gap-3 px-3 py-2.5"
                                                         >
                                                             <KeyRound className="size-4 text-accent shrink-0" />
                                                             <div className="flex-1 min-w-0">
                                                                 <p className="text-sm font-medium text-foreground truncate">
-                                                                    {credential.label}
+                                                                    {key.label}
                                                                 </p>
                                                                 <p className="text-xs text-muted font-mono truncate">
-                                                                    {credential.env_name}
-                                                                    {credential.last4
-                                                                        ? ` · •••• ${credential.last4}`
+                                                                    {key.env_name}
+                                                                    {key.last4
+                                                                        ? ` · •••• ${key.last4}`
                                                                         : ""}
                                                                 </p>
                                                             </div>
@@ -133,7 +150,7 @@ export function IntegrationDetailModal({
                                                                     size="sm"
                                                                     variant="ghost"
                                                                     onPress={() =>
-                                                                        openEdit(credential)
+                                                                        openEdit(key)
                                                                     }
                                                                 >
                                                                     <Pencil className="size-3.5" />
@@ -142,9 +159,7 @@ export function IntegrationDetailModal({
                                                                     size="sm"
                                                                     variant="ghost"
                                                                     onPress={() =>
-                                                                        setCredentialToDelete(
-                                                                            credential,
-                                                                        )
+                                                                        setKeyToDelete(key)
                                                                     }
                                                                 >
                                                                     <Trash2 className="size-3.5" />
@@ -171,25 +186,26 @@ export function IntegrationDetailModal({
                 </Modal.Backdrop>
             </Modal>
 
-            <IntegrationCredentialFormModal
+            <IntegrationKeyFormModal
                 isOpen={formOpen}
                 onOpenChange={setFormOpen}
-                provider={providerView.provider}
-                credential={editingCredential}
+                providerView={providerView}
+                keyItem={editingKey}
+                initialKeyType={initialKeyType}
             />
 
             <ConfirmDialog
-                isOpen={!!credentialToDelete}
+                isOpen={!!keyToDelete}
                 onOpenChange={(open) => {
-                    if (!open) setCredentialToDelete(null);
+                    if (!open) setKeyToDelete(null);
                 }}
-                title="Delete credential?"
+                title="Delete key?"
                 description={
-                    credentialToDelete ? (
+                    keyToDelete ? (
                         <>
                             Remove{" "}
                             <span className="font-medium text-foreground">
-                                {credentialToDelete.env_name}
+                                {keyToDelete.env_name}
                             </span>
                             ? This cannot be undone.
                         </>
@@ -197,7 +213,7 @@ export function IntegrationDetailModal({
                 }
                 confirmLabel="Delete"
                 variant="danger"
-                isPending={deleteCredential.isPending}
+                isPending={deleteKey.isPending}
                 onConfirm={handleDelete}
             />
         </>

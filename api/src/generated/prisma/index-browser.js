@@ -411,13 +411,22 @@ exports.Prisma.OpenAiBatchJobScalarFieldEnum = {
   updated_at: 'updated_at'
 };
 
-exports.Prisma.IntegrationCredentialScalarFieldEnum = {
+exports.Prisma.IntegrationScalarFieldEnum = {
   id: 'id',
   uuid: 'uuid',
   user_uuid: 'user_uuid',
   provider: 'provider',
+  title: 'title',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.IntegrationKeyScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  integration_uuid: 'integration_uuid',
+  key_type: 'key_type',
   account: 'account',
-  kind: 'kind',
   secret: 'secret',
   last4: 'last4',
   created_at: 'created_at',
@@ -599,6 +608,14 @@ exports.ExternalIntegrationProvider = exports.$Enums.ExternalIntegrationProvider
   HUBSPOT: 'HUBSPOT'
 };
 
+exports.IntegrationKeyType = exports.$Enums.IntegrationKeyType = {
+  API_KEY: 'API_KEY',
+  WEBHOOK_SECRET: 'WEBHOOK_SECRET',
+  ACCOUNT_SID: 'ACCOUNT_SID',
+  AUTH_TOKEN: 'AUTH_TOKEN',
+  ACCESS_TOKEN: 'ACCESS_TOKEN'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Filter: 'Filter',
@@ -618,7 +635,8 @@ exports.Prisma.ModelName = {
   MarketingCampaign: 'MarketingCampaign',
   MarketingCampaignContact: 'MarketingCampaignContact',
   OpenAiBatchJob: 'OpenAiBatchJob',
-  IntegrationCredential: 'IntegrationCredential'
+  Integration: 'Integration',
+  IntegrationKey: 'IntegrationKey'
 };
 
 /**

@@ -1,59 +1,73 @@
+import axios from "axios";
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type {
-    CreateIntegrationCredentialPayload,
-    IntegrationCredential,
+    CreateIntegrationKeyPayload,
+    IntegrationKey,
+    IntegrationProvider,
     IntegrationProviderView,
-    UpdateIntegrationCredentialPayload,
+    UpdateIntegrationKeyPayload,
 } from "../interfaces/integrations.interface";
+
+function apiErrorMessage(error: unknown, fallback: string): string {
+    if (!axios.isAxiosError(error)) {
+        return fallback;
+    }
+    const data = error.response?.data as { message?: string | string[] } | undefined;
+    if (!data?.message) {
+        return fallback;
+    }
+    return Array.isArray(data.message) ? data.message.join(", ") : data.message;
+}
 
 export const listIntegrations = async (): Promise<IntegrationProviderView[]> => {
     try {
         const response = await axiosInstance.get(ApiRoutes.integrations.list);
         return response.data;
-    } catch {
-        throw new Error("Failed to load integrations. Please try again.");
+    } catch (error) {
+        throw new Error(apiErrorMessage(error, "Failed to load integrations."));
     }
 };
 
-export const createIntegrationCredential = async (
-    payload: CreateIntegrationCredentialPayload,
-): Promise<IntegrationCredential> => {
+export const createIntegrationKey = async (
+    provider: IntegrationProvider,
+    payload: CreateIntegrationKeyPayload,
+): Promise<IntegrationKey> => {
     try {
         const response = await axiosInstance.post(
-            ApiRoutes.integrations.createCredential,
+            ApiRoutes.integrations.createKey(provider),
             payload,
         );
         return response.data;
-    } catch {
-        throw new Error("Failed to store credential. Please try again.");
+    } catch (error) {
+        throw new Error(apiErrorMessage(error, "Failed to store key."));
     }
 };
 
-export const updateIntegrationCredential = async (
+export const updateIntegrationKey = async (
     uuid: string,
-    payload: UpdateIntegrationCredentialPayload,
-): Promise<IntegrationCredential> => {
+    payload: UpdateIntegrationKeyPayload,
+): Promise<IntegrationKey> => {
     try {
         const response = await axiosInstance.patch(
-            ApiRoutes.integrations.updateCredential(uuid),
+            ApiRoutes.integrations.updateKey(uuid),
             payload,
         );
         return response.data;
-    } catch {
-        throw new Error("Failed to update credential. Please try again.");
+    } catch (error) {
+        throw new Error(apiErrorMessage(error, "Failed to update key."));
     }
 };
 
-export const deleteIntegrationCredential = async (
+export const deleteIntegrationKey = async (
     uuid: string,
 ): Promise<{ uuid: string }> => {
     try {
         const response = await axiosInstance.delete(
-            ApiRoutes.integrations.removeCredential(uuid),
+            ApiRoutes.integrations.removeKey(uuid),
         );
         return response.data;
-    } catch {
-        throw new Error("Failed to delete credential. Please try again.");
+    } catch (error) {
+        throw new Error(apiErrorMessage(error, "Failed to delete key."));
     }
 };
