@@ -1,4 +1,4 @@
-import { useMemo, useState, type ComponentType } from "react";
+import { useState, type ComponentType } from "react";
 import { Button, Chip } from "@heroui/react";
 import {
     Bot,
@@ -10,21 +10,12 @@ import {
     Sparkles,
 } from "lucide-react";
 import { useIntegrations } from "@/features/integrations/hooks/use-integrations";
-import type {
-    Integration,
-    IntegrationProvider,
-} from "@/features/integrations/interfaces/integrations.interface";
-import {
-    integrationProviderMeta,
-    integrationProviderOrder,
-} from "@/features/integrations/constants/integration-providers";
+import type { IntegrationProviderView } from "@/features/integrations/interfaces/integrations.interface";
+import { integrationProviderDefinitions } from "@/features/integrations/constants/integrations.catalog";
 import { IntegrationDetailModal } from "./components/integration-detail-modal";
-import { IntegrationKeyFormModal } from "./components/integration-key-form-modal";
+import { IntegrationCredentialFormModal } from "./components/integration-credential-form-modal";
 
-const providerIcons: Record<
-    IntegrationProvider,
-    ComponentType<{ className?: string }>
-> = {
+const providerIcons: Record<string, ComponentType<{ className?: string }>> = {
     OPENAI: Sparkles,
     ANTHROPIC: Bot,
     RESEND: Mail,
@@ -35,34 +26,23 @@ const providerIcons: Record<
 
 export default function IntegrationsPage() {
     const { data, isLoading } = useIntegrations();
-    const [selected, setSelected] = useState<Integration | null>(null);
+    const [selected, setSelected] = useState<IntegrationProviderView | null>(null);
     const [detailOpen, setDetailOpen] = useState(false);
     const [quickAddProvider, setQuickAddProvider] =
-        useState<IntegrationProvider | null>(null);
+        useState<IntegrationProviderView | null>(null);
 
-    const integrationsByProvider = useMemo(() => {
-        const map = new Map<IntegrationProvider, Integration>();
-        for (const row of data ?? []) {
-            map.set(row.provider, row);
-        }
-        return integrationProviderOrder.map(
-            (provider) =>
-                map.get(provider) ?? {
-                    provider,
-                    uuid: null,
-                    title: null,
-                    keys: [],
-                },
-        );
-    }, [data]);
+    const providers = data ?? integrationProviderDefinitions.map((definition) => ({
+        ...definition,
+        credentials: [],
+    }));
 
-    const openDetail = (integration: Integration) => {
-        setSelected(integration);
+    const openDetail = (providerView: IntegrationProviderView) => {
+        setSelected(providerView);
         setDetailOpen(true);
     };
 
-    const openQuickAdd = (integration: Integration) => {
-        setQuickAddProvider(integration.provider);
+    const openQuickAdd = (providerView: IntegrationProviderView) => {
+        setQuickAddProvider(providerView);
     };
 
     return (
@@ -72,8 +52,9 @@ export default function IntegrationsPage() {
                     Integrations
                 </h1>
                 <p className="text-sm text-muted max-w-2xl">
-                    Store API keys and credentials for external services. Each
-                    integration supports multiple named keys.
+                    Store credentials per provider. Group related secrets under the
+                    same account, e.g. <span className="font-mono">RESEND_API_KEY_1</span>{" "}
+                    and <span className="font-mono">RESEND_WEBHOOK_SECRET_1</span>.
                 </p>
             </header>
 
@@ -81,12 +62,12 @@ export default function IntegrationsPage() {
                 <SkeletonGrid />
             ) : (
                 <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                    {integrationsByProvider.map((integration) => (
+                    {providers.map((providerView) => (
                         <IntegrationCard
-                            key={integration.provider}
-                            integration={integration}
-                            onOpen={() => openDetail(integration)}
-                            onQuickAdd={() => openQuickAdd(integration)}
+                            key={providerView.provider}
+                            providerView={providerView}
+                            onOpen={() => openDetail(providerView)}
+                            onQuickAdd={() => openQuickAdd(providerView)}
                         />
                     ))}
                 </div>
@@ -98,21 +79,22 @@ export default function IntegrationsPage() {
                     setDetailOpen(open);
                     if (!open) setSelected(null);
                 }}
-                integration={
+                providerView={
                     selected
-                        ? (data?.find((row) => row.provider === selected.provider) ??
-                          selected)
+                        ? (data?.find(
+                              (row) => row.provider === selected.provider,
+                          ) ?? selected)
                         : null
                 }
             />
 
             {quickAddProvider && (
-                <IntegrationKeyFormModal
+                <IntegrationCredentialFormModal
                     isOpen={!!quickAddProvider}
                     onOpenChange={(open) => {
                         if (!open) setQuickAddProvider(null);
                     }}
-                    provider={quickAddProvider}
+                    provider={quickAddProvider.provider}
                 />
             )}
         </div>
@@ -120,18 +102,20 @@ export default function IntegrationsPage() {
 }
 
 function IntegrationCard({
-    integration,
+    providerView,
     onOpen,
     onQuickAdd,
 }: {
-    integration: Integration;
+    providerView: IntegrationProviderView;
     onOpen: () => void;
     onQuickAdd: () => void;
 }) {
-    const meta = integrationProviderMeta[integration.provider];
-    const Icon = providerIcons[integration.provider];
-    const keyCount = integration.keys.length;
-    const configured = keyCount > 0;
+    const Icon = providerIcons[providerView.provider];
+    const credentialCount = providerView.credentials.length;
+    const accountCount = new Set(
+        providerView.credentials.map((row) => row.account),
+    ).size;
+    const configured = credentialCount > 0;
 
     return (
         <article
@@ -153,7 +137,7 @@ function IntegrationCard({
                 <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                         <h3 className="text-sm font-semibold text-foreground">
-                            {meta.label}
+                            {providerView.label}
                         </h3>
                         <Chip
                             size="sm"
@@ -166,7 +150,7 @@ function IntegrationCard({
                         </Chip>
                     </div>
                     <p className="text-xs text-muted line-clamp-2 mt-1">
-                        {meta.description}
+                        {providerView.description}
                     </p>
                 </div>
             </div>
@@ -174,13 +158,13 @@ function IntegrationCard({
             <div className="flex items-center justify-between gap-2 pt-1 border-t border-border">
                 <span className="text-xs text-muted flex items-center gap-1.5">
                     <KeyRound className="size-3.5" />
-                    {keyCount === 0
-                        ? "No keys"
-                        : `${keyCount} key${keyCount === 1 ? "" : "s"}`}
+                    {credentialCount === 0
+                        ? "No credentials"
+                        : `${credentialCount} credential${credentialCount === 1 ? "" : "s"} · ${accountCount} account${accountCount === 1 ? "" : "s"}`}
                 </span>
                 <span onClick={(e) => e.stopPropagation()}>
                     <Button size="sm" variant="secondary" onPress={onQuickAdd}>
-                        Add key
+                        Add credential
                     </Button>
                 </span>
             </div>

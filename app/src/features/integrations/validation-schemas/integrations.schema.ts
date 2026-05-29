@@ -1,20 +1,30 @@
 import { z } from "zod";
+import { IntegrationProviders } from "../interfaces/integrations.interface";
 
-export const integrationKeySchema = z.object({
-    title: z.string().min(1, "Title is required").max(120),
-    secret: z.string().min(1, "Secret is required").max(4096),
+const providerValues = Object.values(IntegrationProviders) as [
+    (typeof IntegrationProviders)[keyof typeof IntegrationProviders],
+    ...(typeof IntegrationProviders)[keyof typeof IntegrationProviders][],
+];
+
+export const integrationCredentialSchema = z.object({
+    provider: z.enum(providerValues),
+    kind: z
+        .string()
+        .min(1)
+        .max(64)
+        .regex(/^[a-z][a-z0-9_]*$/),
+    account: z
+        .string()
+        .min(1)
+        .max(32)
+        .regex(/^[a-zA-Z0-9_-]+$/),
+    secret: z.string().min(1).max(4096),
 });
 
-export const integrationKeyUpdateSchema = z
-    .object({
-        title: z.string().min(1).max(120).optional(),
-        secret: z.string().min(1).max(4096).optional(),
-    })
-    .refine((data) => data.title !== undefined || data.secret !== undefined, {
-        message: "Update title or secret",
-    });
+export const integrationCredentialUpdateSchema = z.object({
+    secret: z.string().min(1).max(4096),
+});
 
-export type IntegrationKeyFormData = z.infer<typeof integrationKeySchema>;
-export type IntegrationKeyUpdateFormData = z.infer<
-    typeof integrationKeyUpdateSchema
+export type IntegrationCredentialFormData = z.infer<
+    typeof integrationCredentialSchema
 >;

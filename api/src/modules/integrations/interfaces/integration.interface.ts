@@ -1,16 +1,22 @@
 import { ExternalIntegrationProvider } from '@/generated/prisma';
+import { IntegrationCredentialKindDefinition } from '../integrations.catalog';
 
-export interface IntegrationKeyResponse {
+export interface IntegrationCredentialResponse {
     uuid: string;
-    title: string;
+    provider: ExternalIntegrationProvider;
+    account: string;
+    kind: string;
+    label: string;
+    env_name: string;
     last4: string | null;
     created_at: Date;
     updated_at: Date;
 }
 
-export interface IntegrationResponse {
+export interface IntegrationProviderResponse {
     provider: ExternalIntegrationProvider;
-    uuid: string | null;
-    title: string | null;
-    keys: IntegrationKeyResponse[];
+    label: string;
+    description: string;
+    credentialKinds: IntegrationCredentialKindDefinition[];
+    credentials: IntegrationCredentialResponse[];
 }

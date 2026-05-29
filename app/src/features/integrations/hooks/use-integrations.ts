@@ -1,15 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "@/hooks/use-toast";
 import {
-    createIntegrationKey,
-    deleteIntegrationKey,
+    createIntegrationCredential,
+    deleteIntegrationCredential,
     listIntegrations,
-    updateIntegrationKey,
+    updateIntegrationCredential,
 } from "../services/integrations.service";
 import type {
-    CreateIntegrationKeyPayload,
-    IntegrationProvider,
-    UpdateIntegrationKeyPayload,
+    CreateIntegrationCredentialPayload,
+    UpdateIntegrationCredentialPayload,
 } from "../interfaces/integrations.interface";
 
 export const integrationsQueryKeys = {
@@ -24,20 +23,18 @@ export function useIntegrations() {
     });
 }
 
-export function useCreateIntegrationKey() {
+export function useCreateIntegrationCredential() {
     const qc = useQueryClient();
     return useMutation({
-        mutationFn: (vars: {
-            provider: IntegrationProvider;
-            payload: CreateIntegrationKeyPayload;
-        }) => createIntegrationKey(vars.provider, vars.payload),
+        mutationFn: (payload: CreateIntegrationCredentialPayload) =>
+            createIntegrationCredential(payload),
         onSuccess: () => {
             qc.invalidateQueries({ queryKey: integrationsQueryKeys.all });
-            toast({ title: "Key added", duration: 1500 });
+            toast({ title: "Credential saved", duration: 1500 });
         },
         onError: (error: Error) => {
             toast({
-                title: "Could not add key",
+                title: "Could not save credential",
                 description: error.message,
                 variant: "error",
                 duration: 3000,
@@ -46,20 +43,20 @@ export function useCreateIntegrationKey() {
     });
 }
 
-export function useUpdateIntegrationKey() {
+export function useUpdateIntegrationCredential() {
     const qc = useQueryClient();
     return useMutation({
         mutationFn: (vars: {
-            keyUuid: string;
-            payload: UpdateIntegrationKeyPayload;
-        }) => updateIntegrationKey(vars.keyUuid, vars.payload),
+            uuid: string;
+            payload: UpdateIntegrationCredentialPayload;
+        }) => updateIntegrationCredential(vars.uuid, vars.payload),
         onSuccess: () => {
             qc.invalidateQueries({ queryKey: integrationsQueryKeys.all });
-            toast({ title: "Key updated", duration: 1500 });
+            toast({ title: "Credential updated", duration: 1500 });
         },
         onError: (error: Error) => {
             toast({
-                title: "Could not update key",
+                title: "Could not update credential",
                 description: error.message,
                 variant: "error",
                 duration: 3000,
@@ -68,17 +65,17 @@ export function useUpdateIntegrationKey() {
     });
 }
 
-export function useDeleteIntegrationKey() {
+export function useDeleteIntegrationCredential() {
     const qc = useQueryClient();
     return useMutation({
-        mutationFn: (keyUuid: string) => deleteIntegrationKey(keyUuid),
+        mutationFn: (uuid: string) => deleteIntegrationCredential(uuid),
         onSuccess: () => {
             qc.invalidateQueries({ queryKey: integrationsQueryKeys.all });
-            toast({ title: "Key deleted", duration: 1500 });
+            toast({ title: "Credential deleted", duration: 1500 });
         },
         onError: (error: Error) => {
             toast({
-                title: "Could not delete key",
+                title: "Could not delete credential",
                 description: error.message,
                 variant: "error",
                 duration: 3000,

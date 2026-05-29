@@ -104,15 +104,10 @@ export type MarketingCampaignContact = $Result.DefaultSelection<Prisma.$Marketin
  */
 export type OpenAiBatchJob = $Result.DefaultSelection<Prisma.$OpenAiBatchJobPayload>
 /**
- * Model Integration
+ * Model IntegrationCredential
  * 
  */
-export type Integration = $Result.DefaultSelection<Prisma.$IntegrationPayload>
-/**
- * Model IntegrationKey
- * 
- */
-export type IntegrationKey = $Result.DefaultSelection<Prisma.$IntegrationKeyPayload>
+export type IntegrationCredential = $Result.DefaultSelection<Prisma.$IntegrationCredentialPayload>
 
 /**
  * Enums
@@ -675,24 +670,14 @@ export class PrismaClient<
   get openAiBatchJob(): Prisma.OpenAiBatchJobDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.integration`: Exposes CRUD operations for the **Integration** model.
+   * `prisma.integrationCredential`: Exposes CRUD operations for the **IntegrationCredential** model.
     * Example usage:
     * ```ts
-    * // Fetch zero or more Integrations
-    * const integrations = await prisma.integration.findMany()
+    * // Fetch zero or more IntegrationCredentials
+    * const integrationCredentials = await prisma.integrationCredential.findMany()
     * ```
     */
-  get integration(): Prisma.IntegrationDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.integrationKey`: Exposes CRUD operations for the **IntegrationKey** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more IntegrationKeys
-    * const integrationKeys = await prisma.integrationKey.findMany()
-    * ```
-    */
-  get integrationKey(): Prisma.IntegrationKeyDelegate<ExtArgs, ClientOptions>;
+  get integrationCredential(): Prisma.IntegrationCredentialDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1145,8 +1130,7 @@ export namespace Prisma {
     MarketingCampaign: 'MarketingCampaign',
     MarketingCampaignContact: 'MarketingCampaignContact',
     OpenAiBatchJob: 'OpenAiBatchJob',
-    Integration: 'Integration',
-    IntegrationKey: 'IntegrationKey'
+    IntegrationCredential: 'IntegrationCredential'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1162,7 +1146,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "filter" | "scoringInstruction" | "filterScoringInstruction" | "rawLead" | "lead" | "leadEnrichment" | "contact" | "contactScore" | "contactTag" | "interaction" | "outreachMessage" | "outreachSequence" | "filterJob" | "senderProfile" | "marketingCampaign" | "marketingCampaignContact" | "openAiBatchJob" | "integration" | "integrationKey"
+      modelProps: "user" | "filter" | "scoringInstruction" | "filterScoringInstruction" | "rawLead" | "lead" | "leadEnrichment" | "contact" | "contactScore" | "contactTag" | "interaction" | "outreachMessage" | "outreachSequence" | "filterJob" | "senderProfile" | "marketingCampaign" | "marketingCampaignContact" | "openAiBatchJob" | "integrationCredential"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2498,151 +2482,77 @@ export namespace Prisma {
           }
         }
       }
-      Integration: {
-        payload: Prisma.$IntegrationPayload<ExtArgs>
-        fields: Prisma.IntegrationFieldRefs
+      IntegrationCredential: {
+        payload: Prisma.$IntegrationCredentialPayload<ExtArgs>
+        fields: Prisma.IntegrationCredentialFieldRefs
         operations: {
           findUnique: {
-            args: Prisma.IntegrationFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$IntegrationPayload> | null
+            args: Prisma.IntegrationCredentialFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationCredentialPayload> | null
           }
           findUniqueOrThrow: {
-            args: Prisma.IntegrationFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$IntegrationPayload>
+            args: Prisma.IntegrationCredentialFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationCredentialPayload>
           }
           findFirst: {
-            args: Prisma.IntegrationFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$IntegrationPayload> | null
+            args: Prisma.IntegrationCredentialFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationCredentialPayload> | null
           }
           findFirstOrThrow: {
-            args: Prisma.IntegrationFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$IntegrationPayload>
+            args: Prisma.IntegrationCredentialFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationCredentialPayload>
           }
           findMany: {
-            args: Prisma.IntegrationFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$IntegrationPayload>[]
+            args: Prisma.IntegrationCredentialFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationCredentialPayload>[]
           }
           create: {
-            args: Prisma.IntegrationCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$IntegrationPayload>
+            args: Prisma.IntegrationCredentialCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationCredentialPayload>
           }
           createMany: {
-            args: Prisma.IntegrationCreateManyArgs<ExtArgs>
+            args: Prisma.IntegrationCredentialCreateManyArgs<ExtArgs>
             result: BatchPayload
           }
           createManyAndReturn: {
-            args: Prisma.IntegrationCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$IntegrationPayload>[]
+            args: Prisma.IntegrationCredentialCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationCredentialPayload>[]
           }
           delete: {
-            args: Prisma.IntegrationDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$IntegrationPayload>
+            args: Prisma.IntegrationCredentialDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationCredentialPayload>
           }
           update: {
-            args: Prisma.IntegrationUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$IntegrationPayload>
+            args: Prisma.IntegrationCredentialUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationCredentialPayload>
           }
           deleteMany: {
-            args: Prisma.IntegrationDeleteManyArgs<ExtArgs>
+            args: Prisma.IntegrationCredentialDeleteManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateMany: {
-            args: Prisma.IntegrationUpdateManyArgs<ExtArgs>
+            args: Prisma.IntegrationCredentialUpdateManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateManyAndReturn: {
-            args: Prisma.IntegrationUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$IntegrationPayload>[]
+            args: Prisma.IntegrationCredentialUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationCredentialPayload>[]
           }
           upsert: {
-            args: Prisma.IntegrationUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$IntegrationPayload>
+            args: Prisma.IntegrationCredentialUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationCredentialPayload>
           }
           aggregate: {
-            args: Prisma.IntegrationAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateIntegration>
+            args: Prisma.IntegrationCredentialAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateIntegrationCredential>
           }
           groupBy: {
-            args: Prisma.IntegrationGroupByArgs<ExtArgs>
-            result: $Utils.Optional<IntegrationGroupByOutputType>[]
+            args: Prisma.IntegrationCredentialGroupByArgs<ExtArgs>
+            result: $Utils.Optional<IntegrationCredentialGroupByOutputType>[]
           }
           count: {
-            args: Prisma.IntegrationCountArgs<ExtArgs>
-            result: $Utils.Optional<IntegrationCountAggregateOutputType> | number
-          }
-        }
-      }
-      IntegrationKey: {
-        payload: Prisma.$IntegrationKeyPayload<ExtArgs>
-        fields: Prisma.IntegrationKeyFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.IntegrationKeyFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$IntegrationKeyPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.IntegrationKeyFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$IntegrationKeyPayload>
-          }
-          findFirst: {
-            args: Prisma.IntegrationKeyFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$IntegrationKeyPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.IntegrationKeyFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$IntegrationKeyPayload>
-          }
-          findMany: {
-            args: Prisma.IntegrationKeyFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$IntegrationKeyPayload>[]
-          }
-          create: {
-            args: Prisma.IntegrationKeyCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$IntegrationKeyPayload>
-          }
-          createMany: {
-            args: Prisma.IntegrationKeyCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.IntegrationKeyCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$IntegrationKeyPayload>[]
-          }
-          delete: {
-            args: Prisma.IntegrationKeyDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$IntegrationKeyPayload>
-          }
-          update: {
-            args: Prisma.IntegrationKeyUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$IntegrationKeyPayload>
-          }
-          deleteMany: {
-            args: Prisma.IntegrationKeyDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.IntegrationKeyUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.IntegrationKeyUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$IntegrationKeyPayload>[]
-          }
-          upsert: {
-            args: Prisma.IntegrationKeyUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$IntegrationKeyPayload>
-          }
-          aggregate: {
-            args: Prisma.IntegrationKeyAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateIntegrationKey>
-          }
-          groupBy: {
-            args: Prisma.IntegrationKeyGroupByArgs<ExtArgs>
-            result: $Utils.Optional<IntegrationKeyGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.IntegrationKeyCountArgs<ExtArgs>
-            result: $Utils.Optional<IntegrationKeyCountAggregateOutputType> | number
+            args: Prisma.IntegrationCredentialCountArgs<ExtArgs>
+            result: $Utils.Optional<IntegrationCredentialCountAggregateOutputType> | number
           }
         }
       }
@@ -2772,8 +2682,7 @@ export namespace Prisma {
     marketingCampaign?: MarketingCampaignOmit
     marketingCampaignContact?: MarketingCampaignContactOmit
     openAiBatchJob?: OpenAiBatchJobOmit
-    integration?: IntegrationOmit
-    integrationKey?: IntegrationKeyOmit
+    integrationCredential?: IntegrationCredentialOmit
   }
 
   /* Types for Logging */
@@ -2863,7 +2772,7 @@ export namespace Prisma {
     marketing_campaigns: number
     scoring_instructions: number
     openai_batch_jobs: number
-    integrations: number
+    integration_credentials: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2876,7 +2785,7 @@ export namespace Prisma {
     marketing_campaigns?: boolean | UserCountOutputTypeCountMarketing_campaignsArgs
     scoring_instructions?: boolean | UserCountOutputTypeCountScoring_instructionsArgs
     openai_batch_jobs?: boolean | UserCountOutputTypeCountOpenai_batch_jobsArgs
-    integrations?: boolean | UserCountOutputTypeCountIntegrationsArgs
+    integration_credentials?: boolean | UserCountOutputTypeCountIntegration_credentialsArgs
   }
 
   // Custom InputTypes
@@ -2956,8 +2865,8 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
-  export type UserCountOutputTypeCountIntegrationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: IntegrationWhereInput
+  export type UserCountOutputTypeCountIntegration_credentialsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: IntegrationCredentialWhereInput
   }
 
 
@@ -3247,37 +3156,6 @@ export namespace Prisma {
 
 
   /**
-   * Count Type IntegrationCountOutputType
-   */
-
-  export type IntegrationCountOutputType = {
-    keys: number
-  }
-
-  export type IntegrationCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    keys?: boolean | IntegrationCountOutputTypeCountKeysArgs
-  }
-
-  // Custom InputTypes
-  /**
-   * IntegrationCountOutputType without action
-   */
-  export type IntegrationCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the IntegrationCountOutputType
-     */
-    select?: IntegrationCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * IntegrationCountOutputType without action
-   */
-  export type IntegrationCountOutputTypeCountKeysArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: IntegrationKeyWhereInput
-  }
-
-
-  /**
    * Models
    */
 
@@ -3512,7 +3390,7 @@ export namespace Prisma {
     marketing_campaigns?: boolean | User$marketing_campaignsArgs<ExtArgs>
     scoring_instructions?: boolean | User$scoring_instructionsArgs<ExtArgs>
     openai_batch_jobs?: boolean | User$openai_batch_jobsArgs<ExtArgs>
-    integrations?: boolean | User$integrationsArgs<ExtArgs>
+    integration_credentials?: boolean | User$integration_credentialsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -3560,7 +3438,7 @@ export namespace Prisma {
     marketing_campaigns?: boolean | User$marketing_campaignsArgs<ExtArgs>
     scoring_instructions?: boolean | User$scoring_instructionsArgs<ExtArgs>
     openai_batch_jobs?: boolean | User$openai_batch_jobsArgs<ExtArgs>
-    integrations?: boolean | User$integrationsArgs<ExtArgs>
+    integration_credentials?: boolean | User$integration_credentialsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -3578,7 +3456,7 @@ export namespace Prisma {
       marketing_campaigns: Prisma.$MarketingCampaignPayload<ExtArgs>[]
       scoring_instructions: Prisma.$ScoringInstructionPayload<ExtArgs>[]
       openai_batch_jobs: Prisma.$OpenAiBatchJobPayload<ExtArgs>[]
-      integrations: Prisma.$IntegrationPayload<ExtArgs>[]
+      integration_credentials: Prisma.$IntegrationCredentialPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -3992,7 +3870,7 @@ export namespace Prisma {
     marketing_campaigns<T extends User$marketing_campaignsArgs<ExtArgs> = {}>(args?: Subset<T, User$marketing_campaignsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketingCampaignPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     scoring_instructions<T extends User$scoring_instructionsArgs<ExtArgs> = {}>(args?: Subset<T, User$scoring_instructionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ScoringInstructionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     openai_batch_jobs<T extends User$openai_batch_jobsArgs<ExtArgs> = {}>(args?: Subset<T, User$openai_batch_jobsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OpenAiBatchJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    integrations<T extends User$integrationsArgs<ExtArgs> = {}>(args?: Subset<T, User$integrationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntegrationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    integration_credentials<T extends User$integration_credentialsArgs<ExtArgs> = {}>(args?: Subset<T, User$integration_credentialsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntegrationCredentialPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4634,27 +4512,27 @@ export namespace Prisma {
   }
 
   /**
-   * User.integrations
+   * User.integration_credentials
    */
-  export type User$integrationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type User$integration_credentialsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Integration
+     * Select specific fields to fetch from the IntegrationCredential
      */
-    select?: IntegrationSelect<ExtArgs> | null
+    select?: IntegrationCredentialSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Integration
+     * Omit specific fields from the IntegrationCredential
      */
-    omit?: IntegrationOmit<ExtArgs> | null
+    omit?: IntegrationCredentialOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: IntegrationInclude<ExtArgs> | null
-    where?: IntegrationWhereInput
-    orderBy?: IntegrationOrderByWithRelationInput | IntegrationOrderByWithRelationInput[]
-    cursor?: IntegrationWhereUniqueInput
+    include?: IntegrationCredentialInclude<ExtArgs> | null
+    where?: IntegrationCredentialWhereInput
+    orderBy?: IntegrationCredentialOrderByWithRelationInput | IntegrationCredentialOrderByWithRelationInput[]
+    cursor?: IntegrationCredentialWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: IntegrationScalarFieldEnum | IntegrationScalarFieldEnum[]
+    distinct?: IntegrationCredentialScalarFieldEnum | IntegrationCredentialScalarFieldEnum[]
   }
 
   /**
@@ -25839,1200 +25717,58 @@ export namespace Prisma {
 
 
   /**
-   * Model Integration
+   * Model IntegrationCredential
    */
 
-  export type AggregateIntegration = {
-    _count: IntegrationCountAggregateOutputType | null
-    _avg: IntegrationAvgAggregateOutputType | null
-    _sum: IntegrationSumAggregateOutputType | null
-    _min: IntegrationMinAggregateOutputType | null
-    _max: IntegrationMaxAggregateOutputType | null
+  export type AggregateIntegrationCredential = {
+    _count: IntegrationCredentialCountAggregateOutputType | null
+    _avg: IntegrationCredentialAvgAggregateOutputType | null
+    _sum: IntegrationCredentialSumAggregateOutputType | null
+    _min: IntegrationCredentialMinAggregateOutputType | null
+    _max: IntegrationCredentialMaxAggregateOutputType | null
   }
 
-  export type IntegrationAvgAggregateOutputType = {
+  export type IntegrationCredentialAvgAggregateOutputType = {
     id: number | null
   }
 
-  export type IntegrationSumAggregateOutputType = {
+  export type IntegrationCredentialSumAggregateOutputType = {
     id: number | null
   }
 
-  export type IntegrationMinAggregateOutputType = {
-    id: number | null
-    uuid: string | null
-    user_uuid: string | null
-    provider: $Enums.ExternalIntegrationProvider | null
-    title: string | null
-    created_at: Date | null
-    updated_at: Date | null
-  }
-
-  export type IntegrationMaxAggregateOutputType = {
+  export type IntegrationCredentialMinAggregateOutputType = {
     id: number | null
     uuid: string | null
     user_uuid: string | null
     provider: $Enums.ExternalIntegrationProvider | null
-    title: string | null
+    account: string | null
+    kind: string | null
+    secret: string | null
+    last4: string | null
     created_at: Date | null
     updated_at: Date | null
   }
 
-  export type IntegrationCountAggregateOutputType = {
+  export type IntegrationCredentialMaxAggregateOutputType = {
+    id: number | null
+    uuid: string | null
+    user_uuid: string | null
+    provider: $Enums.ExternalIntegrationProvider | null
+    account: string | null
+    kind: string | null
+    secret: string | null
+    last4: string | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type IntegrationCredentialCountAggregateOutputType = {
     id: number
     uuid: number
     user_uuid: number
     provider: number
-    title: number
-    created_at: number
-    updated_at: number
-    _all: number
-  }
-
-
-  export type IntegrationAvgAggregateInputType = {
-    id?: true
-  }
-
-  export type IntegrationSumAggregateInputType = {
-    id?: true
-  }
-
-  export type IntegrationMinAggregateInputType = {
-    id?: true
-    uuid?: true
-    user_uuid?: true
-    provider?: true
-    title?: true
-    created_at?: true
-    updated_at?: true
-  }
-
-  export type IntegrationMaxAggregateInputType = {
-    id?: true
-    uuid?: true
-    user_uuid?: true
-    provider?: true
-    title?: true
-    created_at?: true
-    updated_at?: true
-  }
-
-  export type IntegrationCountAggregateInputType = {
-    id?: true
-    uuid?: true
-    user_uuid?: true
-    provider?: true
-    title?: true
-    created_at?: true
-    updated_at?: true
-    _all?: true
-  }
-
-  export type IntegrationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Integration to aggregate.
-     */
-    where?: IntegrationWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Integrations to fetch.
-     */
-    orderBy?: IntegrationOrderByWithRelationInput | IntegrationOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: IntegrationWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Integrations from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Integrations.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned Integrations
-    **/
-    _count?: true | IntegrationCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: IntegrationAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: IntegrationSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: IntegrationMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: IntegrationMaxAggregateInputType
-  }
-
-  export type GetIntegrationAggregateType<T extends IntegrationAggregateArgs> = {
-        [P in keyof T & keyof AggregateIntegration]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateIntegration[P]>
-      : GetScalarType<T[P], AggregateIntegration[P]>
-  }
-
-
-
-
-  export type IntegrationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: IntegrationWhereInput
-    orderBy?: IntegrationOrderByWithAggregationInput | IntegrationOrderByWithAggregationInput[]
-    by: IntegrationScalarFieldEnum[] | IntegrationScalarFieldEnum
-    having?: IntegrationScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: IntegrationCountAggregateInputType | true
-    _avg?: IntegrationAvgAggregateInputType
-    _sum?: IntegrationSumAggregateInputType
-    _min?: IntegrationMinAggregateInputType
-    _max?: IntegrationMaxAggregateInputType
-  }
-
-  export type IntegrationGroupByOutputType = {
-    id: number
-    uuid: string
-    user_uuid: string
-    provider: $Enums.ExternalIntegrationProvider
-    title: string
-    created_at: Date
-    updated_at: Date
-    _count: IntegrationCountAggregateOutputType | null
-    _avg: IntegrationAvgAggregateOutputType | null
-    _sum: IntegrationSumAggregateOutputType | null
-    _min: IntegrationMinAggregateOutputType | null
-    _max: IntegrationMaxAggregateOutputType | null
-  }
-
-  type GetIntegrationGroupByPayload<T extends IntegrationGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<IntegrationGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof IntegrationGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], IntegrationGroupByOutputType[P]>
-            : GetScalarType<T[P], IntegrationGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type IntegrationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    uuid?: boolean
-    user_uuid?: boolean
-    provider?: boolean
-    title?: boolean
-    created_at?: boolean
-    updated_at?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    keys?: boolean | Integration$keysArgs<ExtArgs>
-    _count?: boolean | IntegrationCountOutputTypeDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["integration"]>
-
-  export type IntegrationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    uuid?: boolean
-    user_uuid?: boolean
-    provider?: boolean
-    title?: boolean
-    created_at?: boolean
-    updated_at?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["integration"]>
-
-  export type IntegrationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    uuid?: boolean
-    user_uuid?: boolean
-    provider?: boolean
-    title?: boolean
-    created_at?: boolean
-    updated_at?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["integration"]>
-
-  export type IntegrationSelectScalar = {
-    id?: boolean
-    uuid?: boolean
-    user_uuid?: boolean
-    provider?: boolean
-    title?: boolean
-    created_at?: boolean
-    updated_at?: boolean
-  }
-
-  export type IntegrationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "provider" | "title" | "created_at" | "updated_at", ExtArgs["result"]["integration"]>
-  export type IntegrationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    keys?: boolean | Integration$keysArgs<ExtArgs>
-    _count?: boolean | IntegrationCountOutputTypeDefaultArgs<ExtArgs>
-  }
-  export type IntegrationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }
-  export type IntegrationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }
-
-  export type $IntegrationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "Integration"
-    objects: {
-      user: Prisma.$UserPayload<ExtArgs>
-      keys: Prisma.$IntegrationKeyPayload<ExtArgs>[]
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: number
-      uuid: string
-      user_uuid: string
-      provider: $Enums.ExternalIntegrationProvider
-      title: string
-      created_at: Date
-      updated_at: Date
-    }, ExtArgs["result"]["integration"]>
-    composites: {}
-  }
-
-  type IntegrationGetPayload<S extends boolean | null | undefined | IntegrationDefaultArgs> = $Result.GetResult<Prisma.$IntegrationPayload, S>
-
-  type IntegrationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<IntegrationFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: IntegrationCountAggregateInputType | true
-    }
-
-  export interface IntegrationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Integration'], meta: { name: 'Integration' } }
-    /**
-     * Find zero or one Integration that matches the filter.
-     * @param {IntegrationFindUniqueArgs} args - Arguments to find a Integration
-     * @example
-     * // Get one Integration
-     * const integration = await prisma.integration.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends IntegrationFindUniqueArgs>(args: SelectSubset<T, IntegrationFindUniqueArgs<ExtArgs>>): Prisma__IntegrationClient<$Result.GetResult<Prisma.$IntegrationPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one Integration that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {IntegrationFindUniqueOrThrowArgs} args - Arguments to find a Integration
-     * @example
-     * // Get one Integration
-     * const integration = await prisma.integration.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends IntegrationFindUniqueOrThrowArgs>(args: SelectSubset<T, IntegrationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__IntegrationClient<$Result.GetResult<Prisma.$IntegrationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Integration that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {IntegrationFindFirstArgs} args - Arguments to find a Integration
-     * @example
-     * // Get one Integration
-     * const integration = await prisma.integration.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends IntegrationFindFirstArgs>(args?: SelectSubset<T, IntegrationFindFirstArgs<ExtArgs>>): Prisma__IntegrationClient<$Result.GetResult<Prisma.$IntegrationPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Integration that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {IntegrationFindFirstOrThrowArgs} args - Arguments to find a Integration
-     * @example
-     * // Get one Integration
-     * const integration = await prisma.integration.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends IntegrationFindFirstOrThrowArgs>(args?: SelectSubset<T, IntegrationFindFirstOrThrowArgs<ExtArgs>>): Prisma__IntegrationClient<$Result.GetResult<Prisma.$IntegrationPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more Integrations that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {IntegrationFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all Integrations
-     * const integrations = await prisma.integration.findMany()
-     * 
-     * // Get first 10 Integrations
-     * const integrations = await prisma.integration.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const integrationWithIdOnly = await prisma.integration.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends IntegrationFindManyArgs>(args?: SelectSubset<T, IntegrationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntegrationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a Integration.
-     * @param {IntegrationCreateArgs} args - Arguments to create a Integration.
-     * @example
-     * // Create one Integration
-     * const Integration = await prisma.integration.create({
-     *   data: {
-     *     // ... data to create a Integration
-     *   }
-     * })
-     * 
-     */
-    create<T extends IntegrationCreateArgs>(args: SelectSubset<T, IntegrationCreateArgs<ExtArgs>>): Prisma__IntegrationClient<$Result.GetResult<Prisma.$IntegrationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many Integrations.
-     * @param {IntegrationCreateManyArgs} args - Arguments to create many Integrations.
-     * @example
-     * // Create many Integrations
-     * const integration = await prisma.integration.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends IntegrationCreateManyArgs>(args?: SelectSubset<T, IntegrationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many Integrations and returns the data saved in the database.
-     * @param {IntegrationCreateManyAndReturnArgs} args - Arguments to create many Integrations.
-     * @example
-     * // Create many Integrations
-     * const integration = await prisma.integration.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many Integrations and only return the `id`
-     * const integrationWithIdOnly = await prisma.integration.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends IntegrationCreateManyAndReturnArgs>(args?: SelectSubset<T, IntegrationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntegrationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a Integration.
-     * @param {IntegrationDeleteArgs} args - Arguments to delete one Integration.
-     * @example
-     * // Delete one Integration
-     * const Integration = await prisma.integration.delete({
-     *   where: {
-     *     // ... filter to delete one Integration
-     *   }
-     * })
-     * 
-     */
-    delete<T extends IntegrationDeleteArgs>(args: SelectSubset<T, IntegrationDeleteArgs<ExtArgs>>): Prisma__IntegrationClient<$Result.GetResult<Prisma.$IntegrationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one Integration.
-     * @param {IntegrationUpdateArgs} args - Arguments to update one Integration.
-     * @example
-     * // Update one Integration
-     * const integration = await prisma.integration.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends IntegrationUpdateArgs>(args: SelectSubset<T, IntegrationUpdateArgs<ExtArgs>>): Prisma__IntegrationClient<$Result.GetResult<Prisma.$IntegrationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more Integrations.
-     * @param {IntegrationDeleteManyArgs} args - Arguments to filter Integrations to delete.
-     * @example
-     * // Delete a few Integrations
-     * const { count } = await prisma.integration.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends IntegrationDeleteManyArgs>(args?: SelectSubset<T, IntegrationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Integrations.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {IntegrationUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many Integrations
-     * const integration = await prisma.integration.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends IntegrationUpdateManyArgs>(args: SelectSubset<T, IntegrationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Integrations and returns the data updated in the database.
-     * @param {IntegrationUpdateManyAndReturnArgs} args - Arguments to update many Integrations.
-     * @example
-     * // Update many Integrations
-     * const integration = await prisma.integration.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more Integrations and only return the `id`
-     * const integrationWithIdOnly = await prisma.integration.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends IntegrationUpdateManyAndReturnArgs>(args: SelectSubset<T, IntegrationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntegrationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one Integration.
-     * @param {IntegrationUpsertArgs} args - Arguments to update or create a Integration.
-     * @example
-     * // Update or create a Integration
-     * const integration = await prisma.integration.upsert({
-     *   create: {
-     *     // ... data to create a Integration
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the Integration we want to update
-     *   }
-     * })
-     */
-    upsert<T extends IntegrationUpsertArgs>(args: SelectSubset<T, IntegrationUpsertArgs<ExtArgs>>): Prisma__IntegrationClient<$Result.GetResult<Prisma.$IntegrationPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of Integrations.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {IntegrationCountArgs} args - Arguments to filter Integrations to count.
-     * @example
-     * // Count the number of Integrations
-     * const count = await prisma.integration.count({
-     *   where: {
-     *     // ... the filter for the Integrations we want to count
-     *   }
-     * })
-    **/
-    count<T extends IntegrationCountArgs>(
-      args?: Subset<T, IntegrationCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], IntegrationCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a Integration.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {IntegrationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends IntegrationAggregateArgs>(args: Subset<T, IntegrationAggregateArgs>): Prisma.PrismaPromise<GetIntegrationAggregateType<T>>
-
-    /**
-     * Group by Integration.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {IntegrationGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends IntegrationGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: IntegrationGroupByArgs['orderBy'] }
-        : { orderBy?: IntegrationGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, IntegrationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetIntegrationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the Integration model
-   */
-  readonly fields: IntegrationFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for Integration.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__IntegrationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    keys<T extends Integration$keysArgs<ExtArgs> = {}>(args?: Subset<T, Integration$keysArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntegrationKeyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the Integration model
-   */
-  interface IntegrationFieldRefs {
-    readonly id: FieldRef<"Integration", 'Int'>
-    readonly uuid: FieldRef<"Integration", 'String'>
-    readonly user_uuid: FieldRef<"Integration", 'String'>
-    readonly provider: FieldRef<"Integration", 'ExternalIntegrationProvider'>
-    readonly title: FieldRef<"Integration", 'String'>
-    readonly created_at: FieldRef<"Integration", 'DateTime'>
-    readonly updated_at: FieldRef<"Integration", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * Integration findUnique
-   */
-  export type IntegrationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Integration
-     */
-    select?: IntegrationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Integration
-     */
-    omit?: IntegrationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: IntegrationInclude<ExtArgs> | null
-    /**
-     * Filter, which Integration to fetch.
-     */
-    where: IntegrationWhereUniqueInput
-  }
-
-  /**
-   * Integration findUniqueOrThrow
-   */
-  export type IntegrationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Integration
-     */
-    select?: IntegrationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Integration
-     */
-    omit?: IntegrationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: IntegrationInclude<ExtArgs> | null
-    /**
-     * Filter, which Integration to fetch.
-     */
-    where: IntegrationWhereUniqueInput
-  }
-
-  /**
-   * Integration findFirst
-   */
-  export type IntegrationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Integration
-     */
-    select?: IntegrationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Integration
-     */
-    omit?: IntegrationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: IntegrationInclude<ExtArgs> | null
-    /**
-     * Filter, which Integration to fetch.
-     */
-    where?: IntegrationWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Integrations to fetch.
-     */
-    orderBy?: IntegrationOrderByWithRelationInput | IntegrationOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Integrations.
-     */
-    cursor?: IntegrationWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Integrations from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Integrations.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Integrations.
-     */
-    distinct?: IntegrationScalarFieldEnum | IntegrationScalarFieldEnum[]
-  }
-
-  /**
-   * Integration findFirstOrThrow
-   */
-  export type IntegrationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Integration
-     */
-    select?: IntegrationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Integration
-     */
-    omit?: IntegrationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: IntegrationInclude<ExtArgs> | null
-    /**
-     * Filter, which Integration to fetch.
-     */
-    where?: IntegrationWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Integrations to fetch.
-     */
-    orderBy?: IntegrationOrderByWithRelationInput | IntegrationOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Integrations.
-     */
-    cursor?: IntegrationWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Integrations from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Integrations.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Integrations.
-     */
-    distinct?: IntegrationScalarFieldEnum | IntegrationScalarFieldEnum[]
-  }
-
-  /**
-   * Integration findMany
-   */
-  export type IntegrationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Integration
-     */
-    select?: IntegrationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Integration
-     */
-    omit?: IntegrationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: IntegrationInclude<ExtArgs> | null
-    /**
-     * Filter, which Integrations to fetch.
-     */
-    where?: IntegrationWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Integrations to fetch.
-     */
-    orderBy?: IntegrationOrderByWithRelationInput | IntegrationOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing Integrations.
-     */
-    cursor?: IntegrationWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Integrations from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Integrations.
-     */
-    skip?: number
-    distinct?: IntegrationScalarFieldEnum | IntegrationScalarFieldEnum[]
-  }
-
-  /**
-   * Integration create
-   */
-  export type IntegrationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Integration
-     */
-    select?: IntegrationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Integration
-     */
-    omit?: IntegrationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: IntegrationInclude<ExtArgs> | null
-    /**
-     * The data needed to create a Integration.
-     */
-    data: XOR<IntegrationCreateInput, IntegrationUncheckedCreateInput>
-  }
-
-  /**
-   * Integration createMany
-   */
-  export type IntegrationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many Integrations.
-     */
-    data: IntegrationCreateManyInput | IntegrationCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * Integration createManyAndReturn
-   */
-  export type IntegrationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Integration
-     */
-    select?: IntegrationSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Integration
-     */
-    omit?: IntegrationOmit<ExtArgs> | null
-    /**
-     * The data used to create many Integrations.
-     */
-    data: IntegrationCreateManyInput | IntegrationCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: IntegrationIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * Integration update
-   */
-  export type IntegrationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Integration
-     */
-    select?: IntegrationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Integration
-     */
-    omit?: IntegrationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: IntegrationInclude<ExtArgs> | null
-    /**
-     * The data needed to update a Integration.
-     */
-    data: XOR<IntegrationUpdateInput, IntegrationUncheckedUpdateInput>
-    /**
-     * Choose, which Integration to update.
-     */
-    where: IntegrationWhereUniqueInput
-  }
-
-  /**
-   * Integration updateMany
-   */
-  export type IntegrationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update Integrations.
-     */
-    data: XOR<IntegrationUpdateManyMutationInput, IntegrationUncheckedUpdateManyInput>
-    /**
-     * Filter which Integrations to update
-     */
-    where?: IntegrationWhereInput
-    /**
-     * Limit how many Integrations to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * Integration updateManyAndReturn
-   */
-  export type IntegrationUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Integration
-     */
-    select?: IntegrationSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Integration
-     */
-    omit?: IntegrationOmit<ExtArgs> | null
-    /**
-     * The data used to update Integrations.
-     */
-    data: XOR<IntegrationUpdateManyMutationInput, IntegrationUncheckedUpdateManyInput>
-    /**
-     * Filter which Integrations to update
-     */
-    where?: IntegrationWhereInput
-    /**
-     * Limit how many Integrations to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: IntegrationIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * Integration upsert
-   */
-  export type IntegrationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Integration
-     */
-    select?: IntegrationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Integration
-     */
-    omit?: IntegrationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: IntegrationInclude<ExtArgs> | null
-    /**
-     * The filter to search for the Integration to update in case it exists.
-     */
-    where: IntegrationWhereUniqueInput
-    /**
-     * In case the Integration found by the `where` argument doesn't exist, create a new Integration with this data.
-     */
-    create: XOR<IntegrationCreateInput, IntegrationUncheckedCreateInput>
-    /**
-     * In case the Integration was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<IntegrationUpdateInput, IntegrationUncheckedUpdateInput>
-  }
-
-  /**
-   * Integration delete
-   */
-  export type IntegrationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Integration
-     */
-    select?: IntegrationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Integration
-     */
-    omit?: IntegrationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: IntegrationInclude<ExtArgs> | null
-    /**
-     * Filter which Integration to delete.
-     */
-    where: IntegrationWhereUniqueInput
-  }
-
-  /**
-   * Integration deleteMany
-   */
-  export type IntegrationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Integrations to delete
-     */
-    where?: IntegrationWhereInput
-    /**
-     * Limit how many Integrations to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * Integration.keys
-   */
-  export type Integration$keysArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the IntegrationKey
-     */
-    select?: IntegrationKeySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the IntegrationKey
-     */
-    omit?: IntegrationKeyOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: IntegrationKeyInclude<ExtArgs> | null
-    where?: IntegrationKeyWhereInput
-    orderBy?: IntegrationKeyOrderByWithRelationInput | IntegrationKeyOrderByWithRelationInput[]
-    cursor?: IntegrationKeyWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: IntegrationKeyScalarFieldEnum | IntegrationKeyScalarFieldEnum[]
-  }
-
-  /**
-   * Integration without action
-   */
-  export type IntegrationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Integration
-     */
-    select?: IntegrationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Integration
-     */
-    omit?: IntegrationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: IntegrationInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model IntegrationKey
-   */
-
-  export type AggregateIntegrationKey = {
-    _count: IntegrationKeyCountAggregateOutputType | null
-    _avg: IntegrationKeyAvgAggregateOutputType | null
-    _sum: IntegrationKeySumAggregateOutputType | null
-    _min: IntegrationKeyMinAggregateOutputType | null
-    _max: IntegrationKeyMaxAggregateOutputType | null
-  }
-
-  export type IntegrationKeyAvgAggregateOutputType = {
-    id: number | null
-  }
-
-  export type IntegrationKeySumAggregateOutputType = {
-    id: number | null
-  }
-
-  export type IntegrationKeyMinAggregateOutputType = {
-    id: number | null
-    uuid: string | null
-    integration_uuid: string | null
-    title: string | null
-    secret: string | null
-    last4: string | null
-    created_at: Date | null
-    updated_at: Date | null
-  }
-
-  export type IntegrationKeyMaxAggregateOutputType = {
-    id: number | null
-    uuid: string | null
-    integration_uuid: string | null
-    title: string | null
-    secret: string | null
-    last4: string | null
-    created_at: Date | null
-    updated_at: Date | null
-  }
-
-  export type IntegrationKeyCountAggregateOutputType = {
-    id: number
-    uuid: number
-    integration_uuid: number
-    title: number
+    account: number
+    kind: number
     secret: number
     last4: number
     created_at: number
@@ -27041,41 +25777,47 @@ export namespace Prisma {
   }
 
 
-  export type IntegrationKeyAvgAggregateInputType = {
+  export type IntegrationCredentialAvgAggregateInputType = {
     id?: true
   }
 
-  export type IntegrationKeySumAggregateInputType = {
+  export type IntegrationCredentialSumAggregateInputType = {
     id?: true
   }
 
-  export type IntegrationKeyMinAggregateInputType = {
+  export type IntegrationCredentialMinAggregateInputType = {
     id?: true
     uuid?: true
-    integration_uuid?: true
-    title?: true
+    user_uuid?: true
+    provider?: true
+    account?: true
+    kind?: true
     secret?: true
     last4?: true
     created_at?: true
     updated_at?: true
   }
 
-  export type IntegrationKeyMaxAggregateInputType = {
+  export type IntegrationCredentialMaxAggregateInputType = {
     id?: true
     uuid?: true
-    integration_uuid?: true
-    title?: true
+    user_uuid?: true
+    provider?: true
+    account?: true
+    kind?: true
     secret?: true
     last4?: true
     created_at?: true
     updated_at?: true
   }
 
-  export type IntegrationKeyCountAggregateInputType = {
+  export type IntegrationCredentialCountAggregateInputType = {
     id?: true
     uuid?: true
-    integration_uuid?: true
-    title?: true
+    user_uuid?: true
+    provider?: true
+    account?: true
+    kind?: true
     secret?: true
     last4?: true
     created_at?: true
@@ -27083,324 +25825,336 @@ export namespace Prisma {
     _all?: true
   }
 
-  export type IntegrationKeyAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type IntegrationCredentialAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which IntegrationKey to aggregate.
+     * Filter which IntegrationCredential to aggregate.
      */
-    where?: IntegrationKeyWhereInput
+    where?: IntegrationCredentialWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of IntegrationKeys to fetch.
+     * Determine the order of IntegrationCredentials to fetch.
      */
-    orderBy?: IntegrationKeyOrderByWithRelationInput | IntegrationKeyOrderByWithRelationInput[]
+    orderBy?: IntegrationCredentialOrderByWithRelationInput | IntegrationCredentialOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
      */
-    cursor?: IntegrationKeyWhereUniqueInput
+    cursor?: IntegrationCredentialWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` IntegrationKeys from the position of the cursor.
+     * Take `±n` IntegrationCredentials from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` IntegrationKeys.
+     * Skip the first `n` IntegrationCredentials.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Count returned IntegrationKeys
+     * Count returned IntegrationCredentials
     **/
-    _count?: true | IntegrationKeyCountAggregateInputType
+    _count?: true | IntegrationCredentialCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to average
     **/
-    _avg?: IntegrationKeyAvgAggregateInputType
+    _avg?: IntegrationCredentialAvgAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to sum
     **/
-    _sum?: IntegrationKeySumAggregateInputType
+    _sum?: IntegrationCredentialSumAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the minimum value
     **/
-    _min?: IntegrationKeyMinAggregateInputType
+    _min?: IntegrationCredentialMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the maximum value
     **/
-    _max?: IntegrationKeyMaxAggregateInputType
+    _max?: IntegrationCredentialMaxAggregateInputType
   }
 
-  export type GetIntegrationKeyAggregateType<T extends IntegrationKeyAggregateArgs> = {
-        [P in keyof T & keyof AggregateIntegrationKey]: P extends '_count' | 'count'
+  export type GetIntegrationCredentialAggregateType<T extends IntegrationCredentialAggregateArgs> = {
+        [P in keyof T & keyof AggregateIntegrationCredential]: P extends '_count' | 'count'
       ? T[P] extends true
         ? number
-        : GetScalarType<T[P], AggregateIntegrationKey[P]>
-      : GetScalarType<T[P], AggregateIntegrationKey[P]>
+        : GetScalarType<T[P], AggregateIntegrationCredential[P]>
+      : GetScalarType<T[P], AggregateIntegrationCredential[P]>
   }
 
 
 
 
-  export type IntegrationKeyGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: IntegrationKeyWhereInput
-    orderBy?: IntegrationKeyOrderByWithAggregationInput | IntegrationKeyOrderByWithAggregationInput[]
-    by: IntegrationKeyScalarFieldEnum[] | IntegrationKeyScalarFieldEnum
-    having?: IntegrationKeyScalarWhereWithAggregatesInput
+  export type IntegrationCredentialGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: IntegrationCredentialWhereInput
+    orderBy?: IntegrationCredentialOrderByWithAggregationInput | IntegrationCredentialOrderByWithAggregationInput[]
+    by: IntegrationCredentialScalarFieldEnum[] | IntegrationCredentialScalarFieldEnum
+    having?: IntegrationCredentialScalarWhereWithAggregatesInput
     take?: number
     skip?: number
-    _count?: IntegrationKeyCountAggregateInputType | true
-    _avg?: IntegrationKeyAvgAggregateInputType
-    _sum?: IntegrationKeySumAggregateInputType
-    _min?: IntegrationKeyMinAggregateInputType
-    _max?: IntegrationKeyMaxAggregateInputType
+    _count?: IntegrationCredentialCountAggregateInputType | true
+    _avg?: IntegrationCredentialAvgAggregateInputType
+    _sum?: IntegrationCredentialSumAggregateInputType
+    _min?: IntegrationCredentialMinAggregateInputType
+    _max?: IntegrationCredentialMaxAggregateInputType
   }
 
-  export type IntegrationKeyGroupByOutputType = {
+  export type IntegrationCredentialGroupByOutputType = {
     id: number
     uuid: string
-    integration_uuid: string
-    title: string
+    user_uuid: string
+    provider: $Enums.ExternalIntegrationProvider
+    account: string
+    kind: string
     secret: string
     last4: string | null
     created_at: Date
     updated_at: Date
-    _count: IntegrationKeyCountAggregateOutputType | null
-    _avg: IntegrationKeyAvgAggregateOutputType | null
-    _sum: IntegrationKeySumAggregateOutputType | null
-    _min: IntegrationKeyMinAggregateOutputType | null
-    _max: IntegrationKeyMaxAggregateOutputType | null
+    _count: IntegrationCredentialCountAggregateOutputType | null
+    _avg: IntegrationCredentialAvgAggregateOutputType | null
+    _sum: IntegrationCredentialSumAggregateOutputType | null
+    _min: IntegrationCredentialMinAggregateOutputType | null
+    _max: IntegrationCredentialMaxAggregateOutputType | null
   }
 
-  type GetIntegrationKeyGroupByPayload<T extends IntegrationKeyGroupByArgs> = Prisma.PrismaPromise<
+  type GetIntegrationCredentialGroupByPayload<T extends IntegrationCredentialGroupByArgs> = Prisma.PrismaPromise<
     Array<
-      PickEnumerable<IntegrationKeyGroupByOutputType, T['by']> &
+      PickEnumerable<IntegrationCredentialGroupByOutputType, T['by']> &
         {
-          [P in ((keyof T) & (keyof IntegrationKeyGroupByOutputType))]: P extends '_count'
+          [P in ((keyof T) & (keyof IntegrationCredentialGroupByOutputType))]: P extends '_count'
             ? T[P] extends boolean
               ? number
-              : GetScalarType<T[P], IntegrationKeyGroupByOutputType[P]>
-            : GetScalarType<T[P], IntegrationKeyGroupByOutputType[P]>
+              : GetScalarType<T[P], IntegrationCredentialGroupByOutputType[P]>
+            : GetScalarType<T[P], IntegrationCredentialGroupByOutputType[P]>
         }
       >
     >
 
 
-  export type IntegrationKeySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type IntegrationCredentialSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     uuid?: boolean
-    integration_uuid?: boolean
-    title?: boolean
+    user_uuid?: boolean
+    provider?: boolean
+    account?: boolean
+    kind?: boolean
     secret?: boolean
     last4?: boolean
     created_at?: boolean
     updated_at?: boolean
-    integration?: boolean | IntegrationDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["integrationKey"]>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["integrationCredential"]>
 
-  export type IntegrationKeySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type IntegrationCredentialSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     uuid?: boolean
-    integration_uuid?: boolean
-    title?: boolean
+    user_uuid?: boolean
+    provider?: boolean
+    account?: boolean
+    kind?: boolean
     secret?: boolean
     last4?: boolean
     created_at?: boolean
     updated_at?: boolean
-    integration?: boolean | IntegrationDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["integrationKey"]>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["integrationCredential"]>
 
-  export type IntegrationKeySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type IntegrationCredentialSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     uuid?: boolean
-    integration_uuid?: boolean
-    title?: boolean
+    user_uuid?: boolean
+    provider?: boolean
+    account?: boolean
+    kind?: boolean
     secret?: boolean
     last4?: boolean
     created_at?: boolean
     updated_at?: boolean
-    integration?: boolean | IntegrationDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["integrationKey"]>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["integrationCredential"]>
 
-  export type IntegrationKeySelectScalar = {
+  export type IntegrationCredentialSelectScalar = {
     id?: boolean
     uuid?: boolean
-    integration_uuid?: boolean
-    title?: boolean
+    user_uuid?: boolean
+    provider?: boolean
+    account?: boolean
+    kind?: boolean
     secret?: boolean
     last4?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type IntegrationKeyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "integration_uuid" | "title" | "secret" | "last4" | "created_at" | "updated_at", ExtArgs["result"]["integrationKey"]>
-  export type IntegrationKeyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    integration?: boolean | IntegrationDefaultArgs<ExtArgs>
+  export type IntegrationCredentialOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "provider" | "account" | "kind" | "secret" | "last4" | "created_at" | "updated_at", ExtArgs["result"]["integrationCredential"]>
+  export type IntegrationCredentialInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
-  export type IntegrationKeyIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    integration?: boolean | IntegrationDefaultArgs<ExtArgs>
+  export type IntegrationCredentialIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
-  export type IntegrationKeyIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    integration?: boolean | IntegrationDefaultArgs<ExtArgs>
+  export type IntegrationCredentialIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
 
-  export type $IntegrationKeyPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "IntegrationKey"
+  export type $IntegrationCredentialPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "IntegrationCredential"
     objects: {
-      integration: Prisma.$IntegrationPayload<ExtArgs>
+      user: Prisma.$UserPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
       uuid: string
-      integration_uuid: string
-      title: string
+      user_uuid: string
+      provider: $Enums.ExternalIntegrationProvider
+      account: string
+      kind: string
       secret: string
       last4: string | null
       created_at: Date
       updated_at: Date
-    }, ExtArgs["result"]["integrationKey"]>
+    }, ExtArgs["result"]["integrationCredential"]>
     composites: {}
   }
 
-  type IntegrationKeyGetPayload<S extends boolean | null | undefined | IntegrationKeyDefaultArgs> = $Result.GetResult<Prisma.$IntegrationKeyPayload, S>
+  type IntegrationCredentialGetPayload<S extends boolean | null | undefined | IntegrationCredentialDefaultArgs> = $Result.GetResult<Prisma.$IntegrationCredentialPayload, S>
 
-  type IntegrationKeyCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<IntegrationKeyFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: IntegrationKeyCountAggregateInputType | true
+  type IntegrationCredentialCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<IntegrationCredentialFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: IntegrationCredentialCountAggregateInputType | true
     }
 
-  export interface IntegrationKeyDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['IntegrationKey'], meta: { name: 'IntegrationKey' } }
+  export interface IntegrationCredentialDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['IntegrationCredential'], meta: { name: 'IntegrationCredential' } }
     /**
-     * Find zero or one IntegrationKey that matches the filter.
-     * @param {IntegrationKeyFindUniqueArgs} args - Arguments to find a IntegrationKey
+     * Find zero or one IntegrationCredential that matches the filter.
+     * @param {IntegrationCredentialFindUniqueArgs} args - Arguments to find a IntegrationCredential
      * @example
-     * // Get one IntegrationKey
-     * const integrationKey = await prisma.integrationKey.findUnique({
+     * // Get one IntegrationCredential
+     * const integrationCredential = await prisma.integrationCredential.findUnique({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUnique<T extends IntegrationKeyFindUniqueArgs>(args: SelectSubset<T, IntegrationKeyFindUniqueArgs<ExtArgs>>): Prisma__IntegrationKeyClient<$Result.GetResult<Prisma.$IntegrationKeyPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findUnique<T extends IntegrationCredentialFindUniqueArgs>(args: SelectSubset<T, IntegrationCredentialFindUniqueArgs<ExtArgs>>): Prisma__IntegrationCredentialClient<$Result.GetResult<Prisma.$IntegrationCredentialPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find one IntegrationKey that matches the filter or throw an error with `error.code='P2025'`
+     * Find one IntegrationCredential that matches the filter or throw an error with `error.code='P2025'`
      * if no matches were found.
-     * @param {IntegrationKeyFindUniqueOrThrowArgs} args - Arguments to find a IntegrationKey
+     * @param {IntegrationCredentialFindUniqueOrThrowArgs} args - Arguments to find a IntegrationCredential
      * @example
-     * // Get one IntegrationKey
-     * const integrationKey = await prisma.integrationKey.findUniqueOrThrow({
+     * // Get one IntegrationCredential
+     * const integrationCredential = await prisma.integrationCredential.findUniqueOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUniqueOrThrow<T extends IntegrationKeyFindUniqueOrThrowArgs>(args: SelectSubset<T, IntegrationKeyFindUniqueOrThrowArgs<ExtArgs>>): Prisma__IntegrationKeyClient<$Result.GetResult<Prisma.$IntegrationKeyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findUniqueOrThrow<T extends IntegrationCredentialFindUniqueOrThrowArgs>(args: SelectSubset<T, IntegrationCredentialFindUniqueOrThrowArgs<ExtArgs>>): Prisma__IntegrationCredentialClient<$Result.GetResult<Prisma.$IntegrationCredentialPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first IntegrationKey that matches the filter.
+     * Find the first IntegrationCredential that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {IntegrationKeyFindFirstArgs} args - Arguments to find a IntegrationKey
+     * @param {IntegrationCredentialFindFirstArgs} args - Arguments to find a IntegrationCredential
      * @example
-     * // Get one IntegrationKey
-     * const integrationKey = await prisma.integrationKey.findFirst({
+     * // Get one IntegrationCredential
+     * const integrationCredential = await prisma.integrationCredential.findFirst({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirst<T extends IntegrationKeyFindFirstArgs>(args?: SelectSubset<T, IntegrationKeyFindFirstArgs<ExtArgs>>): Prisma__IntegrationKeyClient<$Result.GetResult<Prisma.$IntegrationKeyPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findFirst<T extends IntegrationCredentialFindFirstArgs>(args?: SelectSubset<T, IntegrationCredentialFindFirstArgs<ExtArgs>>): Prisma__IntegrationCredentialClient<$Result.GetResult<Prisma.$IntegrationCredentialPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first IntegrationKey that matches the filter or
+     * Find the first IntegrationCredential that matches the filter or
      * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {IntegrationKeyFindFirstOrThrowArgs} args - Arguments to find a IntegrationKey
+     * @param {IntegrationCredentialFindFirstOrThrowArgs} args - Arguments to find a IntegrationCredential
      * @example
-     * // Get one IntegrationKey
-     * const integrationKey = await prisma.integrationKey.findFirstOrThrow({
+     * // Get one IntegrationCredential
+     * const integrationCredential = await prisma.integrationCredential.findFirstOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirstOrThrow<T extends IntegrationKeyFindFirstOrThrowArgs>(args?: SelectSubset<T, IntegrationKeyFindFirstOrThrowArgs<ExtArgs>>): Prisma__IntegrationKeyClient<$Result.GetResult<Prisma.$IntegrationKeyPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findFirstOrThrow<T extends IntegrationCredentialFindFirstOrThrowArgs>(args?: SelectSubset<T, IntegrationCredentialFindFirstOrThrowArgs<ExtArgs>>): Prisma__IntegrationCredentialClient<$Result.GetResult<Prisma.$IntegrationCredentialPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find zero or more IntegrationKeys that matches the filter.
+     * Find zero or more IntegrationCredentials that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {IntegrationKeyFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @param {IntegrationCredentialFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
-     * // Get all IntegrationKeys
-     * const integrationKeys = await prisma.integrationKey.findMany()
+     * // Get all IntegrationCredentials
+     * const integrationCredentials = await prisma.integrationCredential.findMany()
      * 
-     * // Get first 10 IntegrationKeys
-     * const integrationKeys = await prisma.integrationKey.findMany({ take: 10 })
+     * // Get first 10 IntegrationCredentials
+     * const integrationCredentials = await prisma.integrationCredential.findMany({ take: 10 })
      * 
      * // Only select the `id`
-     * const integrationKeyWithIdOnly = await prisma.integrationKey.findMany({ select: { id: true } })
+     * const integrationCredentialWithIdOnly = await prisma.integrationCredential.findMany({ select: { id: true } })
      * 
      */
-    findMany<T extends IntegrationKeyFindManyArgs>(args?: SelectSubset<T, IntegrationKeyFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntegrationKeyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+    findMany<T extends IntegrationCredentialFindManyArgs>(args?: SelectSubset<T, IntegrationCredentialFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntegrationCredentialPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
     /**
-     * Create a IntegrationKey.
-     * @param {IntegrationKeyCreateArgs} args - Arguments to create a IntegrationKey.
+     * Create a IntegrationCredential.
+     * @param {IntegrationCredentialCreateArgs} args - Arguments to create a IntegrationCredential.
      * @example
-     * // Create one IntegrationKey
-     * const IntegrationKey = await prisma.integrationKey.create({
+     * // Create one IntegrationCredential
+     * const IntegrationCredential = await prisma.integrationCredential.create({
      *   data: {
-     *     // ... data to create a IntegrationKey
+     *     // ... data to create a IntegrationCredential
      *   }
      * })
      * 
      */
-    create<T extends IntegrationKeyCreateArgs>(args: SelectSubset<T, IntegrationKeyCreateArgs<ExtArgs>>): Prisma__IntegrationKeyClient<$Result.GetResult<Prisma.$IntegrationKeyPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    create<T extends IntegrationCredentialCreateArgs>(args: SelectSubset<T, IntegrationCredentialCreateArgs<ExtArgs>>): Prisma__IntegrationCredentialClient<$Result.GetResult<Prisma.$IntegrationCredentialPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Create many IntegrationKeys.
-     * @param {IntegrationKeyCreateManyArgs} args - Arguments to create many IntegrationKeys.
+     * Create many IntegrationCredentials.
+     * @param {IntegrationCredentialCreateManyArgs} args - Arguments to create many IntegrationCredentials.
      * @example
-     * // Create many IntegrationKeys
-     * const integrationKey = await prisma.integrationKey.createMany({
+     * // Create many IntegrationCredentials
+     * const integrationCredential = await prisma.integrationCredential.createMany({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      *     
      */
-    createMany<T extends IntegrationKeyCreateManyArgs>(args?: SelectSubset<T, IntegrationKeyCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    createMany<T extends IntegrationCredentialCreateManyArgs>(args?: SelectSubset<T, IntegrationCredentialCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Create many IntegrationKeys and returns the data saved in the database.
-     * @param {IntegrationKeyCreateManyAndReturnArgs} args - Arguments to create many IntegrationKeys.
+     * Create many IntegrationCredentials and returns the data saved in the database.
+     * @param {IntegrationCredentialCreateManyAndReturnArgs} args - Arguments to create many IntegrationCredentials.
      * @example
-     * // Create many IntegrationKeys
-     * const integrationKey = await prisma.integrationKey.createManyAndReturn({
+     * // Create many IntegrationCredentials
+     * const integrationCredential = await prisma.integrationCredential.createManyAndReturn({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      * 
-     * // Create many IntegrationKeys and only return the `id`
-     * const integrationKeyWithIdOnly = await prisma.integrationKey.createManyAndReturn({
+     * // Create many IntegrationCredentials and only return the `id`
+     * const integrationCredentialWithIdOnly = await prisma.integrationCredential.createManyAndReturn({
      *   select: { id: true },
      *   data: [
      *     // ... provide data here
@@ -27410,28 +26164,28 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    createManyAndReturn<T extends IntegrationKeyCreateManyAndReturnArgs>(args?: SelectSubset<T, IntegrationKeyCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntegrationKeyPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+    createManyAndReturn<T extends IntegrationCredentialCreateManyAndReturnArgs>(args?: SelectSubset<T, IntegrationCredentialCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntegrationCredentialPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Delete a IntegrationKey.
-     * @param {IntegrationKeyDeleteArgs} args - Arguments to delete one IntegrationKey.
+     * Delete a IntegrationCredential.
+     * @param {IntegrationCredentialDeleteArgs} args - Arguments to delete one IntegrationCredential.
      * @example
-     * // Delete one IntegrationKey
-     * const IntegrationKey = await prisma.integrationKey.delete({
+     * // Delete one IntegrationCredential
+     * const IntegrationCredential = await prisma.integrationCredential.delete({
      *   where: {
-     *     // ... filter to delete one IntegrationKey
+     *     // ... filter to delete one IntegrationCredential
      *   }
      * })
      * 
      */
-    delete<T extends IntegrationKeyDeleteArgs>(args: SelectSubset<T, IntegrationKeyDeleteArgs<ExtArgs>>): Prisma__IntegrationKeyClient<$Result.GetResult<Prisma.$IntegrationKeyPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    delete<T extends IntegrationCredentialDeleteArgs>(args: SelectSubset<T, IntegrationCredentialDeleteArgs<ExtArgs>>): Prisma__IntegrationCredentialClient<$Result.GetResult<Prisma.$IntegrationCredentialPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Update one IntegrationKey.
-     * @param {IntegrationKeyUpdateArgs} args - Arguments to update one IntegrationKey.
+     * Update one IntegrationCredential.
+     * @param {IntegrationCredentialUpdateArgs} args - Arguments to update one IntegrationCredential.
      * @example
-     * // Update one IntegrationKey
-     * const integrationKey = await prisma.integrationKey.update({
+     * // Update one IntegrationCredential
+     * const integrationCredential = await prisma.integrationCredential.update({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -27441,30 +26195,30 @@ export namespace Prisma {
      * })
      * 
      */
-    update<T extends IntegrationKeyUpdateArgs>(args: SelectSubset<T, IntegrationKeyUpdateArgs<ExtArgs>>): Prisma__IntegrationKeyClient<$Result.GetResult<Prisma.$IntegrationKeyPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    update<T extends IntegrationCredentialUpdateArgs>(args: SelectSubset<T, IntegrationCredentialUpdateArgs<ExtArgs>>): Prisma__IntegrationCredentialClient<$Result.GetResult<Prisma.$IntegrationCredentialPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Delete zero or more IntegrationKeys.
-     * @param {IntegrationKeyDeleteManyArgs} args - Arguments to filter IntegrationKeys to delete.
+     * Delete zero or more IntegrationCredentials.
+     * @param {IntegrationCredentialDeleteManyArgs} args - Arguments to filter IntegrationCredentials to delete.
      * @example
-     * // Delete a few IntegrationKeys
-     * const { count } = await prisma.integrationKey.deleteMany({
+     * // Delete a few IntegrationCredentials
+     * const { count } = await prisma.integrationCredential.deleteMany({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      * 
      */
-    deleteMany<T extends IntegrationKeyDeleteManyArgs>(args?: SelectSubset<T, IntegrationKeyDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    deleteMany<T extends IntegrationCredentialDeleteManyArgs>(args?: SelectSubset<T, IntegrationCredentialDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more IntegrationKeys.
+     * Update zero or more IntegrationCredentials.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {IntegrationKeyUpdateManyArgs} args - Arguments to update one or more rows.
+     * @param {IntegrationCredentialUpdateManyArgs} args - Arguments to update one or more rows.
      * @example
-     * // Update many IntegrationKeys
-     * const integrationKey = await prisma.integrationKey.updateMany({
+     * // Update many IntegrationCredentials
+     * const integrationCredential = await prisma.integrationCredential.updateMany({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -27474,14 +26228,14 @@ export namespace Prisma {
      * })
      * 
      */
-    updateMany<T extends IntegrationKeyUpdateManyArgs>(args: SelectSubset<T, IntegrationKeyUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    updateMany<T extends IntegrationCredentialUpdateManyArgs>(args: SelectSubset<T, IntegrationCredentialUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more IntegrationKeys and returns the data updated in the database.
-     * @param {IntegrationKeyUpdateManyAndReturnArgs} args - Arguments to update many IntegrationKeys.
+     * Update zero or more IntegrationCredentials and returns the data updated in the database.
+     * @param {IntegrationCredentialUpdateManyAndReturnArgs} args - Arguments to update many IntegrationCredentials.
      * @example
-     * // Update many IntegrationKeys
-     * const integrationKey = await prisma.integrationKey.updateManyAndReturn({
+     * // Update many IntegrationCredentials
+     * const integrationCredential = await prisma.integrationCredential.updateManyAndReturn({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -27490,8 +26244,8 @@ export namespace Prisma {
      *   ]
      * })
      * 
-     * // Update zero or more IntegrationKeys and only return the `id`
-     * const integrationKeyWithIdOnly = await prisma.integrationKey.updateManyAndReturn({
+     * // Update zero or more IntegrationCredentials and only return the `id`
+     * const integrationCredentialWithIdOnly = await prisma.integrationCredential.updateManyAndReturn({
      *   select: { id: true },
      *   where: {
      *     // ... provide filter here
@@ -27504,56 +26258,56 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    updateManyAndReturn<T extends IntegrationKeyUpdateManyAndReturnArgs>(args: SelectSubset<T, IntegrationKeyUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntegrationKeyPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+    updateManyAndReturn<T extends IntegrationCredentialUpdateManyAndReturnArgs>(args: SelectSubset<T, IntegrationCredentialUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntegrationCredentialPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Create or update one IntegrationKey.
-     * @param {IntegrationKeyUpsertArgs} args - Arguments to update or create a IntegrationKey.
+     * Create or update one IntegrationCredential.
+     * @param {IntegrationCredentialUpsertArgs} args - Arguments to update or create a IntegrationCredential.
      * @example
-     * // Update or create a IntegrationKey
-     * const integrationKey = await prisma.integrationKey.upsert({
+     * // Update or create a IntegrationCredential
+     * const integrationCredential = await prisma.integrationCredential.upsert({
      *   create: {
-     *     // ... data to create a IntegrationKey
+     *     // ... data to create a IntegrationCredential
      *   },
      *   update: {
      *     // ... in case it already exists, update
      *   },
      *   where: {
-     *     // ... the filter for the IntegrationKey we want to update
+     *     // ... the filter for the IntegrationCredential we want to update
      *   }
      * })
      */
-    upsert<T extends IntegrationKeyUpsertArgs>(args: SelectSubset<T, IntegrationKeyUpsertArgs<ExtArgs>>): Prisma__IntegrationKeyClient<$Result.GetResult<Prisma.$IntegrationKeyPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    upsert<T extends IntegrationCredentialUpsertArgs>(args: SelectSubset<T, IntegrationCredentialUpsertArgs<ExtArgs>>): Prisma__IntegrationCredentialClient<$Result.GetResult<Prisma.$IntegrationCredentialPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
     /**
-     * Count the number of IntegrationKeys.
+     * Count the number of IntegrationCredentials.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {IntegrationKeyCountArgs} args - Arguments to filter IntegrationKeys to count.
+     * @param {IntegrationCredentialCountArgs} args - Arguments to filter IntegrationCredentials to count.
      * @example
-     * // Count the number of IntegrationKeys
-     * const count = await prisma.integrationKey.count({
+     * // Count the number of IntegrationCredentials
+     * const count = await prisma.integrationCredential.count({
      *   where: {
-     *     // ... the filter for the IntegrationKeys we want to count
+     *     // ... the filter for the IntegrationCredentials we want to count
      *   }
      * })
     **/
-    count<T extends IntegrationKeyCountArgs>(
-      args?: Subset<T, IntegrationKeyCountArgs>,
+    count<T extends IntegrationCredentialCountArgs>(
+      args?: Subset<T, IntegrationCredentialCountArgs>,
     ): Prisma.PrismaPromise<
       T extends $Utils.Record<'select', any>
         ? T['select'] extends true
           ? number
-          : GetScalarType<T['select'], IntegrationKeyCountAggregateOutputType>
+          : GetScalarType<T['select'], IntegrationCredentialCountAggregateOutputType>
         : number
     >
 
     /**
-     * Allows you to perform aggregations operations on a IntegrationKey.
+     * Allows you to perform aggregations operations on a IntegrationCredential.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {IntegrationKeyAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @param {IntegrationCredentialAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
      * @example
      * // Ordered by age ascending
      * // Where email contains prisma.io
@@ -27573,13 +26327,13 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends IntegrationKeyAggregateArgs>(args: Subset<T, IntegrationKeyAggregateArgs>): Prisma.PrismaPromise<GetIntegrationKeyAggregateType<T>>
+    aggregate<T extends IntegrationCredentialAggregateArgs>(args: Subset<T, IntegrationCredentialAggregateArgs>): Prisma.PrismaPromise<GetIntegrationCredentialAggregateType<T>>
 
     /**
-     * Group by IntegrationKey.
+     * Group by IntegrationCredential.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {IntegrationKeyGroupByArgs} args - Group by arguments.
+     * @param {IntegrationCredentialGroupByArgs} args - Group by arguments.
      * @example
      * // Group by city, order by createdAt, get count
      * const result = await prisma.user.groupBy({
@@ -27594,14 +26348,14 @@ export namespace Prisma {
      * 
     **/
     groupBy<
-      T extends IntegrationKeyGroupByArgs,
+      T extends IntegrationCredentialGroupByArgs,
       HasSelectOrTake extends Or<
         Extends<'skip', Keys<T>>,
         Extends<'take', Keys<T>>
       >,
       OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: IntegrationKeyGroupByArgs['orderBy'] }
-        : { orderBy?: IntegrationKeyGroupByArgs['orderBy'] },
+        ? { orderBy: IntegrationCredentialGroupByArgs['orderBy'] }
+        : { orderBy?: IntegrationCredentialGroupByArgs['orderBy'] },
       OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
       ByFields extends MaybeTupleToUnion<T['by']>,
       ByValid extends Has<ByFields, OrderFields>,
@@ -27650,22 +26404,22 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, IntegrationKeyGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetIntegrationKeyGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, IntegrationCredentialGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetIntegrationCredentialGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
   /**
-   * Fields of the IntegrationKey model
+   * Fields of the IntegrationCredential model
    */
-  readonly fields: IntegrationKeyFieldRefs;
+  readonly fields: IntegrationCredentialFieldRefs;
   }
 
   /**
-   * The delegate class that acts as a "Promise-like" for IntegrationKey.
+   * The delegate class that acts as a "Promise-like" for IntegrationCredential.
    * Why is this prefixed with `Prisma__`?
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export interface Prisma__IntegrationKeyClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+  export interface Prisma__IntegrationCredentialClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    integration<T extends IntegrationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, IntegrationDefaultArgs<ExtArgs>>): Prisma__IntegrationClient<$Result.GetResult<Prisma.$IntegrationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -27692,428 +26446,430 @@ export namespace Prisma {
 
 
   /**
-   * Fields of the IntegrationKey model
+   * Fields of the IntegrationCredential model
    */
-  interface IntegrationKeyFieldRefs {
-    readonly id: FieldRef<"IntegrationKey", 'Int'>
-    readonly uuid: FieldRef<"IntegrationKey", 'String'>
-    readonly integration_uuid: FieldRef<"IntegrationKey", 'String'>
-    readonly title: FieldRef<"IntegrationKey", 'String'>
-    readonly secret: FieldRef<"IntegrationKey", 'String'>
-    readonly last4: FieldRef<"IntegrationKey", 'String'>
-    readonly created_at: FieldRef<"IntegrationKey", 'DateTime'>
-    readonly updated_at: FieldRef<"IntegrationKey", 'DateTime'>
+  interface IntegrationCredentialFieldRefs {
+    readonly id: FieldRef<"IntegrationCredential", 'Int'>
+    readonly uuid: FieldRef<"IntegrationCredential", 'String'>
+    readonly user_uuid: FieldRef<"IntegrationCredential", 'String'>
+    readonly provider: FieldRef<"IntegrationCredential", 'ExternalIntegrationProvider'>
+    readonly account: FieldRef<"IntegrationCredential", 'String'>
+    readonly kind: FieldRef<"IntegrationCredential", 'String'>
+    readonly secret: FieldRef<"IntegrationCredential", 'String'>
+    readonly last4: FieldRef<"IntegrationCredential", 'String'>
+    readonly created_at: FieldRef<"IntegrationCredential", 'DateTime'>
+    readonly updated_at: FieldRef<"IntegrationCredential", 'DateTime'>
   }
     
 
   // Custom InputTypes
   /**
-   * IntegrationKey findUnique
+   * IntegrationCredential findUnique
    */
-  export type IntegrationKeyFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type IntegrationCredentialFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the IntegrationKey
+     * Select specific fields to fetch from the IntegrationCredential
      */
-    select?: IntegrationKeySelect<ExtArgs> | null
+    select?: IntegrationCredentialSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the IntegrationKey
+     * Omit specific fields from the IntegrationCredential
      */
-    omit?: IntegrationKeyOmit<ExtArgs> | null
+    omit?: IntegrationCredentialOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: IntegrationKeyInclude<ExtArgs> | null
+    include?: IntegrationCredentialInclude<ExtArgs> | null
     /**
-     * Filter, which IntegrationKey to fetch.
+     * Filter, which IntegrationCredential to fetch.
      */
-    where: IntegrationKeyWhereUniqueInput
+    where: IntegrationCredentialWhereUniqueInput
   }
 
   /**
-   * IntegrationKey findUniqueOrThrow
+   * IntegrationCredential findUniqueOrThrow
    */
-  export type IntegrationKeyFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type IntegrationCredentialFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the IntegrationKey
+     * Select specific fields to fetch from the IntegrationCredential
      */
-    select?: IntegrationKeySelect<ExtArgs> | null
+    select?: IntegrationCredentialSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the IntegrationKey
+     * Omit specific fields from the IntegrationCredential
      */
-    omit?: IntegrationKeyOmit<ExtArgs> | null
+    omit?: IntegrationCredentialOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: IntegrationKeyInclude<ExtArgs> | null
+    include?: IntegrationCredentialInclude<ExtArgs> | null
     /**
-     * Filter, which IntegrationKey to fetch.
+     * Filter, which IntegrationCredential to fetch.
      */
-    where: IntegrationKeyWhereUniqueInput
+    where: IntegrationCredentialWhereUniqueInput
   }
 
   /**
-   * IntegrationKey findFirst
+   * IntegrationCredential findFirst
    */
-  export type IntegrationKeyFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type IntegrationCredentialFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the IntegrationKey
+     * Select specific fields to fetch from the IntegrationCredential
      */
-    select?: IntegrationKeySelect<ExtArgs> | null
+    select?: IntegrationCredentialSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the IntegrationKey
+     * Omit specific fields from the IntegrationCredential
      */
-    omit?: IntegrationKeyOmit<ExtArgs> | null
+    omit?: IntegrationCredentialOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: IntegrationKeyInclude<ExtArgs> | null
+    include?: IntegrationCredentialInclude<ExtArgs> | null
     /**
-     * Filter, which IntegrationKey to fetch.
+     * Filter, which IntegrationCredential to fetch.
      */
-    where?: IntegrationKeyWhereInput
+    where?: IntegrationCredentialWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of IntegrationKeys to fetch.
+     * Determine the order of IntegrationCredentials to fetch.
      */
-    orderBy?: IntegrationKeyOrderByWithRelationInput | IntegrationKeyOrderByWithRelationInput[]
+    orderBy?: IntegrationCredentialOrderByWithRelationInput | IntegrationCredentialOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for IntegrationKeys.
+     * Sets the position for searching for IntegrationCredentials.
      */
-    cursor?: IntegrationKeyWhereUniqueInput
+    cursor?: IntegrationCredentialWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` IntegrationKeys from the position of the cursor.
+     * Take `±n` IntegrationCredentials from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` IntegrationKeys.
+     * Skip the first `n` IntegrationCredentials.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of IntegrationKeys.
+     * Filter by unique combinations of IntegrationCredentials.
      */
-    distinct?: IntegrationKeyScalarFieldEnum | IntegrationKeyScalarFieldEnum[]
+    distinct?: IntegrationCredentialScalarFieldEnum | IntegrationCredentialScalarFieldEnum[]
   }
 
   /**
-   * IntegrationKey findFirstOrThrow
+   * IntegrationCredential findFirstOrThrow
    */
-  export type IntegrationKeyFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type IntegrationCredentialFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the IntegrationKey
+     * Select specific fields to fetch from the IntegrationCredential
      */
-    select?: IntegrationKeySelect<ExtArgs> | null
+    select?: IntegrationCredentialSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the IntegrationKey
+     * Omit specific fields from the IntegrationCredential
      */
-    omit?: IntegrationKeyOmit<ExtArgs> | null
+    omit?: IntegrationCredentialOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: IntegrationKeyInclude<ExtArgs> | null
+    include?: IntegrationCredentialInclude<ExtArgs> | null
     /**
-     * Filter, which IntegrationKey to fetch.
+     * Filter, which IntegrationCredential to fetch.
      */
-    where?: IntegrationKeyWhereInput
+    where?: IntegrationCredentialWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of IntegrationKeys to fetch.
+     * Determine the order of IntegrationCredentials to fetch.
      */
-    orderBy?: IntegrationKeyOrderByWithRelationInput | IntegrationKeyOrderByWithRelationInput[]
+    orderBy?: IntegrationCredentialOrderByWithRelationInput | IntegrationCredentialOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for IntegrationKeys.
+     * Sets the position for searching for IntegrationCredentials.
      */
-    cursor?: IntegrationKeyWhereUniqueInput
+    cursor?: IntegrationCredentialWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` IntegrationKeys from the position of the cursor.
+     * Take `±n` IntegrationCredentials from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` IntegrationKeys.
+     * Skip the first `n` IntegrationCredentials.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of IntegrationKeys.
+     * Filter by unique combinations of IntegrationCredentials.
      */
-    distinct?: IntegrationKeyScalarFieldEnum | IntegrationKeyScalarFieldEnum[]
+    distinct?: IntegrationCredentialScalarFieldEnum | IntegrationCredentialScalarFieldEnum[]
   }
 
   /**
-   * IntegrationKey findMany
+   * IntegrationCredential findMany
    */
-  export type IntegrationKeyFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type IntegrationCredentialFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the IntegrationKey
+     * Select specific fields to fetch from the IntegrationCredential
      */
-    select?: IntegrationKeySelect<ExtArgs> | null
+    select?: IntegrationCredentialSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the IntegrationKey
+     * Omit specific fields from the IntegrationCredential
      */
-    omit?: IntegrationKeyOmit<ExtArgs> | null
+    omit?: IntegrationCredentialOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: IntegrationKeyInclude<ExtArgs> | null
+    include?: IntegrationCredentialInclude<ExtArgs> | null
     /**
-     * Filter, which IntegrationKeys to fetch.
+     * Filter, which IntegrationCredentials to fetch.
      */
-    where?: IntegrationKeyWhereInput
+    where?: IntegrationCredentialWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of IntegrationKeys to fetch.
+     * Determine the order of IntegrationCredentials to fetch.
      */
-    orderBy?: IntegrationKeyOrderByWithRelationInput | IntegrationKeyOrderByWithRelationInput[]
+    orderBy?: IntegrationCredentialOrderByWithRelationInput | IntegrationCredentialOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for listing IntegrationKeys.
+     * Sets the position for listing IntegrationCredentials.
      */
-    cursor?: IntegrationKeyWhereUniqueInput
+    cursor?: IntegrationCredentialWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` IntegrationKeys from the position of the cursor.
+     * Take `±n` IntegrationCredentials from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` IntegrationKeys.
+     * Skip the first `n` IntegrationCredentials.
      */
     skip?: number
-    distinct?: IntegrationKeyScalarFieldEnum | IntegrationKeyScalarFieldEnum[]
+    distinct?: IntegrationCredentialScalarFieldEnum | IntegrationCredentialScalarFieldEnum[]
   }
 
   /**
-   * IntegrationKey create
+   * IntegrationCredential create
    */
-  export type IntegrationKeyCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type IntegrationCredentialCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the IntegrationKey
+     * Select specific fields to fetch from the IntegrationCredential
      */
-    select?: IntegrationKeySelect<ExtArgs> | null
+    select?: IntegrationCredentialSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the IntegrationKey
+     * Omit specific fields from the IntegrationCredential
      */
-    omit?: IntegrationKeyOmit<ExtArgs> | null
+    omit?: IntegrationCredentialOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: IntegrationKeyInclude<ExtArgs> | null
+    include?: IntegrationCredentialInclude<ExtArgs> | null
     /**
-     * The data needed to create a IntegrationKey.
+     * The data needed to create a IntegrationCredential.
      */
-    data: XOR<IntegrationKeyCreateInput, IntegrationKeyUncheckedCreateInput>
+    data: XOR<IntegrationCredentialCreateInput, IntegrationCredentialUncheckedCreateInput>
   }
 
   /**
-   * IntegrationKey createMany
+   * IntegrationCredential createMany
    */
-  export type IntegrationKeyCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type IntegrationCredentialCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to create many IntegrationKeys.
+     * The data used to create many IntegrationCredentials.
      */
-    data: IntegrationKeyCreateManyInput | IntegrationKeyCreateManyInput[]
+    data: IntegrationCredentialCreateManyInput | IntegrationCredentialCreateManyInput[]
     skipDuplicates?: boolean
   }
 
   /**
-   * IntegrationKey createManyAndReturn
+   * IntegrationCredential createManyAndReturn
    */
-  export type IntegrationKeyCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type IntegrationCredentialCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the IntegrationKey
+     * Select specific fields to fetch from the IntegrationCredential
      */
-    select?: IntegrationKeySelectCreateManyAndReturn<ExtArgs> | null
+    select?: IntegrationCredentialSelectCreateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the IntegrationKey
+     * Omit specific fields from the IntegrationCredential
      */
-    omit?: IntegrationKeyOmit<ExtArgs> | null
+    omit?: IntegrationCredentialOmit<ExtArgs> | null
     /**
-     * The data used to create many IntegrationKeys.
+     * The data used to create many IntegrationCredentials.
      */
-    data: IntegrationKeyCreateManyInput | IntegrationKeyCreateManyInput[]
+    data: IntegrationCredentialCreateManyInput | IntegrationCredentialCreateManyInput[]
     skipDuplicates?: boolean
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: IntegrationKeyIncludeCreateManyAndReturn<ExtArgs> | null
+    include?: IntegrationCredentialIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
-   * IntegrationKey update
+   * IntegrationCredential update
    */
-  export type IntegrationKeyUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type IntegrationCredentialUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the IntegrationKey
+     * Select specific fields to fetch from the IntegrationCredential
      */
-    select?: IntegrationKeySelect<ExtArgs> | null
+    select?: IntegrationCredentialSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the IntegrationKey
+     * Omit specific fields from the IntegrationCredential
      */
-    omit?: IntegrationKeyOmit<ExtArgs> | null
+    omit?: IntegrationCredentialOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: IntegrationKeyInclude<ExtArgs> | null
+    include?: IntegrationCredentialInclude<ExtArgs> | null
     /**
-     * The data needed to update a IntegrationKey.
+     * The data needed to update a IntegrationCredential.
      */
-    data: XOR<IntegrationKeyUpdateInput, IntegrationKeyUncheckedUpdateInput>
+    data: XOR<IntegrationCredentialUpdateInput, IntegrationCredentialUncheckedUpdateInput>
     /**
-     * Choose, which IntegrationKey to update.
+     * Choose, which IntegrationCredential to update.
      */
-    where: IntegrationKeyWhereUniqueInput
+    where: IntegrationCredentialWhereUniqueInput
   }
 
   /**
-   * IntegrationKey updateMany
+   * IntegrationCredential updateMany
    */
-  export type IntegrationKeyUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type IntegrationCredentialUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to update IntegrationKeys.
+     * The data used to update IntegrationCredentials.
      */
-    data: XOR<IntegrationKeyUpdateManyMutationInput, IntegrationKeyUncheckedUpdateManyInput>
+    data: XOR<IntegrationCredentialUpdateManyMutationInput, IntegrationCredentialUncheckedUpdateManyInput>
     /**
-     * Filter which IntegrationKeys to update
+     * Filter which IntegrationCredentials to update
      */
-    where?: IntegrationKeyWhereInput
+    where?: IntegrationCredentialWhereInput
     /**
-     * Limit how many IntegrationKeys to update.
+     * Limit how many IntegrationCredentials to update.
      */
     limit?: number
   }
 
   /**
-   * IntegrationKey updateManyAndReturn
+   * IntegrationCredential updateManyAndReturn
    */
-  export type IntegrationKeyUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type IntegrationCredentialUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the IntegrationKey
+     * Select specific fields to fetch from the IntegrationCredential
      */
-    select?: IntegrationKeySelectUpdateManyAndReturn<ExtArgs> | null
+    select?: IntegrationCredentialSelectUpdateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the IntegrationKey
+     * Omit specific fields from the IntegrationCredential
      */
-    omit?: IntegrationKeyOmit<ExtArgs> | null
+    omit?: IntegrationCredentialOmit<ExtArgs> | null
     /**
-     * The data used to update IntegrationKeys.
+     * The data used to update IntegrationCredentials.
      */
-    data: XOR<IntegrationKeyUpdateManyMutationInput, IntegrationKeyUncheckedUpdateManyInput>
+    data: XOR<IntegrationCredentialUpdateManyMutationInput, IntegrationCredentialUncheckedUpdateManyInput>
     /**
-     * Filter which IntegrationKeys to update
+     * Filter which IntegrationCredentials to update
      */
-    where?: IntegrationKeyWhereInput
+    where?: IntegrationCredentialWhereInput
     /**
-     * Limit how many IntegrationKeys to update.
+     * Limit how many IntegrationCredentials to update.
      */
     limit?: number
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: IntegrationKeyIncludeUpdateManyAndReturn<ExtArgs> | null
+    include?: IntegrationCredentialIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
-   * IntegrationKey upsert
+   * IntegrationCredential upsert
    */
-  export type IntegrationKeyUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type IntegrationCredentialUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the IntegrationKey
+     * Select specific fields to fetch from the IntegrationCredential
      */
-    select?: IntegrationKeySelect<ExtArgs> | null
+    select?: IntegrationCredentialSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the IntegrationKey
+     * Omit specific fields from the IntegrationCredential
      */
-    omit?: IntegrationKeyOmit<ExtArgs> | null
+    omit?: IntegrationCredentialOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: IntegrationKeyInclude<ExtArgs> | null
+    include?: IntegrationCredentialInclude<ExtArgs> | null
     /**
-     * The filter to search for the IntegrationKey to update in case it exists.
+     * The filter to search for the IntegrationCredential to update in case it exists.
      */
-    where: IntegrationKeyWhereUniqueInput
+    where: IntegrationCredentialWhereUniqueInput
     /**
-     * In case the IntegrationKey found by the `where` argument doesn't exist, create a new IntegrationKey with this data.
+     * In case the IntegrationCredential found by the `where` argument doesn't exist, create a new IntegrationCredential with this data.
      */
-    create: XOR<IntegrationKeyCreateInput, IntegrationKeyUncheckedCreateInput>
+    create: XOR<IntegrationCredentialCreateInput, IntegrationCredentialUncheckedCreateInput>
     /**
-     * In case the IntegrationKey was found with the provided `where` argument, update it with this data.
+     * In case the IntegrationCredential was found with the provided `where` argument, update it with this data.
      */
-    update: XOR<IntegrationKeyUpdateInput, IntegrationKeyUncheckedUpdateInput>
+    update: XOR<IntegrationCredentialUpdateInput, IntegrationCredentialUncheckedUpdateInput>
   }
 
   /**
-   * IntegrationKey delete
+   * IntegrationCredential delete
    */
-  export type IntegrationKeyDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type IntegrationCredentialDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the IntegrationKey
+     * Select specific fields to fetch from the IntegrationCredential
      */
-    select?: IntegrationKeySelect<ExtArgs> | null
+    select?: IntegrationCredentialSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the IntegrationKey
+     * Omit specific fields from the IntegrationCredential
      */
-    omit?: IntegrationKeyOmit<ExtArgs> | null
+    omit?: IntegrationCredentialOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: IntegrationKeyInclude<ExtArgs> | null
+    include?: IntegrationCredentialInclude<ExtArgs> | null
     /**
-     * Filter which IntegrationKey to delete.
+     * Filter which IntegrationCredential to delete.
      */
-    where: IntegrationKeyWhereUniqueInput
+    where: IntegrationCredentialWhereUniqueInput
   }
 
   /**
-   * IntegrationKey deleteMany
+   * IntegrationCredential deleteMany
    */
-  export type IntegrationKeyDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type IntegrationCredentialDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which IntegrationKeys to delete
+     * Filter which IntegrationCredentials to delete
      */
-    where?: IntegrationKeyWhereInput
+    where?: IntegrationCredentialWhereInput
     /**
-     * Limit how many IntegrationKeys to delete.
+     * Limit how many IntegrationCredentials to delete.
      */
     limit?: number
   }
 
   /**
-   * IntegrationKey without action
+   * IntegrationCredential without action
    */
-  export type IntegrationKeyDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type IntegrationCredentialDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the IntegrationKey
+     * Select specific fields to fetch from the IntegrationCredential
      */
-    select?: IntegrationKeySelect<ExtArgs> | null
+    select?: IntegrationCredentialSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the IntegrationKey
+     * Omit specific fields from the IntegrationCredential
      */
-    omit?: IntegrationKeyOmit<ExtArgs> | null
+    omit?: IntegrationCredentialOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: IntegrationKeyInclude<ExtArgs> | null
+    include?: IntegrationCredentialInclude<ExtArgs> | null
   }
 
 
@@ -28476,31 +27232,20 @@ export namespace Prisma {
   export type OpenAiBatchJobScalarFieldEnum = (typeof OpenAiBatchJobScalarFieldEnum)[keyof typeof OpenAiBatchJobScalarFieldEnum]
 
 
-  export const IntegrationScalarFieldEnum: {
+  export const IntegrationCredentialScalarFieldEnum: {
     id: 'id',
     uuid: 'uuid',
     user_uuid: 'user_uuid',
     provider: 'provider',
-    title: 'title',
-    created_at: 'created_at',
-    updated_at: 'updated_at'
-  };
-
-  export type IntegrationScalarFieldEnum = (typeof IntegrationScalarFieldEnum)[keyof typeof IntegrationScalarFieldEnum]
-
-
-  export const IntegrationKeyScalarFieldEnum: {
-    id: 'id',
-    uuid: 'uuid',
-    integration_uuid: 'integration_uuid',
-    title: 'title',
+    account: 'account',
+    kind: 'kind',
     secret: 'secret',
     last4: 'last4',
     created_at: 'created_at',
     updated_at: 'updated_at'
   };
 
-  export type IntegrationKeyScalarFieldEnum = (typeof IntegrationKeyScalarFieldEnum)[keyof typeof IntegrationKeyScalarFieldEnum]
+  export type IntegrationCredentialScalarFieldEnum = (typeof IntegrationCredentialScalarFieldEnum)[keyof typeof IntegrationCredentialScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -28895,7 +27640,7 @@ export namespace Prisma {
     marketing_campaigns?: MarketingCampaignListRelationFilter
     scoring_instructions?: ScoringInstructionListRelationFilter
     openai_batch_jobs?: OpenAiBatchJobListRelationFilter
-    integrations?: IntegrationListRelationFilter
+    integration_credentials?: IntegrationCredentialListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -28916,7 +27661,7 @@ export namespace Prisma {
     marketing_campaigns?: MarketingCampaignOrderByRelationAggregateInput
     scoring_instructions?: ScoringInstructionOrderByRelationAggregateInput
     openai_batch_jobs?: OpenAiBatchJobOrderByRelationAggregateInput
-    integrations?: IntegrationOrderByRelationAggregateInput
+    integration_credentials?: IntegrationCredentialOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -28940,7 +27685,7 @@ export namespace Prisma {
     marketing_campaigns?: MarketingCampaignListRelationFilter
     scoring_instructions?: ScoringInstructionListRelationFilter
     openai_batch_jobs?: OpenAiBatchJobListRelationFilter
-    integrations?: IntegrationListRelationFilter
+    integration_credentials?: IntegrationCredentialListRelationFilter
   }, "id" | "uuid" | "email" | "phone">
 
   export type UserOrderByWithAggregationInput = {
@@ -30755,147 +29500,87 @@ export namespace Prisma {
     updated_at?: DateTimeWithAggregatesFilter<"OpenAiBatchJob"> | Date | string
   }
 
-  export type IntegrationWhereInput = {
-    AND?: IntegrationWhereInput | IntegrationWhereInput[]
-    OR?: IntegrationWhereInput[]
-    NOT?: IntegrationWhereInput | IntegrationWhereInput[]
-    id?: IntFilter<"Integration"> | number
-    uuid?: StringFilter<"Integration"> | string
-    user_uuid?: StringFilter<"Integration"> | string
-    provider?: EnumExternalIntegrationProviderFilter<"Integration"> | $Enums.ExternalIntegrationProvider
-    title?: StringFilter<"Integration"> | string
-    created_at?: DateTimeFilter<"Integration"> | Date | string
-    updated_at?: DateTimeFilter<"Integration"> | Date | string
+  export type IntegrationCredentialWhereInput = {
+    AND?: IntegrationCredentialWhereInput | IntegrationCredentialWhereInput[]
+    OR?: IntegrationCredentialWhereInput[]
+    NOT?: IntegrationCredentialWhereInput | IntegrationCredentialWhereInput[]
+    id?: IntFilter<"IntegrationCredential"> | number
+    uuid?: StringFilter<"IntegrationCredential"> | string
+    user_uuid?: StringFilter<"IntegrationCredential"> | string
+    provider?: EnumExternalIntegrationProviderFilter<"IntegrationCredential"> | $Enums.ExternalIntegrationProvider
+    account?: StringFilter<"IntegrationCredential"> | string
+    kind?: StringFilter<"IntegrationCredential"> | string
+    secret?: StringFilter<"IntegrationCredential"> | string
+    last4?: StringNullableFilter<"IntegrationCredential"> | string | null
+    created_at?: DateTimeFilter<"IntegrationCredential"> | Date | string
+    updated_at?: DateTimeFilter<"IntegrationCredential"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    keys?: IntegrationKeyListRelationFilter
   }
 
-  export type IntegrationOrderByWithRelationInput = {
+  export type IntegrationCredentialOrderByWithRelationInput = {
     id?: SortOrder
     uuid?: SortOrder
     user_uuid?: SortOrder
     provider?: SortOrder
-    title?: SortOrder
+    account?: SortOrder
+    kind?: SortOrder
+    secret?: SortOrder
+    last4?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     user?: UserOrderByWithRelationInput
-    keys?: IntegrationKeyOrderByRelationAggregateInput
   }
 
-  export type IntegrationWhereUniqueInput = Prisma.AtLeast<{
+  export type IntegrationCredentialWhereUniqueInput = Prisma.AtLeast<{
     id?: number
     uuid?: string
-    user_uuid_provider?: IntegrationUser_uuidProviderCompoundUniqueInput
-    AND?: IntegrationWhereInput | IntegrationWhereInput[]
-    OR?: IntegrationWhereInput[]
-    NOT?: IntegrationWhereInput | IntegrationWhereInput[]
-    user_uuid?: StringFilter<"Integration"> | string
-    provider?: EnumExternalIntegrationProviderFilter<"Integration"> | $Enums.ExternalIntegrationProvider
-    title?: StringFilter<"Integration"> | string
-    created_at?: DateTimeFilter<"Integration"> | Date | string
-    updated_at?: DateTimeFilter<"Integration"> | Date | string
+    user_uuid_provider_account_kind?: IntegrationCredentialUser_uuidProviderAccountKindCompoundUniqueInput
+    AND?: IntegrationCredentialWhereInput | IntegrationCredentialWhereInput[]
+    OR?: IntegrationCredentialWhereInput[]
+    NOT?: IntegrationCredentialWhereInput | IntegrationCredentialWhereInput[]
+    user_uuid?: StringFilter<"IntegrationCredential"> | string
+    provider?: EnumExternalIntegrationProviderFilter<"IntegrationCredential"> | $Enums.ExternalIntegrationProvider
+    account?: StringFilter<"IntegrationCredential"> | string
+    kind?: StringFilter<"IntegrationCredential"> | string
+    secret?: StringFilter<"IntegrationCredential"> | string
+    last4?: StringNullableFilter<"IntegrationCredential"> | string | null
+    created_at?: DateTimeFilter<"IntegrationCredential"> | Date | string
+    updated_at?: DateTimeFilter<"IntegrationCredential"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    keys?: IntegrationKeyListRelationFilter
-  }, "id" | "uuid" | "user_uuid_provider">
+  }, "id" | "uuid" | "user_uuid_provider_account_kind">
 
-  export type IntegrationOrderByWithAggregationInput = {
+  export type IntegrationCredentialOrderByWithAggregationInput = {
     id?: SortOrder
     uuid?: SortOrder
     user_uuid?: SortOrder
     provider?: SortOrder
-    title?: SortOrder
-    created_at?: SortOrder
-    updated_at?: SortOrder
-    _count?: IntegrationCountOrderByAggregateInput
-    _avg?: IntegrationAvgOrderByAggregateInput
-    _max?: IntegrationMaxOrderByAggregateInput
-    _min?: IntegrationMinOrderByAggregateInput
-    _sum?: IntegrationSumOrderByAggregateInput
-  }
-
-  export type IntegrationScalarWhereWithAggregatesInput = {
-    AND?: IntegrationScalarWhereWithAggregatesInput | IntegrationScalarWhereWithAggregatesInput[]
-    OR?: IntegrationScalarWhereWithAggregatesInput[]
-    NOT?: IntegrationScalarWhereWithAggregatesInput | IntegrationScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"Integration"> | number
-    uuid?: StringWithAggregatesFilter<"Integration"> | string
-    user_uuid?: StringWithAggregatesFilter<"Integration"> | string
-    provider?: EnumExternalIntegrationProviderWithAggregatesFilter<"Integration"> | $Enums.ExternalIntegrationProvider
-    title?: StringWithAggregatesFilter<"Integration"> | string
-    created_at?: DateTimeWithAggregatesFilter<"Integration"> | Date | string
-    updated_at?: DateTimeWithAggregatesFilter<"Integration"> | Date | string
-  }
-
-  export type IntegrationKeyWhereInput = {
-    AND?: IntegrationKeyWhereInput | IntegrationKeyWhereInput[]
-    OR?: IntegrationKeyWhereInput[]
-    NOT?: IntegrationKeyWhereInput | IntegrationKeyWhereInput[]
-    id?: IntFilter<"IntegrationKey"> | number
-    uuid?: StringFilter<"IntegrationKey"> | string
-    integration_uuid?: StringFilter<"IntegrationKey"> | string
-    title?: StringFilter<"IntegrationKey"> | string
-    secret?: StringFilter<"IntegrationKey"> | string
-    last4?: StringNullableFilter<"IntegrationKey"> | string | null
-    created_at?: DateTimeFilter<"IntegrationKey"> | Date | string
-    updated_at?: DateTimeFilter<"IntegrationKey"> | Date | string
-    integration?: XOR<IntegrationScalarRelationFilter, IntegrationWhereInput>
-  }
-
-  export type IntegrationKeyOrderByWithRelationInput = {
-    id?: SortOrder
-    uuid?: SortOrder
-    integration_uuid?: SortOrder
-    title?: SortOrder
+    account?: SortOrder
+    kind?: SortOrder
     secret?: SortOrder
     last4?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
-    integration?: IntegrationOrderByWithRelationInput
+    _count?: IntegrationCredentialCountOrderByAggregateInput
+    _avg?: IntegrationCredentialAvgOrderByAggregateInput
+    _max?: IntegrationCredentialMaxOrderByAggregateInput
+    _min?: IntegrationCredentialMinOrderByAggregateInput
+    _sum?: IntegrationCredentialSumOrderByAggregateInput
   }
 
-  export type IntegrationKeyWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
-    uuid?: string
-    AND?: IntegrationKeyWhereInput | IntegrationKeyWhereInput[]
-    OR?: IntegrationKeyWhereInput[]
-    NOT?: IntegrationKeyWhereInput | IntegrationKeyWhereInput[]
-    integration_uuid?: StringFilter<"IntegrationKey"> | string
-    title?: StringFilter<"IntegrationKey"> | string
-    secret?: StringFilter<"IntegrationKey"> | string
-    last4?: StringNullableFilter<"IntegrationKey"> | string | null
-    created_at?: DateTimeFilter<"IntegrationKey"> | Date | string
-    updated_at?: DateTimeFilter<"IntegrationKey"> | Date | string
-    integration?: XOR<IntegrationScalarRelationFilter, IntegrationWhereInput>
-  }, "id" | "uuid">
-
-  export type IntegrationKeyOrderByWithAggregationInput = {
-    id?: SortOrder
-    uuid?: SortOrder
-    integration_uuid?: SortOrder
-    title?: SortOrder
-    secret?: SortOrder
-    last4?: SortOrderInput | SortOrder
-    created_at?: SortOrder
-    updated_at?: SortOrder
-    _count?: IntegrationKeyCountOrderByAggregateInput
-    _avg?: IntegrationKeyAvgOrderByAggregateInput
-    _max?: IntegrationKeyMaxOrderByAggregateInput
-    _min?: IntegrationKeyMinOrderByAggregateInput
-    _sum?: IntegrationKeySumOrderByAggregateInput
-  }
-
-  export type IntegrationKeyScalarWhereWithAggregatesInput = {
-    AND?: IntegrationKeyScalarWhereWithAggregatesInput | IntegrationKeyScalarWhereWithAggregatesInput[]
-    OR?: IntegrationKeyScalarWhereWithAggregatesInput[]
-    NOT?: IntegrationKeyScalarWhereWithAggregatesInput | IntegrationKeyScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"IntegrationKey"> | number
-    uuid?: StringWithAggregatesFilter<"IntegrationKey"> | string
-    integration_uuid?: StringWithAggregatesFilter<"IntegrationKey"> | string
-    title?: StringWithAggregatesFilter<"IntegrationKey"> | string
-    secret?: StringWithAggregatesFilter<"IntegrationKey"> | string
-    last4?: StringNullableWithAggregatesFilter<"IntegrationKey"> | string | null
-    created_at?: DateTimeWithAggregatesFilter<"IntegrationKey"> | Date | string
-    updated_at?: DateTimeWithAggregatesFilter<"IntegrationKey"> | Date | string
+  export type IntegrationCredentialScalarWhereWithAggregatesInput = {
+    AND?: IntegrationCredentialScalarWhereWithAggregatesInput | IntegrationCredentialScalarWhereWithAggregatesInput[]
+    OR?: IntegrationCredentialScalarWhereWithAggregatesInput[]
+    NOT?: IntegrationCredentialScalarWhereWithAggregatesInput | IntegrationCredentialScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"IntegrationCredential"> | number
+    uuid?: StringWithAggregatesFilter<"IntegrationCredential"> | string
+    user_uuid?: StringWithAggregatesFilter<"IntegrationCredential"> | string
+    provider?: EnumExternalIntegrationProviderWithAggregatesFilter<"IntegrationCredential"> | $Enums.ExternalIntegrationProvider
+    account?: StringWithAggregatesFilter<"IntegrationCredential"> | string
+    kind?: StringWithAggregatesFilter<"IntegrationCredential"> | string
+    secret?: StringWithAggregatesFilter<"IntegrationCredential"> | string
+    last4?: StringNullableWithAggregatesFilter<"IntegrationCredential"> | string | null
+    created_at?: DateTimeWithAggregatesFilter<"IntegrationCredential"> | Date | string
+    updated_at?: DateTimeWithAggregatesFilter<"IntegrationCredential"> | Date | string
   }
 
   export type UserCreateInput = {
@@ -30915,7 +29600,7 @@ export namespace Prisma {
     marketing_campaigns?: MarketingCampaignCreateNestedManyWithoutUserInput
     scoring_instructions?: ScoringInstructionCreateNestedManyWithoutUserInput
     openai_batch_jobs?: OpenAiBatchJobCreateNestedManyWithoutUserInput
-    integrations?: IntegrationCreateNestedManyWithoutUserInput
+    integration_credentials?: IntegrationCredentialCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -30936,7 +29621,7 @@ export namespace Prisma {
     marketing_campaigns?: MarketingCampaignUncheckedCreateNestedManyWithoutUserInput
     scoring_instructions?: ScoringInstructionUncheckedCreateNestedManyWithoutUserInput
     openai_batch_jobs?: OpenAiBatchJobUncheckedCreateNestedManyWithoutUserInput
-    integrations?: IntegrationUncheckedCreateNestedManyWithoutUserInput
+    integration_credentials?: IntegrationCredentialUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -30956,7 +29641,7 @@ export namespace Prisma {
     marketing_campaigns?: MarketingCampaignUpdateManyWithoutUserNestedInput
     scoring_instructions?: ScoringInstructionUpdateManyWithoutUserNestedInput
     openai_batch_jobs?: OpenAiBatchJobUpdateManyWithoutUserNestedInput
-    integrations?: IntegrationUpdateManyWithoutUserNestedInput
+    integration_credentials?: IntegrationCredentialUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -30977,7 +29662,7 @@ export namespace Prisma {
     marketing_campaigns?: MarketingCampaignUncheckedUpdateManyWithoutUserNestedInput
     scoring_instructions?: ScoringInstructionUncheckedUpdateManyWithoutUserNestedInput
     openai_batch_jobs?: OpenAiBatchJobUncheckedUpdateManyWithoutUserNestedInput
-    integrations?: IntegrationUncheckedUpdateManyWithoutUserNestedInput
+    integration_credentials?: IntegrationCredentialUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -32975,143 +31660,87 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type IntegrationCreateInput = {
+  export type IntegrationCredentialCreateInput = {
     uuid?: string
     provider: $Enums.ExternalIntegrationProvider
-    title: string
+    account?: string
+    kind: string
+    secret: string
+    last4?: string | null
     created_at?: Date | string
     updated_at?: Date | string
-    user: UserCreateNestedOneWithoutIntegrationsInput
-    keys?: IntegrationKeyCreateNestedManyWithoutIntegrationInput
+    user: UserCreateNestedOneWithoutIntegration_credentialsInput
   }
 
-  export type IntegrationUncheckedCreateInput = {
+  export type IntegrationCredentialUncheckedCreateInput = {
     id?: number
     uuid?: string
     user_uuid: string
     provider: $Enums.ExternalIntegrationProvider
-    title: string
+    account?: string
+    kind: string
+    secret: string
+    last4?: string | null
     created_at?: Date | string
     updated_at?: Date | string
-    keys?: IntegrationKeyUncheckedCreateNestedManyWithoutIntegrationInput
   }
 
-  export type IntegrationUpdateInput = {
+  export type IntegrationCredentialUpdateInput = {
     uuid?: StringFieldUpdateOperationsInput | string
     provider?: EnumExternalIntegrationProviderFieldUpdateOperationsInput | $Enums.ExternalIntegrationProvider
-    title?: StringFieldUpdateOperationsInput | string
+    account?: StringFieldUpdateOperationsInput | string
+    kind?: StringFieldUpdateOperationsInput | string
+    secret?: StringFieldUpdateOperationsInput | string
+    last4?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutIntegrationsNestedInput
-    keys?: IntegrationKeyUpdateManyWithoutIntegrationNestedInput
+    user?: UserUpdateOneRequiredWithoutIntegration_credentialsNestedInput
   }
 
-  export type IntegrationUncheckedUpdateInput = {
+  export type IntegrationCredentialUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
     user_uuid?: StringFieldUpdateOperationsInput | string
     provider?: EnumExternalIntegrationProviderFieldUpdateOperationsInput | $Enums.ExternalIntegrationProvider
-    title?: StringFieldUpdateOperationsInput | string
+    account?: StringFieldUpdateOperationsInput | string
+    kind?: StringFieldUpdateOperationsInput | string
+    secret?: StringFieldUpdateOperationsInput | string
+    last4?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    keys?: IntegrationKeyUncheckedUpdateManyWithoutIntegrationNestedInput
   }
 
-  export type IntegrationCreateManyInput = {
+  export type IntegrationCredentialCreateManyInput = {
     id?: number
     uuid?: string
     user_uuid: string
     provider: $Enums.ExternalIntegrationProvider
-    title: string
+    account?: string
+    kind: string
+    secret: string
+    last4?: string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
 
-  export type IntegrationUpdateManyMutationInput = {
+  export type IntegrationCredentialUpdateManyMutationInput = {
     uuid?: StringFieldUpdateOperationsInput | string
     provider?: EnumExternalIntegrationProviderFieldUpdateOperationsInput | $Enums.ExternalIntegrationProvider
-    title?: StringFieldUpdateOperationsInput | string
+    account?: StringFieldUpdateOperationsInput | string
+    kind?: StringFieldUpdateOperationsInput | string
+    secret?: StringFieldUpdateOperationsInput | string
+    last4?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type IntegrationUncheckedUpdateManyInput = {
+  export type IntegrationCredentialUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
     user_uuid?: StringFieldUpdateOperationsInput | string
     provider?: EnumExternalIntegrationProviderFieldUpdateOperationsInput | $Enums.ExternalIntegrationProvider
-    title?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type IntegrationKeyCreateInput = {
-    uuid?: string
-    title: string
-    secret: string
-    last4?: string | null
-    created_at?: Date | string
-    updated_at?: Date | string
-    integration: IntegrationCreateNestedOneWithoutKeysInput
-  }
-
-  export type IntegrationKeyUncheckedCreateInput = {
-    id?: number
-    uuid?: string
-    integration_uuid: string
-    title: string
-    secret: string
-    last4?: string | null
-    created_at?: Date | string
-    updated_at?: Date | string
-  }
-
-  export type IntegrationKeyUpdateInput = {
-    uuid?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    secret?: StringFieldUpdateOperationsInput | string
-    last4?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    integration?: IntegrationUpdateOneRequiredWithoutKeysNestedInput
-  }
-
-  export type IntegrationKeyUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    uuid?: StringFieldUpdateOperationsInput | string
-    integration_uuid?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    secret?: StringFieldUpdateOperationsInput | string
-    last4?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type IntegrationKeyCreateManyInput = {
-    id?: number
-    uuid?: string
-    integration_uuid: string
-    title: string
-    secret: string
-    last4?: string | null
-    created_at?: Date | string
-    updated_at?: Date | string
-  }
-
-  export type IntegrationKeyUpdateManyMutationInput = {
-    uuid?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    secret?: StringFieldUpdateOperationsInput | string
-    last4?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type IntegrationKeyUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    uuid?: StringFieldUpdateOperationsInput | string
-    integration_uuid?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
+    account?: StringFieldUpdateOperationsInput | string
+    kind?: StringFieldUpdateOperationsInput | string
     secret?: StringFieldUpdateOperationsInput | string
     last4?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33231,10 +31860,10 @@ export namespace Prisma {
     none?: OpenAiBatchJobWhereInput
   }
 
-  export type IntegrationListRelationFilter = {
-    every?: IntegrationWhereInput
-    some?: IntegrationWhereInput
-    none?: IntegrationWhereInput
+  export type IntegrationCredentialListRelationFilter = {
+    every?: IntegrationCredentialWhereInput
+    some?: IntegrationCredentialWhereInput
+    none?: IntegrationCredentialWhereInput
   }
 
   export type SortOrderInput = {
@@ -33278,7 +31907,7 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
-  export type IntegrationOrderByRelationAggregateInput = {
+  export type IntegrationCredentialOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -34991,56 +33620,57 @@ export namespace Prisma {
     not?: NestedEnumExternalIntegrationProviderFilter<$PrismaModel> | $Enums.ExternalIntegrationProvider
   }
 
-  export type IntegrationKeyListRelationFilter = {
-    every?: IntegrationKeyWhereInput
-    some?: IntegrationKeyWhereInput
-    none?: IntegrationKeyWhereInput
-  }
-
-  export type IntegrationKeyOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type IntegrationUser_uuidProviderCompoundUniqueInput = {
+  export type IntegrationCredentialUser_uuidProviderAccountKindCompoundUniqueInput = {
     user_uuid: string
     provider: $Enums.ExternalIntegrationProvider
+    account: string
+    kind: string
   }
 
-  export type IntegrationCountOrderByAggregateInput = {
+  export type IntegrationCredentialCountOrderByAggregateInput = {
     id?: SortOrder
     uuid?: SortOrder
     user_uuid?: SortOrder
     provider?: SortOrder
-    title?: SortOrder
+    account?: SortOrder
+    kind?: SortOrder
+    secret?: SortOrder
+    last4?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
 
-  export type IntegrationAvgOrderByAggregateInput = {
+  export type IntegrationCredentialAvgOrderByAggregateInput = {
     id?: SortOrder
   }
 
-  export type IntegrationMaxOrderByAggregateInput = {
-    id?: SortOrder
-    uuid?: SortOrder
-    user_uuid?: SortOrder
-    provider?: SortOrder
-    title?: SortOrder
-    created_at?: SortOrder
-    updated_at?: SortOrder
-  }
-
-  export type IntegrationMinOrderByAggregateInput = {
+  export type IntegrationCredentialMaxOrderByAggregateInput = {
     id?: SortOrder
     uuid?: SortOrder
     user_uuid?: SortOrder
     provider?: SortOrder
-    title?: SortOrder
+    account?: SortOrder
+    kind?: SortOrder
+    secret?: SortOrder
+    last4?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
 
-  export type IntegrationSumOrderByAggregateInput = {
+  export type IntegrationCredentialMinOrderByAggregateInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    user_uuid?: SortOrder
+    provider?: SortOrder
+    account?: SortOrder
+    kind?: SortOrder
+    secret?: SortOrder
+    last4?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type IntegrationCredentialSumOrderByAggregateInput = {
     id?: SortOrder
   }
 
@@ -35052,52 +33682,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumExternalIntegrationProviderFilter<$PrismaModel>
     _max?: NestedEnumExternalIntegrationProviderFilter<$PrismaModel>
-  }
-
-  export type IntegrationScalarRelationFilter = {
-    is?: IntegrationWhereInput
-    isNot?: IntegrationWhereInput
-  }
-
-  export type IntegrationKeyCountOrderByAggregateInput = {
-    id?: SortOrder
-    uuid?: SortOrder
-    integration_uuid?: SortOrder
-    title?: SortOrder
-    secret?: SortOrder
-    last4?: SortOrder
-    created_at?: SortOrder
-    updated_at?: SortOrder
-  }
-
-  export type IntegrationKeyAvgOrderByAggregateInput = {
-    id?: SortOrder
-  }
-
-  export type IntegrationKeyMaxOrderByAggregateInput = {
-    id?: SortOrder
-    uuid?: SortOrder
-    integration_uuid?: SortOrder
-    title?: SortOrder
-    secret?: SortOrder
-    last4?: SortOrder
-    created_at?: SortOrder
-    updated_at?: SortOrder
-  }
-
-  export type IntegrationKeyMinOrderByAggregateInput = {
-    id?: SortOrder
-    uuid?: SortOrder
-    integration_uuid?: SortOrder
-    title?: SortOrder
-    secret?: SortOrder
-    last4?: SortOrder
-    created_at?: SortOrder
-    updated_at?: SortOrder
-  }
-
-  export type IntegrationKeySumOrderByAggregateInput = {
-    id?: SortOrder
   }
 
   export type FilterCreateNestedManyWithoutUserInput = {
@@ -35163,11 +33747,11 @@ export namespace Prisma {
     connect?: OpenAiBatchJobWhereUniqueInput | OpenAiBatchJobWhereUniqueInput[]
   }
 
-  export type IntegrationCreateNestedManyWithoutUserInput = {
-    create?: XOR<IntegrationCreateWithoutUserInput, IntegrationUncheckedCreateWithoutUserInput> | IntegrationCreateWithoutUserInput[] | IntegrationUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: IntegrationCreateOrConnectWithoutUserInput | IntegrationCreateOrConnectWithoutUserInput[]
-    createMany?: IntegrationCreateManyUserInputEnvelope
-    connect?: IntegrationWhereUniqueInput | IntegrationWhereUniqueInput[]
+  export type IntegrationCredentialCreateNestedManyWithoutUserInput = {
+    create?: XOR<IntegrationCredentialCreateWithoutUserInput, IntegrationCredentialUncheckedCreateWithoutUserInput> | IntegrationCredentialCreateWithoutUserInput[] | IntegrationCredentialUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: IntegrationCredentialCreateOrConnectWithoutUserInput | IntegrationCredentialCreateOrConnectWithoutUserInput[]
+    createMany?: IntegrationCredentialCreateManyUserInputEnvelope
+    connect?: IntegrationCredentialWhereUniqueInput | IntegrationCredentialWhereUniqueInput[]
   }
 
   export type FilterUncheckedCreateNestedManyWithoutUserInput = {
@@ -35233,11 +33817,11 @@ export namespace Prisma {
     connect?: OpenAiBatchJobWhereUniqueInput | OpenAiBatchJobWhereUniqueInput[]
   }
 
-  export type IntegrationUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<IntegrationCreateWithoutUserInput, IntegrationUncheckedCreateWithoutUserInput> | IntegrationCreateWithoutUserInput[] | IntegrationUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: IntegrationCreateOrConnectWithoutUserInput | IntegrationCreateOrConnectWithoutUserInput[]
-    createMany?: IntegrationCreateManyUserInputEnvelope
-    connect?: IntegrationWhereUniqueInput | IntegrationWhereUniqueInput[]
+  export type IntegrationCredentialUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<IntegrationCredentialCreateWithoutUserInput, IntegrationCredentialUncheckedCreateWithoutUserInput> | IntegrationCredentialCreateWithoutUserInput[] | IntegrationCredentialUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: IntegrationCredentialCreateOrConnectWithoutUserInput | IntegrationCredentialCreateOrConnectWithoutUserInput[]
+    createMany?: IntegrationCredentialCreateManyUserInputEnvelope
+    connect?: IntegrationCredentialWhereUniqueInput | IntegrationCredentialWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -35382,18 +33966,18 @@ export namespace Prisma {
     deleteMany?: OpenAiBatchJobScalarWhereInput | OpenAiBatchJobScalarWhereInput[]
   }
 
-  export type IntegrationUpdateManyWithoutUserNestedInput = {
-    create?: XOR<IntegrationCreateWithoutUserInput, IntegrationUncheckedCreateWithoutUserInput> | IntegrationCreateWithoutUserInput[] | IntegrationUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: IntegrationCreateOrConnectWithoutUserInput | IntegrationCreateOrConnectWithoutUserInput[]
-    upsert?: IntegrationUpsertWithWhereUniqueWithoutUserInput | IntegrationUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: IntegrationCreateManyUserInputEnvelope
-    set?: IntegrationWhereUniqueInput | IntegrationWhereUniqueInput[]
-    disconnect?: IntegrationWhereUniqueInput | IntegrationWhereUniqueInput[]
-    delete?: IntegrationWhereUniqueInput | IntegrationWhereUniqueInput[]
-    connect?: IntegrationWhereUniqueInput | IntegrationWhereUniqueInput[]
-    update?: IntegrationUpdateWithWhereUniqueWithoutUserInput | IntegrationUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: IntegrationUpdateManyWithWhereWithoutUserInput | IntegrationUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: IntegrationScalarWhereInput | IntegrationScalarWhereInput[]
+  export type IntegrationCredentialUpdateManyWithoutUserNestedInput = {
+    create?: XOR<IntegrationCredentialCreateWithoutUserInput, IntegrationCredentialUncheckedCreateWithoutUserInput> | IntegrationCredentialCreateWithoutUserInput[] | IntegrationCredentialUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: IntegrationCredentialCreateOrConnectWithoutUserInput | IntegrationCredentialCreateOrConnectWithoutUserInput[]
+    upsert?: IntegrationCredentialUpsertWithWhereUniqueWithoutUserInput | IntegrationCredentialUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: IntegrationCredentialCreateManyUserInputEnvelope
+    set?: IntegrationCredentialWhereUniqueInput | IntegrationCredentialWhereUniqueInput[]
+    disconnect?: IntegrationCredentialWhereUniqueInput | IntegrationCredentialWhereUniqueInput[]
+    delete?: IntegrationCredentialWhereUniqueInput | IntegrationCredentialWhereUniqueInput[]
+    connect?: IntegrationCredentialWhereUniqueInput | IntegrationCredentialWhereUniqueInput[]
+    update?: IntegrationCredentialUpdateWithWhereUniqueWithoutUserInput | IntegrationCredentialUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: IntegrationCredentialUpdateManyWithWhereWithoutUserInput | IntegrationCredentialUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: IntegrationCredentialScalarWhereInput | IntegrationCredentialScalarWhereInput[]
   }
 
   export type IntFieldUpdateOperationsInput = {
@@ -35530,18 +34114,18 @@ export namespace Prisma {
     deleteMany?: OpenAiBatchJobScalarWhereInput | OpenAiBatchJobScalarWhereInput[]
   }
 
-  export type IntegrationUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<IntegrationCreateWithoutUserInput, IntegrationUncheckedCreateWithoutUserInput> | IntegrationCreateWithoutUserInput[] | IntegrationUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: IntegrationCreateOrConnectWithoutUserInput | IntegrationCreateOrConnectWithoutUserInput[]
-    upsert?: IntegrationUpsertWithWhereUniqueWithoutUserInput | IntegrationUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: IntegrationCreateManyUserInputEnvelope
-    set?: IntegrationWhereUniqueInput | IntegrationWhereUniqueInput[]
-    disconnect?: IntegrationWhereUniqueInput | IntegrationWhereUniqueInput[]
-    delete?: IntegrationWhereUniqueInput | IntegrationWhereUniqueInput[]
-    connect?: IntegrationWhereUniqueInput | IntegrationWhereUniqueInput[]
-    update?: IntegrationUpdateWithWhereUniqueWithoutUserInput | IntegrationUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: IntegrationUpdateManyWithWhereWithoutUserInput | IntegrationUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: IntegrationScalarWhereInput | IntegrationScalarWhereInput[]
+  export type IntegrationCredentialUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<IntegrationCredentialCreateWithoutUserInput, IntegrationCredentialUncheckedCreateWithoutUserInput> | IntegrationCredentialCreateWithoutUserInput[] | IntegrationCredentialUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: IntegrationCredentialCreateOrConnectWithoutUserInput | IntegrationCredentialCreateOrConnectWithoutUserInput[]
+    upsert?: IntegrationCredentialUpsertWithWhereUniqueWithoutUserInput | IntegrationCredentialUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: IntegrationCredentialCreateManyUserInputEnvelope
+    set?: IntegrationCredentialWhereUniqueInput | IntegrationCredentialWhereUniqueInput[]
+    disconnect?: IntegrationCredentialWhereUniqueInput | IntegrationCredentialWhereUniqueInput[]
+    delete?: IntegrationCredentialWhereUniqueInput | IntegrationCredentialWhereUniqueInput[]
+    connect?: IntegrationCredentialWhereUniqueInput | IntegrationCredentialWhereUniqueInput[]
+    update?: IntegrationCredentialUpdateWithWhereUniqueWithoutUserInput | IntegrationCredentialUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: IntegrationCredentialUpdateManyWithWhereWithoutUserInput | IntegrationCredentialUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: IntegrationCredentialScalarWhereInput | IntegrationCredentialScalarWhereInput[]
   }
 
   export type FilterCreateenrichment_sourcesInput = {
@@ -36833,78 +35417,22 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutOpenai_batch_jobsInput, UserUpdateWithoutOpenai_batch_jobsInput>, UserUncheckedUpdateWithoutOpenai_batch_jobsInput>
   }
 
-  export type UserCreateNestedOneWithoutIntegrationsInput = {
-    create?: XOR<UserCreateWithoutIntegrationsInput, UserUncheckedCreateWithoutIntegrationsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutIntegrationsInput
+  export type UserCreateNestedOneWithoutIntegration_credentialsInput = {
+    create?: XOR<UserCreateWithoutIntegration_credentialsInput, UserUncheckedCreateWithoutIntegration_credentialsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutIntegration_credentialsInput
     connect?: UserWhereUniqueInput
-  }
-
-  export type IntegrationKeyCreateNestedManyWithoutIntegrationInput = {
-    create?: XOR<IntegrationKeyCreateWithoutIntegrationInput, IntegrationKeyUncheckedCreateWithoutIntegrationInput> | IntegrationKeyCreateWithoutIntegrationInput[] | IntegrationKeyUncheckedCreateWithoutIntegrationInput[]
-    connectOrCreate?: IntegrationKeyCreateOrConnectWithoutIntegrationInput | IntegrationKeyCreateOrConnectWithoutIntegrationInput[]
-    createMany?: IntegrationKeyCreateManyIntegrationInputEnvelope
-    connect?: IntegrationKeyWhereUniqueInput | IntegrationKeyWhereUniqueInput[]
-  }
-
-  export type IntegrationKeyUncheckedCreateNestedManyWithoutIntegrationInput = {
-    create?: XOR<IntegrationKeyCreateWithoutIntegrationInput, IntegrationKeyUncheckedCreateWithoutIntegrationInput> | IntegrationKeyCreateWithoutIntegrationInput[] | IntegrationKeyUncheckedCreateWithoutIntegrationInput[]
-    connectOrCreate?: IntegrationKeyCreateOrConnectWithoutIntegrationInput | IntegrationKeyCreateOrConnectWithoutIntegrationInput[]
-    createMany?: IntegrationKeyCreateManyIntegrationInputEnvelope
-    connect?: IntegrationKeyWhereUniqueInput | IntegrationKeyWhereUniqueInput[]
   }
 
   export type EnumExternalIntegrationProviderFieldUpdateOperationsInput = {
     set?: $Enums.ExternalIntegrationProvider
   }
 
-  export type UserUpdateOneRequiredWithoutIntegrationsNestedInput = {
-    create?: XOR<UserCreateWithoutIntegrationsInput, UserUncheckedCreateWithoutIntegrationsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutIntegrationsInput
-    upsert?: UserUpsertWithoutIntegrationsInput
+  export type UserUpdateOneRequiredWithoutIntegration_credentialsNestedInput = {
+    create?: XOR<UserCreateWithoutIntegration_credentialsInput, UserUncheckedCreateWithoutIntegration_credentialsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutIntegration_credentialsInput
+    upsert?: UserUpsertWithoutIntegration_credentialsInput
     connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutIntegrationsInput, UserUpdateWithoutIntegrationsInput>, UserUncheckedUpdateWithoutIntegrationsInput>
-  }
-
-  export type IntegrationKeyUpdateManyWithoutIntegrationNestedInput = {
-    create?: XOR<IntegrationKeyCreateWithoutIntegrationInput, IntegrationKeyUncheckedCreateWithoutIntegrationInput> | IntegrationKeyCreateWithoutIntegrationInput[] | IntegrationKeyUncheckedCreateWithoutIntegrationInput[]
-    connectOrCreate?: IntegrationKeyCreateOrConnectWithoutIntegrationInput | IntegrationKeyCreateOrConnectWithoutIntegrationInput[]
-    upsert?: IntegrationKeyUpsertWithWhereUniqueWithoutIntegrationInput | IntegrationKeyUpsertWithWhereUniqueWithoutIntegrationInput[]
-    createMany?: IntegrationKeyCreateManyIntegrationInputEnvelope
-    set?: IntegrationKeyWhereUniqueInput | IntegrationKeyWhereUniqueInput[]
-    disconnect?: IntegrationKeyWhereUniqueInput | IntegrationKeyWhereUniqueInput[]
-    delete?: IntegrationKeyWhereUniqueInput | IntegrationKeyWhereUniqueInput[]
-    connect?: IntegrationKeyWhereUniqueInput | IntegrationKeyWhereUniqueInput[]
-    update?: IntegrationKeyUpdateWithWhereUniqueWithoutIntegrationInput | IntegrationKeyUpdateWithWhereUniqueWithoutIntegrationInput[]
-    updateMany?: IntegrationKeyUpdateManyWithWhereWithoutIntegrationInput | IntegrationKeyUpdateManyWithWhereWithoutIntegrationInput[]
-    deleteMany?: IntegrationKeyScalarWhereInput | IntegrationKeyScalarWhereInput[]
-  }
-
-  export type IntegrationKeyUncheckedUpdateManyWithoutIntegrationNestedInput = {
-    create?: XOR<IntegrationKeyCreateWithoutIntegrationInput, IntegrationKeyUncheckedCreateWithoutIntegrationInput> | IntegrationKeyCreateWithoutIntegrationInput[] | IntegrationKeyUncheckedCreateWithoutIntegrationInput[]
-    connectOrCreate?: IntegrationKeyCreateOrConnectWithoutIntegrationInput | IntegrationKeyCreateOrConnectWithoutIntegrationInput[]
-    upsert?: IntegrationKeyUpsertWithWhereUniqueWithoutIntegrationInput | IntegrationKeyUpsertWithWhereUniqueWithoutIntegrationInput[]
-    createMany?: IntegrationKeyCreateManyIntegrationInputEnvelope
-    set?: IntegrationKeyWhereUniqueInput | IntegrationKeyWhereUniqueInput[]
-    disconnect?: IntegrationKeyWhereUniqueInput | IntegrationKeyWhereUniqueInput[]
-    delete?: IntegrationKeyWhereUniqueInput | IntegrationKeyWhereUniqueInput[]
-    connect?: IntegrationKeyWhereUniqueInput | IntegrationKeyWhereUniqueInput[]
-    update?: IntegrationKeyUpdateWithWhereUniqueWithoutIntegrationInput | IntegrationKeyUpdateWithWhereUniqueWithoutIntegrationInput[]
-    updateMany?: IntegrationKeyUpdateManyWithWhereWithoutIntegrationInput | IntegrationKeyUpdateManyWithWhereWithoutIntegrationInput[]
-    deleteMany?: IntegrationKeyScalarWhereInput | IntegrationKeyScalarWhereInput[]
-  }
-
-  export type IntegrationCreateNestedOneWithoutKeysInput = {
-    create?: XOR<IntegrationCreateWithoutKeysInput, IntegrationUncheckedCreateWithoutKeysInput>
-    connectOrCreate?: IntegrationCreateOrConnectWithoutKeysInput
-    connect?: IntegrationWhereUniqueInput
-  }
-
-  export type IntegrationUpdateOneRequiredWithoutKeysNestedInput = {
-    create?: XOR<IntegrationCreateWithoutKeysInput, IntegrationUncheckedCreateWithoutKeysInput>
-    connectOrCreate?: IntegrationCreateOrConnectWithoutKeysInput
-    upsert?: IntegrationUpsertWithoutKeysInput
-    connect?: IntegrationWhereUniqueInput
-    update?: XOR<XOR<IntegrationUpdateToOneWithWhereWithoutKeysInput, IntegrationUpdateWithoutKeysInput>, IntegrationUncheckedUpdateWithoutKeysInput>
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutIntegration_credentialsInput, UserUpdateWithoutIntegration_credentialsInput>, UserUncheckedUpdateWithoutIntegration_credentialsInput>
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -37913,32 +36441,36 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type IntegrationCreateWithoutUserInput = {
+  export type IntegrationCredentialCreateWithoutUserInput = {
     uuid?: string
     provider: $Enums.ExternalIntegrationProvider
-    title: string
+    account?: string
+    kind: string
+    secret: string
+    last4?: string | null
     created_at?: Date | string
     updated_at?: Date | string
-    keys?: IntegrationKeyCreateNestedManyWithoutIntegrationInput
   }
 
-  export type IntegrationUncheckedCreateWithoutUserInput = {
+  export type IntegrationCredentialUncheckedCreateWithoutUserInput = {
     id?: number
     uuid?: string
     provider: $Enums.ExternalIntegrationProvider
-    title: string
+    account?: string
+    kind: string
+    secret: string
+    last4?: string | null
     created_at?: Date | string
     updated_at?: Date | string
-    keys?: IntegrationKeyUncheckedCreateNestedManyWithoutIntegrationInput
   }
 
-  export type IntegrationCreateOrConnectWithoutUserInput = {
-    where: IntegrationWhereUniqueInput
-    create: XOR<IntegrationCreateWithoutUserInput, IntegrationUncheckedCreateWithoutUserInput>
+  export type IntegrationCredentialCreateOrConnectWithoutUserInput = {
+    where: IntegrationCredentialWhereUniqueInput
+    create: XOR<IntegrationCredentialCreateWithoutUserInput, IntegrationCredentialUncheckedCreateWithoutUserInput>
   }
 
-  export type IntegrationCreateManyUserInputEnvelope = {
-    data: IntegrationCreateManyUserInput | IntegrationCreateManyUserInput[]
+  export type IntegrationCredentialCreateManyUserInputEnvelope = {
+    data: IntegrationCredentialCreateManyUserInput | IntegrationCredentialCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -38295,33 +36827,36 @@ export namespace Prisma {
     updated_at?: DateTimeFilter<"OpenAiBatchJob"> | Date | string
   }
 
-  export type IntegrationUpsertWithWhereUniqueWithoutUserInput = {
-    where: IntegrationWhereUniqueInput
-    update: XOR<IntegrationUpdateWithoutUserInput, IntegrationUncheckedUpdateWithoutUserInput>
-    create: XOR<IntegrationCreateWithoutUserInput, IntegrationUncheckedCreateWithoutUserInput>
+  export type IntegrationCredentialUpsertWithWhereUniqueWithoutUserInput = {
+    where: IntegrationCredentialWhereUniqueInput
+    update: XOR<IntegrationCredentialUpdateWithoutUserInput, IntegrationCredentialUncheckedUpdateWithoutUserInput>
+    create: XOR<IntegrationCredentialCreateWithoutUserInput, IntegrationCredentialUncheckedCreateWithoutUserInput>
   }
 
-  export type IntegrationUpdateWithWhereUniqueWithoutUserInput = {
-    where: IntegrationWhereUniqueInput
-    data: XOR<IntegrationUpdateWithoutUserInput, IntegrationUncheckedUpdateWithoutUserInput>
+  export type IntegrationCredentialUpdateWithWhereUniqueWithoutUserInput = {
+    where: IntegrationCredentialWhereUniqueInput
+    data: XOR<IntegrationCredentialUpdateWithoutUserInput, IntegrationCredentialUncheckedUpdateWithoutUserInput>
   }
 
-  export type IntegrationUpdateManyWithWhereWithoutUserInput = {
-    where: IntegrationScalarWhereInput
-    data: XOR<IntegrationUpdateManyMutationInput, IntegrationUncheckedUpdateManyWithoutUserInput>
+  export type IntegrationCredentialUpdateManyWithWhereWithoutUserInput = {
+    where: IntegrationCredentialScalarWhereInput
+    data: XOR<IntegrationCredentialUpdateManyMutationInput, IntegrationCredentialUncheckedUpdateManyWithoutUserInput>
   }
 
-  export type IntegrationScalarWhereInput = {
-    AND?: IntegrationScalarWhereInput | IntegrationScalarWhereInput[]
-    OR?: IntegrationScalarWhereInput[]
-    NOT?: IntegrationScalarWhereInput | IntegrationScalarWhereInput[]
-    id?: IntFilter<"Integration"> | number
-    uuid?: StringFilter<"Integration"> | string
-    user_uuid?: StringFilter<"Integration"> | string
-    provider?: EnumExternalIntegrationProviderFilter<"Integration"> | $Enums.ExternalIntegrationProvider
-    title?: StringFilter<"Integration"> | string
-    created_at?: DateTimeFilter<"Integration"> | Date | string
-    updated_at?: DateTimeFilter<"Integration"> | Date | string
+  export type IntegrationCredentialScalarWhereInput = {
+    AND?: IntegrationCredentialScalarWhereInput | IntegrationCredentialScalarWhereInput[]
+    OR?: IntegrationCredentialScalarWhereInput[]
+    NOT?: IntegrationCredentialScalarWhereInput | IntegrationCredentialScalarWhereInput[]
+    id?: IntFilter<"IntegrationCredential"> | number
+    uuid?: StringFilter<"IntegrationCredential"> | string
+    user_uuid?: StringFilter<"IntegrationCredential"> | string
+    provider?: EnumExternalIntegrationProviderFilter<"IntegrationCredential"> | $Enums.ExternalIntegrationProvider
+    account?: StringFilter<"IntegrationCredential"> | string
+    kind?: StringFilter<"IntegrationCredential"> | string
+    secret?: StringFilter<"IntegrationCredential"> | string
+    last4?: StringNullableFilter<"IntegrationCredential"> | string | null
+    created_at?: DateTimeFilter<"IntegrationCredential"> | Date | string
+    updated_at?: DateTimeFilter<"IntegrationCredential"> | Date | string
   }
 
   export type UserCreateWithoutFiltersInput = {
@@ -38340,7 +36875,7 @@ export namespace Prisma {
     marketing_campaigns?: MarketingCampaignCreateNestedManyWithoutUserInput
     scoring_instructions?: ScoringInstructionCreateNestedManyWithoutUserInput
     openai_batch_jobs?: OpenAiBatchJobCreateNestedManyWithoutUserInput
-    integrations?: IntegrationCreateNestedManyWithoutUserInput
+    integration_credentials?: IntegrationCredentialCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutFiltersInput = {
@@ -38360,7 +36895,7 @@ export namespace Prisma {
     marketing_campaigns?: MarketingCampaignUncheckedCreateNestedManyWithoutUserInput
     scoring_instructions?: ScoringInstructionUncheckedCreateNestedManyWithoutUserInput
     openai_batch_jobs?: OpenAiBatchJobUncheckedCreateNestedManyWithoutUserInput
-    integrations?: IntegrationUncheckedCreateNestedManyWithoutUserInput
+    integration_credentials?: IntegrationCredentialUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutFiltersInput = {
@@ -38550,7 +37085,7 @@ export namespace Prisma {
     marketing_campaigns?: MarketingCampaignUpdateManyWithoutUserNestedInput
     scoring_instructions?: ScoringInstructionUpdateManyWithoutUserNestedInput
     openai_batch_jobs?: OpenAiBatchJobUpdateManyWithoutUserNestedInput
-    integrations?: IntegrationUpdateManyWithoutUserNestedInput
+    integration_credentials?: IntegrationCredentialUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFiltersInput = {
@@ -38570,7 +37105,7 @@ export namespace Prisma {
     marketing_campaigns?: MarketingCampaignUncheckedUpdateManyWithoutUserNestedInput
     scoring_instructions?: ScoringInstructionUncheckedUpdateManyWithoutUserNestedInput
     openai_batch_jobs?: OpenAiBatchJobUncheckedUpdateManyWithoutUserNestedInput
-    integrations?: IntegrationUncheckedUpdateManyWithoutUserNestedInput
+    integration_credentials?: IntegrationCredentialUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type RawLeadUpsertWithWhereUniqueWithoutFilterInput = {
@@ -38694,7 +37229,7 @@ export namespace Prisma {
     sender_profiles?: SenderProfileCreateNestedManyWithoutUserInput
     marketing_campaigns?: MarketingCampaignCreateNestedManyWithoutUserInput
     openai_batch_jobs?: OpenAiBatchJobCreateNestedManyWithoutUserInput
-    integrations?: IntegrationCreateNestedManyWithoutUserInput
+    integration_credentials?: IntegrationCredentialCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutScoring_instructionsInput = {
@@ -38714,7 +37249,7 @@ export namespace Prisma {
     sender_profiles?: SenderProfileUncheckedCreateNestedManyWithoutUserInput
     marketing_campaigns?: MarketingCampaignUncheckedCreateNestedManyWithoutUserInput
     openai_batch_jobs?: OpenAiBatchJobUncheckedCreateNestedManyWithoutUserInput
-    integrations?: IntegrationUncheckedCreateNestedManyWithoutUserInput
+    integration_credentials?: IntegrationCredentialUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutScoring_instructionsInput = {
@@ -38792,7 +37327,7 @@ export namespace Prisma {
     sender_profiles?: SenderProfileUpdateManyWithoutUserNestedInput
     marketing_campaigns?: MarketingCampaignUpdateManyWithoutUserNestedInput
     openai_batch_jobs?: OpenAiBatchJobUpdateManyWithoutUserNestedInput
-    integrations?: IntegrationUpdateManyWithoutUserNestedInput
+    integration_credentials?: IntegrationCredentialUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutScoring_instructionsInput = {
@@ -38812,7 +37347,7 @@ export namespace Prisma {
     sender_profiles?: SenderProfileUncheckedUpdateManyWithoutUserNestedInput
     marketing_campaigns?: MarketingCampaignUncheckedUpdateManyWithoutUserNestedInput
     openai_batch_jobs?: OpenAiBatchJobUncheckedUpdateManyWithoutUserNestedInput
-    integrations?: IntegrationUncheckedUpdateManyWithoutUserNestedInput
+    integration_credentials?: IntegrationCredentialUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type FilterScoringInstructionUpsertWithWhereUniqueWithoutScoring_instructionInput = {
@@ -39536,7 +38071,7 @@ export namespace Prisma {
     marketing_campaigns?: MarketingCampaignCreateNestedManyWithoutUserInput
     scoring_instructions?: ScoringInstructionCreateNestedManyWithoutUserInput
     openai_batch_jobs?: OpenAiBatchJobCreateNestedManyWithoutUserInput
-    integrations?: IntegrationCreateNestedManyWithoutUserInput
+    integration_credentials?: IntegrationCredentialCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutContactsInput = {
@@ -39556,7 +38091,7 @@ export namespace Prisma {
     marketing_campaigns?: MarketingCampaignUncheckedCreateNestedManyWithoutUserInput
     scoring_instructions?: ScoringInstructionUncheckedCreateNestedManyWithoutUserInput
     openai_batch_jobs?: OpenAiBatchJobUncheckedCreateNestedManyWithoutUserInput
-    integrations?: IntegrationUncheckedCreateNestedManyWithoutUserInput
+    integration_credentials?: IntegrationCredentialUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutContactsInput = {
@@ -39856,7 +38391,7 @@ export namespace Prisma {
     marketing_campaigns?: MarketingCampaignUpdateManyWithoutUserNestedInput
     scoring_instructions?: ScoringInstructionUpdateManyWithoutUserNestedInput
     openai_batch_jobs?: OpenAiBatchJobUpdateManyWithoutUserNestedInput
-    integrations?: IntegrationUpdateManyWithoutUserNestedInput
+    integration_credentials?: IntegrationCredentialUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutContactsInput = {
@@ -39876,7 +38411,7 @@ export namespace Prisma {
     marketing_campaigns?: MarketingCampaignUncheckedUpdateManyWithoutUserNestedInput
     scoring_instructions?: ScoringInstructionUncheckedUpdateManyWithoutUserNestedInput
     openai_batch_jobs?: OpenAiBatchJobUncheckedUpdateManyWithoutUserNestedInput
-    integrations?: IntegrationUncheckedUpdateManyWithoutUserNestedInput
+    integration_credentials?: IntegrationCredentialUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type LeadUpsertWithoutContactsInput = {
@@ -40486,7 +39021,7 @@ export namespace Prisma {
     marketing_campaigns?: MarketingCampaignCreateNestedManyWithoutUserInput
     scoring_instructions?: ScoringInstructionCreateNestedManyWithoutUserInput
     openai_batch_jobs?: OpenAiBatchJobCreateNestedManyWithoutUserInput
-    integrations?: IntegrationCreateNestedManyWithoutUserInput
+    integration_credentials?: IntegrationCredentialCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutInteractionsInput = {
@@ -40506,7 +39041,7 @@ export namespace Prisma {
     marketing_campaigns?: MarketingCampaignUncheckedCreateNestedManyWithoutUserInput
     scoring_instructions?: ScoringInstructionUncheckedCreateNestedManyWithoutUserInput
     openai_batch_jobs?: OpenAiBatchJobUncheckedCreateNestedManyWithoutUserInput
-    integrations?: IntegrationUncheckedCreateNestedManyWithoutUserInput
+    integration_credentials?: IntegrationCredentialUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutInteractionsInput = {
@@ -40743,7 +39278,7 @@ export namespace Prisma {
     marketing_campaigns?: MarketingCampaignUpdateManyWithoutUserNestedInput
     scoring_instructions?: ScoringInstructionUpdateManyWithoutUserNestedInput
     openai_batch_jobs?: OpenAiBatchJobUpdateManyWithoutUserNestedInput
-    integrations?: IntegrationUpdateManyWithoutUserNestedInput
+    integration_credentials?: IntegrationCredentialUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutInteractionsInput = {
@@ -40763,7 +39298,7 @@ export namespace Prisma {
     marketing_campaigns?: MarketingCampaignUncheckedUpdateManyWithoutUserNestedInput
     scoring_instructions?: ScoringInstructionUncheckedUpdateManyWithoutUserNestedInput
     openai_batch_jobs?: OpenAiBatchJobUncheckedUpdateManyWithoutUserNestedInput
-    integrations?: IntegrationUncheckedUpdateManyWithoutUserNestedInput
+    integration_credentials?: IntegrationCredentialUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type OutreachMessageUpsertWithoutInteractionInput = {
@@ -40928,7 +39463,7 @@ export namespace Prisma {
     marketing_campaigns?: MarketingCampaignCreateNestedManyWithoutUserInput
     scoring_instructions?: ScoringInstructionCreateNestedManyWithoutUserInput
     openai_batch_jobs?: OpenAiBatchJobCreateNestedManyWithoutUserInput
-    integrations?: IntegrationCreateNestedManyWithoutUserInput
+    integration_credentials?: IntegrationCredentialCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOutreach_messagesInput = {
@@ -40948,7 +39483,7 @@ export namespace Prisma {
     marketing_campaigns?: MarketingCampaignUncheckedCreateNestedManyWithoutUserInput
     scoring_instructions?: ScoringInstructionUncheckedCreateNestedManyWithoutUserInput
     openai_batch_jobs?: OpenAiBatchJobUncheckedCreateNestedManyWithoutUserInput
-    integrations?: IntegrationUncheckedCreateNestedManyWithoutUserInput
+    integration_credentials?: IntegrationCredentialUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOutreach_messagesInput = {
@@ -41159,7 +39694,7 @@ export namespace Prisma {
     marketing_campaigns?: MarketingCampaignUpdateManyWithoutUserNestedInput
     scoring_instructions?: ScoringInstructionUpdateManyWithoutUserNestedInput
     openai_batch_jobs?: OpenAiBatchJobUpdateManyWithoutUserNestedInput
-    integrations?: IntegrationUpdateManyWithoutUserNestedInput
+    integration_credentials?: IntegrationCredentialUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOutreach_messagesInput = {
@@ -41179,7 +39714,7 @@ export namespace Prisma {
     marketing_campaigns?: MarketingCampaignUncheckedUpdateManyWithoutUserNestedInput
     scoring_instructions?: ScoringInstructionUncheckedUpdateManyWithoutUserNestedInput
     openai_batch_jobs?: OpenAiBatchJobUncheckedUpdateManyWithoutUserNestedInput
-    integrations?: IntegrationUncheckedUpdateManyWithoutUserNestedInput
+    integration_credentials?: IntegrationCredentialUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ContactUpsertWithoutOutreach_messagesInput = {
@@ -41392,7 +39927,7 @@ export namespace Prisma {
     marketing_campaigns?: MarketingCampaignCreateNestedManyWithoutUserInput
     scoring_instructions?: ScoringInstructionCreateNestedManyWithoutUserInput
     openai_batch_jobs?: OpenAiBatchJobCreateNestedManyWithoutUserInput
-    integrations?: IntegrationCreateNestedManyWithoutUserInput
+    integration_credentials?: IntegrationCredentialCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOutreach_sequencesInput = {
@@ -41412,7 +39947,7 @@ export namespace Prisma {
     marketing_campaigns?: MarketingCampaignUncheckedCreateNestedManyWithoutUserInput
     scoring_instructions?: ScoringInstructionUncheckedCreateNestedManyWithoutUserInput
     openai_batch_jobs?: OpenAiBatchJobUncheckedCreateNestedManyWithoutUserInput
-    integrations?: IntegrationUncheckedCreateNestedManyWithoutUserInput
+    integration_credentials?: IntegrationCredentialUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOutreach_sequencesInput = {
@@ -41447,7 +39982,7 @@ export namespace Prisma {
     marketing_campaigns?: MarketingCampaignUpdateManyWithoutUserNestedInput
     scoring_instructions?: ScoringInstructionUpdateManyWithoutUserNestedInput
     openai_batch_jobs?: OpenAiBatchJobUpdateManyWithoutUserNestedInput
-    integrations?: IntegrationUpdateManyWithoutUserNestedInput
+    integration_credentials?: IntegrationCredentialUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOutreach_sequencesInput = {
@@ -41467,7 +40002,7 @@ export namespace Prisma {
     marketing_campaigns?: MarketingCampaignUncheckedUpdateManyWithoutUserNestedInput
     scoring_instructions?: ScoringInstructionUncheckedUpdateManyWithoutUserNestedInput
     openai_batch_jobs?: OpenAiBatchJobUncheckedUpdateManyWithoutUserNestedInput
-    integrations?: IntegrationUncheckedUpdateManyWithoutUserNestedInput
+    integration_credentials?: IntegrationCredentialUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type FilterCreateWithoutJobsInput = {
@@ -41576,7 +40111,7 @@ export namespace Prisma {
     marketing_campaigns?: MarketingCampaignCreateNestedManyWithoutUserInput
     scoring_instructions?: ScoringInstructionCreateNestedManyWithoutUserInput
     openai_batch_jobs?: OpenAiBatchJobCreateNestedManyWithoutUserInput
-    integrations?: IntegrationCreateNestedManyWithoutUserInput
+    integration_credentials?: IntegrationCredentialCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSender_profilesInput = {
@@ -41596,7 +40131,7 @@ export namespace Prisma {
     marketing_campaigns?: MarketingCampaignUncheckedCreateNestedManyWithoutUserInput
     scoring_instructions?: ScoringInstructionUncheckedCreateNestedManyWithoutUserInput
     openai_batch_jobs?: OpenAiBatchJobUncheckedCreateNestedManyWithoutUserInput
-    integrations?: IntegrationUncheckedCreateNestedManyWithoutUserInput
+    integration_credentials?: IntegrationCredentialUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSender_profilesInput = {
@@ -41718,7 +40253,7 @@ export namespace Prisma {
     marketing_campaigns?: MarketingCampaignUpdateManyWithoutUserNestedInput
     scoring_instructions?: ScoringInstructionUpdateManyWithoutUserNestedInput
     openai_batch_jobs?: OpenAiBatchJobUpdateManyWithoutUserNestedInput
-    integrations?: IntegrationUpdateManyWithoutUserNestedInput
+    integration_credentials?: IntegrationCredentialUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSender_profilesInput = {
@@ -41738,7 +40273,7 @@ export namespace Prisma {
     marketing_campaigns?: MarketingCampaignUncheckedUpdateManyWithoutUserNestedInput
     scoring_instructions?: ScoringInstructionUncheckedUpdateManyWithoutUserNestedInput
     openai_batch_jobs?: OpenAiBatchJobUncheckedUpdateManyWithoutUserNestedInput
-    integrations?: IntegrationUncheckedUpdateManyWithoutUserNestedInput
+    integration_credentials?: IntegrationCredentialUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type MarketingCampaignUpsertWithWhereUniqueWithoutSender_profileInput = {
@@ -41773,7 +40308,7 @@ export namespace Prisma {
     sender_profiles?: SenderProfileCreateNestedManyWithoutUserInput
     scoring_instructions?: ScoringInstructionCreateNestedManyWithoutUserInput
     openai_batch_jobs?: OpenAiBatchJobCreateNestedManyWithoutUserInput
-    integrations?: IntegrationCreateNestedManyWithoutUserInput
+    integration_credentials?: IntegrationCredentialCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutMarketing_campaignsInput = {
@@ -41793,7 +40328,7 @@ export namespace Prisma {
     sender_profiles?: SenderProfileUncheckedCreateNestedManyWithoutUserInput
     scoring_instructions?: ScoringInstructionUncheckedCreateNestedManyWithoutUserInput
     openai_batch_jobs?: OpenAiBatchJobUncheckedCreateNestedManyWithoutUserInput
-    integrations?: IntegrationUncheckedCreateNestedManyWithoutUserInput
+    integration_credentials?: IntegrationCredentialUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutMarketing_campaignsInput = {
@@ -42015,7 +40550,7 @@ export namespace Prisma {
     sender_profiles?: SenderProfileUpdateManyWithoutUserNestedInput
     scoring_instructions?: ScoringInstructionUpdateManyWithoutUserNestedInput
     openai_batch_jobs?: OpenAiBatchJobUpdateManyWithoutUserNestedInput
-    integrations?: IntegrationUpdateManyWithoutUserNestedInput
+    integration_credentials?: IntegrationCredentialUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMarketing_campaignsInput = {
@@ -42035,7 +40570,7 @@ export namespace Prisma {
     sender_profiles?: SenderProfileUncheckedUpdateManyWithoutUserNestedInput
     scoring_instructions?: ScoringInstructionUncheckedUpdateManyWithoutUserNestedInput
     openai_batch_jobs?: OpenAiBatchJobUncheckedUpdateManyWithoutUserNestedInput
-    integrations?: IntegrationUncheckedUpdateManyWithoutUserNestedInput
+    integration_credentials?: IntegrationCredentialUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type SenderProfileUpsertWithoutMarketing_campaignsInput = {
@@ -42466,7 +41001,7 @@ export namespace Prisma {
     sender_profiles?: SenderProfileCreateNestedManyWithoutUserInput
     marketing_campaigns?: MarketingCampaignCreateNestedManyWithoutUserInput
     scoring_instructions?: ScoringInstructionCreateNestedManyWithoutUserInput
-    integrations?: IntegrationCreateNestedManyWithoutUserInput
+    integration_credentials?: IntegrationCredentialCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOpenai_batch_jobsInput = {
@@ -42486,7 +41021,7 @@ export namespace Prisma {
     sender_profiles?: SenderProfileUncheckedCreateNestedManyWithoutUserInput
     marketing_campaigns?: MarketingCampaignUncheckedCreateNestedManyWithoutUserInput
     scoring_instructions?: ScoringInstructionUncheckedCreateNestedManyWithoutUserInput
-    integrations?: IntegrationUncheckedCreateNestedManyWithoutUserInput
+    integration_credentials?: IntegrationCredentialUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOpenai_batch_jobsInput = {
@@ -42521,7 +41056,7 @@ export namespace Prisma {
     sender_profiles?: SenderProfileUpdateManyWithoutUserNestedInput
     marketing_campaigns?: MarketingCampaignUpdateManyWithoutUserNestedInput
     scoring_instructions?: ScoringInstructionUpdateManyWithoutUserNestedInput
-    integrations?: IntegrationUpdateManyWithoutUserNestedInput
+    integration_credentials?: IntegrationCredentialUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOpenai_batch_jobsInput = {
@@ -42541,10 +41076,10 @@ export namespace Prisma {
     sender_profiles?: SenderProfileUncheckedUpdateManyWithoutUserNestedInput
     marketing_campaigns?: MarketingCampaignUncheckedUpdateManyWithoutUserNestedInput
     scoring_instructions?: ScoringInstructionUncheckedUpdateManyWithoutUserNestedInput
-    integrations?: IntegrationUncheckedUpdateManyWithoutUserNestedInput
+    integration_credentials?: IntegrationCredentialUncheckedUpdateManyWithoutUserNestedInput
   }
 
-  export type UserCreateWithoutIntegrationsInput = {
+  export type UserCreateWithoutIntegration_credentialsInput = {
     uuid?: string
     email: string
     phone?: string | null
@@ -42563,7 +41098,7 @@ export namespace Prisma {
     openai_batch_jobs?: OpenAiBatchJobCreateNestedManyWithoutUserInput
   }
 
-  export type UserUncheckedCreateWithoutIntegrationsInput = {
+  export type UserUncheckedCreateWithoutIntegration_credentialsInput = {
     id?: number
     uuid?: string
     email: string
@@ -42583,52 +41118,23 @@ export namespace Prisma {
     openai_batch_jobs?: OpenAiBatchJobUncheckedCreateNestedManyWithoutUserInput
   }
 
-  export type UserCreateOrConnectWithoutIntegrationsInput = {
+  export type UserCreateOrConnectWithoutIntegration_credentialsInput = {
     where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutIntegrationsInput, UserUncheckedCreateWithoutIntegrationsInput>
+    create: XOR<UserCreateWithoutIntegration_credentialsInput, UserUncheckedCreateWithoutIntegration_credentialsInput>
   }
 
-  export type IntegrationKeyCreateWithoutIntegrationInput = {
-    uuid?: string
-    title: string
-    secret: string
-    last4?: string | null
-    created_at?: Date | string
-    updated_at?: Date | string
-  }
-
-  export type IntegrationKeyUncheckedCreateWithoutIntegrationInput = {
-    id?: number
-    uuid?: string
-    title: string
-    secret: string
-    last4?: string | null
-    created_at?: Date | string
-    updated_at?: Date | string
-  }
-
-  export type IntegrationKeyCreateOrConnectWithoutIntegrationInput = {
-    where: IntegrationKeyWhereUniqueInput
-    create: XOR<IntegrationKeyCreateWithoutIntegrationInput, IntegrationKeyUncheckedCreateWithoutIntegrationInput>
-  }
-
-  export type IntegrationKeyCreateManyIntegrationInputEnvelope = {
-    data: IntegrationKeyCreateManyIntegrationInput | IntegrationKeyCreateManyIntegrationInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type UserUpsertWithoutIntegrationsInput = {
-    update: XOR<UserUpdateWithoutIntegrationsInput, UserUncheckedUpdateWithoutIntegrationsInput>
-    create: XOR<UserCreateWithoutIntegrationsInput, UserUncheckedCreateWithoutIntegrationsInput>
+  export type UserUpsertWithoutIntegration_credentialsInput = {
+    update: XOR<UserUpdateWithoutIntegration_credentialsInput, UserUncheckedUpdateWithoutIntegration_credentialsInput>
+    create: XOR<UserCreateWithoutIntegration_credentialsInput, UserUncheckedCreateWithoutIntegration_credentialsInput>
     where?: UserWhereInput
   }
 
-  export type UserUpdateToOneWithWhereWithoutIntegrationsInput = {
+  export type UserUpdateToOneWithWhereWithoutIntegration_credentialsInput = {
     where?: UserWhereInput
-    data: XOR<UserUpdateWithoutIntegrationsInput, UserUncheckedUpdateWithoutIntegrationsInput>
+    data: XOR<UserUpdateWithoutIntegration_credentialsInput, UserUncheckedUpdateWithoutIntegration_credentialsInput>
   }
 
-  export type UserUpdateWithoutIntegrationsInput = {
+  export type UserUpdateWithoutIntegration_credentialsInput = {
     uuid?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -42647,7 +41153,7 @@ export namespace Prisma {
     openai_batch_jobs?: OpenAiBatchJobUpdateManyWithoutUserNestedInput
   }
 
-  export type UserUncheckedUpdateWithoutIntegrationsInput = {
+  export type UserUncheckedUpdateWithoutIntegration_credentialsInput = {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
@@ -42665,90 +41171,6 @@ export namespace Prisma {
     marketing_campaigns?: MarketingCampaignUncheckedUpdateManyWithoutUserNestedInput
     scoring_instructions?: ScoringInstructionUncheckedUpdateManyWithoutUserNestedInput
     openai_batch_jobs?: OpenAiBatchJobUncheckedUpdateManyWithoutUserNestedInput
-  }
-
-  export type IntegrationKeyUpsertWithWhereUniqueWithoutIntegrationInput = {
-    where: IntegrationKeyWhereUniqueInput
-    update: XOR<IntegrationKeyUpdateWithoutIntegrationInput, IntegrationKeyUncheckedUpdateWithoutIntegrationInput>
-    create: XOR<IntegrationKeyCreateWithoutIntegrationInput, IntegrationKeyUncheckedCreateWithoutIntegrationInput>
-  }
-
-  export type IntegrationKeyUpdateWithWhereUniqueWithoutIntegrationInput = {
-    where: IntegrationKeyWhereUniqueInput
-    data: XOR<IntegrationKeyUpdateWithoutIntegrationInput, IntegrationKeyUncheckedUpdateWithoutIntegrationInput>
-  }
-
-  export type IntegrationKeyUpdateManyWithWhereWithoutIntegrationInput = {
-    where: IntegrationKeyScalarWhereInput
-    data: XOR<IntegrationKeyUpdateManyMutationInput, IntegrationKeyUncheckedUpdateManyWithoutIntegrationInput>
-  }
-
-  export type IntegrationKeyScalarWhereInput = {
-    AND?: IntegrationKeyScalarWhereInput | IntegrationKeyScalarWhereInput[]
-    OR?: IntegrationKeyScalarWhereInput[]
-    NOT?: IntegrationKeyScalarWhereInput | IntegrationKeyScalarWhereInput[]
-    id?: IntFilter<"IntegrationKey"> | number
-    uuid?: StringFilter<"IntegrationKey"> | string
-    integration_uuid?: StringFilter<"IntegrationKey"> | string
-    title?: StringFilter<"IntegrationKey"> | string
-    secret?: StringFilter<"IntegrationKey"> | string
-    last4?: StringNullableFilter<"IntegrationKey"> | string | null
-    created_at?: DateTimeFilter<"IntegrationKey"> | Date | string
-    updated_at?: DateTimeFilter<"IntegrationKey"> | Date | string
-  }
-
-  export type IntegrationCreateWithoutKeysInput = {
-    uuid?: string
-    provider: $Enums.ExternalIntegrationProvider
-    title: string
-    created_at?: Date | string
-    updated_at?: Date | string
-    user: UserCreateNestedOneWithoutIntegrationsInput
-  }
-
-  export type IntegrationUncheckedCreateWithoutKeysInput = {
-    id?: number
-    uuid?: string
-    user_uuid: string
-    provider: $Enums.ExternalIntegrationProvider
-    title: string
-    created_at?: Date | string
-    updated_at?: Date | string
-  }
-
-  export type IntegrationCreateOrConnectWithoutKeysInput = {
-    where: IntegrationWhereUniqueInput
-    create: XOR<IntegrationCreateWithoutKeysInput, IntegrationUncheckedCreateWithoutKeysInput>
-  }
-
-  export type IntegrationUpsertWithoutKeysInput = {
-    update: XOR<IntegrationUpdateWithoutKeysInput, IntegrationUncheckedUpdateWithoutKeysInput>
-    create: XOR<IntegrationCreateWithoutKeysInput, IntegrationUncheckedCreateWithoutKeysInput>
-    where?: IntegrationWhereInput
-  }
-
-  export type IntegrationUpdateToOneWithWhereWithoutKeysInput = {
-    where?: IntegrationWhereInput
-    data: XOR<IntegrationUpdateWithoutKeysInput, IntegrationUncheckedUpdateWithoutKeysInput>
-  }
-
-  export type IntegrationUpdateWithoutKeysInput = {
-    uuid?: StringFieldUpdateOperationsInput | string
-    provider?: EnumExternalIntegrationProviderFieldUpdateOperationsInput | $Enums.ExternalIntegrationProvider
-    title?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutIntegrationsNestedInput
-  }
-
-  export type IntegrationUncheckedUpdateWithoutKeysInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    uuid?: StringFieldUpdateOperationsInput | string
-    user_uuid?: StringFieldUpdateOperationsInput | string
-    provider?: EnumExternalIntegrationProviderFieldUpdateOperationsInput | $Enums.ExternalIntegrationProvider
-    title?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type FilterCreateManyUserInput = {
@@ -42924,11 +41346,14 @@ export namespace Prisma {
     updated_at?: Date | string
   }
 
-  export type IntegrationCreateManyUserInput = {
+  export type IntegrationCredentialCreateManyUserInput = {
     id?: number
     uuid?: string
     provider: $Enums.ExternalIntegrationProvider
-    title: string
+    account?: string
+    kind: string
+    secret: string
+    last4?: string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -43476,30 +41901,37 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type IntegrationUpdateWithoutUserInput = {
+  export type IntegrationCredentialUpdateWithoutUserInput = {
     uuid?: StringFieldUpdateOperationsInput | string
     provider?: EnumExternalIntegrationProviderFieldUpdateOperationsInput | $Enums.ExternalIntegrationProvider
-    title?: StringFieldUpdateOperationsInput | string
+    account?: StringFieldUpdateOperationsInput | string
+    kind?: StringFieldUpdateOperationsInput | string
+    secret?: StringFieldUpdateOperationsInput | string
+    last4?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    keys?: IntegrationKeyUpdateManyWithoutIntegrationNestedInput
   }
 
-  export type IntegrationUncheckedUpdateWithoutUserInput = {
+  export type IntegrationCredentialUncheckedUpdateWithoutUserInput = {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
     provider?: EnumExternalIntegrationProviderFieldUpdateOperationsInput | $Enums.ExternalIntegrationProvider
-    title?: StringFieldUpdateOperationsInput | string
+    account?: StringFieldUpdateOperationsInput | string
+    kind?: StringFieldUpdateOperationsInput | string
+    secret?: StringFieldUpdateOperationsInput | string
+    last4?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    keys?: IntegrationKeyUncheckedUpdateManyWithoutIntegrationNestedInput
   }
 
-  export type IntegrationUncheckedUpdateManyWithoutUserInput = {
+  export type IntegrationCredentialUncheckedUpdateManyWithoutUserInput = {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
     provider?: EnumExternalIntegrationProviderFieldUpdateOperationsInput | $Enums.ExternalIntegrationProvider
-    title?: StringFieldUpdateOperationsInput | string
+    account?: StringFieldUpdateOperationsInput | string
+    kind?: StringFieldUpdateOperationsInput | string
+    secret?: StringFieldUpdateOperationsInput | string
+    last4?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -44525,45 +42957,6 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
     status_change?: NullableJsonNullValueInput | InputJsonValue
     outreach_message_uuid?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type IntegrationKeyCreateManyIntegrationInput = {
-    id?: number
-    uuid?: string
-    title: string
-    secret: string
-    last4?: string | null
-    created_at?: Date | string
-    updated_at?: Date | string
-  }
-
-  export type IntegrationKeyUpdateWithoutIntegrationInput = {
-    uuid?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    secret?: StringFieldUpdateOperationsInput | string
-    last4?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type IntegrationKeyUncheckedUpdateWithoutIntegrationInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    uuid?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    secret?: StringFieldUpdateOperationsInput | string
-    last4?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type IntegrationKeyUncheckedUpdateManyWithoutIntegrationInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    uuid?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    secret?: StringFieldUpdateOperationsInput | string
-    last4?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }

@@ -11,16 +11,14 @@ import {
 import {
     ApiBearerAuth,
     ApiOperation,
-    ApiParam,
     ApiResponse,
     ApiTags,
 } from '@nestjs/swagger';
-import { ExternalIntegrationProvider } from '@/generated/prisma';
 import { CurrentUser } from '@/shared/decorators/current-user.decorator';
 import { JwtGuard } from '@/shared/guards/jwt.guard';
 import { IntegrationsService } from './integrations.service';
-import { CreateIntegrationKeyDto } from './dto/create-integration-key.dto';
-import { UpdateIntegrationKeyDto } from './dto/update-integration-key.dto';
+import { CreateIntegrationCredentialDto } from './dto/create-integration-credential.dto';
+import { UpdateIntegrationCredentialDto } from './dto/update-integration-credential.dto';
 
 @ApiTags('integrations')
 @ApiBearerAuth()
@@ -30,40 +28,38 @@ export class IntegrationsController {
     constructor(private readonly integrationsService: IntegrationsService) {}
 
     @Get()
-    @ApiOperation({ summary: 'List integrations and keys for the current user' })
+    @ApiOperation({ summary: 'List integration providers and stored credentials' })
     findAll(@CurrentUser('uuid') user_uuid: string) {
         return this.integrationsService.findAll(user_uuid);
     }
 
-    @Post(':provider/keys')
-    @ApiOperation({ summary: 'Add a key for a provider integration' })
-    @ApiParam({ name: 'provider', enum: ExternalIntegrationProvider })
-    createKey(
+    @Post('credentials')
+    @ApiOperation({ summary: 'Store a credential for an integration provider' })
+    createCredential(
         @CurrentUser('uuid') user_uuid: string,
-        @Param('provider') provider: ExternalIntegrationProvider,
-        @Body() dto: CreateIntegrationKeyDto,
+        @Body() dto: CreateIntegrationCredentialDto,
     ) {
-        return this.integrationsService.createKey(user_uuid, provider, dto);
+        return this.integrationsService.createCredential(user_uuid, dto);
     }
 
-    @Patch('keys/:uuid')
-    @ApiOperation({ summary: 'Update an integration key' })
-    @ApiResponse({ status: 404, description: 'Key not found' })
-    updateKey(
+    @Patch('credentials/:uuid')
+    @ApiOperation({ summary: 'Update a stored credential secret' })
+    @ApiResponse({ status: 404, description: 'Credential not found' })
+    updateCredential(
         @CurrentUser('uuid') user_uuid: string,
         @Param('uuid') uuid: string,
-        @Body() dto: UpdateIntegrationKeyDto,
+        @Body() dto: UpdateIntegrationCredentialDto,
     ) {
-        return this.integrationsService.updateKey(user_uuid, uuid, dto);
+        return this.integrationsService.updateCredential(user_uuid, uuid, dto);
     }
 
-    @Delete('keys/:uuid')
-    @ApiOperation({ summary: 'Delete an integration key' })
-    @ApiResponse({ status: 404, description: 'Key not found' })
-    removeKey(
+    @Delete('credentials/:uuid')
+    @ApiOperation({ summary: 'Delete a stored credential' })
+    @ApiResponse({ status: 404, description: 'Credential not found' })
+    removeCredential(
         @CurrentUser('uuid') user_uuid: string,
         @Param('uuid') uuid: string,
     ) {
-        return this.integrationsService.removeKey(user_uuid, uuid);
+        return this.integrationsService.removeCredential(user_uuid, uuid);
     }
 }

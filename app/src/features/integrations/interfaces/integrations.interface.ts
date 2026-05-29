@@ -10,27 +10,39 @@ export const IntegrationProviders = {
 export type IntegrationProvider =
     (typeof IntegrationProviders)[keyof typeof IntegrationProviders];
 
-export interface IntegrationKey {
+export interface IntegrationCredentialKind {
+    kind: string;
+    label: string;
+    placeholder: string;
+}
+
+export interface IntegrationCredential {
     uuid: string;
-    title: string;
+    provider: IntegrationProvider;
+    account: string;
+    kind: string;
+    label: string;
+    env_name: string;
     last4: string | null;
     created_at: string;
     updated_at: string;
 }
 
-export interface Integration {
+export interface IntegrationProviderView {
     provider: IntegrationProvider;
-    uuid: string | null;
-    title: string | null;
-    keys: IntegrationKey[];
+    label: string;
+    description: string;
+    credentialKinds: IntegrationCredentialKind[];
+    credentials: IntegrationCredential[];
 }
 
-export interface CreateIntegrationKeyPayload {
-    title: string;
+export interface CreateIntegrationCredentialPayload {
+    provider: IntegrationProvider;
+    kind: string;
+    account: string;
     secret: string;
 }
 
-export interface UpdateIntegrationKeyPayload {
-    title?: string;
-    secret?: string;
+export interface UpdateIntegrationCredentialPayload {
+    secret: string;
 }

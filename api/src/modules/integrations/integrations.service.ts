@@ -1,13 +1,14 @@
 import {
     BadRequestException,
+    ConflictException,
     Injectable,
     NotFoundException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
     ExternalIntegrationProvider,
-    Integration,
-    IntegrationKey,
+    IntegrationCredential,
+    Prisma,
 } from '@/generated/prisma';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import {
@@ -15,12 +16,18 @@ import {
     encryptIntegrationSecret,
     secretLast4,
 } from '@/shared/utils/integration-secret.util';
-import { INTEGRATION_PROVIDERS } from './constants/integrations.constants';
-import { CreateIntegrationKeyDto } from './dto/create-integration-key.dto';
-import { UpdateIntegrationKeyDto } from './dto/update-integration-key.dto';
 import {
-    IntegrationKeyResponse,
-    IntegrationResponse,
+    formatCredentialEnvName,
+    formatCredentialLabel,
+    getIntegrationProviderDefinition,
+    INTEGRATION_PROVIDER_DEFINITIONS,
+    isCredentialKindAllowed,
+} from './integrations.catalog';
+import { CreateIntegrationCredentialDto } from './dto/create-integration-credential.dto';
+import { UpdateIntegrationCredentialDto } from './dto/update-integration-credential.dto';
+import {
+    IntegrationCredentialResponse,
+    IntegrationProviderResponse,
 } from './interfaces/integration.interface';
 
 @Injectable()
@@ -30,124 +37,144 @@ export class IntegrationsService {
         private readonly config: ConfigService,
     ) {}
 
-    async findAll(user_uuid: string): Promise<IntegrationResponse[]> {
-        const integrations = await this.prisma.integration.findMany({
+    async findAll(user_uuid: string): Promise<IntegrationProviderResponse[]> {
+        const credentials = await this.prisma.integrationCredential.findMany({
             where: { user_uuid },
-            include: {
-                keys: { orderBy: { created_at: 'desc' } },
-            },
+            orderBy: [
+                { provider: 'asc' },
+                { account: 'asc' },
+                { kind: 'asc' },
+            ],
         });
-        const byProvider = new Map(
-            integrations.map((row) => [row.provider, row]),
-        );
 
-        return INTEGRATION_PROVIDERS.map((provider) =>
-            this.toIntegrationResponse(provider, byProvider.get(provider)),
-        );
+        const credentialsByProvider = new Map<
+            ExternalIntegrationProvider,
+            IntegrationCredential[]
+        >();
+        for (const row of credentials) {
+            const list = credentialsByProvider.get(row.provider) ?? [];
+            list.push(row);
+            credentialsByProvider.set(row.provider, list);
+        }
+
+        return INTEGRATION_PROVIDER_DEFINITIONS.map((definition) => ({
+            provider: definition.provider,
+            label: definition.label,
+            description: definition.description,
+            credentialKinds: definition.credentialKinds,
+            credentials: (credentialsByProvider.get(definition.provider) ?? []).map(
+                (row) => this.toCredentialResponse(row),
+            ),
+        }));
     }
 
-    async createKey(
+    async createCredential(
         user_uuid: string,
-        provider: ExternalIntegrationProvider,
-        dto: CreateIntegrationKeyDto,
-    ): Promise<IntegrationKeyResponse> {
-        const integration = await this.ensureIntegration(user_uuid, provider);
-        const encrypted = encryptIntegrationSecret(
-            dto.secret.trim(),
-            this.encryptionKey(),
-        );
-        const key = await this.prisma.integrationKey.create({
+        dto: CreateIntegrationCredentialDto,
+    ): Promise<IntegrationCredentialResponse> {
+        if (!isCredentialKindAllowed(dto.provider, dto.kind)) {
+            throw new BadRequestException(
+                `Credential kind "${dto.kind}" is not supported for ${dto.provider}`,
+            );
+        }
+
+        const account = dto.account.trim();
+        const kind = dto.kind.trim();
+
+        try {
+            const row = await this.prisma.integrationCredential.create({
+                data: {
+                    user_uuid,
+                    provider: dto.provider,
+                    account,
+                    kind,
+                    secret: encryptIntegrationSecret(
+                        dto.secret.trim(),
+                        this.encryptionKey(),
+                    ),
+                    last4: secretLast4(dto.secret),
+                },
+            });
+            return this.toCredentialResponse(row);
+        } catch (error) {
+            if (
+                error instanceof Prisma.PrismaClientKnownRequestError &&
+                error.code === 'P2002'
+            ) {
+                throw new ConflictException(
+                    `${formatCredentialLabel(dto.provider, kind, account)} already exists`,
+                );
+            }
+            throw error;
+        }
+    }
+
+    async updateCredential(
+        user_uuid: string,
+        uuid: string,
+        dto: UpdateIntegrationCredentialDto,
+    ): Promise<IntegrationCredentialResponse> {
+        await this.requireOwnedCredential(user_uuid, uuid);
+
+        const row = await this.prisma.integrationCredential.update({
+            where: { uuid },
             data: {
-                integration_uuid: integration.uuid,
-                title: dto.title.trim(),
-                secret: encrypted,
+                secret: encryptIntegrationSecret(
+                    dto.secret.trim(),
+                    this.encryptionKey(),
+                ),
                 last4: secretLast4(dto.secret),
             },
         });
-        return this.toKeyResponse(key);
+        return this.toCredentialResponse(row);
     }
 
-    async updateKey(
+    async removeCredential(
         user_uuid: string,
-        key_uuid: string,
-        dto: UpdateIntegrationKeyDto,
-    ): Promise<IntegrationKeyResponse> {
-        if (dto.title === undefined && dto.secret === undefined) {
-            throw new BadRequestException('No fields to update');
-        }
-
-        await this.requireOwnedKey(user_uuid, key_uuid);
-        const data: { title?: string; secret?: string; last4?: string | null } =
-            {};
-
-        if (dto.title !== undefined) {
-            data.title = dto.title.trim();
-        }
-        if (dto.secret !== undefined) {
-            data.secret = encryptIntegrationSecret(
-                dto.secret.trim(),
-                this.encryptionKey(),
-            );
-            data.last4 = secretLast4(dto.secret);
-        }
-
-        const key = await this.prisma.integrationKey.update({
-            where: { uuid: key_uuid },
-            data,
-        });
-        return this.toKeyResponse(key);
-    }
-
-    async removeKey(
-        user_uuid: string,
-        key_uuid: string,
+        uuid: string,
     ): Promise<{ uuid: string }> {
-        await this.requireOwnedKey(user_uuid, key_uuid);
-        await this.prisma.integrationKey.delete({ where: { uuid: key_uuid } });
-        return { uuid: key_uuid };
+        await this.requireOwnedCredential(user_uuid, uuid);
+        await this.prisma.integrationCredential.delete({ where: { uuid } });
+        return { uuid };
     }
 
-    async getDecryptedSecret(
+    async getDecryptedCredential(
         user_uuid: string,
         provider: ExternalIntegrationProvider,
-        key_uuid: string,
+        kind: string,
+        account = 'default',
     ): Promise<string> {
-        const key = await this.requireOwnedKey(user_uuid, key_uuid);
-        if (key.integration.provider !== provider) {
-            throw new NotFoundException('Integration key not found');
-        }
-        return decryptIntegrationSecret(key.secret, this.encryptionKey());
-    }
+        getIntegrationProviderDefinition(provider);
 
-    private async ensureIntegration(
-        user_uuid: string,
-        provider: ExternalIntegrationProvider,
-    ): Promise<Integration> {
-        return this.prisma.integration.upsert({
+        const row = await this.prisma.integrationCredential.findUnique({
             where: {
-                user_uuid_provider: { user_uuid, provider },
+                user_uuid_provider_account_kind: {
+                    user_uuid,
+                    provider,
+                    account,
+                    kind,
+                },
             },
-            create: {
-                user_uuid,
-                provider,
-                title: this.defaultTitle(provider),
-            },
-            update: {},
         });
+        if (!row) {
+            throw new NotFoundException(
+                `Credential ${formatCredentialEnvName(provider, kind, account)} not found`,
+            );
+        }
+        return decryptIntegrationSecret(row.secret, this.encryptionKey());
     }
 
-    private async requireOwnedKey(
+    private async requireOwnedCredential(
         user_uuid: string,
-        key_uuid: string,
-    ): Promise<IntegrationKey & { integration: Integration }> {
-        const key = await this.prisma.integrationKey.findFirst({
-            where: { uuid: key_uuid, integration: { user_uuid } },
-            include: { integration: true },
+        uuid: string,
+    ): Promise<IntegrationCredential> {
+        const row = await this.prisma.integrationCredential.findFirst({
+            where: { uuid, user_uuid },
         });
-        if (!key) {
-            throw new NotFoundException(`Integration key ${key_uuid} not found`);
+        if (!row) {
+            throw new NotFoundException(`Credential ${uuid} not found`);
         }
-        return key;
+        return row;
     }
 
     private encryptionKey(): string {
@@ -158,35 +185,23 @@ export class IntegrationsService {
         );
     }
 
-    private defaultTitle(provider: ExternalIntegrationProvider): string {
-        return provider
-            .split('_')
-            .map((part) => part.charAt(0) + part.slice(1).toLowerCase())
-            .join(' ');
-    }
-
-    private toIntegrationResponse(
-        provider: ExternalIntegrationProvider,
-        row?: Integration & { keys: IntegrationKey[] },
-    ): IntegrationResponse {
-        if (!row) {
-            return { provider, uuid: null, title: null, keys: [] };
-        }
+    private toCredentialResponse(
+        row: IntegrationCredential,
+    ): IntegrationCredentialResponse {
         return {
-            provider: row.provider,
             uuid: row.uuid,
-            title: row.title,
-            keys: row.keys.map((key) => this.toKeyResponse(key)),
-        };
-    }
-
-    private toKeyResponse(key: IntegrationKey): IntegrationKeyResponse {
-        return {
-            uuid: key.uuid,
-            title: key.title,
-            last4: key.last4,
-            created_at: key.created_at,
-            updated_at: key.updated_at,
+            provider: row.provider,
+            account: row.account,
+            kind: row.kind,
+            label: formatCredentialLabel(row.provider, row.kind, row.account),
+            env_name: formatCredentialEnvName(
+                row.provider,
+                row.kind,
+                row.account,
+            ),
+            last4: row.last4,
+            created_at: row.created_at,
+            updated_at: row.updated_at,
         };
     }
 }
