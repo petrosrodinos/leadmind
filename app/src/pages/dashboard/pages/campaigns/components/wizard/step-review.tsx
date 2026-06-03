@@ -59,7 +59,9 @@ export function StepReview({ basics, audienceCount, message, aiPrompt }: StepRev
                         {aiPrompt || <span className="text-muted italic">— no prompt set —</span>}
                     </p>
                     <p className="text-xs text-muted">
-                        The AI will generate a unique message for each contact when you click "Generate Drafts".
+                        {basics.use_openai_batch
+                            ? 'Drafts will be created via the OpenAI Batch API when you click "Generate Drafts" (typically within 24 hours).'
+                            : 'The AI will generate a unique message for each contact when you click "Generate Drafts".'}
                     </p>
                 </section>
             )}

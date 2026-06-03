@@ -49,6 +49,7 @@ export function CampaignWizard({ campaign }: CampaignWizardProps) {
             scheduled_at: campaign.scheduled_at
                 ? toLocalInputValue(campaign.scheduled_at)
                 : null,
+            use_openai_batch: campaign.use_openai_batch ?? false,
         }),
         [campaign],
     );
@@ -94,6 +95,7 @@ export function CampaignWizard({ campaign }: CampaignWizardProps) {
             ...(isPersonalized
                 ? {
                       ai_prompt: aiPrompt || undefined,
+                      use_openai_batch: basics.use_openai_batch,
                       email_subject: null,
                       email_content: null,
                       sms_content: null,
@@ -253,7 +255,17 @@ export function CampaignWizard({ campaign }: CampaignWizardProps) {
                 description={
                     isPersonalized ? (
                         <>
-                            The AI will generate a unique message for each matched contact. You can review the drafts before sending.
+                            {basics.use_openai_batch ? (
+                                <>
+                                    Drafts will be queued via the OpenAI Batch API (typically within 24
+                                    hours). You can review them before sending once they are ready.
+                                </>
+                            ) : (
+                                <>
+                                    The AI will generate a unique message for each matched contact. You
+                                    can review the drafts before sending.
+                                </>
+                            )}
                         </>
                     ) : basics.scheduled_at ? (
                         <>

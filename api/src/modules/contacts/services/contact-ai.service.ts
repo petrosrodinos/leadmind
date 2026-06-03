@@ -1,5 +1,16 @@
 import { BadRequestException, ForbiddenException, Injectable, Logger } from '@nestjs/common';
-import { Channel, Contact, Filter, Lead, MsgStatus, OpenAiBatchJobType, OpenAiBatchStatus, OutreachMessage, Prisma } from '@/generated/prisma';
+import {
+    CampaignStatus,
+    Channel,
+    Contact,
+    Filter,
+    Lead,
+    MsgStatus,
+    OpenAiBatchJobType,
+    OpenAiBatchStatus,
+    OutreachMessage,
+    Prisma,
+} from '@/generated/prisma';
 import { AiDraftMessageDto } from '../dto/ai-draft-message.dto';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { AiService } from '@/integrations/ai/services/ai.service';
@@ -181,6 +192,10 @@ export class ContactAiService {
 
         this.logger.log(`Batch scoring submitted: ${result.batch_id} (${requests.length} requests)`);
         return { batch_id: result.batch_id, queued: requests.length };
+    }
+
+    async findBatchJob(batchId: string) {
+        return this.prisma.openAiBatchJob.findUnique({ where: { batch_id: batchId } });
     }
 
     async processBatchScoreResults(batchId: string): Promise<void> {
@@ -384,6 +399,191 @@ export class ContactAiService {
 
         this.logger.log(`Bulk draft complete: ${generated} generated, ${skipped} skipped, ${failed} failed`);
         return { generated, skipped, failed };
+    }
+
+    async submitBatchCampaignDrafts(
+        user_uuid: string,
+        campaign_uuid: string,
+        contacts: Array<Contact & { lead: Lead }>,
+        channel: Channel,
+        prompt: string,
+        language?: string,
+    ): Promise<{ batch_id: string; queued: number }> {
+        const sender_business_description = await this.resolveSenderBusinessDescription(user_uuid);
+        const systemContent =
+            'You are an expert B2B outreach copywriter. Produce drafts ready for human review.';
+
+        const contactUuids = contacts.map((c) => c.uuid);
+        const existingDrafts = await this.prisma.outreachMessage.findMany({
+            where: {
+                contact_uuid: { in: contactUuids },
+                channel,
+                status: MsgStatus.PENDING,
+                campaign_uuid,
+            },
+            select: { contact_uuid: true },
+        });
+        const hasDraft = new Set(existingDrafts.map((m) => m.contact_uuid));
+
+        const requests: OpenAiBatchRequest[] = [];
+
+        for (const contact of contacts) {
+            if (hasDraft.has(contact.uuid)) continue;
+
+            const userContent = this.promptForChannel(
+                channel,
+                contact,
+                contact.lead,
+                prompt,
+                language,
+                sender_business_description,
+            );
+
+            requests.push({
+                custom_id: `message_create|${campaign_uuid}|${contact.uuid}|${channel}`,
+                model: AiModels.openai.gpt4o,
+                messages: [
+                    { role: 'system', content: systemContent },
+                    { role: 'user', content: userContent },
+                ],
+            });
+        }
+
+        if (requests.length === 0) {
+            throw new BadRequestException(
+                'All matching contacts already have pending drafts for this campaign.',
+            );
+        }
+
+        const result = await this.openAiBatchService.createBatch(requests);
+
+        await this.prisma.openAiBatchJob.create({
+            data: {
+                batch_id: result.batch_id,
+                user_uuid,
+                type: OpenAiBatchJobType.MESSAGE_CREATE,
+                status: OpenAiBatchStatus.IN_PROGRESS,
+                total_requests: requests.length,
+                input_file_id: result.input_file_id,
+                expires_at: result.expires_at,
+            },
+        });
+
+        this.logger.log(
+            `Batch campaign drafts submitted: ${result.batch_id} (${requests.length} requests)`,
+        );
+        return { batch_id: result.batch_id, queued: requests.length };
+    }
+
+    async processBatchMessageCreateResults(batchId: string): Promise<void> {
+        const job = await this.prisma.openAiBatchJob.findUnique({ where: { batch_id: batchId } });
+        if (!job) {
+            this.logger.warn(`No OpenAiBatchJob found for batch_id: ${batchId}`);
+            return;
+        }
+
+        const batchStatus = await this.openAiBatchService.getBatchStatus(batchId);
+        if (!batchStatus.output_file_id) {
+            this.logger.warn(`Batch ${batchId} has no output file yet`);
+            return;
+        }
+
+        const results = await this.openAiBatchService.getBatchResults(batchStatus.output_file_id);
+        let generated = 0;
+        let campaign_uuid: string | null = null;
+
+        for (const result of results) {
+            if (!result.content || result.error) {
+                this.logger.warn(`Batch result ${result.custom_id} failed: ${result.error}`);
+                continue;
+            }
+
+            const parts = result.custom_id.split('|');
+            if (parts.length !== 4 || parts[0] !== 'message_create') continue;
+            const [, campUuid, contact_uuid, channelStr] = parts;
+            campaign_uuid = campUuid;
+
+            const channel = channelStr as Channel;
+            if (channel !== Channel.EMAIL && channel !== Channel.SMS && channel !== Channel.LINKEDIN) {
+                continue;
+            }
+
+            try {
+                const contact = await this.prisma.contact.findUnique({
+                    where: { uuid: contact_uuid },
+                });
+                if (!contact || contact.user_uuid !== job.user_uuid) continue;
+
+                const existing = await this.prisma.outreachMessage.findFirst({
+                    where: {
+                        contact_uuid,
+                        channel,
+                        status: MsgStatus.PENDING,
+                        campaign_uuid: campUuid,
+                    },
+                });
+                if (existing) continue;
+
+                const draft =
+                    channel === Channel.EMAIL
+                        ? parseEmailDraft(result.content)
+                        : { subject: null, content: result.content.trim() };
+                const content =
+                    channel === Channel.EMAIL ? sanitizeEmailHtml(draft.content) : draft.content;
+                const idempotencyKey = `campaign:${campUuid}:${contact_uuid}:${channel}`;
+
+                await this.prisma.outreachMessage.create({
+                    data: {
+                        user_uuid: job.user_uuid,
+                        contact_uuid,
+                        channel,
+                        subject: draft.subject ?? null,
+                        content,
+                        status: MsgStatus.PENDING,
+                        campaign_uuid: campUuid,
+                        idempotency_key: idempotencyKey,
+                    },
+                });
+                generated++;
+            } catch (err) {
+                const message = err instanceof Error ? err.message : 'Unknown error';
+                this.logger.warn(`Failed to persist batch draft ${result.custom_id}: ${message}`);
+            }
+        }
+
+        await this.prisma.openAiBatchJob.update({
+            where: { batch_id: batchId },
+            data: {
+                status: OpenAiBatchStatus.COMPLETED,
+                finished_at: new Date(),
+                output_file_id: batchStatus.output_file_id,
+                error_file_id: batchStatus.error_file_id,
+                completed_requests: batchStatus.completed_requests,
+                failed_requests: batchStatus.failed_requests,
+                total_requests: batchStatus.total_requests,
+            },
+        });
+
+        if (campaign_uuid) {
+            const campaign = await this.prisma.marketingCampaign.findUnique({
+                where: { uuid: campaign_uuid },
+            });
+            if (campaign && campaign.draft_batch_id === batchId) {
+                await this.prisma.marketingCampaign.update({
+                    where: { uuid: campaign_uuid },
+                    data: {
+                        status: CampaignStatus.DRAFTS_READY,
+                        draft_batch_id: null,
+                        total_messages: generated,
+                    },
+                });
+                this.logger.log(
+                    `Campaign ${campaign_uuid}: batch ${batchId} complete, ${generated} drafts created`,
+                );
+            }
+        }
+
+        this.logger.log(`Batch ${batchId} message_create processed: ${generated} drafts`);
     }
 
     async draftAdHocMessage(

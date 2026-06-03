@@ -5,6 +5,7 @@ import {
     ArrayMinSize,
     ArrayUnique,
     IsArray,
+    IsBoolean,
     IsDateString,
     IsEnum,
     IsOptional,
@@ -73,6 +74,14 @@ export class CreateCampaignDto {
     @IsString()
     @MaxLength(2000)
     ai_prompt?: string;
+
+    @ApiPropertyOptional({
+        description:
+            'When true on PERSONALIZED campaigns, draft generation uses the OpenAI Batch API (lower cost, up to 24h)',
+    })
+    @IsOptional()
+    @IsBoolean()
+    use_openai_batch?: boolean;
 
     @ApiPropertyOptional({ type: CampaignFiltersDto })
     @IsOptional()

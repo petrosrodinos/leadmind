@@ -22,6 +22,7 @@ export default function NewCampaignPage() {
         campaign_type: CampaignType.STANDARD,
         channels: [Channel.EMAIL],
         scheduled_at: null,
+        use_openai_batch: false,
     });
 
     const canSave = basics.name.trim().length > 0 && basics.channels.length === 1;
@@ -34,6 +35,10 @@ export default function NewCampaignPage() {
                 description: basics.description.trim() || undefined,
                 campaign_type: basics.campaign_type,
                 channels: basics.channels,
+                use_openai_batch:
+                    basics.campaign_type === CampaignType.PERSONALIZED
+                        ? basics.use_openai_batch
+                        : undefined,
                 scheduled_at:
                     basics.campaign_type === CampaignType.STANDARD && basics.scheduled_at
                         ? new Date(basics.scheduled_at).toISOString()

@@ -1,4 +1,4 @@
-import { Input, Label, TextArea, TextField } from "@heroui/react";
+import { Checkbox, Input, Label, TextArea, TextField } from "@heroui/react";
 import { Channel } from "@/features/contacts/interfaces/contact.interface";
 import { CampaignType } from "@/features/marketing-campaigns/interfaces/campaign.interface";
 import { cn } from "@/lib/utils";
@@ -10,6 +10,7 @@ export interface BasicsValues {
     campaign_type: CampaignType;
     channels: Channel[];
     scheduled_at: string | null;
+    use_openai_batch: boolean;
 }
 
 interface StepBasicsProps {
@@ -26,7 +27,12 @@ export function StepBasics({ value, onChange }: StepBasicsProps) {
     const selectType = (t: CampaignType) => {
         if (value.campaign_type === t) return;
         const patch: Partial<BasicsValues> = { campaign_type: t };
-        if (t === CampaignType.PERSONALIZED) patch.scheduled_at = null;
+        if (t === CampaignType.PERSONALIZED) {
+            patch.scheduled_at = null;
+            patch.use_openai_batch = true;
+        } else {
+            patch.use_openai_batch = false;
+        }
         onChange(patch);
     };
 
@@ -71,6 +77,22 @@ export function StepBasics({ value, onChange }: StepBasicsProps) {
                         description="Unique AI draft per contact"
                     />
                 </div>
+                {value.campaign_type === CampaignType.PERSONALIZED && (
+                    <div className="mt-3">
+                        <Checkbox
+                            isSelected={value.use_openai_batch}
+                            onChange={(checked: boolean) => onChange({ use_openai_batch: checked })}
+                        >
+                            <Checkbox.Control>
+                                <Checkbox.Indicator />
+                            </Checkbox.Control>
+                            <span className="text-xs text-muted">
+                                Use OpenAI Batch API to generate personalized messages (50% cheaper,
+                                results within 24h)
+                            </span>
+                        </Checkbox>
+                    </div>
+                )}
             </div>
 
             <div role="radiogroup" aria-label="Channel">

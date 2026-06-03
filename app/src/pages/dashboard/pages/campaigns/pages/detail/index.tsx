@@ -55,6 +55,7 @@ export default function CampaignDetailPage() {
 
     const isPersonalized = campaign.campaign_type === CampaignType.PERSONALIZED;
     const isDraftsReady = campaign.status === CampaignStatuses.DRAFTS_READY;
+    const batchDraftsPending = isPersonalized && !!campaign.draft_batch_id;
 
     return (
         <div className="space-y-6">
@@ -97,6 +98,13 @@ export default function CampaignDetailPage() {
                     />
                 </div>
             </header>
+
+            {batchDraftsPending && (
+                <p className="rounded-xl border border-border bg-surface-secondary/40 px-4 py-3 text-sm text-muted">
+                    Personalized drafts are being generated via the OpenAI Batch API. This usually
+                    completes within 24 hours — refresh this page when status shows Drafts ready.
+                </p>
+            )}
 
             <StatsCards campaign={campaign} />
             <CampaignAnalytics campaign={campaign} />

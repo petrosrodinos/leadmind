@@ -377,6 +377,8 @@ model MarketingCampaign {
   email_content       String?        @db.Text
   sms_content         String?        @db.Text
   ai_prompt           String?        @db.Text
+  use_openai_batch    Boolean        @default(false)
+  draft_batch_id      String?
   sender_profile_uuid String?
   scheduled_at        DateTime?
   started_at          DateTime?

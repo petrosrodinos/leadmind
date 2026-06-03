@@ -1,5 +1,6 @@
 import { Body, Controller, Headers, HttpCode, Logger, Post, Req } from '@nestjs/common';
 import { Request } from 'express';
+import { OpenAiBatchJobType } from '@/generated/prisma';
 import { OpenAiBatchService } from '@/integrations/ai/services/openai-batch.service';
 import { ContactAiService } from '@/modules/contacts/services/contact-ai.service';
 
@@ -36,7 +37,12 @@ export class OpenAiWebhookController {
             if (!batchId) return;
 
             try {
-                await this.contactAiService.processBatchScoreResults(batchId);
+                const job = await this.contactAiService.findBatchJob(batchId);
+                if (job?.type === OpenAiBatchJobType.MESSAGE_CREATE) {
+                    await this.contactAiService.processBatchMessageCreateResults(batchId);
+                } else {
+                    await this.contactAiService.processBatchScoreResults(batchId);
+                }
             } catch (err) {
                 this.logger.error(`Failed to process batch ${batchId}: ${err.message}`);
             }

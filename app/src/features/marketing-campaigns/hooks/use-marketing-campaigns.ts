@@ -158,9 +158,18 @@ export function useStartCampaign() {
             qc.invalidateQueries({ queryKey: campaignsQueryKeys.detail(uuid) });
             qc.invalidateQueries({ queryKey: campaignsQueryKeys.all });
             const isPersonalized = data.campaign_type === CampaignType.PERSONALIZED;
+            const batchQueued = isPersonalized && !!data.draft_batch_id;
             toast({
-                title: isPersonalized ? "Drafts generated" : "Campaign queued for dispatch",
-                description: isPersonalized ? "Review your drafts and send when ready." : undefined,
+                title: isPersonalized
+                    ? batchQueued
+                        ? "Draft generation queued"
+                        : "Drafts generated"
+                    : "Campaign queued for dispatch",
+                description: isPersonalized
+                    ? batchQueued
+                        ? "OpenAI Batch API will create drafts within 24 hours. Check back to review and send."
+                        : "Review your drafts and send when ready."
+                    : undefined,
                 duration: 3000,
             });
         },

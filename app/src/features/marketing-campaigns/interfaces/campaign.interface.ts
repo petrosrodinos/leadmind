@@ -65,6 +65,8 @@ export interface MarketingCampaign {
     email_content: string | null;
     sms_content: string | null;
     ai_prompt: string | null;
+    use_openai_batch: boolean;
+    draft_batch_id: string | null;
     sender_profile_uuid: string | null;
     scheduled_at: string | null;
     started_at: string | null;
@@ -143,6 +145,7 @@ export interface CreateCampaignPayload {
     email_content?: string;
     sms_content?: string;
     ai_prompt?: string;
+    use_openai_batch?: boolean;
     sender_profile_uuid?: string;
     scheduled_at?: string;
     filters?: CampaignFilters;

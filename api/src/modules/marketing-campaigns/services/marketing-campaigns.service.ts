@@ -12,6 +12,8 @@ import {
     CampaignStatus,
     CampaignType,
     Channel,
+    Contact,
+    Lead,
     MarketingCampaign,
     Prisma,
 } from '@/generated/prisma';
@@ -71,6 +73,8 @@ export class MarketingCampaignsService {
                     : null,
                 sms_content: dto.sms_content ?? null,
                 ai_prompt: dto.ai_prompt ?? null,
+                use_openai_batch:
+                    type === CampaignType.PERSONALIZED ? (dto.use_openai_batch ?? true) : false,
                 sender_profile_uuid: dto.sender_profile_uuid ?? null,
                 scheduled_at: dto.scheduled_at ? new Date(dto.scheduled_at) : null,
                 filters_snapshot: (dto.filters ?? {}) as unknown as Prisma.InputJsonValue,
@@ -124,6 +128,7 @@ export class MarketingCampaignsService {
                 }),
                 ...(dto.sms_content !== undefined && { sms_content: dto.sms_content }),
                 ...(dto.ai_prompt !== undefined && { ai_prompt: dto.ai_prompt }),
+                ...(dto.use_openai_batch !== undefined && { use_openai_batch: dto.use_openai_batch }),
                 ...(dto.sender_profile_uuid !== undefined && {
                     sender_profile_uuid: dto.sender_profile_uuid,
                 }),
@@ -344,6 +349,29 @@ export class MarketingCampaignsService {
             include: { lead: true },
         });
 
+        if (campaign.use_openai_batch) {
+            const { batch_id, queued } = await this.contactAiService.submitBatchCampaignDrafts(
+                user_uuid,
+                campaign.uuid,
+                contacts as Array<Contact & { lead: Lead }>,
+                channel,
+                campaign.ai_prompt,
+            );
+
+            this.logger.log(
+                `PERSONALIZED campaign ${campaign.uuid}: batch ${batch_id} queued ${queued} draft requests`,
+            );
+
+            return this.prisma.marketingCampaign.update({
+                where: { uuid: campaign.uuid },
+                data: {
+                    draft_batch_id: batch_id,
+                    selected_contact_count: contactUuids.length,
+                    total_messages: 0,
+                },
+            });
+        }
+
         const { generated, skipped, failed } = await this.contactAiService.draftBulkMessages(
             user_uuid,
             contacts as any,
@@ -482,6 +510,7 @@ export class MarketingCampaignsService {
                 email_content: campaign.email_content,
                 sms_content: campaign.sms_content,
                 ai_prompt: campaign.ai_prompt,
+                use_openai_batch: campaign.use_openai_batch,
                 sender_profile_uuid: campaign.sender_profile_uuid,
                 filters_snapshot: campaign.filters_snapshot ?? Prisma.JsonNull,
             },
