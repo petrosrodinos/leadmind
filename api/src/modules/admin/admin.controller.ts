@@ -1,4 +1,4 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthRole } from '@/generated/prisma';
 import { JwtGuard } from '@/shared/guards/jwt.guard';
@@ -19,5 +19,11 @@ export class AdminController {
     @ApiOperation({ summary: 'List all OpenAI batch jobs (admin only)' })
     listBatchJobs(@Query() query: ListBatchJobsDto) {
         return this.adminService.listBatchJobs(query);
+    }
+
+    @Post('batch-jobs/:batchId/sync')
+    @ApiOperation({ summary: 'Pull OpenAI batch results into the app (admin only)' })
+    syncBatchJob(@Param('batchId') batchId: string) {
+        return this.adminService.syncBatchJob(batchId);
     }
 }

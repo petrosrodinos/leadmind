@@ -14,6 +14,8 @@ import { UtmAnalyticsWebhookController } from './utm-analytics-webhook.controlle
 import { WebhookEventService } from './services/webhook-event.service';
 import { CampaignUtmAnalyticsService } from './services/campaign-utm-analytics.service';
 
+import { OpenAiBatchDispatchService } from './services/openai-batch-dispatch.service';
+
 @Module({
     imports: [
         ConfigModule,
@@ -31,7 +33,7 @@ import { CampaignUtmAnalyticsService } from './services/campaign-utm-analytics.s
         OpenAiWebhookController,
         UtmAnalyticsWebhookController,
     ],
-    providers: [WebhookEventService, CampaignUtmAnalyticsService],
-    exports: [WebhookEventService, CampaignUtmAnalyticsService],
+    providers: [WebhookEventService, CampaignUtmAnalyticsService, OpenAiBatchDispatchService],
+    exports: [WebhookEventService, CampaignUtmAnalyticsService, OpenAiBatchDispatchService],
 })
 export class WebhooksModule { }

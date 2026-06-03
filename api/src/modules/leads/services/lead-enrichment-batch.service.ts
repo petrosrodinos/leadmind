@@ -8,7 +8,7 @@ import {
 } from '@/generated/prisma';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { OpenAiBatchService } from '@/integrations/ai/services/openai-batch.service';
-import { OpenAiBatchRequest } from '@/integrations/ai/interfaces/openai-batch.interface';
+import { OpenAiBatchRequest, OpenAiBatchResult } from '@/integrations/ai/interfaces/openai-batch.interface';
 import { AiModels, AiProviders } from '@/integrations/ai/interfaces/ai.interface';
 import {
     buildGoogleDeterministicSummary,
@@ -33,6 +33,7 @@ import {
 import type {
     LeadEnrichmentBatchContext,
     LeadEnrichmentBatchLeadStaging,
+    LeadEnrichmentBatchPhase,
 } from '../interfaces/lead-enrichment-batch.interface';
 import { AiConfig } from '@/integrations/ai/utils/ai.config';
 
@@ -128,26 +129,49 @@ export class LeadEnrichmentBatchService {
         return { batch_id: result.batch_id, queued: requests.length };
     }
 
-    async processBatchResults(batchId: string): Promise<void> {
+    async processBatchResults(
+        batchId: string,
+        prefetchedStatus?: {
+            output_file_id: string | null;
+            error_file_id: string | null;
+            completed_requests: number;
+            failed_requests: number;
+            total_requests: number;
+        },
+    ): Promise<void> {
         const job = await this.prisma.openAiBatchJob.findUnique({ where: { batch_id: batchId } });
-        if (!job?.context) {
-            this.logger.warn(`No OpenAiBatchJob context for batch_id: ${batchId}`);
+        if (!job) {
+            this.logger.warn(`No OpenAiBatchJob for batch_id: ${batchId}`);
             return;
         }
 
-        const context = job.context as unknown as LeadEnrichmentBatchContext;
-        const batchStatus = await this.openAiBatchService.getBatchStatus(batchId);
+        if (job.status === OpenAiBatchStatus.COMPLETED) {
+            return;
+        }
+
+        const batchStatus = prefetchedStatus ?? (await this.openAiBatchService.waitForBatchReady(batchId));
         if (!batchStatus.output_file_id) {
-            this.logger.warn(`Batch ${batchId} has no output file yet`);
-            return;
-        }
-
-        if (context.phase === 'combined_summaries') {
-            await this.processCombinedBatchResults(batchId, job.user_uuid, context, batchStatus);
+            this.logger.warn(`Batch ${batchId} has no output file yet (status may still be finalizing)`);
             return;
         }
 
         const results = await this.openAiBatchService.getBatchResults(batchStatus.output_file_id);
+        const storedContext = job.context as unknown as LeadEnrichmentBatchContext | null;
+        const phase = storedContext?.phase ?? this.inferBatchPhase(results);
+
+        if (phase === 'combined_summaries') {
+            await this.processCombinedBatchResults(batchId, job.user_uuid, storedContext, batchStatus, results);
+            return;
+        }
+
+        const context: LeadEnrichmentBatchContext = storedContext ?? {
+            phase: 'source_summaries',
+            user_uuid: job.user_uuid,
+            lead_uuids: [],
+            sources: [],
+            staging: {},
+        };
+
         const leadsForCombined = new Set<string>();
 
         for (const result of results) {
@@ -199,9 +223,23 @@ export class LeadEnrichmentBatchService {
                 context,
                 batchId,
             );
+        } else if (results.length > 0) {
+            this.logger.warn(
+                `Lead enrichment source batch ${batchId} produced ${results.length} results but none were persisted`,
+            );
         }
 
         this.logger.log(`Lead enrichment source batch ${batchId} processed`);
+    }
+
+    private inferBatchPhase(results: OpenAiBatchResult[]): LeadEnrichmentBatchPhase {
+        for (const result of results) {
+            const parts = result.custom_id.split('|');
+            if (parts.length === 3 && parts[0] === 'lead_enrich' && parts[1] === 'combined') {
+                return 'combined_summaries';
+            }
+        }
+        return 'source_summaries';
     }
 
     private async submitCombinedSummaryBatch(
@@ -278,7 +316,7 @@ export class LeadEnrichmentBatchService {
     private async processCombinedBatchResults(
         batchId: string,
         user_uuid: string,
-        context: LeadEnrichmentBatchContext,
+        context: LeadEnrichmentBatchContext | null,
         batchStatus: {
             output_file_id: string | null;
             error_file_id: string | null;
@@ -286,8 +324,11 @@ export class LeadEnrichmentBatchService {
             failed_requests: number;
             total_requests: number;
         },
+        prefetchedResults?: OpenAiBatchResult[],
     ): Promise<void> {
-        const results = await this.openAiBatchService.getBatchResults(batchStatus.output_file_id!);
+        const results =
+            prefetchedResults ??
+            (await this.openAiBatchService.getBatchResults(batchStatus.output_file_id!));
 
         for (const result of results) {
             if (!result.content || result.error) continue;
@@ -350,57 +391,87 @@ export class LeadEnrichmentBatchService {
     ): Promise<boolean> {
         switch (kind) {
             case 'linkedin': {
-                if (!staging?.linkedin) return false;
-                const { url, subtype, plain } = staging.linkedin;
-                const summary =
-                    content.trim() ||
-                    buildLinkedInDeterministicSummary(plain, subtype).trim() ||
-                    summarizeLinkedInPlain(plain).trim() ||
-                    '(LinkedIn)';
+                if (staging?.linkedin) {
+                    const { url, subtype, plain } = staging.linkedin;
+                    const summary =
+                        content.trim() ||
+                        buildLinkedInDeterministicSummary(plain, subtype).trim() ||
+                        summarizeLinkedInPlain(plain).trim() ||
+                        '(LinkedIn)';
+                    await this.orchestrator.persistEnrichmentAttempt(
+                        lead.uuid,
+                        {
+                            source: EnrichmentSource.LINKEDIN,
+                            source_url: url,
+                            summary,
+                            payload: {
+                                fetched_at: new Date().toISOString(),
+                                data: plain,
+                            } as Prisma.InputJsonValue,
+                            metadata: { subtype, batch: true },
+                            status: 'success',
+                            lead_update: this.buildLeadUpdateFromLinkedIn(lead, plain, subtype),
+                        },
+                        { skipSummaryRegen: true },
+                    );
+                    return true;
+                }
+                if (!content.trim()) return false;
                 await this.orchestrator.persistEnrichmentAttempt(
                     lead.uuid,
                     {
                         source: EnrichmentSource.LINKEDIN,
-                        source_url: url,
-                        summary,
-                        payload: {
-                            fetched_at: new Date().toISOString(),
-                            data: plain,
-                        } as Prisma.InputJsonValue,
-                        metadata: { subtype, batch: true },
+                        source_url: lead.linkedin_url,
+                        summary: content.trim(),
+                        payload: { fetched_at: new Date().toISOString(), batch: true, staging_missing: true },
+                        metadata: { batch: true, staging_missing: true },
                         status: 'success',
-                        lead_update: this.buildLeadUpdateFromLinkedIn(lead, plain, subtype),
                     },
                     { skipSummaryRegen: true },
                 );
                 return true;
             }
             case 'website': {
-                if (!staging?.website) return false;
-                const { url, title, textSample, markdownSample } = staging.website;
-                const summary =
-                    content.trim() ||
-                    buildWebsiteDeterministicSummary({
-                        url,
-                        title,
-                        textSample,
-                        markdownSample,
-                    }).trim() ||
-                    url;
+                if (staging?.website) {
+                    const { url, title, textSample, markdownSample } = staging.website;
+                    const summary =
+                        content.trim() ||
+                        buildWebsiteDeterministicSummary({
+                            url,
+                            title,
+                            textSample,
+                            markdownSample,
+                        }).trim() ||
+                        url;
+                    await this.orchestrator.persistEnrichmentAttempt(
+                        lead.uuid,
+                        {
+                            source: EnrichmentSource.WEBSITE,
+                            source_url: url,
+                            summary,
+                            payload: {
+                                fetched_at: new Date().toISOString(),
+                                url,
+                                title,
+                                text_sample: textSample,
+                                markdown_sample: markdownSample,
+                            },
+                            metadata: { batch: true },
+                            status: 'success',
+                        },
+                        { skipSummaryRegen: true },
+                    );
+                    return true;
+                }
+                if (!content.trim()) return false;
                 await this.orchestrator.persistEnrichmentAttempt(
                     lead.uuid,
                     {
                         source: EnrichmentSource.WEBSITE,
-                        source_url: url,
-                        summary,
-                        payload: {
-                            fetched_at: new Date().toISOString(),
-                            url,
-                            title,
-                            text_sample: textSample,
-                            markdown_sample: markdownSample,
-                        },
-                        metadata: { batch: true },
+                        source_url: lead.website,
+                        summary: content.trim(),
+                        payload: { fetched_at: new Date().toISOString(), batch: true, staging_missing: true },
+                        metadata: { batch: true, staging_missing: true },
                         status: 'success',
                     },
                     { skipSummaryRegen: true },
@@ -408,24 +479,39 @@ export class LeadEnrichmentBatchService {
                 return true;
             }
             case 'google': {
-                if (!staging?.google) return false;
-                const { query, results } = staging.google;
-                const summary =
-                    content.trim() ||
-                    buildGoogleDeterministicSummary(query, results).trim() ||
-                    '(Google Search)';
+                if (staging?.google) {
+                    const { query, results } = staging.google;
+                    const summary =
+                        content.trim() ||
+                        buildGoogleDeterministicSummary(query, results).trim() ||
+                        '(Google Search)';
+                    await this.orchestrator.persistEnrichmentAttempt(
+                        lead.uuid,
+                        {
+                            source: EnrichmentSource.GOOGLE_SEARCH,
+                            source_url: query,
+                            summary,
+                            payload: {
+                                query,
+                                fetched_at: new Date().toISOString(),
+                                results,
+                            },
+                            metadata: { batch: true },
+                            status: 'success',
+                        },
+                        { skipSummaryRegen: true },
+                    );
+                    return true;
+                }
+                if (!content.trim()) return false;
                 await this.orchestrator.persistEnrichmentAttempt(
                     lead.uuid,
                     {
                         source: EnrichmentSource.GOOGLE_SEARCH,
-                        source_url: query,
-                        summary,
-                        payload: {
-                            query,
-                            fetched_at: new Date().toISOString(),
-                            results,
-                        },
-                        metadata: { batch: true },
+                        source_url: lead.company ?? lead.name,
+                        summary: content.trim(),
+                        payload: { fetched_at: new Date().toISOString(), batch: true, staging_missing: true },
+                        metadata: { batch: true, staging_missing: true },
                         status: 'success',
                     },
                     { skipSummaryRegen: true },

@@ -1,12 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
+import { OpenAiBatchDispatchService } from '@/modules/webhooks/services/openai-batch-dispatch.service';
 import { ListBatchJobsDto } from './dto/list-batch-jobs.dto';
 
 @Injectable()
 export class AdminService {
-    constructor(private readonly prisma: PrismaService) { }
+    constructor(
+        private readonly prisma: PrismaService,
+        private readonly openAiBatchDispatchService: OpenAiBatchDispatchService,
+    ) { }
 
     async listBatchJobs(dto: ListBatchJobsDto) {
+        void this.openAiBatchDispatchService.reconcileInProgressJobs(25);
+
         const page = dto.page ?? 1;
         const limit = dto.limit ?? 20;
         const skip = (page - 1) * limit;
@@ -30,5 +36,13 @@ export class AdminService {
         ]);
 
         return { data, total, page, limit };
+    }
+
+    async syncBatchJob(batchId: string) {
+        await this.openAiBatchDispatchService.processBatchCompletion(batchId);
+        return this.prisma.openAiBatchJob.findUnique({
+            where: { batch_id: batchId },
+            include: { user: { select: { uuid: true, email: true } } },
+        });
     }
 }

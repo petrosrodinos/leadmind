@@ -1,9 +1,7 @@
 import { Body, Controller, Headers, HttpCode, Logger, Post, Req } from '@nestjs/common';
 import { Request } from 'express';
-import { OpenAiBatchJobType } from '@/generated/prisma';
 import { OpenAiBatchService } from '@/integrations/ai/services/openai-batch.service';
-import { ContactAiService } from '@/modules/contacts/services/contact-ai.service';
-import { LeadEnrichmentBatchService } from '@/modules/leads/services/lead-enrichment-batch.service';
+import { OpenAiBatchDispatchService } from './services/openai-batch-dispatch.service';
 
 @Controller('webhooks/openai')
 export class OpenAiWebhookController {
@@ -11,8 +9,7 @@ export class OpenAiWebhookController {
 
     constructor(
         private readonly openAiBatchService: OpenAiBatchService,
-        private readonly contactAiService: ContactAiService,
-        private readonly leadEnrichmentBatchService: LeadEnrichmentBatchService,
+        private readonly openAiBatchDispatchService: OpenAiBatchDispatchService,
     ) { }
 
     @Post()
@@ -34,23 +31,27 @@ export class OpenAiWebhookController {
 
         this.logger.log(`OpenAI webhook event received: ${event?.type}`);
 
-        if (event?.type === 'batch.completed') {
-            const batchId = event.data?.id as string | undefined;
-            if (!batchId) return;
+        const batchId = event?.data?.id as string | undefined;
+        if (!batchId) return;
 
+        if (event?.type === 'batch.completed') {
             try {
-                const job =
-                    (await this.contactAiService.findBatchJob(batchId)) ??
-                    (await this.leadEnrichmentBatchService.findBatchJob(batchId));
-                if (job?.type === OpenAiBatchJobType.LEAD_ENRICH) {
-                    await this.leadEnrichmentBatchService.processBatchResults(batchId);
-                } else if (job?.type === OpenAiBatchJobType.MESSAGE_CREATE) {
-                    await this.contactAiService.processBatchMessageCreateResults(batchId);
-                } else {
-                    await this.contactAiService.processBatchScoreResults(batchId);
-                }
+                await this.openAiBatchDispatchService.processBatchCompletion(batchId);
             } catch (err) {
                 this.logger.error(`Failed to process batch ${batchId}: ${err.message}`);
+            }
+            return;
+        }
+
+        if (
+            event?.type === 'batch.failed' ||
+            event?.type === 'batch.expired' ||
+            event?.type === 'batch.cancelled'
+        ) {
+            try {
+                await this.openAiBatchDispatchService.processBatchCompletion(batchId);
+            } catch (err) {
+                this.logger.error(`Failed to finalize batch ${batchId}: ${err.message}`);
             }
         }
     }

@@ -76,23 +76,86 @@ export class OpenAiBatchService {
         };
     }
 
+    async waitForBatchReady(
+        batchId: string,
+        maxAttempts = 8,
+        delayMs = 1500,
+    ): Promise<{
+        status: string;
+        output_file_id: string | null;
+        error_file_id: string | null;
+        completed_requests: number;
+        failed_requests: number;
+        total_requests: number;
+    }> {
+        let last = await this.getBatchStatus(batchId);
+        for (let attempt = 1; attempt < maxAttempts; attempt += 1) {
+            if (last.output_file_id) {
+                return last;
+            }
+            if (['failed', 'expired', 'cancelled'].includes(last.status)) {
+                return last;
+            }
+            if (last.status !== 'completed' && last.status !== 'finalizing') {
+                return last;
+            }
+            await new Promise((resolve) => setTimeout(resolve, delayMs));
+            last = await this.getBatchStatus(batchId);
+        }
+        return last;
+    }
+
     async getBatchResults(outputFileId: string): Promise<OpenAiBatchResult[]> {
         const fileResponse = await this.client.files.content(outputFileId);
         const text = await fileResponse.text();
 
-        return text
-            .split('\n')
-            .filter((line) => line.trim())
-            .map((line) => {
-                const parsed = JSON.parse(line);
-                const choice = parsed.response?.body?.choices?.[0];
-                return {
-                    custom_id: parsed.custom_id as string,
-                    status_code: parsed.response?.status_code as number,
-                    content: choice?.message?.content ?? null,
-                    error: parsed.error ? JSON.stringify(parsed.error) : null,
+        const results: OpenAiBatchResult[] = [];
+        for (const line of text.split('\n')) {
+            const trimmed = line.trim();
+            if (!trimmed) continue;
+
+            try {
+                const parsed = JSON.parse(trimmed) as {
+                    custom_id?: string;
+                    response?: { status_code?: number; body?: unknown };
+                    error?: unknown;
                 };
-            });
+
+                const statusCode = parsed.response?.status_code;
+                let body = parsed.response?.body;
+                if (typeof body === 'string') {
+                    try {
+                        body = JSON.parse(body);
+                    } catch {
+                        body = null;
+                    }
+                }
+
+                const bodyObj = body as { choices?: Array<{ message?: { content?: string | null } }> } | null;
+                const choice = bodyObj?.choices?.[0];
+                const content =
+                    typeof choice?.message?.content === 'string' ? choice.message.content : null;
+
+                const error =
+                    parsed.error != null
+                        ? JSON.stringify(parsed.error)
+                        : statusCode != null && statusCode >= 400
+                          ? JSON.stringify(body ?? { status_code: statusCode })
+                          : null;
+
+                results.push({
+                    custom_id: String(parsed.custom_id ?? ''),
+                    status_code: statusCode ?? 0,
+                    content,
+                    error,
+                });
+            } catch (err) {
+                const message = err instanceof Error ? err.message : 'parse error';
+                this.logger.warn(`Failed to parse batch output line: ${message}`);
+            }
+        }
+
+        return results;
     }
 
     async verifyWebhookEvent(rawBody: string, headers: Record<string, string>): Promise<unknown> {
