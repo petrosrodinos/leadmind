@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Button, Chip } from "@heroui/react";
-import { ChevronDown, ChevronUp, Pencil, Trash2 } from "lucide-react";
+import { Check, ChevronDown, ChevronUp, Copy, Pencil, Trash2 } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
 import { useCampaignDraftMessages, useDeleteCampaignDraftMessage } from "@/features/marketing-campaigns/hooks/use-marketing-campaigns";
 import type { DraftMessage } from "@/features/marketing-campaigns/interfaces/campaign.interface";
 import { CampaignContactStatuses } from "@/features/marketing-campaigns/interfaces/campaign.interface";
@@ -164,15 +166,29 @@ function DraftRow({ msg, isDeletePending, onEdit, onDelete }: DraftRowProps) {
             >
                 <td className="px-4 py-3">
                     <div className="font-medium text-foreground">{contactName}</div>
+                    {msg.contact.email ? (
+                        <div className="mt-1 flex items-center gap-1 min-w-0">
+                            <span className="text-xs text-muted truncate">{msg.contact.email}</span>
+                            <CopyButton value={msg.contact.email} label="email" />
+                        </div>
+                    ) : (
+                        <div className="text-xs text-muted mt-1">No email</div>
+                    )}
                     {msg.contact.company && (
                         <div className="text-xs text-muted">{msg.contact.company}</div>
                     )}
                 </td>
                 <td className="px-4 py-3 max-w-xs">
                     {msg.subject && (
-                        <div className="font-medium text-foreground truncate">{msg.subject}</div>
+                        <div className="flex items-center gap-1 min-w-0">
+                            <span className="font-medium text-foreground truncate">{msg.subject}</span>
+                            <CopyButton value={msg.subject} label="subject" />
+                        </div>
                     )}
-                    <div className="text-muted truncate">{preview}…</div>
+                    <div className="flex items-center gap-1 min-w-0 mt-0.5">
+                        <span className="text-muted truncate">{preview}…</span>
+                        <CopyButton value={stripHtml(msg.content)} label="message" />
+                    </div>
                 </td>
                 <td className="px-4 py-3">
                     <StatusChip status={msg.status} />
@@ -208,12 +224,18 @@ function DraftRow({ msg, isDeletePending, onEdit, onDelete }: DraftRowProps) {
                 <tr className="border-b border-border last:border-0 bg-surface-secondary/20">
                     <td colSpan={5} className="px-4 py-4">
                         {msg.subject && (
-                            <div className="mb-2">
-                                <span className="text-xs text-muted uppercase tracking-wide">Subject</span>
+                            <div className="mb-3">
+                                <div className="flex items-center gap-2 mb-1">
+                                    <span className="text-xs text-muted uppercase tracking-wide">Subject</span>
+                                    <CopyButton value={msg.subject} label="subject" />
+                                </div>
                                 <div className="font-medium text-foreground">{msg.subject}</div>
                             </div>
                         )}
-                        <div className="text-xs text-muted uppercase tracking-wide mb-1">Message</div>
+                        <div className="flex items-center gap-2 mb-1">
+                            <span className="text-xs text-muted uppercase tracking-wide">Message</span>
+                            <CopyButton value={stripHtml(msg.content)} label="message" />
+                        </div>
                         <div
                             className="prose prose-sm max-w-none text-sm"
                             // eslint-disable-next-line react/no-danger
@@ -242,4 +264,44 @@ function StatusChip({ status }: { status: string }) {
 
 function stripHtml(html: string): string {
     return html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+}
+
+function CopyButton({ value, label }: { value: string; label: string }) {
+    const [copied, setCopied] = useState(false);
+
+    const handleCopy = async () => {
+        if (!value) return;
+        try {
+            await navigator.clipboard.writeText(value);
+            setCopied(true);
+            toast({ title: `Copied ${label}`, variant: "success", duration: 1500 });
+            window.setTimeout(() => setCopied(false), 1200);
+        } catch {
+            toast({ title: "Couldn't copy to clipboard", variant: "error" });
+        }
+    };
+
+    return (
+        <span
+            className="inline-flex shrink-0"
+            onClick={(e) => e.stopPropagation()}
+            onKeyDown={(e) => e.stopPropagation()}
+            role="presentation"
+        >
+            <Button
+                size="sm"
+                variant="ghost"
+                isDisabled={!value}
+                onPress={handleCopy}
+                aria-label={`Copy ${label}`}
+                className="shrink-0 min-w-7 h-7 px-1"
+            >
+                {copied ? (
+                    <Check className={cn("size-3.5 text-accent")} />
+                ) : (
+                    <Copy className="size-3.5 text-muted" />
+                )}
+            </Button>
+        </span>
+    );
 }

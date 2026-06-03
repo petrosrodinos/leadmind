@@ -11,8 +11,6 @@ export class AdminService {
     ) { }
 
     async listBatchJobs(dto: ListBatchJobsDto) {
-        void this.openAiBatchDispatchService.reconcileInProgressJobs(25);
-
         const page = dto.page ?? 1;
         const limit = dto.limit ?? 20;
         const skip = (page - 1) * limit;

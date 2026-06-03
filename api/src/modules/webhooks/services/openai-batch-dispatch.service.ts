@@ -68,42 +68,6 @@ export class OpenAiBatchDispatchService {
         }
     }
 
-    async reconcileInProgressJobs(limit = 25): Promise<number> {
-        const jobs = await this.prisma.openAiBatchJob.findMany({
-            where: { status: OpenAiBatchStatus.IN_PROGRESS },
-            orderBy: { created_at: 'asc' },
-            take: limit,
-            select: { batch_id: true },
-        });
-
-        let processed = 0;
-        for (const job of jobs) {
-            try {
-                const before = await this.prisma.openAiBatchJob.findUnique({
-                    where: { batch_id: job.batch_id },
-                    select: { status: true },
-                });
-                await this.processBatchCompletion(job.batch_id);
-                const after = await this.prisma.openAiBatchJob.findUnique({
-                    where: { batch_id: job.batch_id },
-                    select: { status: true },
-                });
-                if (before?.status === OpenAiBatchStatus.IN_PROGRESS && after?.status !== OpenAiBatchStatus.IN_PROGRESS) {
-                    processed += 1;
-                }
-            } catch (err) {
-                const message = err instanceof Error ? err.message : 'Unknown error';
-                this.logger.error(`Failed to reconcile batch ${job.batch_id}: ${message}`);
-            }
-        }
-
-        if (processed > 0) {
-            this.logger.log(`Reconciled ${processed} completed OpenAI batch job(s)`);
-        }
-
-        return processed;
-    }
-
     private mapTerminalStatus(openAiStatus: string): OpenAiBatchStatus {
         switch (openAiStatus) {
             case 'failed':

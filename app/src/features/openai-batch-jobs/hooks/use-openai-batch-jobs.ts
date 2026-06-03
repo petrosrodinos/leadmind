@@ -12,9 +12,5 @@ export function useBatchJobs(query: ListBatchJobsQuery) {
         queryKey: batchJobsQueryKeys.list(query),
         queryFn: () => listBatchJobs(query),
         placeholderData: (prev) => prev,
-        refetchInterval: (q) => {
-            const rows = q.state.data?.data ?? [];
-            return rows.some((job) => job.status === "IN_PROGRESS") ? 30_000 : false;
-        },
     });
 }
