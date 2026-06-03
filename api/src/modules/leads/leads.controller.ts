@@ -7,6 +7,7 @@ import {
     ApiTags,
 } from '@nestjs/swagger';
 import { EnrichmentSource, SourceType } from '@/generated/prisma';
+import { CurrentUser } from '@/shared/decorators/current-user.decorator';
 import { JwtGuard } from '@/shared/guards/jwt.guard';
 import { RolesGuard } from '@/shared/guards/roles.guard';
 import { Roles } from '@/shared/decorators/roles.decorator';
@@ -42,8 +43,8 @@ export class LeadsController {
     @ApiOperation({ summary: 'Enqueue AI enrichment for multiple leads (admin only)' })
     @ApiResponse({ status: 201, description: 'Enrichment jobs enqueued' })
     @ApiResponse({ status: 404, description: 'One or more leads not found' })
-    triggerBulkEnrich(@Body() dto: BulkEnrichLeadsDto) {
-        return this.leadsService.triggerBulkEnrich(dto);
+    triggerBulkEnrich(@CurrentUser('uuid') user_uuid: string, @Body() dto: BulkEnrichLeadsDto) {
+        return this.leadsService.triggerBulkEnrich(user_uuid, dto);
     }
 
     @Get(':uuid/enrichments')
@@ -90,7 +91,11 @@ export class LeadsController {
     @ApiOperation({ summary: 'Enqueue AI enrichment for a lead' })
     @ApiResponse({ status: 201, description: 'Enrichment job enqueued' })
     @ApiResponse({ status: 404, description: 'Lead not found' })
-    triggerEnrich(@Param('uuid') uuid: string, @Body() dto: EnrichLeadDto) {
-        return this.leadsService.triggerEnrich(uuid, dto);
+    triggerEnrich(
+        @CurrentUser('uuid') user_uuid: string,
+        @Param('uuid') uuid: string,
+        @Body() dto: EnrichLeadDto,
+    ) {
+        return this.leadsService.triggerEnrich(user_uuid, uuid, dto);
     }
 }

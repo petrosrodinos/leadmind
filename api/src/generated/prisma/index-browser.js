@@ -409,6 +409,7 @@ exports.Prisma.OpenAiBatchJobScalarFieldEnum = {
   error_file_id: 'error_file_id',
   expires_at: 'expires_at',
   finished_at: 'finished_at',
+  context: 'context',
   created_at: 'created_at',
   updated_at: 'updated_at'
 };

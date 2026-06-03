@@ -11,7 +11,11 @@ import { ListLeadEnrichmentsDto } from './dto/list-lead-enrichments.dto';
 import { ListLeadsDto } from './dto/list-leads.dto';
 import { UpdateLeadDto } from './dto/update-lead.dto';
 import { resolveLeadEnrichmentSources } from './utils/enrichment-sources.utils';
-import { enqueueLeadEnrichmentJob } from './utils/lead-enrichment-queue.utils';
+import {
+    enqueueLeadBatchEnrichPrepareJob,
+    enqueueLeadEnrichmentJob,
+} from './utils/lead-enrichment-queue.utils';
+import { LeadEnrichmentBatchService } from './services/lead-enrichment-batch.service';
 
 @Injectable()
 export class LeadsService {
@@ -19,6 +23,7 @@ export class LeadsService {
         private readonly prisma: PrismaService,
         @InjectQueue(AI_PROCESS_QUEUE) private readonly aiProcessQueue: Queue,
         private readonly elasticsearchService: ElasticsearchService,
+        private readonly leadEnrichmentBatchService: LeadEnrichmentBatchService,
     ) { }
 
     async findAll(query: ListLeadsDto): Promise<{
@@ -144,13 +149,43 @@ export class LeadsService {
         };
     }
 
-    async triggerEnrich(uuid: string, dto: EnrichLeadDto): Promise<{ jobId: string }> {
+    async triggerEnrich(
+        user_uuid: string,
+        uuid: string,
+        dto: EnrichLeadDto,
+    ): Promise<
+        | { jobId: string; is_batch: false }
+        | { batch_id: string; queued: number; is_batch: true }
+        | { jobId: string; queued: number; is_batch: true; gemi_only: true }
+    > {
         await this.findOne(uuid);
         const enrichment_sources: EnrichmentSource[] = resolveLeadEnrichmentSources(dto.sources);
-        return enqueueLeadEnrichmentJob(this.aiProcessQueue, uuid, enrichment_sources);
+
+        if (dto.use_batch) {
+            const result = await this.leadEnrichmentBatchService.prepareAndSubmitBulk(
+                user_uuid,
+                [uuid],
+                enrichment_sources,
+            );
+            if (result.gemi_only) {
+                return { jobId: '', queued: 0, is_batch: true, gemi_only: true };
+            }
+            return { batch_id: result.batch_id, queued: result.queued, is_batch: true as const };
+        }
+
+        const job = await enqueueLeadEnrichmentJob(this.aiProcessQueue, uuid, enrichment_sources);
+        return { jobId: job.jobId, is_batch: false as const };
     }
 
-    async triggerBulkEnrich(dto: BulkEnrichLeadsDto): Promise<{ jobIds: string[] }> {
+    async triggerBulkEnrich(
+        user_uuid: string,
+        dto: BulkEnrichLeadsDto,
+    ): Promise<
+        | { jobIds: string[]; queued: number; is_batch: false }
+        | { batch_id: string; queued: number; is_batch: true }
+        | { prepare_job_id: string; queued: number; is_batch: true }
+        | { jobIds: string[]; queued: number; is_batch: true; gemi_only: true }
+    > {
         const unique = [...new Set(dto.uuids)];
         const existing = await this.prisma.lead.findMany({
             where: { uuid: { in: unique } },
@@ -162,9 +197,33 @@ export class LeadsService {
             throw new NotFoundException(`Lead(s) not found: ${missing.join(', ')}`);
         }
         const enrichment_sources: EnrichmentSource[] = resolveLeadEnrichmentSources(dto.sources);
+
+        if (dto.use_batch) {
+            if (unique.length === 1) {
+                const result = await this.leadEnrichmentBatchService.prepareAndSubmitBulk(
+                    user_uuid,
+                    unique,
+                    enrichment_sources,
+                );
+                if (result.gemi_only) {
+                    return { jobIds: [], queued: 0, is_batch: true, gemi_only: true };
+                }
+                return { batch_id: result.batch_id, queued: result.queued, is_batch: true as const };
+            }
+
+            const job = await enqueueLeadBatchEnrichPrepareJob(
+                this.aiProcessQueue,
+                user_uuid,
+                unique,
+                enrichment_sources,
+            );
+            return { prepare_job_id: job.jobId, queued: unique.length, is_batch: true as const };
+        }
+
         const jobs = await Promise.all(
             unique.map((leadUuid) => enqueueLeadEnrichmentJob(this.aiProcessQueue, leadUuid, enrichment_sources)),
         );
-        return { jobIds: jobs.map((j) => j.jobId) };
+        const jobIds = jobs.map((j) => j.jobId);
+        return { jobIds, queued: jobIds.length, is_batch: false as const };
     }
 }

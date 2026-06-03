@@ -167,7 +167,9 @@ export default function LeadDirectoryDetailPage() {
                   ? "Uses registry data on file, fetches public GEMI documents, then runs with your other selected sources."
                   : undefined
               }
-              onEnrich={(sources) => enrich.mutate({ uuid: lead.uuid, sources })}
+              onEnrich={(sources, options) =>
+                enrich.mutate({ uuid: lead.uuid, sources, use_batch: options?.use_batch })
+              }
             />
           </>
         )}

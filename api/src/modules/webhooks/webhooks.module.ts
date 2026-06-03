@@ -5,6 +5,7 @@ import { AiIntegrationModule } from '@/integrations/ai/ai.module';
 import { ResendModule } from '@/integrations/notifications/resend/resend.module';
 import { MarketingCampaignsModule } from '@/modules/marketing-campaigns/marketing-campaigns.module';
 import { ContactsModule } from '@/modules/contacts/contacts.module';
+import { LeadsModule } from '@/modules/leads/leads.module';
 import { ResendWebhookController } from './resend-webhook.controller';
 import { TwilioWebhookController } from './twilio-webhook.controller';
 import { UnsubscribeController } from './unsubscribe.controller';
@@ -21,6 +22,7 @@ import { CampaignUtmAnalyticsService } from './services/campaign-utm-analytics.s
         AiIntegrationModule,
         MarketingCampaignsModule,
         ContactsModule,
+        LeadsModule,
     ],
     controllers: [
         ResendWebhookController,

@@ -4,14 +4,21 @@ import { Job } from 'bullmq';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { ContactAiService } from '@/modules/contacts/services/contact-ai.service';
 import { LeadEnrichmentOrchestrator } from '@/modules/leads/services/lead-enrichment.orchestrator';
+import { LeadEnrichmentBatchService } from '@/modules/leads/services/lead-enrichment-batch.service';
 import { AI_PROCESS_QUEUE } from '@/core/queues/queues.constants';
-import { AiProcessJobData, LeadJobData } from './interfaces/workers.interfaces';
-import { ContactJobData } from './interfaces/workers.interfaces';
 import {
+    AiProcessJobData,
+    ContactJobData,
+    LeadBatchEnrichPrepareJobData,
+    LeadJobData,
+} from './interfaces/workers.interfaces';
+import {
+    isLeadBatchEnrichPrepareJob,
     isLeadJob,
     resolveContactEnrichmentSources,
     resolveLeadJobEnrichmentSources,
 } from './utils/workers.utils';
+import { resolveLeadEnrichmentSources } from '@/modules/leads/utils/enrichment-sources.utils';
 
 @Processor(AI_PROCESS_QUEUE, { concurrency: 5 })
 export class AiProcessWorker extends WorkerHost {
@@ -21,16 +28,36 @@ export class AiProcessWorker extends WorkerHost {
         private readonly prisma: PrismaService,
         private readonly contactAiService: ContactAiService,
         private readonly leadEnrichmentOrchestrator: LeadEnrichmentOrchestrator,
+        private readonly leadEnrichmentBatchService: LeadEnrichmentBatchService,
     ) {
         super();
     }
 
     async process(job: Job<AiProcessJobData>): Promise<void> {
+        if (isLeadBatchEnrichPrepareJob(job.data)) {
+            await this.processLeadBatchEnrichPrepare(job.data);
+            return;
+        }
         if (isLeadJob(job.data)) {
             await this.processLeadJob(job.data);
             return;
         }
         await this.processContactJob(job.data);
+    }
+
+    private async processLeadBatchEnrichPrepare(data: LeadBatchEnrichPrepareJobData): Promise<void> {
+        const sources = resolveLeadEnrichmentSources(data.enrichment_sources);
+        try {
+            await this.leadEnrichmentBatchService.prepareAndSubmitBulk(
+                data.user_uuid,
+                data.lead_uuids,
+                sources,
+            );
+        } catch (error) {
+            this.logger.error(
+                `Lead batch enrich prepare failed: ${this.errMsg(error)}`,
+            );
+        }
     }
 
     private async processLeadJob(data: LeadJobData): Promise<void> {

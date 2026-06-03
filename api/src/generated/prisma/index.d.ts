@@ -24723,6 +24723,7 @@ export namespace Prisma {
     error_file_id: number
     expires_at: number
     finished_at: number
+    context: number
     created_at: number
     updated_at: number
     _all: number
@@ -24791,6 +24792,7 @@ export namespace Prisma {
     error_file_id?: true
     expires_at?: true
     finished_at?: true
+    context?: true
     created_at?: true
     updated_at?: true
     _all?: true
@@ -24896,6 +24898,7 @@ export namespace Prisma {
     error_file_id: string | null
     expires_at: Date | null
     finished_at: Date | null
+    context: JsonValue | null
     created_at: Date
     updated_at: Date
     _count: OpenAiBatchJobCountAggregateOutputType | null
@@ -24933,6 +24936,7 @@ export namespace Prisma {
     error_file_id?: boolean
     expires_at?: boolean
     finished_at?: boolean
+    context?: boolean
     created_at?: boolean
     updated_at?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -24952,6 +24956,7 @@ export namespace Prisma {
     error_file_id?: boolean
     expires_at?: boolean
     finished_at?: boolean
+    context?: boolean
     created_at?: boolean
     updated_at?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -24971,6 +24976,7 @@ export namespace Prisma {
     error_file_id?: boolean
     expires_at?: boolean
     finished_at?: boolean
+    context?: boolean
     created_at?: boolean
     updated_at?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -24990,11 +24996,12 @@ export namespace Prisma {
     error_file_id?: boolean
     expires_at?: boolean
     finished_at?: boolean
+    context?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type OpenAiBatchJobOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "batch_id" | "user_uuid" | "type" | "status" | "total_requests" | "completed_requests" | "failed_requests" | "input_file_id" | "output_file_id" | "error_file_id" | "expires_at" | "finished_at" | "created_at" | "updated_at", ExtArgs["result"]["openAiBatchJob"]>
+  export type OpenAiBatchJobOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "batch_id" | "user_uuid" | "type" | "status" | "total_requests" | "completed_requests" | "failed_requests" | "input_file_id" | "output_file_id" | "error_file_id" | "expires_at" | "finished_at" | "context" | "created_at" | "updated_at", ExtArgs["result"]["openAiBatchJob"]>
   export type OpenAiBatchJobInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -25024,6 +25031,7 @@ export namespace Prisma {
       error_file_id: string | null
       expires_at: Date | null
       finished_at: Date | null
+      context: Prisma.JsonValue | null
       created_at: Date
       updated_at: Date
     }, ExtArgs["result"]["openAiBatchJob"]>
@@ -25463,6 +25471,7 @@ export namespace Prisma {
     readonly error_file_id: FieldRef<"OpenAiBatchJob", 'String'>
     readonly expires_at: FieldRef<"OpenAiBatchJob", 'DateTime'>
     readonly finished_at: FieldRef<"OpenAiBatchJob", 'DateTime'>
+    readonly context: FieldRef<"OpenAiBatchJob", 'Json'>
     readonly created_at: FieldRef<"OpenAiBatchJob", 'DateTime'>
     readonly updated_at: FieldRef<"OpenAiBatchJob", 'DateTime'>
   }
@@ -28525,6 +28534,7 @@ export namespace Prisma {
     error_file_id: 'error_file_id',
     expires_at: 'expires_at',
     finished_at: 'finished_at',
+    context: 'context',
     created_at: 'created_at',
     updated_at: 'updated_at'
   };
@@ -30746,6 +30756,7 @@ export namespace Prisma {
     error_file_id?: StringNullableFilter<"OpenAiBatchJob"> | string | null
     expires_at?: DateTimeNullableFilter<"OpenAiBatchJob"> | Date | string | null
     finished_at?: DateTimeNullableFilter<"OpenAiBatchJob"> | Date | string | null
+    context?: JsonNullableFilter<"OpenAiBatchJob">
     created_at?: DateTimeFilter<"OpenAiBatchJob"> | Date | string
     updated_at?: DateTimeFilter<"OpenAiBatchJob"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -30765,6 +30776,7 @@ export namespace Prisma {
     error_file_id?: SortOrderInput | SortOrder
     expires_at?: SortOrderInput | SortOrder
     finished_at?: SortOrderInput | SortOrder
+    context?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     user?: UserOrderByWithRelationInput
@@ -30787,6 +30799,7 @@ export namespace Prisma {
     error_file_id?: StringNullableFilter<"OpenAiBatchJob"> | string | null
     expires_at?: DateTimeNullableFilter<"OpenAiBatchJob"> | Date | string | null
     finished_at?: DateTimeNullableFilter<"OpenAiBatchJob"> | Date | string | null
+    context?: JsonNullableFilter<"OpenAiBatchJob">
     created_at?: DateTimeFilter<"OpenAiBatchJob"> | Date | string
     updated_at?: DateTimeFilter<"OpenAiBatchJob"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -30806,6 +30819,7 @@ export namespace Prisma {
     error_file_id?: SortOrderInput | SortOrder
     expires_at?: SortOrderInput | SortOrder
     finished_at?: SortOrderInput | SortOrder
+    context?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     _count?: OpenAiBatchJobCountOrderByAggregateInput
@@ -30832,6 +30846,7 @@ export namespace Prisma {
     error_file_id?: StringNullableWithAggregatesFilter<"OpenAiBatchJob"> | string | null
     expires_at?: DateTimeNullableWithAggregatesFilter<"OpenAiBatchJob"> | Date | string | null
     finished_at?: DateTimeNullableWithAggregatesFilter<"OpenAiBatchJob"> | Date | string | null
+    context?: JsonNullableWithAggregatesFilter<"OpenAiBatchJob">
     created_at?: DateTimeWithAggregatesFilter<"OpenAiBatchJob"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"OpenAiBatchJob"> | Date | string
   }
@@ -32964,6 +32979,7 @@ export namespace Prisma {
     error_file_id?: string | null
     expires_at?: Date | string | null
     finished_at?: Date | string | null
+    context?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutOpenai_batch_jobsInput
@@ -32983,6 +32999,7 @@ export namespace Prisma {
     error_file_id?: string | null
     expires_at?: Date | string | null
     finished_at?: Date | string | null
+    context?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -33000,6 +33017,7 @@ export namespace Prisma {
     error_file_id?: NullableStringFieldUpdateOperationsInput | string | null
     expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     finished_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    context?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutOpenai_batch_jobsNestedInput
@@ -33019,6 +33037,7 @@ export namespace Prisma {
     error_file_id?: NullableStringFieldUpdateOperationsInput | string | null
     expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     finished_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    context?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -33037,6 +33056,7 @@ export namespace Prisma {
     error_file_id?: string | null
     expires_at?: Date | string | null
     finished_at?: Date | string | null
+    context?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -33054,6 +33074,7 @@ export namespace Prisma {
     error_file_id?: NullableStringFieldUpdateOperationsInput | string | null
     expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     finished_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    context?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -33072,6 +33093,7 @@ export namespace Prisma {
     error_file_id?: NullableStringFieldUpdateOperationsInput | string | null
     expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     finished_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    context?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -35026,6 +35048,7 @@ export namespace Prisma {
     error_file_id?: SortOrder
     expires_at?: SortOrder
     finished_at?: SortOrder
+    context?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -38047,6 +38070,7 @@ export namespace Prisma {
     error_file_id?: string | null
     expires_at?: Date | string | null
     finished_at?: Date | string | null
+    context?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -38064,6 +38088,7 @@ export namespace Prisma {
     error_file_id?: string | null
     expires_at?: Date | string | null
     finished_at?: Date | string | null
+    context?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -38458,6 +38483,7 @@ export namespace Prisma {
     error_file_id?: StringNullableFilter<"OpenAiBatchJob"> | string | null
     expires_at?: DateTimeNullableFilter<"OpenAiBatchJob"> | Date | string | null
     finished_at?: DateTimeNullableFilter<"OpenAiBatchJob"> | Date | string | null
+    context?: JsonNullableFilter<"OpenAiBatchJob">
     created_at?: DateTimeFilter<"OpenAiBatchJob"> | Date | string
     updated_at?: DateTimeFilter<"OpenAiBatchJob"> | Date | string
   }
@@ -43120,6 +43146,7 @@ export namespace Prisma {
     error_file_id?: string | null
     expires_at?: Date | string | null
     finished_at?: Date | string | null
+    context?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -43644,6 +43671,7 @@ export namespace Prisma {
     error_file_id?: NullableStringFieldUpdateOperationsInput | string | null
     expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     finished_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    context?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -43661,6 +43689,7 @@ export namespace Prisma {
     error_file_id?: NullableStringFieldUpdateOperationsInput | string | null
     expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     finished_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    context?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -43678,6 +43707,7 @@ export namespace Prisma {
     error_file_id?: NullableStringFieldUpdateOperationsInput | string | null
     expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     finished_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    context?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }

@@ -16,4 +16,11 @@ export interface LeadJobData {
     force_enrichment?: boolean;
 }
 
-export type AiProcessJobData = ContactJobData | LeadJobData;
+export interface LeadBatchEnrichPrepareJobData {
+    job_kind: 'lead_batch_enrich_prepare';
+    user_uuid: string;
+    lead_uuids: string[];
+    enrichment_sources?: EnrichmentSource[];
+}
+
+export type AiProcessJobData = ContactJobData | LeadJobData | LeadBatchEnrichPrepareJobData;

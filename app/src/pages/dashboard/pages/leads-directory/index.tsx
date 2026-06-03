@@ -230,10 +230,10 @@ export default function LeadsDirectoryPage() {
           mode="lead"
           isPending={enrichBulk.isPending}
           contextHint={bulkContextHint}
-          onEnrich={(sources) => {
+          onEnrich={(sources, options) => {
             if (selectedKeys.size === 0) return;
             enrichBulk.mutate(
-              { uuids: [...selectedKeys], sources },
+              { uuids: [...selectedKeys], sources, use_batch: options?.use_batch },
               {
                 onSuccess: () => {
                   setSelectedKeys(new Set());

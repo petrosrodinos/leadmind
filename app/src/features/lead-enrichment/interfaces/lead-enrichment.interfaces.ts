@@ -29,6 +29,13 @@ export interface PaginatedLeadEnrichments {
     totalPages: number;
 }
 
-export interface BulkEnrichLeadsResponse {
-    jobIds: string[];
-}
+export type EnrichLeadResponse =
+    | { jobId: string; is_batch: false }
+    | { batch_id: string; queued: number; is_batch: true }
+    | { jobId: string; queued: number; is_batch: true; gemi_only: true };
+
+export type BulkEnrichLeadsResponse =
+    | { jobIds: string[]; queued: number; is_batch: false }
+    | { batch_id: string; queued: number; is_batch: true }
+    | { prepare_job_id: string; queued: number; is_batch: true }
+    | { jobIds: string[]; queued: number; is_batch: true; gemi_only: true };

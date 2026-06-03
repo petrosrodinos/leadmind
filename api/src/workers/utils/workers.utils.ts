@@ -1,12 +1,22 @@
 import { EnrichmentSource } from "@/generated/prisma";
-import { ContactJobData, LeadJobData, AiProcessJobData } from "../interfaces/workers.interfaces";
+import {
+    ContactJobData,
+    LeadJobData,
+    LeadBatchEnrichPrepareJobData,
+    AiProcessJobData,
+} from "../interfaces/workers.interfaces";
 import {
     resolveContactEnrichmentSources as resolveContactSourceList,
     resolveLeadEnrichmentSources,
 } from '@/modules/leads/utils/enrichment-sources.utils';
 
+export const isLeadBatchEnrichPrepareJob = (
+    data: AiProcessJobData,
+): data is LeadBatchEnrichPrepareJobData =>
+    'job_kind' in data && data.job_kind === 'lead_batch_enrich_prepare';
+
 export const isLeadJob = (data: AiProcessJobData): data is LeadJobData =>
-    'lead_uuid' in data && data.lead_uuid != null;
+    'lead_uuid' in data && data.lead_uuid != null && !isLeadBatchEnrichPrepareJob(data);
 
 export function resolveContactEnrichmentSources(
     job: ContactJobData,

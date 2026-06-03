@@ -576,6 +576,7 @@ model OpenAiBatchJob {
   error_file_id      String?
   expires_at         DateTime?
   finished_at        DateTime?
+  context            Json?
   created_at         DateTime           @default(now())
   updated_at         DateTime           @updatedAt
   user               User               @relation(fields: [user_uuid], references: [uuid])

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Modal, Popover } from "@heroui/react";
+import { Checkbox, Modal, Popover } from "@heroui/react";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import { Check, Sparkles, X } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -18,7 +18,7 @@ export interface EnrichmentActionPopoverProps {
     initialSources?: EnrichmentSource[];
     sourceOptions?: EnrichmentSourceOption[];
     isPending: boolean;
-    onEnrich: (sources: EnrichmentSource[]) => void;
+    onEnrich: (sources: EnrichmentSource[], options?: { use_batch?: boolean }) => void;
     placement?: "bottom start" | "bottom end" | "top start" | "top end";
     triggerSize?: "sm" | "md" | "lg";
     triggerVariant?: "primary" | "secondary" | "tertiary";
@@ -31,7 +31,7 @@ export interface EnrichmentRunModalProps {
     initialSources?: EnrichmentSource[];
     sourceOptions?: EnrichmentSourceOption[];
     isPending: boolean;
-    onEnrich: (sources: EnrichmentSource[]) => void;
+    onEnrich: (sources: EnrichmentSource[], options?: { use_batch?: boolean }) => void;
     contextHint?: string;
 }
 
@@ -87,10 +87,11 @@ function EnrichmentRunPanel({
     sourceOptions?: EnrichmentSourceOption[];
     isPending: boolean;
     onCancel: () => void;
-    onConfirm: (sources: EnrichmentSource[]) => void;
+    onConfirm: (sources: EnrichmentSource[], options?: { use_batch?: boolean }) => void;
     contextHint?: string;
 }) {
     const [selected, setSelected] = useState<EnrichmentSource[]>([]);
+    const [useBatch, setUseBatch] = useState(mode === "lead");
 
     const baseline = useMemo(
         () => baselineSources(mode, initialSources),
@@ -100,8 +101,9 @@ function EnrichmentRunPanel({
     useEffect(() => {
         if (isActive) {
             setSelected(baseline);
+            setUseBatch(mode === "lead");
         }
-    }, [isActive, baseline]);
+    }, [isActive, baseline, mode]);
 
     const toggleSource = (id: EnrichmentSource) => {
         setSelected((prev) =>
@@ -111,7 +113,7 @@ function EnrichmentRunPanel({
 
     const handleConfirm = () => {
         if (selected.length === 0) return;
-        onConfirm(selected);
+        onConfirm(selected, mode === "lead" ? { use_batch: useBatch } : undefined);
     };
 
     return (
@@ -206,6 +208,23 @@ function EnrichmentRunPanel({
                 })}
             </div>
 
+            {mode === "lead" ? (
+                <div className="px-2.5 py-2 border-t border-border/50">
+                    <Checkbox
+                        isSelected={useBatch}
+                        onChange={(checked: boolean) => setUseBatch(checked)}
+                        isDisabled={isPending}
+                    >
+                        <Checkbox.Control>
+                            <Checkbox.Indicator />
+                        </Checkbox.Control>
+                        <span className="text-xs text-muted">
+                            Use OpenAI Batch API for all sources and combined summary (50% cheaper, within 24h)
+                        </span>
+                    </Checkbox>
+                </div>
+            ) : null}
+
             <div className="flex items-center justify-between gap-2 px-2.5 py-2 border-t border-border/50 bg-surface-secondary/35">
                 <p className="text-[10px] text-muted tabular-nums">
                     {selected.length}/{sourceOptions.length}
@@ -265,8 +284,8 @@ export function EnrichmentRunModal({
                         isPending={isPending}
                         contextHint={contextHint}
                         onCancel={() => onOpenChange(false)}
-                        onConfirm={(sources) => {
-                            onEnrich(sources);
+                        onConfirm={(sources, options) => {
+                            onEnrich(sources, options);
                             onOpenChange(false);
                         }}
                     />
@@ -317,8 +336,8 @@ export function EnrichmentActionPopover({
                         sourceOptions={sourceOptions}
                         isPending={isPending}
                         onCancel={() => setOpen(false)}
-                        onConfirm={(sources) => {
-                            onEnrich(sources);
+                        onConfirm={(sources, options) => {
+                            onEnrich(sources, options);
                             setOpen(false);
                         }}
                     />

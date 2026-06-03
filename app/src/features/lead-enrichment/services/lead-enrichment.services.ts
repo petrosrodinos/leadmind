@@ -3,6 +3,7 @@ import { ApiRoutes } from "@/config/api/routes";
 import type { EnrichmentSource } from "@/features/lead-enrichment/constants/enrichment-sources";
 import type {
     BulkEnrichLeadsResponse,
+    EnrichLeadResponse,
     ListLeadEnrichmentsQuery,
     PaginatedLeadEnrichments,
 } from "../interfaces/lead-enrichment.interfaces";
@@ -21,8 +22,8 @@ export const listLeadEnrichments = async (
 
 export const enrichLead = async (
     uuid: string,
-    payload: { sources?: EnrichmentSource[] } = {},
-): Promise<{ jobId: string }> => {
+    payload: { sources?: EnrichmentSource[]; use_batch?: boolean } = {},
+): Promise<EnrichLeadResponse> => {
     try {
         const response = await axiosInstance.post(ApiRoutes.leads.enrich(uuid), payload);
         return response.data;
@@ -34,6 +35,7 @@ export const enrichLead = async (
 export const enrichLeadsBulk = async (payload: {
     uuids: string[];
     sources?: EnrichmentSource[];
+    use_batch?: boolean;
 }): Promise<BulkEnrichLeadsResponse> => {
     try {
         const response = await axiosInstance.post(ApiRoutes.leads.bulk_enrich, payload);

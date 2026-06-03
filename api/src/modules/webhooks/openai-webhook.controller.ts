@@ -3,6 +3,7 @@ import { Request } from 'express';
 import { OpenAiBatchJobType } from '@/generated/prisma';
 import { OpenAiBatchService } from '@/integrations/ai/services/openai-batch.service';
 import { ContactAiService } from '@/modules/contacts/services/contact-ai.service';
+import { LeadEnrichmentBatchService } from '@/modules/leads/services/lead-enrichment-batch.service';
 
 @Controller('webhooks/openai')
 export class OpenAiWebhookController {
@@ -11,6 +12,7 @@ export class OpenAiWebhookController {
     constructor(
         private readonly openAiBatchService: OpenAiBatchService,
         private readonly contactAiService: ContactAiService,
+        private readonly leadEnrichmentBatchService: LeadEnrichmentBatchService,
     ) { }
 
     @Post()
@@ -37,8 +39,12 @@ export class OpenAiWebhookController {
             if (!batchId) return;
 
             try {
-                const job = await this.contactAiService.findBatchJob(batchId);
-                if (job?.type === OpenAiBatchJobType.MESSAGE_CREATE) {
+                const job =
+                    (await this.contactAiService.findBatchJob(batchId)) ??
+                    (await this.leadEnrichmentBatchService.findBatchJob(batchId));
+                if (job?.type === OpenAiBatchJobType.LEAD_ENRICH) {
+                    await this.leadEnrichmentBatchService.processBatchResults(batchId);
+                } else if (job?.type === OpenAiBatchJobType.MESSAGE_CREATE) {
                     await this.contactAiService.processBatchMessageCreateResults(batchId);
                 } else {
                     await this.contactAiService.processBatchScoreResults(batchId);
