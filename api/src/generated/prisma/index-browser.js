@@ -511,6 +511,7 @@ exports.InteractionType = exports.$Enums.InteractionType = {
   NOTE: 'NOTE',
   CALL: 'CALL',
   EMAIL: 'EMAIL',
+  SMS: 'SMS',
   MEETING: 'MEETING',
   STATUS_CHANGE: 'STATUS_CHANGE',
   CAMPAIGN_EMAIL_SENT: 'CAMPAIGN_EMAIL_SENT',

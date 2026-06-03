@@ -16,8 +16,7 @@ import {
 } from "@/features/marketing-campaigns/interfaces/campaign.interface";
 import { Routes } from "@/routes/routes";
 import { CampaignStatusBadge } from "../../components/campaign-status-badge";
-import { StatsCards } from "../../components/stats-cards";
-import { CampaignAnalytics } from "../../components/campaign-analytics";
+import { CampaignStatsSection } from "../../components/campaign-stats-section";
 import { RecipientsTable } from "../../components/recipients-table";
 import { CampaignActionsDropdown } from "../../components/campaign-actions-dropdown";
 import { CampaignDetailSkeleton } from "../../components/campaign-detail-skeleton";
@@ -106,8 +105,7 @@ export default function CampaignDetailPage() {
                 </p>
             )}
 
-            <StatsCards campaign={campaign} />
-            <CampaignAnalytics campaign={campaign} />
+            <CampaignStatsSection campaign={campaign} />
 
             {isPersonalized && (isDraftsReady || campaign.status === CampaignStatuses.SENDING || campaign.status === CampaignStatuses.COMPLETED) ? (
                 <section className="space-y-3">

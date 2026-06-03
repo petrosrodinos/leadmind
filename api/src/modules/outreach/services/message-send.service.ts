@@ -37,6 +37,7 @@ export class MessageSendService {
                 content: message.content,
                 campaign_uuid: message.campaign_uuid,
             },
+            message.contact,
         );
 
         if (message.channel === Channel.EMAIL) {

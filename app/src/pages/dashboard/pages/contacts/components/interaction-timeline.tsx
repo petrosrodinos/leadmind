@@ -8,6 +8,7 @@ import {
     MailOpen,
     Megaphone,
     MessageCircleReply,
+    MessageSquare,
     MousePointerClick,
     Phone,
     StickyNote,
@@ -25,6 +26,7 @@ import {
     type Interaction,
     type InteractionStatusChange,
     type MeetingMetadata,
+    type MessageMetadata,
 } from "@/features/contacts/interfaces/contact.interface";
 import { isLeadStatus } from "@/features/contacts/constants/contacts.constants";
 import { useContactInteractions } from "@/features/contacts/hooks/use-contacts";
@@ -33,6 +35,7 @@ import { cn } from "@/lib/utils";
 
 const ICONS: Record<InteractionType, React.ComponentType<{ className?: string }>> = {
     [InteractionType.EMAIL]: Mail,
+    [InteractionType.SMS]: MessageSquare,
     [InteractionType.CALL]: Phone,
     [InteractionType.NOTE]: StickyNote,
     [InteractionType.MEETING]: CalendarDays,
@@ -54,6 +57,7 @@ const ICONS: Record<InteractionType, React.ComponentType<{ className?: string }>
 
 const ICON_TONE: Record<InteractionType, string> = {
     [InteractionType.EMAIL]: "text-accent bg-accent/15 border-accent/30",
+    [InteractionType.SMS]: "text-accent bg-accent/15 border-accent/30",
     [InteractionType.CALL]: "text-fuchsia-600 bg-fuchsia-500/15 border-fuchsia-500/30",
     [InteractionType.NOTE]: "text-muted bg-surface-secondary border-border",
     [InteractionType.MEETING]: "text-emerald-600 bg-emerald-500/15 border-emerald-500/30",
@@ -75,6 +79,7 @@ const ICON_TONE: Record<InteractionType, string> = {
 
 const BADGE_COLOR: Record<InteractionType, "default" | "success" | "warning" | "danger"> = {
     [InteractionType.EMAIL]: "success",
+    [InteractionType.SMS]: "success",
     [InteractionType.CALL]: "warning",
     [InteractionType.NOTE]: "default",
     [InteractionType.MEETING]: "success",
@@ -95,7 +100,8 @@ const BADGE_COLOR: Record<InteractionType, "default" | "success" | "warning" | "
 };
 
 const BADGE_LABEL: Record<InteractionType, string> = {
-    [InteractionType.EMAIL]: "Email sent",
+    [InteractionType.EMAIL]: "Email",
+    [InteractionType.SMS]: "SMS",
     [InteractionType.CALL]: "Call",
     [InteractionType.NOTE]: "Note",
     [InteractionType.MEETING]: "Meeting",
@@ -159,6 +165,16 @@ function parseMeetingMetadata(raw: Interaction["metadata"]): MeetingMetadata | n
     const meta: MeetingMetadata = { occurred_at: o.occurred_at };
     if (typeof o.duration_minutes === "number") meta.duration_minutes = o.duration_minutes;
     if (typeof o.location === "string") meta.location = o.location;
+    return meta;
+}
+
+function parseMessageMetadata(raw: Interaction["metadata"]): MessageMetadata | null {
+    if (!raw || typeof raw !== "object") return null;
+    const o = raw as Record<string, unknown>;
+    if (!isCallDirection(o.direction)) return null;
+    const meta: MessageMetadata = { direction: o.direction };
+    if (typeof o.subject === "string") meta.subject = o.subject;
+    if (typeof o.occurred_at === "string") meta.occurred_at = o.occurred_at;
     return meta;
 }
 
@@ -239,6 +255,12 @@ export function InteractionTimeline({ contactUuid, onNavigateToOutreach }: Inter
                 const meetingMeta =
                     interaction.type === InteractionType.MEETING
                         ? parseMeetingMetadata(interaction.metadata)
+                        : null;
+                const messageMeta =
+                    (interaction.type === InteractionType.EMAIL ||
+                        interaction.type === InteractionType.SMS) &&
+                    !interaction.outreach_message
+                        ? parseMessageMetadata(interaction.metadata)
                         : null;
 
                 return (
@@ -326,6 +348,27 @@ export function InteractionTimeline({ contactUuid, onNavigateToOutreach }: Inter
                                     </div>
                                     {meetingMeta.location ? (
                                         <p className="text-xs text-muted mt-1 break-words">{meetingMeta.location}</p>
+                                    ) : null}
+                                    {interaction.content?.trim() ? (
+                                        <p className="text-sm text-foreground whitespace-pre-line break-words mt-2">
+                                            {interaction.content}
+                                        </p>
+                                    ) : null}
+                                </>
+                            ) : messageMeta ? (
+                                <>
+                                    <div className="flex flex-wrap items-center gap-2 mt-2 text-xs text-muted">
+                                        <Chip size="sm" variant="soft" color="default">
+                                            <Chip.Label>{CALL_DIRECTION_LABEL[messageMeta.direction]}</Chip.Label>
+                                        </Chip>
+                                        {messageMeta.occurred_at ? (
+                                            <span>{formatOccurredAt(messageMeta.occurred_at)}</span>
+                                        ) : null}
+                                    </div>
+                                    {messageMeta.subject ? (
+                                        <p className="text-sm font-medium text-foreground mt-2 break-words">
+                                            {messageMeta.subject}
+                                        </p>
                                     ) : null}
                                     {interaction.content?.trim() ? (
                                         <p className="text-sm text-foreground whitespace-pre-line break-words mt-2">

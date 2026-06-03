@@ -481,6 +481,19 @@ export class MarketingCampaignsService {
         );
     }
 
+    async sendDraftMessage(
+        user_uuid: string,
+        campaign_uuid: string,
+        message_uuid: string,
+    ): Promise<{ jobId: string }> {
+        await this.requireOwned(user_uuid, campaign_uuid);
+        return this.campaignMessageSend.queueDraftMessageSend(
+            user_uuid,
+            campaign_uuid,
+            message_uuid,
+        );
+    }
+
     async schedule(
         user_uuid: string,
         uuid: string,

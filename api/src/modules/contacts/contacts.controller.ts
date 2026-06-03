@@ -24,7 +24,9 @@ import { BulkTriggerScoreDto } from './dto/bulk-trigger-score.dto';
 import { CreateContactDto } from './dto/create-contact.dto';
 import { ListContactsDto } from './dto/list-contacts.dto';
 import { LogCallDto } from './dto/log-call.dto';
+import { LogEmailDto } from './dto/log-email.dto';
 import { LogMeetingDto } from './dto/log-meeting.dto';
+import { LogSmsDto } from './dto/log-sms.dto';
 import { UpdateContactDto } from './dto/update-contact.dto';
 import { UpdateStatusDto } from './dto/update-status.dto';
 import { UpdateTagsDto } from './dto/update-tags.dto';
@@ -155,6 +157,28 @@ export class ContactsController {
         @Body() dto: LogMeetingDto,
     ) {
         return this.contactsService.logMeeting(user_uuid, uuid, dto);
+    }
+
+    @Post(':uuid/emails')
+    @ApiOperation({ summary: 'Log an email (creates an Interaction of type EMAIL)' })
+    @ApiResponse({ status: 201 })
+    logEmail(
+        @CurrentUser('uuid') user_uuid: string,
+        @Param('uuid') uuid: string,
+        @Body() dto: LogEmailDto,
+    ) {
+        return this.contactsService.logEmail(user_uuid, uuid, dto);
+    }
+
+    @Post(':uuid/sms')
+    @ApiOperation({ summary: 'Log an SMS (creates an Interaction of type SMS)' })
+    @ApiResponse({ status: 201 })
+    logSms(
+        @CurrentUser('uuid') user_uuid: string,
+        @Param('uuid') uuid: string,
+        @Body() dto: LogSmsDto,
+    ) {
+        return this.contactsService.logSms(user_uuid, uuid, dto);
     }
 
     @Get(':uuid/interactions')

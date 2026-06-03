@@ -516,6 +516,7 @@ enum InteractionType {
   NOTE
   CALL
   EMAIL
+  SMS
   MEETING
   STATUS_CHANGE
   CAMPAIGN_EMAIL_SENT

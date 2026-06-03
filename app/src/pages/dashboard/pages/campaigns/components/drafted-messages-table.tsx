@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { Button, Chip } from "@heroui/react";
-import { Check, ChevronDown, ChevronUp, Copy, Pencil, Trash2 } from "lucide-react";
+import { Check, ChevronDown, ChevronUp, Copy, Pencil, Send, Trash2 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
-import { useCampaignDraftMessages, useDeleteCampaignDraftMessage } from "@/features/marketing-campaigns/hooks/use-marketing-campaigns";
+import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
+import { useCampaignDraftMessages, useDeleteCampaignDraftMessage, useSendCampaignDraftMessage } from "@/features/marketing-campaigns/hooks/use-marketing-campaigns";
 import type { DraftMessage } from "@/features/marketing-campaigns/interfaces/campaign.interface";
 import { CampaignContactStatuses } from "@/features/marketing-campaigns/interfaces/campaign.interface";
-import { MsgStatus } from "@/features/contacts/interfaces/contact.interface";
+import { Channel, MsgStatus } from "@/features/contacts/interfaces/contact.interface";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { EditCampaignDraftMessageModal } from "./edit-campaign-draft-message-modal";
 
@@ -23,7 +24,7 @@ function DraftedMessagesTableSkeleton() {
                         <th className="px-4 py-3 text-left text-xs font-medium text-muted uppercase tracking-wide">Contact</th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-muted uppercase tracking-wide">Subject / Preview</th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-muted uppercase tracking-wide">Status</th>
-                        <th className="px-4 py-3 text-right text-xs font-medium text-muted uppercase tracking-wide w-28">Actions</th>
+                        <th className="px-4 py-3 text-right text-xs font-medium text-muted uppercase tracking-wide w-36">Actions</th>
                         <th className="px-4 py-3 w-10" />
                     </tr>
                 </thead>
@@ -60,7 +61,9 @@ export function DraftedMessagesTable({ campaignUuid }: DraftedMessagesTableProps
     const { data, isLoading } = useCampaignDraftMessages(campaignUuid, { page, limit: 20 });
     const [editMsg, setEditMsg] = useState<DraftMessage | null>(null);
     const [deleteMsg, setDeleteMsg] = useState<DraftMessage | null>(null);
+    const [sendMsg, setSendMsg] = useState<DraftMessage | null>(null);
     const deleteMu = useDeleteCampaignDraftMessage();
+    const sendMu = useSendCampaignDraftMessage();
 
     if (isLoading) {
         return <DraftedMessagesTableSkeleton />;
@@ -80,6 +83,32 @@ export function DraftedMessagesTable({ campaignUuid }: DraftedMessagesTableProps
                     onClose={() => setEditMsg(null)}
                 />
             ) : null}
+
+            <ConfirmDialog
+                isOpen={sendMsg !== null}
+                onOpenChange={(open) => {
+                    if (!open) setSendMsg(null);
+                }}
+                title="Send this message?"
+                description={
+                    sendMsg
+                        ? `This will queue the ${sendMsg.channel} message for delivery to ${draftContactLabel(sendMsg)}. You won't be able to edit it after sending.`
+                        : undefined
+                }
+                confirmLabel="Send"
+                cancelLabel="Cancel"
+                variant="default"
+                isPending={sendMu.isPending}
+                onConfirm={async () => {
+                    if (!sendMsg) return;
+                    await sendMu.mutateAsync({
+                        campaignUuid,
+                        messageUuid: sendMsg.uuid,
+                        contactUuid: sendMsg.contact_uuid,
+                    });
+                    setSendMsg(null);
+                }}
+            />
 
             <ConfirmDialog
                 isOpen={deleteMsg !== null}
@@ -110,7 +139,7 @@ export function DraftedMessagesTable({ campaignUuid }: DraftedMessagesTableProps
                             <th className="px-4 py-3 text-left text-xs font-medium text-muted uppercase tracking-wide">Contact</th>
                             <th className="px-4 py-3 text-left text-xs font-medium text-muted uppercase tracking-wide">Subject / Preview</th>
                             <th className="px-4 py-3 text-left text-xs font-medium text-muted uppercase tracking-wide">Status</th>
-                            <th className="px-4 py-3 text-right text-xs font-medium text-muted uppercase tracking-wide w-28">Actions</th>
+                            <th className="px-4 py-3 text-right text-xs font-medium text-muted uppercase tracking-wide w-36">Actions</th>
                             <th className="px-4 py-3 w-10" />
                         </tr>
                     </thead>
@@ -120,7 +149,9 @@ export function DraftedMessagesTable({ campaignUuid }: DraftedMessagesTableProps
                                 key={msg.uuid}
                                 msg={msg}
                                 isDeletePending={deleteMu.isPending}
+                                isSendPending={sendMu.isPending}
                                 onEdit={() => setEditMsg(msg)}
+                                onSend={() => setSendMsg(msg)}
                                 onDelete={() => setDeleteMsg(msg)}
                             />
                         ))}
@@ -148,15 +179,18 @@ export function DraftedMessagesTable({ campaignUuid }: DraftedMessagesTableProps
 interface DraftRowProps {
     msg: DraftMessage;
     isDeletePending: boolean;
+    isSendPending: boolean;
     onEdit: () => void;
+    onSend: () => void;
     onDelete: () => void;
 }
 
-function DraftRow({ msg, isDeletePending, onEdit, onDelete }: DraftRowProps) {
+function DraftRow({ msg, isDeletePending, isSendPending, onEdit, onSend, onDelete }: DraftRowProps) {
     const [expanded, setExpanded] = useState(false);
     const contactName = msg.contact.name || msg.contact.email || msg.contact.phone || msg.contact_uuid.slice(0, 8);
     const preview = stripHtml(msg.content).slice(0, 120);
     const canMutate = msg.status === MsgStatus.PENDING;
+    const canSend = canSendDraft(msg);
 
     return (
         <>
@@ -195,6 +229,17 @@ function DraftRow({ msg, isDeletePending, onEdit, onDelete }: DraftRowProps) {
                 </td>
                 <td className="px-4 py-3 text-right" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()} role="presentation">
                     <div className="flex justify-end gap-1">
+                        <ActionButtonWithPending
+                            size="sm"
+                            variant="tertiary"
+                            isDisabled={!canSend}
+                            isPending={isSendPending}
+                            onPress={onSend}
+                            aria-label="Send draft"
+                            idleLeading={<Send className="size-3.5 text-emerald-400" />}
+                        >
+                            {null}
+                        </ActionButtonWithPending>
                         <Button
                             size="sm"
                             variant="tertiary"
@@ -260,6 +305,23 @@ function StatusChip({ status }: { status: string }) {
             <Chip.Label>{status}</Chip.Label>
         </Chip>
     );
+}
+
+function draftContactLabel(msg: DraftMessage): string {
+    return msg.contact.name || msg.contact.email || msg.contact.phone || "this contact";
+}
+
+function canSendDraft(msg: DraftMessage): boolean {
+    if (msg.status !== MsgStatus.PENDING && msg.status !== MsgStatus.FAILED) {
+        return false;
+    }
+    if (msg.channel === Channel.EMAIL) {
+        return !!msg.contact.email;
+    }
+    if (msg.channel === Channel.SMS) {
+        return !!msg.contact.phone;
+    }
+    return true;
 }
 
 function stripHtml(html: string): string {

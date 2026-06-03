@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button, Checkbox, Dropdown, ListBox, Popover, Select, TextArea, Tooltip } from "@heroui/react";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
-import { CalendarDays, ChevronDown, Info, Phone, Sparkles } from "lucide-react";
+import { CalendarDays, ChevronDown, Info, Mail, MessageSquare, Phone, Sparkles } from "lucide-react";
 import type { Contact, LeadStatus } from "@/features/contacts/interfaces/contact.interface";
 import { STATUS_OPTIONS } from "@/features/contacts/constants/contacts.constants";
 import { useContactTags, useRescoreContact, useUpdateContactNotes, useUpdateContactStatus, useUpdateContactTags } from "@/features/contacts/hooks/use-contacts";
@@ -10,7 +10,9 @@ import { ScoreBadge } from "@/pages/dashboard/pages/leads/components/badges";
 import { InteractionTimeline } from "@/pages/dashboard/pages/contacts/components/interaction-timeline";
 import { ChangeStatusModal } from "./change-status-modal";
 import { LogCallModal } from "./log-call-modal";
+import { LogEmailModal } from "./log-email-modal";
 import { LogMeetingModal } from "./log-meeting-modal";
+import { LogSmsModal } from "./log-sms-modal";
 import { TagEditor } from "./tag-editor";
 
 interface CrmTabProps {
@@ -33,6 +35,8 @@ export function CrmTab({ contact, onNavigateToOutreach }: CrmTabProps) {
   const [statusNote, setStatusNote] = useState("");
   const [logCallOpen, setLogCallOpen] = useState(false);
   const [logMeetingOpen, setLogMeetingOpen] = useState(false);
+  const [logEmailOpen, setLogEmailOpen] = useState(false);
+  const [logSmsOpen, setLogSmsOpen] = useState(false);
   const [rescoreOpen, setRescoreOpen] = useState(false);
   const [rescoreSelected, setRescoreSelected] = useState<string[]>([]);
 
@@ -328,6 +332,8 @@ export function CrmTab({ contact, onNavigateToOutreach }: CrmTabProps) {
                 onAction={(key) => {
                   if (key === "call") setLogCallOpen(true);
                   if (key === "meeting") setLogMeetingOpen(true);
+                  if (key === "email") setLogEmailOpen(true);
+                  if (key === "sms") setLogSmsOpen(true);
                 }}
               >
                 <Dropdown.Item id="call" textValue="Log call">
@@ -337,6 +343,14 @@ export function CrmTab({ contact, onNavigateToOutreach }: CrmTabProps) {
                 <Dropdown.Item id="meeting" textValue="Log meeting">
                   <CalendarDays className="size-4" />
                   Log meeting
+                </Dropdown.Item>
+                <Dropdown.Item id="email" textValue="Log email">
+                  <Mail className="size-4" />
+                  Log email
+                </Dropdown.Item>
+                <Dropdown.Item id="sms" textValue="Log SMS">
+                  <MessageSquare className="size-4" />
+                  Log SMS
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown.Popover>
@@ -349,6 +363,8 @@ export function CrmTab({ contact, onNavigateToOutreach }: CrmTabProps) {
 
       <LogCallModal contactUuid={contact.uuid} isOpen={logCallOpen} onOpenChange={setLogCallOpen} />
       <LogMeetingModal contactUuid={contact.uuid} isOpen={logMeetingOpen} onOpenChange={setLogMeetingOpen} />
+      <LogEmailModal contactUuid={contact.uuid} isOpen={logEmailOpen} onOpenChange={setLogEmailOpen} />
+      <LogSmsModal contactUuid={contact.uuid} isOpen={logSmsOpen} onOpenChange={setLogSmsOpen} />
     </div>
   );
 }

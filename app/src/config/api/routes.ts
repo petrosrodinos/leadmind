@@ -41,6 +41,8 @@ export const ApiRoutes = {
         add_note: (uuid: string) => `/contacts/${uuid}/notes`,
         log_call: (uuid: string) => `/contacts/${uuid}/calls`,
         log_meeting: (uuid: string) => `/contacts/${uuid}/meetings`,
+        log_email: (uuid: string) => `/contacts/${uuid}/emails`,
+        log_sms: (uuid: string) => `/contacts/${uuid}/sms`,
         interactions: (uuid: string) => `/contacts/${uuid}/interactions`,
         score: (uuid: string) => `/contacts/${uuid}/score`,
         draft_messages: (uuid: string) => `/contacts/${uuid}/draft-messages`,
@@ -124,5 +126,7 @@ export const ApiRoutes = {
         draft_messages: (uuid: string) => `/marketing-campaigns/${uuid}/draft-messages`,
         delete_draft_message: (campaignUuid: string, messageUuid: string) =>
             `/marketing-campaigns/${campaignUuid}/draft-messages/${messageUuid}`,
+        send_draft_message: (campaignUuid: string, messageUuid: string) =>
+            `/marketing-campaigns/${campaignUuid}/draft-messages/${messageUuid}/send`,
     },
 }

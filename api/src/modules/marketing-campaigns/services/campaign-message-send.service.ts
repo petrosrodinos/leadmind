@@ -4,6 +4,7 @@ import {
     Injectable,
     Logger,
     NotFoundException,
+    BadRequestException,
 } from '@nestjs/common';
 import { Queue } from 'bullmq';
 import {
@@ -192,6 +193,123 @@ export class CampaignMessageSendService {
             this.logger.error(`MCC ${mcc.uuid} send failed: ${error_message}`);
             return { status: 'failed', reason: error_message };
         }
+    }
+
+    async queueDraftMessageSend(
+        user_uuid: string,
+        campaign_uuid: string,
+        message_uuid: string,
+    ): Promise<{ jobId: string }> {
+        const message = await this.prisma.outreachMessage.findFirst({
+            where: { uuid: message_uuid, campaign_uuid, user_uuid },
+            include: {
+                contact: { select: { email: true, phone: true, unsubscribed_at: true } },
+            },
+        });
+        if (!message) {
+            throw new NotFoundException('Message not found on this campaign');
+        }
+
+        if (message.status !== MsgStatus.PENDING && message.status !== MsgStatus.FAILED) {
+            throw new ConflictException('Only pending or failed messages can be sent');
+        }
+
+        const campaign = await this.prisma.marketingCampaign.findFirst({
+            where: { uuid: campaign_uuid, user_uuid },
+        });
+        if (!campaign) {
+            throw new NotFoundException('Message not found on this campaign');
+        }
+        if (campaign.status === CampaignStatus.CANCELLED) {
+            throw new ConflictException('Campaign is cancelled');
+        }
+
+        const mcc = await this.prisma.marketingCampaignContact.findUnique({
+            where: {
+                campaign_uuid_contact_uuid_channel: {
+                    campaign_uuid,
+                    contact_uuid: message.contact_uuid,
+                    channel: message.channel,
+                },
+            },
+        });
+        if (!mcc) {
+            throw new NotFoundException('Campaign recipient not found');
+        }
+
+        if (mcc.status === CampaignContactStatus.UNSUBSCRIBED || message.contact.unsubscribed_at) {
+            throw new ConflictException('Contact has unsubscribed');
+        }
+
+        const canQueue =
+            mcc.status === CampaignContactStatus.PENDING ||
+            mcc.status === CampaignContactStatus.FAILED;
+        if (!canQueue) {
+            if (mcc.status === CampaignContactStatus.QUEUED) {
+                throw new ConflictException('Message is already queued for send');
+            }
+            throw new ConflictException('This message cannot be sent in its current state');
+        }
+
+        if (message.channel === Channel.EMAIL && !message.contact.email) {
+            throw new BadRequestException('Contact has no email');
+        }
+        if (message.channel === Channel.SMS && !message.contact.phone) {
+            throw new BadRequestException('Contact has no phone');
+        }
+
+        const mccWasFailed = mcc.status === CampaignContactStatus.FAILED;
+
+        await this.prisma.$transaction(async (tx) => {
+            if (message.status === MsgStatus.FAILED) {
+                await tx.outreachMessage.update({
+                    where: { uuid: message_uuid },
+                    data: {
+                        status: MsgStatus.PENDING,
+                        metadata: null,
+                        sent_at: null,
+                        provider_message_id: null,
+                    },
+                });
+            }
+
+            await tx.marketingCampaignContact.update({
+                where: { uuid: mcc.uuid },
+                data: { status: CampaignContactStatus.QUEUED, error_message: null },
+            });
+
+            const campaignData: Prisma.MarketingCampaignUpdateInput = {
+                queued_count: { increment: 1 },
+            };
+
+            if (campaign.status === CampaignStatus.DRAFTS_READY) {
+                campaignData.status = CampaignStatus.SENDING;
+                campaignData.started_at = new Date();
+            }
+
+            if (mccWasFailed) {
+                campaignData.failed_count = { decrement: 1 };
+            }
+
+            await tx.marketingCampaign.update({
+                where: { uuid: campaign_uuid },
+                data: campaignData,
+            });
+        });
+
+        const job = await this.messageSendQueue.add(
+            `send-${mcc.uuid}`,
+            { campaign_uuid, mcc_uuid: mcc.uuid },
+            {
+                jobId: `mcc-${mcc.uuid}`,
+                attempts: 3,
+                backoff: { type: 'exponential', delay: 30_000 },
+                removeOnComplete: 100,
+                removeOnFail: 100,
+            },
+        );
+
+        return { jobId: String(job.id) };
     }
 
     async removeCampaignOutreachMessage(

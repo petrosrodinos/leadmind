@@ -28,6 +28,7 @@ import {
 import { generateWithCampaignPrompt, parseEmailDraft } from '@/shared/utils/outreach-ai-generate.util';
 import { CONTACT_AI_SCORE_SCHEMA, type ContactAiScoreResult } from '../schemas/contact-ai-score.schema';
 import { sanitizeEmailHtml } from '@/shared/utils/sanitize-html.util';
+import { OutreachRenderService } from '@/modules/outreach/services/outreach-render.service';
 
 const filterForScoreInclude = {
     filter_scoring_instructions: { include: { scoring_instruction: true } },
@@ -49,6 +50,7 @@ export class ContactAiService {
         private readonly aiService: AiService,
         private readonly openAiBatchService: OpenAiBatchService,
         private readonly elasticsearchService: ElasticsearchService,
+        private readonly outreachRenderService: OutreachRenderService,
     ) { }
 
     async scoreContact(
@@ -377,14 +379,24 @@ export class ContactAiService {
                     language,
                     sender_business_description,
                 );
-                const content = channel === Channel.EMAIL ? sanitizeEmailHtml(draft.content) : draft.content;
+                const sanitizedContent =
+                    channel === Channel.EMAIL ? sanitizeEmailHtml(draft.content) : draft.content;
+                const resolved = campaign_uuid
+                    ? await this.resolveCampaignDraftContent(
+                          user_uuid,
+                          campaign_uuid,
+                          item,
+                          channel,
+                          draft,
+                      )
+                    : { subject: draft.subject ?? null, content: sanitizedContent };
                 await this.prisma.outreachMessage.create({
                     data: {
                         user_uuid,
                         contact_uuid: item.uuid,
                         channel,
-                        subject: draft.subject ?? null,
-                        content,
+                        subject: resolved.subject ?? null,
+                        content: resolved.content,
                         status: MsgStatus.PENDING,
                         ...(campaign_uuid ? { campaign_uuid, idempotency_key: idempotencyKey } : {}),
                     },
@@ -528,8 +540,13 @@ export class ContactAiService {
                     channel === Channel.EMAIL
                         ? parseEmailDraft(result.content)
                         : { subject: null, content: result.content.trim() };
-                const content =
-                    channel === Channel.EMAIL ? sanitizeEmailHtml(draft.content) : draft.content;
+                const resolved = await this.resolveCampaignDraftContent(
+                    job.user_uuid,
+                    campUuid,
+                    contact,
+                    channel,
+                    draft,
+                );
                 const idempotencyKey = `campaign:${campUuid}:${contact_uuid}:${channel}`;
 
                 await this.prisma.outreachMessage.create({
@@ -537,8 +554,8 @@ export class ContactAiService {
                         user_uuid: job.user_uuid,
                         contact_uuid,
                         channel,
-                        subject: draft.subject ?? null,
-                        content,
+                        subject: resolved.subject ?? null,
+                        content: resolved.content,
                         status: MsgStatus.PENDING,
                         campaign_uuid: campUuid,
                         idempotency_key: idempotencyKey,
@@ -623,6 +640,23 @@ export class ContactAiService {
             dto.channel === Channel.EMAIL ? sanitizeEmailHtml(draft.content) : draft.content;
 
         return { subject: draft.subject, content };
+    }
+
+    private async resolveCampaignDraftContent(
+        user_uuid: string,
+        campaign_uuid: string,
+        contact: Contact,
+        channel: Channel,
+        draft: { subject: string | null; content: string },
+    ): Promise<{ subject: string | null; content: string }> {
+        const sanitized =
+            channel === Channel.EMAIL ? sanitizeEmailHtml(draft.content) : draft.content;
+        return this.outreachRenderService.renderForCampaignDraft(
+            user_uuid,
+            campaign_uuid,
+            contact,
+            { subject: draft.subject, content: sanitized },
+        );
     }
 
     private async resolveSenderBusinessDescription(user_uuid: string): Promise<string | undefined> {

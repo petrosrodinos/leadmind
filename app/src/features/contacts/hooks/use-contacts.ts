@@ -11,7 +11,9 @@ import {
     listContactMessages,
     listContacts,
     logCall,
+    logEmail,
     logMeeting,
+    logSms,
     triggerContactScore,
     triggerContactsBulkScore,
     triggerDraftMessages,
@@ -28,7 +30,9 @@ import type {
     LeadStatus,
     ListContactsQuery,
     LogCallPayload,
+    LogEmailPayload,
     LogMeetingPayload,
+    LogSmsPayload,
     PaginatedContacts,
     UpdateContactPayload,
 } from "../interfaces/contact.interface";
@@ -438,6 +442,48 @@ export function useLogMeeting() {
         onError: (error: Error) => {
             toast({
                 title: "Could not log meeting",
+                description: error.message,
+                duration: 3000,
+                variant: "error",
+            });
+        },
+    });
+}
+
+export function useLogEmail() {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: (vars: { uuid: string; payload: LogEmailPayload }) =>
+            logEmail(vars.uuid, vars.payload),
+        onSuccess: (_data, vars) => {
+            qc.invalidateQueries({ queryKey: contactsQueryKeys.interactions(vars.uuid) });
+            qc.invalidateQueries({ queryKey: contactsQueryKeys.detail(vars.uuid) });
+            toast({ title: "Email logged", duration: 1500 });
+        },
+        onError: (error: Error) => {
+            toast({
+                title: "Could not log email",
+                description: error.message,
+                duration: 3000,
+                variant: "error",
+            });
+        },
+    });
+}
+
+export function useLogSms() {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: (vars: { uuid: string; payload: LogSmsPayload }) =>
+            logSms(vars.uuid, vars.payload),
+        onSuccess: (_data, vars) => {
+            qc.invalidateQueries({ queryKey: contactsQueryKeys.interactions(vars.uuid) });
+            qc.invalidateQueries({ queryKey: contactsQueryKeys.detail(vars.uuid) });
+            toast({ title: "SMS logged", duration: 1500 });
+        },
+        onError: (error: Error) => {
+            toast({
+                title: "Could not log SMS",
                 description: error.message,
                 duration: 3000,
                 variant: "error",

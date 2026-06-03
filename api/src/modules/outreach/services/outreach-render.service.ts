@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { SenderProfile } from '@/generated/prisma';
+import { Contact, SenderProfile } from '@/generated/prisma';
+import { contactToPlaceholders } from '@/modules/contacts/utils/contact-placeholders.util';
 import {
     renderPlaceholders,
     type PlaceholderVars,
@@ -43,6 +44,15 @@ export class OutreachRenderService {
         return senderProfileToPlaceholders(profile, { campaignUuid: campaign_uuid });
     }
 
+    async buildVarsForCampaignDraft(
+        user_uuid: string,
+        campaign_uuid: string,
+        contact: Contact,
+    ): Promise<PlaceholderVars> {
+        const senderVars = await this.buildVarsForOutreachMessage(user_uuid, campaign_uuid);
+        return { ...senderVars, ...contactToPlaceholders(contact) };
+    }
+
     render(message: RenderableMessage, vars: PlaceholderVars): RenderedMessage {
         return {
             subject: message.subject ? renderPlaceholders(message.subject, vars) : null,
@@ -58,8 +68,20 @@ export class OutreachRenderService {
     async renderForOutreachMessage(
         user_uuid: string,
         message: RenderableMessage & { campaign_uuid?: string | null },
+        contact?: Contact | null,
     ): Promise<RenderedMessage> {
-        const vars = await this.buildVarsForOutreachMessage(user_uuid, message.campaign_uuid);
+        const senderVars = await this.buildVarsForOutreachMessage(user_uuid, message.campaign_uuid);
+        const vars = contact ? { ...senderVars, ...contactToPlaceholders(contact) } : senderVars;
+        return this.render(message, vars);
+    }
+
+    async renderForCampaignDraft(
+        user_uuid: string,
+        campaign_uuid: string,
+        contact: Contact,
+        message: RenderableMessage,
+    ): Promise<RenderedMessage> {
+        const vars = await this.buildVarsForCampaignDraft(user_uuid, campaign_uuid, contact);
         return this.render(message, vars);
     }
 }

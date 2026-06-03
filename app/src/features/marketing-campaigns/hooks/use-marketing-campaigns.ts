@@ -13,6 +13,7 @@ import {
     previewCampaignContacts,
     rerunCampaign,
     scheduleCampaign,
+    sendCampaignDraftMessage,
     sendPersonalizedDrafts,
     startCampaign,
     updateCampaign,
@@ -41,6 +42,21 @@ export const campaignsQueryKeys = {
 
 const isActiveStatus = (status: CampaignStatuses) =>
     status === CS.SENDING || status === CS.SCHEDULED;
+
+function invalidateCampaignDraftMessageQueries(
+    qc: ReturnType<typeof useQueryClient>,
+    vars: { campaignUuid: string; contactUuid?: string },
+) {
+    qc.invalidateQueries({ queryKey: ["marketing-campaigns", "draft-messages", vars.campaignUuid] });
+    qc.invalidateQueries({ queryKey: ["marketing-campaigns", "contacts", vars.campaignUuid] });
+    qc.invalidateQueries({ queryKey: campaignsQueryKeys.detail(vars.campaignUuid) });
+    qc.invalidateQueries({ queryKey: campaignsQueryKeys.all });
+    if (vars.contactUuid) {
+        qc.invalidateQueries({ queryKey: contactsQueryKeys.detail(vars.contactUuid) });
+        qc.invalidateQueries({ queryKey: contactsQueryKeys.messages(vars.contactUuid) });
+    }
+    qc.invalidateQueries({ queryKey: contactsQueryKeys.all });
+}
 
 export function useCampaigns(query: ListCampaignsQuery) {
     return useQuery({
@@ -314,20 +330,36 @@ export function useDeleteCampaignDraftMessage() {
         mutationFn: (vars: { campaignUuid: string; messageUuid: string; contactUuid?: string }) =>
             deleteCampaignDraftMessage(vars.campaignUuid, vars.messageUuid),
         onSuccess: (_data, vars) => {
-            qc.invalidateQueries({ queryKey: ["marketing-campaigns", "draft-messages", vars.campaignUuid] });
-            qc.invalidateQueries({ queryKey: ["marketing-campaigns", "contacts", vars.campaignUuid] });
-            qc.invalidateQueries({ queryKey: campaignsQueryKeys.detail(vars.campaignUuid) });
-            qc.invalidateQueries({ queryKey: campaignsQueryKeys.all });
-            if (vars.contactUuid) {
-                qc.invalidateQueries({ queryKey: contactsQueryKeys.detail(vars.contactUuid) });
-                qc.invalidateQueries({ queryKey: contactsQueryKeys.messages(vars.contactUuid) });
-            }
-            qc.invalidateQueries({ queryKey: contactsQueryKeys.all });
+            invalidateCampaignDraftMessageQueries(qc, vars);
             toast({ title: "Message removed", duration: 1500 });
         },
         onError: (error: Error) => {
             toast({
                 title: "Could not remove message",
+                description: error.message,
+                duration: 3000,
+                variant: "error",
+            });
+        },
+    });
+}
+
+export function useSendCampaignDraftMessage() {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: (vars: { campaignUuid: string; messageUuid: string; contactUuid?: string }) =>
+            sendCampaignDraftMessage(vars.campaignUuid, vars.messageUuid),
+        onSuccess: (_data, vars) => {
+            invalidateCampaignDraftMessageQueries(qc, vars);
+            toast({
+                title: "Message queued for send",
+                description: "We'll update its status when delivery completes.",
+                duration: 2500,
+            });
+        },
+        onError: (error: Error) => {
+            toast({
+                title: "Could not send message",
                 description: error.message,
                 duration: 3000,
                 variant: "error",

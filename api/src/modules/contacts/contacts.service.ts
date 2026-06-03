@@ -31,7 +31,9 @@ export type ContactListFilterParams = Pick<
     'status' | 'tags' | 'search' | 'filter_uuid' | 'lead_uuid' | 'score_rules' | 'source_type'
 >;
 import { LogCallDto } from './dto/log-call.dto';
+import { LogEmailDto } from './dto/log-email.dto';
 import { LogMeetingDto } from './dto/log-meeting.dto';
+import { LogSmsDto } from './dto/log-sms.dto';
 import { UpdateContactDto } from './dto/update-contact.dto';
 import { UpdateStatusDto } from './dto/update-status.dto';
 import { UpdateTagsDto } from './dto/update-tags.dto';
@@ -394,6 +396,49 @@ export class ContactsService {
                 contact_uuid: uuid,
                 user_uuid,
                 type: InteractionType.MEETING,
+                content: dto.content?.trim() || null,
+                metadata,
+            },
+        });
+    }
+
+    async logEmail(
+        user_uuid: string,
+        uuid: string,
+        dto: LogEmailDto,
+    ): Promise<Interaction> {
+        await this.requireOwnedContact(user_uuid, uuid);
+        const metadata: Prisma.InputJsonValue = {
+            direction: dto.direction,
+            ...(dto.subject?.trim() && { subject: dto.subject.trim() }),
+            ...(dto.occurred_at && { occurred_at: dto.occurred_at }),
+        };
+        return this.prisma.interaction.create({
+            data: {
+                contact_uuid: uuid,
+                user_uuid,
+                type: InteractionType.EMAIL,
+                content: dto.content?.trim() || null,
+                metadata,
+            },
+        });
+    }
+
+    async logSms(
+        user_uuid: string,
+        uuid: string,
+        dto: LogSmsDto,
+    ): Promise<Interaction> {
+        await this.requireOwnedContact(user_uuid, uuid);
+        const metadata: Prisma.InputJsonValue = {
+            direction: dto.direction,
+            ...(dto.occurred_at && { occurred_at: dto.occurred_at }),
+        };
+        return this.prisma.interaction.create({
+            data: {
+                contact_uuid: uuid,
+                user_uuid,
+                type: InteractionType.SMS,
                 content: dto.content?.trim() || null,
                 metadata,
             },

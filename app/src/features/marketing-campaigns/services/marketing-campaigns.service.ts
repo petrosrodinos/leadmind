@@ -226,3 +226,20 @@ export async function deleteCampaignDraftMessage(
         unwrap(error, "Failed to delete campaign message.");
     }
 }
+
+export async function sendCampaignDraftMessage(
+    campaignUuid: string,
+    messageUuid: string,
+): Promise<{ jobId: string }> {
+    try {
+        const response = await axiosInstance.post(
+            ApiRoutes.marketing_campaigns.send_draft_message(campaignUuid, messageUuid),
+        );
+        return response.data;
+    } catch (error: any) {
+        if (error?.response?.status === 409) {
+            throw new Error(error?.response?.data?.message || "This message cannot be sent.");
+        }
+        unwrap(error, "Failed to send message.");
+    }
+}

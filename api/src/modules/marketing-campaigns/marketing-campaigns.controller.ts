@@ -182,4 +182,17 @@ export class MarketingCampaignsController {
     ) {
         return this.service.deleteDraftMessage(user_uuid, uuid, message_uuid);
     }
+
+    @Post(':uuid/draft-messages/:message_uuid/send')
+    @ApiOperation({ summary: 'Queue a single campaign draft message for send' })
+    @ApiResponse({ status: 200 })
+    @ApiResponse({ status: 404 })
+    @ApiResponse({ status: 409 })
+    sendDraftMessage(
+        @CurrentUser('uuid') user_uuid: string,
+        @Param('uuid', ParseUUIDPipe) uuid: string,
+        @Param('message_uuid', ParseUUIDPipe) message_uuid: string,
+    ) {
+        return this.service.sendDraftMessage(user_uuid, uuid, message_uuid);
+    }
 }

@@ -33,6 +33,7 @@ export const InteractionType = {
     NOTE: "NOTE",
     CALL: "CALL",
     EMAIL: "EMAIL",
+    SMS: "SMS",
     MEETING: "MEETING",
     STATUS_CHANGE: "STATUS_CHANGE",
     CAMPAIGN_EMAIL_SENT: "CAMPAIGN_EMAIL_SENT",
@@ -93,6 +94,25 @@ export interface LogMeetingPayload {
     occurred_at: string;
     duration_minutes?: number;
     location?: string;
+    content?: string;
+}
+
+export interface MessageMetadata {
+    direction: CallDirection;
+    subject?: string;
+    occurred_at?: string;
+}
+
+export interface LogEmailPayload {
+    direction: CallDirection;
+    subject?: string;
+    occurred_at?: string;
+    content?: string;
+}
+
+export interface LogSmsPayload {
+    direction: CallDirection;
+    occurred_at?: string;
     content?: string;
 }
 

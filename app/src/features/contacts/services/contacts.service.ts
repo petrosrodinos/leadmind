@@ -11,7 +11,9 @@ import type {
     Interaction,
     ListContactsQuery,
     LogCallPayload,
+    LogEmailPayload,
     LogMeetingPayload,
+    LogSmsPayload,
     OutreachMessage,
     PaginatedContacts,
     UpdateContactPayload,
@@ -234,5 +236,29 @@ export const logMeeting = async (
         return response.data;
     } catch (error: any) {
         throw new Error(error?.response?.data?.message || "Failed to log meeting.");
+    }
+};
+
+export const logEmail = async (
+    uuid: string,
+    payload: LogEmailPayload,
+): Promise<Interaction> => {
+    try {
+        const response = await axiosInstance.post(ApiRoutes.contacts.log_email(uuid), payload);
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error?.response?.data?.message || "Failed to log email.");
+    }
+};
+
+export const logSms = async (
+    uuid: string,
+    payload: LogSmsPayload,
+): Promise<Interaction> => {
+    try {
+        const response = await axiosInstance.post(ApiRoutes.contacts.log_sms(uuid), payload);
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error?.response?.data?.message || "Failed to log SMS.");
     }
 };

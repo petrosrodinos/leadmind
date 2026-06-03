@@ -14,8 +14,13 @@ interface RateRow {
     tone: string;
 }
 
-export function CampaignAnalytics({ campaign }: { campaign: MarketingCampaign }) {
-    const [open, setOpen] = useState(true);
+interface CampaignAnalyticsProps {
+    campaign: MarketingCampaign;
+    embedded?: boolean;
+}
+
+export function CampaignAnalytics({ campaign, embedded = false }: CampaignAnalyticsProps) {
+    const [open, setOpen] = useState(false);
     const hasEmail = campaignHasEmail(campaign);
     const rates = getCampaignEngagementRates(campaign);
     const hasSends = campaign.sent_count > 0;
@@ -89,6 +94,30 @@ export function CampaignAnalytics({ campaign }: { campaign: MarketingCampaign })
         },
     );
 
+    const panel = (
+        <div className="rounded-xl border border-border bg-surface p-4 space-y-4">
+            {rows.map((row) => (
+                <RateBar key={row.label} row={row} maxCount={Math.max(campaign.sent_count, 1)} />
+            ))}
+        </div>
+    );
+
+    if (embedded) {
+        return (
+            <section className="space-y-3">
+                <div>
+                    <h3 className="text-sm font-semibold text-foreground">Engagement analytics</h3>
+                    <p className="text-xs text-muted">
+                        {hasEmail
+                            ? "Rates use delivered as the baseline for opens, clicks, and replies."
+                            : "Delivery and issue rates use sent messages as the baseline."}
+                    </p>
+                </div>
+                {panel}
+            </section>
+        );
+    }
+
     return (
         <section className="space-y-3">
             <button
@@ -108,13 +137,7 @@ export function CampaignAnalytics({ campaign }: { campaign: MarketingCampaign })
                     className={`mt-0.5 size-4 shrink-0 text-muted transition-transform ${open ? "rotate-180" : ""}`}
                 />
             </button>
-            {open && (
-                <div className="rounded-xl border border-border bg-surface p-4 space-y-4">
-                    {rows.map((row) => (
-                        <RateBar key={row.label} row={row} maxCount={Math.max(campaign.sent_count, 1)} />
-                    ))}
-                </div>
-            )}
+            {open ? panel : null}
         </section>
     );
 }

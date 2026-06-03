@@ -3,6 +3,7 @@ import { BullModule } from '@nestjs/bullmq';
 import { PrismaModule } from '@/core/databases/prisma/prisma.module';
 import { AiIntegrationModule } from '@/integrations/ai/ai.module';
 import { AI_PROCESS_QUEUE } from '@/core/queues/queues.constants';
+import { OutreachModule } from '@/modules/outreach/outreach.module';
 import { ContactsController } from './contacts.controller';
 import { ContactsService } from './contacts.service';
 import { ContactAiService } from './services/contact-ai.service';
@@ -11,6 +12,7 @@ import { ContactAiService } from './services/contact-ai.service';
     imports: [
         PrismaModule,
         AiIntegrationModule,
+        OutreachModule,
         BullModule.registerQueue({ name: AI_PROCESS_QUEUE }),
     ],
     controllers: [ContactsController],
