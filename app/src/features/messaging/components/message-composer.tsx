@@ -69,7 +69,7 @@ export function MessageComposer({
     const isLinkedIn = activeChannel === Channel.LINKEDIN;
     const promptEmpty = prompt.trim().length === 0;
 
-    const plainBody = isLinkedIn ? value.linkedinContent : value.smsContent;
+    const plainBody = (isLinkedIn ? value.linkedinContent : value.smsContent) ?? "";
 
     const channelHasExisting = isEmail
         ? !isEmailHtmlEmpty(value.emailContent)
