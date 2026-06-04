@@ -29,6 +29,7 @@ const EMPTY_VALUE: MessageComposerValue = {
     emailSubject: "",
     emailContent: "",
     smsContent: "",
+    linkedinContent: "",
 };
 
 export function ComposeMessageModal({

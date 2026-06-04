@@ -55,7 +55,7 @@ export class MarketingCampaignsService {
     async create(user_uuid: string, dto: CreateCampaignDto): Promise<MarketingCampaign> {
         // Drafts are loose: only enforce shape/length. Full content validation runs at start().
         const type = dto.campaign_type ?? CampaignType.STANDARD;
-        this.validateContentLoose(dto.channels, dto.email_subject, dto.email_content, dto.sms_content, type);
+        this.validateContentLoose(dto.channels, dto.email_subject, dto.email_content, dto.sms_content, dto.linkedin_content, type);
         if (dto.sender_profile_uuid) {
             await this.assertOwnedSenderProfile(user_uuid, dto.sender_profile_uuid);
         }
@@ -72,6 +72,7 @@ export class MarketingCampaignsService {
                     ? sanitizeEmailHtml(dto.email_content)
                     : null,
                 sms_content: dto.sms_content ?? null,
+                linkedin_content: dto.linkedin_content ?? null,
                 ai_prompt: dto.ai_prompt ?? null,
                 use_openai_batch:
                     type === CampaignType.PERSONALIZED ? (dto.use_openai_batch ?? true) : false,
@@ -102,11 +103,18 @@ export class MarketingCampaignsService {
                 : existing.email_content;
         const sms_content =
             dto.sms_content !== undefined ? dto.sms_content : existing.sms_content;
+        const linkedin_content =
+            dto.linkedin_content !== undefined ? dto.linkedin_content : existing.linkedin_content;
 
         // Only enforce content validity when the field is being touched; partial drafts are allowed.
         const campaignType = dto.campaign_type ?? existing.campaign_type;
-        if (dto.email_content !== undefined || dto.sms_content !== undefined || dto.channels) {
-            this.validateContentLoose(channels, email_subject ?? null, email_content, sms_content, campaignType);
+        if (
+            dto.email_content !== undefined ||
+            dto.sms_content !== undefined ||
+            dto.linkedin_content !== undefined ||
+            dto.channels
+        ) {
+            this.validateContentLoose(channels, email_subject ?? null, email_content, sms_content, linkedin_content, campaignType);
         }
 
         if (dto.sender_profile_uuid) {
@@ -127,6 +135,7 @@ export class MarketingCampaignsService {
                         : null,
                 }),
                 ...(dto.sms_content !== undefined && { sms_content: dto.sms_content }),
+                ...(dto.linkedin_content !== undefined && { linkedin_content: dto.linkedin_content }),
                 ...(dto.ai_prompt !== undefined && { ai_prompt: dto.ai_prompt }),
                 ...(dto.use_openai_batch !== undefined && { use_openai_batch: dto.use_openai_batch }),
                 ...(dto.sender_profile_uuid !== undefined && {
@@ -274,6 +283,7 @@ export class MarketingCampaignsService {
             campaign.email_subject,
             campaign.email_content,
             campaign.sms_content,
+            campaign.linkedin_content,
         );
 
         const now = new Date();
@@ -522,6 +532,7 @@ export class MarketingCampaignsService {
                 email_subject: campaign.email_subject,
                 email_content: campaign.email_content,
                 sms_content: campaign.sms_content,
+                linkedin_content: campaign.linkedin_content,
                 ai_prompt: campaign.ai_prompt,
                 use_openai_batch: campaign.use_openai_batch,
                 sender_profile_uuid: campaign.sender_profile_uuid,
@@ -672,6 +683,7 @@ export class MarketingCampaignsService {
         email_subject: string | null | undefined,
         email_content: string | null | undefined,
         sms_content: string | null | undefined,
+        linkedin_content: string | null | undefined,
         campaign_type: CampaignType = CampaignType.STANDARD,
     ): void {
         if (campaign_type === CampaignType.PERSONALIZED) return;
@@ -691,6 +703,14 @@ export class MarketingCampaignsService {
                 throw new BadRequestException('SMS body cannot exceed 1600 characters');
             }
         }
+        if (channels.includes(Channel.LINKEDIN)) {
+            if (!linkedin_content || linkedin_content.trim().length === 0) {
+                throw new BadRequestException('LinkedIn message is required when LINKEDIN is selected');
+            }
+            if (linkedin_content.length > 2000) {
+                throw new BadRequestException('LinkedIn message cannot exceed 2000 characters');
+            }
+        }
     }
 
     private validateContentLoose(
@@ -698,6 +718,7 @@ export class MarketingCampaignsService {
         email_subject: string | null | undefined,
         email_content: string | null | undefined,
         sms_content: string | null | undefined,
+        linkedin_content: string | null | undefined,
         campaign_type: CampaignType = CampaignType.STANDARD,
     ): void {
         if (campaign_type === CampaignType.PERSONALIZED) return;
@@ -707,6 +728,9 @@ export class MarketingCampaignsService {
         }
         if (sms_content && sms_content.length > 1600) {
             throw new BadRequestException('SMS body cannot exceed 1600 characters');
+        }
+        if (linkedin_content && linkedin_content.length > 2000) {
+            throw new BadRequestException('LinkedIn message cannot exceed 2000 characters');
         }
         if (email_subject && email_subject.length > 200) {
             throw new BadRequestException('Email subject cannot exceed 200 characters');

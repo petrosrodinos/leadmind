@@ -59,6 +59,12 @@ export class CreateCampaignDto {
     @MaxLength(1600)
     sms_content?: string;
 
+    @ApiPropertyOptional({ description: 'LinkedIn DM body (required when LINKEDIN ∈ channels)' })
+    @IsOptional()
+    @IsString()
+    @MaxLength(2000)
+    linkedin_content?: string;
+
     @ApiPropertyOptional({ description: 'Override sender profile (default: user is_default)' })
     @IsOptional()
     @IsUUID()

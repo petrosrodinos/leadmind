@@ -51,7 +51,10 @@ export function StepMessage({
     return { subject: result.subject, content: result.content };
   };
 
-  const composerChannels = useMemo(() => channels.filter((c) => c === Channel.EMAIL || c === Channel.SMS), [channels]);
+  const composerChannels = useMemo(
+    () => channels.filter((c) => c === Channel.EMAIL || c === Channel.SMS || c === Channel.LINKEDIN),
+    [channels],
+  );
 
   if (campaignType === CampaignType.PERSONALIZED) {
     return (

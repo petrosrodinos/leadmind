@@ -2,7 +2,7 @@ import { Checkbox, Input, Label, TextArea, TextField } from "@heroui/react";
 import { Channel } from "@/features/contacts/interfaces/contact.interface";
 import { CampaignType } from "@/features/marketing-campaigns/interfaces/campaign.interface";
 import { cn } from "@/lib/utils";
-import { Mail, MessageSquare, Sparkles, LayoutTemplate } from "lucide-react";
+import { Mail, MessageSquare, Sparkles, LayoutTemplate, Link2 } from "lucide-react";
 
 export interface BasicsValues {
     name: string;
@@ -109,6 +109,12 @@ export function StepBasics({ value, onChange }: StepBasicsProps) {
                         onClick={() => selectChannel(Channel.SMS)}
                         icon={MessageSquare}
                         label="SMS"
+                    />
+                    <ChannelChip
+                        active={activeChannel === Channel.LINKEDIN}
+                        onClick={() => selectChannel(Channel.LINKEDIN)}
+                        icon={Link2}
+                        label="LinkedIn"
                     />
                 </div>
                 <p className="text-xs text-muted mt-1">

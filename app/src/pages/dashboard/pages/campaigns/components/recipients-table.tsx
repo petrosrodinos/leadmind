@@ -1,5 +1,6 @@
 import { Chip } from "@heroui/react";
 import type { MarketingCampaignContact, CampaignContactStatuses } from "@/features/marketing-campaigns/interfaces/campaign.interface";
+import { Channel } from "@/features/contacts/interfaces/contact.interface";
 
 const STATUS_COLOR: Record<CampaignContactStatuses, "default" | "accent" | "success" | "warning" | "danger"> = {
   PENDING: "default",
@@ -37,7 +38,7 @@ export function RecipientsTable({ rows }: { rows: MarketingCampaignContact[] }) 
             <tr key={row.uuid} className="border-t border-border">
               <td className="px-3 py-2 align-top">
                 <div className="font-medium text-foreground">{row.contact.name ?? "—"}</div>
-                <div className="text-xs text-muted">{row.channel === "EMAIL" ? row.contact.email : row.contact.phone}</div>
+                <div className="text-xs text-muted">{row.channel === Channel.EMAIL ? row.contact.email : row.contact.phone}</div>
               </td>
               <td className="px-3 py-2 align-top text-foreground/90">{row.channel}</td>
               <td className="px-3 py-2 align-top">

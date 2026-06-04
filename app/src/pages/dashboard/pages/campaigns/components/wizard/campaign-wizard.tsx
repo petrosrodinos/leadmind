@@ -64,6 +64,7 @@ export function CampaignWizard({ campaign }: CampaignWizardProps) {
             emailSubject: campaign.email_subject ?? "",
             emailContent: campaign.email_content ?? "",
             smsContent: campaign.sms_content ?? "",
+            linkedinContent: campaign.linkedin_content ?? "",
         }),
         [campaign],
     );
@@ -99,6 +100,7 @@ export function CampaignWizard({ campaign }: CampaignWizardProps) {
                       email_subject: null,
                       email_content: null,
                       sms_content: null,
+                      linkedin_content: null,
                       scheduled_at: null,
                   }
                 : {
@@ -113,6 +115,9 @@ export function CampaignWizard({ campaign }: CampaignWizardProps) {
                           : null,
                       sms_content: basics.channels.includes(Channel.SMS)
                           ? message.smsContent || undefined
+                          : null,
+                      linkedin_content: basics.channels.includes(Channel.LINKEDIN)
+                          ? message.linkedinContent || undefined
                           : null,
                   }),
             ...extra,

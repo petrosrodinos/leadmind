@@ -1,5 +1,6 @@
 import { Chip } from "@heroui/react";
-import type { Contact, Channel } from "@/features/contacts/interfaces/contact.interface";
+import type { Contact } from "@/features/contacts/interfaces/contact.interface";
+import { Channel } from "@/features/contacts/interfaces/contact.interface";
 import { ContactScoresCompact } from "@/pages/dashboard/pages/leads/components/badges";
 
 interface AudiencePreviewTableProps {
@@ -76,7 +77,7 @@ export function AudiencePreviewTable({
                                 </td>
                                 <td className="px-3 py-2 align-top">
                                     <div className="flex flex-wrap gap-1">
-                                        {channels.includes("EMAIL") && (
+                                        {channels.includes(Channel.EMAIL) && (
                                             <Chip
                                                 size="sm"
                                                 variant="soft"
@@ -87,7 +88,7 @@ export function AudiencePreviewTable({
                                                 </Chip.Label>
                                             </Chip>
                                         )}
-                                        {channels.includes("SMS") && (
+                                        {channels.includes(Channel.SMS) && (
                                             <Chip
                                                 size="sm"
                                                 variant="soft"

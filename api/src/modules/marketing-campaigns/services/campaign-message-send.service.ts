@@ -67,6 +67,10 @@ export class CampaignMessageSendService {
             await this.markSkipped(mcc.uuid, mcc.campaign_uuid, 'no_phone');
             return { status: 'skipped', reason: 'no_phone' };
         }
+        if (mcc.channel === Channel.LINKEDIN) {
+            await this.markSkipped(mcc.uuid, mcc.campaign_uuid, 'linkedin_delivery_unavailable');
+            return { status: 'skipped', reason: 'linkedin_delivery_unavailable' };
+        }
         if (mcc.contact.unsubscribed_at) {
             await this.markSkipped(mcc.uuid, mcc.campaign_uuid, 'unsubscribed');
             return { status: 'skipped', reason: 'unsubscribed' };

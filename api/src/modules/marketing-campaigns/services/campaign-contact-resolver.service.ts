@@ -50,7 +50,7 @@ export class CampaignContactResolverService {
             and.push({
                 campaign_contacts: {
                     none: {
-                        channel: { in: [Channel.EMAIL, Channel.SMS] },
+                        channel: { in: [Channel.EMAIL, Channel.SMS, Channel.LINKEDIN] },
                         status: {
                             in: [
                                 CampaignContactStatus.SENT,

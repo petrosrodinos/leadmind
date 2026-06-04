@@ -17,6 +17,9 @@ const EMAIL_FOOTER_PLACEHOLDERS =
 const SMS_FOOTER_PLACEHOLDERS =
     '{{first_name}}, {{full_name}}, {{company_name}}, {{booking_url}}';
 
+const LINKEDIN_FOOTER_PLACEHOLDERS =
+    '{{first_name}}, {{full_name}}, {{company_name}}, {{booking_url}}';
+
 const CONTACT_PLACEHOLDERS =
     '{{contact_first_name}}, {{contact_last_name}}, {{contact_name}}, {{contact_company}}, {{contact_title}}';
 
@@ -74,6 +77,19 @@ SMS RULES — STRICT:
 `.trim();
 }
 
+function linkedinRules(): string {
+    return `
+LINKEDIN DM RULES — STRICT:
+- Short connection/conversation DM — NOT an email, NOT an SMS. Aim for 2-4 short sentences, under 500 characters.
+- Conversational, personable, first-person tone. No subject line. No HTML.
+- Open with a relevant, specific hook, then one clear value point, then a light CTA (e.g. a quick chat or a question).
+- For contact name, use: ${CONTACT_PLACEHOLDERS}.
+- If you sign off, use ONLY: ${LINKEDIN_FOOTER_PLACEHOLDERS}.
+- Placeholders are replaced at send time. Do NOT invent placeholders. Do NOT use square brackets. Do NOT write real or made-up info.
+- A CTA link uses {{booking_url}} as a bare URL (no anchor): e.g. "Grab a slot: {{booking_url}}".
+`.trim();
+}
+
 export function buildCampaignPrompt(
     channel: Channel,
     action: CampaignAiAction,
@@ -81,8 +97,9 @@ export function buildCampaignPrompt(
 ): { prompt: string; system: string } {
     const lang = languageBlock(ctx.language);
     const isEmail = channel === Channel.EMAIL;
-    const channelLabel = isEmail ? 'EMAIL' : 'SMS';
-    const rules = isEmail ? emailRules() : smsRules();
+    const isLinkedIn = channel === Channel.LINKEDIN;
+    const channelLabel = isEmail ? Channel.EMAIL : isLinkedIn ? Channel.LINKEDIN : Channel.SMS;
+    const rules = isEmail ? emailRules() : isLinkedIn ? linkedinRules() : smsRules();
     const campaignCtx = campaignContext(ctx);
     const senderCtx = senderBusinessContext(ctx);
 
@@ -91,7 +108,9 @@ export function buildCampaignPrompt(
 Subject: <subject line, under 80 chars, no placeholders>
 
 <HTML body, 80-150 words, formal-but-warm tone, with a clear CTA. End with a sign-off using sender placeholders.>`
-        : `Output: only the SMS body. No subject. No quotes. No commentary.`;
+        : isLinkedIn
+          ? `Output: only the LinkedIn DM body. No subject. No quotes. No commentary. No markdown.`
+          : `Output: only the SMS body. No subject. No quotes. No commentary.`;
 
     const existing =
         ctx.current_content
@@ -112,7 +131,9 @@ ${ctx.current_subject ? `Subject: ${ctx.current_subject}\n\n` : ''}${ctx.current
         case 'shorten':
             taskLine = isEmail
                 ? `Shorten the existing email below to under 80 words while keeping the CTA and sign-off.`
-                : `Shorten the existing SMS below to fit comfortably under 140 rendered characters.`;
+                : isLinkedIn
+                  ? `Shorten the existing LinkedIn DM below to 2-3 punchy sentences while keeping the hook and CTA.`
+                  : `Shorten the existing SMS below to fit comfortably under 140 rendered characters.`;
             break;
         case 'tone_professional':
             taskLine = `Rewrite the existing ${channelLabel} below in a more professional, polished tone.`;
@@ -150,7 +171,9 @@ ${ctx.current_subject ? `Subject: ${ctx.current_subject}\n\n` : ''}${ctx.current
 
     const system = isEmail
         ? 'You are an expert B2B outreach copywriter for email marketing campaigns. Produce drafts ready for human review.'
-        : 'You are an expert B2B outreach copywriter for SMS marketing campaigns. Produce drafts ready for human review.';
+        : isLinkedIn
+          ? 'You are an expert B2B outreach copywriter for LinkedIn DM campaigns. Produce drafts ready for human review.'
+          : 'You are an expert B2B outreach copywriter for SMS marketing campaigns. Produce drafts ready for human review.';
 
     return { prompt, system };
 }

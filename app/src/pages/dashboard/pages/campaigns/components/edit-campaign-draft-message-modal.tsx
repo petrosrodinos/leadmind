@@ -18,10 +18,12 @@ interface EditCampaignDraftMessageModalProps {
 
 function valueFromDraft(msg: DraftMessage): MessageComposerValue {
     const isEmail = msg.channel === Channel.EMAIL;
+    const isLinkedIn = msg.channel === Channel.LINKEDIN;
     return {
         emailSubject: isEmail ? (msg.subject ?? "") : "",
         emailContent: isEmail ? msg.content : "",
-        smsContent: !isEmail ? msg.content : "",
+        smsContent: !isEmail && !isLinkedIn ? msg.content : "",
+        linkedinContent: isLinkedIn ? msg.content : "",
     };
 }
 
@@ -38,16 +40,18 @@ export const EditCampaignDraftMessageModal: FC<EditCampaignDraftMessageModalProp
     }, [msg]);
 
     const isEmail = msg.channel === Channel.EMAIL;
+    const isLinkedIn = msg.channel === Channel.LINKEDIN;
+    const plainContent = isLinkedIn ? value.linkedinContent : value.smsContent;
     const contentEmpty = isEmail
         ? isEmailHtmlEmpty(value.emailContent)
-        : value.smsContent.trim().length === 0;
+        : plainContent.trim().length === 0;
 
     const handleSave = async () => {
         if (contentEmpty || update.isPending) return;
         const payload =
             msg.channel === Channel.EMAIL
                 ? { subject: value.emailSubject.trim() || undefined, content: value.emailContent }
-                : { content: value.smsContent };
+                : { content: plainContent };
         await update.mutateAsync({
             uuid: msg.uuid,
             payload,

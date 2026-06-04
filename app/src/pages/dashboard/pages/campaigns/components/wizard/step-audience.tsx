@@ -6,7 +6,7 @@ import type {
     PreviewContactsResult,
 } from "@/features/marketing-campaigns/interfaces/campaign.interface";
 import { usePreviewCampaignContacts } from "@/features/marketing-campaigns/hooks/use-marketing-campaigns";
-import type { Channel } from "@/features/contacts/interfaces/contact.interface";
+import { Channel } from "@/features/contacts/interfaces/contact.interface";
 import { AudienceFilterForm } from "../audience-filter-form";
 import { AudiencePreviewTable } from "../audience-preview-table";
 
@@ -28,8 +28,8 @@ export function StepAudience({
 
     // Auto-enforce channel-based contact requirements (not exposed in UI)
     const channelOverrides = useMemo<Partial<CampaignFilters>>(() => ({
-        has_email: channels.includes("EMAIL") ? true : undefined,
-        has_phone: channels.includes("SMS") ? true : undefined,
+        has_email: channels.includes(Channel.EMAIL) ? true : undefined,
+        has_phone: channels.includes(Channel.SMS) ? true : undefined,
     }), [channels]);
 
     const effectiveValue = useMemo<CampaignFilters>(

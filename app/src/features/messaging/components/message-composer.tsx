@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Input, Label, ListBox, Select, TextArea, TextField } from "@heroui/react";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
-import { Mail, MessageSquare, Sparkles } from "lucide-react";
+import { Link2, Mail, MessageSquare, Sparkles } from "lucide-react";
 import { Channel } from "@/features/contacts/interfaces/contact.interface";
 import { OUTREACH_LANGUAGES, type OutreachLanguage } from "@/features/contacts/constants/outreach-languages";
 import { RichTextEditor } from "@/components/ui/rich-text-editor";
@@ -20,6 +20,7 @@ export interface MessageComposerValue {
     emailSubject: string;
     emailContent: string;
     smsContent: string;
+    linkedinContent: string;
 }
 
 export interface AiGenerateArgs {
@@ -65,11 +66,22 @@ export function MessageComposer({
     const [language, setLanguage] = useState<OutreachLanguage>(DEFAULT_LANGUAGE);
 
     const isEmail = activeChannel === Channel.EMAIL;
+    const isLinkedIn = activeChannel === Channel.LINKEDIN;
     const promptEmpty = prompt.trim().length === 0;
+
+    const plainBody = isLinkedIn ? value.linkedinContent : value.smsContent;
 
     const channelHasExisting = isEmail
         ? !isEmailHtmlEmpty(value.emailContent)
-        : value.smsContent.trim().length > 0;
+        : plainBody.trim().length > 0;
+
+    const setPlainBody = (content: string) => {
+        if (isLinkedIn) {
+            onChange({ linkedinContent: content });
+        } else {
+            onChange({ smsContent: content });
+        }
+    };
 
     const runAction = async (action: AiAction) => {
         if (!onAiGenerate || isAiPending) return;
@@ -84,7 +96,7 @@ export function MessageComposer({
                 prompt: prompt.trim(),
                 language,
                 currentSubject: isEmail ? value.emailSubject : undefined,
-                currentContent: isEmail ? value.emailContent : value.smsContent,
+                currentContent: isEmail ? value.emailContent : plainBody,
             });
             if (isEmail) {
                 onChange({
@@ -92,15 +104,16 @@ export function MessageComposer({
                     emailContent: result.content,
                 });
             } else {
-                onChange({ smsContent: result.content });
+                setPlainBody(result.content);
             }
         } catch {
             // toast surfaced by caller hook
         }
     };
 
-    const smsChars = value.smsContent.length;
-    const smsSegments = smsChars === 0 ? 0 : Math.ceil(smsChars / (smsChars <= 160 ? 160 : 153));
+    const plainChars = plainBody.length;
+    const smsSegments =
+        plainChars === 0 ? 0 : Math.ceil(plainChars / (plainChars <= 160 ? 160 : 153));
 
     return (
         <div className="flex flex-col gap-5">
@@ -156,7 +169,9 @@ export function MessageComposer({
                         placeholder={
                             isEmail
                                 ? "e.g. Pitch our service to small clinics, offer a 15-min intro call."
-                                : "e.g. Friendly check-in inviting them to book a call."
+                                : isLinkedIn
+                                  ? "e.g. Warm connection note referencing their role, invite a quick chat."
+                                  : "e.g. Friendly check-in inviting them to book a call."
                         }
                         value={prompt}
                         onChange={(e) => setPrompt(e.target.value)}
@@ -223,15 +238,17 @@ export function MessageComposer({
                             id="composer-content"
                             aria-label="Message content"
                             rows={8}
-                            value={value.smsContent}
-                            onChange={(e) => onChange({ smsContent: e.target.value })}
+                            value={plainBody}
+                            onChange={(e) => setPlainBody(e.target.value)}
                             disabled={disabled || isAiPending}
                         />
                         <div className="flex items-center justify-end gap-3 text-xs text-muted">
-                            <span>{smsChars} chars</span>
-                            <span>
-                                {smsSegments} segment{smsSegments === 1 ? "" : "s"}
-                            </span>
+                            <span>{plainChars} chars</span>
+                            {!isLinkedIn && (
+                                <span>
+                                    {smsSegments} segment{smsSegments === 1 ? "" : "s"}
+                                </span>
+                            )}
                         </div>
                     </>
                 )}
@@ -267,8 +284,16 @@ function ChannelToggle({ channels, activeChannel, onChange, disabled }: ChannelT
                     active={activeChannel === c}
                     onPress={() => onChange(c)}
                     disabled={disabled}
-                    icon={c === Channel.EMAIL ? Mail : MessageSquare}
-                    label={c === Channel.EMAIL ? "Email" : c === Channel.SMS ? "SMS" : c}
+                    icon={c === Channel.EMAIL ? Mail : c === Channel.LINKEDIN ? Link2 : MessageSquare}
+                    label={
+                        c === Channel.EMAIL
+                            ? "Email"
+                            : c === Channel.SMS
+                              ? "SMS"
+                              : c === Channel.LINKEDIN
+                                ? "LinkedIn"
+                                : c
+                    }
                 />
             ))}
         </div>

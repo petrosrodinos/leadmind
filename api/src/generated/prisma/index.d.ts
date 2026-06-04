@@ -21875,6 +21875,7 @@ export namespace Prisma {
     email_subject: string | null
     email_content: string | null
     sms_content: string | null
+    linkedin_content: string | null
     ai_prompt: string | null
     use_openai_batch: boolean | null
     draft_batch_id: string | null
@@ -21912,6 +21913,7 @@ export namespace Prisma {
     email_subject: string | null
     email_content: string | null
     sms_content: string | null
+    linkedin_content: string | null
     ai_prompt: string | null
     use_openai_batch: boolean | null
     draft_batch_id: string | null
@@ -21951,6 +21953,7 @@ export namespace Prisma {
     email_subject: number
     email_content: number
     sms_content: number
+    linkedin_content: number
     ai_prompt: number
     use_openai_batch: number
     draft_batch_id: number
@@ -22026,6 +22029,7 @@ export namespace Prisma {
     email_subject?: true
     email_content?: true
     sms_content?: true
+    linkedin_content?: true
     ai_prompt?: true
     use_openai_batch?: true
     draft_batch_id?: true
@@ -22063,6 +22067,7 @@ export namespace Prisma {
     email_subject?: true
     email_content?: true
     sms_content?: true
+    linkedin_content?: true
     ai_prompt?: true
     use_openai_batch?: true
     draft_batch_id?: true
@@ -22102,6 +22107,7 @@ export namespace Prisma {
     email_subject?: true
     email_content?: true
     sms_content?: true
+    linkedin_content?: true
     ai_prompt?: true
     use_openai_batch?: true
     draft_batch_id?: true
@@ -22228,6 +22234,7 @@ export namespace Prisma {
     email_subject: string | null
     email_content: string | null
     sms_content: string | null
+    linkedin_content: string | null
     ai_prompt: string | null
     use_openai_batch: boolean
     draft_batch_id: string | null
@@ -22286,6 +22293,7 @@ export namespace Prisma {
     email_subject?: boolean
     email_content?: boolean
     sms_content?: boolean
+    linkedin_content?: boolean
     ai_prompt?: boolean
     use_openai_batch?: boolean
     draft_batch_id?: boolean
@@ -22331,6 +22339,7 @@ export namespace Prisma {
     email_subject?: boolean
     email_content?: boolean
     sms_content?: boolean
+    linkedin_content?: boolean
     ai_prompt?: boolean
     use_openai_batch?: boolean
     draft_batch_id?: boolean
@@ -22372,6 +22381,7 @@ export namespace Prisma {
     email_subject?: boolean
     email_content?: boolean
     sms_content?: boolean
+    linkedin_content?: boolean
     ai_prompt?: boolean
     use_openai_batch?: boolean
     draft_batch_id?: boolean
@@ -22413,6 +22423,7 @@ export namespace Prisma {
     email_subject?: boolean
     email_content?: boolean
     sms_content?: boolean
+    linkedin_content?: boolean
     ai_prompt?: boolean
     use_openai_batch?: boolean
     draft_batch_id?: boolean
@@ -22439,7 +22450,7 @@ export namespace Prisma {
     updated_at?: boolean
   }
 
-  export type MarketingCampaignOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "name" | "description" | "status" | "campaign_type" | "channels" | "filters_snapshot" | "email_subject" | "email_content" | "sms_content" | "ai_prompt" | "use_openai_batch" | "draft_batch_id" | "sender_profile_uuid" | "scheduled_at" | "started_at" | "completed_at" | "cancelled_at" | "selected_contact_count" | "total_messages" | "queued_count" | "sent_count" | "failed_count" | "skipped_count" | "delivered_count" | "opened_count" | "clicked_count" | "replied_count" | "website_visit_count" | "booking_visit_count" | "bounced_count" | "unsubscribed_count" | "created_at" | "updated_at", ExtArgs["result"]["marketingCampaign"]>
+  export type MarketingCampaignOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "name" | "description" | "status" | "campaign_type" | "channels" | "filters_snapshot" | "email_subject" | "email_content" | "sms_content" | "linkedin_content" | "ai_prompt" | "use_openai_batch" | "draft_batch_id" | "sender_profile_uuid" | "scheduled_at" | "started_at" | "completed_at" | "cancelled_at" | "selected_contact_count" | "total_messages" | "queued_count" | "sent_count" | "failed_count" | "skipped_count" | "delivered_count" | "opened_count" | "clicked_count" | "replied_count" | "website_visit_count" | "booking_visit_count" | "bounced_count" | "unsubscribed_count" | "created_at" | "updated_at", ExtArgs["result"]["marketingCampaign"]>
   export type MarketingCampaignInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     sender_profile?: boolean | MarketingCampaign$sender_profileArgs<ExtArgs>
@@ -22479,6 +22490,7 @@ export namespace Prisma {
       email_subject: string | null
       email_content: string | null
       sms_content: string | null
+      linkedin_content: string | null
       ai_prompt: string | null
       use_openai_batch: boolean
       draft_batch_id: string | null
@@ -22943,6 +22955,7 @@ export namespace Prisma {
     readonly email_subject: FieldRef<"MarketingCampaign", 'String'>
     readonly email_content: FieldRef<"MarketingCampaign", 'String'>
     readonly sms_content: FieldRef<"MarketingCampaign", 'String'>
+    readonly linkedin_content: FieldRef<"MarketingCampaign", 'String'>
     readonly ai_prompt: FieldRef<"MarketingCampaign", 'String'>
     readonly use_openai_batch: FieldRef<"MarketingCampaign", 'Boolean'>
     readonly draft_batch_id: FieldRef<"MarketingCampaign", 'String'>
@@ -28475,6 +28488,7 @@ export namespace Prisma {
     email_subject: 'email_subject',
     email_content: 'email_content',
     sms_content: 'sms_content',
+    linkedin_content: 'linkedin_content',
     ai_prompt: 'ai_prompt',
     use_openai_batch: 'use_openai_batch',
     draft_batch_id: 'draft_batch_id',
@@ -30441,6 +30455,7 @@ export namespace Prisma {
     email_subject?: StringNullableFilter<"MarketingCampaign"> | string | null
     email_content?: StringNullableFilter<"MarketingCampaign"> | string | null
     sms_content?: StringNullableFilter<"MarketingCampaign"> | string | null
+    linkedin_content?: StringNullableFilter<"MarketingCampaign"> | string | null
     ai_prompt?: StringNullableFilter<"MarketingCampaign"> | string | null
     use_openai_batch?: BoolFilter<"MarketingCampaign"> | boolean
     draft_batch_id?: StringNullableFilter<"MarketingCampaign"> | string | null
@@ -30485,6 +30500,7 @@ export namespace Prisma {
     email_subject?: SortOrderInput | SortOrder
     email_content?: SortOrderInput | SortOrder
     sms_content?: SortOrderInput | SortOrder
+    linkedin_content?: SortOrderInput | SortOrder
     ai_prompt?: SortOrderInput | SortOrder
     use_openai_batch?: SortOrder
     draft_batch_id?: SortOrderInput | SortOrder
@@ -30532,6 +30548,7 @@ export namespace Prisma {
     email_subject?: StringNullableFilter<"MarketingCampaign"> | string | null
     email_content?: StringNullableFilter<"MarketingCampaign"> | string | null
     sms_content?: StringNullableFilter<"MarketingCampaign"> | string | null
+    linkedin_content?: StringNullableFilter<"MarketingCampaign"> | string | null
     ai_prompt?: StringNullableFilter<"MarketingCampaign"> | string | null
     use_openai_batch?: BoolFilter<"MarketingCampaign"> | boolean
     draft_batch_id?: StringNullableFilter<"MarketingCampaign"> | string | null
@@ -30576,6 +30593,7 @@ export namespace Prisma {
     email_subject?: SortOrderInput | SortOrder
     email_content?: SortOrderInput | SortOrder
     sms_content?: SortOrderInput | SortOrder
+    linkedin_content?: SortOrderInput | SortOrder
     ai_prompt?: SortOrderInput | SortOrder
     use_openai_batch?: SortOrder
     draft_batch_id?: SortOrderInput | SortOrder
@@ -30623,6 +30641,7 @@ export namespace Prisma {
     email_subject?: StringNullableWithAggregatesFilter<"MarketingCampaign"> | string | null
     email_content?: StringNullableWithAggregatesFilter<"MarketingCampaign"> | string | null
     sms_content?: StringNullableWithAggregatesFilter<"MarketingCampaign"> | string | null
+    linkedin_content?: StringNullableWithAggregatesFilter<"MarketingCampaign"> | string | null
     ai_prompt?: StringNullableWithAggregatesFilter<"MarketingCampaign"> | string | null
     use_openai_batch?: BoolWithAggregatesFilter<"MarketingCampaign"> | boolean
     draft_batch_id?: StringNullableWithAggregatesFilter<"MarketingCampaign"> | string | null
@@ -32605,6 +32624,7 @@ export namespace Prisma {
     email_subject?: string | null
     email_content?: string | null
     sms_content?: string | null
+    linkedin_content?: string | null
     ai_prompt?: string | null
     use_openai_batch?: boolean
     draft_batch_id?: string | null
@@ -32648,6 +32668,7 @@ export namespace Prisma {
     email_subject?: string | null
     email_content?: string | null
     sms_content?: string | null
+    linkedin_content?: string | null
     ai_prompt?: string | null
     use_openai_batch?: boolean
     draft_batch_id?: string | null
@@ -32688,6 +32709,7 @@ export namespace Prisma {
     email_subject?: NullableStringFieldUpdateOperationsInput | string | null
     email_content?: NullableStringFieldUpdateOperationsInput | string | null
     sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedin_content?: NullableStringFieldUpdateOperationsInput | string | null
     ai_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     use_openai_batch?: BoolFieldUpdateOperationsInput | boolean
     draft_batch_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32731,6 +32753,7 @@ export namespace Prisma {
     email_subject?: NullableStringFieldUpdateOperationsInput | string | null
     email_content?: NullableStringFieldUpdateOperationsInput | string | null
     sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedin_content?: NullableStringFieldUpdateOperationsInput | string | null
     ai_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     use_openai_batch?: BoolFieldUpdateOperationsInput | boolean
     draft_batch_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32773,6 +32796,7 @@ export namespace Prisma {
     email_subject?: string | null
     email_content?: string | null
     sms_content?: string | null
+    linkedin_content?: string | null
     ai_prompt?: string | null
     use_openai_batch?: boolean
     draft_batch_id?: string | null
@@ -32810,6 +32834,7 @@ export namespace Prisma {
     email_subject?: NullableStringFieldUpdateOperationsInput | string | null
     email_content?: NullableStringFieldUpdateOperationsInput | string | null
     sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedin_content?: NullableStringFieldUpdateOperationsInput | string | null
     ai_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     use_openai_batch?: BoolFieldUpdateOperationsInput | boolean
     draft_batch_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32848,6 +32873,7 @@ export namespace Prisma {
     email_subject?: NullableStringFieldUpdateOperationsInput | string | null
     email_content?: NullableStringFieldUpdateOperationsInput | string | null
     sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedin_content?: NullableStringFieldUpdateOperationsInput | string | null
     ai_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     use_openai_batch?: BoolFieldUpdateOperationsInput | boolean
     draft_batch_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -34787,6 +34813,7 @@ export namespace Prisma {
     email_subject?: SortOrder
     email_content?: SortOrder
     sms_content?: SortOrder
+    linkedin_content?: SortOrder
     ai_prompt?: SortOrder
     use_openai_batch?: SortOrder
     draft_batch_id?: SortOrder
@@ -34842,6 +34869,7 @@ export namespace Prisma {
     email_subject?: SortOrder
     email_content?: SortOrder
     sms_content?: SortOrder
+    linkedin_content?: SortOrder
     ai_prompt?: SortOrder
     use_openai_batch?: SortOrder
     draft_batch_id?: SortOrder
@@ -34879,6 +34907,7 @@ export namespace Prisma {
     email_subject?: SortOrder
     email_content?: SortOrder
     sms_content?: SortOrder
+    linkedin_content?: SortOrder
     ai_prompt?: SortOrder
     use_openai_batch?: SortOrder
     draft_batch_id?: SortOrder
@@ -37947,6 +37976,7 @@ export namespace Prisma {
     email_subject?: string | null
     email_content?: string | null
     sms_content?: string | null
+    linkedin_content?: string | null
     ai_prompt?: string | null
     use_openai_batch?: boolean
     draft_batch_id?: string | null
@@ -37988,6 +38018,7 @@ export namespace Prisma {
     email_subject?: string | null
     email_content?: string | null
     sms_content?: string | null
+    linkedin_content?: string | null
     ai_prompt?: string | null
     use_openai_batch?: boolean
     draft_batch_id?: string | null
@@ -38396,6 +38427,7 @@ export namespace Prisma {
     email_subject?: StringNullableFilter<"MarketingCampaign"> | string | null
     email_content?: StringNullableFilter<"MarketingCampaign"> | string | null
     sms_content?: StringNullableFilter<"MarketingCampaign"> | string | null
+    linkedin_content?: StringNullableFilter<"MarketingCampaign"> | string | null
     ai_prompt?: StringNullableFilter<"MarketingCampaign"> | string | null
     use_openai_batch?: BoolFilter<"MarketingCampaign"> | boolean
     draft_batch_id?: StringNullableFilter<"MarketingCampaign"> | string | null
@@ -40771,6 +40803,7 @@ export namespace Prisma {
     email_subject?: string | null
     email_content?: string | null
     sms_content?: string | null
+    linkedin_content?: string | null
     ai_prompt?: string | null
     use_openai_batch?: boolean
     draft_batch_id?: string | null
@@ -40813,6 +40846,7 @@ export namespace Prisma {
     email_subject?: string | null
     email_content?: string | null
     sms_content?: string | null
+    linkedin_content?: string | null
     ai_prompt?: string | null
     use_openai_batch?: boolean
     draft_batch_id?: string | null
@@ -41044,6 +41078,7 @@ export namespace Prisma {
     email_subject?: NullableStringFieldUpdateOperationsInput | string | null
     email_content?: NullableStringFieldUpdateOperationsInput | string | null
     sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedin_content?: NullableStringFieldUpdateOperationsInput | string | null
     ai_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     use_openai_batch?: BoolFieldUpdateOperationsInput | boolean
     draft_batch_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -41086,6 +41121,7 @@ export namespace Prisma {
     email_subject?: NullableStringFieldUpdateOperationsInput | string | null
     email_content?: NullableStringFieldUpdateOperationsInput | string | null
     sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedin_content?: NullableStringFieldUpdateOperationsInput | string | null
     ai_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     use_openai_batch?: BoolFieldUpdateOperationsInput | boolean
     draft_batch_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -41231,6 +41267,7 @@ export namespace Prisma {
     email_subject?: string | null
     email_content?: string | null
     sms_content?: string | null
+    linkedin_content?: string | null
     ai_prompt?: string | null
     use_openai_batch?: boolean
     draft_batch_id?: string | null
@@ -41273,6 +41310,7 @@ export namespace Prisma {
     email_subject?: string | null
     email_content?: string | null
     sms_content?: string | null
+    linkedin_content?: string | null
     ai_prompt?: string | null
     use_openai_batch?: boolean
     draft_batch_id?: string | null
@@ -41478,6 +41516,7 @@ export namespace Prisma {
     email_subject?: NullableStringFieldUpdateOperationsInput | string | null
     email_content?: NullableStringFieldUpdateOperationsInput | string | null
     sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedin_content?: NullableStringFieldUpdateOperationsInput | string | null
     ai_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     use_openai_batch?: BoolFieldUpdateOperationsInput | boolean
     draft_batch_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -41520,6 +41559,7 @@ export namespace Prisma {
     email_subject?: NullableStringFieldUpdateOperationsInput | string | null
     email_content?: NullableStringFieldUpdateOperationsInput | string | null
     sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedin_content?: NullableStringFieldUpdateOperationsInput | string | null
     ai_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     use_openai_batch?: BoolFieldUpdateOperationsInput | boolean
     draft_batch_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -41825,6 +41865,7 @@ export namespace Prisma {
     email_subject?: string | null
     email_content?: string | null
     sms_content?: string | null
+    linkedin_content?: string | null
     ai_prompt?: string | null
     use_openai_batch?: boolean
     draft_batch_id?: string | null
@@ -41867,6 +41908,7 @@ export namespace Prisma {
     email_subject?: string | null
     email_content?: string | null
     sms_content?: string | null
+    linkedin_content?: string | null
     ai_prompt?: string | null
     use_openai_batch?: boolean
     draft_batch_id?: string | null
@@ -42375,6 +42417,7 @@ export namespace Prisma {
     email_subject?: string | null
     email_content?: string | null
     sms_content?: string | null
+    linkedin_content?: string | null
     ai_prompt?: string | null
     use_openai_batch?: boolean
     draft_batch_id?: string | null
@@ -42417,6 +42460,7 @@ export namespace Prisma {
     email_subject?: string | null
     email_content?: string | null
     sms_content?: string | null
+    linkedin_content?: string | null
     ai_prompt?: string | null
     use_openai_batch?: boolean
     draft_batch_id?: string | null
@@ -42534,6 +42578,7 @@ export namespace Prisma {
     email_subject?: NullableStringFieldUpdateOperationsInput | string | null
     email_content?: NullableStringFieldUpdateOperationsInput | string | null
     sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedin_content?: NullableStringFieldUpdateOperationsInput | string | null
     ai_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     use_openai_batch?: BoolFieldUpdateOperationsInput | boolean
     draft_batch_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -42576,6 +42621,7 @@ export namespace Prisma {
     email_subject?: NullableStringFieldUpdateOperationsInput | string | null
     email_content?: NullableStringFieldUpdateOperationsInput | string | null
     sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedin_content?: NullableStringFieldUpdateOperationsInput | string | null
     ai_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     use_openai_batch?: BoolFieldUpdateOperationsInput | boolean
     draft_batch_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -43099,6 +43145,7 @@ export namespace Prisma {
     email_subject?: string | null
     email_content?: string | null
     sms_content?: string | null
+    linkedin_content?: string | null
     ai_prompt?: string | null
     use_openai_batch?: boolean
     draft_batch_id?: string | null
@@ -43521,6 +43568,7 @@ export namespace Prisma {
     email_subject?: NullableStringFieldUpdateOperationsInput | string | null
     email_content?: NullableStringFieldUpdateOperationsInput | string | null
     sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedin_content?: NullableStringFieldUpdateOperationsInput | string | null
     ai_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     use_openai_batch?: BoolFieldUpdateOperationsInput | boolean
     draft_batch_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -43562,6 +43610,7 @@ export namespace Prisma {
     email_subject?: NullableStringFieldUpdateOperationsInput | string | null
     email_content?: NullableStringFieldUpdateOperationsInput | string | null
     sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedin_content?: NullableStringFieldUpdateOperationsInput | string | null
     ai_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     use_openai_batch?: BoolFieldUpdateOperationsInput | boolean
     draft_batch_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -43603,6 +43652,7 @@ export namespace Prisma {
     email_subject?: NullableStringFieldUpdateOperationsInput | string | null
     email_content?: NullableStringFieldUpdateOperationsInput | string | null
     sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedin_content?: NullableStringFieldUpdateOperationsInput | string | null
     ai_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     use_openai_batch?: BoolFieldUpdateOperationsInput | boolean
     draft_batch_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -44431,6 +44481,7 @@ export namespace Prisma {
     email_subject?: string | null
     email_content?: string | null
     sms_content?: string | null
+    linkedin_content?: string | null
     ai_prompt?: string | null
     use_openai_batch?: boolean
     draft_batch_id?: string | null
@@ -44467,6 +44518,7 @@ export namespace Prisma {
     email_subject?: NullableStringFieldUpdateOperationsInput | string | null
     email_content?: NullableStringFieldUpdateOperationsInput | string | null
     sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedin_content?: NullableStringFieldUpdateOperationsInput | string | null
     ai_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     use_openai_batch?: BoolFieldUpdateOperationsInput | boolean
     draft_batch_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -44509,6 +44561,7 @@ export namespace Prisma {
     email_subject?: NullableStringFieldUpdateOperationsInput | string | null
     email_content?: NullableStringFieldUpdateOperationsInput | string | null
     sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedin_content?: NullableStringFieldUpdateOperationsInput | string | null
     ai_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     use_openai_batch?: BoolFieldUpdateOperationsInput | boolean
     draft_batch_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -44550,6 +44603,7 @@ export namespace Prisma {
     email_subject?: NullableStringFieldUpdateOperationsInput | string | null
     email_content?: NullableStringFieldUpdateOperationsInput | string | null
     sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedin_content?: NullableStringFieldUpdateOperationsInput | string | null
     ai_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     use_openai_batch?: BoolFieldUpdateOperationsInput | boolean
     draft_batch_id?: NullableStringFieldUpdateOperationsInput | string | null

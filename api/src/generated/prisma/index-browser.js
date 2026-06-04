@@ -355,6 +355,7 @@ exports.Prisma.MarketingCampaignScalarFieldEnum = {
   email_subject: 'email_subject',
   email_content: 'email_content',
   sms_content: 'sms_content',
+  linkedin_content: 'linkedin_content',
   ai_prompt: 'ai_prompt',
   use_openai_batch: 'use_openai_batch',
   draft_batch_id: 'draft_batch_id',

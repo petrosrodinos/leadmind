@@ -1,6 +1,6 @@
 import { Chip } from "@heroui/react";
-import { Calendar, Mail, MessageSquare, Sparkles, Users } from "lucide-react";
-import type { Channel } from "@/features/contacts/interfaces/contact.interface";
+import { Calendar, Link2, Mail, MessageSquare, Sparkles, Users } from "lucide-react";
+import { Channel } from "@/features/contacts/interfaces/contact.interface";
 import { CampaignType } from "@/features/marketing-campaigns/interfaces/campaign.interface";
 import type { MessageComposerValue } from "@/features/messaging/components/message-composer";
 import type { BasicsValues } from "./step-basics";
@@ -25,7 +25,13 @@ export function StepReview({ basics, audienceCount, message, aiPrompt }: StepRev
                 <div className="flex flex-wrap gap-2 pt-1">
                     {basics.channels.map((c) => (
                         <Chip key={c} size="sm" variant="soft" color="accent">
-                            {c === "EMAIL" ? <Mail className="size-3" /> : <MessageSquare className="size-3" />}
+                            {c === Channel.EMAIL ? (
+                                <Mail className="size-3" />
+                            ) : c === Channel.LINKEDIN ? (
+                                <Link2 className="size-3" />
+                            ) : (
+                                <MessageSquare className="size-3" />
+                            )}
                             <Chip.Label>{c}</Chip.Label>
                         </Chip>
                     ))}
@@ -66,7 +72,7 @@ export function StepReview({ basics, audienceCount, message, aiPrompt }: StepRev
                 </section>
             )}
 
-            {!isPersonalized && basics.channels.includes("EMAIL" as Channel) && (
+            {!isPersonalized && basics.channels.includes(Channel.EMAIL) && (
                 <section className="rounded-xl border border-border bg-surface p-4 space-y-3">
                     <h3 className="text-xs uppercase tracking-wide text-muted">Email</h3>
                     <div>
@@ -88,7 +94,7 @@ export function StepReview({ basics, audienceCount, message, aiPrompt }: StepRev
                 </section>
             )}
 
-            {!isPersonalized && basics.channels.includes("SMS" as Channel) && (
+            {!isPersonalized && basics.channels.includes(Channel.SMS) && (
                 <section className="rounded-xl border border-border bg-surface p-4 space-y-2">
                     <h3 className="text-xs uppercase tracking-wide text-muted">SMS</h3>
                     <div className="rounded-lg border border-border bg-surface-secondary/30 p-3 text-sm whitespace-pre-wrap">
@@ -105,6 +111,18 @@ export function StepReview({ basics, audienceCount, message, aiPrompt }: StepRev
                                   )}{" "}
                             segments
                         </div>
+                    )}
+                </section>
+            )}
+
+            {!isPersonalized && basics.channels.includes(Channel.LINKEDIN) && (
+                <section className="rounded-xl border border-border bg-surface p-4 space-y-2">
+                    <h3 className="text-xs uppercase tracking-wide text-muted">LinkedIn</h3>
+                    <div className="rounded-lg border border-border bg-surface-secondary/30 p-3 text-sm whitespace-pre-wrap">
+                        {message.linkedinContent || <span className="text-muted italic">— missing —</span>}
+                    </div>
+                    {message.linkedinContent && (
+                        <div className="text-xs text-muted">{message.linkedinContent.length} chars</div>
                     )}
                 </section>
             )}
