@@ -8,6 +8,7 @@ import {
     CalendarClock,
     ExternalLink,
     Globe,
+    MapPin,
     Pencil,
     Tag,
     X,
@@ -49,8 +50,9 @@ export function OverviewTab({ contact }: OverviewTabProps) {
 
 function IdentitySidebar({ contact }: { contact: Contact }) {
     const websiteHref = contact.website?.trim() ? normalizeUrl(contact.website.trim()) : undefined;
+    const googleMapsHref = contact.google_maps_url?.trim() || undefined;
     const linkedinHref = contact.linkedin_url?.trim() || undefined;
-    const hasLinks = !!(linkedinHref || websiteHref);
+    const hasLinks = !!(linkedinHref || websiteHref || googleMapsHref);
 
     return (
         <aside className="flex flex-col gap-5 lg:w-56 lg:shrink-0 lg:border-r lg:border-border/50 lg:pr-8">
@@ -122,6 +124,17 @@ function IdentitySidebar({ contact }: { contact: Contact }) {
                                 Website
                             </a>
                         ) : null}
+                        {googleMapsHref ? (
+                            <a
+                                href={googleMapsHref}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2.5 rounded-lg px-2 py-2 text-sm text-muted transition-colors hover:bg-surface-secondary/80 hover:text-foreground"
+                            >
+                                <MapPin className="size-4 shrink-0 text-accent" strokeWidth={2} aria-hidden />
+                                Google Maps
+                            </a>
+                        ) : null}
                     </>
                 ) : (
                     <p className="px-2 text-xs italic text-muted/50">No links on file.</p>
@@ -150,6 +163,7 @@ function DetailPanel({ contact, onEdit }: { contact: Contact; onEdit: () => void
     );
 
     const websiteHref = contact.website?.trim() ? normalizeUrl(contact.website.trim()) : undefined;
+    const googleMapsHref = contact.google_maps_url?.trim() || undefined;
     const linkedinHref = contact.linkedin_url?.trim() || undefined;
 
     return (
@@ -200,6 +214,9 @@ function DetailPanel({ contact, onEdit }: { contact: Contact; onEdit: () => void
             <SectionCard title="Links & Presence" icon={Globe}>
                 <Row label="Website">
                     <ProfileValue value={contact.website} href={websiteHref} />
+                </Row>
+                <Row label="Google Maps">
+                    <ProfileValue value={contact.google_maps_url} href={googleMapsHref} />
                 </Row>
                 <Row label="LinkedIn">
                     <ProfileValue value={contact.linkedin_url} href={linkedinHref} />
@@ -255,6 +272,7 @@ function EditForm({ contact, onDone }: { contact: Contact; onDone: () => void })
             phone: t(draft.phone) || undefined,
             company: t(draft.company) || undefined,
             website: t(draft.website) || undefined,
+            google_maps_url: t(draft.google_maps_url) || undefined,
             title: t(draft.title) || undefined,
             location: t(draft.location) || undefined,
             linkedin_url: t(draft.linkedin_url) || undefined,
@@ -350,6 +368,15 @@ function EditForm({ contact, onDone }: { contact: Contact; onDone: () => void })
                     placeholder="https://example.com"
                     Icon={Globe}
                     openAriaLabel="Open website in new tab"
+                />
+                <OverviewUrlField
+                    id="pf-google-maps"
+                    label="Google Maps"
+                    value={draft.google_maps_url}
+                    onChange={(e) => setField("google_maps_url", e.target.value)}
+                    placeholder="https://maps.google.com/…"
+                    Icon={MapPin}
+                    openAriaLabel="Open Google Maps listing in new tab"
                 />
                 <OverviewUrlField
                     id="pf-linkedin"

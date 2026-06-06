@@ -78,6 +78,7 @@ export function LeadDrawer({ contactUuid, isOpen, onOpenChange }: LeadDrawerProp
                     <Field label="Location" value={contact.location} />
                     <Field label="Industry" value={contact.industry} />
                     <Field label="Website" value={contact.website} link />
+                    <Field label="Google Maps" value={contact.google_maps_url} link />
                     <Field label="LinkedIn" value={contact.linkedin_url} link />
                     <Field label="Source">
                       <SourceBadge source={contact.lead.source_type} />

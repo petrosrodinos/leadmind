@@ -45,6 +45,12 @@ export class CreateContactDto {
     @MaxLength(500)
     website?: string;
 
+    @ApiPropertyOptional()
+    @IsOptional()
+    @IsUrl({ require_protocol: false })
+    @MaxLength(500)
+    google_maps_url?: string;
+
     @ApiPropertyOptional({ maxLength: 200 })
     @IsOptional()
     @IsString()

@@ -250,6 +250,7 @@ export class ElasticsearchService implements OnModuleInit {
             lead.industry && `Industry: ${lead.industry}`,
             lead.location && `Location: ${lead.location}`,
             lead.website && `Website: ${lead.website}`,
+            lead.google_maps_url && `Google Maps: ${lead.google_maps_url}`,
             lead.description && `Description: ${lead.description}`,
             enrichmentSummary && `Summary: ${enrichmentSummary}`,
         ]
@@ -265,6 +266,7 @@ export class ElasticsearchService implements OnModuleInit {
             contact.industry && `Industry: ${contact.industry}`,
             contact.location && `Location: ${contact.location}`,
             contact.website && `Website: ${contact.website}`,
+            contact.google_maps_url && `Google Maps: ${contact.google_maps_url}`,
             contact.email && `Email: ${contact.email}`,
             contact.phone && `Phone: ${contact.phone}`,
             contact.linkedin_url && `LinkedIn: ${contact.linkedin_url}`,

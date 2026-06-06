@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { Button, Input, Label, TextArea } from "@heroui/react";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
-import { AtSign, Briefcase, Building2, CalendarClock, ExternalLink, Globe, Pencil, Tag, X } from "lucide-react";
+import { AtSign, Briefcase, Building2, CalendarClock, ExternalLink, Globe, MapPin, Pencil, Tag, X } from "lucide-react";
 import type { Lead } from "@/features/leads/interfaces/lead.interface";
 import type { UpdateLeadPayload } from "@/features/leads/interfaces/lead.interface";
 import { useUpdateLead } from "@/features/leads/hooks/use-leads";
@@ -23,6 +23,7 @@ type LeadDraft = {
     phone: string;
     company: string;
     website: string;
+    google_maps_url: string;
     linkedin_url: string;
     title: string;
     location: string;
@@ -37,6 +38,7 @@ function draftFromLead(lead: Lead): LeadDraft {
         phone: lead.phone ?? "",
         company: lead.company ?? "",
         website: lead.website ?? "",
+        google_maps_url: lead.google_maps_url ?? "",
         linkedin_url: lead.linkedin_url ?? "",
         title: lead.title ?? "",
         location: lead.location ?? "",
@@ -65,8 +67,9 @@ export function LeadDirectoryProfileTab({ lead }: LeadDirectoryProfileTabProps) 
 
 function IdentitySidebar({ lead }: { lead: Lead }) {
     const websiteHref = lead.website?.trim() ? normalizeUrl(lead.website.trim()) : undefined;
+    const googleMapsHref = lead.google_maps_url?.trim() || undefined;
     const linkedinHref = lead.linkedin_url?.trim() || undefined;
-    const hasLinks = !!(linkedinHref || websiteHref);
+    const hasLinks = !!(linkedinHref || websiteHref || googleMapsHref);
 
     return (
         <aside className="flex flex-col gap-5 lg:w-56 lg:shrink-0 lg:border-r lg:border-border/50 lg:pr-8">
@@ -125,6 +128,17 @@ function IdentitySidebar({ lead }: { lead: Lead }) {
                                 Website
                             </a>
                         ) : null}
+                        {googleMapsHref ? (
+                            <a
+                                href={googleMapsHref}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2.5 rounded-lg px-2 py-2 text-sm text-muted transition-colors hover:bg-surface-secondary/80 hover:text-foreground"
+                            >
+                                <MapPin className="size-4 shrink-0 text-accent" strokeWidth={2} aria-hidden />
+                                Google Maps
+                            </a>
+                        ) : null}
                     </>
                 ) : (
                     <p className="px-2 text-xs italic text-muted/50">No links on file.</p>
@@ -147,6 +161,7 @@ function IdentitySidebar({ lead }: { lead: Lead }) {
 
 function DetailPanel({ lead, canEdit, onEdit }: { lead: Lead; canEdit: boolean; onEdit: () => void }) {
     const websiteHref = lead.website?.trim() ? normalizeUrl(lead.website.trim()) : undefined;
+    const googleMapsHref = lead.google_maps_url?.trim() || undefined;
     const linkedinHref = lead.linkedin_url?.trim() || undefined;
 
     return (
@@ -200,6 +215,9 @@ function DetailPanel({ lead, canEdit, onEdit }: { lead: Lead; canEdit: boolean; 
                 <Row label="Website">
                     <ProfileValue value={lead.website} href={websiteHref} />
                 </Row>
+                <Row label="Google Maps">
+                    <ProfileValue value={lead.google_maps_url} href={googleMapsHref} />
+                </Row>
                 <Row label="LinkedIn">
                     <ProfileValue value={lead.linkedin_url} href={linkedinHref} />
                 </Row>
@@ -242,6 +260,7 @@ function EditForm({ lead, onDone }: { lead: Lead; onDone: () => void }) {
             phone: t(draft.phone) || undefined,
             company: t(draft.company) || undefined,
             website: t(draft.website) || undefined,
+            google_maps_url: t(draft.google_maps_url) || undefined,
             title: t(draft.title) || undefined,
             location: t(draft.location) || undefined,
             linkedin_url: t(draft.linkedin_url) || undefined,
@@ -308,6 +327,15 @@ function EditForm({ lead, onDone }: { lead: Lead; onDone: () => void }) {
                     placeholder="https://example.com"
                     Icon={Globe}
                     openAriaLabel="Open website in new tab"
+                />
+                <OverviewUrlField
+                    id="ld-google-maps"
+                    label="Google Maps"
+                    value={draft.google_maps_url}
+                    onChange={(e) => setField("google_maps_url", e.target.value)}
+                    placeholder="https://maps.google.com/…"
+                    Icon={MapPin}
+                    openAriaLabel="Open Google Maps listing in new tab"
                 />
                 <OverviewUrlField
                     id="ld-linkedin"

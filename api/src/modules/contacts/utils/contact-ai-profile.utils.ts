@@ -10,6 +10,7 @@ export function formatContactForAi(contact: Contact, lead: Lead): string {
         `Industry: ${contact.industry ?? 'N/A'}`,
         `Location: ${contact.location ?? 'N/A'}`,
         `Website: ${contact.website ?? 'N/A'}`,
+        `Google Maps: ${contact.google_maps_url ?? 'N/A'}`,
         `Email: ${contact.email ?? 'N/A'}`,
         `Phone: ${contact.phone ?? 'N/A'}`,
         `LinkedIn: ${contact.linkedin_url ?? 'N/A'}`,

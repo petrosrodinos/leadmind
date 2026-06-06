@@ -9385,6 +9385,7 @@ export namespace Prisma {
     phone: string | null
     company: string | null
     website: string | null
+    google_maps_url: string | null
     linkedin_url: string | null
     title: string | null
     location: string | null
@@ -9405,6 +9406,7 @@ export namespace Prisma {
     phone: string | null
     company: string | null
     website: string | null
+    google_maps_url: string | null
     linkedin_url: string | null
     title: string | null
     location: string | null
@@ -9425,6 +9427,7 @@ export namespace Prisma {
     phone: number
     company: number
     website: number
+    google_maps_url: number
     linkedin_url: number
     title: number
     location: number
@@ -9457,6 +9460,7 @@ export namespace Prisma {
     phone?: true
     company?: true
     website?: true
+    google_maps_url?: true
     linkedin_url?: true
     title?: true
     location?: true
@@ -9477,6 +9481,7 @@ export namespace Prisma {
     phone?: true
     company?: true
     website?: true
+    google_maps_url?: true
     linkedin_url?: true
     title?: true
     location?: true
@@ -9497,6 +9502,7 @@ export namespace Prisma {
     phone?: true
     company?: true
     website?: true
+    google_maps_url?: true
     linkedin_url?: true
     title?: true
     location?: true
@@ -9606,6 +9612,7 @@ export namespace Prisma {
     phone: string | null
     company: string | null
     website: string | null
+    google_maps_url: string | null
     linkedin_url: string | null
     title: string | null
     location: string | null
@@ -9647,6 +9654,7 @@ export namespace Prisma {
     phone?: boolean
     company?: boolean
     website?: boolean
+    google_maps_url?: boolean
     linkedin_url?: boolean
     title?: boolean
     location?: boolean
@@ -9673,6 +9681,7 @@ export namespace Prisma {
     phone?: boolean
     company?: boolean
     website?: boolean
+    google_maps_url?: boolean
     linkedin_url?: boolean
     title?: boolean
     location?: boolean
@@ -9696,6 +9705,7 @@ export namespace Prisma {
     phone?: boolean
     company?: boolean
     website?: boolean
+    google_maps_url?: boolean
     linkedin_url?: boolean
     title?: boolean
     location?: boolean
@@ -9719,6 +9729,7 @@ export namespace Prisma {
     phone?: boolean
     company?: boolean
     website?: boolean
+    google_maps_url?: boolean
     linkedin_url?: boolean
     title?: boolean
     location?: boolean
@@ -9732,7 +9743,7 @@ export namespace Prisma {
     updated_at?: boolean
   }
 
-  export type LeadOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "raw_lead_uuid" | "name" | "email" | "phone" | "company" | "website" | "linkedin_url" | "title" | "location" | "industry" | "description" | "source_type" | "raw_data" | "enrichment_summary" | "enrichment_metadata" | "created_at" | "updated_at", ExtArgs["result"]["lead"]>
+  export type LeadOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "raw_lead_uuid" | "name" | "email" | "phone" | "company" | "website" | "google_maps_url" | "linkedin_url" | "title" | "location" | "industry" | "description" | "source_type" | "raw_data" | "enrichment_summary" | "enrichment_metadata" | "created_at" | "updated_at", ExtArgs["result"]["lead"]>
   export type LeadInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     raw_lead?: boolean | Lead$raw_leadArgs<ExtArgs>
     contacts?: boolean | Lead$contactsArgs<ExtArgs>
@@ -9762,6 +9773,7 @@ export namespace Prisma {
       phone: string | null
       company: string | null
       website: string | null
+      google_maps_url: string | null
       linkedin_url: string | null
       title: string | null
       location: string | null
@@ -10207,6 +10219,7 @@ export namespace Prisma {
     readonly phone: FieldRef<"Lead", 'String'>
     readonly company: FieldRef<"Lead", 'String'>
     readonly website: FieldRef<"Lead", 'String'>
+    readonly google_maps_url: FieldRef<"Lead", 'String'>
     readonly linkedin_url: FieldRef<"Lead", 'String'>
     readonly title: FieldRef<"Lead", 'String'>
     readonly location: FieldRef<"Lead", 'String'>
@@ -11919,6 +11932,7 @@ export namespace Prisma {
     phone: string | null
     company: string | null
     website: string | null
+    google_maps_url: string | null
     linkedin_url: string | null
     title: string | null
     location: string | null
@@ -11944,6 +11958,7 @@ export namespace Prisma {
     phone: string | null
     company: string | null
     website: string | null
+    google_maps_url: string | null
     linkedin_url: string | null
     title: string | null
     location: string | null
@@ -11969,6 +11984,7 @@ export namespace Prisma {
     phone: number
     company: number
     website: number
+    google_maps_url: number
     linkedin_url: number
     title: number
     location: number
@@ -12004,6 +12020,7 @@ export namespace Prisma {
     phone?: true
     company?: true
     website?: true
+    google_maps_url?: true
     linkedin_url?: true
     title?: true
     location?: true
@@ -12029,6 +12046,7 @@ export namespace Prisma {
     phone?: true
     company?: true
     website?: true
+    google_maps_url?: true
     linkedin_url?: true
     title?: true
     location?: true
@@ -12054,6 +12072,7 @@ export namespace Prisma {
     phone?: true
     company?: true
     website?: true
+    google_maps_url?: true
     linkedin_url?: true
     title?: true
     location?: true
@@ -12166,6 +12185,7 @@ export namespace Prisma {
     phone: string | null
     company: string | null
     website: string | null
+    google_maps_url: string | null
     linkedin_url: string | null
     title: string | null
     location: string | null
@@ -12210,6 +12230,7 @@ export namespace Prisma {
     phone?: boolean
     company?: boolean
     website?: boolean
+    google_maps_url?: boolean
     linkedin_url?: boolean
     title?: boolean
     location?: boolean
@@ -12244,6 +12265,7 @@ export namespace Prisma {
     phone?: boolean
     company?: boolean
     website?: boolean
+    google_maps_url?: boolean
     linkedin_url?: boolean
     title?: boolean
     location?: boolean
@@ -12272,6 +12294,7 @@ export namespace Prisma {
     phone?: boolean
     company?: boolean
     website?: boolean
+    google_maps_url?: boolean
     linkedin_url?: boolean
     title?: boolean
     location?: boolean
@@ -12300,6 +12323,7 @@ export namespace Prisma {
     phone?: boolean
     company?: boolean
     website?: boolean
+    google_maps_url?: boolean
     linkedin_url?: boolean
     title?: boolean
     location?: boolean
@@ -12312,7 +12336,7 @@ export namespace Prisma {
     updated_at?: boolean
   }
 
-  export type ContactOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "lead_uuid" | "filter_uuid" | "status" | "notes" | "name" | "email" | "phone" | "company" | "website" | "linkedin_url" | "title" | "location" | "industry" | "description" | "unsubscribed_at" | "unsubscribe_token" | "last_interaction_at" | "created_at" | "updated_at", ExtArgs["result"]["contact"]>
+  export type ContactOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "lead_uuid" | "filter_uuid" | "status" | "notes" | "name" | "email" | "phone" | "company" | "website" | "google_maps_url" | "linkedin_url" | "title" | "location" | "industry" | "description" | "unsubscribed_at" | "unsubscribe_token" | "last_interaction_at" | "created_at" | "updated_at", ExtArgs["result"]["contact"]>
   export type ContactInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     lead?: boolean | LeadDefaultArgs<ExtArgs>
@@ -12360,6 +12384,7 @@ export namespace Prisma {
       phone: string | null
       company: string | null
       website: string | null
+      google_maps_url: string | null
       linkedin_url: string | null
       title: string | null
       location: string | null
@@ -12813,6 +12838,7 @@ export namespace Prisma {
     readonly phone: FieldRef<"Contact", 'String'>
     readonly company: FieldRef<"Contact", 'String'>
     readonly website: FieldRef<"Contact", 'String'>
+    readonly google_maps_url: FieldRef<"Contact", 'String'>
     readonly linkedin_url: FieldRef<"Contact", 'String'>
     readonly title: FieldRef<"Contact", 'String'>
     readonly location: FieldRef<"Contact", 'String'>
@@ -28286,6 +28312,7 @@ export namespace Prisma {
     phone: 'phone',
     company: 'company',
     website: 'website',
+    google_maps_url: 'google_maps_url',
     linkedin_url: 'linkedin_url',
     title: 'title',
     location: 'location',
@@ -28333,6 +28360,7 @@ export namespace Prisma {
     phone: 'phone',
     company: 'company',
     website: 'website',
+    google_maps_url: 'google_maps_url',
     linkedin_url: 'linkedin_url',
     title: 'title',
     location: 'location',
@@ -29387,6 +29415,7 @@ export namespace Prisma {
     phone?: StringNullableFilter<"Lead"> | string | null
     company?: StringNullableFilter<"Lead"> | string | null
     website?: StringNullableFilter<"Lead"> | string | null
+    google_maps_url?: StringNullableFilter<"Lead"> | string | null
     linkedin_url?: StringNullableFilter<"Lead"> | string | null
     title?: StringNullableFilter<"Lead"> | string | null
     location?: StringNullableFilter<"Lead"> | string | null
@@ -29412,6 +29441,7 @@ export namespace Prisma {
     phone?: SortOrderInput | SortOrder
     company?: SortOrderInput | SortOrder
     website?: SortOrderInput | SortOrder
+    google_maps_url?: SortOrderInput | SortOrder
     linkedin_url?: SortOrderInput | SortOrder
     title?: SortOrderInput | SortOrder
     location?: SortOrderInput | SortOrder
@@ -29440,6 +29470,7 @@ export namespace Prisma {
     phone?: StringNullableFilter<"Lead"> | string | null
     company?: StringNullableFilter<"Lead"> | string | null
     website?: StringNullableFilter<"Lead"> | string | null
+    google_maps_url?: StringNullableFilter<"Lead"> | string | null
     linkedin_url?: StringNullableFilter<"Lead"> | string | null
     title?: StringNullableFilter<"Lead"> | string | null
     location?: StringNullableFilter<"Lead"> | string | null
@@ -29465,6 +29496,7 @@ export namespace Prisma {
     phone?: SortOrderInput | SortOrder
     company?: SortOrderInput | SortOrder
     website?: SortOrderInput | SortOrder
+    google_maps_url?: SortOrderInput | SortOrder
     linkedin_url?: SortOrderInput | SortOrder
     title?: SortOrderInput | SortOrder
     location?: SortOrderInput | SortOrder
@@ -29495,6 +29527,7 @@ export namespace Prisma {
     phone?: StringNullableWithAggregatesFilter<"Lead"> | string | null
     company?: StringNullableWithAggregatesFilter<"Lead"> | string | null
     website?: StringNullableWithAggregatesFilter<"Lead"> | string | null
+    google_maps_url?: StringNullableWithAggregatesFilter<"Lead"> | string | null
     linkedin_url?: StringNullableWithAggregatesFilter<"Lead"> | string | null
     title?: StringNullableWithAggregatesFilter<"Lead"> | string | null
     location?: StringNullableWithAggregatesFilter<"Lead"> | string | null
@@ -29616,6 +29649,7 @@ export namespace Prisma {
     phone?: StringNullableFilter<"Contact"> | string | null
     company?: StringNullableFilter<"Contact"> | string | null
     website?: StringNullableFilter<"Contact"> | string | null
+    google_maps_url?: StringNullableFilter<"Contact"> | string | null
     linkedin_url?: StringNullableFilter<"Contact"> | string | null
     title?: StringNullableFilter<"Contact"> | string | null
     location?: StringNullableFilter<"Contact"> | string | null
@@ -29649,6 +29683,7 @@ export namespace Prisma {
     phone?: SortOrderInput | SortOrder
     company?: SortOrderInput | SortOrder
     website?: SortOrderInput | SortOrder
+    google_maps_url?: SortOrderInput | SortOrder
     linkedin_url?: SortOrderInput | SortOrder
     title?: SortOrderInput | SortOrder
     location?: SortOrderInput | SortOrder
@@ -29687,6 +29722,7 @@ export namespace Prisma {
     phone?: StringNullableFilter<"Contact"> | string | null
     company?: StringNullableFilter<"Contact"> | string | null
     website?: StringNullableFilter<"Contact"> | string | null
+    google_maps_url?: StringNullableFilter<"Contact"> | string | null
     linkedin_url?: StringNullableFilter<"Contact"> | string | null
     title?: StringNullableFilter<"Contact"> | string | null
     location?: StringNullableFilter<"Contact"> | string | null
@@ -29719,6 +29755,7 @@ export namespace Prisma {
     phone?: SortOrderInput | SortOrder
     company?: SortOrderInput | SortOrder
     website?: SortOrderInput | SortOrder
+    google_maps_url?: SortOrderInput | SortOrder
     linkedin_url?: SortOrderInput | SortOrder
     title?: SortOrderInput | SortOrder
     location?: SortOrderInput | SortOrder
@@ -29752,6 +29789,7 @@ export namespace Prisma {
     phone?: StringNullableWithAggregatesFilter<"Contact"> | string | null
     company?: StringNullableWithAggregatesFilter<"Contact"> | string | null
     website?: StringNullableWithAggregatesFilter<"Contact"> | string | null
+    google_maps_url?: StringNullableWithAggregatesFilter<"Contact"> | string | null
     linkedin_url?: StringNullableWithAggregatesFilter<"Contact"> | string | null
     title?: StringNullableWithAggregatesFilter<"Contact"> | string | null
     location?: StringNullableWithAggregatesFilter<"Contact"> | string | null
@@ -31456,6 +31494,7 @@ export namespace Prisma {
     phone?: string | null
     company?: string | null
     website?: string | null
+    google_maps_url?: string | null
     linkedin_url?: string | null
     title?: string | null
     location?: string | null
@@ -31481,6 +31520,7 @@ export namespace Prisma {
     phone?: string | null
     company?: string | null
     website?: string | null
+    google_maps_url?: string | null
     linkedin_url?: string | null
     title?: string | null
     location?: string | null
@@ -31503,6 +31543,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     company?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    google_maps_url?: NullableStringFieldUpdateOperationsInput | string | null
     linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
     title?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31528,6 +31569,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     company?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    google_maps_url?: NullableStringFieldUpdateOperationsInput | string | null
     linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
     title?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31552,6 +31594,7 @@ export namespace Prisma {
     phone?: string | null
     company?: string | null
     website?: string | null
+    google_maps_url?: string | null
     linkedin_url?: string | null
     title?: string | null
     location?: string | null
@@ -31572,6 +31615,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     company?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    google_maps_url?: NullableStringFieldUpdateOperationsInput | string | null
     linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
     title?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31594,6 +31638,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     company?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    google_maps_url?: NullableStringFieldUpdateOperationsInput | string | null
     linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
     title?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31717,6 +31762,7 @@ export namespace Prisma {
     phone?: string | null
     company?: string | null
     website?: string | null
+    google_maps_url?: string | null
     linkedin_url?: string | null
     title?: string | null
     location?: string | null
@@ -31750,6 +31796,7 @@ export namespace Prisma {
     phone?: string | null
     company?: string | null
     website?: string | null
+    google_maps_url?: string | null
     linkedin_url?: string | null
     title?: string | null
     location?: string | null
@@ -31776,6 +31823,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     company?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    google_maps_url?: NullableStringFieldUpdateOperationsInput | string | null
     linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
     title?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31809,6 +31857,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     company?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    google_maps_url?: NullableStringFieldUpdateOperationsInput | string | null
     linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
     title?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31839,6 +31888,7 @@ export namespace Prisma {
     phone?: string | null
     company?: string | null
     website?: string | null
+    google_maps_url?: string | null
     linkedin_url?: string | null
     title?: string | null
     location?: string | null
@@ -31860,6 +31910,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     company?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    google_maps_url?: NullableStringFieldUpdateOperationsInput | string | null
     linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
     title?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31885,6 +31936,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     company?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    google_maps_url?: NullableStringFieldUpdateOperationsInput | string | null
     linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
     title?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -33933,6 +33985,7 @@ export namespace Prisma {
     phone?: SortOrder
     company?: SortOrder
     website?: SortOrder
+    google_maps_url?: SortOrder
     linkedin_url?: SortOrder
     title?: SortOrder
     location?: SortOrder
@@ -33959,6 +34012,7 @@ export namespace Prisma {
     phone?: SortOrder
     company?: SortOrder
     website?: SortOrder
+    google_maps_url?: SortOrder
     linkedin_url?: SortOrder
     title?: SortOrder
     location?: SortOrder
@@ -33979,6 +34033,7 @@ export namespace Prisma {
     phone?: SortOrder
     company?: SortOrder
     website?: SortOrder
+    google_maps_url?: SortOrder
     linkedin_url?: SortOrder
     title?: SortOrder
     location?: SortOrder
@@ -34201,6 +34256,7 @@ export namespace Prisma {
     phone?: SortOrder
     company?: SortOrder
     website?: SortOrder
+    google_maps_url?: SortOrder
     linkedin_url?: SortOrder
     title?: SortOrder
     location?: SortOrder
@@ -34230,6 +34286,7 @@ export namespace Prisma {
     phone?: SortOrder
     company?: SortOrder
     website?: SortOrder
+    google_maps_url?: SortOrder
     linkedin_url?: SortOrder
     title?: SortOrder
     location?: SortOrder
@@ -34255,6 +34312,7 @@ export namespace Prisma {
     phone?: SortOrder
     company?: SortOrder
     website?: SortOrder
+    google_maps_url?: SortOrder
     linkedin_url?: SortOrder
     title?: SortOrder
     location?: SortOrder
@@ -37723,6 +37781,7 @@ export namespace Prisma {
     phone?: string | null
     company?: string | null
     website?: string | null
+    google_maps_url?: string | null
     linkedin_url?: string | null
     title?: string | null
     location?: string | null
@@ -37754,6 +37813,7 @@ export namespace Prisma {
     phone?: string | null
     company?: string | null
     website?: string | null
+    google_maps_url?: string | null
     linkedin_url?: string | null
     title?: string | null
     location?: string | null
@@ -38231,6 +38291,7 @@ export namespace Prisma {
     phone?: StringNullableFilter<"Contact"> | string | null
     company?: StringNullableFilter<"Contact"> | string | null
     website?: StringNullableFilter<"Contact"> | string | null
+    google_maps_url?: StringNullableFilter<"Contact"> | string | null
     linkedin_url?: StringNullableFilter<"Contact"> | string | null
     title?: StringNullableFilter<"Contact"> | string | null
     location?: StringNullableFilter<"Contact"> | string | null
@@ -38634,6 +38695,7 @@ export namespace Prisma {
     phone?: string | null
     company?: string | null
     website?: string | null
+    google_maps_url?: string | null
     linkedin_url?: string | null
     title?: string | null
     location?: string | null
@@ -38665,6 +38727,7 @@ export namespace Prisma {
     phone?: string | null
     company?: string | null
     website?: string | null
+    google_maps_url?: string | null
     linkedin_url?: string | null
     title?: string | null
     location?: string | null
@@ -39281,6 +39344,7 @@ export namespace Prisma {
     phone?: string | null
     company?: string | null
     website?: string | null
+    google_maps_url?: string | null
     linkedin_url?: string | null
     title?: string | null
     location?: string | null
@@ -39304,6 +39368,7 @@ export namespace Prisma {
     phone?: string | null
     company?: string | null
     website?: string | null
+    google_maps_url?: string | null
     linkedin_url?: string | null
     title?: string | null
     location?: string | null
@@ -39390,6 +39455,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     company?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    google_maps_url?: NullableStringFieldUpdateOperationsInput | string | null
     linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
     title?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -39413,6 +39479,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     company?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    google_maps_url?: NullableStringFieldUpdateOperationsInput | string | null
     linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
     title?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -39463,6 +39530,7 @@ export namespace Prisma {
     phone?: string | null
     company?: string | null
     website?: string | null
+    google_maps_url?: string | null
     linkedin_url?: string | null
     title?: string | null
     location?: string | null
@@ -39494,6 +39562,7 @@ export namespace Prisma {
     phone?: string | null
     company?: string | null
     website?: string | null
+    google_maps_url?: string | null
     linkedin_url?: string | null
     title?: string | null
     location?: string | null
@@ -39647,6 +39716,7 @@ export namespace Prisma {
     phone?: string | null
     company?: string | null
     website?: string | null
+    google_maps_url?: string | null
     linkedin_url?: string | null
     title?: string | null
     location?: string | null
@@ -39671,6 +39741,7 @@ export namespace Prisma {
     phone?: string | null
     company?: string | null
     website?: string | null
+    google_maps_url?: string | null
     linkedin_url?: string | null
     title?: string | null
     location?: string | null
@@ -39708,6 +39779,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     company?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    google_maps_url?: NullableStringFieldUpdateOperationsInput | string | null
     linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
     title?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -39732,6 +39804,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     company?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    google_maps_url?: NullableStringFieldUpdateOperationsInput | string | null
     linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
     title?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -39797,6 +39870,7 @@ export namespace Prisma {
     phone?: string | null
     company?: string | null
     website?: string | null
+    google_maps_url?: string | null
     linkedin_url?: string | null
     title?: string | null
     location?: string | null
@@ -39821,6 +39895,7 @@ export namespace Prisma {
     phone?: string | null
     company?: string | null
     website?: string | null
+    google_maps_url?: string | null
     linkedin_url?: string | null
     title?: string | null
     location?: string | null
@@ -40123,6 +40198,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     company?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    google_maps_url?: NullableStringFieldUpdateOperationsInput | string | null
     linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
     title?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -40147,6 +40223,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     company?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    google_maps_url?: NullableStringFieldUpdateOperationsInput | string | null
     linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
     title?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -40325,6 +40402,7 @@ export namespace Prisma {
     phone?: string | null
     company?: string | null
     website?: string | null
+    google_maps_url?: string | null
     linkedin_url?: string | null
     title?: string | null
     location?: string | null
@@ -40357,6 +40435,7 @@ export namespace Prisma {
     phone?: string | null
     company?: string | null
     website?: string | null
+    google_maps_url?: string | null
     linkedin_url?: string | null
     title?: string | null
     location?: string | null
@@ -40424,6 +40503,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     company?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    google_maps_url?: NullableStringFieldUpdateOperationsInput | string | null
     linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
     title?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -40456,6 +40536,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     company?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    google_maps_url?: NullableStringFieldUpdateOperationsInput | string | null
     linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
     title?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -40513,6 +40594,7 @@ export namespace Prisma {
     phone?: string | null
     company?: string | null
     website?: string | null
+    google_maps_url?: string | null
     linkedin_url?: string | null
     title?: string | null
     location?: string | null
@@ -40545,6 +40627,7 @@ export namespace Prisma {
     phone?: string | null
     company?: string | null
     website?: string | null
+    google_maps_url?: string | null
     linkedin_url?: string | null
     title?: string | null
     location?: string | null
@@ -40586,6 +40669,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     company?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    google_maps_url?: NullableStringFieldUpdateOperationsInput | string | null
     linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
     title?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -40618,6 +40702,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     company?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    google_maps_url?: NullableStringFieldUpdateOperationsInput | string | null
     linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
     title?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -40643,6 +40728,7 @@ export namespace Prisma {
     phone?: string | null
     company?: string | null
     website?: string | null
+    google_maps_url?: string | null
     linkedin_url?: string | null
     title?: string | null
     location?: string | null
@@ -40675,6 +40761,7 @@ export namespace Prisma {
     phone?: string | null
     company?: string | null
     website?: string | null
+    google_maps_url?: string | null
     linkedin_url?: string | null
     title?: string | null
     location?: string | null
@@ -40900,6 +40987,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     company?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    google_maps_url?: NullableStringFieldUpdateOperationsInput | string | null
     linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
     title?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -40932,6 +41020,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     company?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    google_maps_url?: NullableStringFieldUpdateOperationsInput | string | null
     linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
     title?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -41203,6 +41292,7 @@ export namespace Prisma {
     phone?: string | null
     company?: string | null
     website?: string | null
+    google_maps_url?: string | null
     linkedin_url?: string | null
     title?: string | null
     location?: string | null
@@ -41235,6 +41325,7 @@ export namespace Prisma {
     phone?: string | null
     company?: string | null
     website?: string | null
+    google_maps_url?: string | null
     linkedin_url?: string | null
     title?: string | null
     location?: string | null
@@ -41446,6 +41537,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     company?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    google_maps_url?: NullableStringFieldUpdateOperationsInput | string | null
     linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
     title?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -41478,6 +41570,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     company?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    google_maps_url?: NullableStringFieldUpdateOperationsInput | string | null
     linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
     title?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -42503,6 +42596,7 @@ export namespace Prisma {
     phone?: string | null
     company?: string | null
     website?: string | null
+    google_maps_url?: string | null
     linkedin_url?: string | null
     title?: string | null
     location?: string | null
@@ -42535,6 +42629,7 @@ export namespace Prisma {
     phone?: string | null
     company?: string | null
     website?: string | null
+    google_maps_url?: string | null
     linkedin_url?: string | null
     title?: string | null
     location?: string | null
@@ -42670,6 +42765,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     company?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    google_maps_url?: NullableStringFieldUpdateOperationsInput | string | null
     linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
     title?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -42702,6 +42798,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     company?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    google_maps_url?: NullableStringFieldUpdateOperationsInput | string | null
     linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
     title?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -43049,6 +43146,7 @@ export namespace Prisma {
     phone?: string | null
     company?: string | null
     website?: string | null
+    google_maps_url?: string | null
     linkedin_url?: string | null
     title?: string | null
     location?: string | null
@@ -43269,6 +43367,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     company?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    google_maps_url?: NullableStringFieldUpdateOperationsInput | string | null
     linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
     title?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -43300,6 +43399,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     company?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    google_maps_url?: NullableStringFieldUpdateOperationsInput | string | null
     linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
     title?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -43329,6 +43429,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     company?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    google_maps_url?: NullableStringFieldUpdateOperationsInput | string | null
     linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
     title?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -43813,6 +43914,7 @@ export namespace Prisma {
     phone?: string | null
     company?: string | null
     website?: string | null
+    google_maps_url?: string | null
     linkedin_url?: string | null
     title?: string | null
     location?: string | null
@@ -43884,6 +43986,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     company?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    google_maps_url?: NullableStringFieldUpdateOperationsInput | string | null
     linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
     title?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -43915,6 +44018,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     company?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    google_maps_url?: NullableStringFieldUpdateOperationsInput | string | null
     linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
     title?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -43944,6 +44048,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     company?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    google_maps_url?: NullableStringFieldUpdateOperationsInput | string | null
     linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
     title?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -44071,6 +44176,7 @@ export namespace Prisma {
     phone?: string | null
     company?: string | null
     website?: string | null
+    google_maps_url?: string | null
     linkedin_url?: string | null
     title?: string | null
     location?: string | null
@@ -44106,6 +44212,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     company?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    google_maps_url?: NullableStringFieldUpdateOperationsInput | string | null
     linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
     title?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -44137,6 +44244,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     company?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    google_maps_url?: NullableStringFieldUpdateOperationsInput | string | null
     linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
     title?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -44166,6 +44274,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     company?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    google_maps_url?: NullableStringFieldUpdateOperationsInput | string | null
     linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
     title?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null

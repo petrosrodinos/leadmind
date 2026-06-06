@@ -67,6 +67,7 @@ export class ContactsService {
                 phone: dto.phone,
                 company: dto.company,
                 website: dto.website,
+                google_maps_url: dto.google_maps_url,
                 title: dto.title,
                 location: dto.location,
                 linkedin_url: dto.linkedin_url,

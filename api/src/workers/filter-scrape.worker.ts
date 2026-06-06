@@ -220,6 +220,7 @@ export class FilterScrapeWorker extends WorkerHost {
             phone: normalized.phone ?? null,
             company: normalized.company ?? null,
             website: resolveLeadWebsite(normalized.website, normalized.email),
+            google_maps_url: normalized.google_maps_url ?? null,
             linkedin_url: normalized.linkedin_url ?? null,
             title: normalized.title ?? null,
             location: normalized.location ?? null,

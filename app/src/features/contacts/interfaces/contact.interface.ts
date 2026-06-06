@@ -185,6 +185,7 @@ export interface Contact {
     phone: string | null;
     company: string | null;
     website: string | null;
+    google_maps_url: string | null;
     linkedin_url: string | null;
     title: string | null;
     location: string | null;
@@ -262,6 +263,7 @@ export interface CreateContactPayload {
     phone?: string;
     company?: string;
     website?: string;
+    google_maps_url?: string;
     title?: string;
     location?: string;
     linkedin_url?: string;
@@ -278,6 +280,7 @@ export interface UpdateContactPayload {
     phone?: string;
     company?: string;
     website?: string;
+    google_maps_url?: string;
     title?: string;
     location?: string;
     linkedin_url?: string;

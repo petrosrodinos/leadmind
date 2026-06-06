@@ -9,6 +9,7 @@ export function profileDraftFromContact(contact: Contact): ProfileDraft {
     phone: contact.phone ?? "",
     company: contact.company ?? "",
     website: contact.website ?? "",
+    google_maps_url: contact.google_maps_url ?? "",
     title: contact.title ?? "",
     location: contact.location ?? "",
     linkedin_url: contact.linkedin_url ?? "",

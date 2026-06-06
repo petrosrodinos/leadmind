@@ -35,6 +35,12 @@ export class UpdateLeadDto {
     @IsOptional()
     @IsString()
     @MaxLength(500)
+    google_maps_url?: string;
+
+    @ApiPropertyOptional()
+    @IsOptional()
+    @IsString()
+    @MaxLength(500)
     linkedin_url?: string;
 
     @ApiPropertyOptional()

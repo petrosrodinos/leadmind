@@ -6,6 +6,7 @@ export const CONTACT_PROFILE_UPDATE_KEYS = [
     'phone',
     'company',
     'website',
+    'google_maps_url',
     'linkedin_url',
     'title',
     'location',

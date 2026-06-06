@@ -123,6 +123,7 @@ model Lead {
   phone               String?
   company             String?
   website             String?
+  google_maps_url     String?
   linkedin_url        String?
   title               String?
   location            String?
@@ -177,6 +178,7 @@ model Contact {
   phone               String?
   company             String?
   website             String?
+  google_maps_url     String?
   linkedin_url        String?
   title               String?
   location            String?

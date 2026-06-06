@@ -8,6 +8,7 @@ export function contactProfileFromLead(
         | 'phone'
         | 'company'
         | 'website'
+        | 'google_maps_url'
         | 'linkedin_url'
         | 'title'
         | 'location'
@@ -21,6 +22,7 @@ export function contactProfileFromLead(
         phone: lead.phone,
         company: lead.company,
         website: lead.website,
+        google_maps_url: lead.google_maps_url,
         linkedin_url: lead.linkedin_url,
         title: lead.title,
         location: lead.location,

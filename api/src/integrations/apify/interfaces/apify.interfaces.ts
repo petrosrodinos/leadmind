@@ -6,6 +6,7 @@ export interface NormalizedLead {
     phone?: string;
     company?: string;
     website?: string;
+    google_maps_url?: string;
     linkedin_url?: string;
     title?: string;
     location?: string;

@@ -5,6 +5,7 @@ export interface ProfileDraft {
   phone: string;
   company: string;
   website: string;
+  google_maps_url: string;
   title: string;
   location: string;
   linkedin_url: string;

@@ -35,6 +35,23 @@ describe('GoogleMapsAdapter', () => {
         expect(leads[0].website).toBe('https://logiqdev.com');
     });
 
+    it('stores Google Maps listing URL separately from business website', () => {
+        const leads = adapter.normalize([
+            {
+                title: 'Heraklion Cafe',
+                phone: '+30 281 0123456',
+                website: 'https://cafe.example.com',
+                url: 'https://www.google.com/maps/place/Heraklion+Cafe',
+            },
+        ]);
+
+        expect(leads).toHaveLength(1);
+        expect(leads[0]).toMatchObject({
+            website: 'https://cafe.example.com',
+            google_maps_url: 'https://www.google.com/maps/place/Heraklion+Cafe',
+        });
+    });
+
     it('drops places with no email, phone, or LinkedIn URL', () => {
         const leads = adapter.normalize([
             {
