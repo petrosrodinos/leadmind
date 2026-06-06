@@ -1,4 +1,5 @@
 import type { Channel, Contact, ContactScoreRule, LeadStatus } from "@/features/contacts/interfaces/contact.interface";
+import type { CampaignProfileField } from "@/features/marketing-campaigns/constants/campaign-profile-fields.constants";
 
 export const CampaignType = {
     STANDARD: "STANDARD",
@@ -45,6 +46,8 @@ export interface CampaignFilters {
     lead_uuid?: string;
     has_email?: boolean;
     has_phone?: boolean;
+    profile_field?: CampaignProfileField;
+    has_profile_field?: boolean;
     last_interaction_after?: string;
     last_interaction_before?: string;
     exclude_uuids?: string[];

@@ -2,7 +2,38 @@ import { Injectable } from '@nestjs/common';
 import { CampaignContactStatus, Channel, Prisma } from '@/generated/prisma';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { ContactsService } from '@/modules/contacts/contacts.service';
+import { CampaignProfileField } from '../constants/campaign-profile-fields.constants';
 import { CampaignFiltersDto } from '../dto/campaign-filters.dto';
+
+type ContactProfileColumn =
+    | 'email'
+    | 'phone'
+    | 'website'
+    | 'linkedin_url'
+    | 'google_maps_url';
+
+const PROFILE_FIELD_COLUMNS: Record<CampaignProfileField, ContactProfileColumn> = {
+    [CampaignProfileField.EMAIL]: 'email',
+    [CampaignProfileField.PHONE]: 'phone',
+    [CampaignProfileField.WEBSITE]: 'website',
+    [CampaignProfileField.LINKEDIN_URL]: 'linkedin_url',
+    [CampaignProfileField.GOOGLE_MAPS_URL]: 'google_maps_url',
+};
+
+function buildProfileFieldWhere(
+    field: CampaignProfileField,
+    hasValue: boolean,
+): Prisma.ContactWhereInput {
+    const column = PROFILE_FIELD_COLUMNS[field];
+    if (hasValue) {
+        return {
+            AND: [{ [column]: { not: null } }, { NOT: { [column]: '' } }],
+        };
+    }
+    return {
+        OR: [{ [column]: null }, { [column]: '' }],
+    };
+}
 
 @Injectable()
 export class CampaignContactResolverService {
@@ -29,10 +60,13 @@ export class CampaignContactResolverService {
         const and: Prisma.ContactWhereInput[] = [];
 
         if (filters.has_email) {
-            and.push({ email: { not: null } });
+            and.push(buildProfileFieldWhere(CampaignProfileField.EMAIL, true));
         }
         if (filters.has_phone) {
-            and.push({ phone: { not: null } });
+            and.push(buildProfileFieldWhere(CampaignProfileField.PHONE, true));
+        }
+        if (filters.profile_field && filters.has_profile_field !== undefined) {
+            and.push(buildProfileFieldWhere(filters.profile_field, filters.has_profile_field));
         }
         if (filters.last_interaction_after) {
             and.push({ last_interaction_at: { gte: new Date(filters.last_interaction_after) } });

@@ -5,12 +5,17 @@ import {
     IsBoolean,
     IsDateString,
     IsEnum,
+    IsIn,
     IsOptional,
     IsString,
     IsUUID,
     ValidateNested,
 } from 'class-validator';
 import { LeadStatus } from '@/generated/prisma';
+import {
+    CampaignProfileField,
+    CAMPAIGN_PROFILE_FIELD_KEYS,
+} from '../constants/campaign-profile-fields.constants';
 import {
     ContactScoreRuleItemDto,
     ScoreRulesQueryTransform,
@@ -70,6 +75,24 @@ export class CampaignFiltersDto {
     @Type(() => Boolean)
     @IsBoolean()
     has_phone?: boolean;
+
+    @ApiPropertyOptional({
+        enum: CAMPAIGN_PROFILE_FIELD_KEYS,
+        description:
+            'Contact profile field to filter by (email, phone, website, linkedin_url, google_maps_url)',
+    })
+    @IsOptional()
+    @IsIn(CAMPAIGN_PROFILE_FIELD_KEYS)
+    profile_field?: CampaignProfileField;
+
+    @ApiPropertyOptional({
+        description:
+            'When profile_field is set: true = contact must have a value, false = contact must not',
+    })
+    @IsOptional()
+    @Type(() => Boolean)
+    @IsBoolean()
+    has_profile_field?: boolean;
 
     @ApiPropertyOptional({ description: 'ISO date — last_interaction_at after this' })
     @IsOptional()
