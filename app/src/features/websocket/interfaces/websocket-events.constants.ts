@@ -17,6 +17,13 @@ export const WEBSOCKET_EVENTS = {
         STOP_TYPING_RECEIVED: 'chat:stop_typing',
         READ: 'chat:read',
     },
+    REMINDER: {
+        CREATED: 'reminder.created',
+        UPDATED: 'reminder.updated',
+        COMPLETED: 'reminder.completed',
+        DELETED: 'reminder.deleted',
+        TRIGGERED: 'reminder.triggered',
+    },
 } as const;
 
 export type WebsocketEventCategory = keyof typeof WEBSOCKET_EVENTS;

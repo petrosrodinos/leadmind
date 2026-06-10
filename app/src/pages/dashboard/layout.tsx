@@ -5,11 +5,14 @@ import DashboardNavbar from "@/components/layout/dashboard-navbar";
 import SidebarContent from "@/components/layout/sidebar-content";
 import { AppLogo } from "@/components/layout/app-logo";
 import UserMenuPopover from "@/components/layout/user-menu-popover";
+import { WebsocketProvider } from "@/components/providers/websocket-provider";
+import { useReminderNotifications } from "@/features/reminders/hooks/use-reminder-notifications";
 import { environments } from "@/config/environments";
 import { Routes } from "@/routes/routes";
 
-export default function DashboardLayout() {
+function DashboardLayoutInner() {
   const drawerState = useOverlayState();
+  useReminderNotifications();
 
   return (
     <div className="flex h-full min-h-0 overflow-hidden bg-background">
@@ -64,5 +67,13 @@ export default function DashboardLayout() {
         </Drawer.Content>
       </Drawer>
     </div>
+  );
+}
+
+export default function DashboardLayout() {
+  return (
+    <WebsocketProvider>
+      <DashboardLayoutInner />
+    </WebsocketProvider>
   );
 }

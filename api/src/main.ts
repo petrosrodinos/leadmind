@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ExpressAdapter } from '@bull-board/express';
+import { IoAdapter } from '@nestjs/platform-socket.io';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { BULL_BOARD_ADAPTER } from './core/queues/queues.constants';
@@ -9,6 +10,7 @@ import { bullBoardAuthMiddleware } from './core/queues/bull-board.middleware';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { rawBody: true });
+  app.useWebSocketAdapter(new IoAdapter(app));
 
   app.useGlobalPipes(
     new ValidationPipe({

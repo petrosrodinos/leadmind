@@ -27,6 +27,8 @@ import { WebhooksModule } from './modules/webhooks/webhooks.module';
 import { WorkersModule } from './workers/workers.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { IntegrationsModule } from './modules/integrations/integrations.module';
+import { RemindersModule } from './modules/reminders/reminders.module';
+import { GatewaysModule } from './gateways/gateways.module';
 
 @Module({
   imports: [
@@ -57,6 +59,8 @@ import { IntegrationsModule } from './modules/integrations/integrations.module';
     WorkersModule,
     AdminModule,
     IntegrationsModule,
+    RemindersModule,
+    GatewaysModule,
   ],
   controllers: [AppController],
   providers: [AppService],

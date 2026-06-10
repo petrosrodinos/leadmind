@@ -11,3 +11,5 @@ export const OUTREACH_SEND_QUEUE = 'outreach-send';
 export const MARKETING_CAMPAIGN_DISPATCH_QUEUE = 'marketing-campaign-dispatch';
 
 export const MARKETING_MESSAGE_SEND_QUEUE = 'marketing-message-send';
+
+export const REMINDER_TRIGGER_QUEUE = 'reminder-trigger';

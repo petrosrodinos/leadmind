@@ -107,6 +107,16 @@ export const ApiRoutes = {
     admin: {
         batch_jobs: "/admin/batch-jobs",
     },
+    reminders: {
+        prefix: "/reminders",
+        list: "/reminders",
+        stats: "/reminders/stats",
+        create: "/reminders",
+        get: (uuid: string) => `/reminders/${uuid}`,
+        update: (uuid: string) => `/reminders/${uuid}`,
+        complete: (uuid: string) => `/reminders/${uuid}/complete`,
+        remove: (uuid: string) => `/reminders/${uuid}`,
+    },
     marketing_campaigns: {
         prefix: "/marketing-campaigns",
         list: "/marketing-campaigns",

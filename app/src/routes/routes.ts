@@ -29,6 +29,7 @@ export const Routes = {
         campaigns_new: "/dashboard/campaigns/new",
         campaigns_detail: "/dashboard/campaigns/:uuid",
         campaigns_edit: "/dashboard/campaigns/:uuid/edit",
+        reminders: "/dashboard/reminders",
         admin_batch_jobs: "/dashboard/admin/batch-jobs",
     },
 };

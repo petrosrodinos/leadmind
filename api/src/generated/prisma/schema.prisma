@@ -33,6 +33,7 @@ model User {
   scoring_instructions ScoringInstruction[]
   openai_batch_jobs    OpenAiBatchJob[]
   integrations         Integration[]
+  reminders            Reminder[]
 
   @@index([email])
   @@index([phone])
@@ -198,6 +199,7 @@ model Contact {
   outreach_messages OutreachMessage[]
   campaign_contacts MarketingCampaignContact[]
   contact_scores    ContactScore[]
+  reminders         Reminder[]
 
   @@unique([user_uuid, lead_uuid])
   @@index([user_uuid])
@@ -653,4 +655,36 @@ model IntegrationKey {
   @@unique([integration_uuid, key_type, account])
   @@index([integration_uuid])
   @@map("integration_keys")
+}
+
+enum ReminderStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
+}
+
+model Reminder {
+  id           Int            @id @default(autoincrement())
+  uuid         String         @unique @default(uuid())
+  user_uuid    String
+  contact_uuid String
+  title        String?
+  notes        String?        @db.Text
+  remind_at    DateTime
+  status       ReminderStatus @default(PENDING)
+  job_id       String?        @unique
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user    User    @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
+  contact Contact @relation(fields: [contact_uuid], references: [uuid], onDelete: Cascade)
+
+  @@index([user_uuid])
+  @@index([contact_uuid])
+  @@index([remind_at])
+  @@index([status])
+  @@index([user_uuid, status])
+  @@index([user_uuid, remind_at])
+  @@map("reminders")
 }

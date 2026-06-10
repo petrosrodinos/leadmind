@@ -439,6 +439,20 @@ exports.Prisma.IntegrationKeyScalarFieldEnum = {
   updated_at: 'updated_at'
 };
 
+exports.Prisma.ReminderScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  user_uuid: 'user_uuid',
+  contact_uuid: 'contact_uuid',
+  title: 'title',
+  notes: 'notes',
+  remind_at: 'remind_at',
+  status: 'status',
+  job_id: 'job_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -623,6 +637,12 @@ exports.IntegrationKeyType = exports.$Enums.IntegrationKeyType = {
   ACCESS_TOKEN: 'ACCESS_TOKEN'
 };
 
+exports.ReminderStatus = exports.$Enums.ReminderStatus = {
+  PENDING: 'PENDING',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Filter: 'Filter',
@@ -643,7 +663,8 @@ exports.Prisma.ModelName = {
   MarketingCampaignContact: 'MarketingCampaignContact',
   OpenAiBatchJob: 'OpenAiBatchJob',
   Integration: 'Integration',
-  IntegrationKey: 'IntegrationKey'
+  IntegrationKey: 'IntegrationKey',
+  Reminder: 'Reminder'
 };
 
 /**

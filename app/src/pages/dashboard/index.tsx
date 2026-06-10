@@ -10,6 +10,7 @@ import { DashboardPipelineDistribution } from "./components/dashboard-pipeline-d
 import { DashboardTopContactsCard } from "./components/dashboard-top-contacts-card";
 import { DashboardPendingDraftsCard } from "./components/dashboard-pending-drafts-card";
 import { DashboardFiltersCard } from "./components/dashboard-filters-card";
+import { DashboardRemindersCard } from "./components/dashboard-reminders-card";
 import { EMPTY_BY_STATUS } from "./components/dashboard.constants";
 import { firstName, greetingFor } from "./components/dashboard.utils";
 
@@ -17,7 +18,6 @@ export default function DashboardHome() {
   const { full_name, email } = useAuthStore();
   const name = firstName(full_name, email);
   const greeting = greetingFor(new Date());
-
   const { data: stats, isLoading: statsLoading } = useDashboardStats();
   const { data: topContacts = [], isLoading: topLoading } = useDashboardTopContacts(5);
   const { data: pendingGroups = [], isLoading: draftsLoading } = useDashboardPendingDrafts(5);
@@ -77,10 +77,11 @@ export default function DashboardHome() {
       {/* Pipeline — full width */}
       <DashboardPipelineDistribution stats={stats} isLoading={statsLoading} />
 
-      {/* Bottom: contacts (main) + sidebar (drafts + filters) */}
+      {/* Bottom: contacts (main) + sidebar (drafts + filters + reminders) */}
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_320px]">
         <DashboardTopContactsCard contacts={topContacts} isLoading={topLoading} />
         <div className="flex flex-col gap-6">
+          <DashboardRemindersCard />
           <DashboardPendingDraftsCard items={pendingGroups} isLoading={draftsLoading} />
           <DashboardFiltersCard filters={filters} isLoading={filtersLoading} />
         </div>

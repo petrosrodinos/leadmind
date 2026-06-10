@@ -9,18 +9,21 @@ import { OutreachModule } from '@/modules/outreach/outreach.module';
 import { MarketingCampaignsModule } from '@/modules/marketing-campaigns/marketing-campaigns.module';
 import { ResendModule } from '@/integrations/notifications/resend/resend.module';
 import { TwillioModule } from '@/integrations/notifications/twillio/twillio.module';
+import { GatewaysModule } from '@/gateways/gateways.module';
 import {
     AI_PROCESS_QUEUE,
     FILTER_SCRAPE_QUEUE,
     MARKETING_CAMPAIGN_DISPATCH_QUEUE,
     MARKETING_MESSAGE_SEND_QUEUE,
     OUTREACH_SEND_QUEUE,
+    REMINDER_TRIGGER_QUEUE,
 } from '@/core/queues/queues.constants';
 import { FilterScrapeWorker } from './filter-scrape.worker';
 import { AiProcessWorker } from './ai-process.worker';
 import { OutreachSendWorker } from './outreach-send.worker';
 import { MarketingCampaignDispatchWorker } from './marketing-campaign-dispatch.worker';
 import { MarketingMessageSendWorker } from './marketing-message-send.worker';
+import { ReminderTriggerWorker } from './reminder-trigger.worker';
 
 @Module({
     imports: [
@@ -33,12 +36,14 @@ import { MarketingMessageSendWorker } from './marketing-message-send.worker';
         MarketingCampaignsModule,
         ResendModule,
         TwillioModule,
+        GatewaysModule,
         BullModule.registerQueue(
             { name: FILTER_SCRAPE_QUEUE },
             { name: AI_PROCESS_QUEUE },
             { name: OUTREACH_SEND_QUEUE },
             { name: MARKETING_CAMPAIGN_DISPATCH_QUEUE },
             { name: MARKETING_MESSAGE_SEND_QUEUE },
+            { name: REMINDER_TRIGGER_QUEUE },
         ),
     ],
     providers: [
@@ -47,6 +52,7 @@ import { MarketingMessageSendWorker } from './marketing-message-send.worker';
         OutreachSendWorker,
         MarketingCampaignDispatchWorker,
         MarketingMessageSendWorker,
+        ReminderTriggerWorker,
     ],
     exports: [
         FilterScrapeWorker,
@@ -54,6 +60,7 @@ import { MarketingMessageSendWorker } from './marketing-message-send.worker';
         OutreachSendWorker,
         MarketingCampaignDispatchWorker,
         MarketingMessageSendWorker,
+        ReminderTriggerWorker,
     ],
 })
 export class WorkersModule { }
