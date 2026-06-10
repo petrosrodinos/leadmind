@@ -26,6 +26,8 @@ import EditCampaignPage from "@/pages/dashboard/pages/campaigns/pages/edit";
 import CampaignDetailPage from "@/pages/dashboard/pages/campaigns/pages/detail";
 import AdminBatchJobsPage from "@/pages/dashboard/pages/admin/batch-jobs";
 import RemindersPage from "@/pages/dashboard/pages/reminders";
+import FormsPage from "@/pages/dashboard/pages/forms";
+import FormDetailPage from "@/pages/dashboard/pages/forms/pages/detail";
 
 function NavigateToFilterTab({ tab }: { tab: (typeof FilterDetailTabIds)[keyof typeof FilterDetailTabIds] }) {
   const { uuid } = useParams<{ uuid: string }>();
@@ -70,6 +72,8 @@ export default function AppRoutes() {
         <Route path="contacts" element={<ContactsPage />} />
         <Route path="contacts/:uuid" element={<ContactDetailPage />} />
         <Route path="reminders" element={<RemindersPage />} />
+        <Route path="forms" element={<FormsPage />} />
+        <Route path="forms/:uuid" element={<FormDetailPage />} />
         <Route path="sender-profiles" element={<SenderProfilesPage />} />
         <Route path="integrations" element={<IntegrationsPage />} />
         <Route path="campaigns" element={<CampaignsPage />} />

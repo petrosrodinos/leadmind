@@ -34,6 +34,8 @@ model User {
   openai_batch_jobs    OpenAiBatchJob[]
   integrations         Integration[]
   reminders            Reminder[]
+  forms                Form[]
+  form_completions     FormCompletion[]     @relation("CompletedByUser")
 
   @@index([email])
   @@index([phone])
@@ -200,6 +202,7 @@ model Contact {
   campaign_contacts MarketingCampaignContact[]
   contact_scores    ContactScore[]
   reminders         Reminder[]
+  form_completions  FormCompletion[]
 
   @@unique([user_uuid, lead_uuid])
   @@index([user_uuid])
@@ -687,4 +690,100 @@ model Reminder {
   @@index([user_uuid, status])
   @@index([user_uuid, remind_at])
   @@map("reminders")
+}
+
+enum FieldType {
+  TEXT_INPUT
+  TEXTAREA
+  NUMBER_INPUT
+  EMAIL_INPUT
+  PHONE_INPUT
+  DATE_INPUT
+  CHECKBOX
+  RADIO_GROUP
+  DROPDOWN
+  MULTI_SELECT_DROPDOWN
+  LABEL
+  SECTION_HEADER
+}
+
+model Form {
+  id          Int     @id @default(autoincrement())
+  uuid        String  @unique @default(uuid())
+  user_uuid   String
+  name        String
+  description String? @db.Text
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user        User             @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
+  fields      FormField[]
+  completions FormCompletion[]
+
+  @@index([user_uuid])
+  @@map("forms")
+}
+
+model FormField {
+  id            Int       @id @default(autoincrement())
+  uuid          String    @unique @default(uuid())
+  form_uuid     String
+  label         String
+  field_type    FieldType
+  placeholder   String?
+  help_text     String?
+  required      Boolean   @default(false)
+  default_value String?
+  options       Json?
+  order_index   Int       @default(0)
+  enabled       Boolean   @default(true)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  form              Form                  @relation(fields: [form_uuid], references: [uuid], onDelete: Cascade)
+  completion_values FormCompletionValue[]
+
+  @@index([form_uuid])
+  @@index([form_uuid, order_index])
+  @@map("form_fields")
+}
+
+model FormCompletion {
+  id                Int    @id @default(autoincrement())
+  uuid              String @unique @default(uuid())
+  form_uuid         String
+  contact_uuid      String
+  completed_by_uuid String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  form         Form                  @relation(fields: [form_uuid], references: [uuid], onDelete: Cascade)
+  contact      Contact               @relation(fields: [contact_uuid], references: [uuid], onDelete: Cascade)
+  completed_by User                  @relation("CompletedByUser", fields: [completed_by_uuid], references: [uuid], onDelete: Cascade)
+  values       FormCompletionValue[]
+
+  @@index([form_uuid])
+  @@index([contact_uuid])
+  @@map("form_completions")
+}
+
+model FormCompletionValue {
+  id              Int    @id @default(autoincrement())
+  uuid            String @unique @default(uuid())
+  completion_uuid String
+  field_uuid      String
+  value           String @db.Text
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  completion FormCompletion @relation(fields: [completion_uuid], references: [uuid], onDelete: Cascade)
+  field      FormField      @relation(fields: [field_uuid], references: [uuid])
+
+  @@index([completion_uuid])
+  @@index([field_uuid])
+  @@map("form_completion_values")
 }

@@ -28,6 +28,7 @@ import { WorkersModule } from './workers/workers.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { IntegrationsModule } from './modules/integrations/integrations.module';
 import { RemindersModule } from './modules/reminders/reminders.module';
+import { FormsModule } from './modules/forms/forms.module';
 import { GatewaysModule } from './gateways/gateways.module';
 
 @Module({
@@ -60,6 +61,7 @@ import { GatewaysModule } from './gateways/gateways.module';
     AdminModule,
     IntegrationsModule,
     RemindersModule,
+    FormsModule,
     GatewaysModule,
   ],
   controllers: [AppController],

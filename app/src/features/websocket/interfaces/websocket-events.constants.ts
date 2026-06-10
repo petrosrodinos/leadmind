@@ -24,6 +24,16 @@ export const WEBSOCKET_EVENTS = {
         DELETED: 'reminder.deleted',
         TRIGGERED: 'reminder.triggered',
     },
+    FORM: {
+        CREATED: 'form.created',
+        UPDATED: 'form.updated',
+        DELETED: 'form.deleted',
+    },
+    FORM_COMPLETION: {
+        CREATED: 'form_completion.created',
+        UPDATED: 'form_completion.updated',
+        DELETED: 'form_completion.deleted',
+    },
 } as const;
 
 export type WebsocketEventCategory = keyof typeof WEBSOCKET_EVENTS;

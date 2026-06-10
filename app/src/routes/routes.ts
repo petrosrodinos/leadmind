@@ -30,6 +30,8 @@ export const Routes = {
         campaigns_detail: "/dashboard/campaigns/:uuid",
         campaigns_edit: "/dashboard/campaigns/:uuid/edit",
         reminders: "/dashboard/reminders",
+        forms: "/dashboard/forms",
+        forms_detail: "/dashboard/forms/:uuid",
         admin_batch_jobs: "/dashboard/admin/batch-jobs",
     },
 };

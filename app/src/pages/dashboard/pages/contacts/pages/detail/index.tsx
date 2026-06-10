@@ -5,7 +5,7 @@ import { useContact, useDeleteContact } from "@/features/contacts/hooks/use-cont
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { Routes } from "@/routes/routes";
 import { CONTACT_DETAIL_TABS } from "./constants/detail-tabs";
-import { ContactDetailHeader, CrmTab, OverviewTab, OutreachTab, RemindersTab } from "./components";
+import { ContactDetailHeader, CrmTab, FormsTab, OverviewTab, OutreachTab, RemindersTab } from "./components";
 
 export default function ContactDetailPage() {
   const { uuid } = useParams<{ uuid: string }>();
@@ -60,6 +60,8 @@ export default function ContactDetailPage() {
           />
         ) : activeTab === "reminders" ? (
           <RemindersTab contactUuid={contact.uuid} />
+        ) : activeTab === "forms" ? (
+          <FormsTab contactUuid={contact.uuid} contactName={contact.name} />
         ) : (
           <CrmTab contact={contact} onNavigateToOutreach={navigateToOutreach} />
         )}

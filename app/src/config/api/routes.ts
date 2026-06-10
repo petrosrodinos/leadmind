@@ -139,4 +139,25 @@ export const ApiRoutes = {
         send_draft_message: (campaignUuid: string, messageUuid: string) =>
             `/marketing-campaigns/${campaignUuid}/draft-messages/${messageUuid}/send`,
     },
+    forms: {
+        list: '/forms',
+        create: '/forms',
+        get: (uuid: string) => `/forms/${uuid}`,
+        update: (uuid: string) => `/forms/${uuid}`,
+        remove: (uuid: string) => `/forms/${uuid}`,
+        duplicate: (uuid: string) => `/forms/${uuid}/duplicate`,
+        createField: (formUuid: string) => `/forms/${formUuid}/fields`,
+        updateField: (formUuid: string, fieldUuid: string) => `/forms/${formUuid}/fields/${fieldUuid}`,
+        removeField: (formUuid: string, fieldUuid: string) => `/forms/${formUuid}/fields/${fieldUuid}`,
+        reorderFields: (formUuid: string) => `/forms/${formUuid}/fields/reorder`,
+        listCompletions: (formUuid: string) => `/forms/${formUuid}/completions`,
+        createCompletion: (formUuid: string) => `/forms/${formUuid}/completions`,
+        getCompletion: (formUuid: string, completionUuid: string) =>
+            `/forms/${formUuid}/completions/${completionUuid}`,
+        updateCompletion: (formUuid: string, completionUuid: string) =>
+            `/forms/${formUuid}/completions/${completionUuid}`,
+        removeCompletion: (formUuid: string, completionUuid: string) =>
+            `/forms/${formUuid}/completions/${completionUuid}`,
+        contactCompletions: (contactUuid: string) => `/form-completions/contact/${contactUuid}`,
+    },
 }

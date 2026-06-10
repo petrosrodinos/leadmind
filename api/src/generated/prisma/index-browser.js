@@ -453,6 +453,53 @@ exports.Prisma.ReminderScalarFieldEnum = {
   updated_at: 'updated_at'
 };
 
+exports.Prisma.FormScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  user_uuid: 'user_uuid',
+  name: 'name',
+  description: 'description',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.FormFieldScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  form_uuid: 'form_uuid',
+  label: 'label',
+  field_type: 'field_type',
+  placeholder: 'placeholder',
+  help_text: 'help_text',
+  required: 'required',
+  default_value: 'default_value',
+  options: 'options',
+  order_index: 'order_index',
+  enabled: 'enabled',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.FormCompletionScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  form_uuid: 'form_uuid',
+  contact_uuid: 'contact_uuid',
+  completed_by_uuid: 'completed_by_uuid',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.FormCompletionValueScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  completion_uuid: 'completion_uuid',
+  field_uuid: 'field_uuid',
+  value: 'value',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -643,6 +690,21 @@ exports.ReminderStatus = exports.$Enums.ReminderStatus = {
   CANCELLED: 'CANCELLED'
 };
 
+exports.FieldType = exports.$Enums.FieldType = {
+  TEXT_INPUT: 'TEXT_INPUT',
+  TEXTAREA: 'TEXTAREA',
+  NUMBER_INPUT: 'NUMBER_INPUT',
+  EMAIL_INPUT: 'EMAIL_INPUT',
+  PHONE_INPUT: 'PHONE_INPUT',
+  DATE_INPUT: 'DATE_INPUT',
+  CHECKBOX: 'CHECKBOX',
+  RADIO_GROUP: 'RADIO_GROUP',
+  DROPDOWN: 'DROPDOWN',
+  MULTI_SELECT_DROPDOWN: 'MULTI_SELECT_DROPDOWN',
+  LABEL: 'LABEL',
+  SECTION_HEADER: 'SECTION_HEADER'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Filter: 'Filter',
@@ -664,7 +726,11 @@ exports.Prisma.ModelName = {
   OpenAiBatchJob: 'OpenAiBatchJob',
   Integration: 'Integration',
   IntegrationKey: 'IntegrationKey',
-  Reminder: 'Reminder'
+  Reminder: 'Reminder',
+  Form: 'Form',
+  FormField: 'FormField',
+  FormCompletion: 'FormCompletion',
+  FormCompletionValue: 'FormCompletionValue'
 };
 
 /**

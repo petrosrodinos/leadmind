@@ -118,6 +118,26 @@ export type IntegrationKey = $Result.DefaultSelection<Prisma.$IntegrationKeyPayl
  * 
  */
 export type Reminder = $Result.DefaultSelection<Prisma.$ReminderPayload>
+/**
+ * Model Form
+ * 
+ */
+export type Form = $Result.DefaultSelection<Prisma.$FormPayload>
+/**
+ * Model FormField
+ * 
+ */
+export type FormField = $Result.DefaultSelection<Prisma.$FormFieldPayload>
+/**
+ * Model FormCompletion
+ * 
+ */
+export type FormCompletion = $Result.DefaultSelection<Prisma.$FormCompletionPayload>
+/**
+ * Model FormCompletionValue
+ * 
+ */
+export type FormCompletionValue = $Result.DefaultSelection<Prisma.$FormCompletionValuePayload>
 
 /**
  * Enums
@@ -337,6 +357,24 @@ export const ReminderStatus: {
 
 export type ReminderStatus = (typeof ReminderStatus)[keyof typeof ReminderStatus]
 
+
+export const FieldType: {
+  TEXT_INPUT: 'TEXT_INPUT',
+  TEXTAREA: 'TEXTAREA',
+  NUMBER_INPUT: 'NUMBER_INPUT',
+  EMAIL_INPUT: 'EMAIL_INPUT',
+  PHONE_INPUT: 'PHONE_INPUT',
+  DATE_INPUT: 'DATE_INPUT',
+  CHECKBOX: 'CHECKBOX',
+  RADIO_GROUP: 'RADIO_GROUP',
+  DROPDOWN: 'DROPDOWN',
+  MULTI_SELECT_DROPDOWN: 'MULTI_SELECT_DROPDOWN',
+  LABEL: 'LABEL',
+  SECTION_HEADER: 'SECTION_HEADER'
+};
+
+export type FieldType = (typeof FieldType)[keyof typeof FieldType]
+
 }
 
 export type AuthRole = $Enums.AuthRole
@@ -410,6 +448,10 @@ export const IntegrationKeyType: typeof $Enums.IntegrationKeyType
 export type ReminderStatus = $Enums.ReminderStatus
 
 export const ReminderStatus: typeof $Enums.ReminderStatus
+
+export type FieldType = $Enums.FieldType
+
+export const FieldType: typeof $Enums.FieldType
 
 /**
  * ##  Prisma Client ʲˢ
@@ -737,6 +779,46 @@ export class PrismaClient<
     * ```
     */
   get reminder(): Prisma.ReminderDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.form`: Exposes CRUD operations for the **Form** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Forms
+    * const forms = await prisma.form.findMany()
+    * ```
+    */
+  get form(): Prisma.FormDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.formField`: Exposes CRUD operations for the **FormField** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more FormFields
+    * const formFields = await prisma.formField.findMany()
+    * ```
+    */
+  get formField(): Prisma.FormFieldDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.formCompletion`: Exposes CRUD operations for the **FormCompletion** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more FormCompletions
+    * const formCompletions = await prisma.formCompletion.findMany()
+    * ```
+    */
+  get formCompletion(): Prisma.FormCompletionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.formCompletionValue`: Exposes CRUD operations for the **FormCompletionValue** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more FormCompletionValues
+    * const formCompletionValues = await prisma.formCompletionValue.findMany()
+    * ```
+    */
+  get formCompletionValue(): Prisma.FormCompletionValueDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1191,7 +1273,11 @@ export namespace Prisma {
     OpenAiBatchJob: 'OpenAiBatchJob',
     Integration: 'Integration',
     IntegrationKey: 'IntegrationKey',
-    Reminder: 'Reminder'
+    Reminder: 'Reminder',
+    Form: 'Form',
+    FormField: 'FormField',
+    FormCompletion: 'FormCompletion',
+    FormCompletionValue: 'FormCompletionValue'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1207,7 +1293,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "filter" | "scoringInstruction" | "filterScoringInstruction" | "rawLead" | "lead" | "leadEnrichment" | "contact" | "contactScore" | "contactTag" | "interaction" | "outreachMessage" | "outreachSequence" | "filterJob" | "senderProfile" | "marketingCampaign" | "marketingCampaignContact" | "openAiBatchJob" | "integration" | "integrationKey" | "reminder"
+      modelProps: "user" | "filter" | "scoringInstruction" | "filterScoringInstruction" | "rawLead" | "lead" | "leadEnrichment" | "contact" | "contactScore" | "contactTag" | "interaction" | "outreachMessage" | "outreachSequence" | "filterJob" | "senderProfile" | "marketingCampaign" | "marketingCampaignContact" | "openAiBatchJob" | "integration" | "integrationKey" | "reminder" | "form" | "formField" | "formCompletion" | "formCompletionValue"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2765,6 +2851,302 @@ export namespace Prisma {
           }
         }
       }
+      Form: {
+        payload: Prisma.$FormPayload<ExtArgs>
+        fields: Prisma.FormFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.FormFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.FormFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormPayload>
+          }
+          findFirst: {
+            args: Prisma.FormFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.FormFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormPayload>
+          }
+          findMany: {
+            args: Prisma.FormFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormPayload>[]
+          }
+          create: {
+            args: Prisma.FormCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormPayload>
+          }
+          createMany: {
+            args: Prisma.FormCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.FormCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormPayload>[]
+          }
+          delete: {
+            args: Prisma.FormDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormPayload>
+          }
+          update: {
+            args: Prisma.FormUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormPayload>
+          }
+          deleteMany: {
+            args: Prisma.FormDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.FormUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.FormUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormPayload>[]
+          }
+          upsert: {
+            args: Prisma.FormUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormPayload>
+          }
+          aggregate: {
+            args: Prisma.FormAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateForm>
+          }
+          groupBy: {
+            args: Prisma.FormGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FormGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.FormCountArgs<ExtArgs>
+            result: $Utils.Optional<FormCountAggregateOutputType> | number
+          }
+        }
+      }
+      FormField: {
+        payload: Prisma.$FormFieldPayload<ExtArgs>
+        fields: Prisma.FormFieldFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.FormFieldFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormFieldPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.FormFieldFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormFieldPayload>
+          }
+          findFirst: {
+            args: Prisma.FormFieldFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormFieldPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.FormFieldFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormFieldPayload>
+          }
+          findMany: {
+            args: Prisma.FormFieldFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormFieldPayload>[]
+          }
+          create: {
+            args: Prisma.FormFieldCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormFieldPayload>
+          }
+          createMany: {
+            args: Prisma.FormFieldCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.FormFieldCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormFieldPayload>[]
+          }
+          delete: {
+            args: Prisma.FormFieldDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormFieldPayload>
+          }
+          update: {
+            args: Prisma.FormFieldUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormFieldPayload>
+          }
+          deleteMany: {
+            args: Prisma.FormFieldDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.FormFieldUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.FormFieldUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormFieldPayload>[]
+          }
+          upsert: {
+            args: Prisma.FormFieldUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormFieldPayload>
+          }
+          aggregate: {
+            args: Prisma.FormFieldAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFormField>
+          }
+          groupBy: {
+            args: Prisma.FormFieldGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FormFieldGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.FormFieldCountArgs<ExtArgs>
+            result: $Utils.Optional<FormFieldCountAggregateOutputType> | number
+          }
+        }
+      }
+      FormCompletion: {
+        payload: Prisma.$FormCompletionPayload<ExtArgs>
+        fields: Prisma.FormCompletionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.FormCompletionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormCompletionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.FormCompletionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormCompletionPayload>
+          }
+          findFirst: {
+            args: Prisma.FormCompletionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormCompletionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.FormCompletionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormCompletionPayload>
+          }
+          findMany: {
+            args: Prisma.FormCompletionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormCompletionPayload>[]
+          }
+          create: {
+            args: Prisma.FormCompletionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormCompletionPayload>
+          }
+          createMany: {
+            args: Prisma.FormCompletionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.FormCompletionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormCompletionPayload>[]
+          }
+          delete: {
+            args: Prisma.FormCompletionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormCompletionPayload>
+          }
+          update: {
+            args: Prisma.FormCompletionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormCompletionPayload>
+          }
+          deleteMany: {
+            args: Prisma.FormCompletionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.FormCompletionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.FormCompletionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormCompletionPayload>[]
+          }
+          upsert: {
+            args: Prisma.FormCompletionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormCompletionPayload>
+          }
+          aggregate: {
+            args: Prisma.FormCompletionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFormCompletion>
+          }
+          groupBy: {
+            args: Prisma.FormCompletionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FormCompletionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.FormCompletionCountArgs<ExtArgs>
+            result: $Utils.Optional<FormCompletionCountAggregateOutputType> | number
+          }
+        }
+      }
+      FormCompletionValue: {
+        payload: Prisma.$FormCompletionValuePayload<ExtArgs>
+        fields: Prisma.FormCompletionValueFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.FormCompletionValueFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormCompletionValuePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.FormCompletionValueFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormCompletionValuePayload>
+          }
+          findFirst: {
+            args: Prisma.FormCompletionValueFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormCompletionValuePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.FormCompletionValueFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormCompletionValuePayload>
+          }
+          findMany: {
+            args: Prisma.FormCompletionValueFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormCompletionValuePayload>[]
+          }
+          create: {
+            args: Prisma.FormCompletionValueCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormCompletionValuePayload>
+          }
+          createMany: {
+            args: Prisma.FormCompletionValueCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.FormCompletionValueCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormCompletionValuePayload>[]
+          }
+          delete: {
+            args: Prisma.FormCompletionValueDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormCompletionValuePayload>
+          }
+          update: {
+            args: Prisma.FormCompletionValueUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormCompletionValuePayload>
+          }
+          deleteMany: {
+            args: Prisma.FormCompletionValueDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.FormCompletionValueUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.FormCompletionValueUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormCompletionValuePayload>[]
+          }
+          upsert: {
+            args: Prisma.FormCompletionValueUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormCompletionValuePayload>
+          }
+          aggregate: {
+            args: Prisma.FormCompletionValueAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFormCompletionValue>
+          }
+          groupBy: {
+            args: Prisma.FormCompletionValueGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FormCompletionValueGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.FormCompletionValueCountArgs<ExtArgs>
+            result: $Utils.Optional<FormCompletionValueCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2894,6 +3276,10 @@ export namespace Prisma {
     integration?: IntegrationOmit
     integrationKey?: IntegrationKeyOmit
     reminder?: ReminderOmit
+    form?: FormOmit
+    formField?: FormFieldOmit
+    formCompletion?: FormCompletionOmit
+    formCompletionValue?: FormCompletionValueOmit
   }
 
   /* Types for Logging */
@@ -2985,6 +3371,8 @@ export namespace Prisma {
     openai_batch_jobs: number
     integrations: number
     reminders: number
+    forms: number
+    form_completions: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2999,6 +3387,8 @@ export namespace Prisma {
     openai_batch_jobs?: boolean | UserCountOutputTypeCountOpenai_batch_jobsArgs
     integrations?: boolean | UserCountOutputTypeCountIntegrationsArgs
     reminders?: boolean | UserCountOutputTypeCountRemindersArgs
+    forms?: boolean | UserCountOutputTypeCountFormsArgs
+    form_completions?: boolean | UserCountOutputTypeCountForm_completionsArgs
   }
 
   // Custom InputTypes
@@ -3087,6 +3477,20 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountRemindersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ReminderWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountFormsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FormWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountForm_completionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FormCompletionWhereInput
   }
 
 
@@ -3239,6 +3643,7 @@ export namespace Prisma {
     campaign_contacts: number
     contact_scores: number
     reminders: number
+    form_completions: number
   }
 
   export type ContactCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3248,6 +3653,7 @@ export namespace Prisma {
     campaign_contacts?: boolean | ContactCountOutputTypeCountCampaign_contactsArgs
     contact_scores?: boolean | ContactCountOutputTypeCountContact_scoresArgs
     reminders?: boolean | ContactCountOutputTypeCountRemindersArgs
+    form_completions?: boolean | ContactCountOutputTypeCountForm_completionsArgs
   }
 
   // Custom InputTypes
@@ -3301,6 +3707,13 @@ export namespace Prisma {
    */
   export type ContactCountOutputTypeCountRemindersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ReminderWhereInput
+  }
+
+  /**
+   * ContactCountOutputType without action
+   */
+  export type ContactCountOutputTypeCountForm_completionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FormCompletionWhereInput
   }
 
 
@@ -3412,6 +3825,108 @@ export namespace Prisma {
    */
   export type IntegrationCountOutputTypeCountKeysArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: IntegrationKeyWhereInput
+  }
+
+
+  /**
+   * Count Type FormCountOutputType
+   */
+
+  export type FormCountOutputType = {
+    fields: number
+    completions: number
+  }
+
+  export type FormCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    fields?: boolean | FormCountOutputTypeCountFieldsArgs
+    completions?: boolean | FormCountOutputTypeCountCompletionsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * FormCountOutputType without action
+   */
+  export type FormCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormCountOutputType
+     */
+    select?: FormCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * FormCountOutputType without action
+   */
+  export type FormCountOutputTypeCountFieldsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FormFieldWhereInput
+  }
+
+  /**
+   * FormCountOutputType without action
+   */
+  export type FormCountOutputTypeCountCompletionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FormCompletionWhereInput
+  }
+
+
+  /**
+   * Count Type FormFieldCountOutputType
+   */
+
+  export type FormFieldCountOutputType = {
+    completion_values: number
+  }
+
+  export type FormFieldCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    completion_values?: boolean | FormFieldCountOutputTypeCountCompletion_valuesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * FormFieldCountOutputType without action
+   */
+  export type FormFieldCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormFieldCountOutputType
+     */
+    select?: FormFieldCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * FormFieldCountOutputType without action
+   */
+  export type FormFieldCountOutputTypeCountCompletion_valuesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FormCompletionValueWhereInput
+  }
+
+
+  /**
+   * Count Type FormCompletionCountOutputType
+   */
+
+  export type FormCompletionCountOutputType = {
+    values: number
+  }
+
+  export type FormCompletionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    values?: boolean | FormCompletionCountOutputTypeCountValuesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * FormCompletionCountOutputType without action
+   */
+  export type FormCompletionCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormCompletionCountOutputType
+     */
+    select?: FormCompletionCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * FormCompletionCountOutputType without action
+   */
+  export type FormCompletionCountOutputTypeCountValuesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FormCompletionValueWhereInput
   }
 
 
@@ -3652,6 +4167,8 @@ export namespace Prisma {
     openai_batch_jobs?: boolean | User$openai_batch_jobsArgs<ExtArgs>
     integrations?: boolean | User$integrationsArgs<ExtArgs>
     reminders?: boolean | User$remindersArgs<ExtArgs>
+    forms?: boolean | User$formsArgs<ExtArgs>
+    form_completions?: boolean | User$form_completionsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -3701,6 +4218,8 @@ export namespace Prisma {
     openai_batch_jobs?: boolean | User$openai_batch_jobsArgs<ExtArgs>
     integrations?: boolean | User$integrationsArgs<ExtArgs>
     reminders?: boolean | User$remindersArgs<ExtArgs>
+    forms?: boolean | User$formsArgs<ExtArgs>
+    form_completions?: boolean | User$form_completionsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -3720,6 +4239,8 @@ export namespace Prisma {
       openai_batch_jobs: Prisma.$OpenAiBatchJobPayload<ExtArgs>[]
       integrations: Prisma.$IntegrationPayload<ExtArgs>[]
       reminders: Prisma.$ReminderPayload<ExtArgs>[]
+      forms: Prisma.$FormPayload<ExtArgs>[]
+      form_completions: Prisma.$FormCompletionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -4135,6 +4656,8 @@ export namespace Prisma {
     openai_batch_jobs<T extends User$openai_batch_jobsArgs<ExtArgs> = {}>(args?: Subset<T, User$openai_batch_jobsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OpenAiBatchJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     integrations<T extends User$integrationsArgs<ExtArgs> = {}>(args?: Subset<T, User$integrationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntegrationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     reminders<T extends User$remindersArgs<ExtArgs> = {}>(args?: Subset<T, User$remindersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReminderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    forms<T extends User$formsArgs<ExtArgs> = {}>(args?: Subset<T, User$formsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FormPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    form_completions<T extends User$form_completionsArgs<ExtArgs> = {}>(args?: Subset<T, User$form_completionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FormCompletionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4821,6 +5344,54 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ReminderScalarFieldEnum | ReminderScalarFieldEnum[]
+  }
+
+  /**
+   * User.forms
+   */
+  export type User$formsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Form
+     */
+    select?: FormSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Form
+     */
+    omit?: FormOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormInclude<ExtArgs> | null
+    where?: FormWhereInput
+    orderBy?: FormOrderByWithRelationInput | FormOrderByWithRelationInput[]
+    cursor?: FormWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FormScalarFieldEnum | FormScalarFieldEnum[]
+  }
+
+  /**
+   * User.form_completions
+   */
+  export type User$form_completionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormCompletion
+     */
+    select?: FormCompletionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormCompletion
+     */
+    omit?: FormCompletionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormCompletionInclude<ExtArgs> | null
+    where?: FormCompletionWhereInput
+    orderBy?: FormCompletionOrderByWithRelationInput | FormCompletionOrderByWithRelationInput[]
+    cursor?: FormCompletionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FormCompletionScalarFieldEnum | FormCompletionScalarFieldEnum[]
   }
 
   /**
@@ -12400,6 +12971,7 @@ export namespace Prisma {
     campaign_contacts?: boolean | Contact$campaign_contactsArgs<ExtArgs>
     contact_scores?: boolean | Contact$contact_scoresArgs<ExtArgs>
     reminders?: boolean | Contact$remindersArgs<ExtArgs>
+    form_completions?: boolean | Contact$form_completionsArgs<ExtArgs>
     _count?: boolean | ContactCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["contact"]>
 
@@ -12498,6 +13070,7 @@ export namespace Prisma {
     campaign_contacts?: boolean | Contact$campaign_contactsArgs<ExtArgs>
     contact_scores?: boolean | Contact$contact_scoresArgs<ExtArgs>
     reminders?: boolean | Contact$remindersArgs<ExtArgs>
+    form_completions?: boolean | Contact$form_completionsArgs<ExtArgs>
     _count?: boolean | ContactCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ContactIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -12523,6 +13096,7 @@ export namespace Prisma {
       campaign_contacts: Prisma.$MarketingCampaignContactPayload<ExtArgs>[]
       contact_scores: Prisma.$ContactScorePayload<ExtArgs>[]
       reminders: Prisma.$ReminderPayload<ExtArgs>[]
+      form_completions: Prisma.$FormCompletionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -12951,6 +13525,7 @@ export namespace Prisma {
     campaign_contacts<T extends Contact$campaign_contactsArgs<ExtArgs> = {}>(args?: Subset<T, Contact$campaign_contactsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketingCampaignContactPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     contact_scores<T extends Contact$contact_scoresArgs<ExtArgs> = {}>(args?: Subset<T, Contact$contact_scoresArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactScorePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     reminders<T extends Contact$remindersArgs<ExtArgs> = {}>(args?: Subset<T, Contact$remindersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReminderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    form_completions<T extends Contact$form_completionsArgs<ExtArgs> = {}>(args?: Subset<T, Contact$form_completionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FormCompletionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -13559,6 +14134,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ReminderScalarFieldEnum | ReminderScalarFieldEnum[]
+  }
+
+  /**
+   * Contact.form_completions
+   */
+  export type Contact$form_completionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormCompletion
+     */
+    select?: FormCompletionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormCompletion
+     */
+    omit?: FormCompletionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormCompletionInclude<ExtArgs> | null
+    where?: FormCompletionWhereInput
+    orderBy?: FormCompletionOrderByWithRelationInput | FormCompletionOrderByWithRelationInput[]
+    cursor?: FormCompletionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FormCompletionScalarFieldEnum | FormCompletionScalarFieldEnum[]
   }
 
   /**
@@ -29577,6 +30176,4711 @@ export namespace Prisma {
 
 
   /**
+   * Model Form
+   */
+
+  export type AggregateForm = {
+    _count: FormCountAggregateOutputType | null
+    _avg: FormAvgAggregateOutputType | null
+    _sum: FormSumAggregateOutputType | null
+    _min: FormMinAggregateOutputType | null
+    _max: FormMaxAggregateOutputType | null
+  }
+
+  export type FormAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type FormSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type FormMinAggregateOutputType = {
+    id: number | null
+    uuid: string | null
+    user_uuid: string | null
+    name: string | null
+    description: string | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type FormMaxAggregateOutputType = {
+    id: number | null
+    uuid: string | null
+    user_uuid: string | null
+    name: string | null
+    description: string | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type FormCountAggregateOutputType = {
+    id: number
+    uuid: number
+    user_uuid: number
+    name: number
+    description: number
+    created_at: number
+    updated_at: number
+    _all: number
+  }
+
+
+  export type FormAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type FormSumAggregateInputType = {
+    id?: true
+  }
+
+  export type FormMinAggregateInputType = {
+    id?: true
+    uuid?: true
+    user_uuid?: true
+    name?: true
+    description?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type FormMaxAggregateInputType = {
+    id?: true
+    uuid?: true
+    user_uuid?: true
+    name?: true
+    description?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type FormCountAggregateInputType = {
+    id?: true
+    uuid?: true
+    user_uuid?: true
+    name?: true
+    description?: true
+    created_at?: true
+    updated_at?: true
+    _all?: true
+  }
+
+  export type FormAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Form to aggregate.
+     */
+    where?: FormWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Forms to fetch.
+     */
+    orderBy?: FormOrderByWithRelationInput | FormOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FormWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Forms from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Forms.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Forms
+    **/
+    _count?: true | FormCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: FormAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: FormSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FormMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FormMaxAggregateInputType
+  }
+
+  export type GetFormAggregateType<T extends FormAggregateArgs> = {
+        [P in keyof T & keyof AggregateForm]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateForm[P]>
+      : GetScalarType<T[P], AggregateForm[P]>
+  }
+
+
+
+
+  export type FormGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FormWhereInput
+    orderBy?: FormOrderByWithAggregationInput | FormOrderByWithAggregationInput[]
+    by: FormScalarFieldEnum[] | FormScalarFieldEnum
+    having?: FormScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FormCountAggregateInputType | true
+    _avg?: FormAvgAggregateInputType
+    _sum?: FormSumAggregateInputType
+    _min?: FormMinAggregateInputType
+    _max?: FormMaxAggregateInputType
+  }
+
+  export type FormGroupByOutputType = {
+    id: number
+    uuid: string
+    user_uuid: string
+    name: string
+    description: string | null
+    created_at: Date
+    updated_at: Date
+    _count: FormCountAggregateOutputType | null
+    _avg: FormAvgAggregateOutputType | null
+    _sum: FormSumAggregateOutputType | null
+    _min: FormMinAggregateOutputType | null
+    _max: FormMaxAggregateOutputType | null
+  }
+
+  type GetFormGroupByPayload<T extends FormGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FormGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FormGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FormGroupByOutputType[P]>
+            : GetScalarType<T[P], FormGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FormSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uuid?: boolean
+    user_uuid?: boolean
+    name?: boolean
+    description?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    fields?: boolean | Form$fieldsArgs<ExtArgs>
+    completions?: boolean | Form$completionsArgs<ExtArgs>
+    _count?: boolean | FormCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["form"]>
+
+  export type FormSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uuid?: boolean
+    user_uuid?: boolean
+    name?: boolean
+    description?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["form"]>
+
+  export type FormSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uuid?: boolean
+    user_uuid?: boolean
+    name?: boolean
+    description?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["form"]>
+
+  export type FormSelectScalar = {
+    id?: boolean
+    uuid?: boolean
+    user_uuid?: boolean
+    name?: boolean
+    description?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }
+
+  export type FormOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "name" | "description" | "created_at" | "updated_at", ExtArgs["result"]["form"]>
+  export type FormInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    fields?: boolean | Form$fieldsArgs<ExtArgs>
+    completions?: boolean | Form$completionsArgs<ExtArgs>
+    _count?: boolean | FormCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type FormIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type FormIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $FormPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Form"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      fields: Prisma.$FormFieldPayload<ExtArgs>[]
+      completions: Prisma.$FormCompletionPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      uuid: string
+      user_uuid: string
+      name: string
+      description: string | null
+      created_at: Date
+      updated_at: Date
+    }, ExtArgs["result"]["form"]>
+    composites: {}
+  }
+
+  type FormGetPayload<S extends boolean | null | undefined | FormDefaultArgs> = $Result.GetResult<Prisma.$FormPayload, S>
+
+  type FormCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<FormFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: FormCountAggregateInputType | true
+    }
+
+  export interface FormDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Form'], meta: { name: 'Form' } }
+    /**
+     * Find zero or one Form that matches the filter.
+     * @param {FormFindUniqueArgs} args - Arguments to find a Form
+     * @example
+     * // Get one Form
+     * const form = await prisma.form.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends FormFindUniqueArgs>(args: SelectSubset<T, FormFindUniqueArgs<ExtArgs>>): Prisma__FormClient<$Result.GetResult<Prisma.$FormPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Form that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {FormFindUniqueOrThrowArgs} args - Arguments to find a Form
+     * @example
+     * // Get one Form
+     * const form = await prisma.form.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends FormFindUniqueOrThrowArgs>(args: SelectSubset<T, FormFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FormClient<$Result.GetResult<Prisma.$FormPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Form that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FormFindFirstArgs} args - Arguments to find a Form
+     * @example
+     * // Get one Form
+     * const form = await prisma.form.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends FormFindFirstArgs>(args?: SelectSubset<T, FormFindFirstArgs<ExtArgs>>): Prisma__FormClient<$Result.GetResult<Prisma.$FormPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Form that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FormFindFirstOrThrowArgs} args - Arguments to find a Form
+     * @example
+     * // Get one Form
+     * const form = await prisma.form.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends FormFindFirstOrThrowArgs>(args?: SelectSubset<T, FormFindFirstOrThrowArgs<ExtArgs>>): Prisma__FormClient<$Result.GetResult<Prisma.$FormPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Forms that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FormFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Forms
+     * const forms = await prisma.form.findMany()
+     * 
+     * // Get first 10 Forms
+     * const forms = await prisma.form.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const formWithIdOnly = await prisma.form.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends FormFindManyArgs>(args?: SelectSubset<T, FormFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FormPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Form.
+     * @param {FormCreateArgs} args - Arguments to create a Form.
+     * @example
+     * // Create one Form
+     * const Form = await prisma.form.create({
+     *   data: {
+     *     // ... data to create a Form
+     *   }
+     * })
+     * 
+     */
+    create<T extends FormCreateArgs>(args: SelectSubset<T, FormCreateArgs<ExtArgs>>): Prisma__FormClient<$Result.GetResult<Prisma.$FormPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Forms.
+     * @param {FormCreateManyArgs} args - Arguments to create many Forms.
+     * @example
+     * // Create many Forms
+     * const form = await prisma.form.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends FormCreateManyArgs>(args?: SelectSubset<T, FormCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Forms and returns the data saved in the database.
+     * @param {FormCreateManyAndReturnArgs} args - Arguments to create many Forms.
+     * @example
+     * // Create many Forms
+     * const form = await prisma.form.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Forms and only return the `id`
+     * const formWithIdOnly = await prisma.form.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends FormCreateManyAndReturnArgs>(args?: SelectSubset<T, FormCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FormPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Form.
+     * @param {FormDeleteArgs} args - Arguments to delete one Form.
+     * @example
+     * // Delete one Form
+     * const Form = await prisma.form.delete({
+     *   where: {
+     *     // ... filter to delete one Form
+     *   }
+     * })
+     * 
+     */
+    delete<T extends FormDeleteArgs>(args: SelectSubset<T, FormDeleteArgs<ExtArgs>>): Prisma__FormClient<$Result.GetResult<Prisma.$FormPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Form.
+     * @param {FormUpdateArgs} args - Arguments to update one Form.
+     * @example
+     * // Update one Form
+     * const form = await prisma.form.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends FormUpdateArgs>(args: SelectSubset<T, FormUpdateArgs<ExtArgs>>): Prisma__FormClient<$Result.GetResult<Prisma.$FormPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Forms.
+     * @param {FormDeleteManyArgs} args - Arguments to filter Forms to delete.
+     * @example
+     * // Delete a few Forms
+     * const { count } = await prisma.form.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends FormDeleteManyArgs>(args?: SelectSubset<T, FormDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Forms.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FormUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Forms
+     * const form = await prisma.form.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends FormUpdateManyArgs>(args: SelectSubset<T, FormUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Forms and returns the data updated in the database.
+     * @param {FormUpdateManyAndReturnArgs} args - Arguments to update many Forms.
+     * @example
+     * // Update many Forms
+     * const form = await prisma.form.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Forms and only return the `id`
+     * const formWithIdOnly = await prisma.form.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends FormUpdateManyAndReturnArgs>(args: SelectSubset<T, FormUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FormPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Form.
+     * @param {FormUpsertArgs} args - Arguments to update or create a Form.
+     * @example
+     * // Update or create a Form
+     * const form = await prisma.form.upsert({
+     *   create: {
+     *     // ... data to create a Form
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Form we want to update
+     *   }
+     * })
+     */
+    upsert<T extends FormUpsertArgs>(args: SelectSubset<T, FormUpsertArgs<ExtArgs>>): Prisma__FormClient<$Result.GetResult<Prisma.$FormPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Forms.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FormCountArgs} args - Arguments to filter Forms to count.
+     * @example
+     * // Count the number of Forms
+     * const count = await prisma.form.count({
+     *   where: {
+     *     // ... the filter for the Forms we want to count
+     *   }
+     * })
+    **/
+    count<T extends FormCountArgs>(
+      args?: Subset<T, FormCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FormCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Form.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FormAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FormAggregateArgs>(args: Subset<T, FormAggregateArgs>): Prisma.PrismaPromise<GetFormAggregateType<T>>
+
+    /**
+     * Group by Form.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FormGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FormGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FormGroupByArgs['orderBy'] }
+        : { orderBy?: FormGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FormGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFormGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Form model
+   */
+  readonly fields: FormFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Form.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__FormClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    fields<T extends Form$fieldsArgs<ExtArgs> = {}>(args?: Subset<T, Form$fieldsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FormFieldPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    completions<T extends Form$completionsArgs<ExtArgs> = {}>(args?: Subset<T, Form$completionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FormCompletionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Form model
+   */
+  interface FormFieldRefs {
+    readonly id: FieldRef<"Form", 'Int'>
+    readonly uuid: FieldRef<"Form", 'String'>
+    readonly user_uuid: FieldRef<"Form", 'String'>
+    readonly name: FieldRef<"Form", 'String'>
+    readonly description: FieldRef<"Form", 'String'>
+    readonly created_at: FieldRef<"Form", 'DateTime'>
+    readonly updated_at: FieldRef<"Form", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Form findUnique
+   */
+  export type FormFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Form
+     */
+    select?: FormSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Form
+     */
+    omit?: FormOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormInclude<ExtArgs> | null
+    /**
+     * Filter, which Form to fetch.
+     */
+    where: FormWhereUniqueInput
+  }
+
+  /**
+   * Form findUniqueOrThrow
+   */
+  export type FormFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Form
+     */
+    select?: FormSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Form
+     */
+    omit?: FormOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormInclude<ExtArgs> | null
+    /**
+     * Filter, which Form to fetch.
+     */
+    where: FormWhereUniqueInput
+  }
+
+  /**
+   * Form findFirst
+   */
+  export type FormFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Form
+     */
+    select?: FormSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Form
+     */
+    omit?: FormOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormInclude<ExtArgs> | null
+    /**
+     * Filter, which Form to fetch.
+     */
+    where?: FormWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Forms to fetch.
+     */
+    orderBy?: FormOrderByWithRelationInput | FormOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Forms.
+     */
+    cursor?: FormWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Forms from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Forms.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Forms.
+     */
+    distinct?: FormScalarFieldEnum | FormScalarFieldEnum[]
+  }
+
+  /**
+   * Form findFirstOrThrow
+   */
+  export type FormFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Form
+     */
+    select?: FormSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Form
+     */
+    omit?: FormOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormInclude<ExtArgs> | null
+    /**
+     * Filter, which Form to fetch.
+     */
+    where?: FormWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Forms to fetch.
+     */
+    orderBy?: FormOrderByWithRelationInput | FormOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Forms.
+     */
+    cursor?: FormWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Forms from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Forms.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Forms.
+     */
+    distinct?: FormScalarFieldEnum | FormScalarFieldEnum[]
+  }
+
+  /**
+   * Form findMany
+   */
+  export type FormFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Form
+     */
+    select?: FormSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Form
+     */
+    omit?: FormOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormInclude<ExtArgs> | null
+    /**
+     * Filter, which Forms to fetch.
+     */
+    where?: FormWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Forms to fetch.
+     */
+    orderBy?: FormOrderByWithRelationInput | FormOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Forms.
+     */
+    cursor?: FormWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Forms from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Forms.
+     */
+    skip?: number
+    distinct?: FormScalarFieldEnum | FormScalarFieldEnum[]
+  }
+
+  /**
+   * Form create
+   */
+  export type FormCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Form
+     */
+    select?: FormSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Form
+     */
+    omit?: FormOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Form.
+     */
+    data: XOR<FormCreateInput, FormUncheckedCreateInput>
+  }
+
+  /**
+   * Form createMany
+   */
+  export type FormCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Forms.
+     */
+    data: FormCreateManyInput | FormCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Form createManyAndReturn
+   */
+  export type FormCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Form
+     */
+    select?: FormSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Form
+     */
+    omit?: FormOmit<ExtArgs> | null
+    /**
+     * The data used to create many Forms.
+     */
+    data: FormCreateManyInput | FormCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Form update
+   */
+  export type FormUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Form
+     */
+    select?: FormSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Form
+     */
+    omit?: FormOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Form.
+     */
+    data: XOR<FormUpdateInput, FormUncheckedUpdateInput>
+    /**
+     * Choose, which Form to update.
+     */
+    where: FormWhereUniqueInput
+  }
+
+  /**
+   * Form updateMany
+   */
+  export type FormUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Forms.
+     */
+    data: XOR<FormUpdateManyMutationInput, FormUncheckedUpdateManyInput>
+    /**
+     * Filter which Forms to update
+     */
+    where?: FormWhereInput
+    /**
+     * Limit how many Forms to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Form updateManyAndReturn
+   */
+  export type FormUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Form
+     */
+    select?: FormSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Form
+     */
+    omit?: FormOmit<ExtArgs> | null
+    /**
+     * The data used to update Forms.
+     */
+    data: XOR<FormUpdateManyMutationInput, FormUncheckedUpdateManyInput>
+    /**
+     * Filter which Forms to update
+     */
+    where?: FormWhereInput
+    /**
+     * Limit how many Forms to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Form upsert
+   */
+  export type FormUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Form
+     */
+    select?: FormSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Form
+     */
+    omit?: FormOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Form to update in case it exists.
+     */
+    where: FormWhereUniqueInput
+    /**
+     * In case the Form found by the `where` argument doesn't exist, create a new Form with this data.
+     */
+    create: XOR<FormCreateInput, FormUncheckedCreateInput>
+    /**
+     * In case the Form was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FormUpdateInput, FormUncheckedUpdateInput>
+  }
+
+  /**
+   * Form delete
+   */
+  export type FormDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Form
+     */
+    select?: FormSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Form
+     */
+    omit?: FormOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormInclude<ExtArgs> | null
+    /**
+     * Filter which Form to delete.
+     */
+    where: FormWhereUniqueInput
+  }
+
+  /**
+   * Form deleteMany
+   */
+  export type FormDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Forms to delete
+     */
+    where?: FormWhereInput
+    /**
+     * Limit how many Forms to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Form.fields
+   */
+  export type Form$fieldsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormField
+     */
+    select?: FormFieldSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormField
+     */
+    omit?: FormFieldOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormFieldInclude<ExtArgs> | null
+    where?: FormFieldWhereInput
+    orderBy?: FormFieldOrderByWithRelationInput | FormFieldOrderByWithRelationInput[]
+    cursor?: FormFieldWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FormFieldScalarFieldEnum | FormFieldScalarFieldEnum[]
+  }
+
+  /**
+   * Form.completions
+   */
+  export type Form$completionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormCompletion
+     */
+    select?: FormCompletionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormCompletion
+     */
+    omit?: FormCompletionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormCompletionInclude<ExtArgs> | null
+    where?: FormCompletionWhereInput
+    orderBy?: FormCompletionOrderByWithRelationInput | FormCompletionOrderByWithRelationInput[]
+    cursor?: FormCompletionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FormCompletionScalarFieldEnum | FormCompletionScalarFieldEnum[]
+  }
+
+  /**
+   * Form without action
+   */
+  export type FormDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Form
+     */
+    select?: FormSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Form
+     */
+    omit?: FormOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model FormField
+   */
+
+  export type AggregateFormField = {
+    _count: FormFieldCountAggregateOutputType | null
+    _avg: FormFieldAvgAggregateOutputType | null
+    _sum: FormFieldSumAggregateOutputType | null
+    _min: FormFieldMinAggregateOutputType | null
+    _max: FormFieldMaxAggregateOutputType | null
+  }
+
+  export type FormFieldAvgAggregateOutputType = {
+    id: number | null
+    order_index: number | null
+  }
+
+  export type FormFieldSumAggregateOutputType = {
+    id: number | null
+    order_index: number | null
+  }
+
+  export type FormFieldMinAggregateOutputType = {
+    id: number | null
+    uuid: string | null
+    form_uuid: string | null
+    label: string | null
+    field_type: $Enums.FieldType | null
+    placeholder: string | null
+    help_text: string | null
+    required: boolean | null
+    default_value: string | null
+    order_index: number | null
+    enabled: boolean | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type FormFieldMaxAggregateOutputType = {
+    id: number | null
+    uuid: string | null
+    form_uuid: string | null
+    label: string | null
+    field_type: $Enums.FieldType | null
+    placeholder: string | null
+    help_text: string | null
+    required: boolean | null
+    default_value: string | null
+    order_index: number | null
+    enabled: boolean | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type FormFieldCountAggregateOutputType = {
+    id: number
+    uuid: number
+    form_uuid: number
+    label: number
+    field_type: number
+    placeholder: number
+    help_text: number
+    required: number
+    default_value: number
+    options: number
+    order_index: number
+    enabled: number
+    created_at: number
+    updated_at: number
+    _all: number
+  }
+
+
+  export type FormFieldAvgAggregateInputType = {
+    id?: true
+    order_index?: true
+  }
+
+  export type FormFieldSumAggregateInputType = {
+    id?: true
+    order_index?: true
+  }
+
+  export type FormFieldMinAggregateInputType = {
+    id?: true
+    uuid?: true
+    form_uuid?: true
+    label?: true
+    field_type?: true
+    placeholder?: true
+    help_text?: true
+    required?: true
+    default_value?: true
+    order_index?: true
+    enabled?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type FormFieldMaxAggregateInputType = {
+    id?: true
+    uuid?: true
+    form_uuid?: true
+    label?: true
+    field_type?: true
+    placeholder?: true
+    help_text?: true
+    required?: true
+    default_value?: true
+    order_index?: true
+    enabled?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type FormFieldCountAggregateInputType = {
+    id?: true
+    uuid?: true
+    form_uuid?: true
+    label?: true
+    field_type?: true
+    placeholder?: true
+    help_text?: true
+    required?: true
+    default_value?: true
+    options?: true
+    order_index?: true
+    enabled?: true
+    created_at?: true
+    updated_at?: true
+    _all?: true
+  }
+
+  export type FormFieldAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FormField to aggregate.
+     */
+    where?: FormFieldWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FormFields to fetch.
+     */
+    orderBy?: FormFieldOrderByWithRelationInput | FormFieldOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FormFieldWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FormFields from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FormFields.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned FormFields
+    **/
+    _count?: true | FormFieldCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: FormFieldAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: FormFieldSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FormFieldMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FormFieldMaxAggregateInputType
+  }
+
+  export type GetFormFieldAggregateType<T extends FormFieldAggregateArgs> = {
+        [P in keyof T & keyof AggregateFormField]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFormField[P]>
+      : GetScalarType<T[P], AggregateFormField[P]>
+  }
+
+
+
+
+  export type FormFieldGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FormFieldWhereInput
+    orderBy?: FormFieldOrderByWithAggregationInput | FormFieldOrderByWithAggregationInput[]
+    by: FormFieldScalarFieldEnum[] | FormFieldScalarFieldEnum
+    having?: FormFieldScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FormFieldCountAggregateInputType | true
+    _avg?: FormFieldAvgAggregateInputType
+    _sum?: FormFieldSumAggregateInputType
+    _min?: FormFieldMinAggregateInputType
+    _max?: FormFieldMaxAggregateInputType
+  }
+
+  export type FormFieldGroupByOutputType = {
+    id: number
+    uuid: string
+    form_uuid: string
+    label: string
+    field_type: $Enums.FieldType
+    placeholder: string | null
+    help_text: string | null
+    required: boolean
+    default_value: string | null
+    options: JsonValue | null
+    order_index: number
+    enabled: boolean
+    created_at: Date
+    updated_at: Date
+    _count: FormFieldCountAggregateOutputType | null
+    _avg: FormFieldAvgAggregateOutputType | null
+    _sum: FormFieldSumAggregateOutputType | null
+    _min: FormFieldMinAggregateOutputType | null
+    _max: FormFieldMaxAggregateOutputType | null
+  }
+
+  type GetFormFieldGroupByPayload<T extends FormFieldGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FormFieldGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FormFieldGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FormFieldGroupByOutputType[P]>
+            : GetScalarType<T[P], FormFieldGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FormFieldSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uuid?: boolean
+    form_uuid?: boolean
+    label?: boolean
+    field_type?: boolean
+    placeholder?: boolean
+    help_text?: boolean
+    required?: boolean
+    default_value?: boolean
+    options?: boolean
+    order_index?: boolean
+    enabled?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    form?: boolean | FormDefaultArgs<ExtArgs>
+    completion_values?: boolean | FormField$completion_valuesArgs<ExtArgs>
+    _count?: boolean | FormFieldCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["formField"]>
+
+  export type FormFieldSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uuid?: boolean
+    form_uuid?: boolean
+    label?: boolean
+    field_type?: boolean
+    placeholder?: boolean
+    help_text?: boolean
+    required?: boolean
+    default_value?: boolean
+    options?: boolean
+    order_index?: boolean
+    enabled?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    form?: boolean | FormDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["formField"]>
+
+  export type FormFieldSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uuid?: boolean
+    form_uuid?: boolean
+    label?: boolean
+    field_type?: boolean
+    placeholder?: boolean
+    help_text?: boolean
+    required?: boolean
+    default_value?: boolean
+    options?: boolean
+    order_index?: boolean
+    enabled?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    form?: boolean | FormDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["formField"]>
+
+  export type FormFieldSelectScalar = {
+    id?: boolean
+    uuid?: boolean
+    form_uuid?: boolean
+    label?: boolean
+    field_type?: boolean
+    placeholder?: boolean
+    help_text?: boolean
+    required?: boolean
+    default_value?: boolean
+    options?: boolean
+    order_index?: boolean
+    enabled?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }
+
+  export type FormFieldOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "form_uuid" | "label" | "field_type" | "placeholder" | "help_text" | "required" | "default_value" | "options" | "order_index" | "enabled" | "created_at" | "updated_at", ExtArgs["result"]["formField"]>
+  export type FormFieldInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    form?: boolean | FormDefaultArgs<ExtArgs>
+    completion_values?: boolean | FormField$completion_valuesArgs<ExtArgs>
+    _count?: boolean | FormFieldCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type FormFieldIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    form?: boolean | FormDefaultArgs<ExtArgs>
+  }
+  export type FormFieldIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    form?: boolean | FormDefaultArgs<ExtArgs>
+  }
+
+  export type $FormFieldPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "FormField"
+    objects: {
+      form: Prisma.$FormPayload<ExtArgs>
+      completion_values: Prisma.$FormCompletionValuePayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      uuid: string
+      form_uuid: string
+      label: string
+      field_type: $Enums.FieldType
+      placeholder: string | null
+      help_text: string | null
+      required: boolean
+      default_value: string | null
+      options: Prisma.JsonValue | null
+      order_index: number
+      enabled: boolean
+      created_at: Date
+      updated_at: Date
+    }, ExtArgs["result"]["formField"]>
+    composites: {}
+  }
+
+  type FormFieldGetPayload<S extends boolean | null | undefined | FormFieldDefaultArgs> = $Result.GetResult<Prisma.$FormFieldPayload, S>
+
+  type FormFieldCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<FormFieldFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: FormFieldCountAggregateInputType | true
+    }
+
+  export interface FormFieldDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['FormField'], meta: { name: 'FormField' } }
+    /**
+     * Find zero or one FormField that matches the filter.
+     * @param {FormFieldFindUniqueArgs} args - Arguments to find a FormField
+     * @example
+     * // Get one FormField
+     * const formField = await prisma.formField.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends FormFieldFindUniqueArgs>(args: SelectSubset<T, FormFieldFindUniqueArgs<ExtArgs>>): Prisma__FormFieldClient<$Result.GetResult<Prisma.$FormFieldPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one FormField that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {FormFieldFindUniqueOrThrowArgs} args - Arguments to find a FormField
+     * @example
+     * // Get one FormField
+     * const formField = await prisma.formField.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends FormFieldFindUniqueOrThrowArgs>(args: SelectSubset<T, FormFieldFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FormFieldClient<$Result.GetResult<Prisma.$FormFieldPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FormField that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FormFieldFindFirstArgs} args - Arguments to find a FormField
+     * @example
+     * // Get one FormField
+     * const formField = await prisma.formField.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends FormFieldFindFirstArgs>(args?: SelectSubset<T, FormFieldFindFirstArgs<ExtArgs>>): Prisma__FormFieldClient<$Result.GetResult<Prisma.$FormFieldPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FormField that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FormFieldFindFirstOrThrowArgs} args - Arguments to find a FormField
+     * @example
+     * // Get one FormField
+     * const formField = await prisma.formField.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends FormFieldFindFirstOrThrowArgs>(args?: SelectSubset<T, FormFieldFindFirstOrThrowArgs<ExtArgs>>): Prisma__FormFieldClient<$Result.GetResult<Prisma.$FormFieldPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more FormFields that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FormFieldFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all FormFields
+     * const formFields = await prisma.formField.findMany()
+     * 
+     * // Get first 10 FormFields
+     * const formFields = await prisma.formField.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const formFieldWithIdOnly = await prisma.formField.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends FormFieldFindManyArgs>(args?: SelectSubset<T, FormFieldFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FormFieldPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a FormField.
+     * @param {FormFieldCreateArgs} args - Arguments to create a FormField.
+     * @example
+     * // Create one FormField
+     * const FormField = await prisma.formField.create({
+     *   data: {
+     *     // ... data to create a FormField
+     *   }
+     * })
+     * 
+     */
+    create<T extends FormFieldCreateArgs>(args: SelectSubset<T, FormFieldCreateArgs<ExtArgs>>): Prisma__FormFieldClient<$Result.GetResult<Prisma.$FormFieldPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many FormFields.
+     * @param {FormFieldCreateManyArgs} args - Arguments to create many FormFields.
+     * @example
+     * // Create many FormFields
+     * const formField = await prisma.formField.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends FormFieldCreateManyArgs>(args?: SelectSubset<T, FormFieldCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many FormFields and returns the data saved in the database.
+     * @param {FormFieldCreateManyAndReturnArgs} args - Arguments to create many FormFields.
+     * @example
+     * // Create many FormFields
+     * const formField = await prisma.formField.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many FormFields and only return the `id`
+     * const formFieldWithIdOnly = await prisma.formField.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends FormFieldCreateManyAndReturnArgs>(args?: SelectSubset<T, FormFieldCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FormFieldPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a FormField.
+     * @param {FormFieldDeleteArgs} args - Arguments to delete one FormField.
+     * @example
+     * // Delete one FormField
+     * const FormField = await prisma.formField.delete({
+     *   where: {
+     *     // ... filter to delete one FormField
+     *   }
+     * })
+     * 
+     */
+    delete<T extends FormFieldDeleteArgs>(args: SelectSubset<T, FormFieldDeleteArgs<ExtArgs>>): Prisma__FormFieldClient<$Result.GetResult<Prisma.$FormFieldPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one FormField.
+     * @param {FormFieldUpdateArgs} args - Arguments to update one FormField.
+     * @example
+     * // Update one FormField
+     * const formField = await prisma.formField.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends FormFieldUpdateArgs>(args: SelectSubset<T, FormFieldUpdateArgs<ExtArgs>>): Prisma__FormFieldClient<$Result.GetResult<Prisma.$FormFieldPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more FormFields.
+     * @param {FormFieldDeleteManyArgs} args - Arguments to filter FormFields to delete.
+     * @example
+     * // Delete a few FormFields
+     * const { count } = await prisma.formField.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends FormFieldDeleteManyArgs>(args?: SelectSubset<T, FormFieldDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FormFields.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FormFieldUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many FormFields
+     * const formField = await prisma.formField.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends FormFieldUpdateManyArgs>(args: SelectSubset<T, FormFieldUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FormFields and returns the data updated in the database.
+     * @param {FormFieldUpdateManyAndReturnArgs} args - Arguments to update many FormFields.
+     * @example
+     * // Update many FormFields
+     * const formField = await prisma.formField.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more FormFields and only return the `id`
+     * const formFieldWithIdOnly = await prisma.formField.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends FormFieldUpdateManyAndReturnArgs>(args: SelectSubset<T, FormFieldUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FormFieldPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one FormField.
+     * @param {FormFieldUpsertArgs} args - Arguments to update or create a FormField.
+     * @example
+     * // Update or create a FormField
+     * const formField = await prisma.formField.upsert({
+     *   create: {
+     *     // ... data to create a FormField
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the FormField we want to update
+     *   }
+     * })
+     */
+    upsert<T extends FormFieldUpsertArgs>(args: SelectSubset<T, FormFieldUpsertArgs<ExtArgs>>): Prisma__FormFieldClient<$Result.GetResult<Prisma.$FormFieldPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of FormFields.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FormFieldCountArgs} args - Arguments to filter FormFields to count.
+     * @example
+     * // Count the number of FormFields
+     * const count = await prisma.formField.count({
+     *   where: {
+     *     // ... the filter for the FormFields we want to count
+     *   }
+     * })
+    **/
+    count<T extends FormFieldCountArgs>(
+      args?: Subset<T, FormFieldCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FormFieldCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a FormField.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FormFieldAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FormFieldAggregateArgs>(args: Subset<T, FormFieldAggregateArgs>): Prisma.PrismaPromise<GetFormFieldAggregateType<T>>
+
+    /**
+     * Group by FormField.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FormFieldGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FormFieldGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FormFieldGroupByArgs['orderBy'] }
+        : { orderBy?: FormFieldGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FormFieldGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFormFieldGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the FormField model
+   */
+  readonly fields: FormFieldFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for FormField.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__FormFieldClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    form<T extends FormDefaultArgs<ExtArgs> = {}>(args?: Subset<T, FormDefaultArgs<ExtArgs>>): Prisma__FormClient<$Result.GetResult<Prisma.$FormPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    completion_values<T extends FormField$completion_valuesArgs<ExtArgs> = {}>(args?: Subset<T, FormField$completion_valuesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FormCompletionValuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the FormField model
+   */
+  interface FormFieldFieldRefs {
+    readonly id: FieldRef<"FormField", 'Int'>
+    readonly uuid: FieldRef<"FormField", 'String'>
+    readonly form_uuid: FieldRef<"FormField", 'String'>
+    readonly label: FieldRef<"FormField", 'String'>
+    readonly field_type: FieldRef<"FormField", 'FieldType'>
+    readonly placeholder: FieldRef<"FormField", 'String'>
+    readonly help_text: FieldRef<"FormField", 'String'>
+    readonly required: FieldRef<"FormField", 'Boolean'>
+    readonly default_value: FieldRef<"FormField", 'String'>
+    readonly options: FieldRef<"FormField", 'Json'>
+    readonly order_index: FieldRef<"FormField", 'Int'>
+    readonly enabled: FieldRef<"FormField", 'Boolean'>
+    readonly created_at: FieldRef<"FormField", 'DateTime'>
+    readonly updated_at: FieldRef<"FormField", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * FormField findUnique
+   */
+  export type FormFieldFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormField
+     */
+    select?: FormFieldSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormField
+     */
+    omit?: FormFieldOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormFieldInclude<ExtArgs> | null
+    /**
+     * Filter, which FormField to fetch.
+     */
+    where: FormFieldWhereUniqueInput
+  }
+
+  /**
+   * FormField findUniqueOrThrow
+   */
+  export type FormFieldFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormField
+     */
+    select?: FormFieldSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormField
+     */
+    omit?: FormFieldOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormFieldInclude<ExtArgs> | null
+    /**
+     * Filter, which FormField to fetch.
+     */
+    where: FormFieldWhereUniqueInput
+  }
+
+  /**
+   * FormField findFirst
+   */
+  export type FormFieldFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormField
+     */
+    select?: FormFieldSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormField
+     */
+    omit?: FormFieldOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormFieldInclude<ExtArgs> | null
+    /**
+     * Filter, which FormField to fetch.
+     */
+    where?: FormFieldWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FormFields to fetch.
+     */
+    orderBy?: FormFieldOrderByWithRelationInput | FormFieldOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FormFields.
+     */
+    cursor?: FormFieldWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FormFields from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FormFields.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FormFields.
+     */
+    distinct?: FormFieldScalarFieldEnum | FormFieldScalarFieldEnum[]
+  }
+
+  /**
+   * FormField findFirstOrThrow
+   */
+  export type FormFieldFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormField
+     */
+    select?: FormFieldSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormField
+     */
+    omit?: FormFieldOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormFieldInclude<ExtArgs> | null
+    /**
+     * Filter, which FormField to fetch.
+     */
+    where?: FormFieldWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FormFields to fetch.
+     */
+    orderBy?: FormFieldOrderByWithRelationInput | FormFieldOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FormFields.
+     */
+    cursor?: FormFieldWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FormFields from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FormFields.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FormFields.
+     */
+    distinct?: FormFieldScalarFieldEnum | FormFieldScalarFieldEnum[]
+  }
+
+  /**
+   * FormField findMany
+   */
+  export type FormFieldFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormField
+     */
+    select?: FormFieldSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormField
+     */
+    omit?: FormFieldOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormFieldInclude<ExtArgs> | null
+    /**
+     * Filter, which FormFields to fetch.
+     */
+    where?: FormFieldWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FormFields to fetch.
+     */
+    orderBy?: FormFieldOrderByWithRelationInput | FormFieldOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing FormFields.
+     */
+    cursor?: FormFieldWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FormFields from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FormFields.
+     */
+    skip?: number
+    distinct?: FormFieldScalarFieldEnum | FormFieldScalarFieldEnum[]
+  }
+
+  /**
+   * FormField create
+   */
+  export type FormFieldCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormField
+     */
+    select?: FormFieldSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormField
+     */
+    omit?: FormFieldOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormFieldInclude<ExtArgs> | null
+    /**
+     * The data needed to create a FormField.
+     */
+    data: XOR<FormFieldCreateInput, FormFieldUncheckedCreateInput>
+  }
+
+  /**
+   * FormField createMany
+   */
+  export type FormFieldCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many FormFields.
+     */
+    data: FormFieldCreateManyInput | FormFieldCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * FormField createManyAndReturn
+   */
+  export type FormFieldCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormField
+     */
+    select?: FormFieldSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormField
+     */
+    omit?: FormFieldOmit<ExtArgs> | null
+    /**
+     * The data used to create many FormFields.
+     */
+    data: FormFieldCreateManyInput | FormFieldCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormFieldIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FormField update
+   */
+  export type FormFieldUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormField
+     */
+    select?: FormFieldSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormField
+     */
+    omit?: FormFieldOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormFieldInclude<ExtArgs> | null
+    /**
+     * The data needed to update a FormField.
+     */
+    data: XOR<FormFieldUpdateInput, FormFieldUncheckedUpdateInput>
+    /**
+     * Choose, which FormField to update.
+     */
+    where: FormFieldWhereUniqueInput
+  }
+
+  /**
+   * FormField updateMany
+   */
+  export type FormFieldUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update FormFields.
+     */
+    data: XOR<FormFieldUpdateManyMutationInput, FormFieldUncheckedUpdateManyInput>
+    /**
+     * Filter which FormFields to update
+     */
+    where?: FormFieldWhereInput
+    /**
+     * Limit how many FormFields to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * FormField updateManyAndReturn
+   */
+  export type FormFieldUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormField
+     */
+    select?: FormFieldSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormField
+     */
+    omit?: FormFieldOmit<ExtArgs> | null
+    /**
+     * The data used to update FormFields.
+     */
+    data: XOR<FormFieldUpdateManyMutationInput, FormFieldUncheckedUpdateManyInput>
+    /**
+     * Filter which FormFields to update
+     */
+    where?: FormFieldWhereInput
+    /**
+     * Limit how many FormFields to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormFieldIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FormField upsert
+   */
+  export type FormFieldUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormField
+     */
+    select?: FormFieldSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormField
+     */
+    omit?: FormFieldOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormFieldInclude<ExtArgs> | null
+    /**
+     * The filter to search for the FormField to update in case it exists.
+     */
+    where: FormFieldWhereUniqueInput
+    /**
+     * In case the FormField found by the `where` argument doesn't exist, create a new FormField with this data.
+     */
+    create: XOR<FormFieldCreateInput, FormFieldUncheckedCreateInput>
+    /**
+     * In case the FormField was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FormFieldUpdateInput, FormFieldUncheckedUpdateInput>
+  }
+
+  /**
+   * FormField delete
+   */
+  export type FormFieldDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormField
+     */
+    select?: FormFieldSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormField
+     */
+    omit?: FormFieldOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormFieldInclude<ExtArgs> | null
+    /**
+     * Filter which FormField to delete.
+     */
+    where: FormFieldWhereUniqueInput
+  }
+
+  /**
+   * FormField deleteMany
+   */
+  export type FormFieldDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FormFields to delete
+     */
+    where?: FormFieldWhereInput
+    /**
+     * Limit how many FormFields to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * FormField.completion_values
+   */
+  export type FormField$completion_valuesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormCompletionValue
+     */
+    select?: FormCompletionValueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormCompletionValue
+     */
+    omit?: FormCompletionValueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormCompletionValueInclude<ExtArgs> | null
+    where?: FormCompletionValueWhereInput
+    orderBy?: FormCompletionValueOrderByWithRelationInput | FormCompletionValueOrderByWithRelationInput[]
+    cursor?: FormCompletionValueWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FormCompletionValueScalarFieldEnum | FormCompletionValueScalarFieldEnum[]
+  }
+
+  /**
+   * FormField without action
+   */
+  export type FormFieldDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormField
+     */
+    select?: FormFieldSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormField
+     */
+    omit?: FormFieldOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormFieldInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model FormCompletion
+   */
+
+  export type AggregateFormCompletion = {
+    _count: FormCompletionCountAggregateOutputType | null
+    _avg: FormCompletionAvgAggregateOutputType | null
+    _sum: FormCompletionSumAggregateOutputType | null
+    _min: FormCompletionMinAggregateOutputType | null
+    _max: FormCompletionMaxAggregateOutputType | null
+  }
+
+  export type FormCompletionAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type FormCompletionSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type FormCompletionMinAggregateOutputType = {
+    id: number | null
+    uuid: string | null
+    form_uuid: string | null
+    contact_uuid: string | null
+    completed_by_uuid: string | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type FormCompletionMaxAggregateOutputType = {
+    id: number | null
+    uuid: string | null
+    form_uuid: string | null
+    contact_uuid: string | null
+    completed_by_uuid: string | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type FormCompletionCountAggregateOutputType = {
+    id: number
+    uuid: number
+    form_uuid: number
+    contact_uuid: number
+    completed_by_uuid: number
+    created_at: number
+    updated_at: number
+    _all: number
+  }
+
+
+  export type FormCompletionAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type FormCompletionSumAggregateInputType = {
+    id?: true
+  }
+
+  export type FormCompletionMinAggregateInputType = {
+    id?: true
+    uuid?: true
+    form_uuid?: true
+    contact_uuid?: true
+    completed_by_uuid?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type FormCompletionMaxAggregateInputType = {
+    id?: true
+    uuid?: true
+    form_uuid?: true
+    contact_uuid?: true
+    completed_by_uuid?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type FormCompletionCountAggregateInputType = {
+    id?: true
+    uuid?: true
+    form_uuid?: true
+    contact_uuid?: true
+    completed_by_uuid?: true
+    created_at?: true
+    updated_at?: true
+    _all?: true
+  }
+
+  export type FormCompletionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FormCompletion to aggregate.
+     */
+    where?: FormCompletionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FormCompletions to fetch.
+     */
+    orderBy?: FormCompletionOrderByWithRelationInput | FormCompletionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FormCompletionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FormCompletions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FormCompletions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned FormCompletions
+    **/
+    _count?: true | FormCompletionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: FormCompletionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: FormCompletionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FormCompletionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FormCompletionMaxAggregateInputType
+  }
+
+  export type GetFormCompletionAggregateType<T extends FormCompletionAggregateArgs> = {
+        [P in keyof T & keyof AggregateFormCompletion]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFormCompletion[P]>
+      : GetScalarType<T[P], AggregateFormCompletion[P]>
+  }
+
+
+
+
+  export type FormCompletionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FormCompletionWhereInput
+    orderBy?: FormCompletionOrderByWithAggregationInput | FormCompletionOrderByWithAggregationInput[]
+    by: FormCompletionScalarFieldEnum[] | FormCompletionScalarFieldEnum
+    having?: FormCompletionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FormCompletionCountAggregateInputType | true
+    _avg?: FormCompletionAvgAggregateInputType
+    _sum?: FormCompletionSumAggregateInputType
+    _min?: FormCompletionMinAggregateInputType
+    _max?: FormCompletionMaxAggregateInputType
+  }
+
+  export type FormCompletionGroupByOutputType = {
+    id: number
+    uuid: string
+    form_uuid: string
+    contact_uuid: string
+    completed_by_uuid: string
+    created_at: Date
+    updated_at: Date
+    _count: FormCompletionCountAggregateOutputType | null
+    _avg: FormCompletionAvgAggregateOutputType | null
+    _sum: FormCompletionSumAggregateOutputType | null
+    _min: FormCompletionMinAggregateOutputType | null
+    _max: FormCompletionMaxAggregateOutputType | null
+  }
+
+  type GetFormCompletionGroupByPayload<T extends FormCompletionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FormCompletionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FormCompletionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FormCompletionGroupByOutputType[P]>
+            : GetScalarType<T[P], FormCompletionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FormCompletionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uuid?: boolean
+    form_uuid?: boolean
+    contact_uuid?: boolean
+    completed_by_uuid?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    form?: boolean | FormDefaultArgs<ExtArgs>
+    contact?: boolean | ContactDefaultArgs<ExtArgs>
+    completed_by?: boolean | UserDefaultArgs<ExtArgs>
+    values?: boolean | FormCompletion$valuesArgs<ExtArgs>
+    _count?: boolean | FormCompletionCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["formCompletion"]>
+
+  export type FormCompletionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uuid?: boolean
+    form_uuid?: boolean
+    contact_uuid?: boolean
+    completed_by_uuid?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    form?: boolean | FormDefaultArgs<ExtArgs>
+    contact?: boolean | ContactDefaultArgs<ExtArgs>
+    completed_by?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["formCompletion"]>
+
+  export type FormCompletionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uuid?: boolean
+    form_uuid?: boolean
+    contact_uuid?: boolean
+    completed_by_uuid?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    form?: boolean | FormDefaultArgs<ExtArgs>
+    contact?: boolean | ContactDefaultArgs<ExtArgs>
+    completed_by?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["formCompletion"]>
+
+  export type FormCompletionSelectScalar = {
+    id?: boolean
+    uuid?: boolean
+    form_uuid?: boolean
+    contact_uuid?: boolean
+    completed_by_uuid?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }
+
+  export type FormCompletionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "form_uuid" | "contact_uuid" | "completed_by_uuid" | "created_at" | "updated_at", ExtArgs["result"]["formCompletion"]>
+  export type FormCompletionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    form?: boolean | FormDefaultArgs<ExtArgs>
+    contact?: boolean | ContactDefaultArgs<ExtArgs>
+    completed_by?: boolean | UserDefaultArgs<ExtArgs>
+    values?: boolean | FormCompletion$valuesArgs<ExtArgs>
+    _count?: boolean | FormCompletionCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type FormCompletionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    form?: boolean | FormDefaultArgs<ExtArgs>
+    contact?: boolean | ContactDefaultArgs<ExtArgs>
+    completed_by?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type FormCompletionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    form?: boolean | FormDefaultArgs<ExtArgs>
+    contact?: boolean | ContactDefaultArgs<ExtArgs>
+    completed_by?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $FormCompletionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "FormCompletion"
+    objects: {
+      form: Prisma.$FormPayload<ExtArgs>
+      contact: Prisma.$ContactPayload<ExtArgs>
+      completed_by: Prisma.$UserPayload<ExtArgs>
+      values: Prisma.$FormCompletionValuePayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      uuid: string
+      form_uuid: string
+      contact_uuid: string
+      completed_by_uuid: string
+      created_at: Date
+      updated_at: Date
+    }, ExtArgs["result"]["formCompletion"]>
+    composites: {}
+  }
+
+  type FormCompletionGetPayload<S extends boolean | null | undefined | FormCompletionDefaultArgs> = $Result.GetResult<Prisma.$FormCompletionPayload, S>
+
+  type FormCompletionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<FormCompletionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: FormCompletionCountAggregateInputType | true
+    }
+
+  export interface FormCompletionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['FormCompletion'], meta: { name: 'FormCompletion' } }
+    /**
+     * Find zero or one FormCompletion that matches the filter.
+     * @param {FormCompletionFindUniqueArgs} args - Arguments to find a FormCompletion
+     * @example
+     * // Get one FormCompletion
+     * const formCompletion = await prisma.formCompletion.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends FormCompletionFindUniqueArgs>(args: SelectSubset<T, FormCompletionFindUniqueArgs<ExtArgs>>): Prisma__FormCompletionClient<$Result.GetResult<Prisma.$FormCompletionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one FormCompletion that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {FormCompletionFindUniqueOrThrowArgs} args - Arguments to find a FormCompletion
+     * @example
+     * // Get one FormCompletion
+     * const formCompletion = await prisma.formCompletion.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends FormCompletionFindUniqueOrThrowArgs>(args: SelectSubset<T, FormCompletionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FormCompletionClient<$Result.GetResult<Prisma.$FormCompletionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FormCompletion that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FormCompletionFindFirstArgs} args - Arguments to find a FormCompletion
+     * @example
+     * // Get one FormCompletion
+     * const formCompletion = await prisma.formCompletion.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends FormCompletionFindFirstArgs>(args?: SelectSubset<T, FormCompletionFindFirstArgs<ExtArgs>>): Prisma__FormCompletionClient<$Result.GetResult<Prisma.$FormCompletionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FormCompletion that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FormCompletionFindFirstOrThrowArgs} args - Arguments to find a FormCompletion
+     * @example
+     * // Get one FormCompletion
+     * const formCompletion = await prisma.formCompletion.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends FormCompletionFindFirstOrThrowArgs>(args?: SelectSubset<T, FormCompletionFindFirstOrThrowArgs<ExtArgs>>): Prisma__FormCompletionClient<$Result.GetResult<Prisma.$FormCompletionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more FormCompletions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FormCompletionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all FormCompletions
+     * const formCompletions = await prisma.formCompletion.findMany()
+     * 
+     * // Get first 10 FormCompletions
+     * const formCompletions = await prisma.formCompletion.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const formCompletionWithIdOnly = await prisma.formCompletion.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends FormCompletionFindManyArgs>(args?: SelectSubset<T, FormCompletionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FormCompletionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a FormCompletion.
+     * @param {FormCompletionCreateArgs} args - Arguments to create a FormCompletion.
+     * @example
+     * // Create one FormCompletion
+     * const FormCompletion = await prisma.formCompletion.create({
+     *   data: {
+     *     // ... data to create a FormCompletion
+     *   }
+     * })
+     * 
+     */
+    create<T extends FormCompletionCreateArgs>(args: SelectSubset<T, FormCompletionCreateArgs<ExtArgs>>): Prisma__FormCompletionClient<$Result.GetResult<Prisma.$FormCompletionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many FormCompletions.
+     * @param {FormCompletionCreateManyArgs} args - Arguments to create many FormCompletions.
+     * @example
+     * // Create many FormCompletions
+     * const formCompletion = await prisma.formCompletion.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends FormCompletionCreateManyArgs>(args?: SelectSubset<T, FormCompletionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many FormCompletions and returns the data saved in the database.
+     * @param {FormCompletionCreateManyAndReturnArgs} args - Arguments to create many FormCompletions.
+     * @example
+     * // Create many FormCompletions
+     * const formCompletion = await prisma.formCompletion.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many FormCompletions and only return the `id`
+     * const formCompletionWithIdOnly = await prisma.formCompletion.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends FormCompletionCreateManyAndReturnArgs>(args?: SelectSubset<T, FormCompletionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FormCompletionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a FormCompletion.
+     * @param {FormCompletionDeleteArgs} args - Arguments to delete one FormCompletion.
+     * @example
+     * // Delete one FormCompletion
+     * const FormCompletion = await prisma.formCompletion.delete({
+     *   where: {
+     *     // ... filter to delete one FormCompletion
+     *   }
+     * })
+     * 
+     */
+    delete<T extends FormCompletionDeleteArgs>(args: SelectSubset<T, FormCompletionDeleteArgs<ExtArgs>>): Prisma__FormCompletionClient<$Result.GetResult<Prisma.$FormCompletionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one FormCompletion.
+     * @param {FormCompletionUpdateArgs} args - Arguments to update one FormCompletion.
+     * @example
+     * // Update one FormCompletion
+     * const formCompletion = await prisma.formCompletion.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends FormCompletionUpdateArgs>(args: SelectSubset<T, FormCompletionUpdateArgs<ExtArgs>>): Prisma__FormCompletionClient<$Result.GetResult<Prisma.$FormCompletionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more FormCompletions.
+     * @param {FormCompletionDeleteManyArgs} args - Arguments to filter FormCompletions to delete.
+     * @example
+     * // Delete a few FormCompletions
+     * const { count } = await prisma.formCompletion.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends FormCompletionDeleteManyArgs>(args?: SelectSubset<T, FormCompletionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FormCompletions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FormCompletionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many FormCompletions
+     * const formCompletion = await prisma.formCompletion.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends FormCompletionUpdateManyArgs>(args: SelectSubset<T, FormCompletionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FormCompletions and returns the data updated in the database.
+     * @param {FormCompletionUpdateManyAndReturnArgs} args - Arguments to update many FormCompletions.
+     * @example
+     * // Update many FormCompletions
+     * const formCompletion = await prisma.formCompletion.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more FormCompletions and only return the `id`
+     * const formCompletionWithIdOnly = await prisma.formCompletion.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends FormCompletionUpdateManyAndReturnArgs>(args: SelectSubset<T, FormCompletionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FormCompletionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one FormCompletion.
+     * @param {FormCompletionUpsertArgs} args - Arguments to update or create a FormCompletion.
+     * @example
+     * // Update or create a FormCompletion
+     * const formCompletion = await prisma.formCompletion.upsert({
+     *   create: {
+     *     // ... data to create a FormCompletion
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the FormCompletion we want to update
+     *   }
+     * })
+     */
+    upsert<T extends FormCompletionUpsertArgs>(args: SelectSubset<T, FormCompletionUpsertArgs<ExtArgs>>): Prisma__FormCompletionClient<$Result.GetResult<Prisma.$FormCompletionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of FormCompletions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FormCompletionCountArgs} args - Arguments to filter FormCompletions to count.
+     * @example
+     * // Count the number of FormCompletions
+     * const count = await prisma.formCompletion.count({
+     *   where: {
+     *     // ... the filter for the FormCompletions we want to count
+     *   }
+     * })
+    **/
+    count<T extends FormCompletionCountArgs>(
+      args?: Subset<T, FormCompletionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FormCompletionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a FormCompletion.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FormCompletionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FormCompletionAggregateArgs>(args: Subset<T, FormCompletionAggregateArgs>): Prisma.PrismaPromise<GetFormCompletionAggregateType<T>>
+
+    /**
+     * Group by FormCompletion.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FormCompletionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FormCompletionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FormCompletionGroupByArgs['orderBy'] }
+        : { orderBy?: FormCompletionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FormCompletionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFormCompletionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the FormCompletion model
+   */
+  readonly fields: FormCompletionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for FormCompletion.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__FormCompletionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    form<T extends FormDefaultArgs<ExtArgs> = {}>(args?: Subset<T, FormDefaultArgs<ExtArgs>>): Prisma__FormClient<$Result.GetResult<Prisma.$FormPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    contact<T extends ContactDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ContactDefaultArgs<ExtArgs>>): Prisma__ContactClient<$Result.GetResult<Prisma.$ContactPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    completed_by<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    values<T extends FormCompletion$valuesArgs<ExtArgs> = {}>(args?: Subset<T, FormCompletion$valuesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FormCompletionValuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the FormCompletion model
+   */
+  interface FormCompletionFieldRefs {
+    readonly id: FieldRef<"FormCompletion", 'Int'>
+    readonly uuid: FieldRef<"FormCompletion", 'String'>
+    readonly form_uuid: FieldRef<"FormCompletion", 'String'>
+    readonly contact_uuid: FieldRef<"FormCompletion", 'String'>
+    readonly completed_by_uuid: FieldRef<"FormCompletion", 'String'>
+    readonly created_at: FieldRef<"FormCompletion", 'DateTime'>
+    readonly updated_at: FieldRef<"FormCompletion", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * FormCompletion findUnique
+   */
+  export type FormCompletionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormCompletion
+     */
+    select?: FormCompletionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormCompletion
+     */
+    omit?: FormCompletionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormCompletionInclude<ExtArgs> | null
+    /**
+     * Filter, which FormCompletion to fetch.
+     */
+    where: FormCompletionWhereUniqueInput
+  }
+
+  /**
+   * FormCompletion findUniqueOrThrow
+   */
+  export type FormCompletionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormCompletion
+     */
+    select?: FormCompletionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormCompletion
+     */
+    omit?: FormCompletionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormCompletionInclude<ExtArgs> | null
+    /**
+     * Filter, which FormCompletion to fetch.
+     */
+    where: FormCompletionWhereUniqueInput
+  }
+
+  /**
+   * FormCompletion findFirst
+   */
+  export type FormCompletionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormCompletion
+     */
+    select?: FormCompletionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormCompletion
+     */
+    omit?: FormCompletionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormCompletionInclude<ExtArgs> | null
+    /**
+     * Filter, which FormCompletion to fetch.
+     */
+    where?: FormCompletionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FormCompletions to fetch.
+     */
+    orderBy?: FormCompletionOrderByWithRelationInput | FormCompletionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FormCompletions.
+     */
+    cursor?: FormCompletionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FormCompletions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FormCompletions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FormCompletions.
+     */
+    distinct?: FormCompletionScalarFieldEnum | FormCompletionScalarFieldEnum[]
+  }
+
+  /**
+   * FormCompletion findFirstOrThrow
+   */
+  export type FormCompletionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormCompletion
+     */
+    select?: FormCompletionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormCompletion
+     */
+    omit?: FormCompletionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormCompletionInclude<ExtArgs> | null
+    /**
+     * Filter, which FormCompletion to fetch.
+     */
+    where?: FormCompletionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FormCompletions to fetch.
+     */
+    orderBy?: FormCompletionOrderByWithRelationInput | FormCompletionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FormCompletions.
+     */
+    cursor?: FormCompletionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FormCompletions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FormCompletions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FormCompletions.
+     */
+    distinct?: FormCompletionScalarFieldEnum | FormCompletionScalarFieldEnum[]
+  }
+
+  /**
+   * FormCompletion findMany
+   */
+  export type FormCompletionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormCompletion
+     */
+    select?: FormCompletionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormCompletion
+     */
+    omit?: FormCompletionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormCompletionInclude<ExtArgs> | null
+    /**
+     * Filter, which FormCompletions to fetch.
+     */
+    where?: FormCompletionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FormCompletions to fetch.
+     */
+    orderBy?: FormCompletionOrderByWithRelationInput | FormCompletionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing FormCompletions.
+     */
+    cursor?: FormCompletionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FormCompletions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FormCompletions.
+     */
+    skip?: number
+    distinct?: FormCompletionScalarFieldEnum | FormCompletionScalarFieldEnum[]
+  }
+
+  /**
+   * FormCompletion create
+   */
+  export type FormCompletionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormCompletion
+     */
+    select?: FormCompletionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormCompletion
+     */
+    omit?: FormCompletionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormCompletionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a FormCompletion.
+     */
+    data: XOR<FormCompletionCreateInput, FormCompletionUncheckedCreateInput>
+  }
+
+  /**
+   * FormCompletion createMany
+   */
+  export type FormCompletionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many FormCompletions.
+     */
+    data: FormCompletionCreateManyInput | FormCompletionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * FormCompletion createManyAndReturn
+   */
+  export type FormCompletionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormCompletion
+     */
+    select?: FormCompletionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormCompletion
+     */
+    omit?: FormCompletionOmit<ExtArgs> | null
+    /**
+     * The data used to create many FormCompletions.
+     */
+    data: FormCompletionCreateManyInput | FormCompletionCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormCompletionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FormCompletion update
+   */
+  export type FormCompletionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormCompletion
+     */
+    select?: FormCompletionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormCompletion
+     */
+    omit?: FormCompletionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormCompletionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a FormCompletion.
+     */
+    data: XOR<FormCompletionUpdateInput, FormCompletionUncheckedUpdateInput>
+    /**
+     * Choose, which FormCompletion to update.
+     */
+    where: FormCompletionWhereUniqueInput
+  }
+
+  /**
+   * FormCompletion updateMany
+   */
+  export type FormCompletionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update FormCompletions.
+     */
+    data: XOR<FormCompletionUpdateManyMutationInput, FormCompletionUncheckedUpdateManyInput>
+    /**
+     * Filter which FormCompletions to update
+     */
+    where?: FormCompletionWhereInput
+    /**
+     * Limit how many FormCompletions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * FormCompletion updateManyAndReturn
+   */
+  export type FormCompletionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormCompletion
+     */
+    select?: FormCompletionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormCompletion
+     */
+    omit?: FormCompletionOmit<ExtArgs> | null
+    /**
+     * The data used to update FormCompletions.
+     */
+    data: XOR<FormCompletionUpdateManyMutationInput, FormCompletionUncheckedUpdateManyInput>
+    /**
+     * Filter which FormCompletions to update
+     */
+    where?: FormCompletionWhereInput
+    /**
+     * Limit how many FormCompletions to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormCompletionIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FormCompletion upsert
+   */
+  export type FormCompletionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormCompletion
+     */
+    select?: FormCompletionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormCompletion
+     */
+    omit?: FormCompletionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormCompletionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the FormCompletion to update in case it exists.
+     */
+    where: FormCompletionWhereUniqueInput
+    /**
+     * In case the FormCompletion found by the `where` argument doesn't exist, create a new FormCompletion with this data.
+     */
+    create: XOR<FormCompletionCreateInput, FormCompletionUncheckedCreateInput>
+    /**
+     * In case the FormCompletion was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FormCompletionUpdateInput, FormCompletionUncheckedUpdateInput>
+  }
+
+  /**
+   * FormCompletion delete
+   */
+  export type FormCompletionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormCompletion
+     */
+    select?: FormCompletionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormCompletion
+     */
+    omit?: FormCompletionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormCompletionInclude<ExtArgs> | null
+    /**
+     * Filter which FormCompletion to delete.
+     */
+    where: FormCompletionWhereUniqueInput
+  }
+
+  /**
+   * FormCompletion deleteMany
+   */
+  export type FormCompletionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FormCompletions to delete
+     */
+    where?: FormCompletionWhereInput
+    /**
+     * Limit how many FormCompletions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * FormCompletion.values
+   */
+  export type FormCompletion$valuesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormCompletionValue
+     */
+    select?: FormCompletionValueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormCompletionValue
+     */
+    omit?: FormCompletionValueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormCompletionValueInclude<ExtArgs> | null
+    where?: FormCompletionValueWhereInput
+    orderBy?: FormCompletionValueOrderByWithRelationInput | FormCompletionValueOrderByWithRelationInput[]
+    cursor?: FormCompletionValueWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FormCompletionValueScalarFieldEnum | FormCompletionValueScalarFieldEnum[]
+  }
+
+  /**
+   * FormCompletion without action
+   */
+  export type FormCompletionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormCompletion
+     */
+    select?: FormCompletionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormCompletion
+     */
+    omit?: FormCompletionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormCompletionInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model FormCompletionValue
+   */
+
+  export type AggregateFormCompletionValue = {
+    _count: FormCompletionValueCountAggregateOutputType | null
+    _avg: FormCompletionValueAvgAggregateOutputType | null
+    _sum: FormCompletionValueSumAggregateOutputType | null
+    _min: FormCompletionValueMinAggregateOutputType | null
+    _max: FormCompletionValueMaxAggregateOutputType | null
+  }
+
+  export type FormCompletionValueAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type FormCompletionValueSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type FormCompletionValueMinAggregateOutputType = {
+    id: number | null
+    uuid: string | null
+    completion_uuid: string | null
+    field_uuid: string | null
+    value: string | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type FormCompletionValueMaxAggregateOutputType = {
+    id: number | null
+    uuid: string | null
+    completion_uuid: string | null
+    field_uuid: string | null
+    value: string | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type FormCompletionValueCountAggregateOutputType = {
+    id: number
+    uuid: number
+    completion_uuid: number
+    field_uuid: number
+    value: number
+    created_at: number
+    updated_at: number
+    _all: number
+  }
+
+
+  export type FormCompletionValueAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type FormCompletionValueSumAggregateInputType = {
+    id?: true
+  }
+
+  export type FormCompletionValueMinAggregateInputType = {
+    id?: true
+    uuid?: true
+    completion_uuid?: true
+    field_uuid?: true
+    value?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type FormCompletionValueMaxAggregateInputType = {
+    id?: true
+    uuid?: true
+    completion_uuid?: true
+    field_uuid?: true
+    value?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type FormCompletionValueCountAggregateInputType = {
+    id?: true
+    uuid?: true
+    completion_uuid?: true
+    field_uuid?: true
+    value?: true
+    created_at?: true
+    updated_at?: true
+    _all?: true
+  }
+
+  export type FormCompletionValueAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FormCompletionValue to aggregate.
+     */
+    where?: FormCompletionValueWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FormCompletionValues to fetch.
+     */
+    orderBy?: FormCompletionValueOrderByWithRelationInput | FormCompletionValueOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FormCompletionValueWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FormCompletionValues from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FormCompletionValues.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned FormCompletionValues
+    **/
+    _count?: true | FormCompletionValueCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: FormCompletionValueAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: FormCompletionValueSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FormCompletionValueMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FormCompletionValueMaxAggregateInputType
+  }
+
+  export type GetFormCompletionValueAggregateType<T extends FormCompletionValueAggregateArgs> = {
+        [P in keyof T & keyof AggregateFormCompletionValue]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFormCompletionValue[P]>
+      : GetScalarType<T[P], AggregateFormCompletionValue[P]>
+  }
+
+
+
+
+  export type FormCompletionValueGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FormCompletionValueWhereInput
+    orderBy?: FormCompletionValueOrderByWithAggregationInput | FormCompletionValueOrderByWithAggregationInput[]
+    by: FormCompletionValueScalarFieldEnum[] | FormCompletionValueScalarFieldEnum
+    having?: FormCompletionValueScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FormCompletionValueCountAggregateInputType | true
+    _avg?: FormCompletionValueAvgAggregateInputType
+    _sum?: FormCompletionValueSumAggregateInputType
+    _min?: FormCompletionValueMinAggregateInputType
+    _max?: FormCompletionValueMaxAggregateInputType
+  }
+
+  export type FormCompletionValueGroupByOutputType = {
+    id: number
+    uuid: string
+    completion_uuid: string
+    field_uuid: string
+    value: string
+    created_at: Date
+    updated_at: Date
+    _count: FormCompletionValueCountAggregateOutputType | null
+    _avg: FormCompletionValueAvgAggregateOutputType | null
+    _sum: FormCompletionValueSumAggregateOutputType | null
+    _min: FormCompletionValueMinAggregateOutputType | null
+    _max: FormCompletionValueMaxAggregateOutputType | null
+  }
+
+  type GetFormCompletionValueGroupByPayload<T extends FormCompletionValueGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FormCompletionValueGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FormCompletionValueGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FormCompletionValueGroupByOutputType[P]>
+            : GetScalarType<T[P], FormCompletionValueGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FormCompletionValueSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uuid?: boolean
+    completion_uuid?: boolean
+    field_uuid?: boolean
+    value?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    completion?: boolean | FormCompletionDefaultArgs<ExtArgs>
+    field?: boolean | FormFieldDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["formCompletionValue"]>
+
+  export type FormCompletionValueSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uuid?: boolean
+    completion_uuid?: boolean
+    field_uuid?: boolean
+    value?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    completion?: boolean | FormCompletionDefaultArgs<ExtArgs>
+    field?: boolean | FormFieldDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["formCompletionValue"]>
+
+  export type FormCompletionValueSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uuid?: boolean
+    completion_uuid?: boolean
+    field_uuid?: boolean
+    value?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    completion?: boolean | FormCompletionDefaultArgs<ExtArgs>
+    field?: boolean | FormFieldDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["formCompletionValue"]>
+
+  export type FormCompletionValueSelectScalar = {
+    id?: boolean
+    uuid?: boolean
+    completion_uuid?: boolean
+    field_uuid?: boolean
+    value?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }
+
+  export type FormCompletionValueOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "completion_uuid" | "field_uuid" | "value" | "created_at" | "updated_at", ExtArgs["result"]["formCompletionValue"]>
+  export type FormCompletionValueInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    completion?: boolean | FormCompletionDefaultArgs<ExtArgs>
+    field?: boolean | FormFieldDefaultArgs<ExtArgs>
+  }
+  export type FormCompletionValueIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    completion?: boolean | FormCompletionDefaultArgs<ExtArgs>
+    field?: boolean | FormFieldDefaultArgs<ExtArgs>
+  }
+  export type FormCompletionValueIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    completion?: boolean | FormCompletionDefaultArgs<ExtArgs>
+    field?: boolean | FormFieldDefaultArgs<ExtArgs>
+  }
+
+  export type $FormCompletionValuePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "FormCompletionValue"
+    objects: {
+      completion: Prisma.$FormCompletionPayload<ExtArgs>
+      field: Prisma.$FormFieldPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      uuid: string
+      completion_uuid: string
+      field_uuid: string
+      value: string
+      created_at: Date
+      updated_at: Date
+    }, ExtArgs["result"]["formCompletionValue"]>
+    composites: {}
+  }
+
+  type FormCompletionValueGetPayload<S extends boolean | null | undefined | FormCompletionValueDefaultArgs> = $Result.GetResult<Prisma.$FormCompletionValuePayload, S>
+
+  type FormCompletionValueCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<FormCompletionValueFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: FormCompletionValueCountAggregateInputType | true
+    }
+
+  export interface FormCompletionValueDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['FormCompletionValue'], meta: { name: 'FormCompletionValue' } }
+    /**
+     * Find zero or one FormCompletionValue that matches the filter.
+     * @param {FormCompletionValueFindUniqueArgs} args - Arguments to find a FormCompletionValue
+     * @example
+     * // Get one FormCompletionValue
+     * const formCompletionValue = await prisma.formCompletionValue.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends FormCompletionValueFindUniqueArgs>(args: SelectSubset<T, FormCompletionValueFindUniqueArgs<ExtArgs>>): Prisma__FormCompletionValueClient<$Result.GetResult<Prisma.$FormCompletionValuePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one FormCompletionValue that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {FormCompletionValueFindUniqueOrThrowArgs} args - Arguments to find a FormCompletionValue
+     * @example
+     * // Get one FormCompletionValue
+     * const formCompletionValue = await prisma.formCompletionValue.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends FormCompletionValueFindUniqueOrThrowArgs>(args: SelectSubset<T, FormCompletionValueFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FormCompletionValueClient<$Result.GetResult<Prisma.$FormCompletionValuePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FormCompletionValue that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FormCompletionValueFindFirstArgs} args - Arguments to find a FormCompletionValue
+     * @example
+     * // Get one FormCompletionValue
+     * const formCompletionValue = await prisma.formCompletionValue.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends FormCompletionValueFindFirstArgs>(args?: SelectSubset<T, FormCompletionValueFindFirstArgs<ExtArgs>>): Prisma__FormCompletionValueClient<$Result.GetResult<Prisma.$FormCompletionValuePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FormCompletionValue that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FormCompletionValueFindFirstOrThrowArgs} args - Arguments to find a FormCompletionValue
+     * @example
+     * // Get one FormCompletionValue
+     * const formCompletionValue = await prisma.formCompletionValue.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends FormCompletionValueFindFirstOrThrowArgs>(args?: SelectSubset<T, FormCompletionValueFindFirstOrThrowArgs<ExtArgs>>): Prisma__FormCompletionValueClient<$Result.GetResult<Prisma.$FormCompletionValuePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more FormCompletionValues that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FormCompletionValueFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all FormCompletionValues
+     * const formCompletionValues = await prisma.formCompletionValue.findMany()
+     * 
+     * // Get first 10 FormCompletionValues
+     * const formCompletionValues = await prisma.formCompletionValue.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const formCompletionValueWithIdOnly = await prisma.formCompletionValue.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends FormCompletionValueFindManyArgs>(args?: SelectSubset<T, FormCompletionValueFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FormCompletionValuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a FormCompletionValue.
+     * @param {FormCompletionValueCreateArgs} args - Arguments to create a FormCompletionValue.
+     * @example
+     * // Create one FormCompletionValue
+     * const FormCompletionValue = await prisma.formCompletionValue.create({
+     *   data: {
+     *     // ... data to create a FormCompletionValue
+     *   }
+     * })
+     * 
+     */
+    create<T extends FormCompletionValueCreateArgs>(args: SelectSubset<T, FormCompletionValueCreateArgs<ExtArgs>>): Prisma__FormCompletionValueClient<$Result.GetResult<Prisma.$FormCompletionValuePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many FormCompletionValues.
+     * @param {FormCompletionValueCreateManyArgs} args - Arguments to create many FormCompletionValues.
+     * @example
+     * // Create many FormCompletionValues
+     * const formCompletionValue = await prisma.formCompletionValue.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends FormCompletionValueCreateManyArgs>(args?: SelectSubset<T, FormCompletionValueCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many FormCompletionValues and returns the data saved in the database.
+     * @param {FormCompletionValueCreateManyAndReturnArgs} args - Arguments to create many FormCompletionValues.
+     * @example
+     * // Create many FormCompletionValues
+     * const formCompletionValue = await prisma.formCompletionValue.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many FormCompletionValues and only return the `id`
+     * const formCompletionValueWithIdOnly = await prisma.formCompletionValue.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends FormCompletionValueCreateManyAndReturnArgs>(args?: SelectSubset<T, FormCompletionValueCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FormCompletionValuePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a FormCompletionValue.
+     * @param {FormCompletionValueDeleteArgs} args - Arguments to delete one FormCompletionValue.
+     * @example
+     * // Delete one FormCompletionValue
+     * const FormCompletionValue = await prisma.formCompletionValue.delete({
+     *   where: {
+     *     // ... filter to delete one FormCompletionValue
+     *   }
+     * })
+     * 
+     */
+    delete<T extends FormCompletionValueDeleteArgs>(args: SelectSubset<T, FormCompletionValueDeleteArgs<ExtArgs>>): Prisma__FormCompletionValueClient<$Result.GetResult<Prisma.$FormCompletionValuePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one FormCompletionValue.
+     * @param {FormCompletionValueUpdateArgs} args - Arguments to update one FormCompletionValue.
+     * @example
+     * // Update one FormCompletionValue
+     * const formCompletionValue = await prisma.formCompletionValue.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends FormCompletionValueUpdateArgs>(args: SelectSubset<T, FormCompletionValueUpdateArgs<ExtArgs>>): Prisma__FormCompletionValueClient<$Result.GetResult<Prisma.$FormCompletionValuePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more FormCompletionValues.
+     * @param {FormCompletionValueDeleteManyArgs} args - Arguments to filter FormCompletionValues to delete.
+     * @example
+     * // Delete a few FormCompletionValues
+     * const { count } = await prisma.formCompletionValue.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends FormCompletionValueDeleteManyArgs>(args?: SelectSubset<T, FormCompletionValueDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FormCompletionValues.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FormCompletionValueUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many FormCompletionValues
+     * const formCompletionValue = await prisma.formCompletionValue.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends FormCompletionValueUpdateManyArgs>(args: SelectSubset<T, FormCompletionValueUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FormCompletionValues and returns the data updated in the database.
+     * @param {FormCompletionValueUpdateManyAndReturnArgs} args - Arguments to update many FormCompletionValues.
+     * @example
+     * // Update many FormCompletionValues
+     * const formCompletionValue = await prisma.formCompletionValue.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more FormCompletionValues and only return the `id`
+     * const formCompletionValueWithIdOnly = await prisma.formCompletionValue.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends FormCompletionValueUpdateManyAndReturnArgs>(args: SelectSubset<T, FormCompletionValueUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FormCompletionValuePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one FormCompletionValue.
+     * @param {FormCompletionValueUpsertArgs} args - Arguments to update or create a FormCompletionValue.
+     * @example
+     * // Update or create a FormCompletionValue
+     * const formCompletionValue = await prisma.formCompletionValue.upsert({
+     *   create: {
+     *     // ... data to create a FormCompletionValue
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the FormCompletionValue we want to update
+     *   }
+     * })
+     */
+    upsert<T extends FormCompletionValueUpsertArgs>(args: SelectSubset<T, FormCompletionValueUpsertArgs<ExtArgs>>): Prisma__FormCompletionValueClient<$Result.GetResult<Prisma.$FormCompletionValuePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of FormCompletionValues.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FormCompletionValueCountArgs} args - Arguments to filter FormCompletionValues to count.
+     * @example
+     * // Count the number of FormCompletionValues
+     * const count = await prisma.formCompletionValue.count({
+     *   where: {
+     *     // ... the filter for the FormCompletionValues we want to count
+     *   }
+     * })
+    **/
+    count<T extends FormCompletionValueCountArgs>(
+      args?: Subset<T, FormCompletionValueCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FormCompletionValueCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a FormCompletionValue.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FormCompletionValueAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FormCompletionValueAggregateArgs>(args: Subset<T, FormCompletionValueAggregateArgs>): Prisma.PrismaPromise<GetFormCompletionValueAggregateType<T>>
+
+    /**
+     * Group by FormCompletionValue.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FormCompletionValueGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FormCompletionValueGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FormCompletionValueGroupByArgs['orderBy'] }
+        : { orderBy?: FormCompletionValueGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FormCompletionValueGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFormCompletionValueGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the FormCompletionValue model
+   */
+  readonly fields: FormCompletionValueFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for FormCompletionValue.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__FormCompletionValueClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    completion<T extends FormCompletionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, FormCompletionDefaultArgs<ExtArgs>>): Prisma__FormCompletionClient<$Result.GetResult<Prisma.$FormCompletionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    field<T extends FormFieldDefaultArgs<ExtArgs> = {}>(args?: Subset<T, FormFieldDefaultArgs<ExtArgs>>): Prisma__FormFieldClient<$Result.GetResult<Prisma.$FormFieldPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the FormCompletionValue model
+   */
+  interface FormCompletionValueFieldRefs {
+    readonly id: FieldRef<"FormCompletionValue", 'Int'>
+    readonly uuid: FieldRef<"FormCompletionValue", 'String'>
+    readonly completion_uuid: FieldRef<"FormCompletionValue", 'String'>
+    readonly field_uuid: FieldRef<"FormCompletionValue", 'String'>
+    readonly value: FieldRef<"FormCompletionValue", 'String'>
+    readonly created_at: FieldRef<"FormCompletionValue", 'DateTime'>
+    readonly updated_at: FieldRef<"FormCompletionValue", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * FormCompletionValue findUnique
+   */
+  export type FormCompletionValueFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormCompletionValue
+     */
+    select?: FormCompletionValueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormCompletionValue
+     */
+    omit?: FormCompletionValueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormCompletionValueInclude<ExtArgs> | null
+    /**
+     * Filter, which FormCompletionValue to fetch.
+     */
+    where: FormCompletionValueWhereUniqueInput
+  }
+
+  /**
+   * FormCompletionValue findUniqueOrThrow
+   */
+  export type FormCompletionValueFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormCompletionValue
+     */
+    select?: FormCompletionValueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormCompletionValue
+     */
+    omit?: FormCompletionValueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormCompletionValueInclude<ExtArgs> | null
+    /**
+     * Filter, which FormCompletionValue to fetch.
+     */
+    where: FormCompletionValueWhereUniqueInput
+  }
+
+  /**
+   * FormCompletionValue findFirst
+   */
+  export type FormCompletionValueFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormCompletionValue
+     */
+    select?: FormCompletionValueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormCompletionValue
+     */
+    omit?: FormCompletionValueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormCompletionValueInclude<ExtArgs> | null
+    /**
+     * Filter, which FormCompletionValue to fetch.
+     */
+    where?: FormCompletionValueWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FormCompletionValues to fetch.
+     */
+    orderBy?: FormCompletionValueOrderByWithRelationInput | FormCompletionValueOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FormCompletionValues.
+     */
+    cursor?: FormCompletionValueWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FormCompletionValues from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FormCompletionValues.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FormCompletionValues.
+     */
+    distinct?: FormCompletionValueScalarFieldEnum | FormCompletionValueScalarFieldEnum[]
+  }
+
+  /**
+   * FormCompletionValue findFirstOrThrow
+   */
+  export type FormCompletionValueFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormCompletionValue
+     */
+    select?: FormCompletionValueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormCompletionValue
+     */
+    omit?: FormCompletionValueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormCompletionValueInclude<ExtArgs> | null
+    /**
+     * Filter, which FormCompletionValue to fetch.
+     */
+    where?: FormCompletionValueWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FormCompletionValues to fetch.
+     */
+    orderBy?: FormCompletionValueOrderByWithRelationInput | FormCompletionValueOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FormCompletionValues.
+     */
+    cursor?: FormCompletionValueWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FormCompletionValues from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FormCompletionValues.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FormCompletionValues.
+     */
+    distinct?: FormCompletionValueScalarFieldEnum | FormCompletionValueScalarFieldEnum[]
+  }
+
+  /**
+   * FormCompletionValue findMany
+   */
+  export type FormCompletionValueFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormCompletionValue
+     */
+    select?: FormCompletionValueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormCompletionValue
+     */
+    omit?: FormCompletionValueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormCompletionValueInclude<ExtArgs> | null
+    /**
+     * Filter, which FormCompletionValues to fetch.
+     */
+    where?: FormCompletionValueWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FormCompletionValues to fetch.
+     */
+    orderBy?: FormCompletionValueOrderByWithRelationInput | FormCompletionValueOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing FormCompletionValues.
+     */
+    cursor?: FormCompletionValueWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FormCompletionValues from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FormCompletionValues.
+     */
+    skip?: number
+    distinct?: FormCompletionValueScalarFieldEnum | FormCompletionValueScalarFieldEnum[]
+  }
+
+  /**
+   * FormCompletionValue create
+   */
+  export type FormCompletionValueCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormCompletionValue
+     */
+    select?: FormCompletionValueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormCompletionValue
+     */
+    omit?: FormCompletionValueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormCompletionValueInclude<ExtArgs> | null
+    /**
+     * The data needed to create a FormCompletionValue.
+     */
+    data: XOR<FormCompletionValueCreateInput, FormCompletionValueUncheckedCreateInput>
+  }
+
+  /**
+   * FormCompletionValue createMany
+   */
+  export type FormCompletionValueCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many FormCompletionValues.
+     */
+    data: FormCompletionValueCreateManyInput | FormCompletionValueCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * FormCompletionValue createManyAndReturn
+   */
+  export type FormCompletionValueCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormCompletionValue
+     */
+    select?: FormCompletionValueSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormCompletionValue
+     */
+    omit?: FormCompletionValueOmit<ExtArgs> | null
+    /**
+     * The data used to create many FormCompletionValues.
+     */
+    data: FormCompletionValueCreateManyInput | FormCompletionValueCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormCompletionValueIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FormCompletionValue update
+   */
+  export type FormCompletionValueUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormCompletionValue
+     */
+    select?: FormCompletionValueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormCompletionValue
+     */
+    omit?: FormCompletionValueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormCompletionValueInclude<ExtArgs> | null
+    /**
+     * The data needed to update a FormCompletionValue.
+     */
+    data: XOR<FormCompletionValueUpdateInput, FormCompletionValueUncheckedUpdateInput>
+    /**
+     * Choose, which FormCompletionValue to update.
+     */
+    where: FormCompletionValueWhereUniqueInput
+  }
+
+  /**
+   * FormCompletionValue updateMany
+   */
+  export type FormCompletionValueUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update FormCompletionValues.
+     */
+    data: XOR<FormCompletionValueUpdateManyMutationInput, FormCompletionValueUncheckedUpdateManyInput>
+    /**
+     * Filter which FormCompletionValues to update
+     */
+    where?: FormCompletionValueWhereInput
+    /**
+     * Limit how many FormCompletionValues to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * FormCompletionValue updateManyAndReturn
+   */
+  export type FormCompletionValueUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormCompletionValue
+     */
+    select?: FormCompletionValueSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormCompletionValue
+     */
+    omit?: FormCompletionValueOmit<ExtArgs> | null
+    /**
+     * The data used to update FormCompletionValues.
+     */
+    data: XOR<FormCompletionValueUpdateManyMutationInput, FormCompletionValueUncheckedUpdateManyInput>
+    /**
+     * Filter which FormCompletionValues to update
+     */
+    where?: FormCompletionValueWhereInput
+    /**
+     * Limit how many FormCompletionValues to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormCompletionValueIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FormCompletionValue upsert
+   */
+  export type FormCompletionValueUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormCompletionValue
+     */
+    select?: FormCompletionValueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormCompletionValue
+     */
+    omit?: FormCompletionValueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormCompletionValueInclude<ExtArgs> | null
+    /**
+     * The filter to search for the FormCompletionValue to update in case it exists.
+     */
+    where: FormCompletionValueWhereUniqueInput
+    /**
+     * In case the FormCompletionValue found by the `where` argument doesn't exist, create a new FormCompletionValue with this data.
+     */
+    create: XOR<FormCompletionValueCreateInput, FormCompletionValueUncheckedCreateInput>
+    /**
+     * In case the FormCompletionValue was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FormCompletionValueUpdateInput, FormCompletionValueUncheckedUpdateInput>
+  }
+
+  /**
+   * FormCompletionValue delete
+   */
+  export type FormCompletionValueDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormCompletionValue
+     */
+    select?: FormCompletionValueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormCompletionValue
+     */
+    omit?: FormCompletionValueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormCompletionValueInclude<ExtArgs> | null
+    /**
+     * Filter which FormCompletionValue to delete.
+     */
+    where: FormCompletionValueWhereUniqueInput
+  }
+
+  /**
+   * FormCompletionValue deleteMany
+   */
+  export type FormCompletionValueDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FormCompletionValues to delete
+     */
+    where?: FormCompletionValueWhereInput
+    /**
+     * Limit how many FormCompletionValues to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * FormCompletionValue without action
+   */
+  export type FormCompletionValueDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormCompletionValue
+     */
+    select?: FormCompletionValueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormCompletionValue
+     */
+    omit?: FormCompletionValueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormCompletionValueInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -29986,6 +35290,65 @@ export namespace Prisma {
   export type ReminderScalarFieldEnum = (typeof ReminderScalarFieldEnum)[keyof typeof ReminderScalarFieldEnum]
 
 
+  export const FormScalarFieldEnum: {
+    id: 'id',
+    uuid: 'uuid',
+    user_uuid: 'user_uuid',
+    name: 'name',
+    description: 'description',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
+  };
+
+  export type FormScalarFieldEnum = (typeof FormScalarFieldEnum)[keyof typeof FormScalarFieldEnum]
+
+
+  export const FormFieldScalarFieldEnum: {
+    id: 'id',
+    uuid: 'uuid',
+    form_uuid: 'form_uuid',
+    label: 'label',
+    field_type: 'field_type',
+    placeholder: 'placeholder',
+    help_text: 'help_text',
+    required: 'required',
+    default_value: 'default_value',
+    options: 'options',
+    order_index: 'order_index',
+    enabled: 'enabled',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
+  };
+
+  export type FormFieldScalarFieldEnum = (typeof FormFieldScalarFieldEnum)[keyof typeof FormFieldScalarFieldEnum]
+
+
+  export const FormCompletionScalarFieldEnum: {
+    id: 'id',
+    uuid: 'uuid',
+    form_uuid: 'form_uuid',
+    contact_uuid: 'contact_uuid',
+    completed_by_uuid: 'completed_by_uuid',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
+  };
+
+  export type FormCompletionScalarFieldEnum = (typeof FormCompletionScalarFieldEnum)[keyof typeof FormCompletionScalarFieldEnum]
+
+
+  export const FormCompletionValueScalarFieldEnum: {
+    id: 'id',
+    uuid: 'uuid',
+    completion_uuid: 'completion_uuid',
+    field_uuid: 'field_uuid',
+    value: 'value',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
+  };
+
+  export type FormCompletionValueScalarFieldEnum = (typeof FormCompletionValueScalarFieldEnum)[keyof typeof FormCompletionValueScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -30369,6 +35732,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'FieldType'
+   */
+  export type EnumFieldTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FieldType'>
+    
+
+
+  /**
+   * Reference to a field of type 'FieldType[]'
+   */
+  export type ListEnumFieldTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FieldType[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -30408,6 +35785,8 @@ export namespace Prisma {
     openai_batch_jobs?: OpenAiBatchJobListRelationFilter
     integrations?: IntegrationListRelationFilter
     reminders?: ReminderListRelationFilter
+    forms?: FormListRelationFilter
+    form_completions?: FormCompletionListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -30430,6 +35809,8 @@ export namespace Prisma {
     openai_batch_jobs?: OpenAiBatchJobOrderByRelationAggregateInput
     integrations?: IntegrationOrderByRelationAggregateInput
     reminders?: ReminderOrderByRelationAggregateInput
+    forms?: FormOrderByRelationAggregateInput
+    form_completions?: FormCompletionOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -30455,6 +35836,8 @@ export namespace Prisma {
     openai_batch_jobs?: OpenAiBatchJobListRelationFilter
     integrations?: IntegrationListRelationFilter
     reminders?: ReminderListRelationFilter
+    forms?: FormListRelationFilter
+    form_completions?: FormCompletionListRelationFilter
   }, "id" | "uuid" | "email" | "phone">
 
   export type UserOrderByWithAggregationInput = {
@@ -31059,6 +36442,7 @@ export namespace Prisma {
     campaign_contacts?: MarketingCampaignContactListRelationFilter
     contact_scores?: ContactScoreListRelationFilter
     reminders?: ReminderListRelationFilter
+    form_completions?: FormCompletionListRelationFilter
   }
 
   export type ContactOrderByWithRelationInput = {
@@ -31094,6 +36478,7 @@ export namespace Prisma {
     campaign_contacts?: MarketingCampaignContactOrderByRelationAggregateInput
     contact_scores?: ContactScoreOrderByRelationAggregateInput
     reminders?: ReminderOrderByRelationAggregateInput
+    form_completions?: FormCompletionOrderByRelationAggregateInput
   }
 
   export type ContactWhereUniqueInput = Prisma.AtLeast<{
@@ -31133,6 +36518,7 @@ export namespace Prisma {
     campaign_contacts?: MarketingCampaignContactListRelationFilter
     contact_scores?: ContactScoreListRelationFilter
     reminders?: ReminderListRelationFilter
+    form_completions?: FormCompletionListRelationFilter
   }, "id" | "uuid" | "unsubscribe_token" | "user_uuid_lead_uuid">
 
   export type ContactOrderByWithAggregationInput = {
@@ -32541,6 +37927,330 @@ export namespace Prisma {
     updated_at?: DateTimeWithAggregatesFilter<"Reminder"> | Date | string
   }
 
+  export type FormWhereInput = {
+    AND?: FormWhereInput | FormWhereInput[]
+    OR?: FormWhereInput[]
+    NOT?: FormWhereInput | FormWhereInput[]
+    id?: IntFilter<"Form"> | number
+    uuid?: StringFilter<"Form"> | string
+    user_uuid?: StringFilter<"Form"> | string
+    name?: StringFilter<"Form"> | string
+    description?: StringNullableFilter<"Form"> | string | null
+    created_at?: DateTimeFilter<"Form"> | Date | string
+    updated_at?: DateTimeFilter<"Form"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    fields?: FormFieldListRelationFilter
+    completions?: FormCompletionListRelationFilter
+  }
+
+  export type FormOrderByWithRelationInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    user_uuid?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    user?: UserOrderByWithRelationInput
+    fields?: FormFieldOrderByRelationAggregateInput
+    completions?: FormCompletionOrderByRelationAggregateInput
+  }
+
+  export type FormWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    uuid?: string
+    AND?: FormWhereInput | FormWhereInput[]
+    OR?: FormWhereInput[]
+    NOT?: FormWhereInput | FormWhereInput[]
+    user_uuid?: StringFilter<"Form"> | string
+    name?: StringFilter<"Form"> | string
+    description?: StringNullableFilter<"Form"> | string | null
+    created_at?: DateTimeFilter<"Form"> | Date | string
+    updated_at?: DateTimeFilter<"Form"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    fields?: FormFieldListRelationFilter
+    completions?: FormCompletionListRelationFilter
+  }, "id" | "uuid">
+
+  export type FormOrderByWithAggregationInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    user_uuid?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    _count?: FormCountOrderByAggregateInput
+    _avg?: FormAvgOrderByAggregateInput
+    _max?: FormMaxOrderByAggregateInput
+    _min?: FormMinOrderByAggregateInput
+    _sum?: FormSumOrderByAggregateInput
+  }
+
+  export type FormScalarWhereWithAggregatesInput = {
+    AND?: FormScalarWhereWithAggregatesInput | FormScalarWhereWithAggregatesInput[]
+    OR?: FormScalarWhereWithAggregatesInput[]
+    NOT?: FormScalarWhereWithAggregatesInput | FormScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"Form"> | number
+    uuid?: StringWithAggregatesFilter<"Form"> | string
+    user_uuid?: StringWithAggregatesFilter<"Form"> | string
+    name?: StringWithAggregatesFilter<"Form"> | string
+    description?: StringNullableWithAggregatesFilter<"Form"> | string | null
+    created_at?: DateTimeWithAggregatesFilter<"Form"> | Date | string
+    updated_at?: DateTimeWithAggregatesFilter<"Form"> | Date | string
+  }
+
+  export type FormFieldWhereInput = {
+    AND?: FormFieldWhereInput | FormFieldWhereInput[]
+    OR?: FormFieldWhereInput[]
+    NOT?: FormFieldWhereInput | FormFieldWhereInput[]
+    id?: IntFilter<"FormField"> | number
+    uuid?: StringFilter<"FormField"> | string
+    form_uuid?: StringFilter<"FormField"> | string
+    label?: StringFilter<"FormField"> | string
+    field_type?: EnumFieldTypeFilter<"FormField"> | $Enums.FieldType
+    placeholder?: StringNullableFilter<"FormField"> | string | null
+    help_text?: StringNullableFilter<"FormField"> | string | null
+    required?: BoolFilter<"FormField"> | boolean
+    default_value?: StringNullableFilter<"FormField"> | string | null
+    options?: JsonNullableFilter<"FormField">
+    order_index?: IntFilter<"FormField"> | number
+    enabled?: BoolFilter<"FormField"> | boolean
+    created_at?: DateTimeFilter<"FormField"> | Date | string
+    updated_at?: DateTimeFilter<"FormField"> | Date | string
+    form?: XOR<FormScalarRelationFilter, FormWhereInput>
+    completion_values?: FormCompletionValueListRelationFilter
+  }
+
+  export type FormFieldOrderByWithRelationInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    form_uuid?: SortOrder
+    label?: SortOrder
+    field_type?: SortOrder
+    placeholder?: SortOrderInput | SortOrder
+    help_text?: SortOrderInput | SortOrder
+    required?: SortOrder
+    default_value?: SortOrderInput | SortOrder
+    options?: SortOrderInput | SortOrder
+    order_index?: SortOrder
+    enabled?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    form?: FormOrderByWithRelationInput
+    completion_values?: FormCompletionValueOrderByRelationAggregateInput
+  }
+
+  export type FormFieldWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    uuid?: string
+    AND?: FormFieldWhereInput | FormFieldWhereInput[]
+    OR?: FormFieldWhereInput[]
+    NOT?: FormFieldWhereInput | FormFieldWhereInput[]
+    form_uuid?: StringFilter<"FormField"> | string
+    label?: StringFilter<"FormField"> | string
+    field_type?: EnumFieldTypeFilter<"FormField"> | $Enums.FieldType
+    placeholder?: StringNullableFilter<"FormField"> | string | null
+    help_text?: StringNullableFilter<"FormField"> | string | null
+    required?: BoolFilter<"FormField"> | boolean
+    default_value?: StringNullableFilter<"FormField"> | string | null
+    options?: JsonNullableFilter<"FormField">
+    order_index?: IntFilter<"FormField"> | number
+    enabled?: BoolFilter<"FormField"> | boolean
+    created_at?: DateTimeFilter<"FormField"> | Date | string
+    updated_at?: DateTimeFilter<"FormField"> | Date | string
+    form?: XOR<FormScalarRelationFilter, FormWhereInput>
+    completion_values?: FormCompletionValueListRelationFilter
+  }, "id" | "uuid">
+
+  export type FormFieldOrderByWithAggregationInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    form_uuid?: SortOrder
+    label?: SortOrder
+    field_type?: SortOrder
+    placeholder?: SortOrderInput | SortOrder
+    help_text?: SortOrderInput | SortOrder
+    required?: SortOrder
+    default_value?: SortOrderInput | SortOrder
+    options?: SortOrderInput | SortOrder
+    order_index?: SortOrder
+    enabled?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    _count?: FormFieldCountOrderByAggregateInput
+    _avg?: FormFieldAvgOrderByAggregateInput
+    _max?: FormFieldMaxOrderByAggregateInput
+    _min?: FormFieldMinOrderByAggregateInput
+    _sum?: FormFieldSumOrderByAggregateInput
+  }
+
+  export type FormFieldScalarWhereWithAggregatesInput = {
+    AND?: FormFieldScalarWhereWithAggregatesInput | FormFieldScalarWhereWithAggregatesInput[]
+    OR?: FormFieldScalarWhereWithAggregatesInput[]
+    NOT?: FormFieldScalarWhereWithAggregatesInput | FormFieldScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"FormField"> | number
+    uuid?: StringWithAggregatesFilter<"FormField"> | string
+    form_uuid?: StringWithAggregatesFilter<"FormField"> | string
+    label?: StringWithAggregatesFilter<"FormField"> | string
+    field_type?: EnumFieldTypeWithAggregatesFilter<"FormField"> | $Enums.FieldType
+    placeholder?: StringNullableWithAggregatesFilter<"FormField"> | string | null
+    help_text?: StringNullableWithAggregatesFilter<"FormField"> | string | null
+    required?: BoolWithAggregatesFilter<"FormField"> | boolean
+    default_value?: StringNullableWithAggregatesFilter<"FormField"> | string | null
+    options?: JsonNullableWithAggregatesFilter<"FormField">
+    order_index?: IntWithAggregatesFilter<"FormField"> | number
+    enabled?: BoolWithAggregatesFilter<"FormField"> | boolean
+    created_at?: DateTimeWithAggregatesFilter<"FormField"> | Date | string
+    updated_at?: DateTimeWithAggregatesFilter<"FormField"> | Date | string
+  }
+
+  export type FormCompletionWhereInput = {
+    AND?: FormCompletionWhereInput | FormCompletionWhereInput[]
+    OR?: FormCompletionWhereInput[]
+    NOT?: FormCompletionWhereInput | FormCompletionWhereInput[]
+    id?: IntFilter<"FormCompletion"> | number
+    uuid?: StringFilter<"FormCompletion"> | string
+    form_uuid?: StringFilter<"FormCompletion"> | string
+    contact_uuid?: StringFilter<"FormCompletion"> | string
+    completed_by_uuid?: StringFilter<"FormCompletion"> | string
+    created_at?: DateTimeFilter<"FormCompletion"> | Date | string
+    updated_at?: DateTimeFilter<"FormCompletion"> | Date | string
+    form?: XOR<FormScalarRelationFilter, FormWhereInput>
+    contact?: XOR<ContactScalarRelationFilter, ContactWhereInput>
+    completed_by?: XOR<UserScalarRelationFilter, UserWhereInput>
+    values?: FormCompletionValueListRelationFilter
+  }
+
+  export type FormCompletionOrderByWithRelationInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    form_uuid?: SortOrder
+    contact_uuid?: SortOrder
+    completed_by_uuid?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    form?: FormOrderByWithRelationInput
+    contact?: ContactOrderByWithRelationInput
+    completed_by?: UserOrderByWithRelationInput
+    values?: FormCompletionValueOrderByRelationAggregateInput
+  }
+
+  export type FormCompletionWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    uuid?: string
+    AND?: FormCompletionWhereInput | FormCompletionWhereInput[]
+    OR?: FormCompletionWhereInput[]
+    NOT?: FormCompletionWhereInput | FormCompletionWhereInput[]
+    form_uuid?: StringFilter<"FormCompletion"> | string
+    contact_uuid?: StringFilter<"FormCompletion"> | string
+    completed_by_uuid?: StringFilter<"FormCompletion"> | string
+    created_at?: DateTimeFilter<"FormCompletion"> | Date | string
+    updated_at?: DateTimeFilter<"FormCompletion"> | Date | string
+    form?: XOR<FormScalarRelationFilter, FormWhereInput>
+    contact?: XOR<ContactScalarRelationFilter, ContactWhereInput>
+    completed_by?: XOR<UserScalarRelationFilter, UserWhereInput>
+    values?: FormCompletionValueListRelationFilter
+  }, "id" | "uuid">
+
+  export type FormCompletionOrderByWithAggregationInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    form_uuid?: SortOrder
+    contact_uuid?: SortOrder
+    completed_by_uuid?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    _count?: FormCompletionCountOrderByAggregateInput
+    _avg?: FormCompletionAvgOrderByAggregateInput
+    _max?: FormCompletionMaxOrderByAggregateInput
+    _min?: FormCompletionMinOrderByAggregateInput
+    _sum?: FormCompletionSumOrderByAggregateInput
+  }
+
+  export type FormCompletionScalarWhereWithAggregatesInput = {
+    AND?: FormCompletionScalarWhereWithAggregatesInput | FormCompletionScalarWhereWithAggregatesInput[]
+    OR?: FormCompletionScalarWhereWithAggregatesInput[]
+    NOT?: FormCompletionScalarWhereWithAggregatesInput | FormCompletionScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"FormCompletion"> | number
+    uuid?: StringWithAggregatesFilter<"FormCompletion"> | string
+    form_uuid?: StringWithAggregatesFilter<"FormCompletion"> | string
+    contact_uuid?: StringWithAggregatesFilter<"FormCompletion"> | string
+    completed_by_uuid?: StringWithAggregatesFilter<"FormCompletion"> | string
+    created_at?: DateTimeWithAggregatesFilter<"FormCompletion"> | Date | string
+    updated_at?: DateTimeWithAggregatesFilter<"FormCompletion"> | Date | string
+  }
+
+  export type FormCompletionValueWhereInput = {
+    AND?: FormCompletionValueWhereInput | FormCompletionValueWhereInput[]
+    OR?: FormCompletionValueWhereInput[]
+    NOT?: FormCompletionValueWhereInput | FormCompletionValueWhereInput[]
+    id?: IntFilter<"FormCompletionValue"> | number
+    uuid?: StringFilter<"FormCompletionValue"> | string
+    completion_uuid?: StringFilter<"FormCompletionValue"> | string
+    field_uuid?: StringFilter<"FormCompletionValue"> | string
+    value?: StringFilter<"FormCompletionValue"> | string
+    created_at?: DateTimeFilter<"FormCompletionValue"> | Date | string
+    updated_at?: DateTimeFilter<"FormCompletionValue"> | Date | string
+    completion?: XOR<FormCompletionScalarRelationFilter, FormCompletionWhereInput>
+    field?: XOR<FormFieldScalarRelationFilter, FormFieldWhereInput>
+  }
+
+  export type FormCompletionValueOrderByWithRelationInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    completion_uuid?: SortOrder
+    field_uuid?: SortOrder
+    value?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    completion?: FormCompletionOrderByWithRelationInput
+    field?: FormFieldOrderByWithRelationInput
+  }
+
+  export type FormCompletionValueWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    uuid?: string
+    AND?: FormCompletionValueWhereInput | FormCompletionValueWhereInput[]
+    OR?: FormCompletionValueWhereInput[]
+    NOT?: FormCompletionValueWhereInput | FormCompletionValueWhereInput[]
+    completion_uuid?: StringFilter<"FormCompletionValue"> | string
+    field_uuid?: StringFilter<"FormCompletionValue"> | string
+    value?: StringFilter<"FormCompletionValue"> | string
+    created_at?: DateTimeFilter<"FormCompletionValue"> | Date | string
+    updated_at?: DateTimeFilter<"FormCompletionValue"> | Date | string
+    completion?: XOR<FormCompletionScalarRelationFilter, FormCompletionWhereInput>
+    field?: XOR<FormFieldScalarRelationFilter, FormFieldWhereInput>
+  }, "id" | "uuid">
+
+  export type FormCompletionValueOrderByWithAggregationInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    completion_uuid?: SortOrder
+    field_uuid?: SortOrder
+    value?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    _count?: FormCompletionValueCountOrderByAggregateInput
+    _avg?: FormCompletionValueAvgOrderByAggregateInput
+    _max?: FormCompletionValueMaxOrderByAggregateInput
+    _min?: FormCompletionValueMinOrderByAggregateInput
+    _sum?: FormCompletionValueSumOrderByAggregateInput
+  }
+
+  export type FormCompletionValueScalarWhereWithAggregatesInput = {
+    AND?: FormCompletionValueScalarWhereWithAggregatesInput | FormCompletionValueScalarWhereWithAggregatesInput[]
+    OR?: FormCompletionValueScalarWhereWithAggregatesInput[]
+    NOT?: FormCompletionValueScalarWhereWithAggregatesInput | FormCompletionValueScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"FormCompletionValue"> | number
+    uuid?: StringWithAggregatesFilter<"FormCompletionValue"> | string
+    completion_uuid?: StringWithAggregatesFilter<"FormCompletionValue"> | string
+    field_uuid?: StringWithAggregatesFilter<"FormCompletionValue"> | string
+    value?: StringWithAggregatesFilter<"FormCompletionValue"> | string
+    created_at?: DateTimeWithAggregatesFilter<"FormCompletionValue"> | Date | string
+    updated_at?: DateTimeWithAggregatesFilter<"FormCompletionValue"> | Date | string
+  }
+
   export type UserCreateInput = {
     uuid?: string
     email: string
@@ -32560,6 +38270,8 @@ export namespace Prisma {
     openai_batch_jobs?: OpenAiBatchJobCreateNestedManyWithoutUserInput
     integrations?: IntegrationCreateNestedManyWithoutUserInput
     reminders?: ReminderCreateNestedManyWithoutUserInput
+    forms?: FormCreateNestedManyWithoutUserInput
+    form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -32582,6 +38294,8 @@ export namespace Prisma {
     openai_batch_jobs?: OpenAiBatchJobUncheckedCreateNestedManyWithoutUserInput
     integrations?: IntegrationUncheckedCreateNestedManyWithoutUserInput
     reminders?: ReminderUncheckedCreateNestedManyWithoutUserInput
+    forms?: FormUncheckedCreateNestedManyWithoutUserInput
+    form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
   }
 
   export type UserUpdateInput = {
@@ -32603,6 +38317,8 @@ export namespace Prisma {
     openai_batch_jobs?: OpenAiBatchJobUpdateManyWithoutUserNestedInput
     integrations?: IntegrationUpdateManyWithoutUserNestedInput
     reminders?: ReminderUpdateManyWithoutUserNestedInput
+    forms?: FormUpdateManyWithoutUserNestedInput
+    form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -32625,6 +38341,8 @@ export namespace Prisma {
     openai_batch_jobs?: OpenAiBatchJobUncheckedUpdateManyWithoutUserNestedInput
     integrations?: IntegrationUncheckedUpdateManyWithoutUserNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutUserNestedInput
+    forms?: FormUncheckedUpdateManyWithoutUserNestedInput
+    form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -33269,6 +38987,7 @@ export namespace Prisma {
     campaign_contacts?: MarketingCampaignContactCreateNestedManyWithoutContactInput
     contact_scores?: ContactScoreCreateNestedManyWithoutContactInput
     reminders?: ReminderCreateNestedManyWithoutContactInput
+    form_completions?: FormCompletionCreateNestedManyWithoutContactInput
   }
 
   export type ContactUncheckedCreateInput = {
@@ -33301,6 +39020,7 @@ export namespace Prisma {
     campaign_contacts?: MarketingCampaignContactUncheckedCreateNestedManyWithoutContactInput
     contact_scores?: ContactScoreUncheckedCreateNestedManyWithoutContactInput
     reminders?: ReminderUncheckedCreateNestedManyWithoutContactInput
+    form_completions?: FormCompletionUncheckedCreateNestedManyWithoutContactInput
   }
 
   export type ContactUpdateInput = {
@@ -33332,6 +39052,7 @@ export namespace Prisma {
     campaign_contacts?: MarketingCampaignContactUpdateManyWithoutContactNestedInput
     contact_scores?: ContactScoreUpdateManyWithoutContactNestedInput
     reminders?: ReminderUpdateManyWithoutContactNestedInput
+    form_completions?: FormCompletionUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateInput = {
@@ -33364,6 +39085,7 @@ export namespace Prisma {
     campaign_contacts?: MarketingCampaignContactUncheckedUpdateManyWithoutContactNestedInput
     contact_scores?: ContactScoreUncheckedUpdateManyWithoutContactNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutContactNestedInput
+    form_completions?: FormCompletionUncheckedUpdateManyWithoutContactNestedInput
   }
 
   export type ContactCreateManyInput = {
@@ -34911,6 +40633,332 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type FormCreateInput = {
+    uuid?: string
+    name: string
+    description?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    user: UserCreateNestedOneWithoutFormsInput
+    fields?: FormFieldCreateNestedManyWithoutFormInput
+    completions?: FormCompletionCreateNestedManyWithoutFormInput
+  }
+
+  export type FormUncheckedCreateInput = {
+    id?: number
+    uuid?: string
+    user_uuid: string
+    name: string
+    description?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    fields?: FormFieldUncheckedCreateNestedManyWithoutFormInput
+    completions?: FormCompletionUncheckedCreateNestedManyWithoutFormInput
+  }
+
+  export type FormUpdateInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutFormsNestedInput
+    fields?: FormFieldUpdateManyWithoutFormNestedInput
+    completions?: FormCompletionUpdateManyWithoutFormNestedInput
+  }
+
+  export type FormUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    fields?: FormFieldUncheckedUpdateManyWithoutFormNestedInput
+    completions?: FormCompletionUncheckedUpdateManyWithoutFormNestedInput
+  }
+
+  export type FormCreateManyInput = {
+    id?: number
+    uuid?: string
+    user_uuid: string
+    name: string
+    description?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type FormUpdateManyMutationInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FormUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FormFieldCreateInput = {
+    uuid?: string
+    label: string
+    field_type: $Enums.FieldType
+    placeholder?: string | null
+    help_text?: string | null
+    required?: boolean
+    default_value?: string | null
+    options?: NullableJsonNullValueInput | InputJsonValue
+    order_index?: number
+    enabled?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    form: FormCreateNestedOneWithoutFieldsInput
+    completion_values?: FormCompletionValueCreateNestedManyWithoutFieldInput
+  }
+
+  export type FormFieldUncheckedCreateInput = {
+    id?: number
+    uuid?: string
+    form_uuid: string
+    label: string
+    field_type: $Enums.FieldType
+    placeholder?: string | null
+    help_text?: string | null
+    required?: boolean
+    default_value?: string | null
+    options?: NullableJsonNullValueInput | InputJsonValue
+    order_index?: number
+    enabled?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    completion_values?: FormCompletionValueUncheckedCreateNestedManyWithoutFieldInput
+  }
+
+  export type FormFieldUpdateInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    label?: StringFieldUpdateOperationsInput | string
+    field_type?: EnumFieldTypeFieldUpdateOperationsInput | $Enums.FieldType
+    placeholder?: NullableStringFieldUpdateOperationsInput | string | null
+    help_text?: NullableStringFieldUpdateOperationsInput | string | null
+    required?: BoolFieldUpdateOperationsInput | boolean
+    default_value?: NullableStringFieldUpdateOperationsInput | string | null
+    options?: NullableJsonNullValueInput | InputJsonValue
+    order_index?: IntFieldUpdateOperationsInput | number
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    form?: FormUpdateOneRequiredWithoutFieldsNestedInput
+    completion_values?: FormCompletionValueUpdateManyWithoutFieldNestedInput
+  }
+
+  export type FormFieldUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    form_uuid?: StringFieldUpdateOperationsInput | string
+    label?: StringFieldUpdateOperationsInput | string
+    field_type?: EnumFieldTypeFieldUpdateOperationsInput | $Enums.FieldType
+    placeholder?: NullableStringFieldUpdateOperationsInput | string | null
+    help_text?: NullableStringFieldUpdateOperationsInput | string | null
+    required?: BoolFieldUpdateOperationsInput | boolean
+    default_value?: NullableStringFieldUpdateOperationsInput | string | null
+    options?: NullableJsonNullValueInput | InputJsonValue
+    order_index?: IntFieldUpdateOperationsInput | number
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    completion_values?: FormCompletionValueUncheckedUpdateManyWithoutFieldNestedInput
+  }
+
+  export type FormFieldCreateManyInput = {
+    id?: number
+    uuid?: string
+    form_uuid: string
+    label: string
+    field_type: $Enums.FieldType
+    placeholder?: string | null
+    help_text?: string | null
+    required?: boolean
+    default_value?: string | null
+    options?: NullableJsonNullValueInput | InputJsonValue
+    order_index?: number
+    enabled?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type FormFieldUpdateManyMutationInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    label?: StringFieldUpdateOperationsInput | string
+    field_type?: EnumFieldTypeFieldUpdateOperationsInput | $Enums.FieldType
+    placeholder?: NullableStringFieldUpdateOperationsInput | string | null
+    help_text?: NullableStringFieldUpdateOperationsInput | string | null
+    required?: BoolFieldUpdateOperationsInput | boolean
+    default_value?: NullableStringFieldUpdateOperationsInput | string | null
+    options?: NullableJsonNullValueInput | InputJsonValue
+    order_index?: IntFieldUpdateOperationsInput | number
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FormFieldUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    form_uuid?: StringFieldUpdateOperationsInput | string
+    label?: StringFieldUpdateOperationsInput | string
+    field_type?: EnumFieldTypeFieldUpdateOperationsInput | $Enums.FieldType
+    placeholder?: NullableStringFieldUpdateOperationsInput | string | null
+    help_text?: NullableStringFieldUpdateOperationsInput | string | null
+    required?: BoolFieldUpdateOperationsInput | boolean
+    default_value?: NullableStringFieldUpdateOperationsInput | string | null
+    options?: NullableJsonNullValueInput | InputJsonValue
+    order_index?: IntFieldUpdateOperationsInput | number
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FormCompletionCreateInput = {
+    uuid?: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    form: FormCreateNestedOneWithoutCompletionsInput
+    contact: ContactCreateNestedOneWithoutForm_completionsInput
+    completed_by: UserCreateNestedOneWithoutForm_completionsInput
+    values?: FormCompletionValueCreateNestedManyWithoutCompletionInput
+  }
+
+  export type FormCompletionUncheckedCreateInput = {
+    id?: number
+    uuid?: string
+    form_uuid: string
+    contact_uuid: string
+    completed_by_uuid: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    values?: FormCompletionValueUncheckedCreateNestedManyWithoutCompletionInput
+  }
+
+  export type FormCompletionUpdateInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    form?: FormUpdateOneRequiredWithoutCompletionsNestedInput
+    contact?: ContactUpdateOneRequiredWithoutForm_completionsNestedInput
+    completed_by?: UserUpdateOneRequiredWithoutForm_completionsNestedInput
+    values?: FormCompletionValueUpdateManyWithoutCompletionNestedInput
+  }
+
+  export type FormCompletionUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    form_uuid?: StringFieldUpdateOperationsInput | string
+    contact_uuid?: StringFieldUpdateOperationsInput | string
+    completed_by_uuid?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    values?: FormCompletionValueUncheckedUpdateManyWithoutCompletionNestedInput
+  }
+
+  export type FormCompletionCreateManyInput = {
+    id?: number
+    uuid?: string
+    form_uuid: string
+    contact_uuid: string
+    completed_by_uuid: string
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type FormCompletionUpdateManyMutationInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FormCompletionUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    form_uuid?: StringFieldUpdateOperationsInput | string
+    contact_uuid?: StringFieldUpdateOperationsInput | string
+    completed_by_uuid?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FormCompletionValueCreateInput = {
+    uuid?: string
+    value: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    completion: FormCompletionCreateNestedOneWithoutValuesInput
+    field: FormFieldCreateNestedOneWithoutCompletion_valuesInput
+  }
+
+  export type FormCompletionValueUncheckedCreateInput = {
+    id?: number
+    uuid?: string
+    completion_uuid: string
+    field_uuid: string
+    value: string
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type FormCompletionValueUpdateInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    completion?: FormCompletionUpdateOneRequiredWithoutValuesNestedInput
+    field?: FormFieldUpdateOneRequiredWithoutCompletion_valuesNestedInput
+  }
+
+  export type FormCompletionValueUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    completion_uuid?: StringFieldUpdateOperationsInput | string
+    field_uuid?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FormCompletionValueCreateManyInput = {
+    id?: number
+    uuid?: string
+    completion_uuid: string
+    field_uuid: string
+    value: string
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type FormCompletionValueUpdateManyMutationInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FormCompletionValueUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    completion_uuid?: StringFieldUpdateOperationsInput | string
+    field_uuid?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -35036,6 +41084,18 @@ export namespace Prisma {
     none?: ReminderWhereInput
   }
 
+  export type FormListRelationFilter = {
+    every?: FormWhereInput
+    some?: FormWhereInput
+    none?: FormWhereInput
+  }
+
+  export type FormCompletionListRelationFilter = {
+    every?: FormCompletionWhereInput
+    some?: FormCompletionWhereInput
+    none?: FormCompletionWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -35082,6 +41142,14 @@ export namespace Prisma {
   }
 
   export type ReminderOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type FormOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type FormCompletionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -37012,6 +43080,231 @@ export namespace Prisma {
     _max?: NestedEnumReminderStatusFilter<$PrismaModel>
   }
 
+  export type FormFieldListRelationFilter = {
+    every?: FormFieldWhereInput
+    some?: FormFieldWhereInput
+    none?: FormFieldWhereInput
+  }
+
+  export type FormFieldOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type FormCountOrderByAggregateInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    user_uuid?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type FormAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type FormMaxOrderByAggregateInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    user_uuid?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type FormMinOrderByAggregateInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    user_uuid?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type FormSumOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type EnumFieldTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.FieldType | EnumFieldTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.FieldType[] | ListEnumFieldTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FieldType[] | ListEnumFieldTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumFieldTypeFilter<$PrismaModel> | $Enums.FieldType
+  }
+
+  export type FormScalarRelationFilter = {
+    is?: FormWhereInput
+    isNot?: FormWhereInput
+  }
+
+  export type FormCompletionValueListRelationFilter = {
+    every?: FormCompletionValueWhereInput
+    some?: FormCompletionValueWhereInput
+    none?: FormCompletionValueWhereInput
+  }
+
+  export type FormCompletionValueOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type FormFieldCountOrderByAggregateInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    form_uuid?: SortOrder
+    label?: SortOrder
+    field_type?: SortOrder
+    placeholder?: SortOrder
+    help_text?: SortOrder
+    required?: SortOrder
+    default_value?: SortOrder
+    options?: SortOrder
+    order_index?: SortOrder
+    enabled?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type FormFieldAvgOrderByAggregateInput = {
+    id?: SortOrder
+    order_index?: SortOrder
+  }
+
+  export type FormFieldMaxOrderByAggregateInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    form_uuid?: SortOrder
+    label?: SortOrder
+    field_type?: SortOrder
+    placeholder?: SortOrder
+    help_text?: SortOrder
+    required?: SortOrder
+    default_value?: SortOrder
+    order_index?: SortOrder
+    enabled?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type FormFieldMinOrderByAggregateInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    form_uuid?: SortOrder
+    label?: SortOrder
+    field_type?: SortOrder
+    placeholder?: SortOrder
+    help_text?: SortOrder
+    required?: SortOrder
+    default_value?: SortOrder
+    order_index?: SortOrder
+    enabled?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type FormFieldSumOrderByAggregateInput = {
+    id?: SortOrder
+    order_index?: SortOrder
+  }
+
+  export type EnumFieldTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FieldType | EnumFieldTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.FieldType[] | ListEnumFieldTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FieldType[] | ListEnumFieldTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumFieldTypeWithAggregatesFilter<$PrismaModel> | $Enums.FieldType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumFieldTypeFilter<$PrismaModel>
+    _max?: NestedEnumFieldTypeFilter<$PrismaModel>
+  }
+
+  export type FormCompletionCountOrderByAggregateInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    form_uuid?: SortOrder
+    contact_uuid?: SortOrder
+    completed_by_uuid?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type FormCompletionAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type FormCompletionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    form_uuid?: SortOrder
+    contact_uuid?: SortOrder
+    completed_by_uuid?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type FormCompletionMinOrderByAggregateInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    form_uuid?: SortOrder
+    contact_uuid?: SortOrder
+    completed_by_uuid?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type FormCompletionSumOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type FormCompletionScalarRelationFilter = {
+    is?: FormCompletionWhereInput
+    isNot?: FormCompletionWhereInput
+  }
+
+  export type FormFieldScalarRelationFilter = {
+    is?: FormFieldWhereInput
+    isNot?: FormFieldWhereInput
+  }
+
+  export type FormCompletionValueCountOrderByAggregateInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    completion_uuid?: SortOrder
+    field_uuid?: SortOrder
+    value?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type FormCompletionValueAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type FormCompletionValueMaxOrderByAggregateInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    completion_uuid?: SortOrder
+    field_uuid?: SortOrder
+    value?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type FormCompletionValueMinOrderByAggregateInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    completion_uuid?: SortOrder
+    field_uuid?: SortOrder
+    value?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type FormCompletionValueSumOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
   export type FilterCreateNestedManyWithoutUserInput = {
     create?: XOR<FilterCreateWithoutUserInput, FilterUncheckedCreateWithoutUserInput> | FilterCreateWithoutUserInput[] | FilterUncheckedCreateWithoutUserInput[]
     connectOrCreate?: FilterCreateOrConnectWithoutUserInput | FilterCreateOrConnectWithoutUserInput[]
@@ -37089,6 +43382,20 @@ export namespace Prisma {
     connect?: ReminderWhereUniqueInput | ReminderWhereUniqueInput[]
   }
 
+  export type FormCreateNestedManyWithoutUserInput = {
+    create?: XOR<FormCreateWithoutUserInput, FormUncheckedCreateWithoutUserInput> | FormCreateWithoutUserInput[] | FormUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: FormCreateOrConnectWithoutUserInput | FormCreateOrConnectWithoutUserInput[]
+    createMany?: FormCreateManyUserInputEnvelope
+    connect?: FormWhereUniqueInput | FormWhereUniqueInput[]
+  }
+
+  export type FormCompletionCreateNestedManyWithoutCompleted_byInput = {
+    create?: XOR<FormCompletionCreateWithoutCompleted_byInput, FormCompletionUncheckedCreateWithoutCompleted_byInput> | FormCompletionCreateWithoutCompleted_byInput[] | FormCompletionUncheckedCreateWithoutCompleted_byInput[]
+    connectOrCreate?: FormCompletionCreateOrConnectWithoutCompleted_byInput | FormCompletionCreateOrConnectWithoutCompleted_byInput[]
+    createMany?: FormCompletionCreateManyCompleted_byInputEnvelope
+    connect?: FormCompletionWhereUniqueInput | FormCompletionWhereUniqueInput[]
+  }
+
   export type FilterUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<FilterCreateWithoutUserInput, FilterUncheckedCreateWithoutUserInput> | FilterCreateWithoutUserInput[] | FilterUncheckedCreateWithoutUserInput[]
     connectOrCreate?: FilterCreateOrConnectWithoutUserInput | FilterCreateOrConnectWithoutUserInput[]
@@ -37164,6 +43471,20 @@ export namespace Prisma {
     connectOrCreate?: ReminderCreateOrConnectWithoutUserInput | ReminderCreateOrConnectWithoutUserInput[]
     createMany?: ReminderCreateManyUserInputEnvelope
     connect?: ReminderWhereUniqueInput | ReminderWhereUniqueInput[]
+  }
+
+  export type FormUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<FormCreateWithoutUserInput, FormUncheckedCreateWithoutUserInput> | FormCreateWithoutUserInput[] | FormUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: FormCreateOrConnectWithoutUserInput | FormCreateOrConnectWithoutUserInput[]
+    createMany?: FormCreateManyUserInputEnvelope
+    connect?: FormWhereUniqueInput | FormWhereUniqueInput[]
+  }
+
+  export type FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput = {
+    create?: XOR<FormCompletionCreateWithoutCompleted_byInput, FormCompletionUncheckedCreateWithoutCompleted_byInput> | FormCompletionCreateWithoutCompleted_byInput[] | FormCompletionUncheckedCreateWithoutCompleted_byInput[]
+    connectOrCreate?: FormCompletionCreateOrConnectWithoutCompleted_byInput | FormCompletionCreateOrConnectWithoutCompleted_byInput[]
+    createMany?: FormCompletionCreateManyCompleted_byInputEnvelope
+    connect?: FormCompletionWhereUniqueInput | FormCompletionWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -37336,6 +43657,34 @@ export namespace Prisma {
     deleteMany?: ReminderScalarWhereInput | ReminderScalarWhereInput[]
   }
 
+  export type FormUpdateManyWithoutUserNestedInput = {
+    create?: XOR<FormCreateWithoutUserInput, FormUncheckedCreateWithoutUserInput> | FormCreateWithoutUserInput[] | FormUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: FormCreateOrConnectWithoutUserInput | FormCreateOrConnectWithoutUserInput[]
+    upsert?: FormUpsertWithWhereUniqueWithoutUserInput | FormUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: FormCreateManyUserInputEnvelope
+    set?: FormWhereUniqueInput | FormWhereUniqueInput[]
+    disconnect?: FormWhereUniqueInput | FormWhereUniqueInput[]
+    delete?: FormWhereUniqueInput | FormWhereUniqueInput[]
+    connect?: FormWhereUniqueInput | FormWhereUniqueInput[]
+    update?: FormUpdateWithWhereUniqueWithoutUserInput | FormUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: FormUpdateManyWithWhereWithoutUserInput | FormUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: FormScalarWhereInput | FormScalarWhereInput[]
+  }
+
+  export type FormCompletionUpdateManyWithoutCompleted_byNestedInput = {
+    create?: XOR<FormCompletionCreateWithoutCompleted_byInput, FormCompletionUncheckedCreateWithoutCompleted_byInput> | FormCompletionCreateWithoutCompleted_byInput[] | FormCompletionUncheckedCreateWithoutCompleted_byInput[]
+    connectOrCreate?: FormCompletionCreateOrConnectWithoutCompleted_byInput | FormCompletionCreateOrConnectWithoutCompleted_byInput[]
+    upsert?: FormCompletionUpsertWithWhereUniqueWithoutCompleted_byInput | FormCompletionUpsertWithWhereUniqueWithoutCompleted_byInput[]
+    createMany?: FormCompletionCreateManyCompleted_byInputEnvelope
+    set?: FormCompletionWhereUniqueInput | FormCompletionWhereUniqueInput[]
+    disconnect?: FormCompletionWhereUniqueInput | FormCompletionWhereUniqueInput[]
+    delete?: FormCompletionWhereUniqueInput | FormCompletionWhereUniqueInput[]
+    connect?: FormCompletionWhereUniqueInput | FormCompletionWhereUniqueInput[]
+    update?: FormCompletionUpdateWithWhereUniqueWithoutCompleted_byInput | FormCompletionUpdateWithWhereUniqueWithoutCompleted_byInput[]
+    updateMany?: FormCompletionUpdateManyWithWhereWithoutCompleted_byInput | FormCompletionUpdateManyWithWhereWithoutCompleted_byInput[]
+    deleteMany?: FormCompletionScalarWhereInput | FormCompletionScalarWhereInput[]
+  }
+
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -37496,6 +43845,34 @@ export namespace Prisma {
     update?: ReminderUpdateWithWhereUniqueWithoutUserInput | ReminderUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: ReminderUpdateManyWithWhereWithoutUserInput | ReminderUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: ReminderScalarWhereInput | ReminderScalarWhereInput[]
+  }
+
+  export type FormUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<FormCreateWithoutUserInput, FormUncheckedCreateWithoutUserInput> | FormCreateWithoutUserInput[] | FormUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: FormCreateOrConnectWithoutUserInput | FormCreateOrConnectWithoutUserInput[]
+    upsert?: FormUpsertWithWhereUniqueWithoutUserInput | FormUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: FormCreateManyUserInputEnvelope
+    set?: FormWhereUniqueInput | FormWhereUniqueInput[]
+    disconnect?: FormWhereUniqueInput | FormWhereUniqueInput[]
+    delete?: FormWhereUniqueInput | FormWhereUniqueInput[]
+    connect?: FormWhereUniqueInput | FormWhereUniqueInput[]
+    update?: FormUpdateWithWhereUniqueWithoutUserInput | FormUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: FormUpdateManyWithWhereWithoutUserInput | FormUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: FormScalarWhereInput | FormScalarWhereInput[]
+  }
+
+  export type FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput = {
+    create?: XOR<FormCompletionCreateWithoutCompleted_byInput, FormCompletionUncheckedCreateWithoutCompleted_byInput> | FormCompletionCreateWithoutCompleted_byInput[] | FormCompletionUncheckedCreateWithoutCompleted_byInput[]
+    connectOrCreate?: FormCompletionCreateOrConnectWithoutCompleted_byInput | FormCompletionCreateOrConnectWithoutCompleted_byInput[]
+    upsert?: FormCompletionUpsertWithWhereUniqueWithoutCompleted_byInput | FormCompletionUpsertWithWhereUniqueWithoutCompleted_byInput[]
+    createMany?: FormCompletionCreateManyCompleted_byInputEnvelope
+    set?: FormCompletionWhereUniqueInput | FormCompletionWhereUniqueInput[]
+    disconnect?: FormCompletionWhereUniqueInput | FormCompletionWhereUniqueInput[]
+    delete?: FormCompletionWhereUniqueInput | FormCompletionWhereUniqueInput[]
+    connect?: FormCompletionWhereUniqueInput | FormCompletionWhereUniqueInput[]
+    update?: FormCompletionUpdateWithWhereUniqueWithoutCompleted_byInput | FormCompletionUpdateWithWhereUniqueWithoutCompleted_byInput[]
+    updateMany?: FormCompletionUpdateManyWithWhereWithoutCompleted_byInput | FormCompletionUpdateManyWithWhereWithoutCompleted_byInput[]
+    deleteMany?: FormCompletionScalarWhereInput | FormCompletionScalarWhereInput[]
   }
 
   export type FilterCreateenrichment_sourcesInput = {
@@ -38076,6 +44453,13 @@ export namespace Prisma {
     connect?: ReminderWhereUniqueInput | ReminderWhereUniqueInput[]
   }
 
+  export type FormCompletionCreateNestedManyWithoutContactInput = {
+    create?: XOR<FormCompletionCreateWithoutContactInput, FormCompletionUncheckedCreateWithoutContactInput> | FormCompletionCreateWithoutContactInput[] | FormCompletionUncheckedCreateWithoutContactInput[]
+    connectOrCreate?: FormCompletionCreateOrConnectWithoutContactInput | FormCompletionCreateOrConnectWithoutContactInput[]
+    createMany?: FormCompletionCreateManyContactInputEnvelope
+    connect?: FormCompletionWhereUniqueInput | FormCompletionWhereUniqueInput[]
+  }
+
   export type ContactTagUncheckedCreateNestedManyWithoutContactInput = {
     create?: XOR<ContactTagCreateWithoutContactInput, ContactTagUncheckedCreateWithoutContactInput> | ContactTagCreateWithoutContactInput[] | ContactTagUncheckedCreateWithoutContactInput[]
     connectOrCreate?: ContactTagCreateOrConnectWithoutContactInput | ContactTagCreateOrConnectWithoutContactInput[]
@@ -38116,6 +44500,13 @@ export namespace Prisma {
     connectOrCreate?: ReminderCreateOrConnectWithoutContactInput | ReminderCreateOrConnectWithoutContactInput[]
     createMany?: ReminderCreateManyContactInputEnvelope
     connect?: ReminderWhereUniqueInput | ReminderWhereUniqueInput[]
+  }
+
+  export type FormCompletionUncheckedCreateNestedManyWithoutContactInput = {
+    create?: XOR<FormCompletionCreateWithoutContactInput, FormCompletionUncheckedCreateWithoutContactInput> | FormCompletionCreateWithoutContactInput[] | FormCompletionUncheckedCreateWithoutContactInput[]
+    connectOrCreate?: FormCompletionCreateOrConnectWithoutContactInput | FormCompletionCreateOrConnectWithoutContactInput[]
+    createMany?: FormCompletionCreateManyContactInputEnvelope
+    connect?: FormCompletionWhereUniqueInput | FormCompletionWhereUniqueInput[]
   }
 
   export type EnumLeadStatusFieldUpdateOperationsInput = {
@@ -38232,6 +44623,20 @@ export namespace Prisma {
     deleteMany?: ReminderScalarWhereInput | ReminderScalarWhereInput[]
   }
 
+  export type FormCompletionUpdateManyWithoutContactNestedInput = {
+    create?: XOR<FormCompletionCreateWithoutContactInput, FormCompletionUncheckedCreateWithoutContactInput> | FormCompletionCreateWithoutContactInput[] | FormCompletionUncheckedCreateWithoutContactInput[]
+    connectOrCreate?: FormCompletionCreateOrConnectWithoutContactInput | FormCompletionCreateOrConnectWithoutContactInput[]
+    upsert?: FormCompletionUpsertWithWhereUniqueWithoutContactInput | FormCompletionUpsertWithWhereUniqueWithoutContactInput[]
+    createMany?: FormCompletionCreateManyContactInputEnvelope
+    set?: FormCompletionWhereUniqueInput | FormCompletionWhereUniqueInput[]
+    disconnect?: FormCompletionWhereUniqueInput | FormCompletionWhereUniqueInput[]
+    delete?: FormCompletionWhereUniqueInput | FormCompletionWhereUniqueInput[]
+    connect?: FormCompletionWhereUniqueInput | FormCompletionWhereUniqueInput[]
+    update?: FormCompletionUpdateWithWhereUniqueWithoutContactInput | FormCompletionUpdateWithWhereUniqueWithoutContactInput[]
+    updateMany?: FormCompletionUpdateManyWithWhereWithoutContactInput | FormCompletionUpdateManyWithWhereWithoutContactInput[]
+    deleteMany?: FormCompletionScalarWhereInput | FormCompletionScalarWhereInput[]
+  }
+
   export type ContactTagUncheckedUpdateManyWithoutContactNestedInput = {
     create?: XOR<ContactTagCreateWithoutContactInput, ContactTagUncheckedCreateWithoutContactInput> | ContactTagCreateWithoutContactInput[] | ContactTagUncheckedCreateWithoutContactInput[]
     connectOrCreate?: ContactTagCreateOrConnectWithoutContactInput | ContactTagCreateOrConnectWithoutContactInput[]
@@ -38314,6 +44719,20 @@ export namespace Prisma {
     update?: ReminderUpdateWithWhereUniqueWithoutContactInput | ReminderUpdateWithWhereUniqueWithoutContactInput[]
     updateMany?: ReminderUpdateManyWithWhereWithoutContactInput | ReminderUpdateManyWithWhereWithoutContactInput[]
     deleteMany?: ReminderScalarWhereInput | ReminderScalarWhereInput[]
+  }
+
+  export type FormCompletionUncheckedUpdateManyWithoutContactNestedInput = {
+    create?: XOR<FormCompletionCreateWithoutContactInput, FormCompletionUncheckedCreateWithoutContactInput> | FormCompletionCreateWithoutContactInput[] | FormCompletionUncheckedCreateWithoutContactInput[]
+    connectOrCreate?: FormCompletionCreateOrConnectWithoutContactInput | FormCompletionCreateOrConnectWithoutContactInput[]
+    upsert?: FormCompletionUpsertWithWhereUniqueWithoutContactInput | FormCompletionUpsertWithWhereUniqueWithoutContactInput[]
+    createMany?: FormCompletionCreateManyContactInputEnvelope
+    set?: FormCompletionWhereUniqueInput | FormCompletionWhereUniqueInput[]
+    disconnect?: FormCompletionWhereUniqueInput | FormCompletionWhereUniqueInput[]
+    delete?: FormCompletionWhereUniqueInput | FormCompletionWhereUniqueInput[]
+    connect?: FormCompletionWhereUniqueInput | FormCompletionWhereUniqueInput[]
+    update?: FormCompletionUpdateWithWhereUniqueWithoutContactInput | FormCompletionUpdateWithWhereUniqueWithoutContactInput[]
+    updateMany?: FormCompletionUpdateManyWithWhereWithoutContactInput | FormCompletionUpdateManyWithWhereWithoutContactInput[]
+    deleteMany?: FormCompletionScalarWhereInput | FormCompletionScalarWhereInput[]
   }
 
   export type ContactCreateNestedOneWithoutContact_scoresInput = {
@@ -38939,6 +45358,276 @@ export namespace Prisma {
     update?: XOR<XOR<ContactUpdateToOneWithWhereWithoutRemindersInput, ContactUpdateWithoutRemindersInput>, ContactUncheckedUpdateWithoutRemindersInput>
   }
 
+  export type UserCreateNestedOneWithoutFormsInput = {
+    create?: XOR<UserCreateWithoutFormsInput, UserUncheckedCreateWithoutFormsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFormsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type FormFieldCreateNestedManyWithoutFormInput = {
+    create?: XOR<FormFieldCreateWithoutFormInput, FormFieldUncheckedCreateWithoutFormInput> | FormFieldCreateWithoutFormInput[] | FormFieldUncheckedCreateWithoutFormInput[]
+    connectOrCreate?: FormFieldCreateOrConnectWithoutFormInput | FormFieldCreateOrConnectWithoutFormInput[]
+    createMany?: FormFieldCreateManyFormInputEnvelope
+    connect?: FormFieldWhereUniqueInput | FormFieldWhereUniqueInput[]
+  }
+
+  export type FormCompletionCreateNestedManyWithoutFormInput = {
+    create?: XOR<FormCompletionCreateWithoutFormInput, FormCompletionUncheckedCreateWithoutFormInput> | FormCompletionCreateWithoutFormInput[] | FormCompletionUncheckedCreateWithoutFormInput[]
+    connectOrCreate?: FormCompletionCreateOrConnectWithoutFormInput | FormCompletionCreateOrConnectWithoutFormInput[]
+    createMany?: FormCompletionCreateManyFormInputEnvelope
+    connect?: FormCompletionWhereUniqueInput | FormCompletionWhereUniqueInput[]
+  }
+
+  export type FormFieldUncheckedCreateNestedManyWithoutFormInput = {
+    create?: XOR<FormFieldCreateWithoutFormInput, FormFieldUncheckedCreateWithoutFormInput> | FormFieldCreateWithoutFormInput[] | FormFieldUncheckedCreateWithoutFormInput[]
+    connectOrCreate?: FormFieldCreateOrConnectWithoutFormInput | FormFieldCreateOrConnectWithoutFormInput[]
+    createMany?: FormFieldCreateManyFormInputEnvelope
+    connect?: FormFieldWhereUniqueInput | FormFieldWhereUniqueInput[]
+  }
+
+  export type FormCompletionUncheckedCreateNestedManyWithoutFormInput = {
+    create?: XOR<FormCompletionCreateWithoutFormInput, FormCompletionUncheckedCreateWithoutFormInput> | FormCompletionCreateWithoutFormInput[] | FormCompletionUncheckedCreateWithoutFormInput[]
+    connectOrCreate?: FormCompletionCreateOrConnectWithoutFormInput | FormCompletionCreateOrConnectWithoutFormInput[]
+    createMany?: FormCompletionCreateManyFormInputEnvelope
+    connect?: FormCompletionWhereUniqueInput | FormCompletionWhereUniqueInput[]
+  }
+
+  export type UserUpdateOneRequiredWithoutFormsNestedInput = {
+    create?: XOR<UserCreateWithoutFormsInput, UserUncheckedCreateWithoutFormsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFormsInput
+    upsert?: UserUpsertWithoutFormsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutFormsInput, UserUpdateWithoutFormsInput>, UserUncheckedUpdateWithoutFormsInput>
+  }
+
+  export type FormFieldUpdateManyWithoutFormNestedInput = {
+    create?: XOR<FormFieldCreateWithoutFormInput, FormFieldUncheckedCreateWithoutFormInput> | FormFieldCreateWithoutFormInput[] | FormFieldUncheckedCreateWithoutFormInput[]
+    connectOrCreate?: FormFieldCreateOrConnectWithoutFormInput | FormFieldCreateOrConnectWithoutFormInput[]
+    upsert?: FormFieldUpsertWithWhereUniqueWithoutFormInput | FormFieldUpsertWithWhereUniqueWithoutFormInput[]
+    createMany?: FormFieldCreateManyFormInputEnvelope
+    set?: FormFieldWhereUniqueInput | FormFieldWhereUniqueInput[]
+    disconnect?: FormFieldWhereUniqueInput | FormFieldWhereUniqueInput[]
+    delete?: FormFieldWhereUniqueInput | FormFieldWhereUniqueInput[]
+    connect?: FormFieldWhereUniqueInput | FormFieldWhereUniqueInput[]
+    update?: FormFieldUpdateWithWhereUniqueWithoutFormInput | FormFieldUpdateWithWhereUniqueWithoutFormInput[]
+    updateMany?: FormFieldUpdateManyWithWhereWithoutFormInput | FormFieldUpdateManyWithWhereWithoutFormInput[]
+    deleteMany?: FormFieldScalarWhereInput | FormFieldScalarWhereInput[]
+  }
+
+  export type FormCompletionUpdateManyWithoutFormNestedInput = {
+    create?: XOR<FormCompletionCreateWithoutFormInput, FormCompletionUncheckedCreateWithoutFormInput> | FormCompletionCreateWithoutFormInput[] | FormCompletionUncheckedCreateWithoutFormInput[]
+    connectOrCreate?: FormCompletionCreateOrConnectWithoutFormInput | FormCompletionCreateOrConnectWithoutFormInput[]
+    upsert?: FormCompletionUpsertWithWhereUniqueWithoutFormInput | FormCompletionUpsertWithWhereUniqueWithoutFormInput[]
+    createMany?: FormCompletionCreateManyFormInputEnvelope
+    set?: FormCompletionWhereUniqueInput | FormCompletionWhereUniqueInput[]
+    disconnect?: FormCompletionWhereUniqueInput | FormCompletionWhereUniqueInput[]
+    delete?: FormCompletionWhereUniqueInput | FormCompletionWhereUniqueInput[]
+    connect?: FormCompletionWhereUniqueInput | FormCompletionWhereUniqueInput[]
+    update?: FormCompletionUpdateWithWhereUniqueWithoutFormInput | FormCompletionUpdateWithWhereUniqueWithoutFormInput[]
+    updateMany?: FormCompletionUpdateManyWithWhereWithoutFormInput | FormCompletionUpdateManyWithWhereWithoutFormInput[]
+    deleteMany?: FormCompletionScalarWhereInput | FormCompletionScalarWhereInput[]
+  }
+
+  export type FormFieldUncheckedUpdateManyWithoutFormNestedInput = {
+    create?: XOR<FormFieldCreateWithoutFormInput, FormFieldUncheckedCreateWithoutFormInput> | FormFieldCreateWithoutFormInput[] | FormFieldUncheckedCreateWithoutFormInput[]
+    connectOrCreate?: FormFieldCreateOrConnectWithoutFormInput | FormFieldCreateOrConnectWithoutFormInput[]
+    upsert?: FormFieldUpsertWithWhereUniqueWithoutFormInput | FormFieldUpsertWithWhereUniqueWithoutFormInput[]
+    createMany?: FormFieldCreateManyFormInputEnvelope
+    set?: FormFieldWhereUniqueInput | FormFieldWhereUniqueInput[]
+    disconnect?: FormFieldWhereUniqueInput | FormFieldWhereUniqueInput[]
+    delete?: FormFieldWhereUniqueInput | FormFieldWhereUniqueInput[]
+    connect?: FormFieldWhereUniqueInput | FormFieldWhereUniqueInput[]
+    update?: FormFieldUpdateWithWhereUniqueWithoutFormInput | FormFieldUpdateWithWhereUniqueWithoutFormInput[]
+    updateMany?: FormFieldUpdateManyWithWhereWithoutFormInput | FormFieldUpdateManyWithWhereWithoutFormInput[]
+    deleteMany?: FormFieldScalarWhereInput | FormFieldScalarWhereInput[]
+  }
+
+  export type FormCompletionUncheckedUpdateManyWithoutFormNestedInput = {
+    create?: XOR<FormCompletionCreateWithoutFormInput, FormCompletionUncheckedCreateWithoutFormInput> | FormCompletionCreateWithoutFormInput[] | FormCompletionUncheckedCreateWithoutFormInput[]
+    connectOrCreate?: FormCompletionCreateOrConnectWithoutFormInput | FormCompletionCreateOrConnectWithoutFormInput[]
+    upsert?: FormCompletionUpsertWithWhereUniqueWithoutFormInput | FormCompletionUpsertWithWhereUniqueWithoutFormInput[]
+    createMany?: FormCompletionCreateManyFormInputEnvelope
+    set?: FormCompletionWhereUniqueInput | FormCompletionWhereUniqueInput[]
+    disconnect?: FormCompletionWhereUniqueInput | FormCompletionWhereUniqueInput[]
+    delete?: FormCompletionWhereUniqueInput | FormCompletionWhereUniqueInput[]
+    connect?: FormCompletionWhereUniqueInput | FormCompletionWhereUniqueInput[]
+    update?: FormCompletionUpdateWithWhereUniqueWithoutFormInput | FormCompletionUpdateWithWhereUniqueWithoutFormInput[]
+    updateMany?: FormCompletionUpdateManyWithWhereWithoutFormInput | FormCompletionUpdateManyWithWhereWithoutFormInput[]
+    deleteMany?: FormCompletionScalarWhereInput | FormCompletionScalarWhereInput[]
+  }
+
+  export type FormCreateNestedOneWithoutFieldsInput = {
+    create?: XOR<FormCreateWithoutFieldsInput, FormUncheckedCreateWithoutFieldsInput>
+    connectOrCreate?: FormCreateOrConnectWithoutFieldsInput
+    connect?: FormWhereUniqueInput
+  }
+
+  export type FormCompletionValueCreateNestedManyWithoutFieldInput = {
+    create?: XOR<FormCompletionValueCreateWithoutFieldInput, FormCompletionValueUncheckedCreateWithoutFieldInput> | FormCompletionValueCreateWithoutFieldInput[] | FormCompletionValueUncheckedCreateWithoutFieldInput[]
+    connectOrCreate?: FormCompletionValueCreateOrConnectWithoutFieldInput | FormCompletionValueCreateOrConnectWithoutFieldInput[]
+    createMany?: FormCompletionValueCreateManyFieldInputEnvelope
+    connect?: FormCompletionValueWhereUniqueInput | FormCompletionValueWhereUniqueInput[]
+  }
+
+  export type FormCompletionValueUncheckedCreateNestedManyWithoutFieldInput = {
+    create?: XOR<FormCompletionValueCreateWithoutFieldInput, FormCompletionValueUncheckedCreateWithoutFieldInput> | FormCompletionValueCreateWithoutFieldInput[] | FormCompletionValueUncheckedCreateWithoutFieldInput[]
+    connectOrCreate?: FormCompletionValueCreateOrConnectWithoutFieldInput | FormCompletionValueCreateOrConnectWithoutFieldInput[]
+    createMany?: FormCompletionValueCreateManyFieldInputEnvelope
+    connect?: FormCompletionValueWhereUniqueInput | FormCompletionValueWhereUniqueInput[]
+  }
+
+  export type EnumFieldTypeFieldUpdateOperationsInput = {
+    set?: $Enums.FieldType
+  }
+
+  export type FormUpdateOneRequiredWithoutFieldsNestedInput = {
+    create?: XOR<FormCreateWithoutFieldsInput, FormUncheckedCreateWithoutFieldsInput>
+    connectOrCreate?: FormCreateOrConnectWithoutFieldsInput
+    upsert?: FormUpsertWithoutFieldsInput
+    connect?: FormWhereUniqueInput
+    update?: XOR<XOR<FormUpdateToOneWithWhereWithoutFieldsInput, FormUpdateWithoutFieldsInput>, FormUncheckedUpdateWithoutFieldsInput>
+  }
+
+  export type FormCompletionValueUpdateManyWithoutFieldNestedInput = {
+    create?: XOR<FormCompletionValueCreateWithoutFieldInput, FormCompletionValueUncheckedCreateWithoutFieldInput> | FormCompletionValueCreateWithoutFieldInput[] | FormCompletionValueUncheckedCreateWithoutFieldInput[]
+    connectOrCreate?: FormCompletionValueCreateOrConnectWithoutFieldInput | FormCompletionValueCreateOrConnectWithoutFieldInput[]
+    upsert?: FormCompletionValueUpsertWithWhereUniqueWithoutFieldInput | FormCompletionValueUpsertWithWhereUniqueWithoutFieldInput[]
+    createMany?: FormCompletionValueCreateManyFieldInputEnvelope
+    set?: FormCompletionValueWhereUniqueInput | FormCompletionValueWhereUniqueInput[]
+    disconnect?: FormCompletionValueWhereUniqueInput | FormCompletionValueWhereUniqueInput[]
+    delete?: FormCompletionValueWhereUniqueInput | FormCompletionValueWhereUniqueInput[]
+    connect?: FormCompletionValueWhereUniqueInput | FormCompletionValueWhereUniqueInput[]
+    update?: FormCompletionValueUpdateWithWhereUniqueWithoutFieldInput | FormCompletionValueUpdateWithWhereUniqueWithoutFieldInput[]
+    updateMany?: FormCompletionValueUpdateManyWithWhereWithoutFieldInput | FormCompletionValueUpdateManyWithWhereWithoutFieldInput[]
+    deleteMany?: FormCompletionValueScalarWhereInput | FormCompletionValueScalarWhereInput[]
+  }
+
+  export type FormCompletionValueUncheckedUpdateManyWithoutFieldNestedInput = {
+    create?: XOR<FormCompletionValueCreateWithoutFieldInput, FormCompletionValueUncheckedCreateWithoutFieldInput> | FormCompletionValueCreateWithoutFieldInput[] | FormCompletionValueUncheckedCreateWithoutFieldInput[]
+    connectOrCreate?: FormCompletionValueCreateOrConnectWithoutFieldInput | FormCompletionValueCreateOrConnectWithoutFieldInput[]
+    upsert?: FormCompletionValueUpsertWithWhereUniqueWithoutFieldInput | FormCompletionValueUpsertWithWhereUniqueWithoutFieldInput[]
+    createMany?: FormCompletionValueCreateManyFieldInputEnvelope
+    set?: FormCompletionValueWhereUniqueInput | FormCompletionValueWhereUniqueInput[]
+    disconnect?: FormCompletionValueWhereUniqueInput | FormCompletionValueWhereUniqueInput[]
+    delete?: FormCompletionValueWhereUniqueInput | FormCompletionValueWhereUniqueInput[]
+    connect?: FormCompletionValueWhereUniqueInput | FormCompletionValueWhereUniqueInput[]
+    update?: FormCompletionValueUpdateWithWhereUniqueWithoutFieldInput | FormCompletionValueUpdateWithWhereUniqueWithoutFieldInput[]
+    updateMany?: FormCompletionValueUpdateManyWithWhereWithoutFieldInput | FormCompletionValueUpdateManyWithWhereWithoutFieldInput[]
+    deleteMany?: FormCompletionValueScalarWhereInput | FormCompletionValueScalarWhereInput[]
+  }
+
+  export type FormCreateNestedOneWithoutCompletionsInput = {
+    create?: XOR<FormCreateWithoutCompletionsInput, FormUncheckedCreateWithoutCompletionsInput>
+    connectOrCreate?: FormCreateOrConnectWithoutCompletionsInput
+    connect?: FormWhereUniqueInput
+  }
+
+  export type ContactCreateNestedOneWithoutForm_completionsInput = {
+    create?: XOR<ContactCreateWithoutForm_completionsInput, ContactUncheckedCreateWithoutForm_completionsInput>
+    connectOrCreate?: ContactCreateOrConnectWithoutForm_completionsInput
+    connect?: ContactWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutForm_completionsInput = {
+    create?: XOR<UserCreateWithoutForm_completionsInput, UserUncheckedCreateWithoutForm_completionsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutForm_completionsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type FormCompletionValueCreateNestedManyWithoutCompletionInput = {
+    create?: XOR<FormCompletionValueCreateWithoutCompletionInput, FormCompletionValueUncheckedCreateWithoutCompletionInput> | FormCompletionValueCreateWithoutCompletionInput[] | FormCompletionValueUncheckedCreateWithoutCompletionInput[]
+    connectOrCreate?: FormCompletionValueCreateOrConnectWithoutCompletionInput | FormCompletionValueCreateOrConnectWithoutCompletionInput[]
+    createMany?: FormCompletionValueCreateManyCompletionInputEnvelope
+    connect?: FormCompletionValueWhereUniqueInput | FormCompletionValueWhereUniqueInput[]
+  }
+
+  export type FormCompletionValueUncheckedCreateNestedManyWithoutCompletionInput = {
+    create?: XOR<FormCompletionValueCreateWithoutCompletionInput, FormCompletionValueUncheckedCreateWithoutCompletionInput> | FormCompletionValueCreateWithoutCompletionInput[] | FormCompletionValueUncheckedCreateWithoutCompletionInput[]
+    connectOrCreate?: FormCompletionValueCreateOrConnectWithoutCompletionInput | FormCompletionValueCreateOrConnectWithoutCompletionInput[]
+    createMany?: FormCompletionValueCreateManyCompletionInputEnvelope
+    connect?: FormCompletionValueWhereUniqueInput | FormCompletionValueWhereUniqueInput[]
+  }
+
+  export type FormUpdateOneRequiredWithoutCompletionsNestedInput = {
+    create?: XOR<FormCreateWithoutCompletionsInput, FormUncheckedCreateWithoutCompletionsInput>
+    connectOrCreate?: FormCreateOrConnectWithoutCompletionsInput
+    upsert?: FormUpsertWithoutCompletionsInput
+    connect?: FormWhereUniqueInput
+    update?: XOR<XOR<FormUpdateToOneWithWhereWithoutCompletionsInput, FormUpdateWithoutCompletionsInput>, FormUncheckedUpdateWithoutCompletionsInput>
+  }
+
+  export type ContactUpdateOneRequiredWithoutForm_completionsNestedInput = {
+    create?: XOR<ContactCreateWithoutForm_completionsInput, ContactUncheckedCreateWithoutForm_completionsInput>
+    connectOrCreate?: ContactCreateOrConnectWithoutForm_completionsInput
+    upsert?: ContactUpsertWithoutForm_completionsInput
+    connect?: ContactWhereUniqueInput
+    update?: XOR<XOR<ContactUpdateToOneWithWhereWithoutForm_completionsInput, ContactUpdateWithoutForm_completionsInput>, ContactUncheckedUpdateWithoutForm_completionsInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutForm_completionsNestedInput = {
+    create?: XOR<UserCreateWithoutForm_completionsInput, UserUncheckedCreateWithoutForm_completionsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutForm_completionsInput
+    upsert?: UserUpsertWithoutForm_completionsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutForm_completionsInput, UserUpdateWithoutForm_completionsInput>, UserUncheckedUpdateWithoutForm_completionsInput>
+  }
+
+  export type FormCompletionValueUpdateManyWithoutCompletionNestedInput = {
+    create?: XOR<FormCompletionValueCreateWithoutCompletionInput, FormCompletionValueUncheckedCreateWithoutCompletionInput> | FormCompletionValueCreateWithoutCompletionInput[] | FormCompletionValueUncheckedCreateWithoutCompletionInput[]
+    connectOrCreate?: FormCompletionValueCreateOrConnectWithoutCompletionInput | FormCompletionValueCreateOrConnectWithoutCompletionInput[]
+    upsert?: FormCompletionValueUpsertWithWhereUniqueWithoutCompletionInput | FormCompletionValueUpsertWithWhereUniqueWithoutCompletionInput[]
+    createMany?: FormCompletionValueCreateManyCompletionInputEnvelope
+    set?: FormCompletionValueWhereUniqueInput | FormCompletionValueWhereUniqueInput[]
+    disconnect?: FormCompletionValueWhereUniqueInput | FormCompletionValueWhereUniqueInput[]
+    delete?: FormCompletionValueWhereUniqueInput | FormCompletionValueWhereUniqueInput[]
+    connect?: FormCompletionValueWhereUniqueInput | FormCompletionValueWhereUniqueInput[]
+    update?: FormCompletionValueUpdateWithWhereUniqueWithoutCompletionInput | FormCompletionValueUpdateWithWhereUniqueWithoutCompletionInput[]
+    updateMany?: FormCompletionValueUpdateManyWithWhereWithoutCompletionInput | FormCompletionValueUpdateManyWithWhereWithoutCompletionInput[]
+    deleteMany?: FormCompletionValueScalarWhereInput | FormCompletionValueScalarWhereInput[]
+  }
+
+  export type FormCompletionValueUncheckedUpdateManyWithoutCompletionNestedInput = {
+    create?: XOR<FormCompletionValueCreateWithoutCompletionInput, FormCompletionValueUncheckedCreateWithoutCompletionInput> | FormCompletionValueCreateWithoutCompletionInput[] | FormCompletionValueUncheckedCreateWithoutCompletionInput[]
+    connectOrCreate?: FormCompletionValueCreateOrConnectWithoutCompletionInput | FormCompletionValueCreateOrConnectWithoutCompletionInput[]
+    upsert?: FormCompletionValueUpsertWithWhereUniqueWithoutCompletionInput | FormCompletionValueUpsertWithWhereUniqueWithoutCompletionInput[]
+    createMany?: FormCompletionValueCreateManyCompletionInputEnvelope
+    set?: FormCompletionValueWhereUniqueInput | FormCompletionValueWhereUniqueInput[]
+    disconnect?: FormCompletionValueWhereUniqueInput | FormCompletionValueWhereUniqueInput[]
+    delete?: FormCompletionValueWhereUniqueInput | FormCompletionValueWhereUniqueInput[]
+    connect?: FormCompletionValueWhereUniqueInput | FormCompletionValueWhereUniqueInput[]
+    update?: FormCompletionValueUpdateWithWhereUniqueWithoutCompletionInput | FormCompletionValueUpdateWithWhereUniqueWithoutCompletionInput[]
+    updateMany?: FormCompletionValueUpdateManyWithWhereWithoutCompletionInput | FormCompletionValueUpdateManyWithWhereWithoutCompletionInput[]
+    deleteMany?: FormCompletionValueScalarWhereInput | FormCompletionValueScalarWhereInput[]
+  }
+
+  export type FormCompletionCreateNestedOneWithoutValuesInput = {
+    create?: XOR<FormCompletionCreateWithoutValuesInput, FormCompletionUncheckedCreateWithoutValuesInput>
+    connectOrCreate?: FormCompletionCreateOrConnectWithoutValuesInput
+    connect?: FormCompletionWhereUniqueInput
+  }
+
+  export type FormFieldCreateNestedOneWithoutCompletion_valuesInput = {
+    create?: XOR<FormFieldCreateWithoutCompletion_valuesInput, FormFieldUncheckedCreateWithoutCompletion_valuesInput>
+    connectOrCreate?: FormFieldCreateOrConnectWithoutCompletion_valuesInput
+    connect?: FormFieldWhereUniqueInput
+  }
+
+  export type FormCompletionUpdateOneRequiredWithoutValuesNestedInput = {
+    create?: XOR<FormCompletionCreateWithoutValuesInput, FormCompletionUncheckedCreateWithoutValuesInput>
+    connectOrCreate?: FormCompletionCreateOrConnectWithoutValuesInput
+    upsert?: FormCompletionUpsertWithoutValuesInput
+    connect?: FormCompletionWhereUniqueInput
+    update?: XOR<XOR<FormCompletionUpdateToOneWithWhereWithoutValuesInput, FormCompletionUpdateWithoutValuesInput>, FormCompletionUncheckedUpdateWithoutValuesInput>
+  }
+
+  export type FormFieldUpdateOneRequiredWithoutCompletion_valuesNestedInput = {
+    create?: XOR<FormFieldCreateWithoutCompletion_valuesInput, FormFieldUncheckedCreateWithoutCompletion_valuesInput>
+    connectOrCreate?: FormFieldCreateOrConnectWithoutCompletion_valuesInput
+    upsert?: FormFieldUpsertWithoutCompletion_valuesInput
+    connect?: FormFieldWhereUniqueInput
+    update?: XOR<XOR<FormFieldUpdateToOneWithWhereWithoutCompletion_valuesInput, FormFieldUpdateWithoutCompletion_valuesInput>, FormFieldUncheckedUpdateWithoutCompletion_valuesInput>
+  }
+
   export type NestedIntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -39519,6 +46208,23 @@ export namespace Prisma {
     _max?: NestedEnumReminderStatusFilter<$PrismaModel>
   }
 
+  export type NestedEnumFieldTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.FieldType | EnumFieldTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.FieldType[] | ListEnumFieldTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FieldType[] | ListEnumFieldTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumFieldTypeFilter<$PrismaModel> | $Enums.FieldType
+  }
+
+  export type NestedEnumFieldTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FieldType | EnumFieldTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.FieldType[] | ListEnumFieldTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FieldType[] | ListEnumFieldTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumFieldTypeWithAggregatesFilter<$PrismaModel> | $Enums.FieldType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumFieldTypeFilter<$PrismaModel>
+    _max?: NestedEnumFieldTypeFilter<$PrismaModel>
+  }
+
   export type FilterCreateWithoutUserInput = {
     uuid?: string
     name: string
@@ -39594,6 +46300,7 @@ export namespace Prisma {
     campaign_contacts?: MarketingCampaignContactCreateNestedManyWithoutContactInput
     contact_scores?: ContactScoreCreateNestedManyWithoutContactInput
     reminders?: ReminderCreateNestedManyWithoutContactInput
+    form_completions?: FormCompletionCreateNestedManyWithoutContactInput
   }
 
   export type ContactUncheckedCreateWithoutUserInput = {
@@ -39625,6 +46332,7 @@ export namespace Prisma {
     campaign_contacts?: MarketingCampaignContactUncheckedCreateNestedManyWithoutContactInput
     contact_scores?: ContactScoreUncheckedCreateNestedManyWithoutContactInput
     reminders?: ReminderUncheckedCreateNestedManyWithoutContactInput
+    form_completions?: FormCompletionUncheckedCreateNestedManyWithoutContactInput
   }
 
   export type ContactCreateOrConnectWithoutUserInput = {
@@ -40055,6 +46763,66 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type FormCreateWithoutUserInput = {
+    uuid?: string
+    name: string
+    description?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    fields?: FormFieldCreateNestedManyWithoutFormInput
+    completions?: FormCompletionCreateNestedManyWithoutFormInput
+  }
+
+  export type FormUncheckedCreateWithoutUserInput = {
+    id?: number
+    uuid?: string
+    name: string
+    description?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    fields?: FormFieldUncheckedCreateNestedManyWithoutFormInput
+    completions?: FormCompletionUncheckedCreateNestedManyWithoutFormInput
+  }
+
+  export type FormCreateOrConnectWithoutUserInput = {
+    where: FormWhereUniqueInput
+    create: XOR<FormCreateWithoutUserInput, FormUncheckedCreateWithoutUserInput>
+  }
+
+  export type FormCreateManyUserInputEnvelope = {
+    data: FormCreateManyUserInput | FormCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type FormCompletionCreateWithoutCompleted_byInput = {
+    uuid?: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    form: FormCreateNestedOneWithoutCompletionsInput
+    contact: ContactCreateNestedOneWithoutForm_completionsInput
+    values?: FormCompletionValueCreateNestedManyWithoutCompletionInput
+  }
+
+  export type FormCompletionUncheckedCreateWithoutCompleted_byInput = {
+    id?: number
+    uuid?: string
+    form_uuid: string
+    contact_uuid: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    values?: FormCompletionValueUncheckedCreateNestedManyWithoutCompletionInput
+  }
+
+  export type FormCompletionCreateOrConnectWithoutCompleted_byInput = {
+    where: FormCompletionWhereUniqueInput
+    create: XOR<FormCompletionCreateWithoutCompleted_byInput, FormCompletionUncheckedCreateWithoutCompleted_byInput>
+  }
+
+  export type FormCompletionCreateManyCompleted_byInputEnvelope = {
+    data: FormCompletionCreateManyCompleted_byInput | FormCompletionCreateManyCompleted_byInput[]
+    skipDuplicates?: boolean
+  }
+
   export type FilterUpsertWithWhereUniqueWithoutUserInput = {
     where: FilterWhereUniqueInput
     update: XOR<FilterUpdateWithoutUserInput, FilterUncheckedUpdateWithoutUserInput>
@@ -40475,6 +47243,64 @@ export namespace Prisma {
     updated_at?: DateTimeFilter<"Reminder"> | Date | string
   }
 
+  export type FormUpsertWithWhereUniqueWithoutUserInput = {
+    where: FormWhereUniqueInput
+    update: XOR<FormUpdateWithoutUserInput, FormUncheckedUpdateWithoutUserInput>
+    create: XOR<FormCreateWithoutUserInput, FormUncheckedCreateWithoutUserInput>
+  }
+
+  export type FormUpdateWithWhereUniqueWithoutUserInput = {
+    where: FormWhereUniqueInput
+    data: XOR<FormUpdateWithoutUserInput, FormUncheckedUpdateWithoutUserInput>
+  }
+
+  export type FormUpdateManyWithWhereWithoutUserInput = {
+    where: FormScalarWhereInput
+    data: XOR<FormUpdateManyMutationInput, FormUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type FormScalarWhereInput = {
+    AND?: FormScalarWhereInput | FormScalarWhereInput[]
+    OR?: FormScalarWhereInput[]
+    NOT?: FormScalarWhereInput | FormScalarWhereInput[]
+    id?: IntFilter<"Form"> | number
+    uuid?: StringFilter<"Form"> | string
+    user_uuid?: StringFilter<"Form"> | string
+    name?: StringFilter<"Form"> | string
+    description?: StringNullableFilter<"Form"> | string | null
+    created_at?: DateTimeFilter<"Form"> | Date | string
+    updated_at?: DateTimeFilter<"Form"> | Date | string
+  }
+
+  export type FormCompletionUpsertWithWhereUniqueWithoutCompleted_byInput = {
+    where: FormCompletionWhereUniqueInput
+    update: XOR<FormCompletionUpdateWithoutCompleted_byInput, FormCompletionUncheckedUpdateWithoutCompleted_byInput>
+    create: XOR<FormCompletionCreateWithoutCompleted_byInput, FormCompletionUncheckedCreateWithoutCompleted_byInput>
+  }
+
+  export type FormCompletionUpdateWithWhereUniqueWithoutCompleted_byInput = {
+    where: FormCompletionWhereUniqueInput
+    data: XOR<FormCompletionUpdateWithoutCompleted_byInput, FormCompletionUncheckedUpdateWithoutCompleted_byInput>
+  }
+
+  export type FormCompletionUpdateManyWithWhereWithoutCompleted_byInput = {
+    where: FormCompletionScalarWhereInput
+    data: XOR<FormCompletionUpdateManyMutationInput, FormCompletionUncheckedUpdateManyWithoutCompleted_byInput>
+  }
+
+  export type FormCompletionScalarWhereInput = {
+    AND?: FormCompletionScalarWhereInput | FormCompletionScalarWhereInput[]
+    OR?: FormCompletionScalarWhereInput[]
+    NOT?: FormCompletionScalarWhereInput | FormCompletionScalarWhereInput[]
+    id?: IntFilter<"FormCompletion"> | number
+    uuid?: StringFilter<"FormCompletion"> | string
+    form_uuid?: StringFilter<"FormCompletion"> | string
+    contact_uuid?: StringFilter<"FormCompletion"> | string
+    completed_by_uuid?: StringFilter<"FormCompletion"> | string
+    created_at?: DateTimeFilter<"FormCompletion"> | Date | string
+    updated_at?: DateTimeFilter<"FormCompletion"> | Date | string
+  }
+
   export type UserCreateWithoutFiltersInput = {
     uuid?: string
     email: string
@@ -40493,6 +47319,8 @@ export namespace Prisma {
     openai_batch_jobs?: OpenAiBatchJobCreateNestedManyWithoutUserInput
     integrations?: IntegrationCreateNestedManyWithoutUserInput
     reminders?: ReminderCreateNestedManyWithoutUserInput
+    forms?: FormCreateNestedManyWithoutUserInput
+    form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
   }
 
   export type UserUncheckedCreateWithoutFiltersInput = {
@@ -40514,6 +47342,8 @@ export namespace Prisma {
     openai_batch_jobs?: OpenAiBatchJobUncheckedCreateNestedManyWithoutUserInput
     integrations?: IntegrationUncheckedCreateNestedManyWithoutUserInput
     reminders?: ReminderUncheckedCreateNestedManyWithoutUserInput
+    forms?: FormUncheckedCreateNestedManyWithoutUserInput
+    form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
   }
 
   export type UserCreateOrConnectWithoutFiltersInput = {
@@ -40580,6 +47410,7 @@ export namespace Prisma {
     campaign_contacts?: MarketingCampaignContactCreateNestedManyWithoutContactInput
     contact_scores?: ContactScoreCreateNestedManyWithoutContactInput
     reminders?: ReminderCreateNestedManyWithoutContactInput
+    form_completions?: FormCompletionCreateNestedManyWithoutContactInput
   }
 
   export type ContactUncheckedCreateWithoutFilterInput = {
@@ -40611,6 +47442,7 @@ export namespace Prisma {
     campaign_contacts?: MarketingCampaignContactUncheckedCreateNestedManyWithoutContactInput
     contact_scores?: ContactScoreUncheckedCreateNestedManyWithoutContactInput
     reminders?: ReminderUncheckedCreateNestedManyWithoutContactInput
+    form_completions?: FormCompletionUncheckedCreateNestedManyWithoutContactInput
   }
 
   export type ContactCreateOrConnectWithoutFilterInput = {
@@ -40709,6 +47541,8 @@ export namespace Prisma {
     openai_batch_jobs?: OpenAiBatchJobUpdateManyWithoutUserNestedInput
     integrations?: IntegrationUpdateManyWithoutUserNestedInput
     reminders?: ReminderUpdateManyWithoutUserNestedInput
+    forms?: FormUpdateManyWithoutUserNestedInput
+    form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFiltersInput = {
@@ -40730,6 +47564,8 @@ export namespace Prisma {
     openai_batch_jobs?: OpenAiBatchJobUncheckedUpdateManyWithoutUserNestedInput
     integrations?: IntegrationUncheckedUpdateManyWithoutUserNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutUserNestedInput
+    forms?: FormUncheckedUpdateManyWithoutUserNestedInput
+    form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
   }
 
   export type RawLeadUpsertWithWhereUniqueWithoutFilterInput = {
@@ -40855,6 +47691,8 @@ export namespace Prisma {
     openai_batch_jobs?: OpenAiBatchJobCreateNestedManyWithoutUserInput
     integrations?: IntegrationCreateNestedManyWithoutUserInput
     reminders?: ReminderCreateNestedManyWithoutUserInput
+    forms?: FormCreateNestedManyWithoutUserInput
+    form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
   }
 
   export type UserUncheckedCreateWithoutScoring_instructionsInput = {
@@ -40876,6 +47714,8 @@ export namespace Prisma {
     openai_batch_jobs?: OpenAiBatchJobUncheckedCreateNestedManyWithoutUserInput
     integrations?: IntegrationUncheckedCreateNestedManyWithoutUserInput
     reminders?: ReminderUncheckedCreateNestedManyWithoutUserInput
+    forms?: FormUncheckedCreateNestedManyWithoutUserInput
+    form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
   }
 
   export type UserCreateOrConnectWithoutScoring_instructionsInput = {
@@ -40955,6 +47795,8 @@ export namespace Prisma {
     openai_batch_jobs?: OpenAiBatchJobUpdateManyWithoutUserNestedInput
     integrations?: IntegrationUpdateManyWithoutUserNestedInput
     reminders?: ReminderUpdateManyWithoutUserNestedInput
+    forms?: FormUpdateManyWithoutUserNestedInput
+    form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
   }
 
   export type UserUncheckedUpdateWithoutScoring_instructionsInput = {
@@ -40976,6 +47818,8 @@ export namespace Prisma {
     openai_batch_jobs?: OpenAiBatchJobUncheckedUpdateManyWithoutUserNestedInput
     integrations?: IntegrationUncheckedUpdateManyWithoutUserNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutUserNestedInput
+    forms?: FormUncheckedUpdateManyWithoutUserNestedInput
+    form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
   }
 
   export type FilterScoringInstructionUpsertWithWhereUniqueWithoutScoring_instructionInput = {
@@ -41423,6 +48267,7 @@ export namespace Prisma {
     campaign_contacts?: MarketingCampaignContactCreateNestedManyWithoutContactInput
     contact_scores?: ContactScoreCreateNestedManyWithoutContactInput
     reminders?: ReminderCreateNestedManyWithoutContactInput
+    form_completions?: FormCompletionCreateNestedManyWithoutContactInput
   }
 
   export type ContactUncheckedCreateWithoutLeadInput = {
@@ -41454,6 +48299,7 @@ export namespace Prisma {
     campaign_contacts?: MarketingCampaignContactUncheckedCreateNestedManyWithoutContactInput
     contact_scores?: ContactScoreUncheckedCreateNestedManyWithoutContactInput
     reminders?: ReminderUncheckedCreateNestedManyWithoutContactInput
+    form_completions?: FormCompletionUncheckedCreateNestedManyWithoutContactInput
   }
 
   export type ContactCreateOrConnectWithoutLeadInput = {
@@ -41713,6 +48559,8 @@ export namespace Prisma {
     openai_batch_jobs?: OpenAiBatchJobCreateNestedManyWithoutUserInput
     integrations?: IntegrationCreateNestedManyWithoutUserInput
     reminders?: ReminderCreateNestedManyWithoutUserInput
+    forms?: FormCreateNestedManyWithoutUserInput
+    form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
   }
 
   export type UserUncheckedCreateWithoutContactsInput = {
@@ -41734,6 +48582,8 @@ export namespace Prisma {
     openai_batch_jobs?: OpenAiBatchJobUncheckedCreateNestedManyWithoutUserInput
     integrations?: IntegrationUncheckedCreateNestedManyWithoutUserInput
     reminders?: ReminderUncheckedCreateNestedManyWithoutUserInput
+    forms?: FormUncheckedCreateNestedManyWithoutUserInput
+    form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
   }
 
   export type UserCreateOrConnectWithoutContactsInput = {
@@ -42043,6 +48893,35 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type FormCompletionCreateWithoutContactInput = {
+    uuid?: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    form: FormCreateNestedOneWithoutCompletionsInput
+    completed_by: UserCreateNestedOneWithoutForm_completionsInput
+    values?: FormCompletionValueCreateNestedManyWithoutCompletionInput
+  }
+
+  export type FormCompletionUncheckedCreateWithoutContactInput = {
+    id?: number
+    uuid?: string
+    form_uuid: string
+    completed_by_uuid: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    values?: FormCompletionValueUncheckedCreateNestedManyWithoutCompletionInput
+  }
+
+  export type FormCompletionCreateOrConnectWithoutContactInput = {
+    where: FormCompletionWhereUniqueInput
+    create: XOR<FormCompletionCreateWithoutContactInput, FormCompletionUncheckedCreateWithoutContactInput>
+  }
+
+  export type FormCompletionCreateManyContactInputEnvelope = {
+    data: FormCompletionCreateManyContactInput | FormCompletionCreateManyContactInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserUpsertWithoutContactsInput = {
     update: XOR<UserUpdateWithoutContactsInput, UserUncheckedUpdateWithoutContactsInput>
     create: XOR<UserCreateWithoutContactsInput, UserUncheckedCreateWithoutContactsInput>
@@ -42072,6 +48951,8 @@ export namespace Prisma {
     openai_batch_jobs?: OpenAiBatchJobUpdateManyWithoutUserNestedInput
     integrations?: IntegrationUpdateManyWithoutUserNestedInput
     reminders?: ReminderUpdateManyWithoutUserNestedInput
+    forms?: FormUpdateManyWithoutUserNestedInput
+    form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
   }
 
   export type UserUncheckedUpdateWithoutContactsInput = {
@@ -42093,6 +48974,8 @@ export namespace Prisma {
     openai_batch_jobs?: OpenAiBatchJobUncheckedUpdateManyWithoutUserNestedInput
     integrations?: IntegrationUncheckedUpdateManyWithoutUserNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutUserNestedInput
+    forms?: FormUncheckedUpdateManyWithoutUserNestedInput
+    form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
   }
 
   export type LeadUpsertWithoutContactsInput = {
@@ -42324,6 +49207,22 @@ export namespace Prisma {
     data: XOR<ReminderUpdateManyMutationInput, ReminderUncheckedUpdateManyWithoutContactInput>
   }
 
+  export type FormCompletionUpsertWithWhereUniqueWithoutContactInput = {
+    where: FormCompletionWhereUniqueInput
+    update: XOR<FormCompletionUpdateWithoutContactInput, FormCompletionUncheckedUpdateWithoutContactInput>
+    create: XOR<FormCompletionCreateWithoutContactInput, FormCompletionUncheckedCreateWithoutContactInput>
+  }
+
+  export type FormCompletionUpdateWithWhereUniqueWithoutContactInput = {
+    where: FormCompletionWhereUniqueInput
+    data: XOR<FormCompletionUpdateWithoutContactInput, FormCompletionUncheckedUpdateWithoutContactInput>
+  }
+
+  export type FormCompletionUpdateManyWithWhereWithoutContactInput = {
+    where: FormCompletionScalarWhereInput
+    data: XOR<FormCompletionUpdateManyMutationInput, FormCompletionUncheckedUpdateManyWithoutContactInput>
+  }
+
   export type ContactCreateWithoutContact_scoresInput = {
     uuid?: string
     status?: $Enums.LeadStatus
@@ -42352,6 +49251,7 @@ export namespace Prisma {
     outreach_messages?: OutreachMessageCreateNestedManyWithoutContactInput
     campaign_contacts?: MarketingCampaignContactCreateNestedManyWithoutContactInput
     reminders?: ReminderCreateNestedManyWithoutContactInput
+    form_completions?: FormCompletionCreateNestedManyWithoutContactInput
   }
 
   export type ContactUncheckedCreateWithoutContact_scoresInput = {
@@ -42383,6 +49283,7 @@ export namespace Prisma {
     outreach_messages?: OutreachMessageUncheckedCreateNestedManyWithoutContactInput
     campaign_contacts?: MarketingCampaignContactUncheckedCreateNestedManyWithoutContactInput
     reminders?: ReminderUncheckedCreateNestedManyWithoutContactInput
+    form_completions?: FormCompletionUncheckedCreateNestedManyWithoutContactInput
   }
 
   export type ContactCreateOrConnectWithoutContact_scoresInput = {
@@ -42455,6 +49356,7 @@ export namespace Prisma {
     outreach_messages?: OutreachMessageUpdateManyWithoutContactNestedInput
     campaign_contacts?: MarketingCampaignContactUpdateManyWithoutContactNestedInput
     reminders?: ReminderUpdateManyWithoutContactNestedInput
+    form_completions?: FormCompletionUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateWithoutContact_scoresInput = {
@@ -42486,6 +49388,7 @@ export namespace Prisma {
     outreach_messages?: OutreachMessageUncheckedUpdateManyWithoutContactNestedInput
     campaign_contacts?: MarketingCampaignContactUncheckedUpdateManyWithoutContactNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutContactNestedInput
+    form_completions?: FormCompletionUncheckedUpdateManyWithoutContactNestedInput
   }
 
   export type ScoringInstructionUpsertWithoutContact_scoresInput = {
@@ -42548,6 +49451,7 @@ export namespace Prisma {
     campaign_contacts?: MarketingCampaignContactCreateNestedManyWithoutContactInput
     contact_scores?: ContactScoreCreateNestedManyWithoutContactInput
     reminders?: ReminderCreateNestedManyWithoutContactInput
+    form_completions?: FormCompletionCreateNestedManyWithoutContactInput
   }
 
   export type ContactUncheckedCreateWithoutTagsInput = {
@@ -42579,6 +49483,7 @@ export namespace Prisma {
     campaign_contacts?: MarketingCampaignContactUncheckedCreateNestedManyWithoutContactInput
     contact_scores?: ContactScoreUncheckedCreateNestedManyWithoutContactInput
     reminders?: ReminderUncheckedCreateNestedManyWithoutContactInput
+    form_completions?: FormCompletionUncheckedCreateNestedManyWithoutContactInput
   }
 
   export type ContactCreateOrConnectWithoutTagsInput = {
@@ -42625,6 +49530,7 @@ export namespace Prisma {
     campaign_contacts?: MarketingCampaignContactUpdateManyWithoutContactNestedInput
     contact_scores?: ContactScoreUpdateManyWithoutContactNestedInput
     reminders?: ReminderUpdateManyWithoutContactNestedInput
+    form_completions?: FormCompletionUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateWithoutTagsInput = {
@@ -42656,6 +49562,7 @@ export namespace Prisma {
     campaign_contacts?: MarketingCampaignContactUncheckedUpdateManyWithoutContactNestedInput
     contact_scores?: ContactScoreUncheckedUpdateManyWithoutContactNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutContactNestedInput
+    form_completions?: FormCompletionUncheckedUpdateManyWithoutContactNestedInput
   }
 
   export type ContactCreateWithoutInteractionsInput = {
@@ -42686,6 +49593,7 @@ export namespace Prisma {
     campaign_contacts?: MarketingCampaignContactCreateNestedManyWithoutContactInput
     contact_scores?: ContactScoreCreateNestedManyWithoutContactInput
     reminders?: ReminderCreateNestedManyWithoutContactInput
+    form_completions?: FormCompletionCreateNestedManyWithoutContactInput
   }
 
   export type ContactUncheckedCreateWithoutInteractionsInput = {
@@ -42717,6 +49625,7 @@ export namespace Prisma {
     campaign_contacts?: MarketingCampaignContactUncheckedCreateNestedManyWithoutContactInput
     contact_scores?: ContactScoreUncheckedCreateNestedManyWithoutContactInput
     reminders?: ReminderUncheckedCreateNestedManyWithoutContactInput
+    form_completions?: FormCompletionUncheckedCreateNestedManyWithoutContactInput
   }
 
   export type ContactCreateOrConnectWithoutInteractionsInput = {
@@ -42742,6 +49651,8 @@ export namespace Prisma {
     openai_batch_jobs?: OpenAiBatchJobCreateNestedManyWithoutUserInput
     integrations?: IntegrationCreateNestedManyWithoutUserInput
     reminders?: ReminderCreateNestedManyWithoutUserInput
+    forms?: FormCreateNestedManyWithoutUserInput
+    form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
   }
 
   export type UserUncheckedCreateWithoutInteractionsInput = {
@@ -42763,6 +49674,8 @@ export namespace Prisma {
     openai_batch_jobs?: OpenAiBatchJobUncheckedCreateNestedManyWithoutUserInput
     integrations?: IntegrationUncheckedCreateNestedManyWithoutUserInput
     reminders?: ReminderUncheckedCreateNestedManyWithoutUserInput
+    forms?: FormUncheckedCreateNestedManyWithoutUserInput
+    form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
   }
 
   export type UserCreateOrConnectWithoutInteractionsInput = {
@@ -42949,6 +49862,7 @@ export namespace Prisma {
     campaign_contacts?: MarketingCampaignContactUpdateManyWithoutContactNestedInput
     contact_scores?: ContactScoreUpdateManyWithoutContactNestedInput
     reminders?: ReminderUpdateManyWithoutContactNestedInput
+    form_completions?: FormCompletionUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateWithoutInteractionsInput = {
@@ -42980,6 +49894,7 @@ export namespace Prisma {
     campaign_contacts?: MarketingCampaignContactUncheckedUpdateManyWithoutContactNestedInput
     contact_scores?: ContactScoreUncheckedUpdateManyWithoutContactNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutContactNestedInput
+    form_completions?: FormCompletionUncheckedUpdateManyWithoutContactNestedInput
   }
 
   export type UserUpsertWithoutInteractionsInput = {
@@ -43011,6 +49926,8 @@ export namespace Prisma {
     openai_batch_jobs?: OpenAiBatchJobUpdateManyWithoutUserNestedInput
     integrations?: IntegrationUpdateManyWithoutUserNestedInput
     reminders?: ReminderUpdateManyWithoutUserNestedInput
+    forms?: FormUpdateManyWithoutUserNestedInput
+    form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
   }
 
   export type UserUncheckedUpdateWithoutInteractionsInput = {
@@ -43032,6 +49949,8 @@ export namespace Prisma {
     openai_batch_jobs?: OpenAiBatchJobUncheckedUpdateManyWithoutUserNestedInput
     integrations?: IntegrationUncheckedUpdateManyWithoutUserNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutUserNestedInput
+    forms?: FormUncheckedUpdateManyWithoutUserNestedInput
+    form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
   }
 
   export type OutreachMessageUpsertWithoutInteractionInput = {
@@ -43204,6 +50123,8 @@ export namespace Prisma {
     openai_batch_jobs?: OpenAiBatchJobCreateNestedManyWithoutUserInput
     integrations?: IntegrationCreateNestedManyWithoutUserInput
     reminders?: ReminderCreateNestedManyWithoutUserInput
+    forms?: FormCreateNestedManyWithoutUserInput
+    form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
   }
 
   export type UserUncheckedCreateWithoutOutreach_messagesInput = {
@@ -43225,6 +50146,8 @@ export namespace Prisma {
     openai_batch_jobs?: OpenAiBatchJobUncheckedCreateNestedManyWithoutUserInput
     integrations?: IntegrationUncheckedCreateNestedManyWithoutUserInput
     reminders?: ReminderUncheckedCreateNestedManyWithoutUserInput
+    forms?: FormUncheckedCreateNestedManyWithoutUserInput
+    form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
   }
 
   export type UserCreateOrConnectWithoutOutreach_messagesInput = {
@@ -43260,6 +50183,7 @@ export namespace Prisma {
     campaign_contacts?: MarketingCampaignContactCreateNestedManyWithoutContactInput
     contact_scores?: ContactScoreCreateNestedManyWithoutContactInput
     reminders?: ReminderCreateNestedManyWithoutContactInput
+    form_completions?: FormCompletionCreateNestedManyWithoutContactInput
   }
 
   export type ContactUncheckedCreateWithoutOutreach_messagesInput = {
@@ -43291,6 +50215,7 @@ export namespace Prisma {
     campaign_contacts?: MarketingCampaignContactUncheckedCreateNestedManyWithoutContactInput
     contact_scores?: ContactScoreUncheckedCreateNestedManyWithoutContactInput
     reminders?: ReminderUncheckedCreateNestedManyWithoutContactInput
+    form_completions?: FormCompletionUncheckedCreateNestedManyWithoutContactInput
   }
 
   export type ContactCreateOrConnectWithoutOutreach_messagesInput = {
@@ -43447,6 +50372,8 @@ export namespace Prisma {
     openai_batch_jobs?: OpenAiBatchJobUpdateManyWithoutUserNestedInput
     integrations?: IntegrationUpdateManyWithoutUserNestedInput
     reminders?: ReminderUpdateManyWithoutUserNestedInput
+    forms?: FormUpdateManyWithoutUserNestedInput
+    form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOutreach_messagesInput = {
@@ -43468,6 +50395,8 @@ export namespace Prisma {
     openai_batch_jobs?: OpenAiBatchJobUncheckedUpdateManyWithoutUserNestedInput
     integrations?: IntegrationUncheckedUpdateManyWithoutUserNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutUserNestedInput
+    forms?: FormUncheckedUpdateManyWithoutUserNestedInput
+    form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
   }
 
   export type ContactUpsertWithoutOutreach_messagesInput = {
@@ -43509,6 +50438,7 @@ export namespace Prisma {
     campaign_contacts?: MarketingCampaignContactUpdateManyWithoutContactNestedInput
     contact_scores?: ContactScoreUpdateManyWithoutContactNestedInput
     reminders?: ReminderUpdateManyWithoutContactNestedInput
+    form_completions?: FormCompletionUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateWithoutOutreach_messagesInput = {
@@ -43540,6 +50470,7 @@ export namespace Prisma {
     campaign_contacts?: MarketingCampaignContactUncheckedUpdateManyWithoutContactNestedInput
     contact_scores?: ContactScoreUncheckedUpdateManyWithoutContactNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutContactNestedInput
+    form_completions?: FormCompletionUncheckedUpdateManyWithoutContactNestedInput
   }
 
   export type MarketingCampaignUpsertWithoutOutreach_messagesInput = {
@@ -43692,6 +50623,8 @@ export namespace Prisma {
     openai_batch_jobs?: OpenAiBatchJobCreateNestedManyWithoutUserInput
     integrations?: IntegrationCreateNestedManyWithoutUserInput
     reminders?: ReminderCreateNestedManyWithoutUserInput
+    forms?: FormCreateNestedManyWithoutUserInput
+    form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
   }
 
   export type UserUncheckedCreateWithoutOutreach_sequencesInput = {
@@ -43713,6 +50646,8 @@ export namespace Prisma {
     openai_batch_jobs?: OpenAiBatchJobUncheckedCreateNestedManyWithoutUserInput
     integrations?: IntegrationUncheckedCreateNestedManyWithoutUserInput
     reminders?: ReminderUncheckedCreateNestedManyWithoutUserInput
+    forms?: FormUncheckedCreateNestedManyWithoutUserInput
+    form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
   }
 
   export type UserCreateOrConnectWithoutOutreach_sequencesInput = {
@@ -43749,6 +50684,8 @@ export namespace Prisma {
     openai_batch_jobs?: OpenAiBatchJobUpdateManyWithoutUserNestedInput
     integrations?: IntegrationUpdateManyWithoutUserNestedInput
     reminders?: ReminderUpdateManyWithoutUserNestedInput
+    forms?: FormUpdateManyWithoutUserNestedInput
+    form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOutreach_sequencesInput = {
@@ -43770,6 +50707,8 @@ export namespace Prisma {
     openai_batch_jobs?: OpenAiBatchJobUncheckedUpdateManyWithoutUserNestedInput
     integrations?: IntegrationUncheckedUpdateManyWithoutUserNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutUserNestedInput
+    forms?: FormUncheckedUpdateManyWithoutUserNestedInput
+    form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
   }
 
   export type FilterCreateWithoutJobsInput = {
@@ -43880,6 +50819,8 @@ export namespace Prisma {
     openai_batch_jobs?: OpenAiBatchJobCreateNestedManyWithoutUserInput
     integrations?: IntegrationCreateNestedManyWithoutUserInput
     reminders?: ReminderCreateNestedManyWithoutUserInput
+    forms?: FormCreateNestedManyWithoutUserInput
+    form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
   }
 
   export type UserUncheckedCreateWithoutSender_profilesInput = {
@@ -43901,6 +50842,8 @@ export namespace Prisma {
     openai_batch_jobs?: OpenAiBatchJobUncheckedCreateNestedManyWithoutUserInput
     integrations?: IntegrationUncheckedCreateNestedManyWithoutUserInput
     reminders?: ReminderUncheckedCreateNestedManyWithoutUserInput
+    forms?: FormUncheckedCreateNestedManyWithoutUserInput
+    form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
   }
 
   export type UserCreateOrConnectWithoutSender_profilesInput = {
@@ -44030,6 +50973,8 @@ export namespace Prisma {
     openai_batch_jobs?: OpenAiBatchJobUpdateManyWithoutUserNestedInput
     integrations?: IntegrationUpdateManyWithoutUserNestedInput
     reminders?: ReminderUpdateManyWithoutUserNestedInput
+    forms?: FormUpdateManyWithoutUserNestedInput
+    form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSender_profilesInput = {
@@ -44051,6 +50996,8 @@ export namespace Prisma {
     openai_batch_jobs?: OpenAiBatchJobUncheckedUpdateManyWithoutUserNestedInput
     integrations?: IntegrationUncheckedUpdateManyWithoutUserNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutUserNestedInput
+    forms?: FormUncheckedUpdateManyWithoutUserNestedInput
+    form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
   }
 
   export type MarketingCampaignUpsertWithWhereUniqueWithoutSender_profileInput = {
@@ -44087,6 +51034,8 @@ export namespace Prisma {
     openai_batch_jobs?: OpenAiBatchJobCreateNestedManyWithoutUserInput
     integrations?: IntegrationCreateNestedManyWithoutUserInput
     reminders?: ReminderCreateNestedManyWithoutUserInput
+    forms?: FormCreateNestedManyWithoutUserInput
+    form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
   }
 
   export type UserUncheckedCreateWithoutMarketing_campaignsInput = {
@@ -44108,6 +51057,8 @@ export namespace Prisma {
     openai_batch_jobs?: OpenAiBatchJobUncheckedCreateNestedManyWithoutUserInput
     integrations?: IntegrationUncheckedCreateNestedManyWithoutUserInput
     reminders?: ReminderUncheckedCreateNestedManyWithoutUserInput
+    forms?: FormUncheckedCreateNestedManyWithoutUserInput
+    form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
   }
 
   export type UserCreateOrConnectWithoutMarketing_campaignsInput = {
@@ -44331,6 +51282,8 @@ export namespace Prisma {
     openai_batch_jobs?: OpenAiBatchJobUpdateManyWithoutUserNestedInput
     integrations?: IntegrationUpdateManyWithoutUserNestedInput
     reminders?: ReminderUpdateManyWithoutUserNestedInput
+    forms?: FormUpdateManyWithoutUserNestedInput
+    form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMarketing_campaignsInput = {
@@ -44352,6 +51305,8 @@ export namespace Prisma {
     openai_batch_jobs?: OpenAiBatchJobUncheckedUpdateManyWithoutUserNestedInput
     integrations?: IntegrationUncheckedUpdateManyWithoutUserNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutUserNestedInput
+    forms?: FormUncheckedUpdateManyWithoutUserNestedInput
+    form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
   }
 
   export type SenderProfileUpsertWithoutMarketing_campaignsInput = {
@@ -44582,6 +51537,7 @@ export namespace Prisma {
     outreach_messages?: OutreachMessageCreateNestedManyWithoutContactInput
     contact_scores?: ContactScoreCreateNestedManyWithoutContactInput
     reminders?: ReminderCreateNestedManyWithoutContactInput
+    form_completions?: FormCompletionCreateNestedManyWithoutContactInput
   }
 
   export type ContactUncheckedCreateWithoutCampaign_contactsInput = {
@@ -44613,6 +51569,7 @@ export namespace Prisma {
     outreach_messages?: OutreachMessageUncheckedCreateNestedManyWithoutContactInput
     contact_scores?: ContactScoreUncheckedCreateNestedManyWithoutContactInput
     reminders?: ReminderUncheckedCreateNestedManyWithoutContactInput
+    form_completions?: FormCompletionUncheckedCreateNestedManyWithoutContactInput
   }
 
   export type ContactCreateOrConnectWithoutCampaign_contactsInput = {
@@ -44753,6 +51710,7 @@ export namespace Prisma {
     outreach_messages?: OutreachMessageUpdateManyWithoutContactNestedInput
     contact_scores?: ContactScoreUpdateManyWithoutContactNestedInput
     reminders?: ReminderUpdateManyWithoutContactNestedInput
+    form_completions?: FormCompletionUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateWithoutCampaign_contactsInput = {
@@ -44784,6 +51742,7 @@ export namespace Prisma {
     outreach_messages?: OutreachMessageUncheckedUpdateManyWithoutContactNestedInput
     contact_scores?: ContactScoreUncheckedUpdateManyWithoutContactNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutContactNestedInput
+    form_completions?: FormCompletionUncheckedUpdateManyWithoutContactNestedInput
   }
 
   export type UserCreateWithoutOpenai_batch_jobsInput = {
@@ -44804,6 +51763,8 @@ export namespace Prisma {
     scoring_instructions?: ScoringInstructionCreateNestedManyWithoutUserInput
     integrations?: IntegrationCreateNestedManyWithoutUserInput
     reminders?: ReminderCreateNestedManyWithoutUserInput
+    forms?: FormCreateNestedManyWithoutUserInput
+    form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
   }
 
   export type UserUncheckedCreateWithoutOpenai_batch_jobsInput = {
@@ -44825,6 +51786,8 @@ export namespace Prisma {
     scoring_instructions?: ScoringInstructionUncheckedCreateNestedManyWithoutUserInput
     integrations?: IntegrationUncheckedCreateNestedManyWithoutUserInput
     reminders?: ReminderUncheckedCreateNestedManyWithoutUserInput
+    forms?: FormUncheckedCreateNestedManyWithoutUserInput
+    form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
   }
 
   export type UserCreateOrConnectWithoutOpenai_batch_jobsInput = {
@@ -44861,6 +51824,8 @@ export namespace Prisma {
     scoring_instructions?: ScoringInstructionUpdateManyWithoutUserNestedInput
     integrations?: IntegrationUpdateManyWithoutUserNestedInput
     reminders?: ReminderUpdateManyWithoutUserNestedInput
+    forms?: FormUpdateManyWithoutUserNestedInput
+    form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOpenai_batch_jobsInput = {
@@ -44882,6 +51847,8 @@ export namespace Prisma {
     scoring_instructions?: ScoringInstructionUncheckedUpdateManyWithoutUserNestedInput
     integrations?: IntegrationUncheckedUpdateManyWithoutUserNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutUserNestedInput
+    forms?: FormUncheckedUpdateManyWithoutUserNestedInput
+    form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
   }
 
   export type UserCreateWithoutIntegrationsInput = {
@@ -44902,6 +51869,8 @@ export namespace Prisma {
     scoring_instructions?: ScoringInstructionCreateNestedManyWithoutUserInput
     openai_batch_jobs?: OpenAiBatchJobCreateNestedManyWithoutUserInput
     reminders?: ReminderCreateNestedManyWithoutUserInput
+    forms?: FormCreateNestedManyWithoutUserInput
+    form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
   }
 
   export type UserUncheckedCreateWithoutIntegrationsInput = {
@@ -44923,6 +51892,8 @@ export namespace Prisma {
     scoring_instructions?: ScoringInstructionUncheckedCreateNestedManyWithoutUserInput
     openai_batch_jobs?: OpenAiBatchJobUncheckedCreateNestedManyWithoutUserInput
     reminders?: ReminderUncheckedCreateNestedManyWithoutUserInput
+    forms?: FormUncheckedCreateNestedManyWithoutUserInput
+    form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
   }
 
   export type UserCreateOrConnectWithoutIntegrationsInput = {
@@ -44990,6 +51961,8 @@ export namespace Prisma {
     scoring_instructions?: ScoringInstructionUpdateManyWithoutUserNestedInput
     openai_batch_jobs?: OpenAiBatchJobUpdateManyWithoutUserNestedInput
     reminders?: ReminderUpdateManyWithoutUserNestedInput
+    forms?: FormUpdateManyWithoutUserNestedInput
+    form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
   }
 
   export type UserUncheckedUpdateWithoutIntegrationsInput = {
@@ -45011,6 +51984,8 @@ export namespace Prisma {
     scoring_instructions?: ScoringInstructionUncheckedUpdateManyWithoutUserNestedInput
     openai_batch_jobs?: OpenAiBatchJobUncheckedUpdateManyWithoutUserNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutUserNestedInput
+    forms?: FormUncheckedUpdateManyWithoutUserNestedInput
+    form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
   }
 
   export type IntegrationKeyUpsertWithWhereUniqueWithoutIntegrationInput = {
@@ -45116,6 +52091,8 @@ export namespace Prisma {
     scoring_instructions?: ScoringInstructionCreateNestedManyWithoutUserInput
     openai_batch_jobs?: OpenAiBatchJobCreateNestedManyWithoutUserInput
     integrations?: IntegrationCreateNestedManyWithoutUserInput
+    forms?: FormCreateNestedManyWithoutUserInput
+    form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
   }
 
   export type UserUncheckedCreateWithoutRemindersInput = {
@@ -45137,6 +52114,8 @@ export namespace Prisma {
     scoring_instructions?: ScoringInstructionUncheckedCreateNestedManyWithoutUserInput
     openai_batch_jobs?: OpenAiBatchJobUncheckedCreateNestedManyWithoutUserInput
     integrations?: IntegrationUncheckedCreateNestedManyWithoutUserInput
+    forms?: FormUncheckedCreateNestedManyWithoutUserInput
+    form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
   }
 
   export type UserCreateOrConnectWithoutRemindersInput = {
@@ -45172,6 +52151,7 @@ export namespace Prisma {
     outreach_messages?: OutreachMessageCreateNestedManyWithoutContactInput
     campaign_contacts?: MarketingCampaignContactCreateNestedManyWithoutContactInput
     contact_scores?: ContactScoreCreateNestedManyWithoutContactInput
+    form_completions?: FormCompletionCreateNestedManyWithoutContactInput
   }
 
   export type ContactUncheckedCreateWithoutRemindersInput = {
@@ -45203,6 +52183,7 @@ export namespace Prisma {
     outreach_messages?: OutreachMessageUncheckedCreateNestedManyWithoutContactInput
     campaign_contacts?: MarketingCampaignContactUncheckedCreateNestedManyWithoutContactInput
     contact_scores?: ContactScoreUncheckedCreateNestedManyWithoutContactInput
+    form_completions?: FormCompletionUncheckedCreateNestedManyWithoutContactInput
   }
 
   export type ContactCreateOrConnectWithoutRemindersInput = {
@@ -45239,6 +52220,8 @@ export namespace Prisma {
     scoring_instructions?: ScoringInstructionUpdateManyWithoutUserNestedInput
     openai_batch_jobs?: OpenAiBatchJobUpdateManyWithoutUserNestedInput
     integrations?: IntegrationUpdateManyWithoutUserNestedInput
+    forms?: FormUpdateManyWithoutUserNestedInput
+    form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRemindersInput = {
@@ -45260,6 +52243,8 @@ export namespace Prisma {
     scoring_instructions?: ScoringInstructionUncheckedUpdateManyWithoutUserNestedInput
     openai_batch_jobs?: OpenAiBatchJobUncheckedUpdateManyWithoutUserNestedInput
     integrations?: IntegrationUncheckedUpdateManyWithoutUserNestedInput
+    forms?: FormUncheckedUpdateManyWithoutUserNestedInput
+    form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
   }
 
   export type ContactUpsertWithoutRemindersInput = {
@@ -45301,6 +52286,7 @@ export namespace Prisma {
     outreach_messages?: OutreachMessageUpdateManyWithoutContactNestedInput
     campaign_contacts?: MarketingCampaignContactUpdateManyWithoutContactNestedInput
     contact_scores?: ContactScoreUpdateManyWithoutContactNestedInput
+    form_completions?: FormCompletionUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateWithoutRemindersInput = {
@@ -45332,6 +52318,836 @@ export namespace Prisma {
     outreach_messages?: OutreachMessageUncheckedUpdateManyWithoutContactNestedInput
     campaign_contacts?: MarketingCampaignContactUncheckedUpdateManyWithoutContactNestedInput
     contact_scores?: ContactScoreUncheckedUpdateManyWithoutContactNestedInput
+    form_completions?: FormCompletionUncheckedUpdateManyWithoutContactNestedInput
+  }
+
+  export type UserCreateWithoutFormsInput = {
+    uuid?: string
+    email: string
+    phone?: string | null
+    password: string
+    role?: $Enums.AuthRole
+    created_at?: Date | string
+    updated_at?: Date | string
+    filters?: FilterCreateNestedManyWithoutUserInput
+    contacts?: ContactCreateNestedManyWithoutUserInput
+    outreach_messages?: OutreachMessageCreateNestedManyWithoutUserInput
+    outreach_sequences?: OutreachSequenceCreateNestedManyWithoutUserInput
+    interactions?: InteractionCreateNestedManyWithoutUserInput
+    sender_profiles?: SenderProfileCreateNestedManyWithoutUserInput
+    marketing_campaigns?: MarketingCampaignCreateNestedManyWithoutUserInput
+    scoring_instructions?: ScoringInstructionCreateNestedManyWithoutUserInput
+    openai_batch_jobs?: OpenAiBatchJobCreateNestedManyWithoutUserInput
+    integrations?: IntegrationCreateNestedManyWithoutUserInput
+    reminders?: ReminderCreateNestedManyWithoutUserInput
+    form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
+  }
+
+  export type UserUncheckedCreateWithoutFormsInput = {
+    id?: number
+    uuid?: string
+    email: string
+    phone?: string | null
+    password: string
+    role?: $Enums.AuthRole
+    created_at?: Date | string
+    updated_at?: Date | string
+    filters?: FilterUncheckedCreateNestedManyWithoutUserInput
+    contacts?: ContactUncheckedCreateNestedManyWithoutUserInput
+    outreach_messages?: OutreachMessageUncheckedCreateNestedManyWithoutUserInput
+    outreach_sequences?: OutreachSequenceUncheckedCreateNestedManyWithoutUserInput
+    interactions?: InteractionUncheckedCreateNestedManyWithoutUserInput
+    sender_profiles?: SenderProfileUncheckedCreateNestedManyWithoutUserInput
+    marketing_campaigns?: MarketingCampaignUncheckedCreateNestedManyWithoutUserInput
+    scoring_instructions?: ScoringInstructionUncheckedCreateNestedManyWithoutUserInput
+    openai_batch_jobs?: OpenAiBatchJobUncheckedCreateNestedManyWithoutUserInput
+    integrations?: IntegrationUncheckedCreateNestedManyWithoutUserInput
+    reminders?: ReminderUncheckedCreateNestedManyWithoutUserInput
+    form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
+  }
+
+  export type UserCreateOrConnectWithoutFormsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutFormsInput, UserUncheckedCreateWithoutFormsInput>
+  }
+
+  export type FormFieldCreateWithoutFormInput = {
+    uuid?: string
+    label: string
+    field_type: $Enums.FieldType
+    placeholder?: string | null
+    help_text?: string | null
+    required?: boolean
+    default_value?: string | null
+    options?: NullableJsonNullValueInput | InputJsonValue
+    order_index?: number
+    enabled?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    completion_values?: FormCompletionValueCreateNestedManyWithoutFieldInput
+  }
+
+  export type FormFieldUncheckedCreateWithoutFormInput = {
+    id?: number
+    uuid?: string
+    label: string
+    field_type: $Enums.FieldType
+    placeholder?: string | null
+    help_text?: string | null
+    required?: boolean
+    default_value?: string | null
+    options?: NullableJsonNullValueInput | InputJsonValue
+    order_index?: number
+    enabled?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    completion_values?: FormCompletionValueUncheckedCreateNestedManyWithoutFieldInput
+  }
+
+  export type FormFieldCreateOrConnectWithoutFormInput = {
+    where: FormFieldWhereUniqueInput
+    create: XOR<FormFieldCreateWithoutFormInput, FormFieldUncheckedCreateWithoutFormInput>
+  }
+
+  export type FormFieldCreateManyFormInputEnvelope = {
+    data: FormFieldCreateManyFormInput | FormFieldCreateManyFormInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type FormCompletionCreateWithoutFormInput = {
+    uuid?: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    contact: ContactCreateNestedOneWithoutForm_completionsInput
+    completed_by: UserCreateNestedOneWithoutForm_completionsInput
+    values?: FormCompletionValueCreateNestedManyWithoutCompletionInput
+  }
+
+  export type FormCompletionUncheckedCreateWithoutFormInput = {
+    id?: number
+    uuid?: string
+    contact_uuid: string
+    completed_by_uuid: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    values?: FormCompletionValueUncheckedCreateNestedManyWithoutCompletionInput
+  }
+
+  export type FormCompletionCreateOrConnectWithoutFormInput = {
+    where: FormCompletionWhereUniqueInput
+    create: XOR<FormCompletionCreateWithoutFormInput, FormCompletionUncheckedCreateWithoutFormInput>
+  }
+
+  export type FormCompletionCreateManyFormInputEnvelope = {
+    data: FormCompletionCreateManyFormInput | FormCompletionCreateManyFormInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithoutFormsInput = {
+    update: XOR<UserUpdateWithoutFormsInput, UserUncheckedUpdateWithoutFormsInput>
+    create: XOR<UserCreateWithoutFormsInput, UserUncheckedCreateWithoutFormsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutFormsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutFormsInput, UserUncheckedUpdateWithoutFormsInput>
+  }
+
+  export type UserUpdateWithoutFormsInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    filters?: FilterUpdateManyWithoutUserNestedInput
+    contacts?: ContactUpdateManyWithoutUserNestedInput
+    outreach_messages?: OutreachMessageUpdateManyWithoutUserNestedInput
+    outreach_sequences?: OutreachSequenceUpdateManyWithoutUserNestedInput
+    interactions?: InteractionUpdateManyWithoutUserNestedInput
+    sender_profiles?: SenderProfileUpdateManyWithoutUserNestedInput
+    marketing_campaigns?: MarketingCampaignUpdateManyWithoutUserNestedInput
+    scoring_instructions?: ScoringInstructionUpdateManyWithoutUserNestedInput
+    openai_batch_jobs?: OpenAiBatchJobUpdateManyWithoutUserNestedInput
+    integrations?: IntegrationUpdateManyWithoutUserNestedInput
+    reminders?: ReminderUpdateManyWithoutUserNestedInput
+    form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutFormsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    filters?: FilterUncheckedUpdateManyWithoutUserNestedInput
+    contacts?: ContactUncheckedUpdateManyWithoutUserNestedInput
+    outreach_messages?: OutreachMessageUncheckedUpdateManyWithoutUserNestedInput
+    outreach_sequences?: OutreachSequenceUncheckedUpdateManyWithoutUserNestedInput
+    interactions?: InteractionUncheckedUpdateManyWithoutUserNestedInput
+    sender_profiles?: SenderProfileUncheckedUpdateManyWithoutUserNestedInput
+    marketing_campaigns?: MarketingCampaignUncheckedUpdateManyWithoutUserNestedInput
+    scoring_instructions?: ScoringInstructionUncheckedUpdateManyWithoutUserNestedInput
+    openai_batch_jobs?: OpenAiBatchJobUncheckedUpdateManyWithoutUserNestedInput
+    integrations?: IntegrationUncheckedUpdateManyWithoutUserNestedInput
+    reminders?: ReminderUncheckedUpdateManyWithoutUserNestedInput
+    form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
+  }
+
+  export type FormFieldUpsertWithWhereUniqueWithoutFormInput = {
+    where: FormFieldWhereUniqueInput
+    update: XOR<FormFieldUpdateWithoutFormInput, FormFieldUncheckedUpdateWithoutFormInput>
+    create: XOR<FormFieldCreateWithoutFormInput, FormFieldUncheckedCreateWithoutFormInput>
+  }
+
+  export type FormFieldUpdateWithWhereUniqueWithoutFormInput = {
+    where: FormFieldWhereUniqueInput
+    data: XOR<FormFieldUpdateWithoutFormInput, FormFieldUncheckedUpdateWithoutFormInput>
+  }
+
+  export type FormFieldUpdateManyWithWhereWithoutFormInput = {
+    where: FormFieldScalarWhereInput
+    data: XOR<FormFieldUpdateManyMutationInput, FormFieldUncheckedUpdateManyWithoutFormInput>
+  }
+
+  export type FormFieldScalarWhereInput = {
+    AND?: FormFieldScalarWhereInput | FormFieldScalarWhereInput[]
+    OR?: FormFieldScalarWhereInput[]
+    NOT?: FormFieldScalarWhereInput | FormFieldScalarWhereInput[]
+    id?: IntFilter<"FormField"> | number
+    uuid?: StringFilter<"FormField"> | string
+    form_uuid?: StringFilter<"FormField"> | string
+    label?: StringFilter<"FormField"> | string
+    field_type?: EnumFieldTypeFilter<"FormField"> | $Enums.FieldType
+    placeholder?: StringNullableFilter<"FormField"> | string | null
+    help_text?: StringNullableFilter<"FormField"> | string | null
+    required?: BoolFilter<"FormField"> | boolean
+    default_value?: StringNullableFilter<"FormField"> | string | null
+    options?: JsonNullableFilter<"FormField">
+    order_index?: IntFilter<"FormField"> | number
+    enabled?: BoolFilter<"FormField"> | boolean
+    created_at?: DateTimeFilter<"FormField"> | Date | string
+    updated_at?: DateTimeFilter<"FormField"> | Date | string
+  }
+
+  export type FormCompletionUpsertWithWhereUniqueWithoutFormInput = {
+    where: FormCompletionWhereUniqueInput
+    update: XOR<FormCompletionUpdateWithoutFormInput, FormCompletionUncheckedUpdateWithoutFormInput>
+    create: XOR<FormCompletionCreateWithoutFormInput, FormCompletionUncheckedCreateWithoutFormInput>
+  }
+
+  export type FormCompletionUpdateWithWhereUniqueWithoutFormInput = {
+    where: FormCompletionWhereUniqueInput
+    data: XOR<FormCompletionUpdateWithoutFormInput, FormCompletionUncheckedUpdateWithoutFormInput>
+  }
+
+  export type FormCompletionUpdateManyWithWhereWithoutFormInput = {
+    where: FormCompletionScalarWhereInput
+    data: XOR<FormCompletionUpdateManyMutationInput, FormCompletionUncheckedUpdateManyWithoutFormInput>
+  }
+
+  export type FormCreateWithoutFieldsInput = {
+    uuid?: string
+    name: string
+    description?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    user: UserCreateNestedOneWithoutFormsInput
+    completions?: FormCompletionCreateNestedManyWithoutFormInput
+  }
+
+  export type FormUncheckedCreateWithoutFieldsInput = {
+    id?: number
+    uuid?: string
+    user_uuid: string
+    name: string
+    description?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    completions?: FormCompletionUncheckedCreateNestedManyWithoutFormInput
+  }
+
+  export type FormCreateOrConnectWithoutFieldsInput = {
+    where: FormWhereUniqueInput
+    create: XOR<FormCreateWithoutFieldsInput, FormUncheckedCreateWithoutFieldsInput>
+  }
+
+  export type FormCompletionValueCreateWithoutFieldInput = {
+    uuid?: string
+    value: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    completion: FormCompletionCreateNestedOneWithoutValuesInput
+  }
+
+  export type FormCompletionValueUncheckedCreateWithoutFieldInput = {
+    id?: number
+    uuid?: string
+    completion_uuid: string
+    value: string
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type FormCompletionValueCreateOrConnectWithoutFieldInput = {
+    where: FormCompletionValueWhereUniqueInput
+    create: XOR<FormCompletionValueCreateWithoutFieldInput, FormCompletionValueUncheckedCreateWithoutFieldInput>
+  }
+
+  export type FormCompletionValueCreateManyFieldInputEnvelope = {
+    data: FormCompletionValueCreateManyFieldInput | FormCompletionValueCreateManyFieldInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type FormUpsertWithoutFieldsInput = {
+    update: XOR<FormUpdateWithoutFieldsInput, FormUncheckedUpdateWithoutFieldsInput>
+    create: XOR<FormCreateWithoutFieldsInput, FormUncheckedCreateWithoutFieldsInput>
+    where?: FormWhereInput
+  }
+
+  export type FormUpdateToOneWithWhereWithoutFieldsInput = {
+    where?: FormWhereInput
+    data: XOR<FormUpdateWithoutFieldsInput, FormUncheckedUpdateWithoutFieldsInput>
+  }
+
+  export type FormUpdateWithoutFieldsInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutFormsNestedInput
+    completions?: FormCompletionUpdateManyWithoutFormNestedInput
+  }
+
+  export type FormUncheckedUpdateWithoutFieldsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    completions?: FormCompletionUncheckedUpdateManyWithoutFormNestedInput
+  }
+
+  export type FormCompletionValueUpsertWithWhereUniqueWithoutFieldInput = {
+    where: FormCompletionValueWhereUniqueInput
+    update: XOR<FormCompletionValueUpdateWithoutFieldInput, FormCompletionValueUncheckedUpdateWithoutFieldInput>
+    create: XOR<FormCompletionValueCreateWithoutFieldInput, FormCompletionValueUncheckedCreateWithoutFieldInput>
+  }
+
+  export type FormCompletionValueUpdateWithWhereUniqueWithoutFieldInput = {
+    where: FormCompletionValueWhereUniqueInput
+    data: XOR<FormCompletionValueUpdateWithoutFieldInput, FormCompletionValueUncheckedUpdateWithoutFieldInput>
+  }
+
+  export type FormCompletionValueUpdateManyWithWhereWithoutFieldInput = {
+    where: FormCompletionValueScalarWhereInput
+    data: XOR<FormCompletionValueUpdateManyMutationInput, FormCompletionValueUncheckedUpdateManyWithoutFieldInput>
+  }
+
+  export type FormCompletionValueScalarWhereInput = {
+    AND?: FormCompletionValueScalarWhereInput | FormCompletionValueScalarWhereInput[]
+    OR?: FormCompletionValueScalarWhereInput[]
+    NOT?: FormCompletionValueScalarWhereInput | FormCompletionValueScalarWhereInput[]
+    id?: IntFilter<"FormCompletionValue"> | number
+    uuid?: StringFilter<"FormCompletionValue"> | string
+    completion_uuid?: StringFilter<"FormCompletionValue"> | string
+    field_uuid?: StringFilter<"FormCompletionValue"> | string
+    value?: StringFilter<"FormCompletionValue"> | string
+    created_at?: DateTimeFilter<"FormCompletionValue"> | Date | string
+    updated_at?: DateTimeFilter<"FormCompletionValue"> | Date | string
+  }
+
+  export type FormCreateWithoutCompletionsInput = {
+    uuid?: string
+    name: string
+    description?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    user: UserCreateNestedOneWithoutFormsInput
+    fields?: FormFieldCreateNestedManyWithoutFormInput
+  }
+
+  export type FormUncheckedCreateWithoutCompletionsInput = {
+    id?: number
+    uuid?: string
+    user_uuid: string
+    name: string
+    description?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    fields?: FormFieldUncheckedCreateNestedManyWithoutFormInput
+  }
+
+  export type FormCreateOrConnectWithoutCompletionsInput = {
+    where: FormWhereUniqueInput
+    create: XOR<FormCreateWithoutCompletionsInput, FormUncheckedCreateWithoutCompletionsInput>
+  }
+
+  export type ContactCreateWithoutForm_completionsInput = {
+    uuid?: string
+    status?: $Enums.LeadStatus
+    notes?: string | null
+    name?: string | null
+    email?: string | null
+    phone?: string | null
+    company?: string | null
+    website?: string | null
+    google_maps_url?: string | null
+    linkedin_url?: string | null
+    title?: string | null
+    location?: string | null
+    industry?: string | null
+    description?: string | null
+    unsubscribed_at?: Date | string | null
+    unsubscribe_token?: string | null
+    last_interaction_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    user: UserCreateNestedOneWithoutContactsInput
+    lead: LeadCreateNestedOneWithoutContactsInput
+    filter?: FilterCreateNestedOneWithoutContactsInput
+    tags?: ContactTagCreateNestedManyWithoutContactInput
+    interactions?: InteractionCreateNestedManyWithoutContactInput
+    outreach_messages?: OutreachMessageCreateNestedManyWithoutContactInput
+    campaign_contacts?: MarketingCampaignContactCreateNestedManyWithoutContactInput
+    contact_scores?: ContactScoreCreateNestedManyWithoutContactInput
+    reminders?: ReminderCreateNestedManyWithoutContactInput
+  }
+
+  export type ContactUncheckedCreateWithoutForm_completionsInput = {
+    id?: number
+    uuid?: string
+    user_uuid: string
+    lead_uuid: string
+    filter_uuid?: string | null
+    status?: $Enums.LeadStatus
+    notes?: string | null
+    name?: string | null
+    email?: string | null
+    phone?: string | null
+    company?: string | null
+    website?: string | null
+    google_maps_url?: string | null
+    linkedin_url?: string | null
+    title?: string | null
+    location?: string | null
+    industry?: string | null
+    description?: string | null
+    unsubscribed_at?: Date | string | null
+    unsubscribe_token?: string | null
+    last_interaction_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    tags?: ContactTagUncheckedCreateNestedManyWithoutContactInput
+    interactions?: InteractionUncheckedCreateNestedManyWithoutContactInput
+    outreach_messages?: OutreachMessageUncheckedCreateNestedManyWithoutContactInput
+    campaign_contacts?: MarketingCampaignContactUncheckedCreateNestedManyWithoutContactInput
+    contact_scores?: ContactScoreUncheckedCreateNestedManyWithoutContactInput
+    reminders?: ReminderUncheckedCreateNestedManyWithoutContactInput
+  }
+
+  export type ContactCreateOrConnectWithoutForm_completionsInput = {
+    where: ContactWhereUniqueInput
+    create: XOR<ContactCreateWithoutForm_completionsInput, ContactUncheckedCreateWithoutForm_completionsInput>
+  }
+
+  export type UserCreateWithoutForm_completionsInput = {
+    uuid?: string
+    email: string
+    phone?: string | null
+    password: string
+    role?: $Enums.AuthRole
+    created_at?: Date | string
+    updated_at?: Date | string
+    filters?: FilterCreateNestedManyWithoutUserInput
+    contacts?: ContactCreateNestedManyWithoutUserInput
+    outreach_messages?: OutreachMessageCreateNestedManyWithoutUserInput
+    outreach_sequences?: OutreachSequenceCreateNestedManyWithoutUserInput
+    interactions?: InteractionCreateNestedManyWithoutUserInput
+    sender_profiles?: SenderProfileCreateNestedManyWithoutUserInput
+    marketing_campaigns?: MarketingCampaignCreateNestedManyWithoutUserInput
+    scoring_instructions?: ScoringInstructionCreateNestedManyWithoutUserInput
+    openai_batch_jobs?: OpenAiBatchJobCreateNestedManyWithoutUserInput
+    integrations?: IntegrationCreateNestedManyWithoutUserInput
+    reminders?: ReminderCreateNestedManyWithoutUserInput
+    forms?: FormCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutForm_completionsInput = {
+    id?: number
+    uuid?: string
+    email: string
+    phone?: string | null
+    password: string
+    role?: $Enums.AuthRole
+    created_at?: Date | string
+    updated_at?: Date | string
+    filters?: FilterUncheckedCreateNestedManyWithoutUserInput
+    contacts?: ContactUncheckedCreateNestedManyWithoutUserInput
+    outreach_messages?: OutreachMessageUncheckedCreateNestedManyWithoutUserInput
+    outreach_sequences?: OutreachSequenceUncheckedCreateNestedManyWithoutUserInput
+    interactions?: InteractionUncheckedCreateNestedManyWithoutUserInput
+    sender_profiles?: SenderProfileUncheckedCreateNestedManyWithoutUserInput
+    marketing_campaigns?: MarketingCampaignUncheckedCreateNestedManyWithoutUserInput
+    scoring_instructions?: ScoringInstructionUncheckedCreateNestedManyWithoutUserInput
+    openai_batch_jobs?: OpenAiBatchJobUncheckedCreateNestedManyWithoutUserInput
+    integrations?: IntegrationUncheckedCreateNestedManyWithoutUserInput
+    reminders?: ReminderUncheckedCreateNestedManyWithoutUserInput
+    forms?: FormUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutForm_completionsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutForm_completionsInput, UserUncheckedCreateWithoutForm_completionsInput>
+  }
+
+  export type FormCompletionValueCreateWithoutCompletionInput = {
+    uuid?: string
+    value: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    field: FormFieldCreateNestedOneWithoutCompletion_valuesInput
+  }
+
+  export type FormCompletionValueUncheckedCreateWithoutCompletionInput = {
+    id?: number
+    uuid?: string
+    field_uuid: string
+    value: string
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type FormCompletionValueCreateOrConnectWithoutCompletionInput = {
+    where: FormCompletionValueWhereUniqueInput
+    create: XOR<FormCompletionValueCreateWithoutCompletionInput, FormCompletionValueUncheckedCreateWithoutCompletionInput>
+  }
+
+  export type FormCompletionValueCreateManyCompletionInputEnvelope = {
+    data: FormCompletionValueCreateManyCompletionInput | FormCompletionValueCreateManyCompletionInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type FormUpsertWithoutCompletionsInput = {
+    update: XOR<FormUpdateWithoutCompletionsInput, FormUncheckedUpdateWithoutCompletionsInput>
+    create: XOR<FormCreateWithoutCompletionsInput, FormUncheckedCreateWithoutCompletionsInput>
+    where?: FormWhereInput
+  }
+
+  export type FormUpdateToOneWithWhereWithoutCompletionsInput = {
+    where?: FormWhereInput
+    data: XOR<FormUpdateWithoutCompletionsInput, FormUncheckedUpdateWithoutCompletionsInput>
+  }
+
+  export type FormUpdateWithoutCompletionsInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutFormsNestedInput
+    fields?: FormFieldUpdateManyWithoutFormNestedInput
+  }
+
+  export type FormUncheckedUpdateWithoutCompletionsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    fields?: FormFieldUncheckedUpdateManyWithoutFormNestedInput
+  }
+
+  export type ContactUpsertWithoutForm_completionsInput = {
+    update: XOR<ContactUpdateWithoutForm_completionsInput, ContactUncheckedUpdateWithoutForm_completionsInput>
+    create: XOR<ContactCreateWithoutForm_completionsInput, ContactUncheckedCreateWithoutForm_completionsInput>
+    where?: ContactWhereInput
+  }
+
+  export type ContactUpdateToOneWithWhereWithoutForm_completionsInput = {
+    where?: ContactWhereInput
+    data: XOR<ContactUpdateWithoutForm_completionsInput, ContactUncheckedUpdateWithoutForm_completionsInput>
+  }
+
+  export type ContactUpdateWithoutForm_completionsInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    google_maps_url?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
+    last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutContactsNestedInput
+    lead?: LeadUpdateOneRequiredWithoutContactsNestedInput
+    filter?: FilterUpdateOneWithoutContactsNestedInput
+    tags?: ContactTagUpdateManyWithoutContactNestedInput
+    interactions?: InteractionUpdateManyWithoutContactNestedInput
+    outreach_messages?: OutreachMessageUpdateManyWithoutContactNestedInput
+    campaign_contacts?: MarketingCampaignContactUpdateManyWithoutContactNestedInput
+    contact_scores?: ContactScoreUpdateManyWithoutContactNestedInput
+    reminders?: ReminderUpdateManyWithoutContactNestedInput
+  }
+
+  export type ContactUncheckedUpdateWithoutForm_completionsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    lead_uuid?: StringFieldUpdateOperationsInput | string
+    filter_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    google_maps_url?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
+    last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    tags?: ContactTagUncheckedUpdateManyWithoutContactNestedInput
+    interactions?: InteractionUncheckedUpdateManyWithoutContactNestedInput
+    outreach_messages?: OutreachMessageUncheckedUpdateManyWithoutContactNestedInput
+    campaign_contacts?: MarketingCampaignContactUncheckedUpdateManyWithoutContactNestedInput
+    contact_scores?: ContactScoreUncheckedUpdateManyWithoutContactNestedInput
+    reminders?: ReminderUncheckedUpdateManyWithoutContactNestedInput
+  }
+
+  export type UserUpsertWithoutForm_completionsInput = {
+    update: XOR<UserUpdateWithoutForm_completionsInput, UserUncheckedUpdateWithoutForm_completionsInput>
+    create: XOR<UserCreateWithoutForm_completionsInput, UserUncheckedCreateWithoutForm_completionsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutForm_completionsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutForm_completionsInput, UserUncheckedUpdateWithoutForm_completionsInput>
+  }
+
+  export type UserUpdateWithoutForm_completionsInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    filters?: FilterUpdateManyWithoutUserNestedInput
+    contacts?: ContactUpdateManyWithoutUserNestedInput
+    outreach_messages?: OutreachMessageUpdateManyWithoutUserNestedInput
+    outreach_sequences?: OutreachSequenceUpdateManyWithoutUserNestedInput
+    interactions?: InteractionUpdateManyWithoutUserNestedInput
+    sender_profiles?: SenderProfileUpdateManyWithoutUserNestedInput
+    marketing_campaigns?: MarketingCampaignUpdateManyWithoutUserNestedInput
+    scoring_instructions?: ScoringInstructionUpdateManyWithoutUserNestedInput
+    openai_batch_jobs?: OpenAiBatchJobUpdateManyWithoutUserNestedInput
+    integrations?: IntegrationUpdateManyWithoutUserNestedInput
+    reminders?: ReminderUpdateManyWithoutUserNestedInput
+    forms?: FormUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutForm_completionsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    filters?: FilterUncheckedUpdateManyWithoutUserNestedInput
+    contacts?: ContactUncheckedUpdateManyWithoutUserNestedInput
+    outreach_messages?: OutreachMessageUncheckedUpdateManyWithoutUserNestedInput
+    outreach_sequences?: OutreachSequenceUncheckedUpdateManyWithoutUserNestedInput
+    interactions?: InteractionUncheckedUpdateManyWithoutUserNestedInput
+    sender_profiles?: SenderProfileUncheckedUpdateManyWithoutUserNestedInput
+    marketing_campaigns?: MarketingCampaignUncheckedUpdateManyWithoutUserNestedInput
+    scoring_instructions?: ScoringInstructionUncheckedUpdateManyWithoutUserNestedInput
+    openai_batch_jobs?: OpenAiBatchJobUncheckedUpdateManyWithoutUserNestedInput
+    integrations?: IntegrationUncheckedUpdateManyWithoutUserNestedInput
+    reminders?: ReminderUncheckedUpdateManyWithoutUserNestedInput
+    forms?: FormUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type FormCompletionValueUpsertWithWhereUniqueWithoutCompletionInput = {
+    where: FormCompletionValueWhereUniqueInput
+    update: XOR<FormCompletionValueUpdateWithoutCompletionInput, FormCompletionValueUncheckedUpdateWithoutCompletionInput>
+    create: XOR<FormCompletionValueCreateWithoutCompletionInput, FormCompletionValueUncheckedCreateWithoutCompletionInput>
+  }
+
+  export type FormCompletionValueUpdateWithWhereUniqueWithoutCompletionInput = {
+    where: FormCompletionValueWhereUniqueInput
+    data: XOR<FormCompletionValueUpdateWithoutCompletionInput, FormCompletionValueUncheckedUpdateWithoutCompletionInput>
+  }
+
+  export type FormCompletionValueUpdateManyWithWhereWithoutCompletionInput = {
+    where: FormCompletionValueScalarWhereInput
+    data: XOR<FormCompletionValueUpdateManyMutationInput, FormCompletionValueUncheckedUpdateManyWithoutCompletionInput>
+  }
+
+  export type FormCompletionCreateWithoutValuesInput = {
+    uuid?: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    form: FormCreateNestedOneWithoutCompletionsInput
+    contact: ContactCreateNestedOneWithoutForm_completionsInput
+    completed_by: UserCreateNestedOneWithoutForm_completionsInput
+  }
+
+  export type FormCompletionUncheckedCreateWithoutValuesInput = {
+    id?: number
+    uuid?: string
+    form_uuid: string
+    contact_uuid: string
+    completed_by_uuid: string
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type FormCompletionCreateOrConnectWithoutValuesInput = {
+    where: FormCompletionWhereUniqueInput
+    create: XOR<FormCompletionCreateWithoutValuesInput, FormCompletionUncheckedCreateWithoutValuesInput>
+  }
+
+  export type FormFieldCreateWithoutCompletion_valuesInput = {
+    uuid?: string
+    label: string
+    field_type: $Enums.FieldType
+    placeholder?: string | null
+    help_text?: string | null
+    required?: boolean
+    default_value?: string | null
+    options?: NullableJsonNullValueInput | InputJsonValue
+    order_index?: number
+    enabled?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    form: FormCreateNestedOneWithoutFieldsInput
+  }
+
+  export type FormFieldUncheckedCreateWithoutCompletion_valuesInput = {
+    id?: number
+    uuid?: string
+    form_uuid: string
+    label: string
+    field_type: $Enums.FieldType
+    placeholder?: string | null
+    help_text?: string | null
+    required?: boolean
+    default_value?: string | null
+    options?: NullableJsonNullValueInput | InputJsonValue
+    order_index?: number
+    enabled?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type FormFieldCreateOrConnectWithoutCompletion_valuesInput = {
+    where: FormFieldWhereUniqueInput
+    create: XOR<FormFieldCreateWithoutCompletion_valuesInput, FormFieldUncheckedCreateWithoutCompletion_valuesInput>
+  }
+
+  export type FormCompletionUpsertWithoutValuesInput = {
+    update: XOR<FormCompletionUpdateWithoutValuesInput, FormCompletionUncheckedUpdateWithoutValuesInput>
+    create: XOR<FormCompletionCreateWithoutValuesInput, FormCompletionUncheckedCreateWithoutValuesInput>
+    where?: FormCompletionWhereInput
+  }
+
+  export type FormCompletionUpdateToOneWithWhereWithoutValuesInput = {
+    where?: FormCompletionWhereInput
+    data: XOR<FormCompletionUpdateWithoutValuesInput, FormCompletionUncheckedUpdateWithoutValuesInput>
+  }
+
+  export type FormCompletionUpdateWithoutValuesInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    form?: FormUpdateOneRequiredWithoutCompletionsNestedInput
+    contact?: ContactUpdateOneRequiredWithoutForm_completionsNestedInput
+    completed_by?: UserUpdateOneRequiredWithoutForm_completionsNestedInput
+  }
+
+  export type FormCompletionUncheckedUpdateWithoutValuesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    form_uuid?: StringFieldUpdateOperationsInput | string
+    contact_uuid?: StringFieldUpdateOperationsInput | string
+    completed_by_uuid?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FormFieldUpsertWithoutCompletion_valuesInput = {
+    update: XOR<FormFieldUpdateWithoutCompletion_valuesInput, FormFieldUncheckedUpdateWithoutCompletion_valuesInput>
+    create: XOR<FormFieldCreateWithoutCompletion_valuesInput, FormFieldUncheckedCreateWithoutCompletion_valuesInput>
+    where?: FormFieldWhereInput
+  }
+
+  export type FormFieldUpdateToOneWithWhereWithoutCompletion_valuesInput = {
+    where?: FormFieldWhereInput
+    data: XOR<FormFieldUpdateWithoutCompletion_valuesInput, FormFieldUncheckedUpdateWithoutCompletion_valuesInput>
+  }
+
+  export type FormFieldUpdateWithoutCompletion_valuesInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    label?: StringFieldUpdateOperationsInput | string
+    field_type?: EnumFieldTypeFieldUpdateOperationsInput | $Enums.FieldType
+    placeholder?: NullableStringFieldUpdateOperationsInput | string | null
+    help_text?: NullableStringFieldUpdateOperationsInput | string | null
+    required?: BoolFieldUpdateOperationsInput | boolean
+    default_value?: NullableStringFieldUpdateOperationsInput | string | null
+    options?: NullableJsonNullValueInput | InputJsonValue
+    order_index?: IntFieldUpdateOperationsInput | number
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    form?: FormUpdateOneRequiredWithoutFieldsNestedInput
+  }
+
+  export type FormFieldUncheckedUpdateWithoutCompletion_valuesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    form_uuid?: StringFieldUpdateOperationsInput | string
+    label?: StringFieldUpdateOperationsInput | string
+    field_type?: EnumFieldTypeFieldUpdateOperationsInput | $Enums.FieldType
+    placeholder?: NullableStringFieldUpdateOperationsInput | string | null
+    help_text?: NullableStringFieldUpdateOperationsInput | string | null
+    required?: BoolFieldUpdateOperationsInput | boolean
+    default_value?: NullableStringFieldUpdateOperationsInput | string | null
+    options?: NullableJsonNullValueInput | InputJsonValue
+    order_index?: IntFieldUpdateOperationsInput | number
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type FilterCreateManyUserInput = {
@@ -45534,6 +53350,24 @@ export namespace Prisma {
     updated_at?: Date | string
   }
 
+  export type FormCreateManyUserInput = {
+    id?: number
+    uuid?: string
+    name: string
+    description?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type FormCompletionCreateManyCompleted_byInput = {
+    id?: number
+    uuid?: string
+    form_uuid: string
+    contact_uuid: string
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
   export type FilterUpdateWithoutUserInput = {
     uuid?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -45614,6 +53448,7 @@ export namespace Prisma {
     campaign_contacts?: MarketingCampaignContactUpdateManyWithoutContactNestedInput
     contact_scores?: ContactScoreUpdateManyWithoutContactNestedInput
     reminders?: ReminderUpdateManyWithoutContactNestedInput
+    form_completions?: FormCompletionUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateWithoutUserInput = {
@@ -45645,6 +53480,7 @@ export namespace Prisma {
     campaign_contacts?: MarketingCampaignContactUncheckedUpdateManyWithoutContactNestedInput
     contact_scores?: ContactScoreUncheckedUpdateManyWithoutContactNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutContactNestedInput
+    form_completions?: FormCompletionUncheckedUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateManyWithoutUserInput = {
@@ -46160,6 +53996,64 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type FormUpdateWithoutUserInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    fields?: FormFieldUpdateManyWithoutFormNestedInput
+    completions?: FormCompletionUpdateManyWithoutFormNestedInput
+  }
+
+  export type FormUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    fields?: FormFieldUncheckedUpdateManyWithoutFormNestedInput
+    completions?: FormCompletionUncheckedUpdateManyWithoutFormNestedInput
+  }
+
+  export type FormUncheckedUpdateManyWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FormCompletionUpdateWithoutCompleted_byInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    form?: FormUpdateOneRequiredWithoutCompletionsNestedInput
+    contact?: ContactUpdateOneRequiredWithoutForm_completionsNestedInput
+    values?: FormCompletionValueUpdateManyWithoutCompletionNestedInput
+  }
+
+  export type FormCompletionUncheckedUpdateWithoutCompleted_byInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    form_uuid?: StringFieldUpdateOperationsInput | string
+    contact_uuid?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    values?: FormCompletionValueUncheckedUpdateManyWithoutCompletionNestedInput
+  }
+
+  export type FormCompletionUncheckedUpdateManyWithoutCompleted_byInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    form_uuid?: StringFieldUpdateOperationsInput | string
+    contact_uuid?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type RawLeadCreateManyFilterInput = {
     id?: number
     uuid?: string
@@ -46273,6 +54167,7 @@ export namespace Prisma {
     campaign_contacts?: MarketingCampaignContactUpdateManyWithoutContactNestedInput
     contact_scores?: ContactScoreUpdateManyWithoutContactNestedInput
     reminders?: ReminderUpdateManyWithoutContactNestedInput
+    form_completions?: FormCompletionUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateWithoutFilterInput = {
@@ -46304,6 +54199,7 @@ export namespace Prisma {
     campaign_contacts?: MarketingCampaignContactUncheckedUpdateManyWithoutContactNestedInput
     contact_scores?: ContactScoreUncheckedUpdateManyWithoutContactNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutContactNestedInput
+    form_completions?: FormCompletionUncheckedUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateManyWithoutFilterInput = {
@@ -46501,6 +54397,7 @@ export namespace Prisma {
     campaign_contacts?: MarketingCampaignContactUpdateManyWithoutContactNestedInput
     contact_scores?: ContactScoreUpdateManyWithoutContactNestedInput
     reminders?: ReminderUpdateManyWithoutContactNestedInput
+    form_completions?: FormCompletionUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateWithoutLeadInput = {
@@ -46532,6 +54429,7 @@ export namespace Prisma {
     campaign_contacts?: MarketingCampaignContactUncheckedUpdateManyWithoutContactNestedInput
     contact_scores?: ContactScoreUncheckedUpdateManyWithoutContactNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutContactNestedInput
+    form_completions?: FormCompletionUncheckedUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateManyWithoutLeadInput = {
@@ -46672,6 +54570,15 @@ export namespace Prisma {
     remind_at: Date | string
     status?: $Enums.ReminderStatus
     job_id?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type FormCompletionCreateManyContactInput = {
+    id?: number
+    uuid?: string
+    form_uuid: string
+    completed_by_uuid: string
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -46896,6 +54803,34 @@ export namespace Prisma {
     remind_at?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumReminderStatusFieldUpdateOperationsInput | $Enums.ReminderStatus
     job_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FormCompletionUpdateWithoutContactInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    form?: FormUpdateOneRequiredWithoutCompletionsNestedInput
+    completed_by?: UserUpdateOneRequiredWithoutForm_completionsNestedInput
+    values?: FormCompletionValueUpdateManyWithoutCompletionNestedInput
+  }
+
+  export type FormCompletionUncheckedUpdateWithoutContactInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    form_uuid?: StringFieldUpdateOperationsInput | string
+    completed_by_uuid?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    values?: FormCompletionValueUncheckedUpdateManyWithoutCompletionNestedInput
+  }
+
+  export type FormCompletionUncheckedUpdateManyWithoutContactInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    form_uuid?: StringFieldUpdateOperationsInput | string
+    completed_by_uuid?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -47299,6 +55234,178 @@ export namespace Prisma {
     account?: StringFieldUpdateOperationsInput | string
     secret?: StringFieldUpdateOperationsInput | string
     last4?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FormFieldCreateManyFormInput = {
+    id?: number
+    uuid?: string
+    label: string
+    field_type: $Enums.FieldType
+    placeholder?: string | null
+    help_text?: string | null
+    required?: boolean
+    default_value?: string | null
+    options?: NullableJsonNullValueInput | InputJsonValue
+    order_index?: number
+    enabled?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type FormCompletionCreateManyFormInput = {
+    id?: number
+    uuid?: string
+    contact_uuid: string
+    completed_by_uuid: string
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type FormFieldUpdateWithoutFormInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    label?: StringFieldUpdateOperationsInput | string
+    field_type?: EnumFieldTypeFieldUpdateOperationsInput | $Enums.FieldType
+    placeholder?: NullableStringFieldUpdateOperationsInput | string | null
+    help_text?: NullableStringFieldUpdateOperationsInput | string | null
+    required?: BoolFieldUpdateOperationsInput | boolean
+    default_value?: NullableStringFieldUpdateOperationsInput | string | null
+    options?: NullableJsonNullValueInput | InputJsonValue
+    order_index?: IntFieldUpdateOperationsInput | number
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    completion_values?: FormCompletionValueUpdateManyWithoutFieldNestedInput
+  }
+
+  export type FormFieldUncheckedUpdateWithoutFormInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    label?: StringFieldUpdateOperationsInput | string
+    field_type?: EnumFieldTypeFieldUpdateOperationsInput | $Enums.FieldType
+    placeholder?: NullableStringFieldUpdateOperationsInput | string | null
+    help_text?: NullableStringFieldUpdateOperationsInput | string | null
+    required?: BoolFieldUpdateOperationsInput | boolean
+    default_value?: NullableStringFieldUpdateOperationsInput | string | null
+    options?: NullableJsonNullValueInput | InputJsonValue
+    order_index?: IntFieldUpdateOperationsInput | number
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    completion_values?: FormCompletionValueUncheckedUpdateManyWithoutFieldNestedInput
+  }
+
+  export type FormFieldUncheckedUpdateManyWithoutFormInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    label?: StringFieldUpdateOperationsInput | string
+    field_type?: EnumFieldTypeFieldUpdateOperationsInput | $Enums.FieldType
+    placeholder?: NullableStringFieldUpdateOperationsInput | string | null
+    help_text?: NullableStringFieldUpdateOperationsInput | string | null
+    required?: BoolFieldUpdateOperationsInput | boolean
+    default_value?: NullableStringFieldUpdateOperationsInput | string | null
+    options?: NullableJsonNullValueInput | InputJsonValue
+    order_index?: IntFieldUpdateOperationsInput | number
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FormCompletionUpdateWithoutFormInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    contact?: ContactUpdateOneRequiredWithoutForm_completionsNestedInput
+    completed_by?: UserUpdateOneRequiredWithoutForm_completionsNestedInput
+    values?: FormCompletionValueUpdateManyWithoutCompletionNestedInput
+  }
+
+  export type FormCompletionUncheckedUpdateWithoutFormInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    contact_uuid?: StringFieldUpdateOperationsInput | string
+    completed_by_uuid?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    values?: FormCompletionValueUncheckedUpdateManyWithoutCompletionNestedInput
+  }
+
+  export type FormCompletionUncheckedUpdateManyWithoutFormInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    contact_uuid?: StringFieldUpdateOperationsInput | string
+    completed_by_uuid?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FormCompletionValueCreateManyFieldInput = {
+    id?: number
+    uuid?: string
+    completion_uuid: string
+    value: string
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type FormCompletionValueUpdateWithoutFieldInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    completion?: FormCompletionUpdateOneRequiredWithoutValuesNestedInput
+  }
+
+  export type FormCompletionValueUncheckedUpdateWithoutFieldInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    completion_uuid?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FormCompletionValueUncheckedUpdateManyWithoutFieldInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    completion_uuid?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FormCompletionValueCreateManyCompletionInput = {
+    id?: number
+    uuid?: string
+    field_uuid: string
+    value: string
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type FormCompletionValueUpdateWithoutCompletionInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    field?: FormFieldUpdateOneRequiredWithoutCompletion_valuesNestedInput
+  }
+
+  export type FormCompletionValueUncheckedUpdateWithoutCompletionInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    field_uuid?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FormCompletionValueUncheckedUpdateManyWithoutCompletionInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    field_uuid?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
