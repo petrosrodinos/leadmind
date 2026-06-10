@@ -1,3 +1,4 @@
+import type { ContactProfileField } from "../constants/contact-profile-fields.constants";
 import type { Lead, SourceType } from "@/features/leads/interfaces/lead.interface";
 import type { EnrichmentSource } from "@/features/lead-enrichment/constants/enrichment-sources";
 
@@ -219,6 +220,8 @@ export interface ListContactsQuery {
     source_type?: SourceType;
     filter_uuid?: string;
     lead_uuid?: string;
+    profile_field?: ContactProfileField;
+    has_profile_field?: boolean;
 }
 
 export interface PaginatedContacts {

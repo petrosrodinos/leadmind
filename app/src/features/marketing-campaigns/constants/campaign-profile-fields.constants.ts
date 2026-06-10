@@ -1,21 +1,11 @@
-export const CampaignProfileField = {
-    EMAIL: "email",
-    PHONE: "phone",
-    WEBSITE: "website",
-    LINKEDIN_URL: "linkedin_url",
-    GOOGLE_MAPS_URL: "google_maps_url",
-} as const;
+import {
+    ContactProfileField,
+    CONTACT_PROFILE_FIELD_KEYS,
+    CONTACT_PROFILE_FIELD_OPTIONS,
+    type ContactProfileField as ContactProfileFieldType,
+} from "@/features/contacts/constants/contact-profile-fields.constants";
 
-export type CampaignProfileField =
-    (typeof CampaignProfileField)[keyof typeof CampaignProfileField];
-
-export const CAMPAIGN_PROFILE_FIELD_OPTIONS: ReadonlyArray<{
-    id: CampaignProfileField;
-    label: string;
-}> = [
-    { id: CampaignProfileField.EMAIL, label: "Email" },
-    { id: CampaignProfileField.PHONE, label: "SMS / Phone" },
-    { id: CampaignProfileField.WEBSITE, label: "Website" },
-    { id: CampaignProfileField.LINKEDIN_URL, label: "LinkedIn" },
-    { id: CampaignProfileField.GOOGLE_MAPS_URL, label: "Google Maps" },
-];
+export const CampaignProfileField = ContactProfileField;
+export const CAMPAIGN_PROFILE_FIELD_KEYS = CONTACT_PROFILE_FIELD_KEYS;
+export const CAMPAIGN_PROFILE_FIELD_OPTIONS = CONTACT_PROFILE_FIELD_OPTIONS;
+export type CampaignProfileField = ContactProfileFieldType;

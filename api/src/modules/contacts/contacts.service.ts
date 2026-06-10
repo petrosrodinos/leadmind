@@ -25,10 +25,19 @@ import { BulkTriggerScoreDto } from './dto/bulk-trigger-score.dto';
 import { CreateContactDto } from './dto/create-contact.dto';
 import { EnrichContactDto } from './dto/enrich-contact.dto';
 import { ListContactsDto } from './dto/list-contacts.dto';
+import { buildContactProfileFieldWhere } from './utils/contact-profile-field-filter.utils';
 
 export type ContactListFilterParams = Pick<
     ListContactsDto,
-    'status' | 'tags' | 'search' | 'filter_uuid' | 'lead_uuid' | 'score_rules' | 'source_type'
+    | 'status'
+    | 'tags'
+    | 'search'
+    | 'filter_uuid'
+    | 'lead_uuid'
+    | 'score_rules'
+    | 'source_type'
+    | 'profile_field'
+    | 'has_profile_field'
 >;
 import { LogCallDto } from './dto/log-call.dto';
 import { LogEmailDto } from './dto/log-email.dto';
@@ -127,10 +136,17 @@ export class ContactsService {
                       })),
                   }
                 : {};
+
+        const profileFieldAnd =
+            query.profile_field && query.has_profile_field !== undefined
+                ? buildContactProfileFieldWhere(query.profile_field, query.has_profile_field)
+                : {};
+
         return {
             user_uuid,
             ...(query.status && { status: query.status }),
             ...scoreAnd,
+            ...profileFieldAnd,
             ...(query.filter_uuid && { filter_uuid: query.filter_uuid }),
             ...(query.lead_uuid && { lead_uuid: query.lead_uuid }),
             ...(query.source_type && { lead: { source_type: query.source_type } }),

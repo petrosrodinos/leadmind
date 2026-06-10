@@ -38,7 +38,7 @@ export function StepAudience({
     );
 
     const handleChange = (patch: Partial<CampaignFilters>) => {
-        onChange({ ...effectiveValue, ...patch });
+        onChange({ ...value, ...patch });
     };
 
     // De-bounced auto-preview when filters change
@@ -85,7 +85,7 @@ export function StepAudience({
     return (
         <div className="flex flex-col gap-6">
             <AudienceFilterForm
-                value={effectiveValue}
+                value={value}
                 onChange={handleChange}
             />
 

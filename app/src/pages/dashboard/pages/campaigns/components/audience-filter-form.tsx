@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { Input, Label, ListBox, Select, Switch, TextField } from "@heroui/react";
-import { CAMPAIGN_PROFILE_FIELD_OPTIONS } from "@/features/marketing-campaigns/constants/campaign-profile-fields.constants";
 import type { CampaignFilters } from "@/features/marketing-campaigns/interfaces/campaign.interface";
+import { ProfileFieldFilter } from "@/pages/dashboard/components/profile-field-filter";
 import type { LeadStatus } from "@/features/contacts/interfaces/contact.interface";
 import { STATUS_OPTIONS } from "@/features/contacts/constants/contacts.constants";
 import { useFilters } from "@/features/filters/hooks/use-filters";
@@ -137,64 +137,18 @@ export function AudienceFilterForm({
                     />
                 </div>
 
-                <div>
-                    <Label>Profile field</Label>
-                    <Select
-                        aria-label="Profile field"
-                        value={value.profile_field ?? ""}
-                        onChange={(v) => {
-                            if (typeof v !== "string") return;
-                            if (v === "") {
-                                onChange({
-                                    profile_field: undefined,
-                                    has_profile_field: undefined,
-                                });
-                                return;
-                            }
-                            onChange({
-                                profile_field: v as CampaignFilters["profile_field"],
-                                has_profile_field: value.has_profile_field ?? true,
-                            });
-                        }}
-                        isDisabled={disabled}
-                    >
-                        <Select.Trigger>
-                            <Select.Value />
-                            <Select.Indicator />
-                        </Select.Trigger>
-                        <Select.Popover>
-                            <ListBox>
-                                <ListBox.Item id="" textValue="Any field">
-                                    Any field
-                                    <ListBox.ItemIndicator />
-                                </ListBox.Item>
-                                {CAMPAIGN_PROFILE_FIELD_OPTIONS.map((opt) => (
-                                    <ListBox.Item key={opt.id} id={opt.id} textValue={opt.label}>
-                                        {opt.label}
-                                        <ListBox.ItemIndicator />
-                                    </ListBox.Item>
-                                ))}
-                            </ListBox>
-                        </Select.Popover>
-                    </Select>
-                    <p className="text-xs text-muted mt-1">
-                        Filter contacts by whether they have email, phone, website, LinkedIn, or Google Maps.
-                    </p>
-                </div>
-
-                {value.profile_field ? (
-                    <SwitchRow
-                        label="Contact has this field"
-                        description={
-                            value.has_profile_field ?? true
-                                ? "Only contacts with a value for the selected field."
-                                : "Only contacts missing the selected field."
-                        }
-                        checked={value.has_profile_field ?? true}
-                        onChange={(checked) => onChange({ has_profile_field: checked })}
-                        disabled={disabled}
-                    />
-                ) : null}
+                <ProfileFieldFilter
+                    profileField={value.profile_field}
+                    hasProfileField={value.has_profile_field}
+                    onProfileFieldChange={(field) =>
+                        onChange({
+                            profile_field: field,
+                            has_profile_field: field ? (value.has_profile_field ?? true) : undefined,
+                        })
+                    }
+                    onHasProfileFieldChange={(has) => onChange({ has_profile_field: has })}
+                    disabled={disabled}
+                />
             </FilterSection>
 
             <FilterSection

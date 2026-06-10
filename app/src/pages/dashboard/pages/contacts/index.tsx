@@ -8,6 +8,7 @@ import { NewContactModal } from "./components/new-contact-modal";
 import { BulkScoreContactsPopover } from "./components/bulk-score-contacts-popover";
 import { LeadFilters } from "@/pages/dashboard/pages/leads/components/lead-filters";
 import { isLeadStatus } from "@/features/contacts/constants/contacts.constants";
+import { isContactProfileField } from "@/features/contacts/constants/contact-profile-fields.constants";
 import { SourceType } from "@/features/leads/interfaces/lead.interface";
 import { useContacts } from "@/features/contacts/hooks/use-contacts";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
@@ -49,6 +50,14 @@ export default function ContactsPage() {
     .split(",")
     .map((t) => t.trim())
     .filter(Boolean);
+  const profileFieldParam = searchParams.get("profile_field");
+  const profileField = isContactProfileField(profileFieldParam) ? profileFieldParam : undefined;
+  const hasProfileFieldParam = searchParams.get("has_profile_field");
+  const hasProfileField = profileField
+    ? hasProfileFieldParam === "false"
+      ? false
+      : true
+    : undefined;
 
   const status = isLeadStatus(statusParam) ? statusParam : undefined;
   const sourceType = isSourceType(sourceParam) ? sourceParam : undefined;
@@ -79,8 +88,22 @@ export default function ContactsPage() {
       filter_uuid: filterUuid,
       score_rules: scoreRules.length > 0 ? scoreRules : undefined,
       tags: tags.length > 0 ? tags : undefined,
+      profile_field: profileField,
+      has_profile_field: hasProfileField,
     }),
-    [view, page, pageSize, debouncedSearch, status, sourceType, filterUuid, scoreRulesParam, tags.join(",")],
+    [
+      view,
+      page,
+      pageSize,
+      debouncedSearch,
+      status,
+      sourceType,
+      filterUuid,
+      scoreRulesParam,
+      tags.join(","),
+      profileField,
+      hasProfileField,
+    ],
   );
 
   const { data, isLoading, isFetching } = useContacts(query);
@@ -134,6 +157,21 @@ export default function ContactsPage() {
         onTagsChange={(next) =>
           updateParams({
             tags: next.length > 0 ? next.join(",") : undefined,
+            page: "1",
+          })
+        }
+        profileField={profileField}
+        onProfileFieldChange={(field) =>
+          updateParams({
+            profile_field: field ?? null,
+            has_profile_field: field ? String(hasProfileField ?? true) : null,
+            page: "1",
+          })
+        }
+        hasProfileField={hasProfileField}
+        onHasProfileFieldChange={(has) =>
+          updateParams({
+            has_profile_field: profileField && has !== undefined ? String(has) : undefined,
             page: "1",
           })
         }

@@ -8,6 +8,8 @@ import { useFilters } from "@/features/filters/hooks/use-filters";
 import { useContactTags } from "@/features/contacts/hooks/use-contacts";
 import { MultiSelect } from "@/components/ui/multi-select";
 import { STATUS_OPTIONS } from "@/features/contacts/constants/contacts.constants";
+import type { ContactProfileField } from "@/features/contacts/constants/contact-profile-fields.constants";
+import { ProfileFieldFilter } from "@/pages/dashboard/components/profile-field-filter";
 import { ScoreRulesFilter } from "@/pages/dashboard/components/score-rules-filter";
 
 interface LeadFiltersProps {
@@ -23,6 +25,10 @@ interface LeadFiltersProps {
     onFilterUuidChange: (uuid: string | undefined) => void;
     tags: string[];
     onTagsChange: (tags: string[]) => void;
+    profileField?: ContactProfileField;
+    onProfileFieldChange?: (field: ContactProfileField | undefined) => void;
+    hasProfileField?: boolean;
+    onHasProfileFieldChange?: (has: boolean | undefined) => void;
 }
 
 export function LeadFilters({
@@ -38,6 +44,10 @@ export function LeadFilters({
     onFilterUuidChange,
     tags,
     onTagsChange,
+    profileField,
+    onProfileFieldChange,
+    hasProfileField,
+    onHasProfileFieldChange,
 }: LeadFiltersProps) {
     const { data: filters = [] } = useFilters();
     const { data: availableTags = [] } = useContactTags();
@@ -158,6 +168,17 @@ export function LeadFilters({
                     aria-label="Filter by tags"
                 />
             </div>
+
+            {onProfileFieldChange && onHasProfileFieldChange ? (
+                <ProfileFieldFilter
+                    profileField={profileField}
+                    hasProfileField={hasProfileField}
+                    onProfileFieldChange={onProfileFieldChange}
+                    onHasProfileFieldChange={onHasProfileFieldChange}
+                    selectClassName="lg:col-span-2"
+                    presenceClassName="lg:col-span-2"
+                />
+            ) : null}
 
             <div className="lg:col-span-6">
                 <ScoreRulesFilter value={scoreRules} onChange={onScoreRulesChange} />

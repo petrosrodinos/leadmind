@@ -2,7 +2,9 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
 import {
     IsArray,
+    IsBoolean,
     IsEnum,
+    IsIn,
     IsInt,
     IsOptional,
     IsString,
@@ -11,6 +13,10 @@ import {
     ValidateNested,
 } from 'class-validator';
 import { LeadStatus, SourceType } from '@/generated/prisma';
+import {
+    ContactProfileField,
+    CONTACT_PROFILE_FIELD_KEYS,
+} from '../constants/contact-profile-fields.constants';
 import {
     ContactScoreRuleItemDto,
     ScoreRulesQueryTransform,
@@ -65,6 +71,24 @@ export class ListContactsDto {
     @IsOptional()
     @IsEnum(SourceType)
     source_type?: SourceType;
+
+    @ApiPropertyOptional({
+        enum: CONTACT_PROFILE_FIELD_KEYS,
+        description:
+            'Contact profile field to filter by (email, phone, website, linkedin_url, google_maps_url)',
+    })
+    @IsOptional()
+    @IsIn(CONTACT_PROFILE_FIELD_KEYS)
+    profile_field?: ContactProfileField;
+
+    @ApiPropertyOptional({
+        description:
+            'When profile_field is set: true = contact must have a value, false = contact must not',
+    })
+    @IsOptional()
+    @Type(() => Boolean)
+    @IsBoolean()
+    has_profile_field?: boolean;
 
     @ApiPropertyOptional({ default: 1, minimum: 1 })
     @IsOptional()

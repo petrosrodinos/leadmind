@@ -1,12 +1,9 @@
-export const CampaignProfileField = {
-    EMAIL: 'email',
-    PHONE: 'phone',
-    WEBSITE: 'website',
-    LINKEDIN_URL: 'linkedin_url',
-    GOOGLE_MAPS_URL: 'google_maps_url',
-} as const;
+import {
+    ContactProfileField,
+    CONTACT_PROFILE_FIELD_KEYS,
+    type ContactProfileField as ContactProfileFieldType,
+} from '@/modules/contacts/constants/contact-profile-fields.constants';
 
-export type CampaignProfileField =
-    (typeof CampaignProfileField)[keyof typeof CampaignProfileField];
-
-export const CAMPAIGN_PROFILE_FIELD_KEYS = Object.values(CampaignProfileField);
+export const CampaignProfileField = ContactProfileField;
+export const CAMPAIGN_PROFILE_FIELD_KEYS = CONTACT_PROFILE_FIELD_KEYS;
+export type CampaignProfileField = ContactProfileFieldType;
