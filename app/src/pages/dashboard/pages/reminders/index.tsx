@@ -89,24 +89,27 @@ export default function RemindersPage() {
             <ReminderStatsCards stats={stats} isLoading={statsLoading} />
 
             <div className="flex flex-wrap items-center gap-3">
-                <Input
-                    className="max-w-xs"
-                    placeholder="Search reminders…"
-                    value={search}
-                    onChange={(e) =>
-                        updateParams({ search: e.target.value || null, page: "1" })
-                    }
-                    startContent={<Search className="size-3.5 text-muted" />}
-                />
+                <div className="relative max-w-xs">
+                    <Search className="size-3.5 text-muted absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <Input
+                        className="pl-9"
+                        placeholder="Search reminders…"
+                        value={search}
+                        onChange={(e) =>
+                            updateParams({ search: e.target.value || null, page: "1" })
+                        }
+                    />
+                </div>
 
                 <Select
                     aria-label="Filter by status"
+                    placeholder="All statuses"
                     value={statusParam}
-                    onChange={(v) => updateParams({ status: v || null, page: "1" })}
+                    onChange={(v) => updateParams({ status: (v as string) || null, page: "1" })}
                     className="w-40"
                 >
                     <Select.Trigger>
-                        <Select.Value placeholder="All statuses" />
+                        <Select.Value />
                         <Select.Indicator />
                     </Select.Trigger>
                     <Select.Popover>
@@ -123,12 +126,13 @@ export default function RemindersPage() {
 
                 <Select
                     aria-label="Filter by date range"
+                    placeholder="All dates"
                     value={rangeParam}
-                    onChange={(v) => updateParams({ range: v || null, page: "1" })}
+                    onChange={(v) => updateParams({ range: (v as string) || null, page: "1" })}
                     className="w-40"
                 >
                     <Select.Trigger>
-                        <Select.Value placeholder="All dates" />
+                        <Select.Value />
                         <Select.Indicator />
                     </Select.Trigger>
                     <Select.Popover>

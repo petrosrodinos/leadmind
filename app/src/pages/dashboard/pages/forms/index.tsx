@@ -54,13 +54,15 @@ export default function FormsPage() {
             </div>
 
             <div className="flex flex-wrap items-center gap-3">
-                <Input
-                    className="max-w-xs"
-                    placeholder="Search forms…"
-                    value={search}
-                    onChange={(e) => updateParams({ search: e.target.value || null, page: "1" })}
-                    startContent={<Search className="size-3.5 text-muted" />}
-                />
+                <div className="relative max-w-xs">
+                    <Search className="size-3.5 text-muted absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <Input
+                        className="pl-9"
+                        placeholder="Search forms…"
+                        value={search}
+                        onChange={(e) => updateParams({ search: e.target.value || null, page: "1" })}
+                    />
+                </div>
             </div>
 
             <FormsTable

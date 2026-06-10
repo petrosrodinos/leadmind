@@ -158,16 +158,17 @@ export function ReminderFormModal({
                                         {/* Filter selector */}
                                         <Select
                                             aria-label="Select a filter"
+                                            placeholder="Select a filter list…"
                                             value={selectedFilterUuid}
                                             onChange={(v) => {
-                                                setSelectedFilterUuid(v);
+                                                setSelectedFilterUuid((v as string) ?? "");
                                                 setContactSearch("");
                                             }}
                                         >
                                             <Select.Trigger className="w-full">
                                                 <span className="flex items-center gap-2 text-sm">
                                                     <Filter className="size-3.5 text-muted shrink-0" />
-                                                    <Select.Value placeholder="Select a filter list…" />
+                                                    <Select.Value />
                                                 </span>
                                                 <Select.Indicator>
                                                     <ChevronDown className="size-3.5" />
@@ -188,12 +189,15 @@ export function ReminderFormModal({
                                         {/* Contacts from selected filter */}
                                         {selectedFilterUuid && (
                                             <div className="flex flex-col gap-1.5">
-                                                <Input
-                                                    placeholder="Search contacts in this list…"
-                                                    value={contactSearch}
-                                                    onChange={(e) => setContactSearch(e.target.value)}
-                                                    startContent={<Search className="size-3.5 text-muted" />}
-                                                />
+                                                <div className="relative">
+                                                    <Search className="size-3.5 text-muted absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                                                    <Input
+                                                        className="pl-9"
+                                                        placeholder="Search contacts in this list…"
+                                                        value={contactSearch}
+                                                        onChange={(e) => setContactSearch(e.target.value)}
+                                                    />
+                                                </div>
                                                 <div className="max-h-44 overflow-y-auto rounded-lg border border-border bg-surface divide-y divide-border/60">
                                                     {contactsLoading ? (
                                                         Array.from({ length: 3 }).map((_, i) => (

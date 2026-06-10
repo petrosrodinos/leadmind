@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Checkbox, Input, Label, ListBox, Modal, Select, TextArea } from "@heroui/react";
+import { Button, Checkbox, Input, Label, ListBox, Modal, Select } from "@heroui/react";
 import { Plus, Trash2 } from "lucide-react";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import { useCreateFormField, useUpdateFormField } from "@/features/forms/hooks/use-form-fields";
@@ -112,11 +112,12 @@ export function FieldFormModal({ formUuid, isOpen, onOpenChange, editing }: Fiel
                         <div className="flex flex-col gap-1.5">
                             <Label>Field Type</Label>
                             <Select
+                                placeholder="Select type"
                                 value={fieldType}
                                 onChange={(v) => setFieldType(v as FieldType)}
                             >
                                 <Select.Trigger>
-                                    <Select.Value placeholder="Select type" />
+                                    <Select.Value />
                                     <Select.Indicator />
                                 </Select.Trigger>
                                 <Select.Popover>

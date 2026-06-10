@@ -1,4 +1,4 @@
-import { FieldType } from './form.interface';
+import type { FieldType } from './form.interface';
 
 export interface CompletionValue {
     uuid: string;

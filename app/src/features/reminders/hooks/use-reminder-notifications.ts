@@ -1,9 +1,6 @@
 import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import {
-    getBrowserNotificationPermission,
-    showReminderNotification,
-} from "@/features/notifications/browser-notifications.service";
+import { showReminderNotification } from "@/features/notifications/browser-notifications.service";
 import { websocketSubscribe } from "@/features/websocket/services/websocket.service";
 import { WEBSOCKET_EVENTS } from "@/features/websocket/interfaces/websocket-events.constants";
 import type { Reminder } from "../interfaces/reminder.interface";

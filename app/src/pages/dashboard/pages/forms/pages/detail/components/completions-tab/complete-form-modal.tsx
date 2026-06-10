@@ -9,10 +9,7 @@ import { listContacts } from "@/features/contacts/services/contacts.service";
 import { contactsQueryKeys } from "@/features/contacts/hooks/use-contacts";
 import { useFilters } from "@/features/filters/hooks/use-filters";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
-import {
-    FIELD_TYPES_DISPLAY_ONLY,
-    FIELD_TYPES_WITH_OPTIONS,
-} from "@/features/forms/interfaces/form.interface";
+import { FIELD_TYPES_DISPLAY_ONLY } from "@/features/forms/interfaces/form.interface";
 import type { FormField } from "@/features/forms/interfaces/form.interface";
 import type { FormCompletion } from "@/features/forms/interfaces/form-completion.interface";
 
@@ -219,16 +216,17 @@ export function CompleteFormModal({
                                     <div className="flex flex-col gap-2">
                                         <Select
                                             aria-label="Select a filter"
+                                            placeholder="Select a filter list…"
                                             value={selectedFilterUuid}
                                             onChange={(v) => {
-                                                setSelectedFilterUuid(v);
+                                                setSelectedFilterUuid((v as string) ?? "");
                                                 setContactSearch("");
                                             }}
                                         >
                                             <Select.Trigger className="w-full">
                                                 <span className="flex items-center gap-2 text-sm">
                                                     <Filter className="size-3.5 text-muted shrink-0" />
-                                                    <Select.Value placeholder="Select a filter list…" />
+                                                    <Select.Value />
                                                 </span>
                                                 <Select.Indicator>
                                                     <ChevronDown className="size-3.5" />
@@ -247,12 +245,15 @@ export function CompleteFormModal({
                                         </Select>
 
                                         {selectedFilterUuid && (
-                                            <Input
-                                                placeholder="Search contacts…"
-                                                value={contactSearch}
-                                                onChange={(e) => setContactSearch(e.target.value)}
-                                                startContent={<Search className="size-3.5 text-muted" />}
-                                            />
+                                            <div className="relative">
+                                                <Search className="size-3.5 text-muted absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                                                <Input
+                                                    className="pl-9"
+                                                    placeholder="Search contacts…"
+                                                    value={contactSearch}
+                                                    onChange={(e) => setContactSearch(e.target.value)}
+                                                />
+                                            </div>
                                         )}
 
                                         {selectedFilterUuid && (
