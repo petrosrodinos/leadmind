@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { Button, Input, Label, Modal, TextArea } from "@heroui/react";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import { useLogMeeting } from "@/features/contacts/hooks/use-contacts";
-import type { LogMeetingPayload } from "@/features/contacts/interfaces/contact.interface";
+import { MeetingOutcome, type LogMeetingPayload } from "@/features/contacts/interfaces/contact.interface";
+import { cn } from "@/lib/utils";
 
 interface LogMeetingModalProps {
   contactUuid: string;
@@ -28,8 +29,18 @@ function nextHalfHour(): Date {
   return d;
 }
 
+const MEETING_OUTCOME_OPTIONS: { id: MeetingOutcome; label: string }[] = [
+  { id: MeetingOutcome.SCHEDULED, label: "Scheduled" },
+  { id: MeetingOutcome.COMPLETED, label: "Completed" },
+  { id: MeetingOutcome.NO_SHOW, label: "No show" },
+  { id: MeetingOutcome.CANCELLED, label: "Cancelled" },
+  { id: MeetingOutcome.CLOSED_WON, label: "Closed won" },
+  { id: MeetingOutcome.CLOSED_LOST, label: "Closed lost" },
+];
+
 export function LogMeetingModal({ contactUuid, isOpen, onOpenChange }: LogMeetingModalProps) {
   const logMeeting = useLogMeeting();
+  const [outcome, setOutcome] = useState<MeetingOutcome>(MeetingOutcome.SCHEDULED);
   const [occurredAt, setOccurredAt] = useState<string>(() => toLocalDatetimeValue(nextHalfHour()));
   const [duration, setDuration] = useState<string>("30");
   const [location, setLocation] = useState<string>("");
@@ -37,6 +48,7 @@ export function LogMeetingModal({ contactUuid, isOpen, onOpenChange }: LogMeetin
 
   useEffect(() => {
     if (isOpen) {
+      setOutcome(MeetingOutcome.SCHEDULED);
       setOccurredAt(toLocalDatetimeValue(nextHalfHour()));
       setDuration("30");
       setLocation("");
@@ -54,6 +66,7 @@ export function LogMeetingModal({ contactUuid, isOpen, onOpenChange }: LogMeetin
     if (!occurredAtValid) return;
     const dt = new Date(occurredAt);
     const payload: LogMeetingPayload = {
+      outcome,
       occurred_at: dt.toISOString(),
     };
     const durNum = duration === "" ? undefined : Number(duration);
@@ -82,6 +95,26 @@ export function LogMeetingModal({ contactUuid, isOpen, onOpenChange }: LogMeetin
             <Modal.Heading>Log meeting</Modal.Heading>
           </Modal.Header>
           <Modal.Body className="p-6 space-y-4">
+            <div className="flex flex-col gap-1.5">
+              <Label>Outcome</Label>
+              <div className="grid grid-cols-2 gap-2">
+                {MEETING_OUTCOME_OPTIONS.map((opt) => (
+                  <button
+                    key={opt.id}
+                    type="button"
+                    onClick={() => setOutcome(opt.id)}
+                    className={cn(
+                      "rounded-md border px-3 py-2 text-sm font-medium transition-colors",
+                      outcome === opt.id
+                        ? "border-accent bg-accent/10 text-accent"
+                        : "border-border bg-surface text-foreground hover:bg-surface-secondary",
+                    )}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="log-meeting-when">When</Label>

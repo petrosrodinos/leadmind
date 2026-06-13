@@ -17,6 +17,7 @@ interface ContactFiltersFormProps {
     onChange: (patch: Partial<ContactFilters>) => void;
     disabled?: boolean;
     sections?: ContactFiltersFormSections;
+    showSourceFilter?: boolean;
 }
 
 const DEFAULT_SECTIONS: Required<ContactFiltersFormSections> = {
@@ -29,6 +30,7 @@ export function ContactFiltersForm({
     onChange,
     disabled,
     sections: sectionsProp,
+    showSourceFilter = true,
 }: ContactFiltersFormProps) {
     const sections = { ...DEFAULT_SECTIONS, ...sectionsProp };
     const { data: filters, isLoading: filtersLoading } = useFilters();
@@ -52,6 +54,7 @@ export function ContactFiltersForm({
                     />
                 </TextField>
 
+                {showSourceFilter ? (
                 <div>
                     <Label>Source filter</Label>
                     <Select
@@ -86,6 +89,7 @@ export function ContactFiltersForm({
                         Restrict to contacts sourced from a specific filter.
                     </p>
                 </div>
+                ) : null}
             </FilterSection>
 
             <FilterSection

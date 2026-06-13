@@ -1,5 +1,5 @@
 import { Routes as ReactRoutes, Route, Navigate, useParams } from "react-router-dom";
-import { FilterDetailTabIds, Routes } from "@/routes/routes";
+import { FilterDetailTabIds, ListDetailTabIds, Routes } from "@/routes/routes";
 import ProtectedRoute from "@/routes/protected-route";
 import { Permissions } from "@/config/permissions";
 import LandingPage from "@/pages/landing";
@@ -41,6 +41,16 @@ function NavigateToFilterTab({ tab }: { tab: (typeof FilterDetailTabIds)[keyof t
   return <Navigate to={{ pathname: Routes.dashboard.filters_detail.replace(":uuid", uuid), search: sp.toString() }} replace />;
 }
 
+function NavigateToListTab({ tab }: { tab: (typeof ListDetailTabIds)[keyof typeof ListDetailTabIds] }) {
+  const { uuid } = useParams<{ uuid: string }>();
+  if (!uuid) {
+    return <Navigate to={Routes.dashboard.lists} replace />;
+  }
+  const sp = new URLSearchParams();
+  sp.set(Routes.dashboard.lists_detail_tab_query, tab);
+  return <Navigate to={{ pathname: Routes.dashboard.lists_detail.replace(":uuid", uuid), search: sp.toString() }} replace />;
+}
+
 export default function AppRoutes() {
   return (
     <ReactRoutes>
@@ -74,6 +84,8 @@ export default function AppRoutes() {
         <Route path="contacts" element={<ContactsPage />} />
         <Route path="contacts/:uuid" element={<ContactDetailPage />} />
         <Route path="lists" element={<ListsPage />} />
+        <Route path="lists/:uuid/analytics" element={<NavigateToListTab tab={ListDetailTabIds.ANALYTICS} />} />
+        <Route path="lists/:uuid/contacts" element={<NavigateToListTab tab={ListDetailTabIds.CONTACTS} />} />
         <Route path="lists/:uuid" element={<ListDetailPage />} />
         <Route path="reminders" element={<RemindersPage />} />
         <Route path="forms" element={<FormsPage />} />
@@ -91,6 +103,7 @@ export default function AppRoutes() {
           <Route path=":uuid/contacts" element={<NavigateToFilterTab tab={FilterDetailTabIds.CONTACTS} />} />
           <Route path=":uuid/jobs" element={<NavigateToFilterTab tab={FilterDetailTabIds.JOBS} />} />
           <Route path=":uuid/filter" element={<NavigateToFilterTab tab={FilterDetailTabIds.FILTER} />} />
+          <Route path=":uuid/analytics" element={<NavigateToFilterTab tab={FilterDetailTabIds.ANALYTICS} />} />
           <Route path=":uuid" element={<FilterDetailPage />} />
         </Route>
         <Route

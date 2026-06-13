@@ -5,11 +5,13 @@ import { ScoringInstructionsModule } from '@/modules/scoring-instructions/scorin
 import { FILTER_SCRAPE_QUEUE } from '@/core/queues/queues.constants';
 import { FiltersService } from './filters.service';
 import { FiltersController } from './filters.controller';
+import { ContactAudienceStatsModule } from '@/modules/contact-audience-stats/contact-audience-stats.module';
 
 @Module({
     imports: [
         PrismaModule,
         ScoringInstructionsModule,
+        ContactAudienceStatsModule,
         BullModule.registerQueue({ name: FILTER_SCRAPE_QUEUE }),
     ],
     controllers: [FiltersController],

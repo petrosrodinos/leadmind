@@ -34,6 +34,7 @@ export const Routes = {
         forms_detail: "/dashboard/forms/:uuid",
         lists: "/dashboard/lists",
         lists_detail: "/dashboard/lists/:uuid",
+        lists_detail_tab_query: "tab",
         admin_batch_jobs: "/dashboard/admin/batch-jobs",
     },
 };
@@ -42,4 +43,10 @@ export const FilterDetailTabIds = {
     FILTER: "filter",
     CONTACTS: "contacts",
     JOBS: "jobs",
+    ANALYTICS: "analytics",
+} as const;
+
+export const ListDetailTabIds = {
+    CONTACTS: "contacts",
+    ANALYTICS: "analytics",
 } as const;

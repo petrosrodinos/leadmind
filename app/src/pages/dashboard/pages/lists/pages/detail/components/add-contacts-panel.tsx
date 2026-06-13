@@ -16,9 +16,15 @@ const PICKER_PAGE_SIZE = 20;
 
 interface AddContactsPanelProps {
     listUuid: string;
+    showHeader?: boolean;
+    onAdded?: () => void;
 }
 
-export function AddContactsPanel({ listUuid }: AddContactsPanelProps) {
+export function AddContactsPanel({
+    listUuid,
+    showHeader = true,
+    onAdded,
+}: AddContactsPanelProps) {
     const [filters, setFilters] = useState<ContactFilters>({});
     const [selected, setSelected] = useState<Set<string>>(new Set());
     const [pickerPage, setPickerPage] = useState(1);
@@ -87,26 +93,36 @@ export function AddContactsPanel({ listUuid }: AddContactsPanelProps) {
                 payload: { contact_uuids: Array.from(selected) },
             },
             {
-                onSuccess: () => setSelected(new Set()),
+                onSuccess: () => {
+                    setSelected(new Set());
+                    onAdded?.();
+                },
             },
         );
     };
 
     const handleBulkAdd = () => {
-        bulkAdd.mutate({
-            listUuid,
-            payload: { filters: debouncedFilters },
-        });
+        bulkAdd.mutate(
+            {
+                listUuid,
+                payload: { filters: debouncedFilters },
+            },
+            {
+                onSuccess: () => onAdded?.(),
+            },
+        );
     };
 
     return (
         <div className="flex flex-col gap-6">
-            <div>
-                <h2 className="text-base font-semibold text-foreground">Add contacts</h2>
-                <p className="text-sm text-muted mt-1">
-                    Filter your contacts, then add selected rows or all matching results.
-                </p>
-            </div>
+            {showHeader ? (
+                <div>
+                    <h2 className="text-base font-semibold text-foreground">Add contacts</h2>
+                    <p className="text-sm text-muted mt-1">
+                        Filter your contacts, then add selected rows or all matching results.
+                    </p>
+                </div>
+            ) : null}
 
             <AudienceFilterForm value={filters} onChange={handleFilterChange} />
 

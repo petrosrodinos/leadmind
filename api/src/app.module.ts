@@ -30,6 +30,7 @@ import { IntegrationsModule } from './modules/integrations/integrations.module';
 import { RemindersModule } from './modules/reminders/reminders.module';
 import { FormsModule } from './modules/forms/forms.module';
 import { ContactListsModule } from './modules/contact-lists/contact-lists.module';
+import { ContactAudienceStatsModule } from './modules/contact-audience-stats/contact-audience-stats.module';
 import { GatewaysModule } from './gateways/gateways.module';
 
 @Module({
@@ -64,6 +65,7 @@ import { GatewaysModule } from './gateways/gateways.module';
     RemindersModule,
     FormsModule,
     ContactListsModule,
+    ContactAudienceStatsModule,
     GatewaysModule,
   ],
   controllers: [AppController],

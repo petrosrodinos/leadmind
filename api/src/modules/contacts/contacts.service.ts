@@ -165,7 +165,7 @@ export class ContactsService {
         };
     }
 
-    private applyAudienceFilters(
+    applyAudienceFilters(
         where: Prisma.ContactWhereInput,
         query: Pick<
             ListContactsDto,
@@ -497,6 +497,7 @@ export class ContactsService {
     ): Promise<Interaction> {
         await this.requireOwnedContact(user_uuid, uuid);
         const metadata: Prisma.InputJsonValue = {
+            outcome: dto.outcome,
             occurred_at: dto.occurred_at,
             ...(dto.duration_minutes !== undefined && { duration_minutes: dto.duration_minutes }),
             ...(dto.location?.trim() && { location: dto.location.trim() }),

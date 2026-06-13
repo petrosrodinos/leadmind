@@ -77,7 +77,19 @@ export interface CallMetadata {
     occurred_at?: string;
 }
 
+export const MeetingOutcome = {
+    SCHEDULED: "SCHEDULED",
+    COMPLETED: "COMPLETED",
+    NO_SHOW: "NO_SHOW",
+    CANCELLED: "CANCELLED",
+    CLOSED_WON: "CLOSED_WON",
+    CLOSED_LOST: "CLOSED_LOST",
+} as const;
+
+export type MeetingOutcome = (typeof MeetingOutcome)[keyof typeof MeetingOutcome];
+
 export interface MeetingMetadata {
+    outcome?: MeetingOutcome;
     occurred_at: string;
     duration_minutes?: number;
     location?: string;
@@ -92,6 +104,7 @@ export interface LogCallPayload {
 }
 
 export interface LogMeetingPayload {
+    outcome: MeetingOutcome;
     occurred_at: string;
     duration_minutes?: number;
     location?: string;

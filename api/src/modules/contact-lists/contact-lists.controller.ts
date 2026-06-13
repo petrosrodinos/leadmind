@@ -19,13 +19,18 @@ import { ListContactListsDto } from './dto/list-contact-lists.dto';
 import { AddListContactsDto } from './dto/add-list-contacts.dto';
 import { BulkAddListContactsDto } from './dto/bulk-add-list-contacts.dto';
 import { ListContactListMembersDto } from './dto/list-contact-list-members.dto';
+import { ContactAudienceStatsService } from '@/modules/contact-audience-stats/contact-audience-stats.service';
+import { ContactAudienceStatsQueryDto } from '@/modules/contact-audience-stats/dto/contact-audience-stats-query.dto';
 
 @ApiTags('contact-lists')
 @ApiBearerAuth()
 @UseGuards(JwtGuard)
 @Controller('contact-lists')
 export class ContactListsController {
-    constructor(private readonly contactListsService: ContactListsService) {}
+    constructor(
+        private readonly contactListsService: ContactListsService,
+        private readonly contactAudienceStatsService: ContactAudienceStatsService,
+    ) {}
 
     @Post()
     @ApiOperation({ summary: 'Create a contact list' })
@@ -99,5 +104,15 @@ export class ContactListsController {
         @Param('contactUuid') contactUuid: string,
     ) {
         return this.contactListsService.removeContact(user_uuid, uuid, contactUuid);
+    }
+
+    @Get(':uuid/stats')
+    @ApiOperation({ summary: 'CRM and activity analytics for contacts in a list' })
+    getStats(
+        @CurrentUser('uuid') user_uuid: string,
+        @Param('uuid') uuid: string,
+        @Query() query: ContactAudienceStatsQueryDto,
+    ) {
+        return this.contactAudienceStatsService.getListStats(user_uuid, uuid, query);
     }
 }

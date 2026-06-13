@@ -21,6 +21,7 @@ import { formatDistanceToNow } from "date-fns";
 import {
     CallDirection,
     CallOutcome,
+    MeetingOutcome,
     InteractionType,
     type CallMetadata,
     type Interaction,
@@ -140,6 +141,28 @@ const CALL_DIRECTION_LABEL: Record<CallDirection, string> = {
     [CallDirection.INBOUND]: "Inbound",
 };
 
+const MEETING_OUTCOME_LABEL: Record<MeetingOutcome, string> = {
+    [MeetingOutcome.SCHEDULED]: "Scheduled",
+    [MeetingOutcome.COMPLETED]: "Completed",
+    [MeetingOutcome.NO_SHOW]: "No show",
+    [MeetingOutcome.CANCELLED]: "Cancelled",
+    [MeetingOutcome.CLOSED_WON]: "Closed won",
+    [MeetingOutcome.CLOSED_LOST]: "Closed lost",
+};
+
+const MEETING_OUTCOME_COLOR: Record<MeetingOutcome, "default" | "success" | "warning" | "danger"> = {
+    [MeetingOutcome.SCHEDULED]: "default",
+    [MeetingOutcome.COMPLETED]: "success",
+    [MeetingOutcome.NO_SHOW]: "warning",
+    [MeetingOutcome.CANCELLED]: "default",
+    [MeetingOutcome.CLOSED_WON]: "success",
+    [MeetingOutcome.CLOSED_LOST]: "danger",
+};
+
+function isMeetingOutcome(v: unknown): v is MeetingOutcome {
+    return typeof v === "string" && (Object.values(MeetingOutcome) as string[]).includes(v);
+}
+
 function isCallOutcome(v: unknown): v is CallOutcome {
     return typeof v === "string" && (Object.values(CallOutcome) as string[]).includes(v);
 }
@@ -163,6 +186,7 @@ function parseMeetingMetadata(raw: Interaction["metadata"]): MeetingMetadata | n
     const o = raw as Record<string, unknown>;
     if (typeof o.occurred_at !== "string") return null;
     const meta: MeetingMetadata = { occurred_at: o.occurred_at };
+    if (isMeetingOutcome(o.outcome)) meta.outcome = o.outcome;
     if (typeof o.duration_minutes === "number") meta.duration_minutes = o.duration_minutes;
     if (typeof o.location === "string") meta.location = o.location;
     return meta;
@@ -341,6 +365,15 @@ export function InteractionTimeline({ contactUuid, onNavigateToOutreach }: Inter
                             ) : meetingMeta ? (
                                 <>
                                     <div className="flex flex-wrap items-center gap-2 mt-2 text-sm text-foreground">
+                                        {meetingMeta.outcome ? (
+                                            <Chip
+                                                size="sm"
+                                                variant="soft"
+                                                color={MEETING_OUTCOME_COLOR[meetingMeta.outcome]}
+                                            >
+                                                <Chip.Label>{MEETING_OUTCOME_LABEL[meetingMeta.outcome]}</Chip.Label>
+                                            </Chip>
+                                        ) : null}
                                         <span className="font-medium">{formatOccurredAt(meetingMeta.occurred_at)}</span>
                                         {meetingMeta.duration_minutes !== undefined ? (
                                             <span className="text-xs text-muted">· {meetingMeta.duration_minutes} min</span>

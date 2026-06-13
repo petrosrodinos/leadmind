@@ -1,5 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
+    IsEnum,
     IsISO8601,
     IsInt,
     IsOptional,
@@ -9,7 +10,20 @@ import {
     Min,
 } from 'class-validator';
 
+export enum MeetingOutcome {
+    SCHEDULED = 'SCHEDULED',
+    COMPLETED = 'COMPLETED',
+    NO_SHOW = 'NO_SHOW',
+    CANCELLED = 'CANCELLED',
+    CLOSED_WON = 'CLOSED_WON',
+    CLOSED_LOST = 'CLOSED_LOST',
+}
+
 export class LogMeetingDto {
+    @ApiProperty({ enum: MeetingOutcome })
+    @IsEnum(MeetingOutcome)
+    outcome: MeetingOutcome;
+
     @ApiProperty({ description: 'When the meeting occurred or is scheduled (ISO datetime)' })
     @IsISO8601()
     occurred_at: string;

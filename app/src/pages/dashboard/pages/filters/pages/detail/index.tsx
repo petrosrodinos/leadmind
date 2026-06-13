@@ -14,6 +14,7 @@ import { FilterRunLeadingVisual } from "@/pages/dashboard/pages/filters/componen
 import FilterContactsPage from "@/pages/dashboard/pages/filters/pages/contacts";
 import { FilterEditPanel } from "@/pages/dashboard/pages/filters/pages/edit";
 import FilterJobsPage from "@/pages/dashboard/pages/filters/pages/jobs";
+import { ContactAudienceAnalyticsPanel } from "@/pages/dashboard/components/audience-analytics/contact-audience-analytics-panel";
 
 const CHANNEL_LABEL: Record<Channel, string> = {
   [Channel.EMAIL]: "Email",
@@ -24,6 +25,7 @@ const CHANNEL_LABEL: Record<Channel, string> = {
 const TABS = [
   { id: FilterDetailTabIds.FILTER, label: "Filter" },
   { id: FilterDetailTabIds.CONTACTS, label: "Contacts" },
+  { id: FilterDetailTabIds.ANALYTICS, label: "Analytics" },
   { id: FilterDetailTabIds.JOBS, label: "Jobs" },
 ] as const;
 
@@ -213,6 +215,9 @@ export default function FilterDetailPage() {
           />
         )}
         {currentTab === FilterDetailTabIds.CONTACTS && uuid && <FilterContactsPage />}
+        {currentTab === FilterDetailTabIds.ANALYTICS && uuid && (
+          <ContactAudienceAnalyticsPanel scope={{ type: "filter", uuid }} showSourceFilter={false} />
+        )}
         {currentTab === FilterDetailTabIds.JOBS && uuid && <FilterJobsPage />}
       </div>
 

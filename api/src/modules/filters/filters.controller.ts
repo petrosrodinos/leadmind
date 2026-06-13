@@ -16,13 +16,18 @@ import { FiltersService } from './filters.service';
 import { CreateFilterDto } from './dto/create-filter.dto';
 import { UpdateFilterDto } from './dto/update-filter.dto';
 import { ListJobsDto } from './dto/list-jobs.dto';
+import { ContactAudienceStatsService } from '@/modules/contact-audience-stats/contact-audience-stats.service';
+import { ContactAudienceStatsQueryDto } from '@/modules/contact-audience-stats/dto/contact-audience-stats-query.dto';
 
 @ApiTags('filters')
 @ApiBearerAuth()
 @UseGuards(JwtGuard)
 @Controller('filters')
 export class FiltersController {
-    constructor(private readonly filtersService: FiltersService) { }
+    constructor(
+        private readonly filtersService: FiltersService,
+        private readonly contactAudienceStatsService: ContactAudienceStatsService,
+    ) { }
 
     @Post()
     @ApiOperation({ summary: 'Create a filter' })
@@ -72,5 +77,15 @@ export class FiltersController {
         @Query() query: ListJobsDto,
     ) {
         return this.filtersService.findJobs(user_uuid, uuid, query);
+    }
+
+    @Get(':uuid/stats')
+    @ApiOperation({ summary: 'CRM and activity analytics for contacts in a filter' })
+    getStats(
+        @CurrentUser('uuid') user_uuid: string,
+        @Param('uuid') uuid: string,
+        @Query() query: ContactAudienceStatsQueryDto,
+    ) {
+        return this.contactAudienceStatsService.getFilterStats(user_uuid, uuid, query);
     }
 }
