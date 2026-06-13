@@ -3,6 +3,7 @@ import { Transform, Type } from 'class-transformer';
 import {
     IsArray,
     IsBoolean,
+    IsDateString,
     IsEnum,
     IsIn,
     IsInt,
@@ -89,6 +90,33 @@ export class ListContactsDto {
     @Type(() => Boolean)
     @IsBoolean()
     has_profile_field?: boolean;
+
+    @ApiPropertyOptional({ description: 'Exclude contacts already in this list' })
+    @IsOptional()
+    @IsString()
+    exclude_list_uuid?: string;
+
+    @ApiPropertyOptional({ description: 'ISO date — last_interaction_at after this' })
+    @IsOptional()
+    @IsDateString()
+    last_interaction_after?: string;
+
+    @ApiPropertyOptional({ description: 'ISO date — last_interaction_at before this' })
+    @IsOptional()
+    @IsDateString()
+    last_interaction_before?: string;
+
+    @ApiPropertyOptional({ description: 'Only contacts who have never been sent a campaign message' })
+    @IsOptional()
+    @Type(() => Boolean)
+    @IsBoolean()
+    never_contacted?: boolean;
+
+    @ApiPropertyOptional({ description: 'Include contacts who have unsubscribed (default false)' })
+    @IsOptional()
+    @Type(() => Boolean)
+    @IsBoolean()
+    include_unsubscribed?: boolean;
 
     @ApiPropertyOptional({ default: 1, minimum: 1 })
     @IsOptional()

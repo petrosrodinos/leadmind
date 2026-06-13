@@ -7,6 +7,8 @@ import {
 } from '@nestjs/common';
 import { Queue } from 'bullmq';
 import {
+    CampaignContactStatus,
+    Channel,
     Contact,
     Interaction,
     InteractionType,
@@ -163,12 +165,103 @@ export class ContactsService {
         };
     }
 
+    private applyAudienceFilters(
+        where: Prisma.ContactWhereInput,
+        query: Pick<
+            ListContactsDto,
+            | 'last_interaction_after'
+            | 'last_interaction_before'
+            | 'never_contacted'
+            | 'include_unsubscribed'
+            | 'exclude_list_uuid'
+        >,
+    ) {
+        const audienceAnd: Prisma.ContactWhereInput[] = [];
+
+        if (query.last_interaction_after) {
+            audienceAnd.push({
+                last_interaction_at: { gte: new Date(query.last_interaction_after) },
+            });
+        }
+        if (query.last_interaction_before) {
+            audienceAnd.push({
+                last_interaction_at: { lte: new Date(query.last_interaction_before) },
+            });
+        }
+        if (query.never_contacted) {
+            audienceAnd.push({
+                campaign_contacts: {
+                    none: {
+                        channel: { in: [Channel.EMAIL, Channel.SMS, Channel.LINKEDIN] },
+                        status: {
+                            in: [
+                                CampaignContactStatus.SENT,
+                                CampaignContactStatus.DELIVERED,
+                                CampaignContactStatus.OPENED,
+                                CampaignContactStatus.CLICKED,
+                                CampaignContactStatus.REPLIED,
+                                CampaignContactStatus.BOUNCED,
+                                CampaignContactStatus.UNSUBSCRIBED,
+                            ],
+                        },
+                    },
+                },
+            });
+        }
+
+        const applyUnsubscribedRule =
+            query.exclude_list_uuid ||
+            query.never_contacted ||
+            query.include_unsubscribed !== undefined ||
+            query.last_interaction_after !== undefined ||
+            query.last_interaction_before !== undefined;
+
+        if (applyUnsubscribedRule && !query.include_unsubscribed) {
+            audienceAnd.push({ unsubscribed_at: null });
+        }
+
+        if (audienceAnd.length === 0) return;
+
+        const existingAnd = where.AND
+            ? Array.isArray(where.AND)
+                ? where.AND
+                : [where.AND]
+            : [];
+        where.AND = [...existingAnd, ...audienceAnd];
+    }
+
     async findAll(user_uuid: string, query: ListContactsDto) {
         const page = query.page ?? 1;
         const limit = query.limit ?? 20;
         const skip = (page - 1) * limit;
 
         const where = this.buildWhereInput(user_uuid, query);
+        this.applyAudienceFilters(where, query);
+
+        if (query.exclude_list_uuid) {
+            const list = await this.prisma.contactList.findFirst({
+                where: { uuid: query.exclude_list_uuid, user_uuid },
+                select: { uuid: true },
+            });
+            if (!list) throw new NotFoundException('Contact list not found');
+
+            const memberUuids = await this.prisma.contactListMember.findMany({
+                where: { list_uuid: query.exclude_list_uuid },
+                select: { contact_uuid: true },
+            });
+
+            if (memberUuids.length > 0) {
+                const existingNotIn = where.uuid && typeof where.uuid === 'object' && 'notIn' in where.uuid
+                    ? (where.uuid as Prisma.StringFilter).notIn ?? []
+                    : [];
+                where.uuid = {
+                    notIn: [
+                        ...memberUuids.map((m) => m.contact_uuid),
+                        ...(Array.isArray(existingNotIn) ? existingNotIn : []),
+                    ],
+                };
+            }
+        }
 
         const [data, total] = await Promise.all([
             this.prisma.contact.findMany({

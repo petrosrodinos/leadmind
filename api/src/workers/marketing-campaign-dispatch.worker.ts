@@ -61,9 +61,11 @@ export class MarketingCampaignDispatchWorker extends WorkerHost {
         }
 
         const filters = (campaign.filters_snapshot ?? {}) as unknown as CampaignFiltersDto;
+        const channels = campaign.channels as Channel[];
         const contact_uuids = await this.resolver.resolveContactUuids(
             campaign.user_uuid,
             filters,
+            { channels },
         );
 
         if (contact_uuids.length === 0) {
@@ -80,7 +82,6 @@ export class MarketingCampaignDispatchWorker extends WorkerHost {
             return;
         }
 
-        const channels = campaign.channels as Channel[];
         const mccRows = contact_uuids.flatMap((contact_uuid) =>
             channels.map((channel) => ({
                 campaign_uuid,

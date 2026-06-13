@@ -333,7 +333,10 @@ export class MarketingCampaignsService {
         const channel = campaign.channels[0];
         const filters = campaign.filters_snapshot as any;
 
-        const contactUuids = await this.resolver.resolveContactUuids(user_uuid, filters, 201);
+        const contactUuids = await this.resolver.resolveContactUuids(user_uuid, filters, {
+            limit: 201,
+            channels: campaign.channels as Channel[],
+        });
         if (contactUuids.length > 200) {
             throw new BadRequestException(
                 'Audience exceeds 200 contacts. Narrow your filters to proceed.',

@@ -28,6 +28,8 @@ import AdminBatchJobsPage from "@/pages/dashboard/pages/admin/batch-jobs";
 import RemindersPage from "@/pages/dashboard/pages/reminders";
 import FormsPage from "@/pages/dashboard/pages/forms";
 import FormDetailPage from "@/pages/dashboard/pages/forms/pages/detail";
+import ListsPage from "@/pages/dashboard/pages/lists";
+import ListDetailPage from "@/pages/dashboard/pages/lists/pages/detail";
 
 function NavigateToFilterTab({ tab }: { tab: (typeof FilterDetailTabIds)[keyof typeof FilterDetailTabIds] }) {
   const { uuid } = useParams<{ uuid: string }>();
@@ -71,6 +73,8 @@ export default function AppRoutes() {
         <Route path="leads" element={<LeadsPage />} />
         <Route path="contacts" element={<ContactsPage />} />
         <Route path="contacts/:uuid" element={<ContactDetailPage />} />
+        <Route path="lists" element={<ListsPage />} />
+        <Route path="lists/:uuid" element={<ListDetailPage />} />
         <Route path="reminders" element={<RemindersPage />} />
         <Route path="forms" element={<FormsPage />} />
         <Route path="forms/:uuid" element={<FormDetailPage />} />

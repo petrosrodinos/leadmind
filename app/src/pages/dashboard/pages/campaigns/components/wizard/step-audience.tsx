@@ -26,24 +26,12 @@ export function StepAudience({
     const preview = usePreviewCampaignContacts();
     const [result, setResult] = useState<PreviewContactsResult | null>(null);
 
-    // Auto-enforce channel-based contact requirements (not exposed in UI)
-    const channelOverrides = useMemo<Partial<CampaignFilters>>(() => ({
-        has_email: channels.includes(Channel.EMAIL) ? true : undefined,
-        has_phone: channels.includes(Channel.SMS) ? true : undefined,
-    }), [channels]);
-
-    const effectiveValue = useMemo<CampaignFilters>(
-        () => ({ ...value, ...channelOverrides }),
-        [value, channelOverrides],
-    );
-
     const handleChange = (patch: Partial<CampaignFilters>) => {
         onChange({ ...value, ...patch });
     };
 
-    // De-bounced auto-preview when filters change
     const debounceTimer = useRef<number | null>(null);
-    const serializedFilters = useMemo(() => JSON.stringify(effectiveValue), [effectiveValue]);
+    const serializedFilters = useMemo(() => JSON.stringify(value), [value]);
 
     useEffect(() => {
         if (debounceTimer.current !== null) {
@@ -53,11 +41,10 @@ export function StepAudience({
             try {
                 const res = await preview.mutateAsync({
                     uuid: campaignUuid,
-                    filters: effectiveValue,
+                    filters: value,
                 });
                 setResult(res);
             } catch {
-                // toast surfaced by hook
             }
         }, 400);
         return () => {
@@ -69,8 +56,8 @@ export function StepAudience({
     }, [serializedFilters, campaignUuid]);
 
     const excluded = useMemo(
-        () => new Set(effectiveValue.exclude_uuids ?? []),
-        [effectiveValue.exclude_uuids],
+        () => new Set(value.exclude_uuids ?? []),
+        [value.exclude_uuids],
     );
 
     const onToggleExclude = (uuid: string) => {
@@ -80,7 +67,14 @@ export function StepAudience({
         handleChange({ exclude_uuids: Array.from(next) });
     };
 
-    const includedCount = (result?.total ?? 0) - excluded.size;
+    const matchingCount = (result?.total ?? 0) - excluded.size;
+    const sendableCount = useMemo(() => {
+        if (!result) return matchingCount;
+        let count = result.total;
+        if (channels.includes(Channel.EMAIL)) count = Math.min(count, result.with_email);
+        if (channels.includes(Channel.SMS)) count = Math.min(count, result.with_phone);
+        return Math.max(0, count - excluded.size);
+    }, [result, channels, excluded.size, matchingCount]);
 
     return (
         <div className="flex flex-col gap-6">
@@ -94,12 +88,15 @@ export function StepAudience({
                     <Users className="size-5 text-accent" />
                     <div>
                         <div className="text-sm font-semibold text-foreground">
-                            {preview.isPending && !result ? "…" : includedCount} contacts in audience
+                            {preview.isPending && !result ? "…" : matchingCount} contacts match filters
                         </div>
                         {result && (
                             <div className="text-xs text-muted">
                                 {result.with_email} with email · {result.with_phone} with phone
-                                {excluded.size > 0 && ` · ${excluded.size} excluded`}
+                                {sendableCount !== matchingCount
+                                    ? ` · ${sendableCount} sendable on selected channels`
+                                    : null}
+                                {excluded.size > 0 ? ` · ${excluded.size} excluded` : null}
                             </div>
                         )}
                     </div>
@@ -110,7 +107,7 @@ export function StepAudience({
                     onPress={async () => {
                         const res = await preview.mutateAsync({
                             uuid: campaignUuid,
-                            filters: effectiveValue,
+                            filters: value,
                         });
                         setResult(res);
                     }}
@@ -130,7 +127,9 @@ export function StepAudience({
             {result && result.total > (result.sample?.length ?? 0) && (
                 <p className="text-xs text-muted text-center">
                     Showing the first {result.sample.length} of {result.total} matched contacts.
-                    All {result.total - excluded.size} included contacts will receive the campaign.
+                    {sendableCount > 0
+                        ? ` ${sendableCount} contact${sendableCount === 1 ? "" : "s"} can receive this campaign on the selected channels.`
+                        : " None of the matched contacts have the required email or phone for the selected channels."}
                 </p>
             )}
         </div>

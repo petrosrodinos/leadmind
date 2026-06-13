@@ -222,6 +222,11 @@ export interface ListContactsQuery {
     lead_uuid?: string;
     profile_field?: ContactProfileField;
     has_profile_field?: boolean;
+    exclude_list_uuid?: string;
+    last_interaction_after?: string;
+    last_interaction_before?: string;
+    never_contacted?: boolean;
+    include_unsubscribed?: boolean;
 }
 
 export interface PaginatedContacts {

@@ -32,6 +32,8 @@ export const Routes = {
         reminders: "/dashboard/reminders",
         forms: "/dashboard/forms",
         forms_detail: "/dashboard/forms/:uuid",
+        lists: "/dashboard/lists",
+        lists_detail: "/dashboard/lists/:uuid",
         admin_batch_jobs: "/dashboard/admin/batch-jobs",
     },
 };

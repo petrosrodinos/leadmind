@@ -160,4 +160,16 @@ export const ApiRoutes = {
             `/forms/${formUuid}/completions/${completionUuid}`,
         contactCompletions: (contactUuid: string) => `/form-completions/contact/${contactUuid}`,
     },
+    contact_lists: {
+        list: "/contact-lists",
+        create: "/contact-lists",
+        get: (uuid: string) => `/contact-lists/${uuid}`,
+        update: (uuid: string) => `/contact-lists/${uuid}`,
+        remove: (uuid: string) => `/contact-lists/${uuid}`,
+        contacts: (uuid: string) => `/contact-lists/${uuid}/contacts`,
+        add_contacts: (uuid: string) => `/contact-lists/${uuid}/contacts`,
+        bulk_add_contacts: (uuid: string) => `/contact-lists/${uuid}/contacts/bulk`,
+        remove_contact: (listUuid: string, contactUuid: string) =>
+            `/contact-lists/${listUuid}/contacts/${contactUuid}`,
+    },
 }

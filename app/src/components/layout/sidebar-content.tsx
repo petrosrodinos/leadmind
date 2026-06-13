@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { Disclosure } from "@heroui/react";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, Users, Globe, Filter, IdCard, Megaphone, Layers, ShieldCheck, ChevronDown, Plug, Bell, ClipboardList } from "lucide-react";
+import { LayoutDashboard, Users, Globe, Filter, IdCard, Megaphone, Layers, ShieldCheck, ChevronDown, Plug, Bell, ClipboardList, List } from "lucide-react";
 import { Routes } from "@/routes/routes";
 import { usePermission } from "@/hooks/use-permission";
 
@@ -15,6 +15,7 @@ const navItems = [
   { label: "Dashboard", icon: LayoutDashboard, href: Routes.dashboard.root, end: true },
   { label: "Filters", icon: Filter, href: Routes.dashboard.filters, end: false },
   { label: "Contacts", icon: Users, href: Routes.dashboard.contacts, end: false },
+  { label: "Lists", icon: List, href: Routes.dashboard.lists, end: false },
   { label: "Reminders", icon: Bell, href: Routes.dashboard.reminders, end: false },
   { label: "Forms", icon: ClipboardList, href: Routes.dashboard.forms, end: false },
   { label: "Leads Directory", icon: Globe, href: Routes.dashboard.leads_directory, end: false },

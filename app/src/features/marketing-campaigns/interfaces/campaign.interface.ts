@@ -1,5 +1,5 @@
-import type { Channel, Contact, ContactScoreRule, LeadStatus } from "@/features/contacts/interfaces/contact.interface";
-import type { CampaignProfileField } from "@/features/marketing-campaigns/constants/campaign-profile-fields.constants";
+import type { Channel, Contact } from "@/features/contacts/interfaces/contact.interface";
+import type { ContactFilters } from "@/interfaces/contact-filters.interface";
 
 export const CampaignType = {
     STANDARD: "STANDARD",
@@ -37,22 +37,9 @@ export const CampaignContactStatuses = {
 export type CampaignContactStatuses =
     (typeof CampaignContactStatuses)[keyof typeof CampaignContactStatuses];
 
-export interface CampaignFilters {
-    status?: LeadStatus;
-    tags?: string[];
-    score_rules?: ContactScoreRule[];
-    search?: string;
-    filter_uuid?: string;
+export interface CampaignFilters extends ContactFilters {
     lead_uuid?: string;
-    has_email?: boolean;
-    has_phone?: boolean;
-    profile_field?: CampaignProfileField;
-    has_profile_field?: boolean;
-    last_interaction_after?: string;
-    last_interaction_before?: string;
     exclude_uuids?: string[];
-    include_unsubscribed?: boolean;
-    never_contacted?: boolean;
 }
 
 export interface MarketingCampaign {

@@ -246,6 +246,24 @@ exports.Prisma.ContactScoreScalarFieldEnum = {
   updated_at: 'updated_at'
 };
 
+exports.Prisma.ContactListScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  user_uuid: 'user_uuid',
+  title: 'title',
+  description: 'description',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.ContactListMemberScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  list_uuid: 'list_uuid',
+  contact_uuid: 'contact_uuid',
+  created_at: 'created_at'
+};
+
 exports.Prisma.ContactTagScalarFieldEnum = {
   id: 'id',
   contact_uuid: 'contact_uuid',
@@ -715,6 +733,8 @@ exports.Prisma.ModelName = {
   LeadEnrichment: 'LeadEnrichment',
   Contact: 'Contact',
   ContactScore: 'ContactScore',
+  ContactList: 'ContactList',
+  ContactListMember: 'ContactListMember',
   ContactTag: 'ContactTag',
   Interaction: 'Interaction',
   OutreachMessage: 'OutreachMessage',
