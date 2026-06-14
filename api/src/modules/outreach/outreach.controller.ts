@@ -23,6 +23,7 @@ import { AssignSequenceDto } from './dto/assign-sequence.dto';
 import { CreateSequenceDto } from './dto/create-sequence.dto';
 import { ListMessagesDto } from './dto/list-messages.dto';
 import { SendOutreachDto } from './dto/send-outreach.dto';
+import { BulkSendOutreachDto } from './dto/bulk-send-outreach.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
 import { OutreachService } from './outreach.service';
 
@@ -83,6 +84,20 @@ export class OutreachController {
     @ApiResponse({ status: 201 })
     createDraft(@CurrentUser('uuid') user_uuid: string, @Body() dto: SendOutreachDto) {
         return this.outreachService.createDraft(user_uuid, dto);
+    }
+
+    @Post('messages/bulk/draft')
+    @ApiOperation({ summary: 'Create PENDING outreach drafts for multiple contacts with the same template' })
+    @ApiResponse({ status: 201 })
+    createBulkDraft(@CurrentUser('uuid') user_uuid: string, @Body() dto: BulkSendOutreachDto) {
+        return this.outreachService.createBulkDraft(user_uuid, dto);
+    }
+
+    @Post('messages/bulk')
+    @ApiOperation({ summary: 'Create and enqueue outreach messages for multiple contacts' })
+    @ApiResponse({ status: 201 })
+    createBulkAndQueue(@CurrentUser('uuid') user_uuid: string, @Body() dto: BulkSendOutreachDto) {
+        return this.outreachService.createBulkAndQueue(user_uuid, dto);
     }
 
     @Post('sequences')

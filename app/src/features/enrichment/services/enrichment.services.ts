@@ -3,6 +3,7 @@ import { ApiRoutes } from "@/config/api/routes";
 import type { EnrichmentSource } from "@/features/enrichment/constants/enrichment-sources";
 import type {
     BulkEnrichLeadsResponse,
+    BulkEnrichContactsResponse,
     EnrichContactResponse,
     EnrichLeadResponse,
     EnrichmentEntityKind,
@@ -71,5 +72,17 @@ export const enrichContact = async (
         return response.data;
     } catch (error: any) {
         throw new Error(error?.response?.data?.message || "Failed to queue enrichment.");
+    }
+};
+
+export const enrichContactsBulk = async (payload: {
+    uuids: string[];
+    sources?: EnrichmentSource[];
+}): Promise<BulkEnrichContactsResponse> => {
+    try {
+        const response = await axiosInstance.post(ApiRoutes.contacts.bulk_enrich, payload);
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error?.response?.data?.message || "Failed to enqueue bulk enrichment.");
     }
 };

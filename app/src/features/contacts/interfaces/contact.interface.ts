@@ -265,6 +265,19 @@ export interface CreateMessagePayload {
     contact_uuid: string;
 }
 
+export interface BulkCreateMessagePayload {
+    contact_uuids: string[];
+    channel: Channel;
+    content: string;
+    subject?: string;
+}
+
+export interface BulkCreateMessageResult {
+    created: number;
+    skipped: number;
+    failed: number;
+}
+
 export interface AiDraftMessagePayload {
     contact_uuid: string;
     channel: Channel;

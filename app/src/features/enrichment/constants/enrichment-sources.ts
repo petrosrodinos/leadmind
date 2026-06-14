@@ -47,6 +47,10 @@ export function defaultEnrichmentSourcesForLead(sourceType: SourceType | undefin
     return DEFAULT_ENRICHMENT_SOURCES;
 }
 
+export function enrichmentSourceOptionsForBulk() {
+    return [GEMI_REGISTRY_ENRICHMENT_OPTION, ...ENRICHMENT_SOURCE_OPTIONS];
+}
+
 export const ENRICHMENT_SOURCE_ICON: Record<EnrichmentSource, LucideIcon> = {
     [EnrichmentSource.LINKEDIN]: Briefcase,
     [EnrichmentSource.WEBSITE]: Globe,

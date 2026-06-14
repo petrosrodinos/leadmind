@@ -20,6 +20,7 @@ import { JwtGuard } from '@/shared/guards/jwt.guard';
 import { ContactsService } from './contacts.service';
 import { AddNoteDto } from './dto/add-note.dto';
 import { AiDraftMessageDto } from './dto/ai-draft-message.dto';
+import { BulkEnrichContactsDto } from './dto/bulk-enrich-contacts.dto';
 import { BulkTriggerScoreDto } from './dto/bulk-trigger-score.dto';
 import { CreateContactDto } from './dto/create-contact.dto';
 import { ListContactsDto } from './dto/list-contacts.dto';
@@ -70,6 +71,17 @@ export class ContactsController {
     @ApiOperation({ summary: 'List all distinct tag strings for the current user contacts' })
     getUserTags(@CurrentUser('uuid') user_uuid: string) {
         return this.contactsService.getUserTags(user_uuid);
+    }
+
+    @Post('bulk-enrich')
+    @ApiOperation({ summary: 'Queue enrichment for multiple contacts (same sources for all)' })
+    @ApiResponse({ status: 201 })
+    @ApiResponse({ status: 404 })
+    triggerBulkEnrich(
+        @CurrentUser('uuid') user_uuid: string,
+        @Body() dto: BulkEnrichContactsDto,
+    ) {
+        return this.contactsService.triggerBulkEnrich(user_uuid, dto);
     }
 
     @Post('bulk-score')

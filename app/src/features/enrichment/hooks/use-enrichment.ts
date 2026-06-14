@@ -10,6 +10,7 @@ import type {
 import {
     enrichLead,
     enrichLeadsBulk,
+    enrichContactsBulk,
     listEnrichments,
 } from "../services/enrichment.services";
 
@@ -121,6 +122,35 @@ export function useEnrichLeadsBulk() {
         onError: (error: Error) => {
             toast({
                 title: "Could not enrich leads",
+                description: error.message,
+                duration: 3000,
+                variant: "error",
+            });
+        },
+    });
+}
+
+export function useEnrichContactsBulk() {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: (vars: { uuids: string[]; sources?: EnrichmentSource[] }) =>
+            enrichContactsBulk({ uuids: vars.uuids, sources: vars.sources }),
+        onSuccess: (_data, vars) => {
+            const n = vars.uuids.length;
+            toast({
+                title: "Enrichment queued",
+                description: `${n} contact${n === 1 ? "" : "s"} will refresh shortly.`,
+                duration: 2500,
+            });
+            qc.invalidateQueries({ queryKey: contactsQueryKeys.all });
+            for (const uuid of vars.uuids) {
+                qc.invalidateQueries({ queryKey: contactsQueryKeys.detail(uuid) });
+                qc.invalidateQueries({ queryKey: [...enrichmentQueryKeys.all, "list", "contact", uuid] });
+            }
+        },
+        onError: (error: Error) => {
+            toast({
+                title: "Could not enrich contacts",
                 description: error.message,
                 duration: 3000,
                 variant: "error",

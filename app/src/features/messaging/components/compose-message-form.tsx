@@ -2,93 +2,72 @@ import { useState } from "react";
 import { Button, Modal } from "@heroui/react";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import { Save, Send } from "lucide-react";
-import {
-    Channel,
-    type CreateMessagePayload,
-} from "@/features/contacts/interfaces/contact.interface";
+import { Channel } from "@/features/contacts/interfaces/contact.interface";
 import { useAiDraftMessage } from "@/features/contacts/hooks/use-contacts";
 import {
+    useBulkCreateAndSendMessages,
+    useBulkCreateDraftMessages,
     useCreateAndSendMessage,
     useCreateDraftMessage,
 } from "@/features/outreach/hooks/use-outreach";
-import { isEmailHtmlEmpty } from "@/lib/sanitize-html";
 import {
     MessageComposer,
     type MessageComposerValue,
     type AiGenerateArgs,
 } from "@/features/messaging/components/message-composer";
 import { DEFAULT_CAMPAIGN_ACTIONS } from "@/features/messaging/constants/ai-actions";
+import {
+    EMPTY_MESSAGE_COMPOSER_VALUE,
+    buildBulkCreateMessagePayload,
+    buildCreateMessagePayload,
+    isComposerContentEmpty,
+} from "@/features/messaging/utils/compose-message";
 
-interface ComposeMessageModalProps {
-    isOpen: boolean;
-    onOpenChange: (open: boolean) => void;
-    contact_uuid: string;
-}
+export type ComposeMessageMode = "single" | "bulk";
 
-const EMPTY_VALUE: MessageComposerValue = {
-    emailSubject: "",
-    emailContent: "",
-    smsContent: "",
-    callContent: "",
-    linkedinContent: "",
-};
-
-export function ComposeMessageModal({
-    isOpen,
-    onOpenChange,
-    contact_uuid,
-}: ComposeMessageModalProps) {
-    const [mountKey, setMountKey] = useState(0);
-
-    const handleOpenChange = (open: boolean) => {
-        if (open) setMountKey((k) => k + 1);
-        onOpenChange(open);
-    };
-
-    return (
-        <Modal.Backdrop isOpen={isOpen} onOpenChange={handleOpenChange}>
-            <Modal.Container>
-                <Modal.Dialog className="sm:max-w-2xl">
-                    <Modal.CloseTrigger />
-                    {isOpen ? (
-                        <ComposeForm
-                            key={mountKey}
-                            contact_uuid={contact_uuid}
-                            onClose={() => onOpenChange(false)}
-                        />
-                    ) : null}
-                </Modal.Dialog>
-            </Modal.Container>
-        </Modal.Backdrop>
-    );
-}
-
-interface ComposeFormProps {
-    contact_uuid: string;
+export interface ComposeMessageFormProps {
+    mode: ComposeMessageMode;
+    contactUuid?: string;
+    contactUuids?: string[];
     onClose: () => void;
+    onBulkComplete?: () => void;
 }
 
-function ComposeForm({ contact_uuid, onClose }: ComposeFormProps) {
+export function ComposeMessageForm({
+    mode,
+    contactUuid,
+    contactUuids = [],
+    onClose,
+    onBulkComplete,
+}: ComposeMessageFormProps) {
     const [activeChannel, setActiveChannel] = useState<Channel>(Channel.EMAIL);
-    const [value, setValue] = useState<MessageComposerValue>(EMPTY_VALUE);
+    const [value, setValue] = useState<MessageComposerValue>(EMPTY_MESSAGE_COMPOSER_VALUE);
 
     const aiDraft = useAiDraftMessage();
     const createDraft = useCreateDraftMessage();
     const createAndSend = useCreateAndSendMessage();
+    const bulkCreateDraft = useBulkCreateDraftMessages();
+    const bulkCreateAndSend = useBulkCreateAndSendMessages();
 
-    const isEmail = activeChannel === Channel.EMAIL;
-    const isCall = activeChannel === Channel.PHONE_CALL;
-    const isPending = aiDraft.isPending || createDraft.isPending || createAndSend.isPending;
+    const isBulk = mode === "bulk";
+    const bulkCount = contactUuids.length;
+    const aiPreviewContactUuid = isBulk ? contactUuids[0] : contactUuid;
 
-    const contentEmpty = isEmail
-        ? isEmailHtmlEmpty(value.emailContent)
-        : isCall
-          ? value.callContent.trim().length === 0
-          : value.smsContent.trim().length === 0;
+    const isPending =
+        aiDraft.isPending ||
+        createDraft.isPending ||
+        createAndSend.isPending ||
+        bulkCreateDraft.isPending ||
+        bulkCreateAndSend.isPending;
+
+    const contentEmpty = isComposerContentEmpty(activeChannel, value);
 
     const handleAi = async (args: AiGenerateArgs) => {
+        if (!aiPreviewContactUuid) {
+            throw new Error("No contact available for AI preview.");
+        }
         const result = await aiDraft.mutateAsync({
-            contact_uuid,
+            contact_uuid: aiPreviewContactUuid,
             channel: args.channel,
             action: args.action,
             prompt: args.prompt,
@@ -99,25 +78,19 @@ function ComposeForm({ contact_uuid, onClose }: ComposeFormProps) {
         return { subject: result.subject, content: result.content };
     };
 
-    const buildPayload = (): CreateMessagePayload => {
-        const content = isEmail
-            ? value.emailContent
-            : isCall
-              ? value.callContent
-              : value.smsContent;
-        const subject = isEmail && value.emailSubject.trim() ? value.emailSubject.trim() : undefined;
-        return {
-            channel: activeChannel,
-            content,
-            contact_uuid,
-            ...(subject ? { subject } : {}),
-        };
-    };
-
     const handleSaveDraft = async () => {
-        if (contentEmpty || createDraft.isPending) return;
+        if (contentEmpty || isPending) return;
         try {
-            await createDraft.mutateAsync(buildPayload());
+            if (isBulk) {
+                await bulkCreateDraft.mutateAsync(
+                    buildBulkCreateMessagePayload(activeChannel, value, contactUuids),
+                );
+                onBulkComplete?.();
+            } else if (contactUuid) {
+                await createDraft.mutateAsync(
+                    buildCreateMessagePayload(activeChannel, value, contactUuid),
+                );
+            }
             onClose();
         } catch {
             // toast surfaced by hook
@@ -125,19 +98,38 @@ function ComposeForm({ contact_uuid, onClose }: ComposeFormProps) {
     };
 
     const handleSend = async () => {
-        if (contentEmpty || createAndSend.isPending) return;
+        if (contentEmpty || isPending) return;
         try {
-            await createAndSend.mutateAsync(buildPayload());
+            if (isBulk) {
+                await bulkCreateAndSend.mutateAsync(
+                    buildBulkCreateMessagePayload(activeChannel, value, contactUuids),
+                );
+                onBulkComplete?.();
+            } else if (contactUuid) {
+                await createAndSend.mutateAsync(
+                    buildCreateMessagePayload(activeChannel, value, contactUuid),
+                );
+            }
             onClose();
         } catch {
             // toast surfaced by hook
         }
     };
 
+    const heading = isBulk
+        ? `Compose message for ${bulkCount} contact${bulkCount === 1 ? "" : "s"}`
+        : "Compose new message";
+
     return (
         <>
             <Modal.Header>
-                <Modal.Heading>Compose new message</Modal.Heading>
+                <Modal.Heading>{heading}</Modal.Heading>
+                {isBulk ? (
+                    <p className="text-sm text-muted">
+                        The same draft is created for each selected contact. AI preview uses the first
+                        selected contact as context.
+                    </p>
+                ) : null}
             </Modal.Header>
             <div className="flex min-h-0 flex-1 flex-col">
                 <Modal.Body className="p-6">
@@ -150,7 +142,7 @@ function ComposeForm({ contact_uuid, onClose }: ComposeFormProps) {
                         }}
                         value={value}
                         onChange={(patch) => setValue((v) => ({ ...v, ...patch }))}
-                        onAiGenerate={handleAi}
+                        onAiGenerate={aiPreviewContactUuid ? handleAi : undefined}
                         aiActions={DEFAULT_CAMPAIGN_ACTIONS}
                         isAiPending={aiDraft.isPending}
                         disabled={isPending}
@@ -163,19 +155,19 @@ function ComposeForm({ contact_uuid, onClose }: ComposeFormProps) {
                     <ActionButtonWithPending
                         variant="tertiary"
                         isDisabled={contentEmpty || isPending}
-                        isPending={createDraft.isPending}
+                        isPending={isBulk ? bulkCreateDraft.isPending : createDraft.isPending}
                         onPress={handleSaveDraft}
                         idleLeading={<Save className="size-4" />}
                     >
-                        Save draft
+                        {isBulk ? "Save drafts" : "Save draft"}
                     </ActionButtonWithPending>
                     <ActionButtonWithPending
                         isDisabled={contentEmpty || isPending}
-                        isPending={createAndSend.isPending}
+                        isPending={isBulk ? bulkCreateAndSend.isPending : createAndSend.isPending}
                         onPress={handleSend}
                         idleLeading={<Send className="size-4" />}
                     >
-                        Send
+                        {isBulk ? "Send to all" : "Send"}
                     </ActionButtonWithPending>
                 </Modal.Footer>
             </div>

@@ -8,7 +8,7 @@ import { useDeleteOutreachMessage, useSendOutreachMessage } from "@/features/out
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { EditMessageModal } from "@/pages/dashboard/pages/leads/components/edit-message-modal";
 import { cn } from "@/lib/utils";
-import { ComposeMessageModal } from "./compose-message-modal";
+import { ComposeMessageModal } from "@/features/messaging/components/compose-message-modal";
 import { MessageBodyPreview } from "./message-body-preview";
 import { Section } from "./section";
 import { channelIcon } from "../utils/channel-icon";
@@ -188,7 +188,7 @@ export function OutreachTab({ contact, highlightUuid, onHighlightConsumed }: Out
       <ComposeMessageModal
         isOpen={composeOpen}
         onOpenChange={setComposeOpen}
-        contact_uuid={contact.uuid}
+        contactUuid={contact.uuid}
       />
 
       <ConfirmDialog

@@ -27,6 +27,7 @@ import { AiDraftMessageDto } from './dto/ai-draft-message.dto';
 import { BulkTriggerScoreDto } from './dto/bulk-trigger-score.dto';
 import { CreateContactDto } from './dto/create-contact.dto';
 import { EnrichContactDto } from './dto/enrich-contact.dto';
+import { BulkEnrichContactsDto } from './dto/bulk-enrich-contacts.dto';
 import { ListContactsDto } from './dto/list-contacts.dto';
 import { buildContactProfileFieldWhere } from './utils/contact-profile-field-filter.utils';
 import { mergeContactWhereClauses } from './utils/contact-where-merge.utils';
@@ -820,6 +821,35 @@ export class ContactsService {
                 );
             });
         return { jobId: 'inline' };
+    }
+
+    async triggerBulkEnrich(
+        user_uuid: string,
+        dto: BulkEnrichContactsDto,
+    ): Promise<{ queued: number }> {
+        const unique = [...new Set(dto.uuids)];
+        const rows = await this.prisma.contact.findMany({
+            where: { user_uuid, uuid: { in: unique } },
+            include: { filter: true },
+        });
+        if (rows.length !== unique.length) {
+            const found = new Set(rows.map((r) => r.uuid));
+            const missing = unique.filter((u) => !found.has(u));
+            throw new NotFoundException(`Contact(s) not found: ${missing.join(', ')}`);
+        }
+
+        for (const row of rows) {
+            const enrichment_sources = resolveContactEnrichmentSources(dto.sources, row.filter);
+            void this.enrichmentOrchestrator
+                .runForContact(row.uuid, enrichment_sources, { force: true })
+                .catch((error) => {
+                    this.logger.error(
+                        `Contact ${row.uuid} enrichment failed: ${error instanceof Error ? error.message : error}`,
+                    );
+                });
+        }
+
+        return { queued: rows.length };
     }
 
     async findEnrichmentsForContact(

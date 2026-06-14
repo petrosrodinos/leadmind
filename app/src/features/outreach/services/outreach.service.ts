@@ -1,6 +1,8 @@
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type {
+    BulkCreateMessagePayload,
+    BulkCreateMessageResult,
     CreateMessagePayload,
     OutreachMessage,
     UpdateMessagePayload,
@@ -40,6 +42,28 @@ export const createAndSendMessage = async (
         return response.data;
     } catch (error: any) {
         throw new Error(error?.response?.data?.message || "Failed to send message.");
+    }
+};
+
+export const createBulkDraftMessages = async (
+    payload: BulkCreateMessagePayload,
+): Promise<BulkCreateMessageResult> => {
+    try {
+        const response = await axiosInstance.post(ApiRoutes.outreach.create_bulk_draft, payload);
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error?.response?.data?.message || "Failed to save drafts.");
+    }
+};
+
+export const createBulkAndSendMessages = async (
+    payload: BulkCreateMessagePayload,
+): Promise<BulkCreateMessageResult> => {
+    try {
+        const response = await axiosInstance.post(ApiRoutes.outreach.create_bulk_and_send, payload);
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error?.response?.data?.message || "Failed to send messages.");
     }
 };
 

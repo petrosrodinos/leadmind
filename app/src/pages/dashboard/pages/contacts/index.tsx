@@ -6,7 +6,14 @@ import { ContactsTable } from "./components/contacts-table";
 import { PipelineView } from "./components/pipeline-view";
 import { NewContactModal } from "./components/new-contact-modal";
 import { BulkScoreContactsPopover } from "./components/bulk-score-contacts-popover";
+import { ComposeMessageModal } from "@/features/messaging/components/compose-message-modal";
+import { BulkEnrichmentRunModal } from "@/components/ui/bulk-enrichment-run-modal";
 import { ContactsActionsDropdown } from "./components/contacts-actions-dropdown";
+import {
+    DEFAULT_ENRICHMENT_SOURCES,
+    enrichmentSourceOptionsForBulk,
+} from "@/features/enrichment/constants/enrichment-sources";
+import { useEnrichContactsBulk } from "@/features/enrichment/hooks/use-enrichment";
 import { ContactFiltersForm } from "@/pages/dashboard/components/contact-filters-form";
 import { ContactStackViewerScope } from "@/pages/dashboard/components/contact-stack-viewer";
 import { useContacts } from "@/features/contacts/hooks/use-contacts";
@@ -51,6 +58,10 @@ export default function ContactsPage() {
   const [selectedKeys, setSelectedKeys] = useState<Set<string>>(new Set());
   const [createOpen, setCreateOpen] = useState(false);
   const [scoreOpen, setScoreOpen] = useState(false);
+  const [composeOpen, setComposeOpen] = useState(false);
+  const [enrichOpen, setEnrichOpen] = useState(false);
+
+  const enrichBulk = useEnrichContactsBulk();
 
   const updateFilters = (patch: Partial<ContactFilters>, resetPage = true) => {
     const next = { ...filters, ...patch };
@@ -112,6 +123,12 @@ export default function ContactsPage() {
                 quickBrowseDisabled={!quickBrowse.hasContacts}
                 onScoreSelected={view === "table" ? () => setScoreOpen(true) : undefined}
                 scoreDisabled={selectedKeys.size === 0}
+                onDraftMessagesSelected={
+                  view === "table" ? () => setComposeOpen(true) : undefined
+                }
+                draftMessagesDisabled={selectedKeys.size === 0}
+                onEnrichSelected={view === "table" ? () => setEnrichOpen(true) : undefined}
+                enrichDisabled={selectedKeys.size === 0 || enrichBulk.isPending}
               />
               <Tabs selectedKey={view} onSelectionChange={(key) => setView(String(key) as View)}>
                 <Tabs.List className="inline-flex gap-1 rounded-lg bg-surface-secondary p-1 border border-border">
@@ -168,6 +185,33 @@ export default function ContactsPage() {
               onOpenChange={setScoreOpen}
               selectedContactUuids={[...selectedKeys]}
               onScoringComplete={() => setSelectedKeys(new Set())}
+            />
+          ) : null}
+          {view === "table" ? (
+            <ComposeMessageModal
+              isOpen={composeOpen}
+              onOpenChange={setComposeOpen}
+              mode="bulk"
+              contactUuids={[...selectedKeys]}
+              onBulkComplete={() => setSelectedKeys(new Set())}
+            />
+          ) : null}
+          {view === "table" ? (
+            <BulkEnrichmentRunModal
+              isOpen={enrichOpen}
+              onOpenChange={setEnrichOpen}
+              mode="contact"
+              selectedCount={selectedKeys.size}
+              sourceOptions={enrichmentSourceOptionsForBulk()}
+              initialSources={DEFAULT_ENRICHMENT_SOURCES}
+              isPending={enrichBulk.isPending}
+              onEnrich={(sources) => {
+                if (selectedKeys.size === 0) return;
+                enrichBulk.mutate(
+                  { uuids: [...selectedKeys], sources },
+                  { onSuccess: () => setSelectedKeys(new Set()) },
+                );
+              }}
             />
           ) : null}
         </div>

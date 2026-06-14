@@ -9,7 +9,7 @@ import {
     ENRICHMENT_SOURCE_OPTIONS,
     EnrichmentSource as EnrichmentSourceEnum,
     type EnrichmentSource,
-} from "@/features/lead-enrichment/constants/enrichment-sources";
+} from "@/features/enrichment/constants/enrichment-sources";
 
 export type EnrichmentActionMode = "contact" | "lead";
 

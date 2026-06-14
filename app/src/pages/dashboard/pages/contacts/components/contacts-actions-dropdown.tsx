@@ -1,6 +1,6 @@
 import type { FC } from "react";
 import { Button, Dropdown } from "@heroui/react";
-import { ChevronDown, ChevronsUpDown, Gauge, Plus } from "lucide-react";
+import { ChevronDown, ChevronsUpDown, Gauge, Mail, Plus, Sparkles } from "lucide-react";
 
 interface ContactsActionsDropdownProps {
     onAddContact: () => void;
@@ -8,6 +8,10 @@ interface ContactsActionsDropdownProps {
     quickBrowseDisabled?: boolean;
     onScoreSelected?: () => void;
     scoreDisabled?: boolean;
+    onDraftMessagesSelected?: () => void;
+    draftMessagesDisabled?: boolean;
+    onEnrichSelected?: () => void;
+    enrichDisabled?: boolean;
 }
 
 export const ContactsActionsDropdown: FC<ContactsActionsDropdownProps> = ({
@@ -16,6 +20,10 @@ export const ContactsActionsDropdown: FC<ContactsActionsDropdownProps> = ({
     quickBrowseDisabled = false,
     onScoreSelected,
     scoreDisabled = false,
+    onDraftMessagesSelected,
+    draftMessagesDisabled = false,
+    onEnrichSelected,
+    enrichDisabled = false,
 }) => (
     <Dropdown>
         <Dropdown.Trigger>
@@ -33,6 +41,8 @@ export const ContactsActionsDropdown: FC<ContactsActionsDropdownProps> = ({
                 onAction={(key) => {
                     if (key === "quick-browse") onQuickBrowse?.();
                     if (key === "score-selected") onScoreSelected?.();
+                    if (key === "draft-messages-selected") onDraftMessagesSelected?.();
+                    if (key === "enrich-selected") onEnrichSelected?.();
                     if (key === "add-contact") onAddContact();
                 }}
             >
@@ -57,6 +67,30 @@ export const ContactsActionsDropdown: FC<ContactsActionsDropdownProps> = ({
                         <span className="flex items-center gap-2.5 antialiased">
                             <Gauge className="size-4 shrink-0 text-muted" strokeWidth={2} />
                             <span className="font-medium text-foreground">Score selected</span>
+                        </span>
+                    </Dropdown.Item>
+                ) : null}
+                {onEnrichSelected ? (
+                    <Dropdown.Item
+                        id="enrich-selected"
+                        textValue="Enrich selected"
+                        isDisabled={enrichDisabled}
+                    >
+                        <span className="flex items-center gap-2.5 antialiased">
+                            <Sparkles className="size-4 shrink-0 text-violet-500" strokeWidth={2} />
+                            <span className="font-medium text-violet-400">Enrich selected</span>
+                        </span>
+                    </Dropdown.Item>
+                ) : null}
+                {onDraftMessagesSelected ? (
+                    <Dropdown.Item
+                        id="draft-messages-selected"
+                        textValue="Draft messages for selected"
+                        isDisabled={draftMessagesDisabled}
+                    >
+                        <span className="flex items-center gap-2.5 antialiased">
+                            <Mail className="size-4 shrink-0 text-muted" strokeWidth={2} />
+                            <span className="font-medium text-foreground">Draft messages for selected</span>
                         </span>
                     </Dropdown.Item>
                 ) : null}

@@ -13,7 +13,7 @@ import { useAddLeadToCrm } from "@/features/contacts/hooks/use-contacts";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { Routes } from "@/routes/routes";
 import { usePermission } from "@/hooks/use-permission";
-import { EnrichmentRunModal } from "@/components/ui/enrichment-action-popover";
+import { BulkEnrichmentRunModal } from "@/components/ui/bulk-enrichment-run-modal";
 import { useEnrichLeadsBulk } from "@/features/lead-enrichment/hooks/use-lead-enrichment";
 
 const PAGE_SIZE = 20;
@@ -144,8 +144,6 @@ export default function LeadsDirectoryPage() {
   const totalPages = data?.totalPages ?? 1;
 
   const selectedCount = selectedKeys.size;
-  const bulkContextHint =
-    selectedCount > 0 ? `One job per selected lead (${selectedCount}). Same sources for all.` : undefined;
 
   return (
     <div className="space-y-4">
@@ -219,12 +217,12 @@ export default function LeadsDirectoryPage() {
       </div>
 
                 {canBulkEnrich ? (
-        <EnrichmentRunModal
+        <BulkEnrichmentRunModal
           isOpen={enrichModalOpen}
           onOpenChange={setEnrichModalOpen}
           mode="lead"
+          selectedCount={selectedCount}
           isPending={enrichBulk.isPending}
-          contextHint={bulkContextHint}
           onEnrich={(sources, options) => {
             if (selectedKeys.size === 0) return;
             enrichBulk.mutate(
