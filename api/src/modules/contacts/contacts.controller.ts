@@ -20,6 +20,7 @@ import { JwtGuard } from '@/shared/guards/jwt.guard';
 import { ContactsService } from './contacts.service';
 import { AddNoteDto } from './dto/add-note.dto';
 import { AiDraftMessageDto } from './dto/ai-draft-message.dto';
+import { BulkAiDraftMessagesDto } from './dto/bulk-ai-draft-messages.dto';
 import { BulkEnrichContactsDto } from './dto/bulk-enrich-contacts.dto';
 import { BulkTriggerScoreDto } from './dto/bulk-trigger-score.dto';
 import { CreateContactDto } from './dto/create-contact.dto';
@@ -71,6 +72,19 @@ export class ContactsController {
     @ApiOperation({ summary: 'List all distinct tag strings for the current user contacts' })
     getUserTags(@CurrentUser('uuid') user_uuid: string) {
         return this.contactsService.getUserTags(user_uuid);
+    }
+
+    @Post('bulk-ai-draft-messages')
+    @ApiOperation({
+        summary: 'Generate personalized AI drafts for multiple contacts (one message per contact)',
+    })
+    @ApiResponse({ status: 201 })
+    @ApiResponse({ status: 404 })
+    triggerBulkAiDraftMessages(
+        @CurrentUser('uuid') user_uuid: string,
+        @Body() dto: BulkAiDraftMessagesDto,
+    ) {
+        return this.contactsService.triggerBulkAiDraftMessages(user_uuid, dto);
     }
 
     @Post('bulk-enrich')

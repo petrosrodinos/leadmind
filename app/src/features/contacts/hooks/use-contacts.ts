@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
     aiDraftMessage,
+    bulkAiDraftMessages,
     createContact,
     createContactFromLead,
     deleteContact,
@@ -24,6 +25,8 @@ import {
 } from "../services/contacts.service";
 import type {
     AiDraftMessagePayload,
+    BulkAiDraftMessagesPayload,
+    BulkCreateMessageResult,
     BulkTriggerContactScorePayload,
     Contact,
     CreateContactPayload,
@@ -485,6 +488,42 @@ export function useLogSms() {
         onError: (error: Error) => {
             toast({
                 title: "Could not log SMS",
+                description: error.message,
+                duration: 3000,
+                variant: "error",
+            });
+        },
+    });
+}
+
+function formatBulkAiDraftResult(result: BulkCreateMessageResult, send?: boolean): string {
+    const parts: string[] = [];
+    if (result.created > 0) parts.push(`${result.created} generated`);
+    if (result.skipped > 0) parts.push(`${result.skipped} skipped`);
+    if (result.failed > 0) parts.push(`${result.failed} failed`);
+    if (send && result.queued != null) parts.push(`${result.queued} queued for send`);
+    return parts.length > 0 ? parts.join(", ") : "No drafts created";
+}
+
+export function useBulkAiDraftMessages() {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: (payload: BulkAiDraftMessagesPayload) => bulkAiDraftMessages(payload),
+        onSuccess: (result, vars) => {
+            qc.invalidateQueries({ queryKey: contactsQueryKeys.all });
+            for (const uuid of vars.contact_uuids) {
+                qc.invalidateQueries({ queryKey: contactsQueryKeys.detail(uuid) });
+                qc.invalidateQueries({ queryKey: contactsQueryKeys.messages(uuid) });
+            }
+            toast({
+                title: vars.send ? "Messages generated" : "Drafts generated",
+                description: formatBulkAiDraftResult(result, vars.send),
+                duration: 3500,
+            });
+        },
+        onError: (error: Error) => {
+            toast({
+                title: "Could not generate messages",
                 description: error.message,
                 duration: 3000,
                 variant: "error",

@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from "react";
 import { useState } from "react";
-import { Label, TextArea, TextField } from "@heroui/react";
+import { PersonalizedMessageGoalField } from "@/features/messaging/components/personalized-message-goal-field";
 import { MessageComposer, type MessageComposerValue } from "@/features/messaging/components/message-composer";
 import { DEFAULT_CAMPAIGN_ACTIONS } from "@/features/messaging/constants/ai-actions";
 import { Channel } from "@/features/contacts/interfaces/contact.interface";
@@ -58,22 +58,7 @@ export function StepMessage({
 
   if (campaignType === CampaignType.PERSONALIZED) {
     return (
-      <div className="flex flex-col gap-4 max-w-2xl">
-        <p className="text-sm text-muted">
-          Describe the goal of your outreach. The AI will write a unique message for each contact based on their profile and this prompt.
-        </p>
-        <TextField name="ai_prompt">
-          <Label>Message goal</Label>
-          <TextArea
-            rows={5}
-            placeholder="e.g. Introduce our new pricing plan, highlight the cost savings for their industry, keep it brief and friendly…"
-            value={aiPrompt}
-            onChange={(e) => onAiPromptChange(e.target.value)}
-            maxLength={2000}
-          />
-          <p className="text-xs text-muted mt-1">{aiPrompt.length}/2000</p>
-        </TextField>
-      </div>
+      <PersonalizedMessageGoalField value={aiPrompt} onChange={onAiPromptChange} />
     );
   }
 

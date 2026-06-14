@@ -57,7 +57,9 @@ import { ContactAiService } from './services/contact-ai.service';
 import { ListEnrichmentsDto } from '@/modules/enrichment/dto/list-enrichments.dto';
 import { EnrichmentQueryService } from '@/modules/enrichment/services/enrichment-query.service';
 import { EnrichmentOrchestrator } from '@/modules/enrichment/services/enrichment.orchestrator';
+import { OutreachService } from '@/modules/outreach/outreach.service';
 import { enqueueContactScoreJob } from './utils/contact-score-queue.utils';
+import { BulkAiDraftMessagesDto } from './dto/bulk-ai-draft-messages.dto';
 
 @Injectable()
 export class ContactsService {
@@ -69,6 +71,7 @@ export class ContactsService {
         private readonly contactAiService: ContactAiService,
         private readonly enrichmentQueryService: EnrichmentQueryService,
         private readonly enrichmentOrchestrator: EnrichmentOrchestrator,
+        private readonly outreachService: OutreachService,
         @InjectQueue(AI_PROCESS_QUEUE) private readonly aiProcessQueue: Queue,
     ) { }
 
@@ -777,6 +780,52 @@ export class ContactsService {
         }
 
         return { jobIds, queued: jobIds.length, skipped_contacts, is_batch: false as const };
+    }
+
+    async triggerBulkAiDraftMessages(
+        user_uuid: string,
+        dto: BulkAiDraftMessagesDto,
+    ): Promise<{ created: number; skipped: number; failed: number; queued?: number }> {
+        const contactUuids = [...new Set(dto.contact_uuids)];
+        const contacts = await this.prisma.contact.findMany({
+            where: { user_uuid, uuid: { in: contactUuids } },
+            include: { lead: true },
+        });
+        if (contacts.length !== contactUuids.length) {
+            const found = new Set(contacts.map((c) => c.uuid));
+            const missing = contactUuids.filter((u) => !found.has(u));
+            throw new NotFoundException(`Contact(s) not found: ${missing.join(', ')}`);
+        }
+
+        const { generated, skipped, failed, message_uuids } =
+            await this.contactAiService.draftBulkMessages(
+                user_uuid,
+                contacts,
+                dto.channel,
+                dto.prompt,
+                dto.language,
+            );
+
+        let queued = 0;
+        if (dto.send && message_uuids.length > 0) {
+            for (const messageUuid of message_uuids) {
+                try {
+                    await this.outreachService.sendMessage(user_uuid, messageUuid);
+                    queued++;
+                } catch (error) {
+                    this.logger.error(
+                        `Bulk AI draft send ${messageUuid} failed: ${error instanceof Error ? error.message : error}`,
+                    );
+                }
+            }
+        }
+
+        return {
+            created: generated,
+            skipped,
+            failed,
+            ...(dto.send ? { queued } : {}),
+        };
     }
 
     async triggerDraftMessages(

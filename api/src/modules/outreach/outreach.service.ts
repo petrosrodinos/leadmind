@@ -22,7 +22,6 @@ import { AssignSequenceDto } from './dto/assign-sequence.dto';
 import { CreateSequenceDto } from './dto/create-sequence.dto';
 import { ListMessagesDto } from './dto/list-messages.dto';
 import { SendOutreachDto } from './dto/send-outreach.dto';
-import { BulkSendOutreachDto } from './dto/bulk-send-outreach.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
 
 @Injectable()
@@ -64,91 +63,6 @@ export class OutreachService {
                 status: MsgStatus.PENDING,
             },
         });
-    }
-
-    async createBulkDraft(
-        user_uuid: string,
-        dto: BulkSendOutreachDto,
-    ): Promise<{ created: number; skipped: number; failed: number }> {
-        const { content } = this.normalizeContentForChannel(dto.channel, dto.content);
-        let created = 0;
-        let skipped = 0;
-        let failed = 0;
-
-        for (const contact_uuid of dto.contact_uuids) {
-            try {
-                const contact = await this.requireOwnedContact(user_uuid, contact_uuid);
-                const existing = await this.prisma.outreachMessage.findFirst({
-                    where: {
-                        contact_uuid: contact.uuid,
-                        channel: dto.channel,
-                        status: MsgStatus.PENDING,
-                    },
-                });
-                if (existing) {
-                    skipped++;
-                    continue;
-                }
-                await this.prisma.outreachMessage.create({
-                    data: {
-                        user_uuid,
-                        contact_uuid: contact.uuid,
-                        channel: dto.channel,
-                        subject: dto.subject,
-                        content,
-                        status: MsgStatus.PENDING,
-                    },
-                });
-                created++;
-            } catch {
-                failed++;
-            }
-        }
-
-        return { created, skipped, failed };
-    }
-
-    async createBulkAndQueue(
-        user_uuid: string,
-        dto: BulkSendOutreachDto,
-    ): Promise<{ created: number; skipped: number; failed: number }> {
-        const { content } = this.normalizeContentForChannel(dto.channel, dto.content);
-        let created = 0;
-        let skipped = 0;
-        let failed = 0;
-
-        for (const contact_uuid of dto.contact_uuids) {
-            try {
-                const contact = await this.requireOwnedContact(user_uuid, contact_uuid);
-                const existing = await this.prisma.outreachMessage.findFirst({
-                    where: {
-                        contact_uuid: contact.uuid,
-                        channel: dto.channel,
-                        status: MsgStatus.PENDING,
-                    },
-                });
-                if (existing) {
-                    skipped++;
-                    continue;
-                }
-                const message = await this.prisma.outreachMessage.create({
-                    data: {
-                        user_uuid,
-                        contact_uuid: contact.uuid,
-                        channel: dto.channel,
-                        subject: dto.subject,
-                        content,
-                        status: MsgStatus.PENDING,
-                    },
-                });
-                await this.enqueueMessage(message.uuid);
-                created++;
-            } catch {
-                failed++;
-            }
-        }
-
-        return { created, skipped, failed };
     }
 
     private normalizeContentForChannel(channel: Channel, content: string): { content: string } {

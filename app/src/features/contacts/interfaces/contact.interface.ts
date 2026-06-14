@@ -265,17 +265,19 @@ export interface CreateMessagePayload {
     contact_uuid: string;
 }
 
-export interface BulkCreateMessagePayload {
-    contact_uuids: string[];
-    channel: Channel;
-    content: string;
-    subject?: string;
-}
-
 export interface BulkCreateMessageResult {
     created: number;
     skipped: number;
     failed: number;
+    queued?: number;
+}
+
+export interface BulkAiDraftMessagesPayload {
+    contact_uuids: string[];
+    channel: Channel;
+    prompt: string;
+    language?: string;
+    send?: boolean;
 }
 
 export interface AiDraftMessagePayload {

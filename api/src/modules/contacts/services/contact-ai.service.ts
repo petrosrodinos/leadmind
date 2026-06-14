@@ -346,11 +346,12 @@ export class ContactAiService {
         prompt: string,
         language?: string,
         campaign_uuid?: string,
-    ): Promise<{ generated: number; skipped: number; failed: number }> {
+    ): Promise<{ generated: number; skipped: number; failed: number; message_uuids: string[] }> {
         const sender_business_description = await this.resolveSenderBusinessDescription(user_uuid);
         let generated = 0;
         let skipped = 0;
         let failed = 0;
+        const message_uuids: string[] = [];
 
         for (const item of contacts) {
             const idempotencyKey = campaign_uuid
@@ -391,7 +392,7 @@ export class ContactAiService {
                           draft,
                       )
                     : { subject: draft.subject ?? null, content: sanitizedContent };
-                await this.prisma.outreachMessage.create({
+                const message = await this.prisma.outreachMessage.create({
                     data: {
                         user_uuid,
                         contact_uuid: item.uuid,
@@ -403,6 +404,7 @@ export class ContactAiService {
                     },
                 });
                 generated++;
+                message_uuids.push(message.uuid);
             } catch (error) {
                 const message = error instanceof Error ? error.message : 'Unknown error';
                 this.logger.error(`Bulk draft ${item.uuid}/${channel}: failed: ${message}`);
@@ -411,7 +413,7 @@ export class ContactAiService {
         }
 
         this.logger.log(`Bulk draft complete: ${generated} generated, ${skipped} skipped, ${failed} failed`);
-        return { generated, skipped, failed };
+        return { generated, skipped, failed, message_uuids };
     }
 
     async submitBatchCampaignDrafts(

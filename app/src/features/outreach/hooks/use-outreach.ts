@@ -1,16 +1,12 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
     createAndSendMessage,
-    createBulkAndSendMessages,
-    createBulkDraftMessages,
     createDraftMessage,
     deleteOutreachMessage,
     sendOutreachMessage,
     updateOutreachMessage,
 } from "../services/outreach.service";
 import type {
-    BulkCreateMessagePayload,
-    BulkCreateMessageResult,
     CreateMessagePayload,
     UpdateMessagePayload,
 } from "@/features/contacts/interfaces/contact.interface";
@@ -115,66 +111,6 @@ export function useCreateAndSendMessage() {
         onError: (error: Error) => {
             toast({
                 title: "Could not send message",
-                description: error.message,
-                duration: 3000,
-                variant: "error",
-            });
-        },
-    });
-}
-
-function formatBulkResultMessage(result: BulkCreateMessageResult): string {
-    const parts: string[] = [];
-    if (result.created > 0) {
-        parts.push(`${result.created} created`);
-    }
-    if (result.skipped > 0) {
-        parts.push(`${result.skipped} skipped`);
-    }
-    if (result.failed > 0) {
-        parts.push(`${result.failed} failed`);
-    }
-    return parts.length > 0 ? parts.join(", ") : "No messages created";
-}
-
-export function useBulkCreateDraftMessages() {
-    const qc = useQueryClient();
-    return useMutation({
-        mutationFn: (payload: BulkCreateMessagePayload) => createBulkDraftMessages(payload),
-        onSuccess: (result) => {
-            invalidateAfterMessageChange(qc, {});
-            toast({
-                title: "Drafts saved",
-                description: formatBulkResultMessage(result),
-                duration: 3000,
-            });
-        },
-        onError: (error: Error) => {
-            toast({
-                title: "Could not save drafts",
-                description: error.message,
-                duration: 3000,
-                variant: "error",
-            });
-        },
-    });
-}
-
-export function useBulkCreateAndSendMessages() {
-    const qc = useQueryClient();
-    return useMutation({
-        mutationFn: (payload: BulkCreateMessagePayload) => createBulkAndSendMessages(payload),
-        onSuccess: (result) => {
-            invalidateAfterMessageChange(qc, {});
-            toast({
-                title: "Messages queued for send",
-                description: formatBulkResultMessage(result),
-                duration: 3000,
-            });
-        },
-        onError: (error: Error) => {
-            toast({
-                title: "Could not send messages",
                 description: error.message,
                 duration: 3000,
                 variant: "error",

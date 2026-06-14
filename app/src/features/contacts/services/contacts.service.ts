@@ -5,6 +5,8 @@ import type { EnrichmentSource } from "@/features/lead-enrichment/constants/enri
 import type {
     AiDraftMessagePayload,
     AiDraftMessageResult,
+    BulkAiDraftMessagesPayload,
+    BulkCreateMessageResult,
     BulkTriggerContactScorePayload,
     BulkTriggerContactScoreResult,
     Contact,
@@ -158,6 +160,17 @@ export const triggerDraftMessages = async (uuid: string): Promise<{ jobId: strin
         return response.data;
     } catch (error: any) {
         throw new Error(error?.response?.data?.message || "Failed to enqueue redraft.");
+    }
+};
+
+export const bulkAiDraftMessages = async (
+    payload: BulkAiDraftMessagesPayload,
+): Promise<BulkCreateMessageResult> => {
+    try {
+        const response = await axiosInstance.post(ApiRoutes.contacts.bulk_ai_draft_messages, payload);
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error?.response?.data?.message || "Failed to generate drafts.");
     }
 };
 

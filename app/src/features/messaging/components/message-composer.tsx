@@ -126,7 +126,7 @@ export function MessageComposer({
     return (
         <div className="flex flex-col gap-5">
             {channels.length > 1 && (
-                <ChannelToggle
+                <MessageChannelToggle
                     channels={channels}
                     activeChannel={activeChannel}
                     onChange={onActiveChannelChange}
@@ -283,7 +283,7 @@ interface ChannelToggleProps {
     disabled?: boolean;
 }
 
-function ChannelToggle({ channels, activeChannel, onChange, disabled }: ChannelToggleProps) {
+export function MessageChannelToggle({ channels, activeChannel, onChange, disabled }: ChannelToggleProps) {
     return (
         <div
             role="radiogroup"

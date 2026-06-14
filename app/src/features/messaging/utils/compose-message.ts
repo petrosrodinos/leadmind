@@ -1,4 +1,4 @@
-import { Channel, type CreateMessagePayload, type BulkCreateMessagePayload } from "@/features/contacts/interfaces/contact.interface";
+import { Channel, type CreateMessagePayload } from "@/features/contacts/interfaces/contact.interface";
 import { isEmailHtmlEmpty } from "@/lib/sanitize-html";
 import type { MessageComposerValue } from "@/features/messaging/components/message-composer";
 
@@ -34,22 +34,6 @@ export function buildCreateMessagePayload(
         channel,
         content,
         contact_uuid,
-        ...(subject ? { subject } : {}),
-    };
-}
-
-export function buildBulkCreateMessagePayload(
-    channel: Channel,
-    value: MessageComposerValue,
-    contact_uuids: string[],
-): BulkCreateMessagePayload {
-    const content = getComposerBodyContent(channel, value);
-    const subject =
-        channel === Channel.EMAIL && value.emailSubject.trim() ? value.emailSubject.trim() : undefined;
-    return {
-        contact_uuids,
-        channel,
-        content,
         ...(subject ? { subject } : {}),
     };
 }
