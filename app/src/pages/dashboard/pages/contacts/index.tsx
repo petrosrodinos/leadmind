@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { Button, Tabs } from "@heroui/react";
 import { Columns3, LayoutList, Plus } from "lucide-react";
 import { ContactsTable } from "./components/contacts-table";
@@ -7,12 +7,16 @@ import { PipelineView } from "./components/pipeline-view";
 import { NewContactModal } from "./components/new-contact-modal";
 import { BulkScoreContactsPopover } from "./components/bulk-score-contacts-popover";
 import { ContactFiltersForm } from "@/pages/dashboard/components/contact-filters-form";
+import {
+  ContactQuickBrowseTrigger,
+  ContactStackViewerScope,
+} from "@/pages/dashboard/components/contact-stack-viewer";
 import { useContacts } from "@/features/contacts/hooks/use-contacts";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import {
-    contactFiltersToListQuery,
-    parseContactFiltersFromSearchParams,
-    serializeContactFiltersToSearchParams,
+  contactFiltersToListQuery,
+  parseContactFiltersFromSearchParams,
+  serializeContactFiltersToSearchParams,
 } from "@/lib/contact-filter-params";
 import type { ContactFilters } from "@/interfaces/contact-filters.interface";
 import { Routes } from "@/routes/routes";
@@ -77,67 +81,99 @@ export default function ContactsPage() {
   const { data, isLoading, isFetching } = useContacts(query);
 
   const contacts = data?.data ?? [];
+  const contactUuids = contacts.map((contact) => contact.uuid);
+  const total = data?.total ?? 0;
+  const totalPages = data?.totalPages ?? 1;
+
+  const handlePageChange = (p: number) => {
+    const params = new URLSearchParams(searchParams);
+    params.set("page", String(p));
+    setSearchParams(params, { replace: true });
+  };
 
   const goToDetail = (uuid: string) => navigate(Routes.dashboard.contacts_detail.replace(":uuid", uuid));
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between gap-2 flex-wrap">
-        <h1 className="text-xl font-semibold text-foreground">Contacts</h1>
-        <div className="flex items-center gap-2">
+    <ContactStackViewerScope
+      contactUuids={contactUuids}
+      page={page}
+      totalPages={totalPages}
+      pageSize={pageSize}
+      totalCount={total}
+      onPageChange={handlePageChange}
+    >
+      {(quickBrowse) => (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between gap-2 flex-wrap">
+            <h1 className="text-xl font-semibold text-foreground">Contacts</h1>
+            <div className="flex items-center gap-2">
+              {view === "table" ? (
+                <>
+                  <ContactQuickBrowseTrigger
+                    isDisabled={!quickBrowse.hasContacts}
+                    onPress={quickBrowse.openFirst}
+                  />
+                  <BulkScoreContactsPopover
+                    selectedContactUuids={[...selectedKeys]}
+                    onScoringComplete={() => setSelectedKeys(new Set())}
+                  />
+                </>
+              ) : null}
+              <Tabs selectedKey={view} onSelectionChange={(key) => setView(String(key) as View)}>
+                <Tabs.List className="inline-flex gap-1 rounded-lg bg-surface-secondary p-1 border border-border">
+                  <Tabs.Tab
+                    id="table"
+                    className="px-3 py-1.5 text-sm font-medium rounded-md cursor-pointer transition-colors text-muted hover:text-foreground data-[selected]:bg-accent data-[selected]:text-accent-foreground data-[selected]:shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-accent inline-flex items-center gap-1.5"
+                  >
+                    <LayoutList className="size-3.5" />
+                    Table
+                  </Tabs.Tab>
+                  <Tabs.Tab
+                    id="pipeline"
+                    className="px-3 py-1.5 text-sm font-medium rounded-md cursor-pointer transition-colors text-muted hover:text-foreground data-[selected]:bg-accent data-[selected]:text-accent-foreground data-[selected]:shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-accent inline-flex items-center gap-1.5"
+                  >
+                    <Columns3 className="size-3.5" />
+                    Pipeline
+                  </Tabs.Tab>
+                </Tabs.List>
+              </Tabs>
+              <Button onPress={() => setCreateOpen(true)}>
+                <Plus className="size-4" />
+                Add contact
+              </Button>
+            </div>
+          </div>
+
+          <ContactFiltersForm
+            value={filters}
+            onChange={(patch) => updateFilters(patch)}
+            showLeadSourceType
+            collapsible
+            defaultOpen={false}
+            sections={{ engagement: true, outreach: true }}
+          />
+
           {view === "table" ? (
-            <BulkScoreContactsPopover selectedContactUuids={[...selectedKeys]} onScoringComplete={() => setSelectedKeys(new Set())} />
-          ) : null}
-          <Tabs selectedKey={view} onSelectionChange={(key) => setView(String(key) as View)}>
-            <Tabs.List className="inline-flex gap-1 rounded-lg bg-surface-secondary p-1 border border-border">
-              <Tabs.Tab id="table" className="px-3 py-1.5 text-sm font-medium rounded-md cursor-pointer transition-colors text-muted hover:text-foreground data-[selected]:bg-accent data-[selected]:text-accent-foreground data-[selected]:shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-accent inline-flex items-center gap-1.5">
-                <LayoutList className="size-3.5" />
-                Table
-              </Tabs.Tab>
-              <Tabs.Tab id="pipeline" className="px-3 py-1.5 text-sm font-medium rounded-md cursor-pointer transition-colors text-muted hover:text-foreground data-[selected]:bg-accent data-[selected]:text-accent-foreground data-[selected]:shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-accent inline-flex items-center gap-1.5">
-                <Columns3 className="size-3.5" />
-                Pipeline
-              </Tabs.Tab>
-            </Tabs.List>
-          </Tabs>
-          <Button onPress={() => setCreateOpen(true)}>
-            <Plus className="size-4" />
-            Add contact
-          </Button>
+            <ContactsTable
+              contacts={contacts}
+              isLoading={isLoading}
+              isFetching={isFetching}
+              page={page}
+              pageSize={pageSize}
+              total={total}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+              selectedKeys={selectedKeys}
+              onSelectionChange={setSelectedKeys}
+              onContactOpen={quickBrowse.openAt}
+            />
+          ) : (
+            <PipelineView contacts={contacts} isLoading={isLoading} onCardClick={(c) => goToDetail(c.uuid)} />
+          )}
+
+          <NewContactModal isOpen={createOpen} onOpenChange={setCreateOpen} />
         </div>
-      </div>
-
-      <ContactFiltersForm
-        value={filters}
-        onChange={(patch) => updateFilters(patch)}
-        showLeadSourceType
-        collapsible
-        defaultOpen={false}
-        sections={{ engagement: true, outreach: true }}
-      />
-
-      {view === "table" ? (
-        <ContactsTable
-          contacts={contacts}
-          isLoading={isLoading}
-          isFetching={isFetching}
-          page={page}
-          pageSize={pageSize}
-          total={data?.total ?? 0}
-          totalPages={data?.totalPages ?? 1}
-          onPageChange={(p) => {
-            const params = new URLSearchParams(searchParams);
-            params.set("page", String(p));
-            setSearchParams(params, { replace: true });
-          }}
-          selectedKeys={selectedKeys}
-          onSelectionChange={setSelectedKeys}
-        />
-      ) : (
-        <PipelineView contacts={contacts} isLoading={isLoading} onCardClick={(c) => goToDetail(c.uuid)} />
       )}
-
-      <NewContactModal isOpen={createOpen} onOpenChange={setCreateOpen} />
-    </div>
+    </ContactStackViewerScope>
   );
 }

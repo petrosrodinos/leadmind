@@ -11,6 +11,11 @@ import { useDeleteContact, useUpdateContactStatus } from "@/features/contacts/ho
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { isTableNavInteractiveCell, renderTableNavCellContent, tableNavInteractiveCellClassName, tableNavRowClassName } from "@/components/ui/table-row-link";
 import { ContactScoresCompact } from "@/pages/dashboard/pages/leads/components/badges";
+import {
+  ContactTableDetailLink,
+  ContactTableNameCell,
+  ContactTableQuickViewButton,
+} from "@/pages/dashboard/components/contact-stack-viewer";
 import { STATUS_OPTIONS } from "@/features/contacts/constants/contacts.constants";
 import { Routes } from "@/routes/routes";
 
@@ -37,9 +42,10 @@ interface ContactsTableProps {
   onPageChange: (page: number) => void;
   selectedKeys: Set<string>;
   onSelectionChange: (keys: Set<string>) => void;
+  onContactOpen?: (contactUuid: string) => void;
 }
 
-export function ContactsTable({ contacts, isLoading, isFetching, page, pageSize, total, totalPages, onPageChange, selectedKeys, onSelectionChange }: ContactsTableProps) {
+export function ContactsTable({ contacts, isLoading, isFetching, page, pageSize, total, totalPages, onPageChange, selectedKeys, onSelectionChange, onContactOpen }: ContactsTableProps) {
   const updateStatus = useUpdateContactStatus();
   const deleteContact = useDeleteContact();
   const [deleteTarget, setDeleteTarget] = useState<Contact | null>(null);
@@ -49,7 +55,16 @@ export function ContactsTable({ contacts, isLoading, isFetching, page, pageSize,
       columnHelper.accessor((row) => row.name, {
         id: "name",
         header: "Name",
-        cell: (info) => <span className="font-medium text-foreground">{info.getValue() ?? "—"}</span>,
+        cell: (info) => {
+          const contact = info.row.original;
+          return (
+            <ContactTableNameCell
+              contactUuid={contact.uuid}
+              name={info.getValue()}
+              onOpen={onContactOpen}
+            />
+          );
+        },
       }),
       columnHelper.accessor((row) => row.company, {
         id: "company",
@@ -139,16 +154,27 @@ export function ContactsTable({ contacts, isLoading, isFetching, page, pageSize,
       columnHelper.display({
         id: "actions",
         header: "",
-        cell: (info) => (
-          <div onClick={(e) => e.stopPropagation()} className="flex justify-end">
+        cell: (info) => {
+          const contact = info.row.original;
+          return (
+          <div onClick={(e) => e.stopPropagation()} className="flex justify-end items-center gap-1">
+            <ContactTableQuickViewButton
+              contactUuid={contact.uuid}
+              contactName={contact.name}
+              onOpen={onContactOpen}
+            />
+            {onContactOpen ? (
+              <ContactTableDetailLink contactUuid={contact.uuid} contactName={contact.name} />
+            ) : null}
             <Button size="sm" variant="tertiary" className="text-danger" isDisabled={deleteContact.isPending} onPress={() => setDeleteTarget(info.row.original)} aria-label={`Delete ${info.row.original.name ?? "contact"}`}>
               <Trash className="size-3.5" />
             </Button>
           </div>
-        ),
+          );
+        },
       }),
     ],
-    [updateStatus, deleteContact.isPending],
+    [updateStatus, deleteContact.isPending, onContactOpen],
   );
 
   const table = useReactTable({
@@ -226,6 +252,9 @@ export function ContactsTable({ contacts, isLoading, isFetching, page, pageSize,
                 : table.getRowModel().rows.map((row) => {
                     const rowHref = Routes.dashboard.contacts_detail.replace(":uuid", row.id);
                     const rowLabel = `View contact ${row.original.name ?? row.original.email ?? "details"}`;
+                    const interactiveColumnIds = onContactOpen
+                      ? ["name", "status", "actions"]
+                      : ["status", "actions"];
 
                     return (
                     <Table.Row key={row.id} id={row.id} className={tableNavRowClassName}>
@@ -238,15 +267,17 @@ export function ContactsTable({ contacts, isLoading, isFetching, page, pageSize,
                       </Table.Cell>
                       {row.getVisibleCells().map((cell) => {
                         const content = flexRender(cell.column.columnDef.cell, cell.getContext());
-                        const isInteractive = isTableNavInteractiveCell(cell.column.id, ["status", "actions"]);
+                        const isInteractive = isTableNavInteractiveCell(cell.column.id, interactiveColumnIds);
 
                         return (
                         <Table.Cell
                           key={cell.id}
                           className={isInteractive ? tableNavInteractiveCellClassName : undefined}
                         >
-                          {renderTableNavCellContent(cell.column.id, rowHref, content, {
-                            interactiveColumnIds: ["status", "actions"],
+                          {isInteractive
+                            ? content
+                            : renderTableNavCellContent(cell.column.id, rowHref, content, {
+                            interactiveColumnIds,
                             primaryColumnId: "name",
                             ariaLabel: rowLabel,
                           })}

@@ -1,14 +1,17 @@
 import { useMemo } from "react";
 import { Button, Table } from "@heroui/react";
-import { ChevronsUpDown, ExternalLink, Trash2 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Trash2 } from "lucide-react";
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { Routes } from "@/routes/routes";
 import { TablePagination } from "@/components/ui/table-pagination";
 import { isTableNavInteractiveCell, tableNavInteractiveCellClassName, tableNavRowClassName } from "@/components/ui/table-row-link";
 import type { Contact } from "@/features/contacts/interfaces/contact.interface";
 import { ContactScoresCompact } from "@/pages/dashboard/pages/leads/components/badges";
 import { useRemoveListContact } from "@/features/contact-lists/hooks/use-contact-lists";
+import {
+    ContactTableDetailLink,
+    ContactTableNameCell,
+    ContactTableQuickViewButton,
+} from "@/pages/dashboard/components/contact-stack-viewer";
 
 const columnHelper = createColumnHelper<Contact>();
 
@@ -46,18 +49,12 @@ export function ListMembersTable({
                 header: "Name",
                 cell: (info) => {
                     const contact = info.row.original;
-                    const name = info.getValue() ?? "—";
-
-                    return onContactOpen ? (
-                        <button
-                            type="button"
-                            onClick={() => onContactOpen(contact.uuid)}
-                            className="font-medium text-foreground truncate text-left hover:text-accent transition-colors max-w-full"
-                        >
-                            {name}
-                        </button>
-                    ) : (
-                        <span className="font-medium text-foreground truncate">{name}</span>
+                    return (
+                        <ContactTableNameCell
+                            contactUuid={contact.uuid}
+                            name={info.getValue()}
+                            onOpen={onContactOpen}
+                        />
                     );
                 },
             }),
@@ -81,27 +78,15 @@ export function ListMembersTable({
                 header: "",
                 cell: (info) => {
                     const contact = info.row.original;
-                    const detailHref = Routes.dashboard.contacts_detail.replace(":uuid", contact.uuid);
 
                     return (
                         <div className="flex justify-end items-center gap-1">
-                            {onContactOpen ? (
-                                <Button
-                                    size="sm"
-                                    variant="tertiary"
-                                    onPress={() => onContactOpen(contact.uuid)}
-                                    aria-label={`Quick view ${contact.name ?? "contact"}`}
-                                >
-                                    <ChevronsUpDown className="size-3.5" />
-                                </Button>
-                            ) : null}
-                            <Link
-                                to={detailHref}
-                                aria-label={`Open ${contact.name ?? "contact"} in full page`}
-                                className="inline-flex items-center justify-center rounded-md p-1.5 text-muted hover:text-accent hover:bg-surface-secondary transition-colors"
-                            >
-                                <ExternalLink className="size-3.5" />
-                            </Link>
+                            <ContactTableQuickViewButton
+                                contactUuid={contact.uuid}
+                                contactName={contact.name}
+                                onOpen={onContactOpen}
+                            />
+                            <ContactTableDetailLink contactUuid={contact.uuid} contactName={contact.name} />
                             <Button
                                 size="sm"
                                 variant="tertiary"

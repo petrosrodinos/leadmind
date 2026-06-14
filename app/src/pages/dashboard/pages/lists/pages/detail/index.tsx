@@ -1,7 +1,7 @@
 import { useState, type Key } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { Button, Tabs } from "@heroui/react";
-import { ArrowLeft, ChevronsUpDown, List, Pencil, UserPlus } from "lucide-react";
+import { ArrowLeft, List, Pencil, UserPlus } from "lucide-react";
 import { Routes, ListDetailTabIds } from "@/routes/routes";
 import {
     useContactList,
@@ -11,8 +11,10 @@ import { ContactListFormModal } from "../../components/contact-list-form-modal";
 import { ListMembersTable } from "./components/list-members-table";
 import { AddContactsModal } from "./components/add-contacts-modal";
 import { ContactAudienceAnalyticsPanel } from "@/pages/dashboard/components/audience-analytics/contact-audience-analytics-panel";
-import { ContactStackViewerModal } from "@/pages/dashboard/components/contact-stack-viewer";
-import { useContactStackViewer } from "@/pages/dashboard/hooks/use-contact-stack-viewer";
+import {
+    ContactQuickBrowseTrigger,
+    ContactStackViewerScope,
+} from "@/pages/dashboard/components/contact-stack-viewer";
 import { ListDetailSkeleton } from "./components/list-detail-skeleton";
 
 const MEMBERS_PAGE_SIZE = 20;
@@ -49,17 +51,11 @@ export default function ListDetailPage() {
     const totalPages = membersData?.totalPages ?? 1;
     const memberUuids = members.map((member) => member.uuid);
 
-    const stackViewer = useContactStackViewer({
-        contactUuids: memberUuids,
-        page: membersPage,
-        totalPages,
-        pageSize: MEMBERS_PAGE_SIZE,
-        onPageChange: (p) => {
-            const params = new URLSearchParams(searchParams);
-            params.set("page", String(p));
-            setSearchParams(params, { replace: true });
-        },
-    });
+    const handleMembersPageChange = (p: number) => {
+        const params = new URLSearchParams(searchParams);
+        params.set("page", String(p));
+        setSearchParams(params, { replace: true });
+    };
 
     const handleTabChange = (key: Key) => {
         if (!uuid) return;
@@ -84,122 +80,110 @@ export default function ListDetailPage() {
     }
 
     return (
-        <div className="flex flex-col gap-8">
-            <div className="flex flex-col gap-4">
-                <Link
-                    to={Routes.dashboard.lists}
-                    className="inline-flex items-center gap-1.5 text-sm text-muted hover:text-foreground w-fit"
-                >
-                    <ArrowLeft className="size-4" />
-                    Back to lists
-                </Link>
-
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                    <div className="flex items-start gap-3 min-w-0">
-                        <List className="size-5 text-muted shrink-0 mt-1" />
-                        <div className="min-w-0">
-                            <h1 className="text-xl font-semibold text-foreground">{list.title}</h1>
-                            {list.description ? (
-                                <p className="text-sm text-muted mt-1">{list.description}</p>
-                            ) : null}
-                            <p className="text-xs text-muted mt-2">
-                                {list.contact_count ?? total} contact
-                                {(list.contact_count ?? total) === 1 ? "" : "s"}
-                            </p>
-                        </div>
-                    </div>
-                    <div className="flex flex-wrap items-center gap-2">
-                        {currentTab === ListDetailTabIds.CONTACTS ? (
-                            <>
-                                <Button
-                                    size="sm"
-                                    variant="secondary"
-                                    isDisabled={members.length === 0}
-                                    onPress={() => stackViewer.openAt(memberUuids[0]!)}
-                                >
-                                    <ChevronsUpDown className="size-4" />
-                                    Quick browse
-                                </Button>
-                                <Button size="sm" onPress={() => setAddContactsOpen(true)}>
-                                    <UserPlus className="size-4" />
-                                    Add contacts
-                                </Button>
-                            </>
-                        ) : null}
-                        <Button size="sm" variant="tertiary" onPress={() => setEditOpen(true)}>
-                            <Pencil className="size-4" />
-                            Edit list
-                        </Button>
-                    </div>
-                </div>
-            </div>
-
-            <Tabs selectedKey={currentTab} onSelectionChange={handleTabChange}>
-                <Tabs.List className="inline-flex gap-1 rounded-lg bg-surface-secondary p-1 border border-border">
-                    {TABS.map((t) => (
-                        <Tabs.Tab
-                            key={t.id}
-                            id={t.id}
-                            className="px-3 py-1.5 text-sm font-medium rounded-md cursor-pointer transition-colors text-muted hover:text-foreground data-[selected]:bg-accent data-[selected]:text-accent-foreground data-[selected]:shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+        <ContactStackViewerScope
+            contactUuids={memberUuids}
+            page={membersPage}
+            totalPages={totalPages}
+            pageSize={MEMBERS_PAGE_SIZE}
+            totalCount={total}
+            onPageChange={handleMembersPageChange}
+        >
+            {(quickBrowse) => (
+                <div className="flex flex-col gap-8">
+                    <div className="flex flex-col gap-4">
+                        <Link
+                            to={Routes.dashboard.lists}
+                            className="inline-flex items-center gap-1.5 text-sm text-muted hover:text-foreground w-fit"
                         >
-                            {t.label}
-                        </Tabs.Tab>
-                    ))}
-                </Tabs.List>
-            </Tabs>
+                            <ArrowLeft className="size-4" />
+                            Back to lists
+                        </Link>
 
-            <div className="pt-2">
-                {currentTab === ListDetailTabIds.CONTACTS && (
-                    <section className="flex flex-col gap-4">
-                        <div className="flex flex-col gap-1">
-                            <h2 className="text-base font-semibold text-foreground">Contacts in list</h2>
-                            <p className="text-xs text-muted">
-                                Click a name or use the up/down icon to open quick browse. Use arrow keys to move between contacts.
-                            </p>
+                        <div className="flex flex-wrap items-start justify-between gap-3">
+                            <div className="flex items-start gap-3 min-w-0">
+                                <List className="size-5 text-muted shrink-0 mt-1" />
+                                <div className="min-w-0">
+                                    <h1 className="text-xl font-semibold text-foreground">{list.title}</h1>
+                                    {list.description ? (
+                                        <p className="text-sm text-muted mt-1">{list.description}</p>
+                                    ) : null}
+                                    <p className="text-xs text-muted mt-2">
+                                        {list.contact_count ?? total} contact
+                                        {(list.contact_count ?? total) === 1 ? "" : "s"}
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="flex flex-wrap items-center gap-2">
+                                {currentTab === ListDetailTabIds.CONTACTS ? (
+                                    <>
+                                        <ContactQuickBrowseTrigger
+                                            isDisabled={!quickBrowse.hasContacts}
+                                            onPress={quickBrowse.openFirst}
+                                        />
+                                        <Button size="sm" onPress={() => setAddContactsOpen(true)}>
+                                            <UserPlus className="size-4" />
+                                            Add contacts
+                                        </Button>
+                                    </>
+                                ) : null}
+                                <Button size="sm" variant="tertiary" onPress={() => setEditOpen(true)}>
+                                    <Pencil className="size-4" />
+                                    Edit list
+                                </Button>
+                            </div>
                         </div>
-                        <ListMembersTable
-                            listUuid={uuid}
-                            contacts={members}
-                            isLoading={membersLoading}
-                            isFetching={membersFetching}
-                            page={membersPage}
-                            pageSize={MEMBERS_PAGE_SIZE}
-                            total={total}
-                            totalPages={totalPages}
-                            onPageChange={(p) => {
-                                const params = new URLSearchParams(searchParams);
-                                params.set("page", String(p));
-                                setSearchParams(params, { replace: true });
-                            }}
-                            onContactOpen={stackViewer.openAt}
-                        />
-                    </section>
-                )}
-                {currentTab === ListDetailTabIds.ANALYTICS && (
-                    <ContactAudienceAnalyticsPanel scope={{ type: "list", uuid }} />
-                )}
-            </div>
+                    </div>
 
-            <ContactListFormModal isOpen={editOpen} onOpenChange={setEditOpen} editing={list} />
-            <AddContactsModal
-                listUuid={uuid}
-                isOpen={addContactsOpen}
-                onOpenChange={setAddContactsOpen}
-            />
+                    <Tabs selectedKey={currentTab} onSelectionChange={handleTabChange}>
+                        <Tabs.List className="inline-flex gap-1 rounded-lg bg-surface-secondary p-1 border border-border">
+                            {TABS.map((t) => (
+                                <Tabs.Tab
+                                    key={t.id}
+                                    id={t.id}
+                                    className="px-3 py-1.5 text-sm font-medium rounded-md cursor-pointer transition-colors text-muted hover:text-foreground data-[selected]:bg-accent data-[selected]:text-accent-foreground data-[selected]:shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                                >
+                                    {t.label}
+                                </Tabs.Tab>
+                            ))}
+                        </Tabs.List>
+                    </Tabs>
 
-            <ContactStackViewerModal
-                isOpen={stackViewer.isOpen}
-                onOpenChange={stackViewer.setIsOpen}
-                contactUuids={memberUuids}
-                currentIndex={stackViewer.currentIndex}
-                onIndexChange={stackViewer.setCurrentIndex}
-                totalCount={total}
-                globalOffset={stackViewer.globalOffset}
-                onRequestNextPage={stackViewer.handleRequestNextPage}
-                onRequestPrevPage={stackViewer.handleRequestPrevPage}
-                hasNextPage={stackViewer.hasNextPage}
-                hasPrevPage={stackViewer.hasPrevPage}
-            />
-        </div>
+                    <div className="pt-2">
+                        {currentTab === ListDetailTabIds.CONTACTS && (
+                            <section className="flex flex-col gap-4">
+                                <div className="flex flex-col gap-1">
+                                    <h2 className="text-base font-semibold text-foreground">Contacts in list</h2>
+                                    <p className="text-xs text-muted">
+                                        Click a name or use the up/down icon to open quick browse. Use arrow keys to move between contacts.
+                                    </p>
+                                </div>
+                                <ListMembersTable
+                                    listUuid={uuid}
+                                    contacts={members}
+                                    isLoading={membersLoading}
+                                    isFetching={membersFetching}
+                                    page={membersPage}
+                                    pageSize={MEMBERS_PAGE_SIZE}
+                                    total={total}
+                                    totalPages={totalPages}
+                                    onPageChange={handleMembersPageChange}
+                                    onContactOpen={quickBrowse.openAt}
+                                />
+                            </section>
+                        )}
+                        {currentTab === ListDetailTabIds.ANALYTICS && (
+                            <ContactAudienceAnalyticsPanel scope={{ type: "list", uuid }} />
+                        )}
+                    </div>
+
+                    <ContactListFormModal isOpen={editOpen} onOpenChange={setEditOpen} editing={list} />
+                    <AddContactsModal
+                        listUuid={uuid}
+                        isOpen={addContactsOpen}
+                        onOpenChange={setAddContactsOpen}
+                    />
+                </div>
+            )}
+        </ContactStackViewerScope>
     );
 }
