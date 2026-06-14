@@ -67,12 +67,28 @@ export class CampaignContactResolverService {
         return where;
     }
 
+    private async resolveWhere(
+        user_uuid: string,
+        filters: CampaignFiltersDto,
+        options: BuildCampaignAudienceOptions = {},
+    ): Promise<Prisma.ContactWhereInput> {
+        const where = this.buildWhereInput(user_uuid, filters, options);
+        if (filters.contact_list_uuid) {
+            await this.contactsService.applyContactListIncludeFilter(
+                where,
+                user_uuid,
+                filters.contact_list_uuid,
+            );
+        }
+        return where;
+    }
+
     async previewContacts(
         user_uuid: string,
         filters: CampaignFiltersDto,
         limit = 50,
     ): Promise<{ total: number; sample: any[]; with_email: number; with_phone: number }> {
-        const where = this.buildWhereInput(user_uuid, filters, { mode: 'preview' });
+        const where = await this.resolveWhere(user_uuid, filters, { mode: 'preview' });
         const emailWhere = mergeContactWhereClauses(where, [
             buildContactProfileFieldWhere(CampaignProfileField.EMAIL, true),
         ]);
@@ -104,7 +120,7 @@ export class CampaignContactResolverService {
         filters: CampaignFiltersDto,
         options?: { limit?: number; channels?: Channel[] },
     ): Promise<string[]> {
-        const where = this.buildWhereInput(user_uuid, filters, {
+        const where = await this.resolveWhere(user_uuid, filters, {
             mode: 'send',
             channels: options?.channels,
         });

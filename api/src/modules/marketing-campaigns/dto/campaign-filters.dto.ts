@@ -60,6 +60,11 @@ export class CampaignFiltersDto {
     @IsUUID()
     filter_uuid?: string;
 
+    @ApiPropertyOptional({ description: 'Only contacts that are members of this contact list' })
+    @IsOptional()
+    @IsUUID()
+    contact_list_uuid?: string;
+
     @ApiPropertyOptional()
     @IsOptional()
     @IsUUID()

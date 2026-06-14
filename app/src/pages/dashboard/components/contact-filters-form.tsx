@@ -10,6 +10,7 @@ import type { LeadStatus } from "@/features/contacts/interfaces/contact.interfac
 import { STATUS_OPTIONS } from "@/features/contacts/constants/contacts.constants";
 import { useFilters } from "@/features/filters/hooks/use-filters";
 import { useContactTags } from "@/features/contacts/hooks/use-contacts";
+import { useContactLists } from "@/features/contact-lists/hooks/use-contact-lists";
 import { MultiSelect } from "@/components/ui/multi-select";
 import { ScoreRulesFilter } from "@/pages/dashboard/components/score-rules-filter";
 import { SOURCE_OPTIONS } from "@/features/filters/constants/source-options";
@@ -17,12 +18,13 @@ import type { SourceType } from "@/features/leads/interfaces/lead.interface";
 import { cn } from "@/lib/utils";
 
 interface ContactFiltersFormProps {
-    value: ContactFilters;
-    onChange: (patch: Partial<ContactFilters>) => void;
+    value: ContactFilters & { contact_list_uuid?: string };
+    onChange: (patch: Partial<ContactFilters & { contact_list_uuid?: string }>) => void;
     disabled?: boolean;
     sections?: ContactFiltersFormSections;
     showSourceFilter?: boolean;
     showLeadSourceType?: boolean;
+    showContactListFilter?: boolean;
     collapsible?: boolean;
     defaultOpen?: boolean;
     open?: boolean;
@@ -42,6 +44,7 @@ export function ContactFiltersForm({
     sections: sectionsProp,
     showSourceFilter = true,
     showLeadSourceType = false,
+    showContactListFilter = false,
     collapsible = false,
     defaultOpen = false,
     open: openProp,
@@ -51,6 +54,12 @@ export function ContactFiltersForm({
     const sections = { ...DEFAULT_SECTIONS, ...sectionsProp };
     const { data: filters, isLoading: filtersLoading } = useFilters();
     const { data: availableTags = [] } = useContactTags();
+    const { data: contactListsPage, isLoading: contactListsLoading } = useContactLists(
+        { limit: 100 },
+        showContactListFilter,
+    );
+    const contactLists = contactListsPage?.data ?? [];
+    const contactListUuid = value.contact_list_uuid;
     const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
     const isControlled = openProp !== undefined;
     const panelOpen = isControlled ? openProp : uncontrolledOpen;
@@ -113,6 +122,49 @@ export function ContactFiltersForm({
                         Restrict to contacts sourced from a specific filter.
                     </p>
                 </div>
+                ) : null}
+
+                {showContactListFilter ? (
+                    <div>
+                        <Label>Contact list</Label>
+                        <Select
+                            aria-label="Contact list"
+                            value={contactListUuid ?? ""}
+                            onChange={(v) => {
+                                if (typeof v !== "string") return;
+                                onChange({
+                                    contact_list_uuid: v === "" ? undefined : v,
+                                });
+                            }}
+                            isDisabled={disabled || contactListsLoading}
+                        >
+                            <Select.Trigger>
+                                <Select.Value />
+                                <Select.Indicator />
+                            </Select.Trigger>
+                            <Select.Popover>
+                                <ListBox>
+                                    <ListBox.Item id="" textValue="Any list">
+                                        Any list
+                                        <ListBox.ItemIndicator />
+                                    </ListBox.Item>
+                                    {contactLists.map((list) => (
+                                        <ListBox.Item
+                                            key={list.uuid}
+                                            id={list.uuid}
+                                            textValue={list.title}
+                                        >
+                                            {list.title}
+                                            <ListBox.ItemIndicator />
+                                        </ListBox.Item>
+                                    ))}
+                                </ListBox>
+                            </Select.Popover>
+                        </Select>
+                        <p className="text-xs text-muted mt-1">
+                            Only include contacts that belong to the selected list.
+                        </p>
+                    </div>
                 ) : null}
 
                 {showLeadSourceType ? (

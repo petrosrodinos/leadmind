@@ -234,6 +234,34 @@ export class ContactsService {
         Object.assign(where, merged);
     }
 
+    async applyContactListIncludeFilter(
+        where: Prisma.ContactWhereInput,
+        user_uuid: string,
+        contact_list_uuid: string,
+    ): Promise<void> {
+        const list = await this.prisma.contactList.findFirst({
+            where: { uuid: contact_list_uuid, user_uuid },
+            select: { uuid: true },
+        });
+        if (!list) {
+            throw new NotFoundException('Contact list not found');
+        }
+
+        const members = await this.prisma.contactListMember.findMany({
+            where: { list_uuid: contact_list_uuid },
+            select: { contact_uuid: true },
+        });
+
+        const memberUuids = members.map((member) => member.contact_uuid);
+        const listConstraint: Prisma.ContactWhereInput =
+            memberUuids.length === 0
+                ? { uuid: { in: [] } }
+                : { uuid: { in: memberUuids } };
+
+        const merged = mergeContactWhereClauses(where, [listConstraint]);
+        Object.assign(where, merged);
+    }
+
     async findAll(user_uuid: string, query: ListContactsDto) {
         const page = query.page ?? 1;
         const limit = query.limit ?? 20;

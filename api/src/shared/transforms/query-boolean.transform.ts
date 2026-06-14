@@ -1,4 +1,4 @@
-import { Transform } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 
 export function parseQueryBoolean(value: unknown): boolean | undefined {
     if (value === undefined || value === null || value === '') return undefined;
@@ -12,4 +12,13 @@ export function parseQueryBoolean(value: unknown): boolean | undefined {
     return undefined;
 }
 
-export const QueryBooleanTransform = Transform(({ value }) => parseQueryBoolean(value));
+export function QueryBooleanTransform(
+    target: object,
+    propertyKey: string | symbol,
+): void {
+    Type(() => String)(target, propertyKey);
+    Transform(({ value }) => parseQueryBoolean(value), { toClassOnly: true })(
+        target,
+        propertyKey,
+    );
+}

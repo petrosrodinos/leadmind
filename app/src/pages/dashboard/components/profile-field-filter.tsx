@@ -80,7 +80,9 @@ export function ProfileFieldFilter({
                         </div>
                         <Switch
                             isSelected={hasValue}
-                            onChange={onHasProfileFieldChange}
+                            onChange={(v) =>
+                                onHasProfileFieldChange(typeof v === "boolean" ? v : !hasValue)
+                            }
                             isDisabled={disabled}
                             aria-label="Contact has this field"
                         >

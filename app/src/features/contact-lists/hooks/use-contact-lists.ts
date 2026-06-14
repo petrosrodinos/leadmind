@@ -28,11 +28,12 @@ export const contactListQueryKeys = {
         ["contact-lists", "members", uuid, query] as const,
 };
 
-export function useContactLists(query: ListContactListsQuery = {}) {
+export function useContactLists(query: ListContactListsQuery = {}, enabled = true) {
     return useQuery({
         queryKey: contactListQueryKeys.list(query),
         queryFn: () => listContactLists(query),
         staleTime: 30_000,
+        enabled,
     });
 }
 
