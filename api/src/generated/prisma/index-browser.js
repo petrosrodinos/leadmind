@@ -231,11 +231,28 @@ exports.Prisma.ContactScalarFieldEnum = {
   location: 'location',
   industry: 'industry',
   description: 'description',
+  enrichment_summary: 'enrichment_summary',
+  enrichment_metadata: 'enrichment_metadata',
   unsubscribed_at: 'unsubscribed_at',
   unsubscribe_token: 'unsubscribe_token',
   last_interaction_at: 'last_interaction_at',
   created_at: 'created_at',
   updated_at: 'updated_at'
+};
+
+exports.Prisma.ContactEnrichmentScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  contact_uuid: 'contact_uuid',
+  source: 'source',
+  source_url: 'source_url',
+  summary: 'summary',
+  payload: 'payload',
+  cost_usd: 'cost_usd',
+  input_tokens: 'input_tokens',
+  output_tokens: 'output_tokens',
+  metadata: 'metadata',
+  created_at: 'created_at'
 };
 
 exports.Prisma.ContactScoreScalarFieldEnum = {
@@ -764,6 +781,7 @@ exports.Prisma.ModelName = {
   Lead: 'Lead',
   LeadEnrichment: 'LeadEnrichment',
   Contact: 'Contact',
+  ContactEnrichment: 'ContactEnrichment',
   ContactScore: 'ContactScore',
   ContactList: 'ContactList',
   ContactListMember: 'ContactListMember',

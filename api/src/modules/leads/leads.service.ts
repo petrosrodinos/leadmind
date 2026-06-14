@@ -16,6 +16,7 @@ import {
     enqueueLeadEnrichmentJob,
 } from './utils/lead-enrichment-queue.utils';
 import { LeadEnrichmentBatchService } from './services/lead-enrichment-batch.service';
+import { EnrichmentQueryService } from '@/modules/enrichment/services/enrichment-query.service';
 
 @Injectable()
 export class LeadsService {
@@ -24,6 +25,7 @@ export class LeadsService {
         @InjectQueue(AI_PROCESS_QUEUE) private readonly aiProcessQueue: Queue,
         private readonly elasticsearchService: ElasticsearchService,
         private readonly leadEnrichmentBatchService: LeadEnrichmentBatchService,
+        private readonly enrichmentQueryService: EnrichmentQueryService,
     ) { }
 
     async findAll(query: ListLeadsDto): Promise<{
@@ -98,55 +100,7 @@ export class LeadsService {
 
     async findEnrichmentsForLead(leadUuid: string, query: ListLeadEnrichmentsDto) {
         await this.findOne(leadUuid);
-        const page = query.page ?? 1;
-        const limit = query.limit ?? 20;
-        const skip = (page - 1) * limit;
-        const search = query.search?.trim();
-
-        const where: Prisma.LeadEnrichmentWhereInput = {
-            lead_uuid: leadUuid,
-            ...(query.source && { source: query.source }),
-            ...(search
-                ? {
-                      OR: [
-                          { summary: { contains: search, mode: 'insensitive' } },
-                          { source_url: { contains: search, mode: 'insensitive' } },
-                      ],
-                  }
-                : {}),
-        };
-
-        const [rows, total] = await Promise.all([
-            this.prisma.leadEnrichment.findMany({
-                where,
-                orderBy: { created_at: 'desc' },
-                skip,
-                take: limit,
-            }),
-            this.prisma.leadEnrichment.count({ where }),
-        ]);
-
-        const data = rows.map((r) => ({
-            uuid: r.uuid,
-            lead_uuid: r.lead_uuid,
-            source: r.source,
-            source_url: r.source_url,
-            summary: r.summary,
-            payload: r.payload,
-            cost_usd: r.cost_usd != null ? Number(r.cost_usd) : null,
-            input_tokens: r.input_tokens,
-            output_tokens: r.output_tokens,
-            metadata: r.metadata,
-            created_at: r.created_at,
-        }));
-
-        return {
-            data,
-            total,
-            page,
-            limit,
-            totalPages: Math.ceil(total / limit),
-        };
+        return this.enrichmentQueryService.findForTarget('lead', leadUuid, query);
     }
 
     async triggerEnrich(

@@ -190,6 +190,8 @@ model Contact {
   location            String?
   industry            String?
   description         String?
+  enrichment_summary  String?    @db.Text
+  enrichment_metadata Json?
   unsubscribed_at     DateTime?
   unsubscribe_token   String?    @unique
   last_interaction_at DateTime?
@@ -207,6 +209,7 @@ model Contact {
   reminders         Reminder[]
   form_completions  FormCompletion[]
   list_memberships  ContactListMember[]
+  enrichments       ContactEnrichment[]
 
   @@unique([user_uuid, lead_uuid])
   @@index([user_uuid])
@@ -215,6 +218,27 @@ model Contact {
   @@index([email])
   @@index([unsubscribed_at])
   @@index([last_interaction_at])
+}
+
+model ContactEnrichment {
+  id            Int              @id @default(autoincrement())
+  uuid          String           @unique @default(uuid())
+  contact_uuid  String
+  source        EnrichmentSource
+  source_url    String?
+  summary       String?          @db.Text
+  payload       Json?
+  cost_usd      Decimal?         @db.Decimal(12, 6)
+  input_tokens  Int?
+  output_tokens Int?
+  metadata      Json?
+  created_at    DateTime         @default(now())
+
+  contact Contact @relation(fields: [contact_uuid], references: [uuid], onDelete: Cascade)
+
+  @@index([contact_uuid])
+  @@index([contact_uuid, source])
+  @@map("contact_enrichments")
 }
 
 model ContactScore {

@@ -1,4 +1,5 @@
 export { ChangeStatusModal } from "./change-status-modal";
+export { ContactEnrichmentTab } from "./enrichment-tab";
 export { ContactDetailHeader } from "./contact-detail-header";
 export { ContactDetailView } from "./contact-detail-view";
 export { CrmTab } from "./crm-tab";

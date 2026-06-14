@@ -287,13 +287,18 @@ export class ElasticsearchService implements OnModuleInit {
                 const label = cs.scoring_instruction?.name ?? cs.scoring_instruction_uuid;
                 return `Score (${label}): ${cs.score}`;
             }) ?? [];
+        const enrichmentSummary =
+            contact.enrichment_summary?.trim() ||
+            contact.lead.enrichment_summary?.trim() ||
+            '';
+        const enrichmentBlock = enrichmentSummary ? `Summary: ${enrichmentSummary}` : '';
         const parts = [
             contact.status && `Status: ${contact.status}`,
             ...scoreLines,
             tags.length > 0 && `Tags: ${tags.join(', ')}`,
             contact.notes && `Notes: ${contact.notes}`,
             this.buildContactIdentityBlock(contact),
-            this.buildLeadEnrichmentBlock(contact.lead),
+            enrichmentBlock,
         ];
         return parts.filter(Boolean).join('\n');
     }

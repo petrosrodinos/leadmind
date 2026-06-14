@@ -13,6 +13,7 @@ import {
     LeadJobData,
 } from './interfaces/workers.interfaces';
 import {
+    isContactJob,
     isLeadBatchEnrichPrepareJob,
     isLeadJob,
     resolveContactEnrichmentSources,
@@ -42,7 +43,11 @@ export class AiProcessWorker extends WorkerHost {
             await this.processLeadJob(job.data);
             return;
         }
-        await this.processContactJob(job.data);
+        if (isContactJob(job.data)) {
+            await this.processContactJob(job.data);
+            return;
+        }
+        this.logger.warn(`Unknown ai-process job payload: ${JSON.stringify(job.data)}`);
     }
 
     private async processLeadBatchEnrichPrepare(data: LeadBatchEnrichPrepareJobData): Promise<void> {
@@ -100,9 +105,13 @@ export class AiProcessWorker extends WorkerHost {
 
         if (full_pipeline || action === 'enrich') {
             try {
-                await this.leadEnrichmentOrchestrator.run(lead.uuid, sources, {
+                this.logger.log(
+                    `Contact ${contact.uuid} enrichment starting (sources: ${sources.join(', ')})`,
+                );
+                await this.leadEnrichmentOrchestrator.runForContact(contact.uuid, sources, {
                     force: data.force_enrichment ?? false,
                 });
+                this.logger.log(`Contact ${contact.uuid} enrichment finished`);
             } catch (error) {
                 this.logger.error(`Contact ${contact.uuid} enrich step failed: ${this.errMsg(error)}`);
             }

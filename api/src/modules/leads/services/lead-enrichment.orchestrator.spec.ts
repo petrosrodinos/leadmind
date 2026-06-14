@@ -108,5 +108,92 @@ describe('LeadEnrichmentOrchestrator', () => {
         expect(tx.leadEnrichment.create.mock.calls[1][0].data.metadata.status).toBe('success');
         expect(googleSearch.fetchRawItems).toHaveBeenCalledTimes(1);
         expect(summaryService.regenerate).toHaveBeenCalledTimes(2);
+        expect(summaryService.regenerate).toHaveBeenCalledWith({ kind: 'lead', uuid: lead.uuid });
+    });
+
+    it('persists contact enrichment rows to contact_enrichments', async () => {
+        const contact = {
+            uuid: 'contact-1',
+            name: 'Grace Hopper',
+            email: null,
+            phone: null,
+            company: 'Navy',
+            website: null,
+            google_maps_url: null,
+            linkedin_url: null,
+            title: null,
+            location: null,
+            industry: null,
+            description: null,
+            lead,
+        };
+        const tx = {
+            contactEnrichment: {
+                create: jest.fn().mockResolvedValue({}),
+            },
+            contact: {
+                update: jest.fn().mockResolvedValue({}),
+            },
+        };
+        const prisma = {
+            lead: {
+                findUnique: jest.fn(),
+            },
+            contact: {
+                findUnique: jest.fn().mockResolvedValue(contact),
+            },
+            contactEnrichment: {
+                findFirst: jest.fn().mockResolvedValue(null),
+            },
+            $transaction: jest.fn(async (callback: any) => callback(tx)),
+        };
+        const googleSearch = {
+            fetchRawItems: jest.fn().mockResolvedValue([
+                {
+                    organicResults: [
+                        {
+                            title: 'Grace Hopper biography',
+                            url: 'https://example.com/grace',
+                            description: 'Computer scientist and Navy officer',
+                        },
+                    ],
+                    paidResults: [],
+                },
+            ]),
+        };
+        const summaryService = {
+            regenerate: jest.fn().mockResolvedValue('summary'),
+        };
+        const leadAi = {
+            summarizeGoogleSearchEnrichment: jest.fn().mockResolvedValue({
+                summary: 'Google summary',
+                cost_usd: null,
+                input_tokens: null,
+                output_tokens: null,
+            }),
+        };
+        const orchestrator = new LeadEnrichmentOrchestrator(
+            prisma as any,
+            leadAi as any,
+            { fetchCompany: jest.fn() } as any,
+            { fetchProfile: jest.fn() } as any,
+            { crawlSinglePage: jest.fn() } as any,
+            googleSearch as any,
+            { getCompanyDocuments: jest.fn() } as any,
+            summaryService as any,
+        );
+
+        await orchestrator.runForContact(contact.uuid, [EnrichmentSource.GOOGLE_SEARCH], {
+            force: true,
+        });
+
+        expect(tx.contactEnrichment.create).toHaveBeenCalledTimes(1);
+        expect(tx.contactEnrichment.create.mock.calls[0][0].data.source).toBe(
+            EnrichmentSource.GOOGLE_SEARCH,
+        );
+        expect(summaryService.regenerate).toHaveBeenCalledWith({
+            kind: 'contact',
+            uuid: contact.uuid,
+        });
     });
 });

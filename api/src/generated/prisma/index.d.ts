@@ -54,6 +54,11 @@ export type LeadEnrichment = $Result.DefaultSelection<Prisma.$LeadEnrichmentPayl
  */
 export type Contact = $Result.DefaultSelection<Prisma.$ContactPayload>
 /**
+ * Model ContactEnrichment
+ * 
+ */
+export type ContactEnrichment = $Result.DefaultSelection<Prisma.$ContactEnrichmentPayload>
+/**
  * Model ContactScore
  * 
  */
@@ -689,6 +694,16 @@ export class PrismaClient<
     * ```
     */
   get contact(): Prisma.ContactDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.contactEnrichment`: Exposes CRUD operations for the **ContactEnrichment** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ContactEnrichments
+    * const contactEnrichments = await prisma.contactEnrichment.findMany()
+    * ```
+    */
+  get contactEnrichment(): Prisma.ContactEnrichmentDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.contactScore`: Exposes CRUD operations for the **ContactScore** model.
@@ -1331,6 +1346,7 @@ export namespace Prisma {
     Lead: 'Lead',
     LeadEnrichment: 'LeadEnrichment',
     Contact: 'Contact',
+    ContactEnrichment: 'ContactEnrichment',
     ContactScore: 'ContactScore',
     ContactList: 'ContactList',
     ContactListMember: 'ContactListMember',
@@ -1366,7 +1382,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "filter" | "scoringInstruction" | "filterScoringInstruction" | "rawLead" | "lead" | "leadEnrichment" | "contact" | "contactScore" | "contactList" | "contactListMember" | "contactTag" | "interaction" | "outreachMessage" | "outreachSequence" | "filterJob" | "senderProfile" | "marketingCampaign" | "marketingCampaignContact" | "openAiBatchJob" | "integration" | "integrationKey" | "reminder" | "form" | "formField" | "formCompletion" | "formCompletionValue" | "contactAudienceAnalysis"
+      modelProps: "user" | "filter" | "scoringInstruction" | "filterScoringInstruction" | "rawLead" | "lead" | "leadEnrichment" | "contact" | "contactEnrichment" | "contactScore" | "contactList" | "contactListMember" | "contactTag" | "interaction" | "outreachMessage" | "outreachSequence" | "filterJob" | "senderProfile" | "marketingCampaign" | "marketingCampaignContact" | "openAiBatchJob" | "integration" | "integrationKey" | "reminder" | "form" | "formField" | "formCompletion" | "formCompletionValue" | "contactAudienceAnalysis"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1959,6 +1975,80 @@ export namespace Prisma {
           count: {
             args: Prisma.ContactCountArgs<ExtArgs>
             result: $Utils.Optional<ContactCountAggregateOutputType> | number
+          }
+        }
+      }
+      ContactEnrichment: {
+        payload: Prisma.$ContactEnrichmentPayload<ExtArgs>
+        fields: Prisma.ContactEnrichmentFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ContactEnrichmentFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactEnrichmentPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ContactEnrichmentFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactEnrichmentPayload>
+          }
+          findFirst: {
+            args: Prisma.ContactEnrichmentFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactEnrichmentPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ContactEnrichmentFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactEnrichmentPayload>
+          }
+          findMany: {
+            args: Prisma.ContactEnrichmentFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactEnrichmentPayload>[]
+          }
+          create: {
+            args: Prisma.ContactEnrichmentCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactEnrichmentPayload>
+          }
+          createMany: {
+            args: Prisma.ContactEnrichmentCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ContactEnrichmentCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactEnrichmentPayload>[]
+          }
+          delete: {
+            args: Prisma.ContactEnrichmentDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactEnrichmentPayload>
+          }
+          update: {
+            args: Prisma.ContactEnrichmentUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactEnrichmentPayload>
+          }
+          deleteMany: {
+            args: Prisma.ContactEnrichmentDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ContactEnrichmentUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ContactEnrichmentUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactEnrichmentPayload>[]
+          }
+          upsert: {
+            args: Prisma.ContactEnrichmentUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactEnrichmentPayload>
+          }
+          aggregate: {
+            args: Prisma.ContactEnrichmentAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateContactEnrichment>
+          }
+          groupBy: {
+            args: Prisma.ContactEnrichmentGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ContactEnrichmentGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ContactEnrichmentCountArgs<ExtArgs>
+            result: $Utils.Optional<ContactEnrichmentCountAggregateOutputType> | number
           }
         }
       }
@@ -3558,6 +3648,7 @@ export namespace Prisma {
     lead?: LeadOmit
     leadEnrichment?: LeadEnrichmentOmit
     contact?: ContactOmit
+    contactEnrichment?: ContactEnrichmentOmit
     contactScore?: ContactScoreOmit
     contactList?: ContactListOmit
     contactListMember?: ContactListMemberOmit
@@ -3970,6 +4061,7 @@ export namespace Prisma {
     reminders: number
     form_completions: number
     list_memberships: number
+    enrichments: number
   }
 
   export type ContactCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3981,6 +4073,7 @@ export namespace Prisma {
     reminders?: boolean | ContactCountOutputTypeCountRemindersArgs
     form_completions?: boolean | ContactCountOutputTypeCountForm_completionsArgs
     list_memberships?: boolean | ContactCountOutputTypeCountList_membershipsArgs
+    enrichments?: boolean | ContactCountOutputTypeCountEnrichmentsArgs
   }
 
   // Custom InputTypes
@@ -4048,6 +4141,13 @@ export namespace Prisma {
    */
   export type ContactCountOutputTypeCountList_membershipsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ContactListMemberWhereInput
+  }
+
+  /**
+   * ContactCountOutputType without action
+   */
+  export type ContactCountOutputTypeCountEnrichmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ContactEnrichmentWhereInput
   }
 
 
@@ -13117,6 +13217,7 @@ export namespace Prisma {
     location: string | null
     industry: string | null
     description: string | null
+    enrichment_summary: string | null
     unsubscribed_at: Date | null
     unsubscribe_token: string | null
     last_interaction_at: Date | null
@@ -13143,6 +13244,7 @@ export namespace Prisma {
     location: string | null
     industry: string | null
     description: string | null
+    enrichment_summary: string | null
     unsubscribed_at: Date | null
     unsubscribe_token: string | null
     last_interaction_at: Date | null
@@ -13169,6 +13271,8 @@ export namespace Prisma {
     location: number
     industry: number
     description: number
+    enrichment_summary: number
+    enrichment_metadata: number
     unsubscribed_at: number
     unsubscribe_token: number
     last_interaction_at: number
@@ -13205,6 +13309,7 @@ export namespace Prisma {
     location?: true
     industry?: true
     description?: true
+    enrichment_summary?: true
     unsubscribed_at?: true
     unsubscribe_token?: true
     last_interaction_at?: true
@@ -13231,6 +13336,7 @@ export namespace Prisma {
     location?: true
     industry?: true
     description?: true
+    enrichment_summary?: true
     unsubscribed_at?: true
     unsubscribe_token?: true
     last_interaction_at?: true
@@ -13257,6 +13363,8 @@ export namespace Prisma {
     location?: true
     industry?: true
     description?: true
+    enrichment_summary?: true
+    enrichment_metadata?: true
     unsubscribed_at?: true
     unsubscribe_token?: true
     last_interaction_at?: true
@@ -13370,6 +13478,8 @@ export namespace Prisma {
     location: string | null
     industry: string | null
     description: string | null
+    enrichment_summary: string | null
+    enrichment_metadata: JsonValue | null
     unsubscribed_at: Date | null
     unsubscribe_token: string | null
     last_interaction_at: Date | null
@@ -13415,6 +13525,8 @@ export namespace Prisma {
     location?: boolean
     industry?: boolean
     description?: boolean
+    enrichment_summary?: boolean
+    enrichment_metadata?: boolean
     unsubscribed_at?: boolean
     unsubscribe_token?: boolean
     last_interaction_at?: boolean
@@ -13431,6 +13543,7 @@ export namespace Prisma {
     reminders?: boolean | Contact$remindersArgs<ExtArgs>
     form_completions?: boolean | Contact$form_completionsArgs<ExtArgs>
     list_memberships?: boolean | Contact$list_membershipsArgs<ExtArgs>
+    enrichments?: boolean | Contact$enrichmentsArgs<ExtArgs>
     _count?: boolean | ContactCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["contact"]>
 
@@ -13453,6 +13566,8 @@ export namespace Prisma {
     location?: boolean
     industry?: boolean
     description?: boolean
+    enrichment_summary?: boolean
+    enrichment_metadata?: boolean
     unsubscribed_at?: boolean
     unsubscribe_token?: boolean
     last_interaction_at?: boolean
@@ -13482,6 +13597,8 @@ export namespace Prisma {
     location?: boolean
     industry?: boolean
     description?: boolean
+    enrichment_summary?: boolean
+    enrichment_metadata?: boolean
     unsubscribed_at?: boolean
     unsubscribe_token?: boolean
     last_interaction_at?: boolean
@@ -13511,6 +13628,8 @@ export namespace Prisma {
     location?: boolean
     industry?: boolean
     description?: boolean
+    enrichment_summary?: boolean
+    enrichment_metadata?: boolean
     unsubscribed_at?: boolean
     unsubscribe_token?: boolean
     last_interaction_at?: boolean
@@ -13518,7 +13637,7 @@ export namespace Prisma {
     updated_at?: boolean
   }
 
-  export type ContactOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "lead_uuid" | "filter_uuid" | "status" | "notes" | "name" | "email" | "phone" | "company" | "website" | "google_maps_url" | "linkedin_url" | "title" | "location" | "industry" | "description" | "unsubscribed_at" | "unsubscribe_token" | "last_interaction_at" | "created_at" | "updated_at", ExtArgs["result"]["contact"]>
+  export type ContactOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "lead_uuid" | "filter_uuid" | "status" | "notes" | "name" | "email" | "phone" | "company" | "website" | "google_maps_url" | "linkedin_url" | "title" | "location" | "industry" | "description" | "enrichment_summary" | "enrichment_metadata" | "unsubscribed_at" | "unsubscribe_token" | "last_interaction_at" | "created_at" | "updated_at", ExtArgs["result"]["contact"]>
   export type ContactInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     lead?: boolean | LeadDefaultArgs<ExtArgs>
@@ -13531,6 +13650,7 @@ export namespace Prisma {
     reminders?: boolean | Contact$remindersArgs<ExtArgs>
     form_completions?: boolean | Contact$form_completionsArgs<ExtArgs>
     list_memberships?: boolean | Contact$list_membershipsArgs<ExtArgs>
+    enrichments?: boolean | Contact$enrichmentsArgs<ExtArgs>
     _count?: boolean | ContactCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ContactIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -13558,6 +13678,7 @@ export namespace Prisma {
       reminders: Prisma.$ReminderPayload<ExtArgs>[]
       form_completions: Prisma.$FormCompletionPayload<ExtArgs>[]
       list_memberships: Prisma.$ContactListMemberPayload<ExtArgs>[]
+      enrichments: Prisma.$ContactEnrichmentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -13578,6 +13699,8 @@ export namespace Prisma {
       location: string | null
       industry: string | null
       description: string | null
+      enrichment_summary: string | null
+      enrichment_metadata: Prisma.JsonValue | null
       unsubscribed_at: Date | null
       unsubscribe_token: string | null
       last_interaction_at: Date | null
@@ -13988,6 +14111,7 @@ export namespace Prisma {
     reminders<T extends Contact$remindersArgs<ExtArgs> = {}>(args?: Subset<T, Contact$remindersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReminderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     form_completions<T extends Contact$form_completionsArgs<ExtArgs> = {}>(args?: Subset<T, Contact$form_completionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FormCompletionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     list_memberships<T extends Contact$list_membershipsArgs<ExtArgs> = {}>(args?: Subset<T, Contact$list_membershipsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactListMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    enrichments<T extends Contact$enrichmentsArgs<ExtArgs> = {}>(args?: Subset<T, Contact$enrichmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactEnrichmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -14035,6 +14159,8 @@ export namespace Prisma {
     readonly location: FieldRef<"Contact", 'String'>
     readonly industry: FieldRef<"Contact", 'String'>
     readonly description: FieldRef<"Contact", 'String'>
+    readonly enrichment_summary: FieldRef<"Contact", 'String'>
+    readonly enrichment_metadata: FieldRef<"Contact", 'Json'>
     readonly unsubscribed_at: FieldRef<"Contact", 'DateTime'>
     readonly unsubscribe_token: FieldRef<"Contact", 'String'>
     readonly last_interaction_at: FieldRef<"Contact", 'DateTime'>
@@ -14647,6 +14773,30 @@ export namespace Prisma {
   }
 
   /**
+   * Contact.enrichments
+   */
+  export type Contact$enrichmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactEnrichment
+     */
+    select?: ContactEnrichmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactEnrichment
+     */
+    omit?: ContactEnrichmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactEnrichmentInclude<ExtArgs> | null
+    where?: ContactEnrichmentWhereInput
+    orderBy?: ContactEnrichmentOrderByWithRelationInput | ContactEnrichmentOrderByWithRelationInput[]
+    cursor?: ContactEnrichmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ContactEnrichmentScalarFieldEnum | ContactEnrichmentScalarFieldEnum[]
+  }
+
+  /**
    * Contact without action
    */
   export type ContactDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -14662,6 +14812,1193 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: ContactInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ContactEnrichment
+   */
+
+  export type AggregateContactEnrichment = {
+    _count: ContactEnrichmentCountAggregateOutputType | null
+    _avg: ContactEnrichmentAvgAggregateOutputType | null
+    _sum: ContactEnrichmentSumAggregateOutputType | null
+    _min: ContactEnrichmentMinAggregateOutputType | null
+    _max: ContactEnrichmentMaxAggregateOutputType | null
+  }
+
+  export type ContactEnrichmentAvgAggregateOutputType = {
+    id: number | null
+    cost_usd: Decimal | null
+    input_tokens: number | null
+    output_tokens: number | null
+  }
+
+  export type ContactEnrichmentSumAggregateOutputType = {
+    id: number | null
+    cost_usd: Decimal | null
+    input_tokens: number | null
+    output_tokens: number | null
+  }
+
+  export type ContactEnrichmentMinAggregateOutputType = {
+    id: number | null
+    uuid: string | null
+    contact_uuid: string | null
+    source: $Enums.EnrichmentSource | null
+    source_url: string | null
+    summary: string | null
+    cost_usd: Decimal | null
+    input_tokens: number | null
+    output_tokens: number | null
+    created_at: Date | null
+  }
+
+  export type ContactEnrichmentMaxAggregateOutputType = {
+    id: number | null
+    uuid: string | null
+    contact_uuid: string | null
+    source: $Enums.EnrichmentSource | null
+    source_url: string | null
+    summary: string | null
+    cost_usd: Decimal | null
+    input_tokens: number | null
+    output_tokens: number | null
+    created_at: Date | null
+  }
+
+  export type ContactEnrichmentCountAggregateOutputType = {
+    id: number
+    uuid: number
+    contact_uuid: number
+    source: number
+    source_url: number
+    summary: number
+    payload: number
+    cost_usd: number
+    input_tokens: number
+    output_tokens: number
+    metadata: number
+    created_at: number
+    _all: number
+  }
+
+
+  export type ContactEnrichmentAvgAggregateInputType = {
+    id?: true
+    cost_usd?: true
+    input_tokens?: true
+    output_tokens?: true
+  }
+
+  export type ContactEnrichmentSumAggregateInputType = {
+    id?: true
+    cost_usd?: true
+    input_tokens?: true
+    output_tokens?: true
+  }
+
+  export type ContactEnrichmentMinAggregateInputType = {
+    id?: true
+    uuid?: true
+    contact_uuid?: true
+    source?: true
+    source_url?: true
+    summary?: true
+    cost_usd?: true
+    input_tokens?: true
+    output_tokens?: true
+    created_at?: true
+  }
+
+  export type ContactEnrichmentMaxAggregateInputType = {
+    id?: true
+    uuid?: true
+    contact_uuid?: true
+    source?: true
+    source_url?: true
+    summary?: true
+    cost_usd?: true
+    input_tokens?: true
+    output_tokens?: true
+    created_at?: true
+  }
+
+  export type ContactEnrichmentCountAggregateInputType = {
+    id?: true
+    uuid?: true
+    contact_uuid?: true
+    source?: true
+    source_url?: true
+    summary?: true
+    payload?: true
+    cost_usd?: true
+    input_tokens?: true
+    output_tokens?: true
+    metadata?: true
+    created_at?: true
+    _all?: true
+  }
+
+  export type ContactEnrichmentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ContactEnrichment to aggregate.
+     */
+    where?: ContactEnrichmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ContactEnrichments to fetch.
+     */
+    orderBy?: ContactEnrichmentOrderByWithRelationInput | ContactEnrichmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ContactEnrichmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ContactEnrichments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ContactEnrichments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ContactEnrichments
+    **/
+    _count?: true | ContactEnrichmentCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ContactEnrichmentAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ContactEnrichmentSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ContactEnrichmentMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ContactEnrichmentMaxAggregateInputType
+  }
+
+  export type GetContactEnrichmentAggregateType<T extends ContactEnrichmentAggregateArgs> = {
+        [P in keyof T & keyof AggregateContactEnrichment]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateContactEnrichment[P]>
+      : GetScalarType<T[P], AggregateContactEnrichment[P]>
+  }
+
+
+
+
+  export type ContactEnrichmentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ContactEnrichmentWhereInput
+    orderBy?: ContactEnrichmentOrderByWithAggregationInput | ContactEnrichmentOrderByWithAggregationInput[]
+    by: ContactEnrichmentScalarFieldEnum[] | ContactEnrichmentScalarFieldEnum
+    having?: ContactEnrichmentScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ContactEnrichmentCountAggregateInputType | true
+    _avg?: ContactEnrichmentAvgAggregateInputType
+    _sum?: ContactEnrichmentSumAggregateInputType
+    _min?: ContactEnrichmentMinAggregateInputType
+    _max?: ContactEnrichmentMaxAggregateInputType
+  }
+
+  export type ContactEnrichmentGroupByOutputType = {
+    id: number
+    uuid: string
+    contact_uuid: string
+    source: $Enums.EnrichmentSource
+    source_url: string | null
+    summary: string | null
+    payload: JsonValue | null
+    cost_usd: Decimal | null
+    input_tokens: number | null
+    output_tokens: number | null
+    metadata: JsonValue | null
+    created_at: Date
+    _count: ContactEnrichmentCountAggregateOutputType | null
+    _avg: ContactEnrichmentAvgAggregateOutputType | null
+    _sum: ContactEnrichmentSumAggregateOutputType | null
+    _min: ContactEnrichmentMinAggregateOutputType | null
+    _max: ContactEnrichmentMaxAggregateOutputType | null
+  }
+
+  type GetContactEnrichmentGroupByPayload<T extends ContactEnrichmentGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ContactEnrichmentGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ContactEnrichmentGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ContactEnrichmentGroupByOutputType[P]>
+            : GetScalarType<T[P], ContactEnrichmentGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ContactEnrichmentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uuid?: boolean
+    contact_uuid?: boolean
+    source?: boolean
+    source_url?: boolean
+    summary?: boolean
+    payload?: boolean
+    cost_usd?: boolean
+    input_tokens?: boolean
+    output_tokens?: boolean
+    metadata?: boolean
+    created_at?: boolean
+    contact?: boolean | ContactDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["contactEnrichment"]>
+
+  export type ContactEnrichmentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uuid?: boolean
+    contact_uuid?: boolean
+    source?: boolean
+    source_url?: boolean
+    summary?: boolean
+    payload?: boolean
+    cost_usd?: boolean
+    input_tokens?: boolean
+    output_tokens?: boolean
+    metadata?: boolean
+    created_at?: boolean
+    contact?: boolean | ContactDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["contactEnrichment"]>
+
+  export type ContactEnrichmentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uuid?: boolean
+    contact_uuid?: boolean
+    source?: boolean
+    source_url?: boolean
+    summary?: boolean
+    payload?: boolean
+    cost_usd?: boolean
+    input_tokens?: boolean
+    output_tokens?: boolean
+    metadata?: boolean
+    created_at?: boolean
+    contact?: boolean | ContactDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["contactEnrichment"]>
+
+  export type ContactEnrichmentSelectScalar = {
+    id?: boolean
+    uuid?: boolean
+    contact_uuid?: boolean
+    source?: boolean
+    source_url?: boolean
+    summary?: boolean
+    payload?: boolean
+    cost_usd?: boolean
+    input_tokens?: boolean
+    output_tokens?: boolean
+    metadata?: boolean
+    created_at?: boolean
+  }
+
+  export type ContactEnrichmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "contact_uuid" | "source" | "source_url" | "summary" | "payload" | "cost_usd" | "input_tokens" | "output_tokens" | "metadata" | "created_at", ExtArgs["result"]["contactEnrichment"]>
+  export type ContactEnrichmentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    contact?: boolean | ContactDefaultArgs<ExtArgs>
+  }
+  export type ContactEnrichmentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    contact?: boolean | ContactDefaultArgs<ExtArgs>
+  }
+  export type ContactEnrichmentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    contact?: boolean | ContactDefaultArgs<ExtArgs>
+  }
+
+  export type $ContactEnrichmentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ContactEnrichment"
+    objects: {
+      contact: Prisma.$ContactPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      uuid: string
+      contact_uuid: string
+      source: $Enums.EnrichmentSource
+      source_url: string | null
+      summary: string | null
+      payload: Prisma.JsonValue | null
+      cost_usd: Prisma.Decimal | null
+      input_tokens: number | null
+      output_tokens: number | null
+      metadata: Prisma.JsonValue | null
+      created_at: Date
+    }, ExtArgs["result"]["contactEnrichment"]>
+    composites: {}
+  }
+
+  type ContactEnrichmentGetPayload<S extends boolean | null | undefined | ContactEnrichmentDefaultArgs> = $Result.GetResult<Prisma.$ContactEnrichmentPayload, S>
+
+  type ContactEnrichmentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ContactEnrichmentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ContactEnrichmentCountAggregateInputType | true
+    }
+
+  export interface ContactEnrichmentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ContactEnrichment'], meta: { name: 'ContactEnrichment' } }
+    /**
+     * Find zero or one ContactEnrichment that matches the filter.
+     * @param {ContactEnrichmentFindUniqueArgs} args - Arguments to find a ContactEnrichment
+     * @example
+     * // Get one ContactEnrichment
+     * const contactEnrichment = await prisma.contactEnrichment.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ContactEnrichmentFindUniqueArgs>(args: SelectSubset<T, ContactEnrichmentFindUniqueArgs<ExtArgs>>): Prisma__ContactEnrichmentClient<$Result.GetResult<Prisma.$ContactEnrichmentPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ContactEnrichment that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ContactEnrichmentFindUniqueOrThrowArgs} args - Arguments to find a ContactEnrichment
+     * @example
+     * // Get one ContactEnrichment
+     * const contactEnrichment = await prisma.contactEnrichment.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ContactEnrichmentFindUniqueOrThrowArgs>(args: SelectSubset<T, ContactEnrichmentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ContactEnrichmentClient<$Result.GetResult<Prisma.$ContactEnrichmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ContactEnrichment that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContactEnrichmentFindFirstArgs} args - Arguments to find a ContactEnrichment
+     * @example
+     * // Get one ContactEnrichment
+     * const contactEnrichment = await prisma.contactEnrichment.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ContactEnrichmentFindFirstArgs>(args?: SelectSubset<T, ContactEnrichmentFindFirstArgs<ExtArgs>>): Prisma__ContactEnrichmentClient<$Result.GetResult<Prisma.$ContactEnrichmentPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ContactEnrichment that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContactEnrichmentFindFirstOrThrowArgs} args - Arguments to find a ContactEnrichment
+     * @example
+     * // Get one ContactEnrichment
+     * const contactEnrichment = await prisma.contactEnrichment.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ContactEnrichmentFindFirstOrThrowArgs>(args?: SelectSubset<T, ContactEnrichmentFindFirstOrThrowArgs<ExtArgs>>): Prisma__ContactEnrichmentClient<$Result.GetResult<Prisma.$ContactEnrichmentPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ContactEnrichments that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContactEnrichmentFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ContactEnrichments
+     * const contactEnrichments = await prisma.contactEnrichment.findMany()
+     * 
+     * // Get first 10 ContactEnrichments
+     * const contactEnrichments = await prisma.contactEnrichment.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const contactEnrichmentWithIdOnly = await prisma.contactEnrichment.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ContactEnrichmentFindManyArgs>(args?: SelectSubset<T, ContactEnrichmentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactEnrichmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ContactEnrichment.
+     * @param {ContactEnrichmentCreateArgs} args - Arguments to create a ContactEnrichment.
+     * @example
+     * // Create one ContactEnrichment
+     * const ContactEnrichment = await prisma.contactEnrichment.create({
+     *   data: {
+     *     // ... data to create a ContactEnrichment
+     *   }
+     * })
+     * 
+     */
+    create<T extends ContactEnrichmentCreateArgs>(args: SelectSubset<T, ContactEnrichmentCreateArgs<ExtArgs>>): Prisma__ContactEnrichmentClient<$Result.GetResult<Prisma.$ContactEnrichmentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ContactEnrichments.
+     * @param {ContactEnrichmentCreateManyArgs} args - Arguments to create many ContactEnrichments.
+     * @example
+     * // Create many ContactEnrichments
+     * const contactEnrichment = await prisma.contactEnrichment.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ContactEnrichmentCreateManyArgs>(args?: SelectSubset<T, ContactEnrichmentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ContactEnrichments and returns the data saved in the database.
+     * @param {ContactEnrichmentCreateManyAndReturnArgs} args - Arguments to create many ContactEnrichments.
+     * @example
+     * // Create many ContactEnrichments
+     * const contactEnrichment = await prisma.contactEnrichment.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ContactEnrichments and only return the `id`
+     * const contactEnrichmentWithIdOnly = await prisma.contactEnrichment.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ContactEnrichmentCreateManyAndReturnArgs>(args?: SelectSubset<T, ContactEnrichmentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactEnrichmentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ContactEnrichment.
+     * @param {ContactEnrichmentDeleteArgs} args - Arguments to delete one ContactEnrichment.
+     * @example
+     * // Delete one ContactEnrichment
+     * const ContactEnrichment = await prisma.contactEnrichment.delete({
+     *   where: {
+     *     // ... filter to delete one ContactEnrichment
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ContactEnrichmentDeleteArgs>(args: SelectSubset<T, ContactEnrichmentDeleteArgs<ExtArgs>>): Prisma__ContactEnrichmentClient<$Result.GetResult<Prisma.$ContactEnrichmentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ContactEnrichment.
+     * @param {ContactEnrichmentUpdateArgs} args - Arguments to update one ContactEnrichment.
+     * @example
+     * // Update one ContactEnrichment
+     * const contactEnrichment = await prisma.contactEnrichment.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ContactEnrichmentUpdateArgs>(args: SelectSubset<T, ContactEnrichmentUpdateArgs<ExtArgs>>): Prisma__ContactEnrichmentClient<$Result.GetResult<Prisma.$ContactEnrichmentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ContactEnrichments.
+     * @param {ContactEnrichmentDeleteManyArgs} args - Arguments to filter ContactEnrichments to delete.
+     * @example
+     * // Delete a few ContactEnrichments
+     * const { count } = await prisma.contactEnrichment.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ContactEnrichmentDeleteManyArgs>(args?: SelectSubset<T, ContactEnrichmentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ContactEnrichments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContactEnrichmentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ContactEnrichments
+     * const contactEnrichment = await prisma.contactEnrichment.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ContactEnrichmentUpdateManyArgs>(args: SelectSubset<T, ContactEnrichmentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ContactEnrichments and returns the data updated in the database.
+     * @param {ContactEnrichmentUpdateManyAndReturnArgs} args - Arguments to update many ContactEnrichments.
+     * @example
+     * // Update many ContactEnrichments
+     * const contactEnrichment = await prisma.contactEnrichment.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ContactEnrichments and only return the `id`
+     * const contactEnrichmentWithIdOnly = await prisma.contactEnrichment.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ContactEnrichmentUpdateManyAndReturnArgs>(args: SelectSubset<T, ContactEnrichmentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactEnrichmentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ContactEnrichment.
+     * @param {ContactEnrichmentUpsertArgs} args - Arguments to update or create a ContactEnrichment.
+     * @example
+     * // Update or create a ContactEnrichment
+     * const contactEnrichment = await prisma.contactEnrichment.upsert({
+     *   create: {
+     *     // ... data to create a ContactEnrichment
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ContactEnrichment we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ContactEnrichmentUpsertArgs>(args: SelectSubset<T, ContactEnrichmentUpsertArgs<ExtArgs>>): Prisma__ContactEnrichmentClient<$Result.GetResult<Prisma.$ContactEnrichmentPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ContactEnrichments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContactEnrichmentCountArgs} args - Arguments to filter ContactEnrichments to count.
+     * @example
+     * // Count the number of ContactEnrichments
+     * const count = await prisma.contactEnrichment.count({
+     *   where: {
+     *     // ... the filter for the ContactEnrichments we want to count
+     *   }
+     * })
+    **/
+    count<T extends ContactEnrichmentCountArgs>(
+      args?: Subset<T, ContactEnrichmentCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ContactEnrichmentCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ContactEnrichment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContactEnrichmentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ContactEnrichmentAggregateArgs>(args: Subset<T, ContactEnrichmentAggregateArgs>): Prisma.PrismaPromise<GetContactEnrichmentAggregateType<T>>
+
+    /**
+     * Group by ContactEnrichment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContactEnrichmentGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ContactEnrichmentGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ContactEnrichmentGroupByArgs['orderBy'] }
+        : { orderBy?: ContactEnrichmentGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ContactEnrichmentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetContactEnrichmentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ContactEnrichment model
+   */
+  readonly fields: ContactEnrichmentFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ContactEnrichment.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ContactEnrichmentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    contact<T extends ContactDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ContactDefaultArgs<ExtArgs>>): Prisma__ContactClient<$Result.GetResult<Prisma.$ContactPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ContactEnrichment model
+   */
+  interface ContactEnrichmentFieldRefs {
+    readonly id: FieldRef<"ContactEnrichment", 'Int'>
+    readonly uuid: FieldRef<"ContactEnrichment", 'String'>
+    readonly contact_uuid: FieldRef<"ContactEnrichment", 'String'>
+    readonly source: FieldRef<"ContactEnrichment", 'EnrichmentSource'>
+    readonly source_url: FieldRef<"ContactEnrichment", 'String'>
+    readonly summary: FieldRef<"ContactEnrichment", 'String'>
+    readonly payload: FieldRef<"ContactEnrichment", 'Json'>
+    readonly cost_usd: FieldRef<"ContactEnrichment", 'Decimal'>
+    readonly input_tokens: FieldRef<"ContactEnrichment", 'Int'>
+    readonly output_tokens: FieldRef<"ContactEnrichment", 'Int'>
+    readonly metadata: FieldRef<"ContactEnrichment", 'Json'>
+    readonly created_at: FieldRef<"ContactEnrichment", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ContactEnrichment findUnique
+   */
+  export type ContactEnrichmentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactEnrichment
+     */
+    select?: ContactEnrichmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactEnrichment
+     */
+    omit?: ContactEnrichmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactEnrichmentInclude<ExtArgs> | null
+    /**
+     * Filter, which ContactEnrichment to fetch.
+     */
+    where: ContactEnrichmentWhereUniqueInput
+  }
+
+  /**
+   * ContactEnrichment findUniqueOrThrow
+   */
+  export type ContactEnrichmentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactEnrichment
+     */
+    select?: ContactEnrichmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactEnrichment
+     */
+    omit?: ContactEnrichmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactEnrichmentInclude<ExtArgs> | null
+    /**
+     * Filter, which ContactEnrichment to fetch.
+     */
+    where: ContactEnrichmentWhereUniqueInput
+  }
+
+  /**
+   * ContactEnrichment findFirst
+   */
+  export type ContactEnrichmentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactEnrichment
+     */
+    select?: ContactEnrichmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactEnrichment
+     */
+    omit?: ContactEnrichmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactEnrichmentInclude<ExtArgs> | null
+    /**
+     * Filter, which ContactEnrichment to fetch.
+     */
+    where?: ContactEnrichmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ContactEnrichments to fetch.
+     */
+    orderBy?: ContactEnrichmentOrderByWithRelationInput | ContactEnrichmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ContactEnrichments.
+     */
+    cursor?: ContactEnrichmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ContactEnrichments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ContactEnrichments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ContactEnrichments.
+     */
+    distinct?: ContactEnrichmentScalarFieldEnum | ContactEnrichmentScalarFieldEnum[]
+  }
+
+  /**
+   * ContactEnrichment findFirstOrThrow
+   */
+  export type ContactEnrichmentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactEnrichment
+     */
+    select?: ContactEnrichmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactEnrichment
+     */
+    omit?: ContactEnrichmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactEnrichmentInclude<ExtArgs> | null
+    /**
+     * Filter, which ContactEnrichment to fetch.
+     */
+    where?: ContactEnrichmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ContactEnrichments to fetch.
+     */
+    orderBy?: ContactEnrichmentOrderByWithRelationInput | ContactEnrichmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ContactEnrichments.
+     */
+    cursor?: ContactEnrichmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ContactEnrichments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ContactEnrichments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ContactEnrichments.
+     */
+    distinct?: ContactEnrichmentScalarFieldEnum | ContactEnrichmentScalarFieldEnum[]
+  }
+
+  /**
+   * ContactEnrichment findMany
+   */
+  export type ContactEnrichmentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactEnrichment
+     */
+    select?: ContactEnrichmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactEnrichment
+     */
+    omit?: ContactEnrichmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactEnrichmentInclude<ExtArgs> | null
+    /**
+     * Filter, which ContactEnrichments to fetch.
+     */
+    where?: ContactEnrichmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ContactEnrichments to fetch.
+     */
+    orderBy?: ContactEnrichmentOrderByWithRelationInput | ContactEnrichmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ContactEnrichments.
+     */
+    cursor?: ContactEnrichmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ContactEnrichments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ContactEnrichments.
+     */
+    skip?: number
+    distinct?: ContactEnrichmentScalarFieldEnum | ContactEnrichmentScalarFieldEnum[]
+  }
+
+  /**
+   * ContactEnrichment create
+   */
+  export type ContactEnrichmentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactEnrichment
+     */
+    select?: ContactEnrichmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactEnrichment
+     */
+    omit?: ContactEnrichmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactEnrichmentInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ContactEnrichment.
+     */
+    data: XOR<ContactEnrichmentCreateInput, ContactEnrichmentUncheckedCreateInput>
+  }
+
+  /**
+   * ContactEnrichment createMany
+   */
+  export type ContactEnrichmentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ContactEnrichments.
+     */
+    data: ContactEnrichmentCreateManyInput | ContactEnrichmentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ContactEnrichment createManyAndReturn
+   */
+  export type ContactEnrichmentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactEnrichment
+     */
+    select?: ContactEnrichmentSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactEnrichment
+     */
+    omit?: ContactEnrichmentOmit<ExtArgs> | null
+    /**
+     * The data used to create many ContactEnrichments.
+     */
+    data: ContactEnrichmentCreateManyInput | ContactEnrichmentCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactEnrichmentIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ContactEnrichment update
+   */
+  export type ContactEnrichmentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactEnrichment
+     */
+    select?: ContactEnrichmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactEnrichment
+     */
+    omit?: ContactEnrichmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactEnrichmentInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ContactEnrichment.
+     */
+    data: XOR<ContactEnrichmentUpdateInput, ContactEnrichmentUncheckedUpdateInput>
+    /**
+     * Choose, which ContactEnrichment to update.
+     */
+    where: ContactEnrichmentWhereUniqueInput
+  }
+
+  /**
+   * ContactEnrichment updateMany
+   */
+  export type ContactEnrichmentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ContactEnrichments.
+     */
+    data: XOR<ContactEnrichmentUpdateManyMutationInput, ContactEnrichmentUncheckedUpdateManyInput>
+    /**
+     * Filter which ContactEnrichments to update
+     */
+    where?: ContactEnrichmentWhereInput
+    /**
+     * Limit how many ContactEnrichments to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ContactEnrichment updateManyAndReturn
+   */
+  export type ContactEnrichmentUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactEnrichment
+     */
+    select?: ContactEnrichmentSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactEnrichment
+     */
+    omit?: ContactEnrichmentOmit<ExtArgs> | null
+    /**
+     * The data used to update ContactEnrichments.
+     */
+    data: XOR<ContactEnrichmentUpdateManyMutationInput, ContactEnrichmentUncheckedUpdateManyInput>
+    /**
+     * Filter which ContactEnrichments to update
+     */
+    where?: ContactEnrichmentWhereInput
+    /**
+     * Limit how many ContactEnrichments to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactEnrichmentIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ContactEnrichment upsert
+   */
+  export type ContactEnrichmentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactEnrichment
+     */
+    select?: ContactEnrichmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactEnrichment
+     */
+    omit?: ContactEnrichmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactEnrichmentInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ContactEnrichment to update in case it exists.
+     */
+    where: ContactEnrichmentWhereUniqueInput
+    /**
+     * In case the ContactEnrichment found by the `where` argument doesn't exist, create a new ContactEnrichment with this data.
+     */
+    create: XOR<ContactEnrichmentCreateInput, ContactEnrichmentUncheckedCreateInput>
+    /**
+     * In case the ContactEnrichment was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ContactEnrichmentUpdateInput, ContactEnrichmentUncheckedUpdateInput>
+  }
+
+  /**
+   * ContactEnrichment delete
+   */
+  export type ContactEnrichmentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactEnrichment
+     */
+    select?: ContactEnrichmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactEnrichment
+     */
+    omit?: ContactEnrichmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactEnrichmentInclude<ExtArgs> | null
+    /**
+     * Filter which ContactEnrichment to delete.
+     */
+    where: ContactEnrichmentWhereUniqueInput
+  }
+
+  /**
+   * ContactEnrichment deleteMany
+   */
+  export type ContactEnrichmentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ContactEnrichments to delete
+     */
+    where?: ContactEnrichmentWhereInput
+    /**
+     * Limit how many ContactEnrichments to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ContactEnrichment without action
+   */
+  export type ContactEnrichmentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactEnrichment
+     */
+    select?: ContactEnrichmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactEnrichment
+     */
+    omit?: ContactEnrichmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactEnrichmentInclude<ExtArgs> | null
   }
 
 
@@ -39107,6 +40444,8 @@ export namespace Prisma {
     location: 'location',
     industry: 'industry',
     description: 'description',
+    enrichment_summary: 'enrichment_summary',
+    enrichment_metadata: 'enrichment_metadata',
     unsubscribed_at: 'unsubscribed_at',
     unsubscribe_token: 'unsubscribe_token',
     last_interaction_at: 'last_interaction_at',
@@ -39115,6 +40454,24 @@ export namespace Prisma {
   };
 
   export type ContactScalarFieldEnum = (typeof ContactScalarFieldEnum)[keyof typeof ContactScalarFieldEnum]
+
+
+  export const ContactEnrichmentScalarFieldEnum: {
+    id: 'id',
+    uuid: 'uuid',
+    contact_uuid: 'contact_uuid',
+    source: 'source',
+    source_url: 'source_url',
+    summary: 'summary',
+    payload: 'payload',
+    cost_usd: 'cost_usd',
+    input_tokens: 'input_tokens',
+    output_tokens: 'output_tokens',
+    metadata: 'metadata',
+    created_at: 'created_at'
+  };
+
+  export type ContactEnrichmentScalarFieldEnum = (typeof ContactEnrichmentScalarFieldEnum)[keyof typeof ContactEnrichmentScalarFieldEnum]
 
 
   export const ContactScoreScalarFieldEnum: {
@@ -40594,6 +41951,8 @@ export namespace Prisma {
     location?: StringNullableFilter<"Contact"> | string | null
     industry?: StringNullableFilter<"Contact"> | string | null
     description?: StringNullableFilter<"Contact"> | string | null
+    enrichment_summary?: StringNullableFilter<"Contact"> | string | null
+    enrichment_metadata?: JsonNullableFilter<"Contact">
     unsubscribed_at?: DateTimeNullableFilter<"Contact"> | Date | string | null
     unsubscribe_token?: StringNullableFilter<"Contact"> | string | null
     last_interaction_at?: DateTimeNullableFilter<"Contact"> | Date | string | null
@@ -40610,6 +41969,7 @@ export namespace Prisma {
     reminders?: ReminderListRelationFilter
     form_completions?: FormCompletionListRelationFilter
     list_memberships?: ContactListMemberListRelationFilter
+    enrichments?: ContactEnrichmentListRelationFilter
   }
 
   export type ContactOrderByWithRelationInput = {
@@ -40631,6 +41991,8 @@ export namespace Prisma {
     location?: SortOrderInput | SortOrder
     industry?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
+    enrichment_summary?: SortOrderInput | SortOrder
+    enrichment_metadata?: SortOrderInput | SortOrder
     unsubscribed_at?: SortOrderInput | SortOrder
     unsubscribe_token?: SortOrderInput | SortOrder
     last_interaction_at?: SortOrderInput | SortOrder
@@ -40647,6 +42009,7 @@ export namespace Prisma {
     reminders?: ReminderOrderByRelationAggregateInput
     form_completions?: FormCompletionOrderByRelationAggregateInput
     list_memberships?: ContactListMemberOrderByRelationAggregateInput
+    enrichments?: ContactEnrichmentOrderByRelationAggregateInput
   }
 
   export type ContactWhereUniqueInput = Prisma.AtLeast<{
@@ -40673,6 +42036,8 @@ export namespace Prisma {
     location?: StringNullableFilter<"Contact"> | string | null
     industry?: StringNullableFilter<"Contact"> | string | null
     description?: StringNullableFilter<"Contact"> | string | null
+    enrichment_summary?: StringNullableFilter<"Contact"> | string | null
+    enrichment_metadata?: JsonNullableFilter<"Contact">
     unsubscribed_at?: DateTimeNullableFilter<"Contact"> | Date | string | null
     last_interaction_at?: DateTimeNullableFilter<"Contact"> | Date | string | null
     created_at?: DateTimeFilter<"Contact"> | Date | string
@@ -40688,6 +42053,7 @@ export namespace Prisma {
     reminders?: ReminderListRelationFilter
     form_completions?: FormCompletionListRelationFilter
     list_memberships?: ContactListMemberListRelationFilter
+    enrichments?: ContactEnrichmentListRelationFilter
   }, "id" | "uuid" | "unsubscribe_token" | "user_uuid_lead_uuid">
 
   export type ContactOrderByWithAggregationInput = {
@@ -40709,6 +42075,8 @@ export namespace Prisma {
     location?: SortOrderInput | SortOrder
     industry?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
+    enrichment_summary?: SortOrderInput | SortOrder
+    enrichment_metadata?: SortOrderInput | SortOrder
     unsubscribed_at?: SortOrderInput | SortOrder
     unsubscribe_token?: SortOrderInput | SortOrder
     last_interaction_at?: SortOrderInput | SortOrder
@@ -40743,11 +42111,105 @@ export namespace Prisma {
     location?: StringNullableWithAggregatesFilter<"Contact"> | string | null
     industry?: StringNullableWithAggregatesFilter<"Contact"> | string | null
     description?: StringNullableWithAggregatesFilter<"Contact"> | string | null
+    enrichment_summary?: StringNullableWithAggregatesFilter<"Contact"> | string | null
+    enrichment_metadata?: JsonNullableWithAggregatesFilter<"Contact">
     unsubscribed_at?: DateTimeNullableWithAggregatesFilter<"Contact"> | Date | string | null
     unsubscribe_token?: StringNullableWithAggregatesFilter<"Contact"> | string | null
     last_interaction_at?: DateTimeNullableWithAggregatesFilter<"Contact"> | Date | string | null
     created_at?: DateTimeWithAggregatesFilter<"Contact"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"Contact"> | Date | string
+  }
+
+  export type ContactEnrichmentWhereInput = {
+    AND?: ContactEnrichmentWhereInput | ContactEnrichmentWhereInput[]
+    OR?: ContactEnrichmentWhereInput[]
+    NOT?: ContactEnrichmentWhereInput | ContactEnrichmentWhereInput[]
+    id?: IntFilter<"ContactEnrichment"> | number
+    uuid?: StringFilter<"ContactEnrichment"> | string
+    contact_uuid?: StringFilter<"ContactEnrichment"> | string
+    source?: EnumEnrichmentSourceFilter<"ContactEnrichment"> | $Enums.EnrichmentSource
+    source_url?: StringNullableFilter<"ContactEnrichment"> | string | null
+    summary?: StringNullableFilter<"ContactEnrichment"> | string | null
+    payload?: JsonNullableFilter<"ContactEnrichment">
+    cost_usd?: DecimalNullableFilter<"ContactEnrichment"> | Decimal | DecimalJsLike | number | string | null
+    input_tokens?: IntNullableFilter<"ContactEnrichment"> | number | null
+    output_tokens?: IntNullableFilter<"ContactEnrichment"> | number | null
+    metadata?: JsonNullableFilter<"ContactEnrichment">
+    created_at?: DateTimeFilter<"ContactEnrichment"> | Date | string
+    contact?: XOR<ContactScalarRelationFilter, ContactWhereInput>
+  }
+
+  export type ContactEnrichmentOrderByWithRelationInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    contact_uuid?: SortOrder
+    source?: SortOrder
+    source_url?: SortOrderInput | SortOrder
+    summary?: SortOrderInput | SortOrder
+    payload?: SortOrderInput | SortOrder
+    cost_usd?: SortOrderInput | SortOrder
+    input_tokens?: SortOrderInput | SortOrder
+    output_tokens?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    contact?: ContactOrderByWithRelationInput
+  }
+
+  export type ContactEnrichmentWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    uuid?: string
+    AND?: ContactEnrichmentWhereInput | ContactEnrichmentWhereInput[]
+    OR?: ContactEnrichmentWhereInput[]
+    NOT?: ContactEnrichmentWhereInput | ContactEnrichmentWhereInput[]
+    contact_uuid?: StringFilter<"ContactEnrichment"> | string
+    source?: EnumEnrichmentSourceFilter<"ContactEnrichment"> | $Enums.EnrichmentSource
+    source_url?: StringNullableFilter<"ContactEnrichment"> | string | null
+    summary?: StringNullableFilter<"ContactEnrichment"> | string | null
+    payload?: JsonNullableFilter<"ContactEnrichment">
+    cost_usd?: DecimalNullableFilter<"ContactEnrichment"> | Decimal | DecimalJsLike | number | string | null
+    input_tokens?: IntNullableFilter<"ContactEnrichment"> | number | null
+    output_tokens?: IntNullableFilter<"ContactEnrichment"> | number | null
+    metadata?: JsonNullableFilter<"ContactEnrichment">
+    created_at?: DateTimeFilter<"ContactEnrichment"> | Date | string
+    contact?: XOR<ContactScalarRelationFilter, ContactWhereInput>
+  }, "id" | "uuid">
+
+  export type ContactEnrichmentOrderByWithAggregationInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    contact_uuid?: SortOrder
+    source?: SortOrder
+    source_url?: SortOrderInput | SortOrder
+    summary?: SortOrderInput | SortOrder
+    payload?: SortOrderInput | SortOrder
+    cost_usd?: SortOrderInput | SortOrder
+    input_tokens?: SortOrderInput | SortOrder
+    output_tokens?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    _count?: ContactEnrichmentCountOrderByAggregateInput
+    _avg?: ContactEnrichmentAvgOrderByAggregateInput
+    _max?: ContactEnrichmentMaxOrderByAggregateInput
+    _min?: ContactEnrichmentMinOrderByAggregateInput
+    _sum?: ContactEnrichmentSumOrderByAggregateInput
+  }
+
+  export type ContactEnrichmentScalarWhereWithAggregatesInput = {
+    AND?: ContactEnrichmentScalarWhereWithAggregatesInput | ContactEnrichmentScalarWhereWithAggregatesInput[]
+    OR?: ContactEnrichmentScalarWhereWithAggregatesInput[]
+    NOT?: ContactEnrichmentScalarWhereWithAggregatesInput | ContactEnrichmentScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"ContactEnrichment"> | number
+    uuid?: StringWithAggregatesFilter<"ContactEnrichment"> | string
+    contact_uuid?: StringWithAggregatesFilter<"ContactEnrichment"> | string
+    source?: EnumEnrichmentSourceWithAggregatesFilter<"ContactEnrichment"> | $Enums.EnrichmentSource
+    source_url?: StringNullableWithAggregatesFilter<"ContactEnrichment"> | string | null
+    summary?: StringNullableWithAggregatesFilter<"ContactEnrichment"> | string | null
+    payload?: JsonNullableWithAggregatesFilter<"ContactEnrichment">
+    cost_usd?: DecimalNullableWithAggregatesFilter<"ContactEnrichment"> | Decimal | DecimalJsLike | number | string | null
+    input_tokens?: IntNullableWithAggregatesFilter<"ContactEnrichment"> | number | null
+    output_tokens?: IntNullableWithAggregatesFilter<"ContactEnrichment"> | number | null
+    metadata?: JsonNullableWithAggregatesFilter<"ContactEnrichment">
+    created_at?: DateTimeWithAggregatesFilter<"ContactEnrichment"> | Date | string
   }
 
   export type ContactScoreWhereInput = {
@@ -43416,6 +44878,8 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    enrichment_summary?: string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: Date | string | null
     unsubscribe_token?: string | null
     last_interaction_at?: Date | string | null
@@ -43432,6 +44896,7 @@ export namespace Prisma {
     reminders?: ReminderCreateNestedManyWithoutContactInput
     form_completions?: FormCompletionCreateNestedManyWithoutContactInput
     list_memberships?: ContactListMemberCreateNestedManyWithoutContactInput
+    enrichments?: ContactEnrichmentCreateNestedManyWithoutContactInput
   }
 
   export type ContactUncheckedCreateInput = {
@@ -43453,6 +44918,8 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    enrichment_summary?: string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: Date | string | null
     unsubscribe_token?: string | null
     last_interaction_at?: Date | string | null
@@ -43466,6 +44933,7 @@ export namespace Prisma {
     reminders?: ReminderUncheckedCreateNestedManyWithoutContactInput
     form_completions?: FormCompletionUncheckedCreateNestedManyWithoutContactInput
     list_memberships?: ContactListMemberUncheckedCreateNestedManyWithoutContactInput
+    enrichments?: ContactEnrichmentUncheckedCreateNestedManyWithoutContactInput
   }
 
   export type ContactUpdateInput = {
@@ -43483,6 +44951,8 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
     last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -43499,6 +44969,7 @@ export namespace Prisma {
     reminders?: ReminderUpdateManyWithoutContactNestedInput
     form_completions?: FormCompletionUpdateManyWithoutContactNestedInput
     list_memberships?: ContactListMemberUpdateManyWithoutContactNestedInput
+    enrichments?: ContactEnrichmentUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateInput = {
@@ -43520,6 +44991,8 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
     last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -43533,6 +45006,7 @@ export namespace Prisma {
     reminders?: ReminderUncheckedUpdateManyWithoutContactNestedInput
     form_completions?: FormCompletionUncheckedUpdateManyWithoutContactNestedInput
     list_memberships?: ContactListMemberUncheckedUpdateManyWithoutContactNestedInput
+    enrichments?: ContactEnrichmentUncheckedUpdateManyWithoutContactNestedInput
   }
 
   export type ContactCreateManyInput = {
@@ -43554,6 +45028,8 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    enrichment_summary?: string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: Date | string | null
     unsubscribe_token?: string | null
     last_interaction_at?: Date | string | null
@@ -43576,6 +45052,8 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
     last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -43602,11 +45080,114 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
     last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ContactEnrichmentCreateInput = {
+    uuid?: string
+    source: $Enums.EnrichmentSource
+    source_url?: string | null
+    summary?: string | null
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    cost_usd?: Decimal | DecimalJsLike | number | string | null
+    input_tokens?: number | null
+    output_tokens?: number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    contact: ContactCreateNestedOneWithoutEnrichmentsInput
+  }
+
+  export type ContactEnrichmentUncheckedCreateInput = {
+    id?: number
+    uuid?: string
+    contact_uuid: string
+    source: $Enums.EnrichmentSource
+    source_url?: string | null
+    summary?: string | null
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    cost_usd?: Decimal | DecimalJsLike | number | string | null
+    input_tokens?: number | null
+    output_tokens?: number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+  }
+
+  export type ContactEnrichmentUpdateInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    source?: EnumEnrichmentSourceFieldUpdateOperationsInput | $Enums.EnrichmentSource
+    source_url?: NullableStringFieldUpdateOperationsInput | string | null
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    input_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    output_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    contact?: ContactUpdateOneRequiredWithoutEnrichmentsNestedInput
+  }
+
+  export type ContactEnrichmentUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    contact_uuid?: StringFieldUpdateOperationsInput | string
+    source?: EnumEnrichmentSourceFieldUpdateOperationsInput | $Enums.EnrichmentSource
+    source_url?: NullableStringFieldUpdateOperationsInput | string | null
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    input_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    output_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ContactEnrichmentCreateManyInput = {
+    id?: number
+    uuid?: string
+    contact_uuid: string
+    source: $Enums.EnrichmentSource
+    source_url?: string | null
+    summary?: string | null
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    cost_usd?: Decimal | DecimalJsLike | number | string | null
+    input_tokens?: number | null
+    output_tokens?: number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+  }
+
+  export type ContactEnrichmentUpdateManyMutationInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    source?: EnumEnrichmentSourceFieldUpdateOperationsInput | $Enums.EnrichmentSource
+    source_url?: NullableStringFieldUpdateOperationsInput | string | null
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    input_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    output_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ContactEnrichmentUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    contact_uuid?: StringFieldUpdateOperationsInput | string
+    source?: EnumEnrichmentSourceFieldUpdateOperationsInput | $Enums.EnrichmentSource
+    source_url?: NullableStringFieldUpdateOperationsInput | string | null
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    input_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    output_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ContactScoreCreateInput = {
@@ -46631,6 +48212,12 @@ export namespace Prisma {
     none?: ContactListMemberWhereInput
   }
 
+  export type ContactEnrichmentListRelationFilter = {
+    every?: ContactEnrichmentWhereInput
+    some?: ContactEnrichmentWhereInput
+    none?: ContactEnrichmentWhereInput
+  }
+
   export type ContactTagOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -46640,6 +48227,10 @@ export namespace Prisma {
   }
 
   export type ContactListMemberOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ContactEnrichmentOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -46667,6 +48258,8 @@ export namespace Prisma {
     location?: SortOrder
     industry?: SortOrder
     description?: SortOrder
+    enrichment_summary?: SortOrder
+    enrichment_metadata?: SortOrder
     unsubscribed_at?: SortOrder
     unsubscribe_token?: SortOrder
     last_interaction_at?: SortOrder
@@ -46697,6 +48290,7 @@ export namespace Prisma {
     location?: SortOrder
     industry?: SortOrder
     description?: SortOrder
+    enrichment_summary?: SortOrder
     unsubscribed_at?: SortOrder
     unsubscribe_token?: SortOrder
     last_interaction_at?: SortOrder
@@ -46723,6 +48317,7 @@ export namespace Prisma {
     location?: SortOrder
     industry?: SortOrder
     description?: SortOrder
+    enrichment_summary?: SortOrder
     unsubscribed_at?: SortOrder
     unsubscribe_token?: SortOrder
     last_interaction_at?: SortOrder
@@ -46747,6 +48342,61 @@ export namespace Prisma {
   export type ContactScalarRelationFilter = {
     is?: ContactWhereInput
     isNot?: ContactWhereInput
+  }
+
+  export type ContactEnrichmentCountOrderByAggregateInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    contact_uuid?: SortOrder
+    source?: SortOrder
+    source_url?: SortOrder
+    summary?: SortOrder
+    payload?: SortOrder
+    cost_usd?: SortOrder
+    input_tokens?: SortOrder
+    output_tokens?: SortOrder
+    metadata?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type ContactEnrichmentAvgOrderByAggregateInput = {
+    id?: SortOrder
+    cost_usd?: SortOrder
+    input_tokens?: SortOrder
+    output_tokens?: SortOrder
+  }
+
+  export type ContactEnrichmentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    contact_uuid?: SortOrder
+    source?: SortOrder
+    source_url?: SortOrder
+    summary?: SortOrder
+    cost_usd?: SortOrder
+    input_tokens?: SortOrder
+    output_tokens?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type ContactEnrichmentMinOrderByAggregateInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    contact_uuid?: SortOrder
+    source?: SortOrder
+    source_url?: SortOrder
+    summary?: SortOrder
+    cost_usd?: SortOrder
+    input_tokens?: SortOrder
+    output_tokens?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type ContactEnrichmentSumOrderByAggregateInput = {
+    id?: SortOrder
+    cost_usd?: SortOrder
+    input_tokens?: SortOrder
+    output_tokens?: SortOrder
   }
 
   export type ContactScoreContact_uuidScoring_instruction_uuidCompoundUniqueInput = {
@@ -49555,6 +51205,13 @@ export namespace Prisma {
     connect?: ContactListMemberWhereUniqueInput | ContactListMemberWhereUniqueInput[]
   }
 
+  export type ContactEnrichmentCreateNestedManyWithoutContactInput = {
+    create?: XOR<ContactEnrichmentCreateWithoutContactInput, ContactEnrichmentUncheckedCreateWithoutContactInput> | ContactEnrichmentCreateWithoutContactInput[] | ContactEnrichmentUncheckedCreateWithoutContactInput[]
+    connectOrCreate?: ContactEnrichmentCreateOrConnectWithoutContactInput | ContactEnrichmentCreateOrConnectWithoutContactInput[]
+    createMany?: ContactEnrichmentCreateManyContactInputEnvelope
+    connect?: ContactEnrichmentWhereUniqueInput | ContactEnrichmentWhereUniqueInput[]
+  }
+
   export type ContactTagUncheckedCreateNestedManyWithoutContactInput = {
     create?: XOR<ContactTagCreateWithoutContactInput, ContactTagUncheckedCreateWithoutContactInput> | ContactTagCreateWithoutContactInput[] | ContactTagUncheckedCreateWithoutContactInput[]
     connectOrCreate?: ContactTagCreateOrConnectWithoutContactInput | ContactTagCreateOrConnectWithoutContactInput[]
@@ -49609,6 +51266,13 @@ export namespace Prisma {
     connectOrCreate?: ContactListMemberCreateOrConnectWithoutContactInput | ContactListMemberCreateOrConnectWithoutContactInput[]
     createMany?: ContactListMemberCreateManyContactInputEnvelope
     connect?: ContactListMemberWhereUniqueInput | ContactListMemberWhereUniqueInput[]
+  }
+
+  export type ContactEnrichmentUncheckedCreateNestedManyWithoutContactInput = {
+    create?: XOR<ContactEnrichmentCreateWithoutContactInput, ContactEnrichmentUncheckedCreateWithoutContactInput> | ContactEnrichmentCreateWithoutContactInput[] | ContactEnrichmentUncheckedCreateWithoutContactInput[]
+    connectOrCreate?: ContactEnrichmentCreateOrConnectWithoutContactInput | ContactEnrichmentCreateOrConnectWithoutContactInput[]
+    createMany?: ContactEnrichmentCreateManyContactInputEnvelope
+    connect?: ContactEnrichmentWhereUniqueInput | ContactEnrichmentWhereUniqueInput[]
   }
 
   export type EnumLeadStatusFieldUpdateOperationsInput = {
@@ -49753,6 +51417,20 @@ export namespace Prisma {
     deleteMany?: ContactListMemberScalarWhereInput | ContactListMemberScalarWhereInput[]
   }
 
+  export type ContactEnrichmentUpdateManyWithoutContactNestedInput = {
+    create?: XOR<ContactEnrichmentCreateWithoutContactInput, ContactEnrichmentUncheckedCreateWithoutContactInput> | ContactEnrichmentCreateWithoutContactInput[] | ContactEnrichmentUncheckedCreateWithoutContactInput[]
+    connectOrCreate?: ContactEnrichmentCreateOrConnectWithoutContactInput | ContactEnrichmentCreateOrConnectWithoutContactInput[]
+    upsert?: ContactEnrichmentUpsertWithWhereUniqueWithoutContactInput | ContactEnrichmentUpsertWithWhereUniqueWithoutContactInput[]
+    createMany?: ContactEnrichmentCreateManyContactInputEnvelope
+    set?: ContactEnrichmentWhereUniqueInput | ContactEnrichmentWhereUniqueInput[]
+    disconnect?: ContactEnrichmentWhereUniqueInput | ContactEnrichmentWhereUniqueInput[]
+    delete?: ContactEnrichmentWhereUniqueInput | ContactEnrichmentWhereUniqueInput[]
+    connect?: ContactEnrichmentWhereUniqueInput | ContactEnrichmentWhereUniqueInput[]
+    update?: ContactEnrichmentUpdateWithWhereUniqueWithoutContactInput | ContactEnrichmentUpdateWithWhereUniqueWithoutContactInput[]
+    updateMany?: ContactEnrichmentUpdateManyWithWhereWithoutContactInput | ContactEnrichmentUpdateManyWithWhereWithoutContactInput[]
+    deleteMany?: ContactEnrichmentScalarWhereInput | ContactEnrichmentScalarWhereInput[]
+  }
+
   export type ContactTagUncheckedUpdateManyWithoutContactNestedInput = {
     create?: XOR<ContactTagCreateWithoutContactInput, ContactTagUncheckedCreateWithoutContactInput> | ContactTagCreateWithoutContactInput[] | ContactTagUncheckedCreateWithoutContactInput[]
     connectOrCreate?: ContactTagCreateOrConnectWithoutContactInput | ContactTagCreateOrConnectWithoutContactInput[]
@@ -49863,6 +51541,34 @@ export namespace Prisma {
     update?: ContactListMemberUpdateWithWhereUniqueWithoutContactInput | ContactListMemberUpdateWithWhereUniqueWithoutContactInput[]
     updateMany?: ContactListMemberUpdateManyWithWhereWithoutContactInput | ContactListMemberUpdateManyWithWhereWithoutContactInput[]
     deleteMany?: ContactListMemberScalarWhereInput | ContactListMemberScalarWhereInput[]
+  }
+
+  export type ContactEnrichmentUncheckedUpdateManyWithoutContactNestedInput = {
+    create?: XOR<ContactEnrichmentCreateWithoutContactInput, ContactEnrichmentUncheckedCreateWithoutContactInput> | ContactEnrichmentCreateWithoutContactInput[] | ContactEnrichmentUncheckedCreateWithoutContactInput[]
+    connectOrCreate?: ContactEnrichmentCreateOrConnectWithoutContactInput | ContactEnrichmentCreateOrConnectWithoutContactInput[]
+    upsert?: ContactEnrichmentUpsertWithWhereUniqueWithoutContactInput | ContactEnrichmentUpsertWithWhereUniqueWithoutContactInput[]
+    createMany?: ContactEnrichmentCreateManyContactInputEnvelope
+    set?: ContactEnrichmentWhereUniqueInput | ContactEnrichmentWhereUniqueInput[]
+    disconnect?: ContactEnrichmentWhereUniqueInput | ContactEnrichmentWhereUniqueInput[]
+    delete?: ContactEnrichmentWhereUniqueInput | ContactEnrichmentWhereUniqueInput[]
+    connect?: ContactEnrichmentWhereUniqueInput | ContactEnrichmentWhereUniqueInput[]
+    update?: ContactEnrichmentUpdateWithWhereUniqueWithoutContactInput | ContactEnrichmentUpdateWithWhereUniqueWithoutContactInput[]
+    updateMany?: ContactEnrichmentUpdateManyWithWhereWithoutContactInput | ContactEnrichmentUpdateManyWithWhereWithoutContactInput[]
+    deleteMany?: ContactEnrichmentScalarWhereInput | ContactEnrichmentScalarWhereInput[]
+  }
+
+  export type ContactCreateNestedOneWithoutEnrichmentsInput = {
+    create?: XOR<ContactCreateWithoutEnrichmentsInput, ContactUncheckedCreateWithoutEnrichmentsInput>
+    connectOrCreate?: ContactCreateOrConnectWithoutEnrichmentsInput
+    connect?: ContactWhereUniqueInput
+  }
+
+  export type ContactUpdateOneRequiredWithoutEnrichmentsNestedInput = {
+    create?: XOR<ContactCreateWithoutEnrichmentsInput, ContactUncheckedCreateWithoutEnrichmentsInput>
+    connectOrCreate?: ContactCreateOrConnectWithoutEnrichmentsInput
+    upsert?: ContactUpsertWithoutEnrichmentsInput
+    connect?: ContactWhereUniqueInput
+    update?: XOR<XOR<ContactUpdateToOneWithWhereWithoutEnrichmentsInput, ContactUpdateWithoutEnrichmentsInput>, ContactUncheckedUpdateWithoutEnrichmentsInput>
   }
 
   export type ContactCreateNestedOneWithoutContact_scoresInput = {
@@ -51657,6 +53363,8 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    enrichment_summary?: string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: Date | string | null
     unsubscribe_token?: string | null
     last_interaction_at?: Date | string | null
@@ -51672,6 +53380,7 @@ export namespace Prisma {
     reminders?: ReminderCreateNestedManyWithoutContactInput
     form_completions?: FormCompletionCreateNestedManyWithoutContactInput
     list_memberships?: ContactListMemberCreateNestedManyWithoutContactInput
+    enrichments?: ContactEnrichmentCreateNestedManyWithoutContactInput
   }
 
   export type ContactUncheckedCreateWithoutUserInput = {
@@ -51692,6 +53401,8 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    enrichment_summary?: string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: Date | string | null
     unsubscribe_token?: string | null
     last_interaction_at?: Date | string | null
@@ -51705,6 +53416,7 @@ export namespace Prisma {
     reminders?: ReminderUncheckedCreateNestedManyWithoutContactInput
     form_completions?: FormCompletionUncheckedCreateNestedManyWithoutContactInput
     list_memberships?: ContactListMemberUncheckedCreateNestedManyWithoutContactInput
+    enrichments?: ContactEnrichmentUncheckedCreateNestedManyWithoutContactInput
   }
 
   export type ContactCreateOrConnectWithoutUserInput = {
@@ -52348,6 +54060,8 @@ export namespace Prisma {
     location?: StringNullableFilter<"Contact"> | string | null
     industry?: StringNullableFilter<"Contact"> | string | null
     description?: StringNullableFilter<"Contact"> | string | null
+    enrichment_summary?: StringNullableFilter<"Contact"> | string | null
+    enrichment_metadata?: JsonNullableFilter<"Contact">
     unsubscribed_at?: DateTimeNullableFilter<"Contact"> | Date | string | null
     unsubscribe_token?: StringNullableFilter<"Contact"> | string | null
     last_interaction_at?: DateTimeNullableFilter<"Contact"> | Date | string | null
@@ -52922,6 +54636,8 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    enrichment_summary?: string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: Date | string | null
     unsubscribe_token?: string | null
     last_interaction_at?: Date | string | null
@@ -52937,6 +54653,7 @@ export namespace Prisma {
     reminders?: ReminderCreateNestedManyWithoutContactInput
     form_completions?: FormCompletionCreateNestedManyWithoutContactInput
     list_memberships?: ContactListMemberCreateNestedManyWithoutContactInput
+    enrichments?: ContactEnrichmentCreateNestedManyWithoutContactInput
   }
 
   export type ContactUncheckedCreateWithoutFilterInput = {
@@ -52957,6 +54674,8 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    enrichment_summary?: string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: Date | string | null
     unsubscribe_token?: string | null
     last_interaction_at?: Date | string | null
@@ -52970,6 +54689,7 @@ export namespace Prisma {
     reminders?: ReminderUncheckedCreateNestedManyWithoutContactInput
     form_completions?: FormCompletionUncheckedCreateNestedManyWithoutContactInput
     list_memberships?: ContactListMemberUncheckedCreateNestedManyWithoutContactInput
+    enrichments?: ContactEnrichmentUncheckedCreateNestedManyWithoutContactInput
   }
 
   export type ContactCreateOrConnectWithoutFilterInput = {
@@ -53866,6 +55586,8 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    enrichment_summary?: string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: Date | string | null
     unsubscribe_token?: string | null
     last_interaction_at?: Date | string | null
@@ -53881,6 +55603,7 @@ export namespace Prisma {
     reminders?: ReminderCreateNestedManyWithoutContactInput
     form_completions?: FormCompletionCreateNestedManyWithoutContactInput
     list_memberships?: ContactListMemberCreateNestedManyWithoutContactInput
+    enrichments?: ContactEnrichmentCreateNestedManyWithoutContactInput
   }
 
   export type ContactUncheckedCreateWithoutLeadInput = {
@@ -53901,6 +55624,8 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    enrichment_summary?: string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: Date | string | null
     unsubscribe_token?: string | null
     last_interaction_at?: Date | string | null
@@ -53914,6 +55639,7 @@ export namespace Prisma {
     reminders?: ReminderUncheckedCreateNestedManyWithoutContactInput
     form_completions?: FormCompletionUncheckedCreateNestedManyWithoutContactInput
     list_memberships?: ContactListMemberUncheckedCreateNestedManyWithoutContactInput
+    enrichments?: ContactEnrichmentUncheckedCreateNestedManyWithoutContactInput
   }
 
   export type ContactCreateOrConnectWithoutLeadInput = {
@@ -54565,6 +56291,43 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ContactEnrichmentCreateWithoutContactInput = {
+    uuid?: string
+    source: $Enums.EnrichmentSource
+    source_url?: string | null
+    summary?: string | null
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    cost_usd?: Decimal | DecimalJsLike | number | string | null
+    input_tokens?: number | null
+    output_tokens?: number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+  }
+
+  export type ContactEnrichmentUncheckedCreateWithoutContactInput = {
+    id?: number
+    uuid?: string
+    source: $Enums.EnrichmentSource
+    source_url?: string | null
+    summary?: string | null
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    cost_usd?: Decimal | DecimalJsLike | number | string | null
+    input_tokens?: number | null
+    output_tokens?: number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+  }
+
+  export type ContactEnrichmentCreateOrConnectWithoutContactInput = {
+    where: ContactEnrichmentWhereUniqueInput
+    create: XOR<ContactEnrichmentCreateWithoutContactInput, ContactEnrichmentUncheckedCreateWithoutContactInput>
+  }
+
+  export type ContactEnrichmentCreateManyContactInputEnvelope = {
+    data: ContactEnrichmentCreateManyContactInput | ContactEnrichmentCreateManyContactInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserUpsertWithoutContactsInput = {
     update: XOR<UserUpdateWithoutContactsInput, UserUncheckedUpdateWithoutContactsInput>
     create: XOR<UserCreateWithoutContactsInput, UserUncheckedCreateWithoutContactsInput>
@@ -54899,6 +56662,198 @@ export namespace Prisma {
     created_at?: DateTimeFilter<"ContactListMember"> | Date | string
   }
 
+  export type ContactEnrichmentUpsertWithWhereUniqueWithoutContactInput = {
+    where: ContactEnrichmentWhereUniqueInput
+    update: XOR<ContactEnrichmentUpdateWithoutContactInput, ContactEnrichmentUncheckedUpdateWithoutContactInput>
+    create: XOR<ContactEnrichmentCreateWithoutContactInput, ContactEnrichmentUncheckedCreateWithoutContactInput>
+  }
+
+  export type ContactEnrichmentUpdateWithWhereUniqueWithoutContactInput = {
+    where: ContactEnrichmentWhereUniqueInput
+    data: XOR<ContactEnrichmentUpdateWithoutContactInput, ContactEnrichmentUncheckedUpdateWithoutContactInput>
+  }
+
+  export type ContactEnrichmentUpdateManyWithWhereWithoutContactInput = {
+    where: ContactEnrichmentScalarWhereInput
+    data: XOR<ContactEnrichmentUpdateManyMutationInput, ContactEnrichmentUncheckedUpdateManyWithoutContactInput>
+  }
+
+  export type ContactEnrichmentScalarWhereInput = {
+    AND?: ContactEnrichmentScalarWhereInput | ContactEnrichmentScalarWhereInput[]
+    OR?: ContactEnrichmentScalarWhereInput[]
+    NOT?: ContactEnrichmentScalarWhereInput | ContactEnrichmentScalarWhereInput[]
+    id?: IntFilter<"ContactEnrichment"> | number
+    uuid?: StringFilter<"ContactEnrichment"> | string
+    contact_uuid?: StringFilter<"ContactEnrichment"> | string
+    source?: EnumEnrichmentSourceFilter<"ContactEnrichment"> | $Enums.EnrichmentSource
+    source_url?: StringNullableFilter<"ContactEnrichment"> | string | null
+    summary?: StringNullableFilter<"ContactEnrichment"> | string | null
+    payload?: JsonNullableFilter<"ContactEnrichment">
+    cost_usd?: DecimalNullableFilter<"ContactEnrichment"> | Decimal | DecimalJsLike | number | string | null
+    input_tokens?: IntNullableFilter<"ContactEnrichment"> | number | null
+    output_tokens?: IntNullableFilter<"ContactEnrichment"> | number | null
+    metadata?: JsonNullableFilter<"ContactEnrichment">
+    created_at?: DateTimeFilter<"ContactEnrichment"> | Date | string
+  }
+
+  export type ContactCreateWithoutEnrichmentsInput = {
+    uuid?: string
+    status?: $Enums.LeadStatus
+    notes?: string | null
+    name?: string | null
+    email?: string | null
+    phone?: string | null
+    company?: string | null
+    website?: string | null
+    google_maps_url?: string | null
+    linkedin_url?: string | null
+    title?: string | null
+    location?: string | null
+    industry?: string | null
+    description?: string | null
+    enrichment_summary?: string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
+    unsubscribed_at?: Date | string | null
+    unsubscribe_token?: string | null
+    last_interaction_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    user: UserCreateNestedOneWithoutContactsInput
+    lead: LeadCreateNestedOneWithoutContactsInput
+    filter?: FilterCreateNestedOneWithoutContactsInput
+    tags?: ContactTagCreateNestedManyWithoutContactInput
+    interactions?: InteractionCreateNestedManyWithoutContactInput
+    outreach_messages?: OutreachMessageCreateNestedManyWithoutContactInput
+    campaign_contacts?: MarketingCampaignContactCreateNestedManyWithoutContactInput
+    contact_scores?: ContactScoreCreateNestedManyWithoutContactInput
+    reminders?: ReminderCreateNestedManyWithoutContactInput
+    form_completions?: FormCompletionCreateNestedManyWithoutContactInput
+    list_memberships?: ContactListMemberCreateNestedManyWithoutContactInput
+  }
+
+  export type ContactUncheckedCreateWithoutEnrichmentsInput = {
+    id?: number
+    uuid?: string
+    user_uuid: string
+    lead_uuid: string
+    filter_uuid?: string | null
+    status?: $Enums.LeadStatus
+    notes?: string | null
+    name?: string | null
+    email?: string | null
+    phone?: string | null
+    company?: string | null
+    website?: string | null
+    google_maps_url?: string | null
+    linkedin_url?: string | null
+    title?: string | null
+    location?: string | null
+    industry?: string | null
+    description?: string | null
+    enrichment_summary?: string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
+    unsubscribed_at?: Date | string | null
+    unsubscribe_token?: string | null
+    last_interaction_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    tags?: ContactTagUncheckedCreateNestedManyWithoutContactInput
+    interactions?: InteractionUncheckedCreateNestedManyWithoutContactInput
+    outreach_messages?: OutreachMessageUncheckedCreateNestedManyWithoutContactInput
+    campaign_contacts?: MarketingCampaignContactUncheckedCreateNestedManyWithoutContactInput
+    contact_scores?: ContactScoreUncheckedCreateNestedManyWithoutContactInput
+    reminders?: ReminderUncheckedCreateNestedManyWithoutContactInput
+    form_completions?: FormCompletionUncheckedCreateNestedManyWithoutContactInput
+    list_memberships?: ContactListMemberUncheckedCreateNestedManyWithoutContactInput
+  }
+
+  export type ContactCreateOrConnectWithoutEnrichmentsInput = {
+    where: ContactWhereUniqueInput
+    create: XOR<ContactCreateWithoutEnrichmentsInput, ContactUncheckedCreateWithoutEnrichmentsInput>
+  }
+
+  export type ContactUpsertWithoutEnrichmentsInput = {
+    update: XOR<ContactUpdateWithoutEnrichmentsInput, ContactUncheckedUpdateWithoutEnrichmentsInput>
+    create: XOR<ContactCreateWithoutEnrichmentsInput, ContactUncheckedCreateWithoutEnrichmentsInput>
+    where?: ContactWhereInput
+  }
+
+  export type ContactUpdateToOneWithWhereWithoutEnrichmentsInput = {
+    where?: ContactWhereInput
+    data: XOR<ContactUpdateWithoutEnrichmentsInput, ContactUncheckedUpdateWithoutEnrichmentsInput>
+  }
+
+  export type ContactUpdateWithoutEnrichmentsInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    google_maps_url?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
+    unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
+    last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutContactsNestedInput
+    lead?: LeadUpdateOneRequiredWithoutContactsNestedInput
+    filter?: FilterUpdateOneWithoutContactsNestedInput
+    tags?: ContactTagUpdateManyWithoutContactNestedInput
+    interactions?: InteractionUpdateManyWithoutContactNestedInput
+    outreach_messages?: OutreachMessageUpdateManyWithoutContactNestedInput
+    campaign_contacts?: MarketingCampaignContactUpdateManyWithoutContactNestedInput
+    contact_scores?: ContactScoreUpdateManyWithoutContactNestedInput
+    reminders?: ReminderUpdateManyWithoutContactNestedInput
+    form_completions?: FormCompletionUpdateManyWithoutContactNestedInput
+    list_memberships?: ContactListMemberUpdateManyWithoutContactNestedInput
+  }
+
+  export type ContactUncheckedUpdateWithoutEnrichmentsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    lead_uuid?: StringFieldUpdateOperationsInput | string
+    filter_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    google_maps_url?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedin_url?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
+    unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
+    last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    tags?: ContactTagUncheckedUpdateManyWithoutContactNestedInput
+    interactions?: InteractionUncheckedUpdateManyWithoutContactNestedInput
+    outreach_messages?: OutreachMessageUncheckedUpdateManyWithoutContactNestedInput
+    campaign_contacts?: MarketingCampaignContactUncheckedUpdateManyWithoutContactNestedInput
+    contact_scores?: ContactScoreUncheckedUpdateManyWithoutContactNestedInput
+    reminders?: ReminderUncheckedUpdateManyWithoutContactNestedInput
+    form_completions?: FormCompletionUncheckedUpdateManyWithoutContactNestedInput
+    list_memberships?: ContactListMemberUncheckedUpdateManyWithoutContactNestedInput
+  }
+
   export type ContactCreateWithoutContact_scoresInput = {
     uuid?: string
     status?: $Enums.LeadStatus
@@ -54914,6 +56869,8 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    enrichment_summary?: string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: Date | string | null
     unsubscribe_token?: string | null
     last_interaction_at?: Date | string | null
@@ -54929,6 +56886,7 @@ export namespace Prisma {
     reminders?: ReminderCreateNestedManyWithoutContactInput
     form_completions?: FormCompletionCreateNestedManyWithoutContactInput
     list_memberships?: ContactListMemberCreateNestedManyWithoutContactInput
+    enrichments?: ContactEnrichmentCreateNestedManyWithoutContactInput
   }
 
   export type ContactUncheckedCreateWithoutContact_scoresInput = {
@@ -54950,6 +56908,8 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    enrichment_summary?: string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: Date | string | null
     unsubscribe_token?: string | null
     last_interaction_at?: Date | string | null
@@ -54962,6 +56922,7 @@ export namespace Prisma {
     reminders?: ReminderUncheckedCreateNestedManyWithoutContactInput
     form_completions?: FormCompletionUncheckedCreateNestedManyWithoutContactInput
     list_memberships?: ContactListMemberUncheckedCreateNestedManyWithoutContactInput
+    enrichments?: ContactEnrichmentUncheckedCreateNestedManyWithoutContactInput
   }
 
   export type ContactCreateOrConnectWithoutContact_scoresInput = {
@@ -55021,6 +56982,8 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
     last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -55036,6 +56999,7 @@ export namespace Prisma {
     reminders?: ReminderUpdateManyWithoutContactNestedInput
     form_completions?: FormCompletionUpdateManyWithoutContactNestedInput
     list_memberships?: ContactListMemberUpdateManyWithoutContactNestedInput
+    enrichments?: ContactEnrichmentUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateWithoutContact_scoresInput = {
@@ -55057,6 +57021,8 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
     last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -55069,6 +57035,7 @@ export namespace Prisma {
     reminders?: ReminderUncheckedUpdateManyWithoutContactNestedInput
     form_completions?: FormCompletionUncheckedUpdateManyWithoutContactNestedInput
     list_memberships?: ContactListMemberUncheckedUpdateManyWithoutContactNestedInput
+    enrichments?: ContactEnrichmentUncheckedUpdateManyWithoutContactNestedInput
   }
 
   export type ScoringInstructionUpsertWithoutContact_scoresInput = {
@@ -55362,6 +57329,8 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    enrichment_summary?: string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: Date | string | null
     unsubscribe_token?: string | null
     last_interaction_at?: Date | string | null
@@ -55377,6 +57346,7 @@ export namespace Prisma {
     contact_scores?: ContactScoreCreateNestedManyWithoutContactInput
     reminders?: ReminderCreateNestedManyWithoutContactInput
     form_completions?: FormCompletionCreateNestedManyWithoutContactInput
+    enrichments?: ContactEnrichmentCreateNestedManyWithoutContactInput
   }
 
   export type ContactUncheckedCreateWithoutList_membershipsInput = {
@@ -55398,6 +57368,8 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    enrichment_summary?: string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: Date | string | null
     unsubscribe_token?: string | null
     last_interaction_at?: Date | string | null
@@ -55410,6 +57382,7 @@ export namespace Prisma {
     contact_scores?: ContactScoreUncheckedCreateNestedManyWithoutContactInput
     reminders?: ReminderUncheckedCreateNestedManyWithoutContactInput
     form_completions?: FormCompletionUncheckedCreateNestedManyWithoutContactInput
+    enrichments?: ContactEnrichmentUncheckedCreateNestedManyWithoutContactInput
   }
 
   export type ContactCreateOrConnectWithoutList_membershipsInput = {
@@ -55475,6 +57448,8 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
     last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -55490,6 +57465,7 @@ export namespace Prisma {
     contact_scores?: ContactScoreUpdateManyWithoutContactNestedInput
     reminders?: ReminderUpdateManyWithoutContactNestedInput
     form_completions?: FormCompletionUpdateManyWithoutContactNestedInput
+    enrichments?: ContactEnrichmentUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateWithoutList_membershipsInput = {
@@ -55511,6 +57487,8 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
     last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -55523,6 +57501,7 @@ export namespace Prisma {
     contact_scores?: ContactScoreUncheckedUpdateManyWithoutContactNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutContactNestedInput
     form_completions?: FormCompletionUncheckedUpdateManyWithoutContactNestedInput
+    enrichments?: ContactEnrichmentUncheckedUpdateManyWithoutContactNestedInput
   }
 
   export type ContactCreateWithoutTagsInput = {
@@ -55540,6 +57519,8 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    enrichment_summary?: string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: Date | string | null
     unsubscribe_token?: string | null
     last_interaction_at?: Date | string | null
@@ -55555,6 +57536,7 @@ export namespace Prisma {
     reminders?: ReminderCreateNestedManyWithoutContactInput
     form_completions?: FormCompletionCreateNestedManyWithoutContactInput
     list_memberships?: ContactListMemberCreateNestedManyWithoutContactInput
+    enrichments?: ContactEnrichmentCreateNestedManyWithoutContactInput
   }
 
   export type ContactUncheckedCreateWithoutTagsInput = {
@@ -55576,6 +57558,8 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    enrichment_summary?: string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: Date | string | null
     unsubscribe_token?: string | null
     last_interaction_at?: Date | string | null
@@ -55588,6 +57572,7 @@ export namespace Prisma {
     reminders?: ReminderUncheckedCreateNestedManyWithoutContactInput
     form_completions?: FormCompletionUncheckedCreateNestedManyWithoutContactInput
     list_memberships?: ContactListMemberUncheckedCreateNestedManyWithoutContactInput
+    enrichments?: ContactEnrichmentUncheckedCreateNestedManyWithoutContactInput
   }
 
   export type ContactCreateOrConnectWithoutTagsInput = {
@@ -55621,6 +57606,8 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
     last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -55636,6 +57623,7 @@ export namespace Prisma {
     reminders?: ReminderUpdateManyWithoutContactNestedInput
     form_completions?: FormCompletionUpdateManyWithoutContactNestedInput
     list_memberships?: ContactListMemberUpdateManyWithoutContactNestedInput
+    enrichments?: ContactEnrichmentUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateWithoutTagsInput = {
@@ -55657,6 +57645,8 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
     last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -55669,6 +57659,7 @@ export namespace Prisma {
     reminders?: ReminderUncheckedUpdateManyWithoutContactNestedInput
     form_completions?: FormCompletionUncheckedUpdateManyWithoutContactNestedInput
     list_memberships?: ContactListMemberUncheckedUpdateManyWithoutContactNestedInput
+    enrichments?: ContactEnrichmentUncheckedUpdateManyWithoutContactNestedInput
   }
 
   export type ContactCreateWithoutInteractionsInput = {
@@ -55686,6 +57677,8 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    enrichment_summary?: string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: Date | string | null
     unsubscribe_token?: string | null
     last_interaction_at?: Date | string | null
@@ -55701,6 +57694,7 @@ export namespace Prisma {
     reminders?: ReminderCreateNestedManyWithoutContactInput
     form_completions?: FormCompletionCreateNestedManyWithoutContactInput
     list_memberships?: ContactListMemberCreateNestedManyWithoutContactInput
+    enrichments?: ContactEnrichmentCreateNestedManyWithoutContactInput
   }
 
   export type ContactUncheckedCreateWithoutInteractionsInput = {
@@ -55722,6 +57716,8 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    enrichment_summary?: string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: Date | string | null
     unsubscribe_token?: string | null
     last_interaction_at?: Date | string | null
@@ -55734,6 +57730,7 @@ export namespace Prisma {
     reminders?: ReminderUncheckedCreateNestedManyWithoutContactInput
     form_completions?: FormCompletionUncheckedCreateNestedManyWithoutContactInput
     list_memberships?: ContactListMemberUncheckedCreateNestedManyWithoutContactInput
+    enrichments?: ContactEnrichmentUncheckedCreateNestedManyWithoutContactInput
   }
 
   export type ContactCreateOrConnectWithoutInteractionsInput = {
@@ -55961,6 +57958,8 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
     last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -55976,6 +57975,7 @@ export namespace Prisma {
     reminders?: ReminderUpdateManyWithoutContactNestedInput
     form_completions?: FormCompletionUpdateManyWithoutContactNestedInput
     list_memberships?: ContactListMemberUpdateManyWithoutContactNestedInput
+    enrichments?: ContactEnrichmentUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateWithoutInteractionsInput = {
@@ -55997,6 +57997,8 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
     last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -56009,6 +58011,7 @@ export namespace Prisma {
     reminders?: ReminderUncheckedUpdateManyWithoutContactNestedInput
     form_completions?: FormCompletionUncheckedUpdateManyWithoutContactNestedInput
     list_memberships?: ContactListMemberUncheckedUpdateManyWithoutContactNestedInput
+    enrichments?: ContactEnrichmentUncheckedUpdateManyWithoutContactNestedInput
   }
 
   export type UserUpsertWithoutInteractionsInput = {
@@ -56292,6 +58295,8 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    enrichment_summary?: string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: Date | string | null
     unsubscribe_token?: string | null
     last_interaction_at?: Date | string | null
@@ -56307,6 +58312,7 @@ export namespace Prisma {
     reminders?: ReminderCreateNestedManyWithoutContactInput
     form_completions?: FormCompletionCreateNestedManyWithoutContactInput
     list_memberships?: ContactListMemberCreateNestedManyWithoutContactInput
+    enrichments?: ContactEnrichmentCreateNestedManyWithoutContactInput
   }
 
   export type ContactUncheckedCreateWithoutOutreach_messagesInput = {
@@ -56328,6 +58334,8 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    enrichment_summary?: string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: Date | string | null
     unsubscribe_token?: string | null
     last_interaction_at?: Date | string | null
@@ -56340,6 +58348,7 @@ export namespace Prisma {
     reminders?: ReminderUncheckedCreateNestedManyWithoutContactInput
     form_completions?: FormCompletionUncheckedCreateNestedManyWithoutContactInput
     list_memberships?: ContactListMemberUncheckedCreateNestedManyWithoutContactInput
+    enrichments?: ContactEnrichmentUncheckedCreateNestedManyWithoutContactInput
   }
 
   export type ContactCreateOrConnectWithoutOutreach_messagesInput = {
@@ -56553,6 +58562,8 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
     last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -56568,6 +58579,7 @@ export namespace Prisma {
     reminders?: ReminderUpdateManyWithoutContactNestedInput
     form_completions?: FormCompletionUpdateManyWithoutContactNestedInput
     list_memberships?: ContactListMemberUpdateManyWithoutContactNestedInput
+    enrichments?: ContactEnrichmentUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateWithoutOutreach_messagesInput = {
@@ -56589,6 +58601,8 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
     last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -56601,6 +58615,7 @@ export namespace Prisma {
     reminders?: ReminderUncheckedUpdateManyWithoutContactNestedInput
     form_completions?: FormCompletionUncheckedUpdateManyWithoutContactNestedInput
     list_memberships?: ContactListMemberUncheckedUpdateManyWithoutContactNestedInput
+    enrichments?: ContactEnrichmentUncheckedUpdateManyWithoutContactNestedInput
   }
 
   export type MarketingCampaignUpsertWithoutOutreach_messagesInput = {
@@ -57682,6 +59697,8 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    enrichment_summary?: string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: Date | string | null
     unsubscribe_token?: string | null
     last_interaction_at?: Date | string | null
@@ -57697,6 +59714,7 @@ export namespace Prisma {
     reminders?: ReminderCreateNestedManyWithoutContactInput
     form_completions?: FormCompletionCreateNestedManyWithoutContactInput
     list_memberships?: ContactListMemberCreateNestedManyWithoutContactInput
+    enrichments?: ContactEnrichmentCreateNestedManyWithoutContactInput
   }
 
   export type ContactUncheckedCreateWithoutCampaign_contactsInput = {
@@ -57718,6 +59736,8 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    enrichment_summary?: string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: Date | string | null
     unsubscribe_token?: string | null
     last_interaction_at?: Date | string | null
@@ -57730,6 +59750,7 @@ export namespace Prisma {
     reminders?: ReminderUncheckedCreateNestedManyWithoutContactInput
     form_completions?: FormCompletionUncheckedCreateNestedManyWithoutContactInput
     list_memberships?: ContactListMemberUncheckedCreateNestedManyWithoutContactInput
+    enrichments?: ContactEnrichmentUncheckedCreateNestedManyWithoutContactInput
   }
 
   export type ContactCreateOrConnectWithoutCampaign_contactsInput = {
@@ -57857,6 +59878,8 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
     last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -57872,6 +59895,7 @@ export namespace Prisma {
     reminders?: ReminderUpdateManyWithoutContactNestedInput
     form_completions?: FormCompletionUpdateManyWithoutContactNestedInput
     list_memberships?: ContactListMemberUpdateManyWithoutContactNestedInput
+    enrichments?: ContactEnrichmentUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateWithoutCampaign_contactsInput = {
@@ -57893,6 +59917,8 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
     last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -57905,6 +59931,7 @@ export namespace Prisma {
     reminders?: ReminderUncheckedUpdateManyWithoutContactNestedInput
     form_completions?: FormCompletionUncheckedUpdateManyWithoutContactNestedInput
     list_memberships?: ContactListMemberUncheckedUpdateManyWithoutContactNestedInput
+    enrichments?: ContactEnrichmentUncheckedUpdateManyWithoutContactNestedInput
   }
 
   export type UserCreateWithoutOpenai_batch_jobsInput = {
@@ -58320,6 +60347,8 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    enrichment_summary?: string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: Date | string | null
     unsubscribe_token?: string | null
     last_interaction_at?: Date | string | null
@@ -58335,6 +60364,7 @@ export namespace Prisma {
     contact_scores?: ContactScoreCreateNestedManyWithoutContactInput
     form_completions?: FormCompletionCreateNestedManyWithoutContactInput
     list_memberships?: ContactListMemberCreateNestedManyWithoutContactInput
+    enrichments?: ContactEnrichmentCreateNestedManyWithoutContactInput
   }
 
   export type ContactUncheckedCreateWithoutRemindersInput = {
@@ -58356,6 +60386,8 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    enrichment_summary?: string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: Date | string | null
     unsubscribe_token?: string | null
     last_interaction_at?: Date | string | null
@@ -58368,6 +60400,7 @@ export namespace Prisma {
     contact_scores?: ContactScoreUncheckedCreateNestedManyWithoutContactInput
     form_completions?: FormCompletionUncheckedCreateNestedManyWithoutContactInput
     list_memberships?: ContactListMemberUncheckedCreateNestedManyWithoutContactInput
+    enrichments?: ContactEnrichmentUncheckedCreateNestedManyWithoutContactInput
   }
 
   export type ContactCreateOrConnectWithoutRemindersInput = {
@@ -58461,6 +60494,8 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
     last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -58476,6 +60511,7 @@ export namespace Prisma {
     contact_scores?: ContactScoreUpdateManyWithoutContactNestedInput
     form_completions?: FormCompletionUpdateManyWithoutContactNestedInput
     list_memberships?: ContactListMemberUpdateManyWithoutContactNestedInput
+    enrichments?: ContactEnrichmentUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateWithoutRemindersInput = {
@@ -58497,6 +60533,8 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
     last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -58509,6 +60547,7 @@ export namespace Prisma {
     contact_scores?: ContactScoreUncheckedUpdateManyWithoutContactNestedInput
     form_completions?: FormCompletionUncheckedUpdateManyWithoutContactNestedInput
     list_memberships?: ContactListMemberUncheckedUpdateManyWithoutContactNestedInput
+    enrichments?: ContactEnrichmentUncheckedUpdateManyWithoutContactNestedInput
   }
 
   export type UserCreateWithoutFormsInput = {
@@ -58904,6 +60943,8 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    enrichment_summary?: string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: Date | string | null
     unsubscribe_token?: string | null
     last_interaction_at?: Date | string | null
@@ -58919,6 +60960,7 @@ export namespace Prisma {
     contact_scores?: ContactScoreCreateNestedManyWithoutContactInput
     reminders?: ReminderCreateNestedManyWithoutContactInput
     list_memberships?: ContactListMemberCreateNestedManyWithoutContactInput
+    enrichments?: ContactEnrichmentCreateNestedManyWithoutContactInput
   }
 
   export type ContactUncheckedCreateWithoutForm_completionsInput = {
@@ -58940,6 +60982,8 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    enrichment_summary?: string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: Date | string | null
     unsubscribe_token?: string | null
     last_interaction_at?: Date | string | null
@@ -58952,6 +60996,7 @@ export namespace Prisma {
     contact_scores?: ContactScoreUncheckedCreateNestedManyWithoutContactInput
     reminders?: ReminderUncheckedCreateNestedManyWithoutContactInput
     list_memberships?: ContactListMemberUncheckedCreateNestedManyWithoutContactInput
+    enrichments?: ContactEnrichmentUncheckedCreateNestedManyWithoutContactInput
   }
 
   export type ContactCreateOrConnectWithoutForm_completionsInput = {
@@ -59098,6 +61143,8 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
     last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -59113,6 +61160,7 @@ export namespace Prisma {
     contact_scores?: ContactScoreUpdateManyWithoutContactNestedInput
     reminders?: ReminderUpdateManyWithoutContactNestedInput
     list_memberships?: ContactListMemberUpdateManyWithoutContactNestedInput
+    enrichments?: ContactEnrichmentUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateWithoutForm_completionsInput = {
@@ -59134,6 +61182,8 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
     last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -59146,6 +61196,7 @@ export namespace Prisma {
     contact_scores?: ContactScoreUncheckedUpdateManyWithoutContactNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutContactNestedInput
     list_memberships?: ContactListMemberUncheckedUpdateManyWithoutContactNestedInput
+    enrichments?: ContactEnrichmentUncheckedUpdateManyWithoutContactNestedInput
   }
 
   export type UserUpsertWithoutForm_completionsInput = {
@@ -59659,6 +61710,8 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    enrichment_summary?: string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: Date | string | null
     unsubscribe_token?: string | null
     last_interaction_at?: Date | string | null
@@ -59942,6 +61995,8 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
     last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -59957,6 +62012,7 @@ export namespace Prisma {
     reminders?: ReminderUpdateManyWithoutContactNestedInput
     form_completions?: FormCompletionUpdateManyWithoutContactNestedInput
     list_memberships?: ContactListMemberUpdateManyWithoutContactNestedInput
+    enrichments?: ContactEnrichmentUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateWithoutUserInput = {
@@ -59977,6 +62033,8 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
     last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -59990,6 +62048,7 @@ export namespace Prisma {
     reminders?: ReminderUncheckedUpdateManyWithoutContactNestedInput
     form_completions?: FormCompletionUncheckedUpdateManyWithoutContactNestedInput
     list_memberships?: ContactListMemberUncheckedUpdateManyWithoutContactNestedInput
+    enrichments?: ContactEnrichmentUncheckedUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateManyWithoutUserInput = {
@@ -60010,6 +62069,8 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
     last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -60680,6 +62741,8 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    enrichment_summary?: string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: Date | string | null
     unsubscribe_token?: string | null
     last_interaction_at?: Date | string | null
@@ -60772,6 +62835,8 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
     last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -60787,6 +62852,7 @@ export namespace Prisma {
     reminders?: ReminderUpdateManyWithoutContactNestedInput
     form_completions?: FormCompletionUpdateManyWithoutContactNestedInput
     list_memberships?: ContactListMemberUpdateManyWithoutContactNestedInput
+    enrichments?: ContactEnrichmentUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateWithoutFilterInput = {
@@ -60807,6 +62873,8 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
     last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -60820,6 +62888,7 @@ export namespace Prisma {
     reminders?: ReminderUncheckedUpdateManyWithoutContactNestedInput
     form_completions?: FormCompletionUncheckedUpdateManyWithoutContactNestedInput
     list_memberships?: ContactListMemberUncheckedUpdateManyWithoutContactNestedInput
+    enrichments?: ContactEnrichmentUncheckedUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateManyWithoutFilterInput = {
@@ -60840,6 +62909,8 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
     last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -61027,6 +63098,8 @@ export namespace Prisma {
     location?: string | null
     industry?: string | null
     description?: string | null
+    enrichment_summary?: string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: Date | string | null
     unsubscribe_token?: string | null
     last_interaction_at?: Date | string | null
@@ -61063,6 +63136,8 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
     last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -61078,6 +63153,7 @@ export namespace Prisma {
     reminders?: ReminderUpdateManyWithoutContactNestedInput
     form_completions?: FormCompletionUpdateManyWithoutContactNestedInput
     list_memberships?: ContactListMemberUpdateManyWithoutContactNestedInput
+    enrichments?: ContactEnrichmentUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateWithoutLeadInput = {
@@ -61098,6 +63174,8 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
     last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -61111,6 +63189,7 @@ export namespace Prisma {
     reminders?: ReminderUncheckedUpdateManyWithoutContactNestedInput
     form_completions?: FormCompletionUncheckedUpdateManyWithoutContactNestedInput
     list_memberships?: ContactListMemberUncheckedUpdateManyWithoutContactNestedInput
+    enrichments?: ContactEnrichmentUncheckedUpdateManyWithoutContactNestedInput
   }
 
   export type ContactUncheckedUpdateManyWithoutLeadInput = {
@@ -61131,6 +63210,8 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    enrichment_metadata?: NullableJsonNullValueInput | InputJsonValue
     unsubscribed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     unsubscribe_token?: NullableStringFieldUpdateOperationsInput | string | null
     last_interaction_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -61268,6 +63349,20 @@ export namespace Prisma {
     id?: number
     uuid?: string
     list_uuid: string
+    created_at?: Date | string
+  }
+
+  export type ContactEnrichmentCreateManyContactInput = {
+    id?: number
+    uuid?: string
+    source: $Enums.EnrichmentSource
+    source_url?: string | null
+    summary?: string | null
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    cost_usd?: Decimal | DecimalJsLike | number | string | null
+    input_tokens?: number | null
+    output_tokens?: number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
   }
 
@@ -61540,6 +63635,47 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
     list_uuid?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ContactEnrichmentUpdateWithoutContactInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    source?: EnumEnrichmentSourceFieldUpdateOperationsInput | $Enums.EnrichmentSource
+    source_url?: NullableStringFieldUpdateOperationsInput | string | null
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    input_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    output_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ContactEnrichmentUncheckedUpdateWithoutContactInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    source?: EnumEnrichmentSourceFieldUpdateOperationsInput | $Enums.EnrichmentSource
+    source_url?: NullableStringFieldUpdateOperationsInput | string | null
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    input_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    output_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ContactEnrichmentUncheckedUpdateManyWithoutContactInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    source?: EnumEnrichmentSourceFieldUpdateOperationsInput | $Enums.EnrichmentSource
+    source_url?: NullableStringFieldUpdateOperationsInput | string | null
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    input_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    output_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

@@ -36,7 +36,8 @@ import type {
     PaginatedContacts,
     UpdateContactPayload,
 } from "../interfaces/contact.interface";
-import type { EnrichmentSource } from "@/features/lead-enrichment/constants/enrichment-sources";
+import { enrichmentQueryKeys } from "@/features/enrichment/hooks/use-enrichment";
+import type { EnrichmentSource } from "@/features/enrichment/constants/enrichment-sources";
 import { toast } from "@/hooks/use-toast";
 
 export const contactsQueryKeys = {
@@ -500,10 +501,11 @@ export function useEnrichContact() {
         onSuccess: (_data, vars) => {
             toast({
                 title: "Enrichment queued",
-                description: "We will refresh public enrichment data shortly.",
+                description: "We will refresh contact enrichment data shortly.",
                 duration: 2500,
             });
             qc.invalidateQueries({ queryKey: contactsQueryKeys.detail(vars.uuid) });
+            qc.invalidateQueries({ queryKey: [...enrichmentQueryKeys.all, "list", "contact", vars.uuid] });
         },
         onError: (error: Error) => {
             toast({

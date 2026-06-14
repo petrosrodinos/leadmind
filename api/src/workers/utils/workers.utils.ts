@@ -15,8 +15,14 @@ export const isLeadBatchEnrichPrepareJob = (
 ): data is LeadBatchEnrichPrepareJobData =>
     'job_kind' in data && data.job_kind === 'lead_batch_enrich_prepare';
 
+export const isContactJob = (data: AiProcessJobData): data is ContactJobData =>
+    'contact_uuid' in data && data.contact_uuid != null;
+
 export const isLeadJob = (data: AiProcessJobData): data is LeadJobData =>
-    'lead_uuid' in data && data.lead_uuid != null && !isLeadBatchEnrichPrepareJob(data);
+    !isContactJob(data) &&
+    'lead_uuid' in data &&
+    data.lead_uuid != null &&
+    !isLeadBatchEnrichPrepareJob(data);
 
 export function resolveContactEnrichmentSources(
     job: ContactJobData,

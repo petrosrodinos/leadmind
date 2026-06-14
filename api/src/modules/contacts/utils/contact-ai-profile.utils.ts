@@ -1,7 +1,8 @@
 import { Contact, Lead } from '@/generated/prisma';
 
 export function formatContactForAi(contact: Contact, lead: Lead): string {
-    const enrichment_summary = lead.enrichment_summary?.trim() ?? '';
+    const enrichment_summary =
+        contact.enrichment_summary?.trim() || lead.enrichment_summary?.trim() || '';
 
     return [
         `Name: ${contact.name ?? 'N/A'}`,

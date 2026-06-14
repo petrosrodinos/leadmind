@@ -205,6 +205,8 @@ export interface Contact {
     location: string | null;
     industry: string | null;
     description: string | null;
+    enrichment_summary: string | null;
+    enrichment_metadata: Record<string, unknown> | null;
     created_at: string;
     updated_at: string;
     tags: string[];

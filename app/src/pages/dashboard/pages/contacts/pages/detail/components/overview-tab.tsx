@@ -176,8 +176,8 @@ function DetailPanel({ contact, onEdit }: { contact: Contact; onEdit: () => void
             </div>
 
             <EnrichmentSnapshotPanel
-                summary={contact.lead.enrichment_summary}
-                metadata={contact.lead.enrichment_metadata}
+                summary={contact.enrichment_summary ?? contact.lead.enrichment_summary}
+                metadata={contact.enrichment_metadata ?? contact.lead.enrichment_metadata}
                 hideWhenEmpty
             />
 

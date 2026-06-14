@@ -21,6 +21,7 @@ import {
     WEBSITE_ENRICHMENT_SUMMARY_SYSTEM_PROMPT,
     leadHasAiResearchSeed,
 } from '../constants/ai-config';
+import { EnrichmentHistoryTarget } from '@/modules/enrichment/interfaces/enrichment-target.interface';
 import {
     buildGoogleDeterministicSummary,
     buildLinkedInDeterministicSummary,
@@ -264,8 +265,11 @@ export class LeadAiService {
             force?: boolean;
             prefetchedPageText?: string | null;
             linkedinProfileExcerpt?: string | null;
-        },
+            historyTarget?: EnrichmentHistoryTarget;
+        } = {},
     ): Promise<LeadEnrichmentSourceResult | null> {
+        const historyTarget: EnrichmentHistoryTarget =
+            opts.historyTarget ?? { kind: 'lead', uuid: lead.uuid };
         const provider = this.aiConfig.resolveLeadEnrichmentAiProvider();
         if (!this.aiConfig.isLeadEnrichmentAiConfigured(provider)) {
             const keyHint =
@@ -274,11 +278,11 @@ export class LeadAiService {
             return null;
         }
 
-        let websiteExcerpt = await this.resolveWebsiteExcerpt(lead, opts);
+        let websiteExcerpt = await this.resolveWebsiteExcerpt(lead, opts, historyTarget);
 
-        const linkedinExcerpt = await this.resolveLinkedinExcerpt(lead.uuid, opts);
+        const linkedinExcerpt = await this.resolveLinkedinExcerpt(historyTarget, opts);
 
-        const googleExcerpt = await this.resolveGoogleSearchExcerpt(lead.uuid);
+        const googleExcerpt = await this.resolveGoogleSearchExcerpt(historyTarget);
 
         if (
             !leadHasAiResearchSeed(lead) &&
@@ -345,15 +349,13 @@ export class LeadAiService {
     private async resolveWebsiteExcerpt(
         lead: Lead,
         opts: { prefetchedPageText?: string | null },
+        historyTarget: EnrichmentHistoryTarget,
     ): Promise<string | null> {
         if (opts.prefetchedPageText !== undefined) {
             const t = opts.prefetchedPageText?.trim();
             return t && t.length > 0 ? t : null;
         }
-        const row = await this.prisma.leadEnrichment.findFirst({
-            where: { lead_uuid: lead.uuid, source: EnrichmentSource.WEBSITE },
-            orderBy: { created_at: 'desc' },
-        });
+        const row = await this.findLatestEnrichmentRow(historyTarget, EnrichmentSource.WEBSITE);
         if (row?.payload && typeof row.payload === 'object' && !Array.isArray(row.payload)) {
             const p = row.payload as Record<string, unknown>;
             const text = typeof p.text_sample === 'string' ? p.text_sample : '';
@@ -371,25 +373,21 @@ export class LeadAiService {
         return null;
     }
 
-    private async resolveGoogleSearchExcerpt(leadUuid: string): Promise<string | null> {
-        const row = await this.prisma.leadEnrichment.findFirst({
-            where: { lead_uuid: leadUuid, source: EnrichmentSource.GOOGLE_SEARCH },
-            orderBy: { created_at: 'desc' },
-        });
+    private async resolveGoogleSearchExcerpt(
+        historyTarget: EnrichmentHistoryTarget,
+    ): Promise<string | null> {
+        const row = await this.findLatestEnrichmentRow(historyTarget, EnrichmentSource.GOOGLE_SEARCH);
         return googleSearchPayloadToContext(row?.payload ?? null);
     }
 
     private async resolveLinkedinExcerpt(
-        leadUuid: string,
+        historyTarget: EnrichmentHistoryTarget,
         opts: { linkedinProfileExcerpt?: string | null },
     ): Promise<string | null> {
         if (opts.linkedinProfileExcerpt?.trim()) {
             return opts.linkedinProfileExcerpt.trim();
         }
-        const row = await this.prisma.leadEnrichment.findFirst({
-            where: { lead_uuid: leadUuid, source: EnrichmentSource.LINKEDIN },
-            orderBy: { created_at: 'desc' },
-        });
+        const row = await this.findLatestEnrichmentRow(historyTarget, EnrichmentSource.LINKEDIN);
         const plain = extractLinkedInDataFromEnrichmentPayload(row?.payload);
         if (!plain) {
             return null;
@@ -397,6 +395,22 @@ export class LeadAiService {
         const meta = row?.metadata as Record<string, unknown> | null;
         const subtype = meta?.subtype === 'company' ? 'company' : 'profile';
         return linkedInPlainForAiContext(plain, subtype);
+    }
+
+    private async findLatestEnrichmentRow(
+        historyTarget: EnrichmentHistoryTarget,
+        source: EnrichmentSource,
+    ) {
+        if (historyTarget.kind === 'lead') {
+            return this.prisma.leadEnrichment.findFirst({
+                where: { lead_uuid: historyTarget.uuid, source },
+                orderBy: { created_at: 'desc' },
+            });
+        }
+        return this.prisma.contactEnrichment.findFirst({
+            where: { contact_uuid: historyTarget.uuid, source },
+            orderBy: { created_at: 'desc' },
+        });
     }
 
     private async getPageTextFromApifyCrawl(url: string): Promise<string | null> {

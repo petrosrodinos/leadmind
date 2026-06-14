@@ -32,6 +32,7 @@ import { UpdateStatusDto } from './dto/update-status.dto';
 import { UpdateTagsDto } from './dto/update-tags.dto';
 import { EnrichContactDto } from './dto/enrich-contact.dto';
 import { TriggerScoreDto } from './dto/trigger-score.dto';
+import { ListEnrichmentsDto } from '@/modules/enrichment/dto/list-enrichments.dto';
 
 @ApiTags('contacts')
 @ApiBearerAuth()
@@ -224,7 +225,7 @@ export class ContactsController {
     }
 
     @Post(':uuid/enrich')
-    @ApiOperation({ summary: 'Queue enrichment for the contact lead (selected sources or filter defaults)' })
+    @ApiOperation({ summary: 'Queue contact-scoped enrichment (selected sources or filter defaults)' })
     @ApiResponse({ status: 201 })
     enrichContact(
         @CurrentUser('uuid') user_uuid: string,
@@ -232,6 +233,16 @@ export class ContactsController {
         @Body() dto: EnrichContactDto,
     ) {
         return this.contactsService.enrichContact(user_uuid, uuid, dto);
+    }
+
+    @Get(':uuid/enrichments')
+    @ApiOperation({ summary: 'List enrichment history for a contact' })
+    findEnrichments(
+        @CurrentUser('uuid') user_uuid: string,
+        @Param('uuid') uuid: string,
+        @Query() query: ListEnrichmentsDto,
+    ) {
+        return this.contactsService.findEnrichmentsForContact(user_uuid, uuid, query);
     }
 
     @Get(':uuid/messages')

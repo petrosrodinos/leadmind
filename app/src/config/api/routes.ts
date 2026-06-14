@@ -48,6 +48,7 @@ export const ApiRoutes = {
         draft_messages: (uuid: string) => `/contacts/${uuid}/draft-messages`,
         ai_draft_message: "/contacts/ai-draft-message",
         enrich: (uuid: string) => `/contacts/${uuid}/enrich`,
+        enrichments: (uuid: string) => `/contacts/${uuid}/enrichments`,
         bulk_score: "/contacts/bulk-score",
         messages: (uuid: string) => `/contacts/${uuid}/messages`,
         from_lead: (lead_uuid: string) => `/contacts/from-lead/${lead_uuid}`,

@@ -3,6 +3,7 @@ import {
     BadRequestException,
     ConflictException,
     Injectable,
+    Logger,
     NotFoundException,
 } from '@nestjs/common';
 import { Queue } from 'bullmq';
@@ -52,14 +53,21 @@ import { UpdateTagsDto } from './dto/update-tags.dto';
 import { CONTACT_PROFILE_UPDATE_KEYS } from './constants/contact-profile.constants';
 import { contactProfileFromLead } from './utils/contact-profile.utils';
 import { ContactAiService } from './services/contact-ai.service';
+import { ListEnrichmentsDto } from '@/modules/enrichment/dto/list-enrichments.dto';
+import { EnrichmentQueryService } from '@/modules/enrichment/services/enrichment-query.service';
+import { EnrichmentOrchestrator } from '@/modules/enrichment/services/enrichment.orchestrator';
 import { enqueueContactScoreJob } from './utils/contact-score-queue.utils';
 
 @Injectable()
 export class ContactsService {
+    private readonly logger = new Logger(ContactsService.name);
+
     constructor(
         private readonly prisma: PrismaService,
         private readonly elasticsearchService: ElasticsearchService,
         private readonly contactAiService: ContactAiService,
+        private readonly enrichmentQueryService: EnrichmentQueryService,
+        private readonly enrichmentOrchestrator: EnrichmentOrchestrator,
         @InjectQueue(AI_PROCESS_QUEUE) private readonly aiProcessQueue: Queue,
     ) { }
 
@@ -804,17 +812,23 @@ export class ContactsService {
             throw new NotFoundException(`Contact ${uuid} not found`);
         }
         const enrichment_sources = resolveContactEnrichmentSources(dto.sources, row.filter);
-        const job = await this.aiProcessQueue.add(
-            `contact-enrich:${uuid}`,
-            {
-                contact_uuid: uuid,
-                action: 'enrich' as const,
-                enrichment_sources,
-                force_enrichment: true,
-            },
-            { removeOnComplete: 100, removeOnFail: 100 },
-        );
-        return { jobId: String(job.id) };
+        void this.enrichmentOrchestrator
+            .runForContact(uuid, enrichment_sources, { force: true })
+            .catch((error) => {
+                this.logger.error(
+                    `Contact ${uuid} enrichment failed: ${error instanceof Error ? error.message : error}`,
+                );
+            });
+        return { jobId: 'inline' };
+    }
+
+    async findEnrichmentsForContact(
+        user_uuid: string,
+        uuid: string,
+        query: ListEnrichmentsDto,
+    ) {
+        await this.requireOwnedContact(user_uuid, uuid);
+        return this.enrichmentQueryService.findForTarget('contact', uuid, query);
     }
 
     async getUserTags(user_uuid: string): Promise<string[]> {

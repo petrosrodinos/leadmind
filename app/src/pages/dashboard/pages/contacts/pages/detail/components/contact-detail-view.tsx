@@ -1,9 +1,16 @@
-import { useState, type FC, type ReactNode } from "react";
-import { Tabs } from "@heroui/react";
-import { useContact, useDeleteContact } from "@/features/contacts/hooks/use-contacts";
+import { useMemo, useState, type FC, type ReactNode } from "react";
+import { Dropdown, Tabs } from "@heroui/react";
+import { MoreVertical, Sparkles } from "lucide-react";
+import {
+    defaultEnrichmentSourcesForLead,
+    enrichmentSourceOptionsForLead,
+} from "@/features/enrichment/constants/enrichment-sources";
+import { useContact, useDeleteContact, useEnrichContact } from "@/features/contacts/hooks/use-contacts";
+import { SourceType } from "@/features/leads/interfaces/lead.interface";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { EnrichmentRunModal } from "@/components/ui/enrichment-action-popover";
 import { CONTACT_DETAIL_TABS } from "../constants/detail-tabs";
-import { ContactDetailHeader, CrmTab, FormsTab, OverviewTab, OutreachTab, RemindersTab } from "./index";
+import { ContactDetailHeader, ContactEnrichmentTab, CrmTab, FormsTab, OverviewTab, OutreachTab, RemindersTab } from "./index";
 
 interface ContactDetailViewProps {
     contactUuid: string;
@@ -22,10 +29,24 @@ export const ContactDetailView: FC<ContactDetailViewProps> = ({
 }) => {
     const { data: contact, isLoading } = useContact(contactUuid);
     const deleteContact = useDeleteContact();
+    const enrichContact = useEnrichContact();
 
     const [activeTab, setActiveTab] = useState("overview");
     const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+    const [enrichModalOpen, setEnrichModalOpen] = useState(false);
     const [highlightOutreachUuid, setHighlightOutreachUuid] = useState<string | null>(null);
+
+    const enrichmentSourceOptions = useMemo(
+        () => enrichmentSourceOptionsForLead(contact?.lead.source_type),
+        [contact?.lead.source_type],
+    );
+
+    const defaultEnrichmentSources = useMemo(() => {
+        if (contact?.filter?.enrichment_sources?.length) {
+            return contact.filter.enrichment_sources;
+        }
+        return defaultEnrichmentSourcesForLead(contact?.lead.source_type);
+    }, [contact?.filter?.enrichment_sources, contact?.lead.source_type]);
 
     const handleConfirmDelete = async () => {
         if (!contact) return;
@@ -54,6 +75,50 @@ export const ContactDetailView: FC<ContactDetailViewProps> = ({
                     />
                 </div>
                 {headerActions ? <div className="shrink-0 flex items-center gap-1">{headerActions}</div> : null}
+                {contact ? (
+                    <>
+                        <Dropdown>
+                            <Dropdown.Trigger
+                                aria-label="Contact actions"
+                                className="inline-flex items-center justify-center size-9 rounded-lg border border-border bg-surface hover:bg-surface-secondary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent shrink-0"
+                            >
+                                <MoreVertical className="size-4" />
+                            </Dropdown.Trigger>
+                            <Dropdown.Popover
+                                placement="bottom end"
+                                className="rounded-xl border border-border bg-surface p-1 shadow-xl outline-none backdrop-blur-none [backdrop-filter:none]"
+                            >
+                                <Dropdown.Menu
+                                    className="min-w-[11rem] bg-transparent p-0 outline-none backdrop-blur-none [backdrop-filter:none]"
+                                    onAction={(key) => {
+                                        if (key === "enrich") setEnrichModalOpen(true);
+                                    }}
+                                >
+                                    <Dropdown.Item id="enrich" textValue="Run enrichment" isDisabled={enrichContact.isPending}>
+                                        <span className="flex items-center gap-2.5 antialiased">
+                                            <Sparkles className="size-4 shrink-0 text-violet-500" strokeWidth={2} />
+                                            <span className="font-medium text-violet-400">Run enrichment</span>
+                                        </span>
+                                    </Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown.Popover>
+                        </Dropdown>
+                        <EnrichmentRunModal
+                            isOpen={enrichModalOpen}
+                            onOpenChange={setEnrichModalOpen}
+                            mode="contact"
+                            sourceOptions={enrichmentSourceOptions}
+                            initialSources={defaultEnrichmentSources}
+                            isPending={enrichContact.isPending}
+                            contextHint={
+                                contact.lead.source_type === SourceType.GEMI
+                                    ? "Uses registry data on file, fetches public GEMI documents, then runs with your other selected sources."
+                                    : undefined
+                            }
+                            onEnrich={(sources) => enrichContact.mutate({ uuid: contact.uuid, sources })}
+                        />
+                    </>
+                ) : null}
             </div>
 
             <Tabs selectedKey={activeTab} onSelectionChange={(key) => setActiveTab(String(key))}>
@@ -79,6 +144,8 @@ export const ContactDetailView: FC<ContactDetailViewProps> = ({
                     </div>
                 ) : activeTab === "overview" ? (
                     <OverviewTab key={`${contact.uuid}-${contact.updated_at}`} contact={contact} />
+                ) : activeTab === "enrichment" ? (
+                    <ContactEnrichmentTab contact={contact} />
                 ) : activeTab === "outreach" ? (
                     <OutreachTab
                         contact={contact}
