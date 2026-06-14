@@ -4,7 +4,6 @@ import { ActionButtonWithPending } from "@/components/ui/action-button-with-pend
 import { Pencil, Plus, RefreshCcw, Send, Trash } from "lucide-react";
 import type { Contact } from "@/features/contacts/interfaces/contact.interface";
 import { MsgStatus, type OutreachMessage } from "@/features/contacts/interfaces/contact.interface";
-import { useRedraftMessages } from "@/features/contacts/hooks/use-contacts";
 import { useDeleteOutreachMessage, useSendOutreachMessage } from "@/features/outreach/hooks/use-outreach";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { EditMessageModal } from "@/pages/dashboard/pages/leads/components/edit-message-modal";
@@ -21,7 +20,6 @@ interface OutreachTabProps {
 }
 
 export function OutreachTab({ contact, highlightUuid, onHighlightConsumed }: OutreachTabProps) {
-  const redraft = useRedraftMessages();
   const sendMessage = useSendOutreachMessage();
   const deleteMessage = useDeleteOutreachMessage();
 
@@ -69,17 +67,12 @@ export function OutreachTab({ contact, highlightUuid, onHighlightConsumed }: Out
       <Section
         title={`Drafted outreach (${drafts.length})`}
         action={
-          <div className="flex items-center gap-2">
-            <Button size="sm" variant="tertiary" onPress={() => setComposeOpen(true)}>
-              <Plus className="size-3.5" />
-              New message
-            </Button>
-            <ActionButtonWithPending size="sm" variant="secondary" isDisabled={redraft.isPending} isPending={redraft.isPending} onPress={() => redraft.mutate(contact.uuid)} idleLeading={<RefreshCcw className="size-3.5" />}>
-              Redraft messages
-            </ActionButtonWithPending>
-          </div>
+          <Button size="sm" variant="tertiary" onPress={() => setComposeOpen(true)}>
+            <Plus className="size-3.5" />
+            New message
+          </Button>
         }
-        emptyText="No pending drafts. Click New message to write one, or Redraft messages to generate filter-based drafts."
+        emptyText="No pending drafts. Click New message to compose one."
       >
         <div className="flex flex-col gap-2">
           {drafts.map((m) => {
@@ -235,7 +228,7 @@ export function OutreachTab({ contact, highlightUuid, onHighlightConsumed }: Out
         title="Delete this draft?"
         description={
           draftPendingDelete
-            ? `This removes the pending ${draftPendingDelete.channel} draft. You can generate a new one with Redraft messages.`
+            ? `This removes the pending ${draftPendingDelete.channel} draft.`
             : undefined
         }
         confirmLabel="Delete"

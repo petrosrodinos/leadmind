@@ -214,7 +214,7 @@ export class ContactsController {
 
     @Post('ai-draft-message')
     @ApiOperation({
-        summary: 'Generate a one-off AI draft (Email or SMS) for a contact using a free-text prompt. Returns subject + content without persisting.',
+        summary: 'Generate a one-off AI draft (Email, SMS, or Call) for a contact using a free-text prompt. Returns subject + content without persisting.',
     })
     @ApiResponse({ status: 201 })
     aiDraftMessage(

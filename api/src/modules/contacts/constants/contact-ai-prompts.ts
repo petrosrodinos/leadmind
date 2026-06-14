@@ -1,13 +1,16 @@
 import { Contact, Lead } from '@/generated/prisma';
 import { formatContactForAi } from '../utils/contact-ai-profile.utils';
 
-function languageDirective(language?: string): string {
+function languageDirective(language?: string, preservePlaceholders = true): string {
     if (!language) return '';
+    const placeholderLine = preservePlaceholders
+        ? '- Placeholder tokens (e.g. {{first_name}}, {{booking_url}}) MUST stay as-is in English, exactly as written. Do NOT translate them.'
+        : '- Do NOT use curly-brace placeholders (e.g. {{first_name}}). Write concrete names and details from the lead profile.';
     return `
 OUTPUT LANGUAGE — STRICT:
 - Write the entire output (subject if any, and body) in ${language}.
 - Use natural ${language} idiom and tone for B2B outreach. Do NOT mix languages.
-- Placeholder tokens (e.g. {{first_name}}, {{booking_url}}) MUST stay as-is in English, exactly as written. Do NOT translate them.
+${placeholderLine}
 `.trim();
 }
 
@@ -197,6 +200,43 @@ SIGN-OFF RULES — STRICT:
 - Do NOT invent placeholders, do NOT use square brackets like [Your Name], do NOT write any real or made-up sender info.
 
 Output: only the DM body. No commentary.
+`.trim();
+}
+
+export function buildPhoneCallPrompt(
+    contact: Contact,
+    lead: Lead,
+    outreach_instructions: string,
+    language?: string,
+    sender_business_description?: string,
+): string {
+    return `
+Draft a cold outbound CALL SCRIPT for a sales rep calling this lead.
+
+TARGET CHANNEL: PHONE CALL — plain-text talking points the rep reads on a live call. Not an email, not SMS, not LinkedIn.
+
+${languageDirective(language, false)}
+
+${senderBusinessBlock(sender_business_description)}
+
+USER OUTREACH INSTRUCTIONS:
+"""
+${outreach_instructions}
+"""
+
+LEAD PROFILE:
+"""
+${formatContactForAi(contact, lead)}
+"""
+
+SCRIPT RULES — STRICT:
+- Structure with short labeled sections: Opening, Value hook, Discovery questions, Objection handling, Close / next step.
+- Conversational spoken language — short sentences, easy to read aloud.
+- Personalize using the lead's actual name, company, and context from LEAD PROFILE above — not placeholder tokens.
+- Do NOT use curly-brace placeholders (e.g. {{first_name}}, {{booking_url}}). Do NOT use square brackets like [Your Name].
+- No HTML. No markdown headings with #. No subject line.
+
+Output: only the call script body. No commentary.
 `.trim();
 }
 

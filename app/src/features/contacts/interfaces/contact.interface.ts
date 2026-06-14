@@ -17,6 +17,7 @@ export type LeadStatus = (typeof LeadStatus)[keyof typeof LeadStatus];
 export const Channel = {
     EMAIL: "EMAIL",
     SMS: "SMS",
+    PHONE_CALL: "PHONE_CALL",
     LINKEDIN: "LINKEDIN",
 } as const;
 

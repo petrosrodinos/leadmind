@@ -29,6 +29,7 @@ const EMPTY_VALUE: MessageComposerValue = {
     emailSubject: "",
     emailContent: "",
     smsContent: "",
+    callContent: "",
     linkedinContent: "",
 };
 
@@ -76,11 +77,14 @@ function ComposeForm({ contact_uuid, onClose }: ComposeFormProps) {
     const createAndSend = useCreateAndSendMessage();
 
     const isEmail = activeChannel === Channel.EMAIL;
+    const isCall = activeChannel === Channel.PHONE_CALL;
     const isPending = aiDraft.isPending || createDraft.isPending || createAndSend.isPending;
 
     const contentEmpty = isEmail
         ? isEmailHtmlEmpty(value.emailContent)
-        : value.smsContent.trim().length === 0;
+        : isCall
+          ? value.callContent.trim().length === 0
+          : value.smsContent.trim().length === 0;
 
     const handleAi = async (args: AiGenerateArgs) => {
         const result = await aiDraft.mutateAsync({
@@ -96,7 +100,11 @@ function ComposeForm({ contact_uuid, onClose }: ComposeFormProps) {
     };
 
     const buildPayload = (): CreateMessagePayload => {
-        const content = isEmail ? value.emailContent : value.smsContent;
+        const content = isEmail
+            ? value.emailContent
+            : isCall
+              ? value.callContent
+              : value.smsContent;
         const subject = isEmail && value.emailSubject.trim() ? value.emailSubject.trim() : undefined;
         return {
             channel: activeChannel,
@@ -134,7 +142,7 @@ function ComposeForm({ contact_uuid, onClose }: ComposeFormProps) {
             <div className="flex min-h-0 flex-1 flex-col">
                 <Modal.Body className="p-6">
                     <MessageComposer
-                        channels={[Channel.EMAIL, Channel.SMS]}
+                        channels={[Channel.EMAIL, Channel.SMS, Channel.PHONE_CALL]}
                         activeChannel={activeChannel}
                         onActiveChannelChange={(c) => {
                             if (isPending) return;

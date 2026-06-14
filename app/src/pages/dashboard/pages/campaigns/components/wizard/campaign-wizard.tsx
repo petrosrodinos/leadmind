@@ -64,6 +64,7 @@ export function CampaignWizard({ campaign }: CampaignWizardProps) {
             emailSubject: campaign.email_subject ?? "",
             emailContent: campaign.email_content ?? "",
             smsContent: campaign.sms_content ?? "",
+            callContent: "",
             linkedinContent: campaign.linkedin_content ?? "",
         }),
         [campaign],

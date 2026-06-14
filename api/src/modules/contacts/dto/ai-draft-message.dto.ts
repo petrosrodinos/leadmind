@@ -9,8 +9,8 @@ export class AiDraftMessageDto {
     @IsUUID()
     contact_uuid!: string;
 
-    @ApiProperty({ enum: [Channel.EMAIL, Channel.SMS] })
-    @IsIn([Channel.EMAIL, Channel.SMS])
+    @ApiProperty({ enum: [Channel.EMAIL, Channel.SMS, Channel.PHONE_CALL] })
+    @IsIn([Channel.EMAIL, Channel.SMS, Channel.PHONE_CALL])
     channel!: Channel;
 
     @ApiPropertyOptional({ enum: CAMPAIGN_AI_ACTIONS, default: 'generate' })

@@ -4,6 +4,7 @@ import * as crypto from 'crypto';
 import { Channel, Contact, InteractionType, MsgStatus, OutreachMessage, Prisma } from '@/generated/prisma';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { ResendMailService } from '@/integrations/notifications/resend/services/mail.service';
+import { CallsService } from '@/integrations/notifications/twillio/services/calls.service';
 import { TwillioSmsService } from '@/integrations/notifications/twillio/services/sms.service';
 import { EmailConfig } from '@/shared/config/email';
 import { sanitizeEmailHtml } from '@/shared/utils/sanitize-html.util';
@@ -23,6 +24,7 @@ export class MessageSendService {
         private readonly configService: ConfigService,
         private readonly resendMailService: ResendMailService,
         private readonly twillioSmsService: TwillioSmsService,
+        private readonly callsService: CallsService,
         private readonly outreachRenderService: OutreachRenderService,
         private readonly senderProfilesService: SenderProfilesService,
     ) { }
@@ -30,6 +32,22 @@ export class MessageSendService {
     async deliverOutreachMessage(
         message: OutreachMessage & { contact: Contact },
     ): Promise<DeliveredMessage> {
+        if (message.channel === Channel.PHONE_CALL) {
+            if (!message.contact.phone) {
+                throw new Error('Contact has no phone');
+            }
+            const script = message.content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+            if (!script) {
+                throw new Error('Call script cannot be empty');
+            }
+            const result: any = await this.callsService.makeCall({
+                to: message.contact.phone,
+                message: script,
+            });
+            const provider_message_id = result?.sid ?? null;
+            return { provider_message_id };
+        }
+
         const rendered = await this.outreachRenderService.renderForOutreachMessage(
             message.user_uuid,
             {

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Input, Label, ListBox, Select, TextArea, TextField } from "@heroui/react";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
-import { Link2, Mail, MessageSquare, Sparkles } from "lucide-react";
+import { Link2, Mail, MessageSquare, Phone, Sparkles } from "lucide-react";
 import { Channel } from "@/features/contacts/interfaces/contact.interface";
 import { OUTREACH_LANGUAGES, type OutreachLanguage } from "@/features/contacts/constants/outreach-languages";
 import { RichTextEditor } from "@/components/ui/rich-text-editor";
@@ -20,6 +20,7 @@ export interface MessageComposerValue {
     emailSubject: string;
     emailContent: string;
     smsContent: string;
+    callContent: string;
     linkedinContent: string;
 }
 
@@ -67,9 +68,14 @@ export function MessageComposer({
 
     const isEmail = activeChannel === Channel.EMAIL;
     const isLinkedIn = activeChannel === Channel.LINKEDIN;
+    const isCall = activeChannel === Channel.PHONE_CALL;
     const promptEmpty = prompt.trim().length === 0;
 
-    const plainBody = (isLinkedIn ? value.linkedinContent : value.smsContent) ?? "";
+    const plainBody = isLinkedIn
+        ? value.linkedinContent
+        : isCall
+          ? value.callContent
+          : value.smsContent ?? "";
 
     const channelHasExisting = isEmail
         ? !isEmailHtmlEmpty(value.emailContent)
@@ -78,6 +84,8 @@ export function MessageComposer({
     const setPlainBody = (content: string) => {
         if (isLinkedIn) {
             onChange({ linkedinContent: content });
+        } else if (isCall) {
+            onChange({ callContent: content });
         } else {
             onChange({ smsContent: content });
         }
@@ -171,7 +179,9 @@ export function MessageComposer({
                                 ? "e.g. Pitch our service to small clinics, offer a 15-min intro call."
                                 : isLinkedIn
                                   ? "e.g. Warm connection note referencing their role, invite a quick chat."
-                                  : "e.g. Friendly check-in inviting them to book a call."
+                                  : isCall
+                                    ? "e.g. Cold call opener for dental clinics, mention free audit, ask for 10-min follow-up."
+                                    : "e.g. Friendly check-in inviting them to book a call."
                         }
                         value={prompt}
                         onChange={(e) => setPrompt(e.target.value)}
@@ -223,7 +233,7 @@ export function MessageComposer({
             <div className="flex flex-col gap-1.5">
                 <div className="flex items-center justify-between gap-2">
                     <Label htmlFor="composer-content">Message</Label>
-                    <PlaceholderInsertPopover />
+                    {!isCall && <PlaceholderInsertPopover />}
                 </div>
                 {isEmail ? (
                     <RichTextEditor
@@ -244,7 +254,7 @@ export function MessageComposer({
                         />
                         <div className="flex items-center justify-end gap-3 text-xs text-muted">
                             <span>{plainChars} chars</span>
-                            {!isLinkedIn && (
+                            {!isLinkedIn && !isCall && (
                                 <span>
                                     {smsSegments} segment{smsSegments === 1 ? "" : "s"}
                                 </span>
@@ -252,13 +262,15 @@ export function MessageComposer({
                         </div>
                     </>
                 )}
-                {placeholderHint ?? (
-                    <p className="text-xs text-muted">
-                        Placeholders like <code>{"{{first_name}}"}</code> or{" "}
-                        <code>{"{{booking_url}}"}</code> are replaced with your sender profile when
-                        the message is sent.
-                    </p>
-                )}
+                {isCall
+                    ? null
+                    : placeholderHint ?? (
+                          <p className="text-xs text-muted">
+                              Placeholders like <code>{"{{first_name}}"}</code> or{" "}
+                              <code>{"{{booking_url}}"}</code> are replaced with your sender profile when
+                              the message is sent.
+                          </p>
+                      )}
             </div>
         </div>
     );
@@ -284,15 +296,25 @@ function ChannelToggle({ channels, activeChannel, onChange, disabled }: ChannelT
                     active={activeChannel === c}
                     onPress={() => onChange(c)}
                     disabled={disabled}
-                    icon={c === Channel.EMAIL ? Mail : c === Channel.LINKEDIN ? Link2 : MessageSquare}
+                    icon={
+                        c === Channel.EMAIL
+                            ? Mail
+                            : c === Channel.LINKEDIN
+                              ? Link2
+                              : c === Channel.PHONE_CALL
+                                ? Phone
+                                : MessageSquare
+                    }
                     label={
                         c === Channel.EMAIL
                             ? "Email"
                             : c === Channel.SMS
                               ? "SMS"
-                              : c === Channel.LINKEDIN
-                                ? "LinkedIn"
-                                : c
+                              : c === Channel.PHONE_CALL
+                                ? "Call"
+                                : c === Channel.LINKEDIN
+                                  ? "LinkedIn"
+                                  : c
                     }
                 />
             ))}

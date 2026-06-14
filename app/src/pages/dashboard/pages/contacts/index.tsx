@@ -1,16 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { Button, Tabs } from "@heroui/react";
-import { Columns3, LayoutList, Plus } from "lucide-react";
+import { Tabs } from "@heroui/react";
+import { Columns3, LayoutList } from "lucide-react";
 import { ContactsTable } from "./components/contacts-table";
 import { PipelineView } from "./components/pipeline-view";
 import { NewContactModal } from "./components/new-contact-modal";
 import { BulkScoreContactsPopover } from "./components/bulk-score-contacts-popover";
+import { ContactsActionsDropdown } from "./components/contacts-actions-dropdown";
 import { ContactFiltersForm } from "@/pages/dashboard/components/contact-filters-form";
-import {
-  ContactQuickBrowseTrigger,
-  ContactStackViewerScope,
-} from "@/pages/dashboard/components/contact-stack-viewer";
+import { ContactStackViewerScope } from "@/pages/dashboard/components/contact-stack-viewer";
 import { useContacts } from "@/features/contacts/hooks/use-contacts";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import {
@@ -52,6 +50,7 @@ export default function ContactsPage() {
 
   const [selectedKeys, setSelectedKeys] = useState<Set<string>>(new Set());
   const [createOpen, setCreateOpen] = useState(false);
+  const [scoreOpen, setScoreOpen] = useState(false);
 
   const updateFilters = (patch: Partial<ContactFilters>, resetPage = true) => {
     const next = { ...filters, ...patch };
@@ -107,18 +106,13 @@ export default function ContactsPage() {
           <div className="flex items-center justify-between gap-2 flex-wrap">
             <h1 className="text-xl font-semibold text-foreground">Contacts</h1>
             <div className="flex items-center gap-2">
-              {view === "table" ? (
-                <>
-                  <ContactQuickBrowseTrigger
-                    isDisabled={!quickBrowse.hasContacts}
-                    onPress={quickBrowse.openFirst}
-                  />
-                  <BulkScoreContactsPopover
-                    selectedContactUuids={[...selectedKeys]}
-                    onScoringComplete={() => setSelectedKeys(new Set())}
-                  />
-                </>
-              ) : null}
+              <ContactsActionsDropdown
+                onAddContact={() => setCreateOpen(true)}
+                onQuickBrowse={view === "table" ? quickBrowse.openFirst : undefined}
+                quickBrowseDisabled={!quickBrowse.hasContacts}
+                onScoreSelected={view === "table" ? () => setScoreOpen(true) : undefined}
+                scoreDisabled={selectedKeys.size === 0}
+              />
               <Tabs selectedKey={view} onSelectionChange={(key) => setView(String(key) as View)}>
                 <Tabs.List className="inline-flex gap-1 rounded-lg bg-surface-secondary p-1 border border-border">
                   <Tabs.Tab
@@ -137,10 +131,6 @@ export default function ContactsPage() {
                   </Tabs.Tab>
                 </Tabs.List>
               </Tabs>
-              <Button onPress={() => setCreateOpen(true)}>
-                <Plus className="size-4" />
-                Add contact
-              </Button>
             </div>
           </div>
 
@@ -172,6 +162,14 @@ export default function ContactsPage() {
           )}
 
           <NewContactModal isOpen={createOpen} onOpenChange={setCreateOpen} />
+          {view === "table" ? (
+            <BulkScoreContactsPopover
+              isOpen={scoreOpen}
+              onOpenChange={setScoreOpen}
+              selectedContactUuids={[...selectedKeys]}
+              onScoringComplete={() => setSelectedKeys(new Set())}
+            />
+          ) : null}
         </div>
       )}
     </ContactStackViewerScope>

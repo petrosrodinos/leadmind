@@ -23,13 +23,16 @@ const LINKEDIN_FOOTER_PLACEHOLDERS =
 const CONTACT_PLACEHOLDERS =
     '{{contact_first_name}}, {{contact_last_name}}, {{contact_name}}, {{contact_company}}, {{contact_title}}';
 
-function languageBlock(language?: string): string {
+function languageBlock(language?: string, preservePlaceholders = true): string {
     if (!language) return '';
+    const placeholderLine = preservePlaceholders
+        ? '- Placeholder tokens like {{first_name}}, {{booking_url}}, {{contact_first_name}} MUST stay as-is in English.'
+        : '- Do NOT use curly-brace placeholders. Write concrete names and details.';
     return `
 OUTPUT LANGUAGE — STRICT:
 - Write the entire output in ${language}.
 - Use natural ${language} idiom for B2B outreach. Do NOT mix languages.
-- Placeholder tokens like {{first_name}}, {{booking_url}}, {{contact_first_name}} MUST stay as-is in English.
+${placeholderLine}
 `.trim();
 }
 
@@ -90,16 +93,40 @@ LINKEDIN DM RULES — STRICT:
 `.trim();
 }
 
+function phoneCallRules(): string {
+    return `
+PHONE CALL SCRIPT RULES — STRICT:
+- Plain-text call script for a live sales call — not email, SMS, or LinkedIn.
+- Use short labeled sections: Opening, Value hook, Discovery questions, Objection handling, Close / next step.
+- Conversational spoken language. No HTML. No subject line.
+- Personalize with concrete names and details. Do NOT use curly-brace placeholders (e.g. {{first_name}}, {{booking_url}}).
+- Do NOT use square brackets like [Your Name].
+`.trim();
+}
+
 export function buildCampaignPrompt(
     channel: Channel,
     action: CampaignAiAction,
     ctx: PromptContext,
 ): { prompt: string; system: string } {
-    const lang = languageBlock(ctx.language);
     const isEmail = channel === Channel.EMAIL;
     const isLinkedIn = channel === Channel.LINKEDIN;
-    const channelLabel = isEmail ? Channel.EMAIL : isLinkedIn ? Channel.LINKEDIN : Channel.SMS;
-    const rules = isEmail ? emailRules() : isLinkedIn ? linkedinRules() : smsRules();
+    const isPhoneCall = channel === Channel.PHONE_CALL;
+    const lang = languageBlock(ctx.language, !isPhoneCall);
+    const channelLabel = isEmail
+        ? Channel.EMAIL
+        : isLinkedIn
+          ? Channel.LINKEDIN
+          : isPhoneCall
+            ? Channel.PHONE_CALL
+            : Channel.SMS;
+    const rules = isEmail
+        ? emailRules()
+        : isLinkedIn
+          ? linkedinRules()
+          : isPhoneCall
+            ? phoneCallRules()
+            : smsRules();
     const campaignCtx = campaignContext(ctx);
     const senderCtx = senderBusinessContext(ctx);
 
@@ -110,7 +137,9 @@ Subject: <subject line, under 80 chars, no placeholders>
 <HTML body, 80-150 words, formal-but-warm tone, with a clear CTA. End with a sign-off using sender placeholders.>`
         : isLinkedIn
           ? `Output: only the LinkedIn DM body. No subject. No quotes. No commentary. No markdown.`
-          : `Output: only the SMS body. No subject. No quotes. No commentary.`;
+          : isPhoneCall
+            ? `Output: only the call script body. No subject. No quotes. No commentary.`
+            : `Output: only the SMS body. No subject. No quotes. No commentary.`;
 
     const existing =
         ctx.current_content
@@ -133,7 +162,9 @@ ${ctx.current_subject ? `Subject: ${ctx.current_subject}\n\n` : ''}${ctx.current
                 ? `Shorten the existing email below to under 80 words while keeping the CTA and sign-off.`
                 : isLinkedIn
                   ? `Shorten the existing LinkedIn DM below to 2-3 punchy sentences while keeping the hook and CTA.`
-                  : `Shorten the existing SMS below to fit comfortably under 140 rendered characters.`;
+                  : isPhoneCall
+                    ? `Shorten the existing call script below while keeping opening, value hook, and close.`
+                    : `Shorten the existing SMS below to fit comfortably under 140 rendered characters.`;
             break;
         case 'tone_professional':
             taskLine = `Rewrite the existing ${channelLabel} below in a more professional, polished tone.`;
@@ -173,7 +204,9 @@ ${ctx.current_subject ? `Subject: ${ctx.current_subject}\n\n` : ''}${ctx.current
         ? 'You are an expert B2B outreach copywriter for email marketing campaigns. Produce drafts ready for human review.'
         : isLinkedIn
           ? 'You are an expert B2B outreach copywriter for LinkedIn DM campaigns. Produce drafts ready for human review.'
-          : 'You are an expert B2B outreach copywriter for SMS marketing campaigns. Produce drafts ready for human review.';
+          : isPhoneCall
+            ? 'You are an expert B2B outreach copywriter for phone call scripts. Produce drafts ready for human review.'
+            : 'You are an expert B2B outreach copywriter for SMS marketing campaigns. Produce drafts ready for human review.';
 
     return { prompt, system };
 }

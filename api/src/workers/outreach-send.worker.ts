@@ -62,9 +62,15 @@ export class OutreachSendWorker extends WorkerHost {
     }
 
     private toInteractionType(channel: Channel): InteractionType {
-        if (channel === Channel.SMS) {
-            return InteractionType.CALL;
+        switch (channel) {
+            case Channel.SMS:
+                return InteractionType.SMS;
+            case Channel.PHONE_CALL:
+                return InteractionType.CALL;
+            case Channel.EMAIL:
+                return InteractionType.EMAIL;
+            default:
+                return InteractionType.EMAIL;
         }
-        return InteractionType.EMAIL;
     }
 }

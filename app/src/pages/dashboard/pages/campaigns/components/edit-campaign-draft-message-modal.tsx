@@ -19,10 +19,12 @@ interface EditCampaignDraftMessageModalProps {
 function valueFromDraft(msg: DraftMessage): MessageComposerValue {
     const isEmail = msg.channel === Channel.EMAIL;
     const isLinkedIn = msg.channel === Channel.LINKEDIN;
+    const isCall = msg.channel === Channel.PHONE_CALL;
     return {
         emailSubject: isEmail ? (msg.subject ?? "") : "",
         emailContent: isEmail ? msg.content : "",
-        smsContent: !isEmail && !isLinkedIn ? msg.content : "",
+        smsContent: msg.channel === Channel.SMS ? msg.content : "",
+        callContent: isCall ? msg.content : "",
         linkedinContent: isLinkedIn ? msg.content : "",
     };
 }
@@ -41,7 +43,12 @@ export const EditCampaignDraftMessageModal: FC<EditCampaignDraftMessageModalProp
 
     const isEmail = msg.channel === Channel.EMAIL;
     const isLinkedIn = msg.channel === Channel.LINKEDIN;
-    const plainContent = isLinkedIn ? value.linkedinContent : value.smsContent;
+    const isCall = msg.channel === Channel.PHONE_CALL;
+    const plainContent = isLinkedIn
+        ? value.linkedinContent
+        : isCall
+          ? value.callContent
+          : value.smsContent;
     const contentEmpty = isEmail
         ? isEmailHtmlEmpty(value.emailContent)
         : plainContent.trim().length === 0;

@@ -22,6 +22,7 @@ import {
     AiScoringSystemPrompt,
     buildEmailPrompt,
     buildLinkedInPrompt,
+    buildPhoneCallPrompt,
     buildScorePrompt,
     buildSmsPrompt,
 } from '../constants/contact-ai-prompts';
@@ -718,6 +719,8 @@ export class ContactAiService {
                 return buildSmsPrompt(contact, lead, outreach_instructions, language, sender_business_description);
             case Channel.LINKEDIN:
                 return buildLinkedInPrompt(contact, lead, outreach_instructions, language, sender_business_description);
+            case Channel.PHONE_CALL:
+                return buildPhoneCallPrompt(contact, lead, outreach_instructions, language, sender_business_description);
             default:
                 throw new Error(`Unsupported channel: ${channel}`);
         }
