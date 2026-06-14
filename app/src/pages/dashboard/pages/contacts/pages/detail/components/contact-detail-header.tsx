@@ -6,17 +6,29 @@ import { ContactScoresCompact, StatusChip } from "@/pages/dashboard/pages/leads/
 interface ContactDetailHeaderProps {
   isLoading: boolean;
   contact: Contact | undefined;
-  onBack: () => void;
+  onBack?: () => void;
   onDeletePress: () => void;
   deletePending: boolean;
+  showBack?: boolean;
+  showDelete?: boolean;
 }
 
-export function ContactDetailHeader({ isLoading, contact, onBack, onDeletePress, deletePending }: ContactDetailHeaderProps) {
+export function ContactDetailHeader({
+  isLoading,
+  contact,
+  onBack,
+  onDeletePress,
+  deletePending,
+  showBack = true,
+  showDelete = true,
+}: ContactDetailHeaderProps) {
   return (
     <div className="flex items-start gap-3 min-w-0 flex-wrap">
-      <Button size="sm" variant="tertiary" onPress={onBack} aria-label="Back">
-        <ArrowLeft className="size-4" />
-      </Button>
+      {showBack && onBack ? (
+        <Button size="sm" variant="tertiary" onPress={onBack} aria-label="Back">
+          <ArrowLeft className="size-4" />
+        </Button>
+      ) : null}
       <div className="min-w-0 flex-1">
         {isLoading ? (
           <>
@@ -41,12 +53,12 @@ export function ContactDetailHeader({ isLoading, contact, onBack, onDeletePress,
         )}
       </div>
 
-      {contact && (
+      {contact && showDelete ? (
         <Button variant="tertiary" className="text-danger" isDisabled={deletePending} onPress={onDeletePress} aria-label="Delete contact">
           <Trash className="size-4" />
           <span className="hidden sm:inline">Delete</span>
         </Button>
-      )}
+      ) : null}
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import { useState, type Key } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { Button, Tabs } from "@heroui/react";
-import { ArrowLeft, List, Pencil, UserPlus } from "lucide-react";
+import { ArrowLeft, ChevronsUpDown, List, Pencil, UserPlus } from "lucide-react";
 import { Routes, ListDetailTabIds } from "@/routes/routes";
 import {
     useContactList,
@@ -11,6 +11,8 @@ import { ContactListFormModal } from "../../components/contact-list-form-modal";
 import { ListMembersTable } from "./components/list-members-table";
 import { AddContactsModal } from "./components/add-contacts-modal";
 import { ContactAudienceAnalyticsPanel } from "@/pages/dashboard/components/audience-analytics/contact-audience-analytics-panel";
+import { ContactStackViewerModal } from "@/pages/dashboard/components/contact-stack-viewer";
+import { useContactStackViewer } from "@/pages/dashboard/hooks/use-contact-stack-viewer";
 import { ListDetailSkeleton } from "./components/list-detail-skeleton";
 
 const MEMBERS_PAGE_SIZE = 20;
@@ -45,6 +47,19 @@ export default function ListDetailPage() {
     const members = membersData?.data ?? [];
     const total = membersData?.total ?? 0;
     const totalPages = membersData?.totalPages ?? 1;
+    const memberUuids = members.map((member) => member.uuid);
+
+    const stackViewer = useContactStackViewer({
+        contactUuids: memberUuids,
+        page: membersPage,
+        totalPages,
+        pageSize: MEMBERS_PAGE_SIZE,
+        onPageChange: (p) => {
+            const params = new URLSearchParams(searchParams);
+            params.set("page", String(p));
+            setSearchParams(params, { replace: true });
+        },
+    });
 
     const handleTabChange = (key: Key) => {
         if (!uuid) return;
@@ -95,10 +110,21 @@ export default function ListDetailPage() {
                     </div>
                     <div className="flex flex-wrap items-center gap-2">
                         {currentTab === ListDetailTabIds.CONTACTS ? (
-                            <Button size="sm" onPress={() => setAddContactsOpen(true)}>
-                                <UserPlus className="size-4" />
-                                Add contacts
-                            </Button>
+                            <>
+                                <Button
+                                    size="sm"
+                                    variant="secondary"
+                                    isDisabled={members.length === 0}
+                                    onPress={() => stackViewer.openAt(memberUuids[0]!)}
+                                >
+                                    <ChevronsUpDown className="size-4" />
+                                    Quick browse
+                                </Button>
+                                <Button size="sm" onPress={() => setAddContactsOpen(true)}>
+                                    <UserPlus className="size-4" />
+                                    Add contacts
+                                </Button>
+                            </>
                         ) : null}
                         <Button size="sm" variant="tertiary" onPress={() => setEditOpen(true)}>
                             <Pencil className="size-4" />
@@ -125,7 +151,12 @@ export default function ListDetailPage() {
             <div className="pt-2">
                 {currentTab === ListDetailTabIds.CONTACTS && (
                     <section className="flex flex-col gap-4">
-                        <h2 className="text-base font-semibold text-foreground">Contacts in list</h2>
+                        <div className="flex flex-col gap-1">
+                            <h2 className="text-base font-semibold text-foreground">Contacts in list</h2>
+                            <p className="text-xs text-muted">
+                                Click a name or use the up/down icon to open quick browse. Use arrow keys to move between contacts.
+                            </p>
+                        </div>
                         <ListMembersTable
                             listUuid={uuid}
                             contacts={members}
@@ -140,6 +171,7 @@ export default function ListDetailPage() {
                                 params.set("page", String(p));
                                 setSearchParams(params, { replace: true });
                             }}
+                            onContactOpen={stackViewer.openAt}
                         />
                     </section>
                 )}
@@ -153,6 +185,20 @@ export default function ListDetailPage() {
                 listUuid={uuid}
                 isOpen={addContactsOpen}
                 onOpenChange={setAddContactsOpen}
+            />
+
+            <ContactStackViewerModal
+                isOpen={stackViewer.isOpen}
+                onOpenChange={stackViewer.setIsOpen}
+                contactUuids={memberUuids}
+                currentIndex={stackViewer.currentIndex}
+                onIndexChange={stackViewer.setCurrentIndex}
+                totalCount={total}
+                globalOffset={stackViewer.globalOffset}
+                onRequestNextPage={stackViewer.handleRequestNextPage}
+                onRequestPrevPage={stackViewer.handleRequestPrevPage}
+                hasNextPage={stackViewer.hasNextPage}
+                hasPrevPage={stackViewer.hasPrevPage}
             />
         </div>
     );

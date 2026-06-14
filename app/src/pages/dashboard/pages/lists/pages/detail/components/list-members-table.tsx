@@ -1,10 +1,11 @@
 import { useMemo } from "react";
 import { Button, Table } from "@heroui/react";
-import { Trash2 } from "lucide-react";
+import { ChevronsUpDown, ExternalLink, Trash2 } from "lucide-react";
+import { Link } from "react-router-dom";
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { Routes } from "@/routes/routes";
 import { TablePagination } from "@/components/ui/table-pagination";
-import { isTableNavInteractiveCell, renderTableNavCellContent, tableNavInteractiveCellClassName, tableNavRowClassName } from "@/components/ui/table-row-link";
+import { isTableNavInteractiveCell, tableNavInteractiveCellClassName, tableNavRowClassName } from "@/components/ui/table-row-link";
 import type { Contact } from "@/features/contacts/interfaces/contact.interface";
 import { ContactScoresCompact } from "@/pages/dashboard/pages/leads/components/badges";
 import { useRemoveListContact } from "@/features/contact-lists/hooks/use-contact-lists";
@@ -21,6 +22,7 @@ interface ListMembersTableProps {
     total: number;
     totalPages: number;
     onPageChange: (page: number) => void;
+    onContactOpen?: (contactUuid: string) => void;
 }
 
 export function ListMembersTable({
@@ -33,6 +35,7 @@ export function ListMembersTable({
     total,
     totalPages,
     onPageChange,
+    onContactOpen,
 }: ListMembersTableProps) {
     const removeContact = useRemoveListContact();
 
@@ -41,9 +44,22 @@ export function ListMembersTable({
             columnHelper.accessor((row) => row.name, {
                 id: "name",
                 header: "Name",
-                cell: (info) => (
-                    <span className="font-medium text-foreground">{info.getValue() ?? "—"}</span>
-                ),
+                cell: (info) => {
+                    const contact = info.row.original;
+                    const name = info.getValue() ?? "—";
+
+                    return onContactOpen ? (
+                        <button
+                            type="button"
+                            onClick={() => onContactOpen(contact.uuid)}
+                            className="font-medium text-foreground truncate text-left hover:text-accent transition-colors max-w-full"
+                        >
+                            {name}
+                        </button>
+                    ) : (
+                        <span className="font-medium text-foreground truncate">{name}</span>
+                    );
+                },
             }),
             columnHelper.accessor((row) => row.company, {
                 id: "company",
@@ -63,28 +79,50 @@ export function ListMembersTable({
             columnHelper.display({
                 id: "actions",
                 header: "",
-                cell: (info) => (
-                    <div className="flex justify-end" onClick={(e) => e.stopPropagation()}>
-                        <Button
-                            size="sm"
-                            variant="tertiary"
-                            className="text-danger"
-                            isDisabled={removeContact.isPending}
-                            onPress={() =>
-                                removeContact.mutate({
-                                    listUuid,
-                                    contactUuid: info.row.original.uuid,
-                                })
-                            }
-                            aria-label="Remove from list"
-                        >
-                            <Trash2 className="size-3.5" />
-                        </Button>
-                    </div>
-                ),
+                cell: (info) => {
+                    const contact = info.row.original;
+                    const detailHref = Routes.dashboard.contacts_detail.replace(":uuid", contact.uuid);
+
+                    return (
+                        <div className="flex justify-end items-center gap-1">
+                            {onContactOpen ? (
+                                <Button
+                                    size="sm"
+                                    variant="tertiary"
+                                    onPress={() => onContactOpen(contact.uuid)}
+                                    aria-label={`Quick view ${contact.name ?? "contact"}`}
+                                >
+                                    <ChevronsUpDown className="size-3.5" />
+                                </Button>
+                            ) : null}
+                            <Link
+                                to={detailHref}
+                                aria-label={`Open ${contact.name ?? "contact"} in full page`}
+                                className="inline-flex items-center justify-center rounded-md p-1.5 text-muted hover:text-accent hover:bg-surface-secondary transition-colors"
+                            >
+                                <ExternalLink className="size-3.5" />
+                            </Link>
+                            <Button
+                                size="sm"
+                                variant="tertiary"
+                                className="text-danger"
+                                isDisabled={removeContact.isPending}
+                                onPress={() =>
+                                    removeContact.mutate({
+                                        listUuid,
+                                        contactUuid: contact.uuid,
+                                    })
+                                }
+                                aria-label="Remove from list"
+                            >
+                                <Trash2 className="size-3.5" />
+                            </Button>
+                        </div>
+                    );
+                },
             }),
         ],
-        [listUuid, removeContact],
+        [listUuid, onContactOpen, removeContact],
     );
 
     const table = useReactTable({
@@ -137,11 +175,7 @@ export function ListMembersTable({
                                           ))}
                                       </Table.Row>
                                   ))
-                                : table.getRowModel().rows.map((row) => {
-                                      const rowHref = Routes.dashboard.contacts_detail.replace(":uuid", row.id);
-                                      const rowLabel = `View contact ${row.original.name ?? row.original.email ?? "details"}`;
-
-                                      return (
+                                : table.getRowModel().rows.map((row) => (
                                       <Table.Row key={row.id} id={row.id} className={tableNavRowClassName}>
                                           {row.getVisibleCells().map((cell) => {
                                               const content = flexRender(
@@ -151,20 +185,20 @@ export function ListMembersTable({
                                               const isInteractive = isTableNavInteractiveCell(cell.column.id);
 
                                               return (
-                                              <Table.Cell
-                                                  key={cell.id}
-                                                  className={isInteractive ? tableNavInteractiveCellClassName : undefined}
-                                              >
-                                                  {renderTableNavCellContent(cell.column.id, rowHref, content, {
-                                                      primaryColumnId: "name",
-                                                      ariaLabel: rowLabel,
-                                                  })}
-                                              </Table.Cell>
+                                                  <Table.Cell
+                                                      key={cell.id}
+                                                      className={
+                                                          isInteractive
+                                                              ? tableNavInteractiveCellClassName
+                                                              : undefined
+                                                      }
+                                                  >
+                                                      {content}
+                                                  </Table.Cell>
                                               );
                                           })}
                                       </Table.Row>
-                                      );
-                                  })}
+                                  ))}
                         </Table.Body>
                     </Table.Content>
                 </Table.ScrollContainer>
