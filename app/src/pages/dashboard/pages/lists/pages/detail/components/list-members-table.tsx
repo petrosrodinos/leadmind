@@ -1,10 +1,10 @@
 import { useMemo } from "react";
-import { useNavigate } from "react-router-dom";
 import { Button, Table } from "@heroui/react";
 import { Trash2 } from "lucide-react";
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { Routes } from "@/routes/routes";
 import { TablePagination } from "@/components/ui/table-pagination";
+import { isTableNavInteractiveCell, renderTableNavCellContent, tableNavInteractiveCellClassName, tableNavRowClassName } from "@/components/ui/table-row-link";
 import type { Contact } from "@/features/contacts/interfaces/contact.interface";
 import { ContactScoresCompact } from "@/pages/dashboard/pages/leads/components/badges";
 import { useRemoveListContact } from "@/features/contact-lists/hooks/use-contact-lists";
@@ -34,7 +34,6 @@ export function ListMembersTable({
     totalPages,
     onPageChange,
 }: ListMembersTableProps) {
-    const navigate = useNavigate();
     const removeContact = useRemoveListContact();
 
     const columns = useMemo(
@@ -104,9 +103,6 @@ export function ListMembersTable({
                     <Table.Content
                         aria-label="List members"
                         className="min-w-[640px]"
-                        onRowAction={(uuid) =>
-                            navigate(Routes.dashboard.contacts_detail.replace(":uuid", String(uuid)))
-                        }
                     >
                         <Table.Header>
                             {table.getHeaderGroups()[0]!.headers.map((header) => (
@@ -141,18 +137,34 @@ export function ListMembersTable({
                                           ))}
                                       </Table.Row>
                                   ))
-                                : table.getRowModel().rows.map((row) => (
-                                      <Table.Row key={row.id} id={row.id}>
-                                          {row.getVisibleCells().map((cell) => (
-                                              <Table.Cell key={cell.id}>
-                                                  {flexRender(
-                                                      cell.column.columnDef.cell,
-                                                      cell.getContext(),
-                                                  )}
+                                : table.getRowModel().rows.map((row) => {
+                                      const rowHref = Routes.dashboard.contacts_detail.replace(":uuid", row.id);
+                                      const rowLabel = `View contact ${row.original.name ?? row.original.email ?? "details"}`;
+
+                                      return (
+                                      <Table.Row key={row.id} id={row.id} className={tableNavRowClassName}>
+                                          {row.getVisibleCells().map((cell) => {
+                                              const content = flexRender(
+                                                  cell.column.columnDef.cell,
+                                                  cell.getContext(),
+                                              );
+                                              const isInteractive = isTableNavInteractiveCell(cell.column.id);
+
+                                              return (
+                                              <Table.Cell
+                                                  key={cell.id}
+                                                  className={isInteractive ? tableNavInteractiveCellClassName : undefined}
+                                              >
+                                                  {renderTableNavCellContent(cell.column.id, rowHref, content, {
+                                                      primaryColumnId: "name",
+                                                      ariaLabel: rowLabel,
+                                                  })}
                                               </Table.Cell>
-                                          ))}
+                                              );
+                                          })}
                                       </Table.Row>
-                                  ))}
+                                      );
+                                  })}
                         </Table.Body>
                     </Table.Content>
                 </Table.ScrollContainer>

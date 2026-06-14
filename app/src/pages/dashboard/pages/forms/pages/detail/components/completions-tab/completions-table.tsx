@@ -8,10 +8,12 @@ import {
     useReactTable,
 } from "@tanstack/react-table";
 import { TablePagination } from "@/components/ui/table-pagination";
+import { isTableNavInteractiveCell, renderTableNavCellContent, tableNavInteractiveCellClassName, tableNavRowClassName } from "@/components/ui/table-row-link";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { useDeleteFormCompletion } from "@/features/forms/hooks/use-form-completions";
 import type { FormCompletion } from "@/features/forms/interfaces/form-completion.interface";
 import type { FormField } from "@/features/forms/interfaces/form.interface";
+import { Routes } from "@/routes/routes";
 import { CompletionViewModal } from "./completion-view-modal";
 
 function formatDate(d: string) {
@@ -220,18 +222,34 @@ export function CompletionsTable({
                                           ))}
                                       </Table.Row>
                                   ))
-                                : table.getRowModel().rows.map((row) => (
-                                      <Table.Row key={row.id} id={row.id}>
-                                          {row.getVisibleCells().map((cell) => (
-                                              <Table.Cell key={cell.id}>
-                                                  {flexRender(
-                                                      cell.column.columnDef.cell,
-                                                      cell.getContext(),
-                                                  )}
+                                : table.getRowModel().rows.map((row) => {
+                                      const rowHref = Routes.dashboard.contacts_detail.replace(":uuid", row.original.contact_uuid);
+                                      const rowLabel = `View contact ${row.original.contact.name ?? row.original.contact.email ?? "details"}`;
+
+                                      return (
+                                      <Table.Row key={row.id} id={row.id} className={tableNavRowClassName}>
+                                          {row.getVisibleCells().map((cell) => {
+                                              const content = flexRender(
+                                                  cell.column.columnDef.cell,
+                                                  cell.getContext(),
+                                              );
+                                              const isInteractive = isTableNavInteractiveCell(cell.column.id);
+
+                                              return (
+                                              <Table.Cell
+                                                  key={cell.id}
+                                                  className={isInteractive ? tableNavInteractiveCellClassName : undefined}
+                                              >
+                                                  {renderTableNavCellContent(cell.column.id, rowHref, content, {
+                                                      primaryColumnId: "contact",
+                                                      ariaLabel: rowLabel,
+                                                  })}
                                               </Table.Cell>
-                                          ))}
+                                              );
+                                          })}
                                       </Table.Row>
-                                  ))}
+                                      );
+                                  })}
                         </Table.Body>
                     </Table.Content>
                 </Table.ScrollContainer>

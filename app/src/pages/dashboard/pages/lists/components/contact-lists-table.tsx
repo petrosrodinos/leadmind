@@ -1,10 +1,10 @@
 import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Button, Table } from "@heroui/react";
 import { Pencil, Trash2 } from "lucide-react";
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { Routes } from "@/routes/routes";
 import { TablePagination } from "@/components/ui/table-pagination";
+import { isTableNavInteractiveCell, renderTableNavCellContent, tableNavInteractiveCellClassName, tableNavRowClassName } from "@/components/ui/table-row-link";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { useDeleteContactList } from "@/features/contact-lists/hooks/use-contact-lists";
 import type { ContactList } from "@/features/contact-lists/interfaces/contact-list.interface";
@@ -82,8 +82,6 @@ export function ContactListsTable({
     totalPages,
     onPageChange,
 }: ContactListsTableProps) {
-    const navigate = useNavigate();
-
     const columns = useMemo(
         () => [
             columnHelper.accessor("title", {
@@ -149,9 +147,6 @@ export function ContactListsTable({
                     <Table.Content
                         aria-label="Contact lists"
                         className="min-w-[700px]"
-                        onRowAction={(uuid) =>
-                            navigate(Routes.dashboard.lists_detail.replace(":uuid", String(uuid)))
-                        }
                     >
                         <Table.Header>
                             {table.getHeaderGroups()[0]!.headers.map((header) => (
@@ -186,18 +181,34 @@ export function ContactListsTable({
                                           ))}
                                       </Table.Row>
                                   ))
-                                : table.getRowModel().rows.map((row) => (
-                                      <Table.Row key={row.id} id={row.id}>
-                                          {row.getVisibleCells().map((cell) => (
-                                              <Table.Cell key={cell.id}>
-                                                  {flexRender(
-                                                      cell.column.columnDef.cell,
-                                                      cell.getContext(),
-                                                  )}
+                                : table.getRowModel().rows.map((row) => {
+                                      const rowHref = Routes.dashboard.lists_detail.replace(":uuid", row.id);
+                                      const rowLabel = `View list ${row.original.title}`;
+
+                                      return (
+                                      <Table.Row key={row.id} id={row.id} className={tableNavRowClassName}>
+                                          {row.getVisibleCells().map((cell) => {
+                                              const content = flexRender(
+                                                  cell.column.columnDef.cell,
+                                                  cell.getContext(),
+                                              );
+                                              const isInteractive = isTableNavInteractiveCell(cell.column.id);
+
+                                              return (
+                                              <Table.Cell
+                                                  key={cell.id}
+                                                  className={isInteractive ? tableNavInteractiveCellClassName : undefined}
+                                              >
+                                                  {renderTableNavCellContent(cell.column.id, rowHref, content, {
+                                                      primaryColumnId: "title",
+                                                      ariaLabel: rowLabel,
+                                                  })}
                                               </Table.Cell>
-                                          ))}
+                                              );
+                                          })}
                                       </Table.Row>
-                                  ))}
+                                      );
+                                  })}
                         </Table.Body>
                     </Table.Content>
                 </Table.ScrollContainer>

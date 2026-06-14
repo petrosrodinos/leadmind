@@ -1,10 +1,11 @@
 import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button, Table } from "@heroui/react";
 import { CheckCircle2, Pencil, Trash2 } from "lucide-react";
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { Routes } from "@/routes/routes";
 import { TablePagination } from "@/components/ui/table-pagination";
+import { isTableNavInteractiveCell, renderTableNavCellContent, tableNavInteractiveCellClassName, tableNavRowClassName } from "@/components/ui/table-row-link";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { ReminderStatusBadge, ReminderFormModal } from "@/components/reminders";
 import { useCompleteReminder, useDeleteReminder } from "@/features/reminders/hooks/use-reminders";
@@ -104,8 +105,6 @@ export function RemindersTable({
     totalPages,
     onPageChange,
 }: RemindersTableProps) {
-    const navigate = useNavigate();
-
     const columns = useMemo(
         () => [
             columnHelper.accessor((row) => row.title, {
@@ -123,14 +122,12 @@ export function RemindersTable({
                 cell: (info) => {
                     const c = info.getValue();
                     const contactUuid = info.row.original.contact_uuid;
+                    const contactHref = Routes.dashboard.contacts_detail.replace(":uuid", contactUuid);
                     return (
-                        <button
-                            type="button"
-                            className="flex flex-col items-start text-left group"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                navigate(Routes.dashboard.contacts_detail.replace(":uuid", contactUuid));
-                            }}
+                        <Link
+                            to={contactHref}
+                            className="relative z-[1] flex flex-col items-start text-left group"
+                            onClick={(e) => e.stopPropagation()}
                         >
                             <span className="text-sm font-medium text-foreground group-hover:text-accent transition-colors">
                                 {c.name ?? c.email ?? "—"}
@@ -138,7 +135,7 @@ export function RemindersTable({
                             {c.company && (
                                 <span className="text-xs text-muted">{c.company}</span>
                             )}
-                        </button>
+                        </Link>
                     );
                 },
             }),
@@ -212,15 +209,32 @@ export function RemindersTable({
                                           ))}
                                       </Table.Row>
                                   ))
-                                : table.getRowModel().rows.map((row) => (
-                                      <Table.Row key={row.id} id={row.id}>
-                                          {row.getVisibleCells().map((cell) => (
-                                              <Table.Cell key={cell.id}>
-                                                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                : table.getRowModel().rows.map((row) => {
+                                      const rowHref = Routes.dashboard.contacts_detail.replace(":uuid", row.original.contact_uuid);
+                                      const rowLabel = `View contact for reminder ${row.original.title ?? "details"}`;
+
+                                      return (
+                                      <Table.Row key={row.id} id={row.id} className={tableNavRowClassName}>
+                                          {row.getVisibleCells().map((cell) => {
+                                              const content = flexRender(cell.column.columnDef.cell, cell.getContext());
+                                              const isInteractive = isTableNavInteractiveCell(cell.column.id, ["contact", "actions"]);
+
+                                              return (
+                                              <Table.Cell
+                                                  key={cell.id}
+                                                  className={isInteractive ? tableNavInteractiveCellClassName : undefined}
+                                              >
+                                                  {renderTableNavCellContent(cell.column.id, rowHref, content, {
+                                                      interactiveColumnIds: ["contact", "actions"],
+                                                      primaryColumnId: "title",
+                                                      ariaLabel: rowLabel,
+                                                  })}
                                               </Table.Cell>
-                                          ))}
+                                              );
+                                          })}
                                       </Table.Row>
-                                  ))}
+                                      );
+                                  })}
                         </Table.Body>
                     </Table.Content>
                 </Table.ScrollContainer>

@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { Button } from "@heroui/react";
 import { Plus } from "lucide-react";
 import { LeadsTable } from "./components/leads-table";
@@ -9,7 +9,6 @@ import { isLeadStatus } from "@/features/contacts/constants/contacts.constants";
 import { SourceType } from "@/features/leads/interfaces/lead.interface";
 import { useContacts } from "@/features/contacts/hooks/use-contacts";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
-import { Routes } from "@/routes/routes";
 import { parseScoreRulesParam, serializeScoreRulesParam } from "@/lib/contact-score-rules";
 
 const PAGE_SIZE = 20;
@@ -37,7 +36,6 @@ export default function LeadsPage() {
 
     const [selectedKeys, setSelectedKeys] = useState<Set<string>>(new Set());
     const [createOpen, setCreateOpen] = useState(false);
-    const navigate = useNavigate();
 
     const updateParams = (next: Record<string, string | undefined | null>) => {
         const params = new URLSearchParams(searchParams);
@@ -110,9 +108,6 @@ export default function LeadsPage() {
                 total={data?.total ?? 0}
                 totalPages={data?.totalPages ?? 1}
                 onPageChange={(p) => updateParams({ page: String(p) })}
-                onRowClick={(c) =>
-                    navigate(Routes.dashboard.contacts_detail.replace(":uuid", c.uuid))
-                }
                 selectedKeys={selectedKeys}
                 onSelectionChange={setSelectedKeys}
             />

@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import type { Selection } from "@heroui/react";
 import { Button, Checkbox, Input, Label, ListBox, Select, Table } from "@heroui/react";
 import { TablePagination } from "@/components/ui/table-pagination";
+import { isTableNavInteractiveCell, renderTableNavCellContent, tableNavInteractiveCellClassName, tableNavRowClassName } from "@/components/ui/table-row-link";
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { Check, Plus, Search, Sparkles } from "lucide-react";
 import type { Lead, SourceType } from "@/features/leads/interfaces/lead.interface";
@@ -21,7 +21,6 @@ const PAGE_SIZE = 20;
 const columnHelper = createColumnHelper<Lead>();
 
 export default function LeadsDirectoryPage() {
-  const navigate = useNavigate();
   const canBulkEnrich = usePermission("lead_enrichment_bulk");
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
@@ -144,10 +143,6 @@ export default function LeadsDirectoryPage() {
   const total = data?.total ?? 0;
   const totalPages = data?.totalPages ?? 1;
 
-  const openLeadDetail = (lead: Lead) => {
-    navigate(Routes.dashboard.leads_directory_detail.replace(":uuid", lead.uuid));
-  };
-
   const selectedCount = selectedKeys.size;
   const bulkContextHint =
     selectedCount > 0 ? `One job per selected lead (${selectedCount}). Same sources for all.` : undefined;
@@ -258,10 +253,6 @@ export default function LeadsDirectoryPage() {
                     onSelectionChange: handleSelectionChange,
                   }
                 : {})}
-              onRowAction={(key) => {
-                const lead = rows.find((r) => r.uuid === key);
-                if (lead) openLeadDetail(lead);
-              }}
             >
               <Table.Header>
                 {canBulkEnrich ? (
@@ -295,10 +286,14 @@ export default function LeadsDirectoryPage() {
                         ))}
                       </Table.Row>
                     ))
-                  : table.getRowModel().rows.map((row) => (
-                      <Table.Row key={row.id} id={row.id} className="cursor-pointer">
+                  : table.getRowModel().rows.map((row) => {
+                      const rowHref = Routes.dashboard.leads_directory_detail.replace(":uuid", row.id);
+                      const rowLabel = `View lead ${row.original.name ?? row.original.company ?? "details"}`;
+
+                      return (
+                      <Table.Row key={row.id} id={row.id} className={tableNavRowClassName}>
                         {canBulkEnrich ? (
-                          <Table.Cell className="pr-0">
+                          <Table.Cell className={`pr-0 ${tableNavInteractiveCellClassName}`}>
                             <Checkbox aria-label={`Select ${row.original.name ?? "lead"}`} slot="selection">
                               <Checkbox.Control>
                                 <Checkbox.Indicator />
@@ -306,11 +301,26 @@ export default function LeadsDirectoryPage() {
                             </Checkbox>
                           </Table.Cell>
                         ) : null}
-                        {row.getVisibleCells().map((cell) => (
-                          <Table.Cell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</Table.Cell>
-                        ))}
+                        {row.getVisibleCells().map((cell) => {
+                          const content = flexRender(cell.column.columnDef.cell, cell.getContext());
+                          const isInteractive = isTableNavInteractiveCell(cell.column.id, ["actions"]);
+
+                          return (
+                          <Table.Cell
+                            key={cell.id}
+                            className={isInteractive ? tableNavInteractiveCellClassName : undefined}
+                          >
+                            {renderTableNavCellContent(cell.column.id, rowHref, content, {
+                              interactiveColumnIds: ["actions"],
+                              primaryColumnId: "name",
+                              ariaLabel: rowLabel,
+                            })}
+                          </Table.Cell>
+                          );
+                        })}
                       </Table.Row>
-                    ))}
+                      );
+                    })}
               </Table.Body>
             </Table.Content>
           </Table.ScrollContainer>

@@ -1,10 +1,11 @@
 import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button, Table } from "@heroui/react";
 import { Copy, ExternalLink, Pencil, Trash2 } from "lucide-react";
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { Routes } from "@/routes/routes";
 import { TablePagination } from "@/components/ui/table-pagination";
+import { isTableNavInteractiveCell, renderTableNavCellContent, tableNavInteractiveCellClassName, tableNavRowClassName } from "@/components/ui/table-row-link";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { useDeleteForm, useDuplicateForm } from "@/features/forms/hooks/use-forms";
 import type { Form } from "@/features/forms/interfaces/form.interface";
@@ -19,22 +20,21 @@ function formatDate(dateStr: string): string {
 }
 
 function RowActions({ form }: { form: Form }) {
-    const navigate = useNavigate();
     const [editOpen, setEditOpen] = useState(false);
     const [deleteOpen, setDeleteOpen] = useState(false);
     const duplicate = useDuplicateForm();
     const del = useDeleteForm();
+    const formHref = Routes.dashboard.forms_detail.replace(":uuid", form.uuid);
 
     return (
         <div className="flex items-center gap-1 justify-end" onClick={(e) => e.stopPropagation()}>
-            <Button
-                size="sm"
-                variant="tertiary"
-                onPress={() => navigate(Routes.dashboard.forms_detail.replace(":uuid", form.uuid))}
+            <Link
+                to={formHref}
                 aria-label="Open form"
+                className="inline-flex items-center justify-center size-8 rounded-md text-foreground hover:bg-surface-secondary transition-colors"
             >
                 <ExternalLink className="size-3.5" />
-            </Button>
+            </Link>
             <Button
                 size="sm"
                 variant="tertiary"
@@ -101,8 +101,6 @@ export function FormsTable({
     totalPages,
     onPageChange,
 }: FormsTableProps) {
-    const navigate = useNavigate();
-
     const columns = useMemo(
         () => [
             columnHelper.accessor("name", {
@@ -172,9 +170,6 @@ export function FormsTable({
                     <Table.Content
                         aria-label="Forms"
                         className="min-w-[700px]"
-                        onRowAction={(uuid) =>
-                            navigate(Routes.dashboard.forms_detail.replace(":uuid", String(uuid)))
-                        }
                     >
                         <Table.Header>
                             {table.getHeaderGroups()[0]!.headers.map((header) => (
@@ -209,15 +204,31 @@ export function FormsTable({
                                           ))}
                                       </Table.Row>
                                   ))
-                                : table.getRowModel().rows.map((row) => (
-                                      <Table.Row key={row.id} id={row.id}>
-                                          {row.getVisibleCells().map((cell) => (
-                                              <Table.Cell key={cell.id}>
-                                                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                : table.getRowModel().rows.map((row) => {
+                                      const rowHref = Routes.dashboard.forms_detail.replace(":uuid", row.id);
+                                      const rowLabel = `View form ${row.original.name}`;
+
+                                      return (
+                                      <Table.Row key={row.id} id={row.id} className={tableNavRowClassName}>
+                                          {row.getVisibleCells().map((cell) => {
+                                              const content = flexRender(cell.column.columnDef.cell, cell.getContext());
+                                              const isInteractive = isTableNavInteractiveCell(cell.column.id);
+
+                                              return (
+                                              <Table.Cell
+                                                  key={cell.id}
+                                                  className={isInteractive ? tableNavInteractiveCellClassName : undefined}
+                                              >
+                                                  {renderTableNavCellContent(cell.column.id, rowHref, content, {
+                                                      primaryColumnId: "name",
+                                                      ariaLabel: rowLabel,
+                                                  })}
                                               </Table.Cell>
-                                          ))}
+                                              );
+                                          })}
                                       </Table.Row>
-                                  ))}
+                                      );
+                                  })}
                         </Table.Body>
                     </Table.Content>
                 </Table.ScrollContainer>

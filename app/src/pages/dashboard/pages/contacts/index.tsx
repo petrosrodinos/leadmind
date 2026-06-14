@@ -130,7 +130,6 @@ export default function ContactsPage() {
             params.set("page", String(p));
             setSearchParams(params, { replace: true });
           }}
-          onRowClick={(c) => goToDetail(c.uuid)}
           selectedKeys={selectedKeys}
           onSelectionChange={setSelectedKeys}
         />

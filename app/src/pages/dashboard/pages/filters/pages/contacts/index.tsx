@@ -1,15 +1,13 @@
 import { useMemo, useState } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { LeadsTable } from "@/pages/dashboard/pages/leads/components/leads-table";
 import { useContacts } from "@/features/contacts/hooks/use-contacts";
-import { Routes } from "@/routes/routes";
 
 const PAGE_SIZE = 20;
 
 export default function FilterContactsPage() {
     const { uuid } = useParams<{ uuid: string }>();
     const [searchParams, setSearchParams] = useSearchParams();
-    const navigate = useNavigate();
 
     const page = Math.max(1, Number(searchParams.get("page") ?? 1));
 
@@ -43,9 +41,6 @@ export default function FilterContactsPage() {
             total={data?.total ?? 0}
             totalPages={data?.totalPages ?? 1}
             onPageChange={onPageChange}
-            onRowClick={(c) =>
-                navigate(Routes.dashboard.contacts_detail.replace(":uuid", c.uuid))
-            }
             selectedKeys={selectedKeys}
             onSelectionChange={setSelectedKeys}
         />

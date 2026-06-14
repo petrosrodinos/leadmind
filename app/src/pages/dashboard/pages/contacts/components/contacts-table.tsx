@@ -9,8 +9,10 @@ import type { Contact } from "@/features/contacts/interfaces/contact.interface";
 import { LeadStatus } from "@/features/contacts/interfaces/contact.interface";
 import { useDeleteContact, useUpdateContactStatus } from "@/features/contacts/hooks/use-contacts";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { isTableNavInteractiveCell, renderTableNavCellContent, tableNavInteractiveCellClassName, tableNavRowClassName } from "@/components/ui/table-row-link";
 import { ContactScoresCompact } from "@/pages/dashboard/pages/leads/components/badges";
 import { STATUS_OPTIONS } from "@/features/contacts/constants/contacts.constants";
+import { Routes } from "@/routes/routes";
 
 const lastInteractionAt = (contact: Contact): string | null => {
   const interactions = contact.interactions ?? [];
@@ -33,12 +35,11 @@ interface ContactsTableProps {
   total: number;
   totalPages: number;
   onPageChange: (page: number) => void;
-  onRowClick: (contact: Contact) => void;
   selectedKeys: Set<string>;
   onSelectionChange: (keys: Set<string>) => void;
 }
 
-export function ContactsTable({ contacts, isLoading, isFetching, page, pageSize, total, totalPages, onPageChange, onRowClick, selectedKeys, onSelectionChange }: ContactsTableProps) {
+export function ContactsTable({ contacts, isLoading, isFetching, page, pageSize, total, totalPages, onPageChange, selectedKeys, onSelectionChange }: ContactsTableProps) {
   const updateStatus = useUpdateContactStatus();
   const deleteContact = useDeleteContact();
   const [deleteTarget, setDeleteTarget] = useState<Contact | null>(null);
@@ -184,10 +185,6 @@ export function ContactsTable({ contacts, isLoading, isFetching, page, pageSize,
             selectionBehavior="toggle"
             selectedKeys={selectedKeys}
             onSelectionChange={handleSelectionChange}
-            onRowAction={(key) => {
-              const contact = contacts.find((c) => c.uuid === key);
-              if (contact) onRowClick(contact);
-            }}
           >
             <Table.Header>
               <Table.Column className="pr-0 w-10">
@@ -226,20 +223,39 @@ export function ContactsTable({ contacts, isLoading, isFetching, page, pageSize,
                       ))}
                     </Table.Row>
                   ))
-                : table.getRowModel().rows.map((row) => (
-                    <Table.Row key={row.id} id={row.id} className="cursor-pointer">
-                      <Table.Cell className="pr-0">
+                : table.getRowModel().rows.map((row) => {
+                    const rowHref = Routes.dashboard.contacts_detail.replace(":uuid", row.id);
+                    const rowLabel = `View contact ${row.original.name ?? row.original.email ?? "details"}`;
+
+                    return (
+                    <Table.Row key={row.id} id={row.id} className={tableNavRowClassName}>
+                      <Table.Cell className={`pr-0 ${tableNavInteractiveCellClassName}`}>
                         <Checkbox aria-label={`Select ${row.original.name ?? "contact"}`} slot="selection">
                           <Checkbox.Control>
                             <Checkbox.Indicator />
                           </Checkbox.Control>
                         </Checkbox>
                       </Table.Cell>
-                      {row.getVisibleCells().map((cell) => (
-                        <Table.Cell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</Table.Cell>
-                      ))}
+                      {row.getVisibleCells().map((cell) => {
+                        const content = flexRender(cell.column.columnDef.cell, cell.getContext());
+                        const isInteractive = isTableNavInteractiveCell(cell.column.id, ["status", "actions"]);
+
+                        return (
+                        <Table.Cell
+                          key={cell.id}
+                          className={isInteractive ? tableNavInteractiveCellClassName : undefined}
+                        >
+                          {renderTableNavCellContent(cell.column.id, rowHref, content, {
+                            interactiveColumnIds: ["status", "actions"],
+                            primaryColumnId: "name",
+                            ariaLabel: rowLabel,
+                          })}
+                        </Table.Cell>
+                        );
+                      })}
                     </Table.Row>
-                  ))}
+                    );
+                  })}
             </Table.Body>
           </Table.Content>
         </Table.ScrollContainer>
