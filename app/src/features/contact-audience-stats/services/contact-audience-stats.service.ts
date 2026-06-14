@@ -1,17 +1,14 @@
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
+import { buildContactListApiParams } from "@/lib/contact-filter-params";
 import type {
     ContactAudienceStats,
     ContactAudienceStatsQuery,
 } from "../interfaces/contact-audience-stats.interface";
 
-function buildStatsParams(query?: ContactAudienceStatsQuery): Record<string, unknown> | undefined {
+function buildStatsParams(query?: ContactAudienceStatsQuery): Record<string, string | number | undefined> | undefined {
     if (!query) return undefined;
-    const params: Record<string, unknown> = { ...query };
-    if (query.score_rules && query.score_rules.length > 0) {
-        params.score_rules = JSON.stringify(query.score_rules);
-    }
-    return params;
+    return buildContactListApiParams(query);
 }
 
 export const getFilterAudienceStats = async (

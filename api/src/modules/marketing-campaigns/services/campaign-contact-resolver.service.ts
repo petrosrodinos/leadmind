@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { CampaignContactStatus, Channel, Prisma } from '@/generated/prisma';
+import { Channel, Prisma } from '@/generated/prisma';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { ContactsService } from '@/modules/contacts/contacts.service';
 import { buildContactProfileFieldWhere } from '@/modules/contacts/utils/contact-profile-field-filter.utils';
+import { mergeContactWhereClauses } from '@/modules/contacts/utils/contact-where-merge.utils';
 import { CampaignProfileField } from '../constants/campaign-profile-fields.constants';
 import { CampaignFiltersDto } from '../dto/campaign-filters.dto';
 
@@ -50,40 +51,20 @@ export class CampaignContactResolverService {
             }
         }
 
-        if (filters.last_interaction_after) {
-            and.push({ last_interaction_at: { gte: new Date(filters.last_interaction_after) } });
-        }
-        if (filters.last_interaction_before) {
-            and.push({ last_interaction_at: { lte: new Date(filters.last_interaction_before) } });
-        }
         if (filters.exclude_uuids && filters.exclude_uuids.length > 0) {
             and.push({ uuid: { notIn: filters.exclude_uuids } });
         }
-        if (mode === 'send' && !filters.include_unsubscribed) {
-            and.push({ unsubscribed_at: null });
-        }
-        if (filters.never_contacted) {
-            and.push({
-                campaign_contacts: {
-                    none: {
-                        channel: { in: [Channel.EMAIL, Channel.SMS, Channel.LINKEDIN] },
-                        status: {
-                            in: [
-                                CampaignContactStatus.SENT,
-                                CampaignContactStatus.DELIVERED,
-                                CampaignContactStatus.OPENED,
-                                CampaignContactStatus.CLICKED,
-                                CampaignContactStatus.REPLIED,
-                                CampaignContactStatus.BOUNCED,
-                                CampaignContactStatus.UNSUBSCRIBED,
-                            ],
-                        },
-                    },
-                },
-            });
-        }
 
-        return this.mergeWhereClauses(base, and);
+        const where = mergeContactWhereClauses(base, and);
+        this.contactsService.applyAudienceFilters(where, {
+            last_interaction_after: filters.last_interaction_after,
+            last_interaction_before: filters.last_interaction_before,
+            never_contacted: filters.never_contacted,
+            include_unsubscribed:
+                mode === 'send' ? (filters.include_unsubscribed ?? false) : true,
+        });
+
+        return where;
     }
 
     async previewContacts(
@@ -92,10 +73,10 @@ export class CampaignContactResolverService {
         limit = 50,
     ): Promise<{ total: number; sample: any[]; with_email: number; with_phone: number }> {
         const where = this.buildWhereInput(user_uuid, filters, { mode: 'preview' });
-        const emailWhere = this.mergeWhereClauses(where, [
+        const emailWhere = mergeContactWhereClauses(where, [
             buildContactProfileFieldWhere(CampaignProfileField.EMAIL, true),
         ]);
-        const phoneWhere = this.mergeWhereClauses(where, [
+        const phoneWhere = mergeContactWhereClauses(where, [
             buildContactProfileFieldWhere(CampaignProfileField.PHONE, true),
         ]);
 
@@ -133,20 +114,5 @@ export class CampaignContactResolverService {
             ...(options?.limit !== undefined && { take: options.limit }),
         });
         return rows.map((r) => r.uuid);
-    }
-
-    private mergeWhereClauses(
-        base: Prisma.ContactWhereInput,
-        andClauses: Prisma.ContactWhereInput[],
-    ): Prisma.ContactWhereInput {
-        if (andClauses.length === 0) return base;
-
-        const baseAnd = base.AND
-            ? Array.isArray(base.AND)
-                ? base.AND
-                : [base.AND]
-            : [];
-        const { AND: _and, ...rest } = base;
-        return { ...rest, AND: [...baseAnd, ...andClauses] };
     }
 }

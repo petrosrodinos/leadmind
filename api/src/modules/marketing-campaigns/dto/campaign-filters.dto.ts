@@ -20,6 +20,7 @@ import {
     ContactScoreRuleItemDto,
     ScoreRulesQueryTransform,
 } from '@/modules/scoring-instructions/dto/contact-score-rule.dto';
+import { QueryBooleanTransform } from '@/shared/transforms/query-boolean.transform';
 
 export class CampaignFiltersDto {
     @ApiPropertyOptional({ enum: LeadStatus })
@@ -66,13 +67,13 @@ export class CampaignFiltersDto {
 
     @ApiPropertyOptional({ description: 'Only contacts with an email address' })
     @IsOptional()
-    @Type(() => Boolean)
+    @QueryBooleanTransform
     @IsBoolean()
     has_email?: boolean;
 
     @ApiPropertyOptional({ description: 'Only contacts with a phone number' })
     @IsOptional()
-    @Type(() => Boolean)
+    @QueryBooleanTransform
     @IsBoolean()
     has_phone?: boolean;
 
@@ -90,7 +91,7 @@ export class CampaignFiltersDto {
             'When profile_field is set: true = contact must have a value, false = contact must not',
     })
     @IsOptional()
-    @Type(() => Boolean)
+    @QueryBooleanTransform
     @IsBoolean()
     has_profile_field?: boolean;
 
@@ -112,13 +113,13 @@ export class CampaignFiltersDto {
 
     @ApiPropertyOptional({ description: 'Include contacts who have unsubscribed (default false)' })
     @IsOptional()
-    @Type(() => Boolean)
+    @QueryBooleanTransform
     @IsBoolean()
     include_unsubscribed?: boolean;
 
     @ApiPropertyOptional({ description: 'Only contacts who have never been sent an email or SMS campaign message' })
     @IsOptional()
-    @Type(() => Boolean)
+    @QueryBooleanTransform
     @IsBoolean()
     never_contacted?: boolean;
 }

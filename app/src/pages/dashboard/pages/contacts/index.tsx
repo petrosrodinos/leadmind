@@ -6,13 +6,15 @@ import { ContactsTable } from "./components/contacts-table";
 import { PipelineView } from "./components/pipeline-view";
 import { NewContactModal } from "./components/new-contact-modal";
 import { BulkScoreContactsPopover } from "./components/bulk-score-contacts-popover";
-import { LeadFilters } from "@/pages/dashboard/pages/leads/components/lead-filters";
-import { isLeadStatus } from "@/features/contacts/constants/contacts.constants";
-import { isContactProfileField } from "@/features/contacts/constants/contact-profile-fields.constants";
-import { SourceType } from "@/features/leads/interfaces/lead.interface";
+import { ContactFiltersForm } from "@/pages/dashboard/components/contact-filters-form";
 import { useContacts } from "@/features/contacts/hooks/use-contacts";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
-import { parseScoreRulesParam, serializeScoreRulesParam } from "@/lib/contact-score-rules";
+import {
+    contactFiltersToListQuery,
+    parseContactFiltersFromSearchParams,
+    serializeContactFiltersToSearchParams,
+} from "@/lib/contact-filter-params";
+import type { ContactFilters } from "@/interfaces/contact-filters.interface";
 import { Routes } from "@/routes/routes";
 
 const TABLE_PAGE_SIZE = 20;
@@ -22,7 +24,6 @@ const VIEW_STORAGE_KEY = "contacts.view";
 type View = "table" | "pipeline";
 
 const isView = (v: string | null): v is View => v === "table" || v === "pipeline";
-const isSourceType = (s: string | null): s is SourceType => !!s && (Object.values(SourceType) as string[]).includes(s);
 
 export default function ContactsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -40,70 +41,37 @@ export default function ContactsPage() {
   }, [view]);
 
   const page = Math.max(1, Number(searchParams.get("page") ?? 1));
-  const search = searchParams.get("search") ?? "";
-  const statusParam = searchParams.get("status");
-  const sourceParam = searchParams.get("source_type");
-  const filterUuid = searchParams.get("filter_uuid") || undefined;
-  const scoreRulesParam = searchParams.get("score_rules");
-  const scoreRules = useMemo(() => parseScoreRulesParam(scoreRulesParam), [scoreRulesParam]);
-  const tags = (searchParams.get("tags") ?? "")
-    .split(",")
-    .map((t) => t.trim())
-    .filter(Boolean);
-  const profileFieldParam = searchParams.get("profile_field");
-  const profileField = isContactProfileField(profileFieldParam) ? profileFieldParam : undefined;
-  const hasProfileFieldParam = searchParams.get("has_profile_field");
-  const hasProfileField = profileField
-    ? hasProfileFieldParam === "false"
-      ? false
-      : true
-    : undefined;
-
-  const status = isLeadStatus(statusParam) ? statusParam : undefined;
-  const sourceType = isSourceType(sourceParam) ? sourceParam : undefined;
+  const filters = useMemo(
+    () => parseContactFiltersFromSearchParams(searchParams),
+    [searchParams],
+  );
 
   const [selectedKeys, setSelectedKeys] = useState<Set<string>>(new Set());
   const [createOpen, setCreateOpen] = useState(false);
 
-  const updateParams = (next: Record<string, string | undefined | null>) => {
-    const params = new URLSearchParams(searchParams);
-    for (const [k, v] of Object.entries(next)) {
-      if (v == null || v === "") params.delete(k);
-      else params.set(k, v);
+  const updateFilters = (patch: Partial<ContactFilters>, resetPage = true) => {
+    const next = { ...filters, ...patch };
+    const serialized = serializeContactFiltersToSearchParams(next);
+    const params = new URLSearchParams();
+    for (const [key, value] of Object.entries(serialized)) {
+      if (value != null && value !== "") params.set(key, value);
     }
+    if (resetPage) params.set("page", "1");
+    else if (page > 1) params.set("page", String(page));
     setSearchParams(params, { replace: true });
+    setSelectedKeys(new Set());
   };
 
-  const debouncedSearch = useDebouncedValue(search, 300);
-
+  const debouncedFilters = useDebouncedValue(filters, 300);
   const pageSize = view === "pipeline" ? PIPELINE_PAGE_SIZE : TABLE_PAGE_SIZE;
 
   const query = useMemo(
-    () => ({
-      page: view === "pipeline" ? 1 : page,
-      limit: pageSize,
-      search: debouncedSearch || undefined,
-      status,
-      source_type: sourceType,
-      filter_uuid: filterUuid,
-      score_rules: scoreRules.length > 0 ? scoreRules : undefined,
-      tags: tags.length > 0 ? tags : undefined,
-      profile_field: profileField,
-      has_profile_field: hasProfileField,
-    }),
-    [
-      view,
-      page,
-      pageSize,
-      debouncedSearch,
-      status,
-      sourceType,
-      filterUuid,
-      scoreRulesParam,
-      tags.join(","),
-      profileField,
-      hasProfileField,
-    ],
+    () =>
+      contactFiltersToListQuery(debouncedFilters, {
+        page: view === "pipeline" ? 1 : page,
+        limit: pageSize,
+      }),
+    [debouncedFilters, view, page, pageSize],
   );
 
   const { data, isLoading, isFetching } = useContacts(query);
@@ -139,45 +107,36 @@ export default function ContactsPage() {
         </div>
       </div>
 
-      <LeadFilters
-        search={search}
-        onSearchChange={(s) => updateParams({ search: s, page: "1" })}
-        status={status}
-        onStatusChange={(s) => updateParams({ status: s, page: "1" })}
-        scoreRules={scoreRules}
-        onScoreRulesChange={(next) => {
-          const enc = serializeScoreRulesParam(next);
-          updateParams({ score_rules: enc ?? undefined, page: "1" });
-        }}
-        sourceType={sourceType}
-        onSourceTypeChange={(s) => updateParams({ source_type: s, page: "1" })}
-        filterUuid={filterUuid}
-        onFilterUuidChange={(u) => updateParams({ filter_uuid: u, page: "1" })}
-        tags={tags}
-        onTagsChange={(next) =>
-          updateParams({
-            tags: next.length > 0 ? next.join(",") : undefined,
-            page: "1",
-          })
-        }
-        profileField={profileField}
-        onProfileFieldChange={(field) =>
-          updateParams({
-            profile_field: field ?? null,
-            has_profile_field: field ? String(hasProfileField ?? true) : null,
-            page: "1",
-          })
-        }
-        hasProfileField={hasProfileField}
-        onHasProfileFieldChange={(has) =>
-          updateParams({
-            has_profile_field: profileField && has !== undefined ? String(has) : undefined,
-            page: "1",
-          })
-        }
+      <ContactFiltersForm
+        value={filters}
+        onChange={(patch) => updateFilters(patch)}
+        showLeadSourceType
+        collapsible
+        defaultOpen={false}
+        sections={{ engagement: true, outreach: true }}
       />
 
-      {view === "table" ? <ContactsTable contacts={contacts} isLoading={isLoading} isFetching={isFetching} page={page} pageSize={pageSize} total={data?.total ?? 0} totalPages={data?.totalPages ?? 1} onPageChange={(p) => updateParams({ page: String(p) })} onRowClick={(c) => goToDetail(c.uuid)} selectedKeys={selectedKeys} onSelectionChange={setSelectedKeys} /> : <PipelineView contacts={contacts} isLoading={isLoading} onCardClick={(c) => goToDetail(c.uuid)} />}
+      {view === "table" ? (
+        <ContactsTable
+          contacts={contacts}
+          isLoading={isLoading}
+          isFetching={isFetching}
+          page={page}
+          pageSize={pageSize}
+          total={data?.total ?? 0}
+          totalPages={data?.totalPages ?? 1}
+          onPageChange={(p) => {
+            const params = new URLSearchParams(searchParams);
+            params.set("page", String(p));
+            setSearchParams(params, { replace: true });
+          }}
+          onRowClick={(c) => goToDetail(c.uuid)}
+          selectedKeys={selectedKeys}
+          onSelectionChange={setSelectedKeys}
+        />
+      ) : (
+        <PipelineView contacts={contacts} isLoading={isLoading} onCardClick={(c) => goToDetail(c.uuid)} />
+      )}
 
       <NewContactModal isOpen={createOpen} onOpenChange={setCreateOpen} />
     </div>

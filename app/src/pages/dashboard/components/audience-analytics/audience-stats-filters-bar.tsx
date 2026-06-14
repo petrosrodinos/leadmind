@@ -1,7 +1,4 @@
-import { useState } from "react";
-import { Button, ListBox, Select } from "@heroui/react";
-import { ChevronDown, Filter } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { ListBox, Select } from "@heroui/react";
 import type { ContactFilters } from "@/interfaces/contact-filters.interface";
 import { ContactFiltersForm } from "../contact-filters-form";
 
@@ -31,6 +28,8 @@ interface AudienceStatsFiltersBarProps {
     contactFilters: ContactFilters;
     onContactFiltersChange: (patch: Partial<ContactFilters>) => void;
     showSourceFilter?: boolean;
+    filtersOpen?: boolean;
+    onFiltersOpenChange?: (open: boolean) => void;
 }
 
 export function AudienceStatsFiltersBar({
@@ -39,9 +38,9 @@ export function AudienceStatsFiltersBar({
     contactFilters,
     onContactFiltersChange,
     showSourceFilter = true,
+    filtersOpen,
+    onFiltersOpenChange,
 }: AudienceStatsFiltersBarProps) {
-    const [filtersOpen, setFiltersOpen] = useState(false);
-
     return (
         <div className="flex flex-col gap-4">
             <div className="flex flex-wrap items-center gap-3">
@@ -71,27 +70,17 @@ export function AudienceStatsFiltersBar({
                         </Select.Popover>
                     </Select>
                 </div>
-                <Button
-                    size="sm"
-                    variant="tertiary"
-                    className="mt-5"
-                    onPress={() => setFiltersOpen((v) => !v)}
-                >
-                    <Filter className="size-4" />
-                    Contact filters
-                    <ChevronDown className={cn("size-4 transition-transform", filtersOpen && "rotate-180")} />
-                </Button>
             </div>
-            {filtersOpen ? (
-                <div className="rounded-xl border border-border bg-surface p-4">
-                    <ContactFiltersForm
-                        value={contactFilters}
-                        onChange={onContactFiltersChange}
-                        showSourceFilter={showSourceFilter}
-                        sections={{ engagement: true, outreach: true }}
-                    />
-                </div>
-            ) : null}
+            <ContactFiltersForm
+                value={contactFilters}
+                onChange={onContactFiltersChange}
+                showSourceFilter={showSourceFilter}
+                sections={{ engagement: true, outreach: true }}
+                collapsible
+                defaultOpen={false}
+                open={filtersOpen}
+                onOpenChange={onFiltersOpenChange}
+            />
         </div>
     );
 }

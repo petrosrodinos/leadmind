@@ -10,6 +10,7 @@ import {
     useBulkAddListContacts,
 } from "@/features/contact-lists/hooks/use-contact-lists";
 import type { ContactFilters } from "@/interfaces/contact-filters.interface";
+import { contactFiltersToListQuery } from "@/lib/contact-filter-params";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 
 const PICKER_PAGE_SIZE = 20;
@@ -32,22 +33,12 @@ export function AddContactsPanel({
     const debouncedFilters = useDebouncedValue(filters, 400);
 
     const contactsQuery = useMemo(
-        () => ({
-            page: pickerPage,
-            limit: PICKER_PAGE_SIZE,
-            exclude_list_uuid: listUuid,
-            search: debouncedFilters.search,
-            status: debouncedFilters.status,
-            tags: debouncedFilters.tags,
-            score_rules: debouncedFilters.score_rules,
-            filter_uuid: debouncedFilters.filter_uuid,
-            profile_field: debouncedFilters.profile_field,
-            has_profile_field: debouncedFilters.has_profile_field,
-            last_interaction_after: debouncedFilters.last_interaction_after,
-            last_interaction_before: debouncedFilters.last_interaction_before,
-            never_contacted: debouncedFilters.never_contacted,
-            include_unsubscribed: debouncedFilters.include_unsubscribed,
-        }),
+        () =>
+            contactFiltersToListQuery(debouncedFilters, {
+                page: pickerPage,
+                limit: PICKER_PAGE_SIZE,
+                exclude_list_uuid: listUuid,
+            }),
         [listUuid, pickerPage, debouncedFilters],
     );
 

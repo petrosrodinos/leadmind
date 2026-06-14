@@ -1,5 +1,6 @@
-import type { ReactNode } from "react";
-import { Input, Label, ListBox, Select, Switch, TextField } from "@heroui/react";
+import { useState, type ReactNode } from "react";
+import { Button, Input, Label, ListBox, Select, Switch, TextField } from "@heroui/react";
+import { ChevronDown, Filter } from "lucide-react";
 import type {
     ContactFilters,
     ContactFiltersFormSections,
@@ -11,6 +12,9 @@ import { useFilters } from "@/features/filters/hooks/use-filters";
 import { useContactTags } from "@/features/contacts/hooks/use-contacts";
 import { MultiSelect } from "@/components/ui/multi-select";
 import { ScoreRulesFilter } from "@/pages/dashboard/components/score-rules-filter";
+import { SOURCE_OPTIONS } from "@/features/filters/constants/source-options";
+import type { SourceType } from "@/features/leads/interfaces/lead.interface";
+import { cn } from "@/lib/utils";
 
 interface ContactFiltersFormProps {
     value: ContactFilters;
@@ -18,6 +22,12 @@ interface ContactFiltersFormProps {
     disabled?: boolean;
     sections?: ContactFiltersFormSections;
     showSourceFilter?: boolean;
+    showLeadSourceType?: boolean;
+    collapsible?: boolean;
+    defaultOpen?: boolean;
+    open?: boolean;
+    onOpenChange?: (open: boolean) => void;
+    collapsibleLabel?: string;
 }
 
 const DEFAULT_SECTIONS: Required<ContactFiltersFormSections> = {
@@ -31,12 +41,26 @@ export function ContactFiltersForm({
     disabled,
     sections: sectionsProp,
     showSourceFilter = true,
+    showLeadSourceType = false,
+    collapsible = false,
+    defaultOpen = false,
+    open: openProp,
+    onOpenChange,
+    collapsibleLabel = "Contact filters",
 }: ContactFiltersFormProps) {
     const sections = { ...DEFAULT_SECTIONS, ...sectionsProp };
     const { data: filters, isLoading: filtersLoading } = useFilters();
     const { data: availableTags = [] } = useContactTags();
+    const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
+    const isControlled = openProp !== undefined;
+    const panelOpen = isControlled ? openProp : uncontrolledOpen;
 
-    return (
+    const setPanelOpen = (next: boolean) => {
+        if (!isControlled) setUncontrolledOpen(next);
+        onOpenChange?.(next);
+    };
+
+    const form = (
         <div className="flex flex-col gap-4">
             <FilterSection
                 title="Find contacts"
@@ -89,6 +113,42 @@ export function ContactFiltersForm({
                         Restrict to contacts sourced from a specific filter.
                     </p>
                 </div>
+                ) : null}
+
+                {showLeadSourceType ? (
+                    <div>
+                        <Label>Lead source</Label>
+                        <Select
+                            aria-label="Lead source"
+                            value={value.source_type ?? ""}
+                            onChange={(v) => {
+                                if (typeof v !== "string") return;
+                                onChange({
+                                    source_type: v === "" ? undefined : (v as SourceType),
+                                });
+                            }}
+                            isDisabled={disabled}
+                        >
+                            <Select.Trigger>
+                                <Select.Value />
+                                <Select.Indicator />
+                            </Select.Trigger>
+                            <Select.Popover>
+                                <ListBox>
+                                    <ListBox.Item id="" textValue="Any source">
+                                        Any source
+                                        <ListBox.ItemIndicator />
+                                    </ListBox.Item>
+                                    {SOURCE_OPTIONS.map((opt) => (
+                                        <ListBox.Item key={opt.id} id={opt.id} textValue={opt.label}>
+                                            {opt.label}
+                                            <ListBox.ItemIndicator />
+                                        </ListBox.Item>
+                                    ))}
+                                </ListBox>
+                            </Select.Popover>
+                        </Select>
+                    </div>
                 ) : null}
             </FilterSection>
 
@@ -241,6 +301,28 @@ export function ContactFiltersForm({
             ) : null}
         </div>
     );
+
+    if (!collapsible) return form;
+
+    return (
+        <div className="flex flex-col gap-4">
+            <Button
+                size="sm"
+                variant="tertiary"
+                className="self-start"
+                onPress={() => setPanelOpen(!panelOpen)}
+            >
+                <Filter className="size-4" />
+                {collapsibleLabel}
+                <ChevronDown
+                    className={cn("size-4 transition-transform", panelOpen && "rotate-180")}
+                />
+            </Button>
+            {panelOpen ? (
+                <div className="rounded-xl border border-border bg-surface p-4">{form}</div>
+            ) : null}
+        </div>
+    );
 }
 
 interface FilterSectionProps {
@@ -250,15 +332,32 @@ interface FilterSectionProps {
 }
 
 function FilterSection({ title, description, children }: FilterSectionProps) {
+    const [open, setOpen] = useState(false);
+
     return (
         <section className="rounded-xl border border-border bg-surface overflow-hidden">
-            <div className="border-b border-border/60 bg-surface-secondary/30 px-4 py-3">
-                <h3 className="text-sm font-semibold text-foreground">{title}</h3>
-                {description ? (
-                    <p className="text-xs text-muted mt-0.5">{description}</p>
-                ) : null}
-            </div>
-            <div className="grid gap-4 p-4 sm:grid-cols-2">{children}</div>
+            <button
+                type="button"
+                onClick={() => setOpen((value) => !value)}
+                aria-expanded={open}
+                className="flex w-full items-center justify-between gap-3 border-b border-border/60 bg-surface-secondary/30 px-4 py-3 text-left outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
+            >
+                <div className="min-w-0">
+                    <h3 className="text-sm font-semibold text-foreground">{title}</h3>
+                    {description ? (
+                        <p className="text-xs text-muted mt-0.5">{description}</p>
+                    ) : null}
+                </div>
+                <ChevronDown
+                    className={cn(
+                        "size-4 shrink-0 text-muted transition-transform",
+                        open && "rotate-180",
+                    )}
+                />
+            </button>
+            {open ? (
+                <div className="grid gap-4 p-4 sm:grid-cols-2">{children}</div>
+            ) : null}
         </section>
     );
 }

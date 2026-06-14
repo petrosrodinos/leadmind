@@ -1,5 +1,6 @@
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
+import { buildContactListApiParams } from "@/lib/contact-filter-params";
 import type { EnrichmentSource } from "@/features/lead-enrichment/constants/enrichment-sources";
 import type {
     AiDraftMessagePayload,
@@ -24,11 +25,9 @@ export const listContacts = async (
     query: ListContactsQuery = {},
 ): Promise<PaginatedContacts> => {
     try {
-        const params: Record<string, unknown> = { ...query };
-        if (query.score_rules && query.score_rules.length > 0) {
-            params.score_rules = JSON.stringify(query.score_rules);
-        }
-        const response = await axiosInstance.get(ApiRoutes.contacts.list, { params });
+        const response = await axiosInstance.get(ApiRoutes.contacts.list, {
+            params: buildContactListApiParams(query),
+        });
         return response.data;
     } catch (error: any) {
         throw new Error(error?.response?.data?.message || "Failed to load contacts.");

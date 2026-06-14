@@ -1,9 +1,11 @@
 import type { ContactScoreRule, LeadStatus } from "@/features/contacts/interfaces/contact.interface";
 import type { ContactProfileField } from "@/features/contacts/constants/contact-profile-fields.constants";
+import type { SourceType } from "@/features/leads/interfaces/lead.interface";
 
 export interface ContactFilters {
     search?: string;
     filter_uuid?: string;
+    source_type?: SourceType;
     status?: LeadStatus;
     tags?: string[];
     score_rules?: ContactScoreRule[];

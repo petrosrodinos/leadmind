@@ -5,12 +5,20 @@ interface AudienceFilterFormProps {
     value: CampaignFilters;
     onChange: (patch: Partial<CampaignFilters>) => void;
     disabled?: boolean;
+    collapsible?: boolean;
+    defaultOpen?: boolean;
+    open?: boolean;
+    onOpenChange?: (open: boolean) => void;
 }
 
 export function AudienceFilterForm({
     value,
     onChange,
     disabled,
+    collapsible = true,
+    defaultOpen = false,
+    open,
+    onOpenChange,
 }: AudienceFilterFormProps) {
     return (
         <ContactFiltersForm
@@ -18,6 +26,10 @@ export function AudienceFilterForm({
             onChange={onChange}
             disabled={disabled}
             sections={{ engagement: true, outreach: true }}
+            collapsible={collapsible}
+            defaultOpen={defaultOpen}
+            open={open}
+            onOpenChange={onOpenChange}
         />
     );
 }

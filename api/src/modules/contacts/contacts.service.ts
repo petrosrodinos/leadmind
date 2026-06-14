@@ -28,6 +28,7 @@ import { CreateContactDto } from './dto/create-contact.dto';
 import { EnrichContactDto } from './dto/enrich-contact.dto';
 import { ListContactsDto } from './dto/list-contacts.dto';
 import { buildContactProfileFieldWhere } from './utils/contact-profile-field-filter.utils';
+import { mergeContactWhereClauses } from './utils/contact-where-merge.utils';
 
 export type ContactListFilterParams = Pick<
     ListContactsDto,
@@ -125,36 +126,41 @@ export class ContactsService {
     }
 
     buildWhereInput(user_uuid: string, query: ContactListFilterParams): Prisma.ContactWhereInput {
-        const scoreAnd =
-            query.score_rules && query.score_rules.length > 0
-                ? {
-                      AND: query.score_rules.map((rule) => ({
-                          contact_scores: {
-                              some: {
-                                  scoring_instruction_uuid: rule.scoring_instruction_uuid,
-                                  score: { gte: rule.min },
-                              },
-                          },
-                      })),
-                  }
-                : {};
+        const andClauses: Prisma.ContactWhereInput[] = [];
 
-        const profileFieldAnd =
-            query.profile_field && query.has_profile_field !== undefined
-                ? buildContactProfileFieldWhere(query.profile_field, query.has_profile_field)
-                : {};
+        if (query.score_rules && query.score_rules.length > 0) {
+            andClauses.push(
+                ...query.score_rules.map((rule) => ({
+                    contact_scores: {
+                        some: {
+                            scoring_instruction_uuid: rule.scoring_instruction_uuid,
+                            score: { gte: rule.min },
+                        },
+                    },
+                })),
+            );
+        }
 
-        return {
+        if (query.profile_field && query.has_profile_field !== undefined) {
+            andClauses.push(
+                buildContactProfileFieldWhere(query.profile_field, query.has_profile_field),
+            );
+        }
+
+        if (query.tags && query.tags.length > 0) {
+            andClauses.push(
+                ...query.tags.map((tag) => ({
+                    tags: { some: { tag } },
+                })),
+            );
+        }
+
+        const base: Prisma.ContactWhereInput = {
             user_uuid,
             ...(query.status && { status: query.status }),
-            ...scoreAnd,
-            ...profileFieldAnd,
             ...(query.filter_uuid && { filter_uuid: query.filter_uuid }),
             ...(query.lead_uuid && { lead_uuid: query.lead_uuid }),
             ...(query.source_type && { lead: { source_type: query.source_type } }),
-            ...(query.tags && query.tags.length > 0
-                ? { tags: { some: { tag: { in: query.tags } } } }
-                : {}),
             ...(query.search && {
                 OR: [
                     { name: { contains: query.search, mode: 'insensitive' } },
@@ -163,6 +169,8 @@ export class ContactsService {
                 ],
             }),
         };
+
+        return mergeContactWhereClauses(base, andClauses);
     }
 
     applyAudienceFilters(
@@ -222,12 +230,8 @@ export class ContactsService {
 
         if (audienceAnd.length === 0) return;
 
-        const existingAnd = where.AND
-            ? Array.isArray(where.AND)
-                ? where.AND
-                : [where.AND]
-            : [];
-        where.AND = [...existingAnd, ...audienceAnd];
+        const merged = mergeContactWhereClauses(where, audienceAnd);
+        Object.assign(where, merged);
     }
 
     async findAll(user_uuid: string, query: ListContactsDto) {

@@ -11,6 +11,7 @@ import { ContactsService } from '@/modules/contacts/contacts.service';
 import { emptyLeadStatusCounts } from '@/modules/contacts/constants/lead-status.constants';
 import { ContactProfileField } from '@/modules/contacts/constants/contact-profile-fields.constants';
 import { buildContactProfileFieldWhere } from '@/modules/contacts/utils/contact-profile-field-filter.utils';
+import { mergeContactWhereClauses } from '@/modules/contacts/utils/contact-where-merge.utils';
 import { CallOutcome } from '@/modules/contacts/dto/log-call.dto';
 import { MeetingOutcome } from '@/modules/contacts/dto/log-meeting.dto';
 import { ContactAudienceStatsQueryDto } from './dto/contact-audience-stats-query.dto';
@@ -112,12 +113,8 @@ export class ContactAudienceStatsService {
         });
 
         if (scopeAnd.length > 0) {
-            const existingAnd = where.AND
-                ? Array.isArray(where.AND)
-                    ? where.AND
-                    : [where.AND]
-                : [];
-            where.AND = [...existingAnd, ...scopeAnd];
+            const merged = mergeContactWhereClauses(where, scopeAnd);
+            Object.assign(where, merged);
         }
 
         return where;
