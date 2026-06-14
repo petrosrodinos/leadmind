@@ -1,6 +1,6 @@
 import { useState, type Key } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
-import { Button, Spinner, Tabs } from "@heroui/react";
+import { Button, Tabs } from "@heroui/react";
 import { ArrowLeft, List, Pencil, UserPlus } from "lucide-react";
 import { Routes, ListDetailTabIds } from "@/routes/routes";
 import {
@@ -11,6 +11,7 @@ import { ContactListFormModal } from "../../components/contact-list-form-modal";
 import { ListMembersTable } from "./components/list-members-table";
 import { AddContactsModal } from "./components/add-contacts-modal";
 import { ContactAudienceAnalyticsPanel } from "@/pages/dashboard/components/audience-analytics/contact-audience-analytics-panel";
+import { ListDetailSkeleton } from "./components/list-detail-skeleton";
 
 const MEMBERS_PAGE_SIZE = 20;
 
@@ -53,11 +54,7 @@ export default function ListDetailPage() {
     };
 
     if (listLoading) {
-        return (
-            <div className="flex items-center justify-center py-24">
-                <Spinner size="lg" />
-            </div>
-        );
+        return <ListDetailSkeleton />;
     }
 
     if (!list) {
