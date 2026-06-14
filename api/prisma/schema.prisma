@@ -818,7 +818,7 @@ model FormCompletionValue {
   updated_at DateTime @updatedAt
 
   completion FormCompletion @relation(fields: [completion_uuid], references: [uuid], onDelete: Cascade)
-  field      FormField      @relation(fields: [field_uuid], references: [uuid])
+  field      FormField      @relation(fields: [field_uuid], references: [uuid], onDelete: Cascade)
 
   @@index([completion_uuid])
   @@index([field_uuid])
