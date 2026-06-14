@@ -20,7 +20,9 @@ import { AddListContactsDto } from './dto/add-list-contacts.dto';
 import { BulkAddListContactsDto } from './dto/bulk-add-list-contacts.dto';
 import { ListContactListMembersDto } from './dto/list-contact-list-members.dto';
 import { ContactAudienceStatsService } from '@/modules/contact-audience-stats/contact-audience-stats.service';
+import { ContactAudienceAnalysisService } from '@/modules/contact-audience-stats/contact-audience-analysis.service';
 import { ContactAudienceStatsQueryDto } from '@/modules/contact-audience-stats/dto/contact-audience-stats-query.dto';
+import { ListContactAudienceAnalysesDto } from '@/modules/contact-audience-stats/dto/list-contact-audience-analyses.dto';
 
 @ApiTags('contact-lists')
 @ApiBearerAuth()
@@ -30,6 +32,7 @@ export class ContactListsController {
     constructor(
         private readonly contactListsService: ContactListsService,
         private readonly contactAudienceStatsService: ContactAudienceStatsService,
+        private readonly contactAudienceAnalysisService: ContactAudienceAnalysisService,
     ) {}
 
     @Post()
@@ -114,5 +117,24 @@ export class ContactListsController {
         @Query() query: ContactAudienceStatsQueryDto,
     ) {
         return this.contactAudienceStatsService.getListStats(user_uuid, uuid, query);
+    }
+
+    @Get(':uuid/analyses')
+    @ApiOperation({ summary: 'List AI audience analyses for a contact list' })
+    listAnalyses(
+        @CurrentUser('uuid') user_uuid: string,
+        @Param('uuid') uuid: string,
+        @Query() query: ListContactAudienceAnalysesDto,
+    ) {
+        return this.contactAudienceAnalysisService.listListAnalyses(user_uuid, uuid, query);
+    }
+
+    @Post(':uuid/analyses')
+    @ApiOperation({ summary: 'Run a new AI audience analysis for a contact list (full history stats)' })
+    createAnalysis(
+        @CurrentUser('uuid') user_uuid: string,
+        @Param('uuid') uuid: string,
+    ) {
+        return this.contactAudienceAnalysisService.createListAnalysis(user_uuid, uuid);
     }
 }

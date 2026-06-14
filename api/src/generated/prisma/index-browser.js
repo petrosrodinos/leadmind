@@ -518,6 +518,27 @@ exports.Prisma.FormCompletionValueScalarFieldEnum = {
   updated_at: 'updated_at'
 };
 
+exports.Prisma.ContactAudienceAnalysisScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  user_uuid: 'user_uuid',
+  scope: 'scope',
+  filter_uuid: 'filter_uuid',
+  contact_list_uuid: 'contact_list_uuid',
+  audience_name: 'audience_name',
+  stats_snapshot: 'stats_snapshot',
+  analysis: 'analysis',
+  status: 'status',
+  error: 'error',
+  provider: 'provider',
+  model: 'model',
+  input_tokens: 'input_tokens',
+  output_tokens: 'output_tokens',
+  cost_usd: 'cost_usd',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -723,6 +744,17 @@ exports.FieldType = exports.$Enums.FieldType = {
   SECTION_HEADER: 'SECTION_HEADER'
 };
 
+exports.ContactAudienceAnalysisScope = exports.$Enums.ContactAudienceAnalysisScope = {
+  FILTER: 'FILTER',
+  LIST: 'LIST'
+};
+
+exports.ContactAudienceAnalysisStatus = exports.$Enums.ContactAudienceAnalysisStatus = {
+  PENDING: 'PENDING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Filter: 'Filter',
@@ -750,7 +782,8 @@ exports.Prisma.ModelName = {
   Form: 'Form',
   FormField: 'FormField',
   FormCompletion: 'FormCompletion',
-  FormCompletionValue: 'FormCompletionValue'
+  FormCompletionValue: 'FormCompletionValue',
+  ContactAudienceAnalysis: 'ContactAudienceAnalysis'
 };
 
 /**

@@ -9,6 +9,7 @@ import {
 } from "./audience-stats-filters-bar";
 import { AudienceStatsSections } from "./audience-stats-sections";
 import { AudiencePipelineDistribution } from "./audience-pipeline-distribution";
+import { AudienceAiAnalysisSection } from "./audience-ai-analysis-section";
 
 interface ContactAudienceAnalyticsPanelProps {
     scope: ContactAudienceScope;
@@ -52,6 +53,8 @@ export function ContactAudienceAnalyticsPanel({
 
     return (
         <div className="flex flex-col gap-6">
+            <AudienceAiAnalysisSection scope={scope} />
+
             <AudienceStatsFiltersBar
                 preset={preset}
                 onPresetChange={setPreset}

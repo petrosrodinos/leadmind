@@ -17,7 +17,9 @@ import { CreateFilterDto } from './dto/create-filter.dto';
 import { UpdateFilterDto } from './dto/update-filter.dto';
 import { ListJobsDto } from './dto/list-jobs.dto';
 import { ContactAudienceStatsService } from '@/modules/contact-audience-stats/contact-audience-stats.service';
+import { ContactAudienceAnalysisService } from '@/modules/contact-audience-stats/contact-audience-analysis.service';
 import { ContactAudienceStatsQueryDto } from '@/modules/contact-audience-stats/dto/contact-audience-stats-query.dto';
+import { ListContactAudienceAnalysesDto } from '@/modules/contact-audience-stats/dto/list-contact-audience-analyses.dto';
 
 @ApiTags('filters')
 @ApiBearerAuth()
@@ -27,6 +29,7 @@ export class FiltersController {
     constructor(
         private readonly filtersService: FiltersService,
         private readonly contactAudienceStatsService: ContactAudienceStatsService,
+        private readonly contactAudienceAnalysisService: ContactAudienceAnalysisService,
     ) { }
 
     @Post()
@@ -87,5 +90,24 @@ export class FiltersController {
         @Query() query: ContactAudienceStatsQueryDto,
     ) {
         return this.contactAudienceStatsService.getFilterStats(user_uuid, uuid, query);
+    }
+
+    @Get(':uuid/analyses')
+    @ApiOperation({ summary: 'List AI audience analyses for a filter' })
+    listAnalyses(
+        @CurrentUser('uuid') user_uuid: string,
+        @Param('uuid') uuid: string,
+        @Query() query: ListContactAudienceAnalysesDto,
+    ) {
+        return this.contactAudienceAnalysisService.listFilterAnalyses(user_uuid, uuid, query);
+    }
+
+    @Post(':uuid/analyses')
+    @ApiOperation({ summary: 'Run a new AI audience analysis for a filter (full history stats)' })
+    createAnalysis(
+        @CurrentUser('uuid') user_uuid: string,
+        @Param('uuid') uuid: string,
+    ) {
+        return this.contactAudienceAnalysisService.createFilterAnalysis(user_uuid, uuid);
     }
 }

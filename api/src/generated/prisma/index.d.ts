@@ -148,6 +148,11 @@ export type FormCompletion = $Result.DefaultSelection<Prisma.$FormCompletionPayl
  * 
  */
 export type FormCompletionValue = $Result.DefaultSelection<Prisma.$FormCompletionValuePayload>
+/**
+ * Model ContactAudienceAnalysis
+ * 
+ */
+export type ContactAudienceAnalysis = $Result.DefaultSelection<Prisma.$ContactAudienceAnalysisPayload>
 
 /**
  * Enums
@@ -385,6 +390,23 @@ export const FieldType: {
 
 export type FieldType = (typeof FieldType)[keyof typeof FieldType]
 
+
+export const ContactAudienceAnalysisScope: {
+  FILTER: 'FILTER',
+  LIST: 'LIST'
+};
+
+export type ContactAudienceAnalysisScope = (typeof ContactAudienceAnalysisScope)[keyof typeof ContactAudienceAnalysisScope]
+
+
+export const ContactAudienceAnalysisStatus: {
+  PENDING: 'PENDING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
+};
+
+export type ContactAudienceAnalysisStatus = (typeof ContactAudienceAnalysisStatus)[keyof typeof ContactAudienceAnalysisStatus]
+
 }
 
 export type AuthRole = $Enums.AuthRole
@@ -462,6 +484,14 @@ export const ReminderStatus: typeof $Enums.ReminderStatus
 export type FieldType = $Enums.FieldType
 
 export const FieldType: typeof $Enums.FieldType
+
+export type ContactAudienceAnalysisScope = $Enums.ContactAudienceAnalysisScope
+
+export const ContactAudienceAnalysisScope: typeof $Enums.ContactAudienceAnalysisScope
+
+export type ContactAudienceAnalysisStatus = $Enums.ContactAudienceAnalysisStatus
+
+export const ContactAudienceAnalysisStatus: typeof $Enums.ContactAudienceAnalysisStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -849,6 +879,16 @@ export class PrismaClient<
     * ```
     */
   get formCompletionValue(): Prisma.FormCompletionValueDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.contactAudienceAnalysis`: Exposes CRUD operations for the **ContactAudienceAnalysis** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ContactAudienceAnalyses
+    * const contactAudienceAnalyses = await prisma.contactAudienceAnalysis.findMany()
+    * ```
+    */
+  get contactAudienceAnalysis(): Prisma.ContactAudienceAnalysisDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1309,7 +1349,8 @@ export namespace Prisma {
     Form: 'Form',
     FormField: 'FormField',
     FormCompletion: 'FormCompletion',
-    FormCompletionValue: 'FormCompletionValue'
+    FormCompletionValue: 'FormCompletionValue',
+    ContactAudienceAnalysis: 'ContactAudienceAnalysis'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1325,7 +1366,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "filter" | "scoringInstruction" | "filterScoringInstruction" | "rawLead" | "lead" | "leadEnrichment" | "contact" | "contactScore" | "contactList" | "contactListMember" | "contactTag" | "interaction" | "outreachMessage" | "outreachSequence" | "filterJob" | "senderProfile" | "marketingCampaign" | "marketingCampaignContact" | "openAiBatchJob" | "integration" | "integrationKey" | "reminder" | "form" | "formField" | "formCompletion" | "formCompletionValue"
+      modelProps: "user" | "filter" | "scoringInstruction" | "filterScoringInstruction" | "rawLead" | "lead" | "leadEnrichment" | "contact" | "contactScore" | "contactList" | "contactListMember" | "contactTag" | "interaction" | "outreachMessage" | "outreachSequence" | "filterJob" | "senderProfile" | "marketingCampaign" | "marketingCampaignContact" | "openAiBatchJob" | "integration" | "integrationKey" | "reminder" | "form" | "formField" | "formCompletion" | "formCompletionValue" | "contactAudienceAnalysis"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3327,6 +3368,80 @@ export namespace Prisma {
           }
         }
       }
+      ContactAudienceAnalysis: {
+        payload: Prisma.$ContactAudienceAnalysisPayload<ExtArgs>
+        fields: Prisma.ContactAudienceAnalysisFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ContactAudienceAnalysisFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactAudienceAnalysisPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ContactAudienceAnalysisFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactAudienceAnalysisPayload>
+          }
+          findFirst: {
+            args: Prisma.ContactAudienceAnalysisFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactAudienceAnalysisPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ContactAudienceAnalysisFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactAudienceAnalysisPayload>
+          }
+          findMany: {
+            args: Prisma.ContactAudienceAnalysisFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactAudienceAnalysisPayload>[]
+          }
+          create: {
+            args: Prisma.ContactAudienceAnalysisCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactAudienceAnalysisPayload>
+          }
+          createMany: {
+            args: Prisma.ContactAudienceAnalysisCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ContactAudienceAnalysisCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactAudienceAnalysisPayload>[]
+          }
+          delete: {
+            args: Prisma.ContactAudienceAnalysisDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactAudienceAnalysisPayload>
+          }
+          update: {
+            args: Prisma.ContactAudienceAnalysisUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactAudienceAnalysisPayload>
+          }
+          deleteMany: {
+            args: Prisma.ContactAudienceAnalysisDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ContactAudienceAnalysisUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ContactAudienceAnalysisUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactAudienceAnalysisPayload>[]
+          }
+          upsert: {
+            args: Prisma.ContactAudienceAnalysisUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactAudienceAnalysisPayload>
+          }
+          aggregate: {
+            args: Prisma.ContactAudienceAnalysisAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateContactAudienceAnalysis>
+          }
+          groupBy: {
+            args: Prisma.ContactAudienceAnalysisGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ContactAudienceAnalysisGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ContactAudienceAnalysisCountArgs<ExtArgs>
+            result: $Utils.Optional<ContactAudienceAnalysisCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -3462,6 +3577,7 @@ export namespace Prisma {
     formField?: FormFieldOmit
     formCompletion?: FormCompletionOmit
     formCompletionValue?: FormCompletionValueOmit
+    contactAudienceAnalysis?: ContactAudienceAnalysisOmit
   }
 
   /* Types for Logging */
@@ -3556,6 +3672,7 @@ export namespace Prisma {
     forms: number
     form_completions: number
     contact_lists: number
+    contact_audience_analyses: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3573,6 +3690,7 @@ export namespace Prisma {
     forms?: boolean | UserCountOutputTypeCountFormsArgs
     form_completions?: boolean | UserCountOutputTypeCountForm_completionsArgs
     contact_lists?: boolean | UserCountOutputTypeCountContact_listsArgs
+    contact_audience_analyses?: boolean | UserCountOutputTypeCountContact_audience_analysesArgs
   }
 
   // Custom InputTypes
@@ -3684,6 +3802,13 @@ export namespace Prisma {
     where?: ContactListWhereInput
   }
 
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountContact_audience_analysesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ContactAudienceAnalysisWhereInput
+  }
+
 
   /**
    * Count Type FilterCountOutputType
@@ -3694,6 +3819,7 @@ export namespace Prisma {
     contacts: number
     jobs: number
     filter_scoring_instructions: number
+    audience_analyses: number
   }
 
   export type FilterCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3701,6 +3827,7 @@ export namespace Prisma {
     contacts?: boolean | FilterCountOutputTypeCountContactsArgs
     jobs?: boolean | FilterCountOutputTypeCountJobsArgs
     filter_scoring_instructions?: boolean | FilterCountOutputTypeCountFilter_scoring_instructionsArgs
+    audience_analyses?: boolean | FilterCountOutputTypeCountAudience_analysesArgs
   }
 
   // Custom InputTypes
@@ -3740,6 +3867,13 @@ export namespace Prisma {
    */
   export type FilterCountOutputTypeCountFilter_scoring_instructionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: FilterScoringInstructionWhereInput
+  }
+
+  /**
+   * FilterCountOutputType without action
+   */
+  export type FilterCountOutputTypeCountAudience_analysesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ContactAudienceAnalysisWhereInput
   }
 
 
@@ -3923,10 +4057,12 @@ export namespace Prisma {
 
   export type ContactListCountOutputType = {
     members: number
+    audience_analyses: number
   }
 
   export type ContactListCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     members?: boolean | ContactListCountOutputTypeCountMembersArgs
+    audience_analyses?: boolean | ContactListCountOutputTypeCountAudience_analysesArgs
   }
 
   // Custom InputTypes
@@ -3945,6 +4081,13 @@ export namespace Prisma {
    */
   export type ContactListCountOutputTypeCountMembersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ContactListMemberWhereInput
+  }
+
+  /**
+   * ContactListCountOutputType without action
+   */
+  export type ContactListCountOutputTypeCountAudience_analysesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ContactAudienceAnalysisWhereInput
   }
 
 
@@ -4401,6 +4544,7 @@ export namespace Prisma {
     forms?: boolean | User$formsArgs<ExtArgs>
     form_completions?: boolean | User$form_completionsArgs<ExtArgs>
     contact_lists?: boolean | User$contact_listsArgs<ExtArgs>
+    contact_audience_analyses?: boolean | User$contact_audience_analysesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -4453,6 +4597,7 @@ export namespace Prisma {
     forms?: boolean | User$formsArgs<ExtArgs>
     form_completions?: boolean | User$form_completionsArgs<ExtArgs>
     contact_lists?: boolean | User$contact_listsArgs<ExtArgs>
+    contact_audience_analyses?: boolean | User$contact_audience_analysesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -4475,6 +4620,7 @@ export namespace Prisma {
       forms: Prisma.$FormPayload<ExtArgs>[]
       form_completions: Prisma.$FormCompletionPayload<ExtArgs>[]
       contact_lists: Prisma.$ContactListPayload<ExtArgs>[]
+      contact_audience_analyses: Prisma.$ContactAudienceAnalysisPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -4893,6 +5039,7 @@ export namespace Prisma {
     forms<T extends User$formsArgs<ExtArgs> = {}>(args?: Subset<T, User$formsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FormPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     form_completions<T extends User$form_completionsArgs<ExtArgs> = {}>(args?: Subset<T, User$form_completionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FormCompletionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     contact_lists<T extends User$contact_listsArgs<ExtArgs> = {}>(args?: Subset<T, User$contact_listsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactListPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    contact_audience_analyses<T extends User$contact_audience_analysesArgs<ExtArgs> = {}>(args?: Subset<T, User$contact_audience_analysesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactAudienceAnalysisPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5654,6 +5801,30 @@ export namespace Prisma {
   }
 
   /**
+   * User.contact_audience_analyses
+   */
+  export type User$contact_audience_analysesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactAudienceAnalysis
+     */
+    select?: ContactAudienceAnalysisSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactAudienceAnalysis
+     */
+    omit?: ContactAudienceAnalysisOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactAudienceAnalysisInclude<ExtArgs> | null
+    where?: ContactAudienceAnalysisWhereInput
+    orderBy?: ContactAudienceAnalysisOrderByWithRelationInput | ContactAudienceAnalysisOrderByWithRelationInput[]
+    cursor?: ContactAudienceAnalysisWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ContactAudienceAnalysisScalarFieldEnum | ContactAudienceAnalysisScalarFieldEnum[]
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5927,6 +6098,7 @@ export namespace Prisma {
     contacts?: boolean | Filter$contactsArgs<ExtArgs>
     jobs?: boolean | Filter$jobsArgs<ExtArgs>
     filter_scoring_instructions?: boolean | Filter$filter_scoring_instructionsArgs<ExtArgs>
+    audience_analyses?: boolean | Filter$audience_analysesArgs<ExtArgs>
     _count?: boolean | FilterCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["filter"]>
 
@@ -5987,6 +6159,7 @@ export namespace Prisma {
     contacts?: boolean | Filter$contactsArgs<ExtArgs>
     jobs?: boolean | Filter$jobsArgs<ExtArgs>
     filter_scoring_instructions?: boolean | Filter$filter_scoring_instructionsArgs<ExtArgs>
+    audience_analyses?: boolean | Filter$audience_analysesArgs<ExtArgs>
     _count?: boolean | FilterCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type FilterIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6004,6 +6177,7 @@ export namespace Prisma {
       contacts: Prisma.$ContactPayload<ExtArgs>[]
       jobs: Prisma.$FilterJobPayload<ExtArgs>[]
       filter_scoring_instructions: Prisma.$FilterScoringInstructionPayload<ExtArgs>[]
+      audience_analyses: Prisma.$ContactAudienceAnalysisPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -6418,6 +6592,7 @@ export namespace Prisma {
     contacts<T extends Filter$contactsArgs<ExtArgs> = {}>(args?: Subset<T, Filter$contactsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     jobs<T extends Filter$jobsArgs<ExtArgs> = {}>(args?: Subset<T, Filter$jobsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FilterJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     filter_scoring_instructions<T extends Filter$filter_scoring_instructionsArgs<ExtArgs> = {}>(args?: Subset<T, Filter$filter_scoring_instructionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FilterScoringInstructionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    audience_analyses<T extends Filter$audience_analysesArgs<ExtArgs> = {}>(args?: Subset<T, Filter$audience_analysesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactAudienceAnalysisPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6949,6 +7124,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: FilterScoringInstructionScalarFieldEnum | FilterScoringInstructionScalarFieldEnum[]
+  }
+
+  /**
+   * Filter.audience_analyses
+   */
+  export type Filter$audience_analysesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactAudienceAnalysis
+     */
+    select?: ContactAudienceAnalysisSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactAudienceAnalysis
+     */
+    omit?: ContactAudienceAnalysisOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactAudienceAnalysisInclude<ExtArgs> | null
+    where?: ContactAudienceAnalysisWhereInput
+    orderBy?: ContactAudienceAnalysisOrderByWithRelationInput | ContactAudienceAnalysisOrderByWithRelationInput[]
+    cursor?: ContactAudienceAnalysisWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ContactAudienceAnalysisScalarFieldEnum | ContactAudienceAnalysisScalarFieldEnum[]
   }
 
   /**
@@ -15786,6 +15985,7 @@ export namespace Prisma {
     updated_at?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     members?: boolean | ContactList$membersArgs<ExtArgs>
+    audience_analyses?: boolean | ContactList$audience_analysesArgs<ExtArgs>
     _count?: boolean | ContactListCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["contactList"]>
 
@@ -15825,6 +16025,7 @@ export namespace Prisma {
   export type ContactListInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     members?: boolean | ContactList$membersArgs<ExtArgs>
+    audience_analyses?: boolean | ContactList$audience_analysesArgs<ExtArgs>
     _count?: boolean | ContactListCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ContactListIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -15839,6 +16040,7 @@ export namespace Prisma {
     objects: {
       user: Prisma.$UserPayload<ExtArgs>
       members: Prisma.$ContactListMemberPayload<ExtArgs>[]
+      audience_analyses: Prisma.$ContactAudienceAnalysisPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -16244,6 +16446,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     members<T extends ContactList$membersArgs<ExtArgs> = {}>(args?: Subset<T, ContactList$membersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactListMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    audience_analyses<T extends ContactList$audience_analysesArgs<ExtArgs> = {}>(args?: Subset<T, ContactList$audience_analysesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactAudienceAnalysisPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -16697,6 +16900,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ContactListMemberScalarFieldEnum | ContactListMemberScalarFieldEnum[]
+  }
+
+  /**
+   * ContactList.audience_analyses
+   */
+  export type ContactList$audience_analysesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactAudienceAnalysis
+     */
+    select?: ContactAudienceAnalysisSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactAudienceAnalysis
+     */
+    omit?: ContactAudienceAnalysisOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactAudienceAnalysisInclude<ExtArgs> | null
+    where?: ContactAudienceAnalysisWhereInput
+    orderBy?: ContactAudienceAnalysisOrderByWithRelationInput | ContactAudienceAnalysisOrderByWithRelationInput[]
+    cursor?: ContactAudienceAnalysisWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ContactAudienceAnalysisScalarFieldEnum | ContactAudienceAnalysisScalarFieldEnum[]
   }
 
   /**
@@ -37416,6 +37643,1325 @@ export namespace Prisma {
 
 
   /**
+   * Model ContactAudienceAnalysis
+   */
+
+  export type AggregateContactAudienceAnalysis = {
+    _count: ContactAudienceAnalysisCountAggregateOutputType | null
+    _avg: ContactAudienceAnalysisAvgAggregateOutputType | null
+    _sum: ContactAudienceAnalysisSumAggregateOutputType | null
+    _min: ContactAudienceAnalysisMinAggregateOutputType | null
+    _max: ContactAudienceAnalysisMaxAggregateOutputType | null
+  }
+
+  export type ContactAudienceAnalysisAvgAggregateOutputType = {
+    id: number | null
+    input_tokens: number | null
+    output_tokens: number | null
+    cost_usd: number | null
+  }
+
+  export type ContactAudienceAnalysisSumAggregateOutputType = {
+    id: number | null
+    input_tokens: number | null
+    output_tokens: number | null
+    cost_usd: number | null
+  }
+
+  export type ContactAudienceAnalysisMinAggregateOutputType = {
+    id: number | null
+    uuid: string | null
+    user_uuid: string | null
+    scope: $Enums.ContactAudienceAnalysisScope | null
+    filter_uuid: string | null
+    contact_list_uuid: string | null
+    audience_name: string | null
+    status: $Enums.ContactAudienceAnalysisStatus | null
+    error: string | null
+    provider: string | null
+    model: string | null
+    input_tokens: number | null
+    output_tokens: number | null
+    cost_usd: number | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type ContactAudienceAnalysisMaxAggregateOutputType = {
+    id: number | null
+    uuid: string | null
+    user_uuid: string | null
+    scope: $Enums.ContactAudienceAnalysisScope | null
+    filter_uuid: string | null
+    contact_list_uuid: string | null
+    audience_name: string | null
+    status: $Enums.ContactAudienceAnalysisStatus | null
+    error: string | null
+    provider: string | null
+    model: string | null
+    input_tokens: number | null
+    output_tokens: number | null
+    cost_usd: number | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type ContactAudienceAnalysisCountAggregateOutputType = {
+    id: number
+    uuid: number
+    user_uuid: number
+    scope: number
+    filter_uuid: number
+    contact_list_uuid: number
+    audience_name: number
+    stats_snapshot: number
+    analysis: number
+    status: number
+    error: number
+    provider: number
+    model: number
+    input_tokens: number
+    output_tokens: number
+    cost_usd: number
+    created_at: number
+    updated_at: number
+    _all: number
+  }
+
+
+  export type ContactAudienceAnalysisAvgAggregateInputType = {
+    id?: true
+    input_tokens?: true
+    output_tokens?: true
+    cost_usd?: true
+  }
+
+  export type ContactAudienceAnalysisSumAggregateInputType = {
+    id?: true
+    input_tokens?: true
+    output_tokens?: true
+    cost_usd?: true
+  }
+
+  export type ContactAudienceAnalysisMinAggregateInputType = {
+    id?: true
+    uuid?: true
+    user_uuid?: true
+    scope?: true
+    filter_uuid?: true
+    contact_list_uuid?: true
+    audience_name?: true
+    status?: true
+    error?: true
+    provider?: true
+    model?: true
+    input_tokens?: true
+    output_tokens?: true
+    cost_usd?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type ContactAudienceAnalysisMaxAggregateInputType = {
+    id?: true
+    uuid?: true
+    user_uuid?: true
+    scope?: true
+    filter_uuid?: true
+    contact_list_uuid?: true
+    audience_name?: true
+    status?: true
+    error?: true
+    provider?: true
+    model?: true
+    input_tokens?: true
+    output_tokens?: true
+    cost_usd?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type ContactAudienceAnalysisCountAggregateInputType = {
+    id?: true
+    uuid?: true
+    user_uuid?: true
+    scope?: true
+    filter_uuid?: true
+    contact_list_uuid?: true
+    audience_name?: true
+    stats_snapshot?: true
+    analysis?: true
+    status?: true
+    error?: true
+    provider?: true
+    model?: true
+    input_tokens?: true
+    output_tokens?: true
+    cost_usd?: true
+    created_at?: true
+    updated_at?: true
+    _all?: true
+  }
+
+  export type ContactAudienceAnalysisAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ContactAudienceAnalysis to aggregate.
+     */
+    where?: ContactAudienceAnalysisWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ContactAudienceAnalyses to fetch.
+     */
+    orderBy?: ContactAudienceAnalysisOrderByWithRelationInput | ContactAudienceAnalysisOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ContactAudienceAnalysisWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ContactAudienceAnalyses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ContactAudienceAnalyses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ContactAudienceAnalyses
+    **/
+    _count?: true | ContactAudienceAnalysisCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ContactAudienceAnalysisAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ContactAudienceAnalysisSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ContactAudienceAnalysisMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ContactAudienceAnalysisMaxAggregateInputType
+  }
+
+  export type GetContactAudienceAnalysisAggregateType<T extends ContactAudienceAnalysisAggregateArgs> = {
+        [P in keyof T & keyof AggregateContactAudienceAnalysis]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateContactAudienceAnalysis[P]>
+      : GetScalarType<T[P], AggregateContactAudienceAnalysis[P]>
+  }
+
+
+
+
+  export type ContactAudienceAnalysisGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ContactAudienceAnalysisWhereInput
+    orderBy?: ContactAudienceAnalysisOrderByWithAggregationInput | ContactAudienceAnalysisOrderByWithAggregationInput[]
+    by: ContactAudienceAnalysisScalarFieldEnum[] | ContactAudienceAnalysisScalarFieldEnum
+    having?: ContactAudienceAnalysisScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ContactAudienceAnalysisCountAggregateInputType | true
+    _avg?: ContactAudienceAnalysisAvgAggregateInputType
+    _sum?: ContactAudienceAnalysisSumAggregateInputType
+    _min?: ContactAudienceAnalysisMinAggregateInputType
+    _max?: ContactAudienceAnalysisMaxAggregateInputType
+  }
+
+  export type ContactAudienceAnalysisGroupByOutputType = {
+    id: number
+    uuid: string
+    user_uuid: string
+    scope: $Enums.ContactAudienceAnalysisScope
+    filter_uuid: string | null
+    contact_list_uuid: string | null
+    audience_name: string
+    stats_snapshot: JsonValue
+    analysis: JsonValue
+    status: $Enums.ContactAudienceAnalysisStatus
+    error: string | null
+    provider: string | null
+    model: string | null
+    input_tokens: number | null
+    output_tokens: number | null
+    cost_usd: number | null
+    created_at: Date
+    updated_at: Date
+    _count: ContactAudienceAnalysisCountAggregateOutputType | null
+    _avg: ContactAudienceAnalysisAvgAggregateOutputType | null
+    _sum: ContactAudienceAnalysisSumAggregateOutputType | null
+    _min: ContactAudienceAnalysisMinAggregateOutputType | null
+    _max: ContactAudienceAnalysisMaxAggregateOutputType | null
+  }
+
+  type GetContactAudienceAnalysisGroupByPayload<T extends ContactAudienceAnalysisGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ContactAudienceAnalysisGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ContactAudienceAnalysisGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ContactAudienceAnalysisGroupByOutputType[P]>
+            : GetScalarType<T[P], ContactAudienceAnalysisGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ContactAudienceAnalysisSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uuid?: boolean
+    user_uuid?: boolean
+    scope?: boolean
+    filter_uuid?: boolean
+    contact_list_uuid?: boolean
+    audience_name?: boolean
+    stats_snapshot?: boolean
+    analysis?: boolean
+    status?: boolean
+    error?: boolean
+    provider?: boolean
+    model?: boolean
+    input_tokens?: boolean
+    output_tokens?: boolean
+    cost_usd?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    filter?: boolean | ContactAudienceAnalysis$filterArgs<ExtArgs>
+    contactList?: boolean | ContactAudienceAnalysis$contactListArgs<ExtArgs>
+  }, ExtArgs["result"]["contactAudienceAnalysis"]>
+
+  export type ContactAudienceAnalysisSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uuid?: boolean
+    user_uuid?: boolean
+    scope?: boolean
+    filter_uuid?: boolean
+    contact_list_uuid?: boolean
+    audience_name?: boolean
+    stats_snapshot?: boolean
+    analysis?: boolean
+    status?: boolean
+    error?: boolean
+    provider?: boolean
+    model?: boolean
+    input_tokens?: boolean
+    output_tokens?: boolean
+    cost_usd?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    filter?: boolean | ContactAudienceAnalysis$filterArgs<ExtArgs>
+    contactList?: boolean | ContactAudienceAnalysis$contactListArgs<ExtArgs>
+  }, ExtArgs["result"]["contactAudienceAnalysis"]>
+
+  export type ContactAudienceAnalysisSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uuid?: boolean
+    user_uuid?: boolean
+    scope?: boolean
+    filter_uuid?: boolean
+    contact_list_uuid?: boolean
+    audience_name?: boolean
+    stats_snapshot?: boolean
+    analysis?: boolean
+    status?: boolean
+    error?: boolean
+    provider?: boolean
+    model?: boolean
+    input_tokens?: boolean
+    output_tokens?: boolean
+    cost_usd?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    filter?: boolean | ContactAudienceAnalysis$filterArgs<ExtArgs>
+    contactList?: boolean | ContactAudienceAnalysis$contactListArgs<ExtArgs>
+  }, ExtArgs["result"]["contactAudienceAnalysis"]>
+
+  export type ContactAudienceAnalysisSelectScalar = {
+    id?: boolean
+    uuid?: boolean
+    user_uuid?: boolean
+    scope?: boolean
+    filter_uuid?: boolean
+    contact_list_uuid?: boolean
+    audience_name?: boolean
+    stats_snapshot?: boolean
+    analysis?: boolean
+    status?: boolean
+    error?: boolean
+    provider?: boolean
+    model?: boolean
+    input_tokens?: boolean
+    output_tokens?: boolean
+    cost_usd?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }
+
+  export type ContactAudienceAnalysisOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "scope" | "filter_uuid" | "contact_list_uuid" | "audience_name" | "stats_snapshot" | "analysis" | "status" | "error" | "provider" | "model" | "input_tokens" | "output_tokens" | "cost_usd" | "created_at" | "updated_at", ExtArgs["result"]["contactAudienceAnalysis"]>
+  export type ContactAudienceAnalysisInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    filter?: boolean | ContactAudienceAnalysis$filterArgs<ExtArgs>
+    contactList?: boolean | ContactAudienceAnalysis$contactListArgs<ExtArgs>
+  }
+  export type ContactAudienceAnalysisIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    filter?: boolean | ContactAudienceAnalysis$filterArgs<ExtArgs>
+    contactList?: boolean | ContactAudienceAnalysis$contactListArgs<ExtArgs>
+  }
+  export type ContactAudienceAnalysisIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    filter?: boolean | ContactAudienceAnalysis$filterArgs<ExtArgs>
+    contactList?: boolean | ContactAudienceAnalysis$contactListArgs<ExtArgs>
+  }
+
+  export type $ContactAudienceAnalysisPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ContactAudienceAnalysis"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      filter: Prisma.$FilterPayload<ExtArgs> | null
+      contactList: Prisma.$ContactListPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      uuid: string
+      user_uuid: string
+      scope: $Enums.ContactAudienceAnalysisScope
+      filter_uuid: string | null
+      contact_list_uuid: string | null
+      audience_name: string
+      stats_snapshot: Prisma.JsonValue
+      analysis: Prisma.JsonValue
+      status: $Enums.ContactAudienceAnalysisStatus
+      error: string | null
+      provider: string | null
+      model: string | null
+      input_tokens: number | null
+      output_tokens: number | null
+      cost_usd: number | null
+      created_at: Date
+      updated_at: Date
+    }, ExtArgs["result"]["contactAudienceAnalysis"]>
+    composites: {}
+  }
+
+  type ContactAudienceAnalysisGetPayload<S extends boolean | null | undefined | ContactAudienceAnalysisDefaultArgs> = $Result.GetResult<Prisma.$ContactAudienceAnalysisPayload, S>
+
+  type ContactAudienceAnalysisCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ContactAudienceAnalysisFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ContactAudienceAnalysisCountAggregateInputType | true
+    }
+
+  export interface ContactAudienceAnalysisDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ContactAudienceAnalysis'], meta: { name: 'ContactAudienceAnalysis' } }
+    /**
+     * Find zero or one ContactAudienceAnalysis that matches the filter.
+     * @param {ContactAudienceAnalysisFindUniqueArgs} args - Arguments to find a ContactAudienceAnalysis
+     * @example
+     * // Get one ContactAudienceAnalysis
+     * const contactAudienceAnalysis = await prisma.contactAudienceAnalysis.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ContactAudienceAnalysisFindUniqueArgs>(args: SelectSubset<T, ContactAudienceAnalysisFindUniqueArgs<ExtArgs>>): Prisma__ContactAudienceAnalysisClient<$Result.GetResult<Prisma.$ContactAudienceAnalysisPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ContactAudienceAnalysis that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ContactAudienceAnalysisFindUniqueOrThrowArgs} args - Arguments to find a ContactAudienceAnalysis
+     * @example
+     * // Get one ContactAudienceAnalysis
+     * const contactAudienceAnalysis = await prisma.contactAudienceAnalysis.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ContactAudienceAnalysisFindUniqueOrThrowArgs>(args: SelectSubset<T, ContactAudienceAnalysisFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ContactAudienceAnalysisClient<$Result.GetResult<Prisma.$ContactAudienceAnalysisPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ContactAudienceAnalysis that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContactAudienceAnalysisFindFirstArgs} args - Arguments to find a ContactAudienceAnalysis
+     * @example
+     * // Get one ContactAudienceAnalysis
+     * const contactAudienceAnalysis = await prisma.contactAudienceAnalysis.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ContactAudienceAnalysisFindFirstArgs>(args?: SelectSubset<T, ContactAudienceAnalysisFindFirstArgs<ExtArgs>>): Prisma__ContactAudienceAnalysisClient<$Result.GetResult<Prisma.$ContactAudienceAnalysisPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ContactAudienceAnalysis that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContactAudienceAnalysisFindFirstOrThrowArgs} args - Arguments to find a ContactAudienceAnalysis
+     * @example
+     * // Get one ContactAudienceAnalysis
+     * const contactAudienceAnalysis = await prisma.contactAudienceAnalysis.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ContactAudienceAnalysisFindFirstOrThrowArgs>(args?: SelectSubset<T, ContactAudienceAnalysisFindFirstOrThrowArgs<ExtArgs>>): Prisma__ContactAudienceAnalysisClient<$Result.GetResult<Prisma.$ContactAudienceAnalysisPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ContactAudienceAnalyses that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContactAudienceAnalysisFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ContactAudienceAnalyses
+     * const contactAudienceAnalyses = await prisma.contactAudienceAnalysis.findMany()
+     * 
+     * // Get first 10 ContactAudienceAnalyses
+     * const contactAudienceAnalyses = await prisma.contactAudienceAnalysis.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const contactAudienceAnalysisWithIdOnly = await prisma.contactAudienceAnalysis.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ContactAudienceAnalysisFindManyArgs>(args?: SelectSubset<T, ContactAudienceAnalysisFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactAudienceAnalysisPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ContactAudienceAnalysis.
+     * @param {ContactAudienceAnalysisCreateArgs} args - Arguments to create a ContactAudienceAnalysis.
+     * @example
+     * // Create one ContactAudienceAnalysis
+     * const ContactAudienceAnalysis = await prisma.contactAudienceAnalysis.create({
+     *   data: {
+     *     // ... data to create a ContactAudienceAnalysis
+     *   }
+     * })
+     * 
+     */
+    create<T extends ContactAudienceAnalysisCreateArgs>(args: SelectSubset<T, ContactAudienceAnalysisCreateArgs<ExtArgs>>): Prisma__ContactAudienceAnalysisClient<$Result.GetResult<Prisma.$ContactAudienceAnalysisPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ContactAudienceAnalyses.
+     * @param {ContactAudienceAnalysisCreateManyArgs} args - Arguments to create many ContactAudienceAnalyses.
+     * @example
+     * // Create many ContactAudienceAnalyses
+     * const contactAudienceAnalysis = await prisma.contactAudienceAnalysis.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ContactAudienceAnalysisCreateManyArgs>(args?: SelectSubset<T, ContactAudienceAnalysisCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ContactAudienceAnalyses and returns the data saved in the database.
+     * @param {ContactAudienceAnalysisCreateManyAndReturnArgs} args - Arguments to create many ContactAudienceAnalyses.
+     * @example
+     * // Create many ContactAudienceAnalyses
+     * const contactAudienceAnalysis = await prisma.contactAudienceAnalysis.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ContactAudienceAnalyses and only return the `id`
+     * const contactAudienceAnalysisWithIdOnly = await prisma.contactAudienceAnalysis.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ContactAudienceAnalysisCreateManyAndReturnArgs>(args?: SelectSubset<T, ContactAudienceAnalysisCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactAudienceAnalysisPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ContactAudienceAnalysis.
+     * @param {ContactAudienceAnalysisDeleteArgs} args - Arguments to delete one ContactAudienceAnalysis.
+     * @example
+     * // Delete one ContactAudienceAnalysis
+     * const ContactAudienceAnalysis = await prisma.contactAudienceAnalysis.delete({
+     *   where: {
+     *     // ... filter to delete one ContactAudienceAnalysis
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ContactAudienceAnalysisDeleteArgs>(args: SelectSubset<T, ContactAudienceAnalysisDeleteArgs<ExtArgs>>): Prisma__ContactAudienceAnalysisClient<$Result.GetResult<Prisma.$ContactAudienceAnalysisPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ContactAudienceAnalysis.
+     * @param {ContactAudienceAnalysisUpdateArgs} args - Arguments to update one ContactAudienceAnalysis.
+     * @example
+     * // Update one ContactAudienceAnalysis
+     * const contactAudienceAnalysis = await prisma.contactAudienceAnalysis.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ContactAudienceAnalysisUpdateArgs>(args: SelectSubset<T, ContactAudienceAnalysisUpdateArgs<ExtArgs>>): Prisma__ContactAudienceAnalysisClient<$Result.GetResult<Prisma.$ContactAudienceAnalysisPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ContactAudienceAnalyses.
+     * @param {ContactAudienceAnalysisDeleteManyArgs} args - Arguments to filter ContactAudienceAnalyses to delete.
+     * @example
+     * // Delete a few ContactAudienceAnalyses
+     * const { count } = await prisma.contactAudienceAnalysis.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ContactAudienceAnalysisDeleteManyArgs>(args?: SelectSubset<T, ContactAudienceAnalysisDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ContactAudienceAnalyses.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContactAudienceAnalysisUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ContactAudienceAnalyses
+     * const contactAudienceAnalysis = await prisma.contactAudienceAnalysis.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ContactAudienceAnalysisUpdateManyArgs>(args: SelectSubset<T, ContactAudienceAnalysisUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ContactAudienceAnalyses and returns the data updated in the database.
+     * @param {ContactAudienceAnalysisUpdateManyAndReturnArgs} args - Arguments to update many ContactAudienceAnalyses.
+     * @example
+     * // Update many ContactAudienceAnalyses
+     * const contactAudienceAnalysis = await prisma.contactAudienceAnalysis.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ContactAudienceAnalyses and only return the `id`
+     * const contactAudienceAnalysisWithIdOnly = await prisma.contactAudienceAnalysis.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ContactAudienceAnalysisUpdateManyAndReturnArgs>(args: SelectSubset<T, ContactAudienceAnalysisUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactAudienceAnalysisPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ContactAudienceAnalysis.
+     * @param {ContactAudienceAnalysisUpsertArgs} args - Arguments to update or create a ContactAudienceAnalysis.
+     * @example
+     * // Update or create a ContactAudienceAnalysis
+     * const contactAudienceAnalysis = await prisma.contactAudienceAnalysis.upsert({
+     *   create: {
+     *     // ... data to create a ContactAudienceAnalysis
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ContactAudienceAnalysis we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ContactAudienceAnalysisUpsertArgs>(args: SelectSubset<T, ContactAudienceAnalysisUpsertArgs<ExtArgs>>): Prisma__ContactAudienceAnalysisClient<$Result.GetResult<Prisma.$ContactAudienceAnalysisPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ContactAudienceAnalyses.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContactAudienceAnalysisCountArgs} args - Arguments to filter ContactAudienceAnalyses to count.
+     * @example
+     * // Count the number of ContactAudienceAnalyses
+     * const count = await prisma.contactAudienceAnalysis.count({
+     *   where: {
+     *     // ... the filter for the ContactAudienceAnalyses we want to count
+     *   }
+     * })
+    **/
+    count<T extends ContactAudienceAnalysisCountArgs>(
+      args?: Subset<T, ContactAudienceAnalysisCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ContactAudienceAnalysisCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ContactAudienceAnalysis.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContactAudienceAnalysisAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ContactAudienceAnalysisAggregateArgs>(args: Subset<T, ContactAudienceAnalysisAggregateArgs>): Prisma.PrismaPromise<GetContactAudienceAnalysisAggregateType<T>>
+
+    /**
+     * Group by ContactAudienceAnalysis.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContactAudienceAnalysisGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ContactAudienceAnalysisGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ContactAudienceAnalysisGroupByArgs['orderBy'] }
+        : { orderBy?: ContactAudienceAnalysisGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ContactAudienceAnalysisGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetContactAudienceAnalysisGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ContactAudienceAnalysis model
+   */
+  readonly fields: ContactAudienceAnalysisFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ContactAudienceAnalysis.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ContactAudienceAnalysisClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    filter<T extends ContactAudienceAnalysis$filterArgs<ExtArgs> = {}>(args?: Subset<T, ContactAudienceAnalysis$filterArgs<ExtArgs>>): Prisma__FilterClient<$Result.GetResult<Prisma.$FilterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    contactList<T extends ContactAudienceAnalysis$contactListArgs<ExtArgs> = {}>(args?: Subset<T, ContactAudienceAnalysis$contactListArgs<ExtArgs>>): Prisma__ContactListClient<$Result.GetResult<Prisma.$ContactListPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ContactAudienceAnalysis model
+   */
+  interface ContactAudienceAnalysisFieldRefs {
+    readonly id: FieldRef<"ContactAudienceAnalysis", 'Int'>
+    readonly uuid: FieldRef<"ContactAudienceAnalysis", 'String'>
+    readonly user_uuid: FieldRef<"ContactAudienceAnalysis", 'String'>
+    readonly scope: FieldRef<"ContactAudienceAnalysis", 'ContactAudienceAnalysisScope'>
+    readonly filter_uuid: FieldRef<"ContactAudienceAnalysis", 'String'>
+    readonly contact_list_uuid: FieldRef<"ContactAudienceAnalysis", 'String'>
+    readonly audience_name: FieldRef<"ContactAudienceAnalysis", 'String'>
+    readonly stats_snapshot: FieldRef<"ContactAudienceAnalysis", 'Json'>
+    readonly analysis: FieldRef<"ContactAudienceAnalysis", 'Json'>
+    readonly status: FieldRef<"ContactAudienceAnalysis", 'ContactAudienceAnalysisStatus'>
+    readonly error: FieldRef<"ContactAudienceAnalysis", 'String'>
+    readonly provider: FieldRef<"ContactAudienceAnalysis", 'String'>
+    readonly model: FieldRef<"ContactAudienceAnalysis", 'String'>
+    readonly input_tokens: FieldRef<"ContactAudienceAnalysis", 'Int'>
+    readonly output_tokens: FieldRef<"ContactAudienceAnalysis", 'Int'>
+    readonly cost_usd: FieldRef<"ContactAudienceAnalysis", 'Float'>
+    readonly created_at: FieldRef<"ContactAudienceAnalysis", 'DateTime'>
+    readonly updated_at: FieldRef<"ContactAudienceAnalysis", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ContactAudienceAnalysis findUnique
+   */
+  export type ContactAudienceAnalysisFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactAudienceAnalysis
+     */
+    select?: ContactAudienceAnalysisSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactAudienceAnalysis
+     */
+    omit?: ContactAudienceAnalysisOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactAudienceAnalysisInclude<ExtArgs> | null
+    /**
+     * Filter, which ContactAudienceAnalysis to fetch.
+     */
+    where: ContactAudienceAnalysisWhereUniqueInput
+  }
+
+  /**
+   * ContactAudienceAnalysis findUniqueOrThrow
+   */
+  export type ContactAudienceAnalysisFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactAudienceAnalysis
+     */
+    select?: ContactAudienceAnalysisSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactAudienceAnalysis
+     */
+    omit?: ContactAudienceAnalysisOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactAudienceAnalysisInclude<ExtArgs> | null
+    /**
+     * Filter, which ContactAudienceAnalysis to fetch.
+     */
+    where: ContactAudienceAnalysisWhereUniqueInput
+  }
+
+  /**
+   * ContactAudienceAnalysis findFirst
+   */
+  export type ContactAudienceAnalysisFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactAudienceAnalysis
+     */
+    select?: ContactAudienceAnalysisSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactAudienceAnalysis
+     */
+    omit?: ContactAudienceAnalysisOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactAudienceAnalysisInclude<ExtArgs> | null
+    /**
+     * Filter, which ContactAudienceAnalysis to fetch.
+     */
+    where?: ContactAudienceAnalysisWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ContactAudienceAnalyses to fetch.
+     */
+    orderBy?: ContactAudienceAnalysisOrderByWithRelationInput | ContactAudienceAnalysisOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ContactAudienceAnalyses.
+     */
+    cursor?: ContactAudienceAnalysisWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ContactAudienceAnalyses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ContactAudienceAnalyses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ContactAudienceAnalyses.
+     */
+    distinct?: ContactAudienceAnalysisScalarFieldEnum | ContactAudienceAnalysisScalarFieldEnum[]
+  }
+
+  /**
+   * ContactAudienceAnalysis findFirstOrThrow
+   */
+  export type ContactAudienceAnalysisFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactAudienceAnalysis
+     */
+    select?: ContactAudienceAnalysisSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactAudienceAnalysis
+     */
+    omit?: ContactAudienceAnalysisOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactAudienceAnalysisInclude<ExtArgs> | null
+    /**
+     * Filter, which ContactAudienceAnalysis to fetch.
+     */
+    where?: ContactAudienceAnalysisWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ContactAudienceAnalyses to fetch.
+     */
+    orderBy?: ContactAudienceAnalysisOrderByWithRelationInput | ContactAudienceAnalysisOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ContactAudienceAnalyses.
+     */
+    cursor?: ContactAudienceAnalysisWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ContactAudienceAnalyses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ContactAudienceAnalyses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ContactAudienceAnalyses.
+     */
+    distinct?: ContactAudienceAnalysisScalarFieldEnum | ContactAudienceAnalysisScalarFieldEnum[]
+  }
+
+  /**
+   * ContactAudienceAnalysis findMany
+   */
+  export type ContactAudienceAnalysisFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactAudienceAnalysis
+     */
+    select?: ContactAudienceAnalysisSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactAudienceAnalysis
+     */
+    omit?: ContactAudienceAnalysisOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactAudienceAnalysisInclude<ExtArgs> | null
+    /**
+     * Filter, which ContactAudienceAnalyses to fetch.
+     */
+    where?: ContactAudienceAnalysisWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ContactAudienceAnalyses to fetch.
+     */
+    orderBy?: ContactAudienceAnalysisOrderByWithRelationInput | ContactAudienceAnalysisOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ContactAudienceAnalyses.
+     */
+    cursor?: ContactAudienceAnalysisWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ContactAudienceAnalyses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ContactAudienceAnalyses.
+     */
+    skip?: number
+    distinct?: ContactAudienceAnalysisScalarFieldEnum | ContactAudienceAnalysisScalarFieldEnum[]
+  }
+
+  /**
+   * ContactAudienceAnalysis create
+   */
+  export type ContactAudienceAnalysisCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactAudienceAnalysis
+     */
+    select?: ContactAudienceAnalysisSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactAudienceAnalysis
+     */
+    omit?: ContactAudienceAnalysisOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactAudienceAnalysisInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ContactAudienceAnalysis.
+     */
+    data: XOR<ContactAudienceAnalysisCreateInput, ContactAudienceAnalysisUncheckedCreateInput>
+  }
+
+  /**
+   * ContactAudienceAnalysis createMany
+   */
+  export type ContactAudienceAnalysisCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ContactAudienceAnalyses.
+     */
+    data: ContactAudienceAnalysisCreateManyInput | ContactAudienceAnalysisCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ContactAudienceAnalysis createManyAndReturn
+   */
+  export type ContactAudienceAnalysisCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactAudienceAnalysis
+     */
+    select?: ContactAudienceAnalysisSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactAudienceAnalysis
+     */
+    omit?: ContactAudienceAnalysisOmit<ExtArgs> | null
+    /**
+     * The data used to create many ContactAudienceAnalyses.
+     */
+    data: ContactAudienceAnalysisCreateManyInput | ContactAudienceAnalysisCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactAudienceAnalysisIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ContactAudienceAnalysis update
+   */
+  export type ContactAudienceAnalysisUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactAudienceAnalysis
+     */
+    select?: ContactAudienceAnalysisSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactAudienceAnalysis
+     */
+    omit?: ContactAudienceAnalysisOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactAudienceAnalysisInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ContactAudienceAnalysis.
+     */
+    data: XOR<ContactAudienceAnalysisUpdateInput, ContactAudienceAnalysisUncheckedUpdateInput>
+    /**
+     * Choose, which ContactAudienceAnalysis to update.
+     */
+    where: ContactAudienceAnalysisWhereUniqueInput
+  }
+
+  /**
+   * ContactAudienceAnalysis updateMany
+   */
+  export type ContactAudienceAnalysisUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ContactAudienceAnalyses.
+     */
+    data: XOR<ContactAudienceAnalysisUpdateManyMutationInput, ContactAudienceAnalysisUncheckedUpdateManyInput>
+    /**
+     * Filter which ContactAudienceAnalyses to update
+     */
+    where?: ContactAudienceAnalysisWhereInput
+    /**
+     * Limit how many ContactAudienceAnalyses to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ContactAudienceAnalysis updateManyAndReturn
+   */
+  export type ContactAudienceAnalysisUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactAudienceAnalysis
+     */
+    select?: ContactAudienceAnalysisSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactAudienceAnalysis
+     */
+    omit?: ContactAudienceAnalysisOmit<ExtArgs> | null
+    /**
+     * The data used to update ContactAudienceAnalyses.
+     */
+    data: XOR<ContactAudienceAnalysisUpdateManyMutationInput, ContactAudienceAnalysisUncheckedUpdateManyInput>
+    /**
+     * Filter which ContactAudienceAnalyses to update
+     */
+    where?: ContactAudienceAnalysisWhereInput
+    /**
+     * Limit how many ContactAudienceAnalyses to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactAudienceAnalysisIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ContactAudienceAnalysis upsert
+   */
+  export type ContactAudienceAnalysisUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactAudienceAnalysis
+     */
+    select?: ContactAudienceAnalysisSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactAudienceAnalysis
+     */
+    omit?: ContactAudienceAnalysisOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactAudienceAnalysisInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ContactAudienceAnalysis to update in case it exists.
+     */
+    where: ContactAudienceAnalysisWhereUniqueInput
+    /**
+     * In case the ContactAudienceAnalysis found by the `where` argument doesn't exist, create a new ContactAudienceAnalysis with this data.
+     */
+    create: XOR<ContactAudienceAnalysisCreateInput, ContactAudienceAnalysisUncheckedCreateInput>
+    /**
+     * In case the ContactAudienceAnalysis was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ContactAudienceAnalysisUpdateInput, ContactAudienceAnalysisUncheckedUpdateInput>
+  }
+
+  /**
+   * ContactAudienceAnalysis delete
+   */
+  export type ContactAudienceAnalysisDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactAudienceAnalysis
+     */
+    select?: ContactAudienceAnalysisSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactAudienceAnalysis
+     */
+    omit?: ContactAudienceAnalysisOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactAudienceAnalysisInclude<ExtArgs> | null
+    /**
+     * Filter which ContactAudienceAnalysis to delete.
+     */
+    where: ContactAudienceAnalysisWhereUniqueInput
+  }
+
+  /**
+   * ContactAudienceAnalysis deleteMany
+   */
+  export type ContactAudienceAnalysisDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ContactAudienceAnalyses to delete
+     */
+    where?: ContactAudienceAnalysisWhereInput
+    /**
+     * Limit how many ContactAudienceAnalyses to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ContactAudienceAnalysis.filter
+   */
+  export type ContactAudienceAnalysis$filterArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Filter
+     */
+    select?: FilterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Filter
+     */
+    omit?: FilterOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FilterInclude<ExtArgs> | null
+    where?: FilterWhereInput
+  }
+
+  /**
+   * ContactAudienceAnalysis.contactList
+   */
+  export type ContactAudienceAnalysis$contactListArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactList
+     */
+    select?: ContactListSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactList
+     */
+    omit?: ContactListOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactListInclude<ExtArgs> | null
+    where?: ContactListWhereInput
+  }
+
+  /**
+   * ContactAudienceAnalysis without action
+   */
+  export type ContactAudienceAnalysisDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactAudienceAnalysis
+     */
+    select?: ContactAudienceAnalysisSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactAudienceAnalysis
+     */
+    omit?: ContactAudienceAnalysisOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactAudienceAnalysisInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -37908,6 +39454,30 @@ export namespace Prisma {
   export type FormCompletionValueScalarFieldEnum = (typeof FormCompletionValueScalarFieldEnum)[keyof typeof FormCompletionValueScalarFieldEnum]
 
 
+  export const ContactAudienceAnalysisScalarFieldEnum: {
+    id: 'id',
+    uuid: 'uuid',
+    user_uuid: 'user_uuid',
+    scope: 'scope',
+    filter_uuid: 'filter_uuid',
+    contact_list_uuid: 'contact_list_uuid',
+    audience_name: 'audience_name',
+    stats_snapshot: 'stats_snapshot',
+    analysis: 'analysis',
+    status: 'status',
+    error: 'error',
+    provider: 'provider',
+    model: 'model',
+    input_tokens: 'input_tokens',
+    output_tokens: 'output_tokens',
+    cost_usd: 'cost_usd',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
+  };
+
+  export type ContactAudienceAnalysisScalarFieldEnum = (typeof ContactAudienceAnalysisScalarFieldEnum)[keyof typeof ContactAudienceAnalysisScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -38305,6 +39875,34 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'ContactAudienceAnalysisScope'
+   */
+  export type EnumContactAudienceAnalysisScopeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ContactAudienceAnalysisScope'>
+    
+
+
+  /**
+   * Reference to a field of type 'ContactAudienceAnalysisScope[]'
+   */
+  export type ListEnumContactAudienceAnalysisScopeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ContactAudienceAnalysisScope[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'ContactAudienceAnalysisStatus'
+   */
+  export type EnumContactAudienceAnalysisStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ContactAudienceAnalysisStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'ContactAudienceAnalysisStatus[]'
+   */
+  export type ListEnumContactAudienceAnalysisStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ContactAudienceAnalysisStatus[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -38347,6 +39945,7 @@ export namespace Prisma {
     forms?: FormListRelationFilter
     form_completions?: FormCompletionListRelationFilter
     contact_lists?: ContactListListRelationFilter
+    contact_audience_analyses?: ContactAudienceAnalysisListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -38372,6 +39971,7 @@ export namespace Prisma {
     forms?: FormOrderByRelationAggregateInput
     form_completions?: FormCompletionOrderByRelationAggregateInput
     contact_lists?: ContactListOrderByRelationAggregateInput
+    contact_audience_analyses?: ContactAudienceAnalysisOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -38400,6 +40000,7 @@ export namespace Prisma {
     forms?: FormListRelationFilter
     form_completions?: FormCompletionListRelationFilter
     contact_lists?: ContactListListRelationFilter
+    contact_audience_analyses?: ContactAudienceAnalysisListRelationFilter
   }, "id" | "uuid" | "email" | "phone">
 
   export type UserOrderByWithAggregationInput = {
@@ -38454,6 +40055,7 @@ export namespace Prisma {
     contacts?: ContactListRelationFilter
     jobs?: FilterJobListRelationFilter
     filter_scoring_instructions?: FilterScoringInstructionListRelationFilter
+    audience_analyses?: ContactAudienceAnalysisListRelationFilter
   }
 
   export type FilterOrderByWithRelationInput = {
@@ -38475,6 +40077,7 @@ export namespace Prisma {
     contacts?: ContactOrderByRelationAggregateInput
     jobs?: FilterJobOrderByRelationAggregateInput
     filter_scoring_instructions?: FilterScoringInstructionOrderByRelationAggregateInput
+    audience_analyses?: ContactAudienceAnalysisOrderByRelationAggregateInput
   }
 
   export type FilterWhereUniqueInput = Prisma.AtLeast<{
@@ -38499,6 +40102,7 @@ export namespace Prisma {
     contacts?: ContactListRelationFilter
     jobs?: FilterJobListRelationFilter
     filter_scoring_instructions?: FilterScoringInstructionListRelationFilter
+    audience_analyses?: ContactAudienceAnalysisListRelationFilter
   }, "id" | "uuid">
 
   export type FilterOrderByWithAggregationInput = {
@@ -39220,6 +40824,7 @@ export namespace Prisma {
     updated_at?: DateTimeFilter<"ContactList"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     members?: ContactListMemberListRelationFilter
+    audience_analyses?: ContactAudienceAnalysisListRelationFilter
   }
 
   export type ContactListOrderByWithRelationInput = {
@@ -39232,6 +40837,7 @@ export namespace Prisma {
     updated_at?: SortOrder
     user?: UserOrderByWithRelationInput
     members?: ContactListMemberOrderByRelationAggregateInput
+    audience_analyses?: ContactAudienceAnalysisOrderByRelationAggregateInput
   }
 
   export type ContactListWhereUniqueInput = Prisma.AtLeast<{
@@ -39247,6 +40853,7 @@ export namespace Prisma {
     updated_at?: DateTimeFilter<"ContactList"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     members?: ContactListMemberListRelationFilter
+    audience_analyses?: ContactAudienceAnalysisListRelationFilter
   }, "id" | "uuid">
 
   export type ContactListOrderByWithAggregationInput = {
@@ -40947,6 +42554,134 @@ export namespace Prisma {
     updated_at?: DateTimeWithAggregatesFilter<"FormCompletionValue"> | Date | string
   }
 
+  export type ContactAudienceAnalysisWhereInput = {
+    AND?: ContactAudienceAnalysisWhereInput | ContactAudienceAnalysisWhereInput[]
+    OR?: ContactAudienceAnalysisWhereInput[]
+    NOT?: ContactAudienceAnalysisWhereInput | ContactAudienceAnalysisWhereInput[]
+    id?: IntFilter<"ContactAudienceAnalysis"> | number
+    uuid?: StringFilter<"ContactAudienceAnalysis"> | string
+    user_uuid?: StringFilter<"ContactAudienceAnalysis"> | string
+    scope?: EnumContactAudienceAnalysisScopeFilter<"ContactAudienceAnalysis"> | $Enums.ContactAudienceAnalysisScope
+    filter_uuid?: StringNullableFilter<"ContactAudienceAnalysis"> | string | null
+    contact_list_uuid?: StringNullableFilter<"ContactAudienceAnalysis"> | string | null
+    audience_name?: StringFilter<"ContactAudienceAnalysis"> | string
+    stats_snapshot?: JsonFilter<"ContactAudienceAnalysis">
+    analysis?: JsonFilter<"ContactAudienceAnalysis">
+    status?: EnumContactAudienceAnalysisStatusFilter<"ContactAudienceAnalysis"> | $Enums.ContactAudienceAnalysisStatus
+    error?: StringNullableFilter<"ContactAudienceAnalysis"> | string | null
+    provider?: StringNullableFilter<"ContactAudienceAnalysis"> | string | null
+    model?: StringNullableFilter<"ContactAudienceAnalysis"> | string | null
+    input_tokens?: IntNullableFilter<"ContactAudienceAnalysis"> | number | null
+    output_tokens?: IntNullableFilter<"ContactAudienceAnalysis"> | number | null
+    cost_usd?: FloatNullableFilter<"ContactAudienceAnalysis"> | number | null
+    created_at?: DateTimeFilter<"ContactAudienceAnalysis"> | Date | string
+    updated_at?: DateTimeFilter<"ContactAudienceAnalysis"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    filter?: XOR<FilterNullableScalarRelationFilter, FilterWhereInput> | null
+    contactList?: XOR<ContactListNullableScalarRelationFilter, ContactListWhereInput> | null
+  }
+
+  export type ContactAudienceAnalysisOrderByWithRelationInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    user_uuid?: SortOrder
+    scope?: SortOrder
+    filter_uuid?: SortOrderInput | SortOrder
+    contact_list_uuid?: SortOrderInput | SortOrder
+    audience_name?: SortOrder
+    stats_snapshot?: SortOrder
+    analysis?: SortOrder
+    status?: SortOrder
+    error?: SortOrderInput | SortOrder
+    provider?: SortOrderInput | SortOrder
+    model?: SortOrderInput | SortOrder
+    input_tokens?: SortOrderInput | SortOrder
+    output_tokens?: SortOrderInput | SortOrder
+    cost_usd?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    user?: UserOrderByWithRelationInput
+    filter?: FilterOrderByWithRelationInput
+    contactList?: ContactListOrderByWithRelationInput
+  }
+
+  export type ContactAudienceAnalysisWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    uuid?: string
+    AND?: ContactAudienceAnalysisWhereInput | ContactAudienceAnalysisWhereInput[]
+    OR?: ContactAudienceAnalysisWhereInput[]
+    NOT?: ContactAudienceAnalysisWhereInput | ContactAudienceAnalysisWhereInput[]
+    user_uuid?: StringFilter<"ContactAudienceAnalysis"> | string
+    scope?: EnumContactAudienceAnalysisScopeFilter<"ContactAudienceAnalysis"> | $Enums.ContactAudienceAnalysisScope
+    filter_uuid?: StringNullableFilter<"ContactAudienceAnalysis"> | string | null
+    contact_list_uuid?: StringNullableFilter<"ContactAudienceAnalysis"> | string | null
+    audience_name?: StringFilter<"ContactAudienceAnalysis"> | string
+    stats_snapshot?: JsonFilter<"ContactAudienceAnalysis">
+    analysis?: JsonFilter<"ContactAudienceAnalysis">
+    status?: EnumContactAudienceAnalysisStatusFilter<"ContactAudienceAnalysis"> | $Enums.ContactAudienceAnalysisStatus
+    error?: StringNullableFilter<"ContactAudienceAnalysis"> | string | null
+    provider?: StringNullableFilter<"ContactAudienceAnalysis"> | string | null
+    model?: StringNullableFilter<"ContactAudienceAnalysis"> | string | null
+    input_tokens?: IntNullableFilter<"ContactAudienceAnalysis"> | number | null
+    output_tokens?: IntNullableFilter<"ContactAudienceAnalysis"> | number | null
+    cost_usd?: FloatNullableFilter<"ContactAudienceAnalysis"> | number | null
+    created_at?: DateTimeFilter<"ContactAudienceAnalysis"> | Date | string
+    updated_at?: DateTimeFilter<"ContactAudienceAnalysis"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    filter?: XOR<FilterNullableScalarRelationFilter, FilterWhereInput> | null
+    contactList?: XOR<ContactListNullableScalarRelationFilter, ContactListWhereInput> | null
+  }, "id" | "uuid">
+
+  export type ContactAudienceAnalysisOrderByWithAggregationInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    user_uuid?: SortOrder
+    scope?: SortOrder
+    filter_uuid?: SortOrderInput | SortOrder
+    contact_list_uuid?: SortOrderInput | SortOrder
+    audience_name?: SortOrder
+    stats_snapshot?: SortOrder
+    analysis?: SortOrder
+    status?: SortOrder
+    error?: SortOrderInput | SortOrder
+    provider?: SortOrderInput | SortOrder
+    model?: SortOrderInput | SortOrder
+    input_tokens?: SortOrderInput | SortOrder
+    output_tokens?: SortOrderInput | SortOrder
+    cost_usd?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    _count?: ContactAudienceAnalysisCountOrderByAggregateInput
+    _avg?: ContactAudienceAnalysisAvgOrderByAggregateInput
+    _max?: ContactAudienceAnalysisMaxOrderByAggregateInput
+    _min?: ContactAudienceAnalysisMinOrderByAggregateInput
+    _sum?: ContactAudienceAnalysisSumOrderByAggregateInput
+  }
+
+  export type ContactAudienceAnalysisScalarWhereWithAggregatesInput = {
+    AND?: ContactAudienceAnalysisScalarWhereWithAggregatesInput | ContactAudienceAnalysisScalarWhereWithAggregatesInput[]
+    OR?: ContactAudienceAnalysisScalarWhereWithAggregatesInput[]
+    NOT?: ContactAudienceAnalysisScalarWhereWithAggregatesInput | ContactAudienceAnalysisScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"ContactAudienceAnalysis"> | number
+    uuid?: StringWithAggregatesFilter<"ContactAudienceAnalysis"> | string
+    user_uuid?: StringWithAggregatesFilter<"ContactAudienceAnalysis"> | string
+    scope?: EnumContactAudienceAnalysisScopeWithAggregatesFilter<"ContactAudienceAnalysis"> | $Enums.ContactAudienceAnalysisScope
+    filter_uuid?: StringNullableWithAggregatesFilter<"ContactAudienceAnalysis"> | string | null
+    contact_list_uuid?: StringNullableWithAggregatesFilter<"ContactAudienceAnalysis"> | string | null
+    audience_name?: StringWithAggregatesFilter<"ContactAudienceAnalysis"> | string
+    stats_snapshot?: JsonWithAggregatesFilter<"ContactAudienceAnalysis">
+    analysis?: JsonWithAggregatesFilter<"ContactAudienceAnalysis">
+    status?: EnumContactAudienceAnalysisStatusWithAggregatesFilter<"ContactAudienceAnalysis"> | $Enums.ContactAudienceAnalysisStatus
+    error?: StringNullableWithAggregatesFilter<"ContactAudienceAnalysis"> | string | null
+    provider?: StringNullableWithAggregatesFilter<"ContactAudienceAnalysis"> | string | null
+    model?: StringNullableWithAggregatesFilter<"ContactAudienceAnalysis"> | string | null
+    input_tokens?: IntNullableWithAggregatesFilter<"ContactAudienceAnalysis"> | number | null
+    output_tokens?: IntNullableWithAggregatesFilter<"ContactAudienceAnalysis"> | number | null
+    cost_usd?: FloatNullableWithAggregatesFilter<"ContactAudienceAnalysis"> | number | null
+    created_at?: DateTimeWithAggregatesFilter<"ContactAudienceAnalysis"> | Date | string
+    updated_at?: DateTimeWithAggregatesFilter<"ContactAudienceAnalysis"> | Date | string
+  }
+
   export type UserCreateInput = {
     uuid?: string
     email: string
@@ -40969,6 +42704,7 @@ export namespace Prisma {
     forms?: FormCreateNestedManyWithoutUserInput
     form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
+    contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -40994,6 +42730,7 @@ export namespace Prisma {
     forms?: FormUncheckedCreateNestedManyWithoutUserInput
     form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
+    contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -41018,6 +42755,7 @@ export namespace Prisma {
     forms?: FormUpdateManyWithoutUserNestedInput
     form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
+    contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -41043,6 +42781,7 @@ export namespace Prisma {
     forms?: FormUncheckedUpdateManyWithoutUserNestedInput
     form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
+    contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -41094,6 +42833,7 @@ export namespace Prisma {
     contacts?: ContactCreateNestedManyWithoutFilterInput
     jobs?: FilterJobCreateNestedManyWithoutFilterInput
     filter_scoring_instructions?: FilterScoringInstructionCreateNestedManyWithoutFilterInput
+    audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutFilterInput
   }
 
   export type FilterUncheckedCreateInput = {
@@ -41114,6 +42854,7 @@ export namespace Prisma {
     contacts?: ContactUncheckedCreateNestedManyWithoutFilterInput
     jobs?: FilterJobUncheckedCreateNestedManyWithoutFilterInput
     filter_scoring_instructions?: FilterScoringInstructionUncheckedCreateNestedManyWithoutFilterInput
+    audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutFilterInput
   }
 
   export type FilterUpdateInput = {
@@ -41133,6 +42874,7 @@ export namespace Prisma {
     contacts?: ContactUpdateManyWithoutFilterNestedInput
     jobs?: FilterJobUpdateManyWithoutFilterNestedInput
     filter_scoring_instructions?: FilterScoringInstructionUpdateManyWithoutFilterNestedInput
+    audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutFilterNestedInput
   }
 
   export type FilterUncheckedUpdateInput = {
@@ -41153,6 +42895,7 @@ export namespace Prisma {
     contacts?: ContactUncheckedUpdateManyWithoutFilterNestedInput
     jobs?: FilterJobUncheckedUpdateManyWithoutFilterNestedInput
     filter_scoring_instructions?: FilterScoringInstructionUncheckedUpdateManyWithoutFilterNestedInput
+    audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutFilterNestedInput
   }
 
   export type FilterCreateManyInput = {
@@ -41925,6 +43668,7 @@ export namespace Prisma {
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutContact_listsInput
     members?: ContactListMemberCreateNestedManyWithoutListInput
+    audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutContactListInput
   }
 
   export type ContactListUncheckedCreateInput = {
@@ -41936,6 +43680,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     members?: ContactListMemberUncheckedCreateNestedManyWithoutListInput
+    audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutContactListInput
   }
 
   export type ContactListUpdateInput = {
@@ -41946,6 +43691,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutContact_listsNestedInput
     members?: ContactListMemberUpdateManyWithoutListNestedInput
+    audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutContactListNestedInput
   }
 
   export type ContactListUncheckedUpdateInput = {
@@ -41957,6 +43703,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: ContactListMemberUncheckedUpdateManyWithoutListNestedInput
+    audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutContactListNestedInput
   }
 
   export type ContactListCreateManyInput = {
@@ -43784,6 +45531,147 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ContactAudienceAnalysisCreateInput = {
+    uuid?: string
+    scope: $Enums.ContactAudienceAnalysisScope
+    audience_name: string
+    stats_snapshot: JsonNullValueInput | InputJsonValue
+    analysis?: JsonNullValueInput | InputJsonValue
+    status?: $Enums.ContactAudienceAnalysisStatus
+    error?: string | null
+    provider?: string | null
+    model?: string | null
+    input_tokens?: number | null
+    output_tokens?: number | null
+    cost_usd?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    user: UserCreateNestedOneWithoutContact_audience_analysesInput
+    filter?: FilterCreateNestedOneWithoutAudience_analysesInput
+    contactList?: ContactListCreateNestedOneWithoutAudience_analysesInput
+  }
+
+  export type ContactAudienceAnalysisUncheckedCreateInput = {
+    id?: number
+    uuid?: string
+    user_uuid: string
+    scope: $Enums.ContactAudienceAnalysisScope
+    filter_uuid?: string | null
+    contact_list_uuid?: string | null
+    audience_name: string
+    stats_snapshot: JsonNullValueInput | InputJsonValue
+    analysis?: JsonNullValueInput | InputJsonValue
+    status?: $Enums.ContactAudienceAnalysisStatus
+    error?: string | null
+    provider?: string | null
+    model?: string | null
+    input_tokens?: number | null
+    output_tokens?: number | null
+    cost_usd?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type ContactAudienceAnalysisUpdateInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    scope?: EnumContactAudienceAnalysisScopeFieldUpdateOperationsInput | $Enums.ContactAudienceAnalysisScope
+    audience_name?: StringFieldUpdateOperationsInput | string
+    stats_snapshot?: JsonNullValueInput | InputJsonValue
+    analysis?: JsonNullValueInput | InputJsonValue
+    status?: EnumContactAudienceAnalysisStatusFieldUpdateOperationsInput | $Enums.ContactAudienceAnalysisStatus
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    provider?: NullableStringFieldUpdateOperationsInput | string | null
+    model?: NullableStringFieldUpdateOperationsInput | string | null
+    input_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    output_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    cost_usd?: NullableFloatFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutContact_audience_analysesNestedInput
+    filter?: FilterUpdateOneWithoutAudience_analysesNestedInput
+    contactList?: ContactListUpdateOneWithoutAudience_analysesNestedInput
+  }
+
+  export type ContactAudienceAnalysisUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    scope?: EnumContactAudienceAnalysisScopeFieldUpdateOperationsInput | $Enums.ContactAudienceAnalysisScope
+    filter_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    contact_list_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    audience_name?: StringFieldUpdateOperationsInput | string
+    stats_snapshot?: JsonNullValueInput | InputJsonValue
+    analysis?: JsonNullValueInput | InputJsonValue
+    status?: EnumContactAudienceAnalysisStatusFieldUpdateOperationsInput | $Enums.ContactAudienceAnalysisStatus
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    provider?: NullableStringFieldUpdateOperationsInput | string | null
+    model?: NullableStringFieldUpdateOperationsInput | string | null
+    input_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    output_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    cost_usd?: NullableFloatFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ContactAudienceAnalysisCreateManyInput = {
+    id?: number
+    uuid?: string
+    user_uuid: string
+    scope: $Enums.ContactAudienceAnalysisScope
+    filter_uuid?: string | null
+    contact_list_uuid?: string | null
+    audience_name: string
+    stats_snapshot: JsonNullValueInput | InputJsonValue
+    analysis?: JsonNullValueInput | InputJsonValue
+    status?: $Enums.ContactAudienceAnalysisStatus
+    error?: string | null
+    provider?: string | null
+    model?: string | null
+    input_tokens?: number | null
+    output_tokens?: number | null
+    cost_usd?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type ContactAudienceAnalysisUpdateManyMutationInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    scope?: EnumContactAudienceAnalysisScopeFieldUpdateOperationsInput | $Enums.ContactAudienceAnalysisScope
+    audience_name?: StringFieldUpdateOperationsInput | string
+    stats_snapshot?: JsonNullValueInput | InputJsonValue
+    analysis?: JsonNullValueInput | InputJsonValue
+    status?: EnumContactAudienceAnalysisStatusFieldUpdateOperationsInput | $Enums.ContactAudienceAnalysisStatus
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    provider?: NullableStringFieldUpdateOperationsInput | string | null
+    model?: NullableStringFieldUpdateOperationsInput | string | null
+    input_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    output_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    cost_usd?: NullableFloatFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ContactAudienceAnalysisUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    scope?: EnumContactAudienceAnalysisScopeFieldUpdateOperationsInput | $Enums.ContactAudienceAnalysisScope
+    filter_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    contact_list_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    audience_name?: StringFieldUpdateOperationsInput | string
+    stats_snapshot?: JsonNullValueInput | InputJsonValue
+    analysis?: JsonNullValueInput | InputJsonValue
+    status?: EnumContactAudienceAnalysisStatusFieldUpdateOperationsInput | $Enums.ContactAudienceAnalysisStatus
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    provider?: NullableStringFieldUpdateOperationsInput | string | null
+    model?: NullableStringFieldUpdateOperationsInput | string | null
+    input_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    output_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    cost_usd?: NullableFloatFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -43927,6 +45815,12 @@ export namespace Prisma {
     none?: ContactListWhereInput
   }
 
+  export type ContactAudienceAnalysisListRelationFilter = {
+    every?: ContactAudienceAnalysisWhereInput
+    some?: ContactAudienceAnalysisWhereInput
+    none?: ContactAudienceAnalysisWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -43985,6 +45879,10 @@ export namespace Prisma {
   }
 
   export type ContactListOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ContactAudienceAnalysisOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -46230,6 +48128,145 @@ export namespace Prisma {
     id?: SortOrder
   }
 
+  export type EnumContactAudienceAnalysisScopeFilter<$PrismaModel = never> = {
+    equals?: $Enums.ContactAudienceAnalysisScope | EnumContactAudienceAnalysisScopeFieldRefInput<$PrismaModel>
+    in?: $Enums.ContactAudienceAnalysisScope[] | ListEnumContactAudienceAnalysisScopeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ContactAudienceAnalysisScope[] | ListEnumContactAudienceAnalysisScopeFieldRefInput<$PrismaModel>
+    not?: NestedEnumContactAudienceAnalysisScopeFilter<$PrismaModel> | $Enums.ContactAudienceAnalysisScope
+  }
+
+  export type EnumContactAudienceAnalysisStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.ContactAudienceAnalysisStatus | EnumContactAudienceAnalysisStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ContactAudienceAnalysisStatus[] | ListEnumContactAudienceAnalysisStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ContactAudienceAnalysisStatus[] | ListEnumContactAudienceAnalysisStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumContactAudienceAnalysisStatusFilter<$PrismaModel> | $Enums.ContactAudienceAnalysisStatus
+  }
+
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type ContactListNullableScalarRelationFilter = {
+    is?: ContactListWhereInput | null
+    isNot?: ContactListWhereInput | null
+  }
+
+  export type ContactAudienceAnalysisCountOrderByAggregateInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    user_uuid?: SortOrder
+    scope?: SortOrder
+    filter_uuid?: SortOrder
+    contact_list_uuid?: SortOrder
+    audience_name?: SortOrder
+    stats_snapshot?: SortOrder
+    analysis?: SortOrder
+    status?: SortOrder
+    error?: SortOrder
+    provider?: SortOrder
+    model?: SortOrder
+    input_tokens?: SortOrder
+    output_tokens?: SortOrder
+    cost_usd?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type ContactAudienceAnalysisAvgOrderByAggregateInput = {
+    id?: SortOrder
+    input_tokens?: SortOrder
+    output_tokens?: SortOrder
+    cost_usd?: SortOrder
+  }
+
+  export type ContactAudienceAnalysisMaxOrderByAggregateInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    user_uuid?: SortOrder
+    scope?: SortOrder
+    filter_uuid?: SortOrder
+    contact_list_uuid?: SortOrder
+    audience_name?: SortOrder
+    status?: SortOrder
+    error?: SortOrder
+    provider?: SortOrder
+    model?: SortOrder
+    input_tokens?: SortOrder
+    output_tokens?: SortOrder
+    cost_usd?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type ContactAudienceAnalysisMinOrderByAggregateInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    user_uuid?: SortOrder
+    scope?: SortOrder
+    filter_uuid?: SortOrder
+    contact_list_uuid?: SortOrder
+    audience_name?: SortOrder
+    status?: SortOrder
+    error?: SortOrder
+    provider?: SortOrder
+    model?: SortOrder
+    input_tokens?: SortOrder
+    output_tokens?: SortOrder
+    cost_usd?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type ContactAudienceAnalysisSumOrderByAggregateInput = {
+    id?: SortOrder
+    input_tokens?: SortOrder
+    output_tokens?: SortOrder
+    cost_usd?: SortOrder
+  }
+
+  export type EnumContactAudienceAnalysisScopeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ContactAudienceAnalysisScope | EnumContactAudienceAnalysisScopeFieldRefInput<$PrismaModel>
+    in?: $Enums.ContactAudienceAnalysisScope[] | ListEnumContactAudienceAnalysisScopeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ContactAudienceAnalysisScope[] | ListEnumContactAudienceAnalysisScopeFieldRefInput<$PrismaModel>
+    not?: NestedEnumContactAudienceAnalysisScopeWithAggregatesFilter<$PrismaModel> | $Enums.ContactAudienceAnalysisScope
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumContactAudienceAnalysisScopeFilter<$PrismaModel>
+    _max?: NestedEnumContactAudienceAnalysisScopeFilter<$PrismaModel>
+  }
+
+  export type EnumContactAudienceAnalysisStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ContactAudienceAnalysisStatus | EnumContactAudienceAnalysisStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ContactAudienceAnalysisStatus[] | ListEnumContactAudienceAnalysisStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ContactAudienceAnalysisStatus[] | ListEnumContactAudienceAnalysisStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumContactAudienceAnalysisStatusWithAggregatesFilter<$PrismaModel> | $Enums.ContactAudienceAnalysisStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumContactAudienceAnalysisStatusFilter<$PrismaModel>
+    _max?: NestedEnumContactAudienceAnalysisStatusFilter<$PrismaModel>
+  }
+
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
   export type FilterCreateNestedManyWithoutUserInput = {
     create?: XOR<FilterCreateWithoutUserInput, FilterUncheckedCreateWithoutUserInput> | FilterCreateWithoutUserInput[] | FilterUncheckedCreateWithoutUserInput[]
     connectOrCreate?: FilterCreateOrConnectWithoutUserInput | FilterCreateOrConnectWithoutUserInput[]
@@ -46328,6 +48365,13 @@ export namespace Prisma {
     connect?: ContactListWhereUniqueInput | ContactListWhereUniqueInput[]
   }
 
+  export type ContactAudienceAnalysisCreateNestedManyWithoutUserInput = {
+    create?: XOR<ContactAudienceAnalysisCreateWithoutUserInput, ContactAudienceAnalysisUncheckedCreateWithoutUserInput> | ContactAudienceAnalysisCreateWithoutUserInput[] | ContactAudienceAnalysisUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ContactAudienceAnalysisCreateOrConnectWithoutUserInput | ContactAudienceAnalysisCreateOrConnectWithoutUserInput[]
+    createMany?: ContactAudienceAnalysisCreateManyUserInputEnvelope
+    connect?: ContactAudienceAnalysisWhereUniqueInput | ContactAudienceAnalysisWhereUniqueInput[]
+  }
+
   export type FilterUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<FilterCreateWithoutUserInput, FilterUncheckedCreateWithoutUserInput> | FilterCreateWithoutUserInput[] | FilterUncheckedCreateWithoutUserInput[]
     connectOrCreate?: FilterCreateOrConnectWithoutUserInput | FilterCreateOrConnectWithoutUserInput[]
@@ -46424,6 +48468,13 @@ export namespace Prisma {
     connectOrCreate?: ContactListCreateOrConnectWithoutUserInput | ContactListCreateOrConnectWithoutUserInput[]
     createMany?: ContactListCreateManyUserInputEnvelope
     connect?: ContactListWhereUniqueInput | ContactListWhereUniqueInput[]
+  }
+
+  export type ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<ContactAudienceAnalysisCreateWithoutUserInput, ContactAudienceAnalysisUncheckedCreateWithoutUserInput> | ContactAudienceAnalysisCreateWithoutUserInput[] | ContactAudienceAnalysisUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ContactAudienceAnalysisCreateOrConnectWithoutUserInput | ContactAudienceAnalysisCreateOrConnectWithoutUserInput[]
+    createMany?: ContactAudienceAnalysisCreateManyUserInputEnvelope
+    connect?: ContactAudienceAnalysisWhereUniqueInput | ContactAudienceAnalysisWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -46638,6 +48689,20 @@ export namespace Prisma {
     deleteMany?: ContactListScalarWhereInput | ContactListScalarWhereInput[]
   }
 
+  export type ContactAudienceAnalysisUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ContactAudienceAnalysisCreateWithoutUserInput, ContactAudienceAnalysisUncheckedCreateWithoutUserInput> | ContactAudienceAnalysisCreateWithoutUserInput[] | ContactAudienceAnalysisUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ContactAudienceAnalysisCreateOrConnectWithoutUserInput | ContactAudienceAnalysisCreateOrConnectWithoutUserInput[]
+    upsert?: ContactAudienceAnalysisUpsertWithWhereUniqueWithoutUserInput | ContactAudienceAnalysisUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ContactAudienceAnalysisCreateManyUserInputEnvelope
+    set?: ContactAudienceAnalysisWhereUniqueInput | ContactAudienceAnalysisWhereUniqueInput[]
+    disconnect?: ContactAudienceAnalysisWhereUniqueInput | ContactAudienceAnalysisWhereUniqueInput[]
+    delete?: ContactAudienceAnalysisWhereUniqueInput | ContactAudienceAnalysisWhereUniqueInput[]
+    connect?: ContactAudienceAnalysisWhereUniqueInput | ContactAudienceAnalysisWhereUniqueInput[]
+    update?: ContactAudienceAnalysisUpdateWithWhereUniqueWithoutUserInput | ContactAudienceAnalysisUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ContactAudienceAnalysisUpdateManyWithWhereWithoutUserInput | ContactAudienceAnalysisUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ContactAudienceAnalysisScalarWhereInput | ContactAudienceAnalysisScalarWhereInput[]
+  }
+
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -46842,6 +48907,20 @@ export namespace Prisma {
     deleteMany?: ContactListScalarWhereInput | ContactListScalarWhereInput[]
   }
 
+  export type ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ContactAudienceAnalysisCreateWithoutUserInput, ContactAudienceAnalysisUncheckedCreateWithoutUserInput> | ContactAudienceAnalysisCreateWithoutUserInput[] | ContactAudienceAnalysisUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ContactAudienceAnalysisCreateOrConnectWithoutUserInput | ContactAudienceAnalysisCreateOrConnectWithoutUserInput[]
+    upsert?: ContactAudienceAnalysisUpsertWithWhereUniqueWithoutUserInput | ContactAudienceAnalysisUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ContactAudienceAnalysisCreateManyUserInputEnvelope
+    set?: ContactAudienceAnalysisWhereUniqueInput | ContactAudienceAnalysisWhereUniqueInput[]
+    disconnect?: ContactAudienceAnalysisWhereUniqueInput | ContactAudienceAnalysisWhereUniqueInput[]
+    delete?: ContactAudienceAnalysisWhereUniqueInput | ContactAudienceAnalysisWhereUniqueInput[]
+    connect?: ContactAudienceAnalysisWhereUniqueInput | ContactAudienceAnalysisWhereUniqueInput[]
+    update?: ContactAudienceAnalysisUpdateWithWhereUniqueWithoutUserInput | ContactAudienceAnalysisUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ContactAudienceAnalysisUpdateManyWithWhereWithoutUserInput | ContactAudienceAnalysisUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ContactAudienceAnalysisScalarWhereInput | ContactAudienceAnalysisScalarWhereInput[]
+  }
+
   export type FilterCreateenrichment_sourcesInput = {
     set: $Enums.EnrichmentSource[]
   }
@@ -46884,6 +48963,13 @@ export namespace Prisma {
     connect?: FilterScoringInstructionWhereUniqueInput | FilterScoringInstructionWhereUniqueInput[]
   }
 
+  export type ContactAudienceAnalysisCreateNestedManyWithoutFilterInput = {
+    create?: XOR<ContactAudienceAnalysisCreateWithoutFilterInput, ContactAudienceAnalysisUncheckedCreateWithoutFilterInput> | ContactAudienceAnalysisCreateWithoutFilterInput[] | ContactAudienceAnalysisUncheckedCreateWithoutFilterInput[]
+    connectOrCreate?: ContactAudienceAnalysisCreateOrConnectWithoutFilterInput | ContactAudienceAnalysisCreateOrConnectWithoutFilterInput[]
+    createMany?: ContactAudienceAnalysisCreateManyFilterInputEnvelope
+    connect?: ContactAudienceAnalysisWhereUniqueInput | ContactAudienceAnalysisWhereUniqueInput[]
+  }
+
   export type RawLeadUncheckedCreateNestedManyWithoutFilterInput = {
     create?: XOR<RawLeadCreateWithoutFilterInput, RawLeadUncheckedCreateWithoutFilterInput> | RawLeadCreateWithoutFilterInput[] | RawLeadUncheckedCreateWithoutFilterInput[]
     connectOrCreate?: RawLeadCreateOrConnectWithoutFilterInput | RawLeadCreateOrConnectWithoutFilterInput[]
@@ -46910,6 +48996,13 @@ export namespace Prisma {
     connectOrCreate?: FilterScoringInstructionCreateOrConnectWithoutFilterInput | FilterScoringInstructionCreateOrConnectWithoutFilterInput[]
     createMany?: FilterScoringInstructionCreateManyFilterInputEnvelope
     connect?: FilterScoringInstructionWhereUniqueInput | FilterScoringInstructionWhereUniqueInput[]
+  }
+
+  export type ContactAudienceAnalysisUncheckedCreateNestedManyWithoutFilterInput = {
+    create?: XOR<ContactAudienceAnalysisCreateWithoutFilterInput, ContactAudienceAnalysisUncheckedCreateWithoutFilterInput> | ContactAudienceAnalysisCreateWithoutFilterInput[] | ContactAudienceAnalysisUncheckedCreateWithoutFilterInput[]
+    connectOrCreate?: ContactAudienceAnalysisCreateOrConnectWithoutFilterInput | ContactAudienceAnalysisCreateOrConnectWithoutFilterInput[]
+    createMany?: ContactAudienceAnalysisCreateManyFilterInputEnvelope
+    connect?: ContactAudienceAnalysisWhereUniqueInput | ContactAudienceAnalysisWhereUniqueInput[]
   }
 
   export type EnumSourceTypeFieldUpdateOperationsInput = {
@@ -46994,6 +49087,20 @@ export namespace Prisma {
     deleteMany?: FilterScoringInstructionScalarWhereInput | FilterScoringInstructionScalarWhereInput[]
   }
 
+  export type ContactAudienceAnalysisUpdateManyWithoutFilterNestedInput = {
+    create?: XOR<ContactAudienceAnalysisCreateWithoutFilterInput, ContactAudienceAnalysisUncheckedCreateWithoutFilterInput> | ContactAudienceAnalysisCreateWithoutFilterInput[] | ContactAudienceAnalysisUncheckedCreateWithoutFilterInput[]
+    connectOrCreate?: ContactAudienceAnalysisCreateOrConnectWithoutFilterInput | ContactAudienceAnalysisCreateOrConnectWithoutFilterInput[]
+    upsert?: ContactAudienceAnalysisUpsertWithWhereUniqueWithoutFilterInput | ContactAudienceAnalysisUpsertWithWhereUniqueWithoutFilterInput[]
+    createMany?: ContactAudienceAnalysisCreateManyFilterInputEnvelope
+    set?: ContactAudienceAnalysisWhereUniqueInput | ContactAudienceAnalysisWhereUniqueInput[]
+    disconnect?: ContactAudienceAnalysisWhereUniqueInput | ContactAudienceAnalysisWhereUniqueInput[]
+    delete?: ContactAudienceAnalysisWhereUniqueInput | ContactAudienceAnalysisWhereUniqueInput[]
+    connect?: ContactAudienceAnalysisWhereUniqueInput | ContactAudienceAnalysisWhereUniqueInput[]
+    update?: ContactAudienceAnalysisUpdateWithWhereUniqueWithoutFilterInput | ContactAudienceAnalysisUpdateWithWhereUniqueWithoutFilterInput[]
+    updateMany?: ContactAudienceAnalysisUpdateManyWithWhereWithoutFilterInput | ContactAudienceAnalysisUpdateManyWithWhereWithoutFilterInput[]
+    deleteMany?: ContactAudienceAnalysisScalarWhereInput | ContactAudienceAnalysisScalarWhereInput[]
+  }
+
   export type RawLeadUncheckedUpdateManyWithoutFilterNestedInput = {
     create?: XOR<RawLeadCreateWithoutFilterInput, RawLeadUncheckedCreateWithoutFilterInput> | RawLeadCreateWithoutFilterInput[] | RawLeadUncheckedCreateWithoutFilterInput[]
     connectOrCreate?: RawLeadCreateOrConnectWithoutFilterInput | RawLeadCreateOrConnectWithoutFilterInput[]
@@ -47048,6 +49155,20 @@ export namespace Prisma {
     update?: FilterScoringInstructionUpdateWithWhereUniqueWithoutFilterInput | FilterScoringInstructionUpdateWithWhereUniqueWithoutFilterInput[]
     updateMany?: FilterScoringInstructionUpdateManyWithWhereWithoutFilterInput | FilterScoringInstructionUpdateManyWithWhereWithoutFilterInput[]
     deleteMany?: FilterScoringInstructionScalarWhereInput | FilterScoringInstructionScalarWhereInput[]
+  }
+
+  export type ContactAudienceAnalysisUncheckedUpdateManyWithoutFilterNestedInput = {
+    create?: XOR<ContactAudienceAnalysisCreateWithoutFilterInput, ContactAudienceAnalysisUncheckedCreateWithoutFilterInput> | ContactAudienceAnalysisCreateWithoutFilterInput[] | ContactAudienceAnalysisUncheckedCreateWithoutFilterInput[]
+    connectOrCreate?: ContactAudienceAnalysisCreateOrConnectWithoutFilterInput | ContactAudienceAnalysisCreateOrConnectWithoutFilterInput[]
+    upsert?: ContactAudienceAnalysisUpsertWithWhereUniqueWithoutFilterInput | ContactAudienceAnalysisUpsertWithWhereUniqueWithoutFilterInput[]
+    createMany?: ContactAudienceAnalysisCreateManyFilterInputEnvelope
+    set?: ContactAudienceAnalysisWhereUniqueInput | ContactAudienceAnalysisWhereUniqueInput[]
+    disconnect?: ContactAudienceAnalysisWhereUniqueInput | ContactAudienceAnalysisWhereUniqueInput[]
+    delete?: ContactAudienceAnalysisWhereUniqueInput | ContactAudienceAnalysisWhereUniqueInput[]
+    connect?: ContactAudienceAnalysisWhereUniqueInput | ContactAudienceAnalysisWhereUniqueInput[]
+    update?: ContactAudienceAnalysisUpdateWithWhereUniqueWithoutFilterInput | ContactAudienceAnalysisUpdateWithWhereUniqueWithoutFilterInput[]
+    updateMany?: ContactAudienceAnalysisUpdateManyWithWhereWithoutFilterInput | ContactAudienceAnalysisUpdateManyWithWhereWithoutFilterInput[]
+    deleteMany?: ContactAudienceAnalysisScalarWhereInput | ContactAudienceAnalysisScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutScoring_instructionsInput = {
@@ -47785,11 +49906,25 @@ export namespace Prisma {
     connect?: ContactListMemberWhereUniqueInput | ContactListMemberWhereUniqueInput[]
   }
 
+  export type ContactAudienceAnalysisCreateNestedManyWithoutContactListInput = {
+    create?: XOR<ContactAudienceAnalysisCreateWithoutContactListInput, ContactAudienceAnalysisUncheckedCreateWithoutContactListInput> | ContactAudienceAnalysisCreateWithoutContactListInput[] | ContactAudienceAnalysisUncheckedCreateWithoutContactListInput[]
+    connectOrCreate?: ContactAudienceAnalysisCreateOrConnectWithoutContactListInput | ContactAudienceAnalysisCreateOrConnectWithoutContactListInput[]
+    createMany?: ContactAudienceAnalysisCreateManyContactListInputEnvelope
+    connect?: ContactAudienceAnalysisWhereUniqueInput | ContactAudienceAnalysisWhereUniqueInput[]
+  }
+
   export type ContactListMemberUncheckedCreateNestedManyWithoutListInput = {
     create?: XOR<ContactListMemberCreateWithoutListInput, ContactListMemberUncheckedCreateWithoutListInput> | ContactListMemberCreateWithoutListInput[] | ContactListMemberUncheckedCreateWithoutListInput[]
     connectOrCreate?: ContactListMemberCreateOrConnectWithoutListInput | ContactListMemberCreateOrConnectWithoutListInput[]
     createMany?: ContactListMemberCreateManyListInputEnvelope
     connect?: ContactListMemberWhereUniqueInput | ContactListMemberWhereUniqueInput[]
+  }
+
+  export type ContactAudienceAnalysisUncheckedCreateNestedManyWithoutContactListInput = {
+    create?: XOR<ContactAudienceAnalysisCreateWithoutContactListInput, ContactAudienceAnalysisUncheckedCreateWithoutContactListInput> | ContactAudienceAnalysisCreateWithoutContactListInput[] | ContactAudienceAnalysisUncheckedCreateWithoutContactListInput[]
+    connectOrCreate?: ContactAudienceAnalysisCreateOrConnectWithoutContactListInput | ContactAudienceAnalysisCreateOrConnectWithoutContactListInput[]
+    createMany?: ContactAudienceAnalysisCreateManyContactListInputEnvelope
+    connect?: ContactAudienceAnalysisWhereUniqueInput | ContactAudienceAnalysisWhereUniqueInput[]
   }
 
   export type UserUpdateOneRequiredWithoutContact_listsNestedInput = {
@@ -47814,6 +49949,20 @@ export namespace Prisma {
     deleteMany?: ContactListMemberScalarWhereInput | ContactListMemberScalarWhereInput[]
   }
 
+  export type ContactAudienceAnalysisUpdateManyWithoutContactListNestedInput = {
+    create?: XOR<ContactAudienceAnalysisCreateWithoutContactListInput, ContactAudienceAnalysisUncheckedCreateWithoutContactListInput> | ContactAudienceAnalysisCreateWithoutContactListInput[] | ContactAudienceAnalysisUncheckedCreateWithoutContactListInput[]
+    connectOrCreate?: ContactAudienceAnalysisCreateOrConnectWithoutContactListInput | ContactAudienceAnalysisCreateOrConnectWithoutContactListInput[]
+    upsert?: ContactAudienceAnalysisUpsertWithWhereUniqueWithoutContactListInput | ContactAudienceAnalysisUpsertWithWhereUniqueWithoutContactListInput[]
+    createMany?: ContactAudienceAnalysisCreateManyContactListInputEnvelope
+    set?: ContactAudienceAnalysisWhereUniqueInput | ContactAudienceAnalysisWhereUniqueInput[]
+    disconnect?: ContactAudienceAnalysisWhereUniqueInput | ContactAudienceAnalysisWhereUniqueInput[]
+    delete?: ContactAudienceAnalysisWhereUniqueInput | ContactAudienceAnalysisWhereUniqueInput[]
+    connect?: ContactAudienceAnalysisWhereUniqueInput | ContactAudienceAnalysisWhereUniqueInput[]
+    update?: ContactAudienceAnalysisUpdateWithWhereUniqueWithoutContactListInput | ContactAudienceAnalysisUpdateWithWhereUniqueWithoutContactListInput[]
+    updateMany?: ContactAudienceAnalysisUpdateManyWithWhereWithoutContactListInput | ContactAudienceAnalysisUpdateManyWithWhereWithoutContactListInput[]
+    deleteMany?: ContactAudienceAnalysisScalarWhereInput | ContactAudienceAnalysisScalarWhereInput[]
+  }
+
   export type ContactListMemberUncheckedUpdateManyWithoutListNestedInput = {
     create?: XOR<ContactListMemberCreateWithoutListInput, ContactListMemberUncheckedCreateWithoutListInput> | ContactListMemberCreateWithoutListInput[] | ContactListMemberUncheckedCreateWithoutListInput[]
     connectOrCreate?: ContactListMemberCreateOrConnectWithoutListInput | ContactListMemberCreateOrConnectWithoutListInput[]
@@ -47826,6 +49975,20 @@ export namespace Prisma {
     update?: ContactListMemberUpdateWithWhereUniqueWithoutListInput | ContactListMemberUpdateWithWhereUniqueWithoutListInput[]
     updateMany?: ContactListMemberUpdateManyWithWhereWithoutListInput | ContactListMemberUpdateManyWithWhereWithoutListInput[]
     deleteMany?: ContactListMemberScalarWhereInput | ContactListMemberScalarWhereInput[]
+  }
+
+  export type ContactAudienceAnalysisUncheckedUpdateManyWithoutContactListNestedInput = {
+    create?: XOR<ContactAudienceAnalysisCreateWithoutContactListInput, ContactAudienceAnalysisUncheckedCreateWithoutContactListInput> | ContactAudienceAnalysisCreateWithoutContactListInput[] | ContactAudienceAnalysisUncheckedCreateWithoutContactListInput[]
+    connectOrCreate?: ContactAudienceAnalysisCreateOrConnectWithoutContactListInput | ContactAudienceAnalysisCreateOrConnectWithoutContactListInput[]
+    upsert?: ContactAudienceAnalysisUpsertWithWhereUniqueWithoutContactListInput | ContactAudienceAnalysisUpsertWithWhereUniqueWithoutContactListInput[]
+    createMany?: ContactAudienceAnalysisCreateManyContactListInputEnvelope
+    set?: ContactAudienceAnalysisWhereUniqueInput | ContactAudienceAnalysisWhereUniqueInput[]
+    disconnect?: ContactAudienceAnalysisWhereUniqueInput | ContactAudienceAnalysisWhereUniqueInput[]
+    delete?: ContactAudienceAnalysisWhereUniqueInput | ContactAudienceAnalysisWhereUniqueInput[]
+    connect?: ContactAudienceAnalysisWhereUniqueInput | ContactAudienceAnalysisWhereUniqueInput[]
+    update?: ContactAudienceAnalysisUpdateWithWhereUniqueWithoutContactListInput | ContactAudienceAnalysisUpdateWithWhereUniqueWithoutContactListInput[]
+    updateMany?: ContactAudienceAnalysisUpdateManyWithWhereWithoutContactListInput | ContactAudienceAnalysisUpdateManyWithWhereWithoutContactListInput[]
+    deleteMany?: ContactAudienceAnalysisScalarWhereInput | ContactAudienceAnalysisScalarWhereInput[]
   }
 
   export type ContactListCreateNestedOneWithoutMembersInput = {
@@ -48721,6 +50884,68 @@ export namespace Prisma {
     update?: XOR<XOR<FormFieldUpdateToOneWithWhereWithoutCompletion_valuesInput, FormFieldUpdateWithoutCompletion_valuesInput>, FormFieldUncheckedUpdateWithoutCompletion_valuesInput>
   }
 
+  export type UserCreateNestedOneWithoutContact_audience_analysesInput = {
+    create?: XOR<UserCreateWithoutContact_audience_analysesInput, UserUncheckedCreateWithoutContact_audience_analysesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutContact_audience_analysesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type FilterCreateNestedOneWithoutAudience_analysesInput = {
+    create?: XOR<FilterCreateWithoutAudience_analysesInput, FilterUncheckedCreateWithoutAudience_analysesInput>
+    connectOrCreate?: FilterCreateOrConnectWithoutAudience_analysesInput
+    connect?: FilterWhereUniqueInput
+  }
+
+  export type ContactListCreateNestedOneWithoutAudience_analysesInput = {
+    create?: XOR<ContactListCreateWithoutAudience_analysesInput, ContactListUncheckedCreateWithoutAudience_analysesInput>
+    connectOrCreate?: ContactListCreateOrConnectWithoutAudience_analysesInput
+    connect?: ContactListWhereUniqueInput
+  }
+
+  export type EnumContactAudienceAnalysisScopeFieldUpdateOperationsInput = {
+    set?: $Enums.ContactAudienceAnalysisScope
+  }
+
+  export type EnumContactAudienceAnalysisStatusFieldUpdateOperationsInput = {
+    set?: $Enums.ContactAudienceAnalysisStatus
+  }
+
+  export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type UserUpdateOneRequiredWithoutContact_audience_analysesNestedInput = {
+    create?: XOR<UserCreateWithoutContact_audience_analysesInput, UserUncheckedCreateWithoutContact_audience_analysesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutContact_audience_analysesInput
+    upsert?: UserUpsertWithoutContact_audience_analysesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutContact_audience_analysesInput, UserUpdateWithoutContact_audience_analysesInput>, UserUncheckedUpdateWithoutContact_audience_analysesInput>
+  }
+
+  export type FilterUpdateOneWithoutAudience_analysesNestedInput = {
+    create?: XOR<FilterCreateWithoutAudience_analysesInput, FilterUncheckedCreateWithoutAudience_analysesInput>
+    connectOrCreate?: FilterCreateOrConnectWithoutAudience_analysesInput
+    upsert?: FilterUpsertWithoutAudience_analysesInput
+    disconnect?: FilterWhereInput | boolean
+    delete?: FilterWhereInput | boolean
+    connect?: FilterWhereUniqueInput
+    update?: XOR<XOR<FilterUpdateToOneWithWhereWithoutAudience_analysesInput, FilterUpdateWithoutAudience_analysesInput>, FilterUncheckedUpdateWithoutAudience_analysesInput>
+  }
+
+  export type ContactListUpdateOneWithoutAudience_analysesNestedInput = {
+    create?: XOR<ContactListCreateWithoutAudience_analysesInput, ContactListUncheckedCreateWithoutAudience_analysesInput>
+    connectOrCreate?: ContactListCreateOrConnectWithoutAudience_analysesInput
+    upsert?: ContactListUpsertWithoutAudience_analysesInput
+    disconnect?: ContactListWhereInput | boolean
+    delete?: ContactListWhereInput | boolean
+    connect?: ContactListWhereUniqueInput
+    update?: XOR<XOR<ContactListUpdateToOneWithWhereWithoutAudience_analysesInput, ContactListUpdateWithoutAudience_analysesInput>, ContactListUncheckedUpdateWithoutAudience_analysesInput>
+  }
+
   export type NestedIntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -49318,6 +51543,56 @@ export namespace Prisma {
     _max?: NestedEnumFieldTypeFilter<$PrismaModel>
   }
 
+  export type NestedEnumContactAudienceAnalysisScopeFilter<$PrismaModel = never> = {
+    equals?: $Enums.ContactAudienceAnalysisScope | EnumContactAudienceAnalysisScopeFieldRefInput<$PrismaModel>
+    in?: $Enums.ContactAudienceAnalysisScope[] | ListEnumContactAudienceAnalysisScopeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ContactAudienceAnalysisScope[] | ListEnumContactAudienceAnalysisScopeFieldRefInput<$PrismaModel>
+    not?: NestedEnumContactAudienceAnalysisScopeFilter<$PrismaModel> | $Enums.ContactAudienceAnalysisScope
+  }
+
+  export type NestedEnumContactAudienceAnalysisStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.ContactAudienceAnalysisStatus | EnumContactAudienceAnalysisStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ContactAudienceAnalysisStatus[] | ListEnumContactAudienceAnalysisStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ContactAudienceAnalysisStatus[] | ListEnumContactAudienceAnalysisStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumContactAudienceAnalysisStatusFilter<$PrismaModel> | $Enums.ContactAudienceAnalysisStatus
+  }
+
+  export type NestedEnumContactAudienceAnalysisScopeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ContactAudienceAnalysisScope | EnumContactAudienceAnalysisScopeFieldRefInput<$PrismaModel>
+    in?: $Enums.ContactAudienceAnalysisScope[] | ListEnumContactAudienceAnalysisScopeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ContactAudienceAnalysisScope[] | ListEnumContactAudienceAnalysisScopeFieldRefInput<$PrismaModel>
+    not?: NestedEnumContactAudienceAnalysisScopeWithAggregatesFilter<$PrismaModel> | $Enums.ContactAudienceAnalysisScope
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumContactAudienceAnalysisScopeFilter<$PrismaModel>
+    _max?: NestedEnumContactAudienceAnalysisScopeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumContactAudienceAnalysisStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ContactAudienceAnalysisStatus | EnumContactAudienceAnalysisStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ContactAudienceAnalysisStatus[] | ListEnumContactAudienceAnalysisStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ContactAudienceAnalysisStatus[] | ListEnumContactAudienceAnalysisStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumContactAudienceAnalysisStatusWithAggregatesFilter<$PrismaModel> | $Enums.ContactAudienceAnalysisStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumContactAudienceAnalysisStatusFilter<$PrismaModel>
+    _max?: NestedEnumContactAudienceAnalysisStatusFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
   export type FilterCreateWithoutUserInput = {
     uuid?: string
     name: string
@@ -49334,6 +51609,7 @@ export namespace Prisma {
     contacts?: ContactCreateNestedManyWithoutFilterInput
     jobs?: FilterJobCreateNestedManyWithoutFilterInput
     filter_scoring_instructions?: FilterScoringInstructionCreateNestedManyWithoutFilterInput
+    audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutFilterInput
   }
 
   export type FilterUncheckedCreateWithoutUserInput = {
@@ -49353,6 +51629,7 @@ export namespace Prisma {
     contacts?: ContactUncheckedCreateNestedManyWithoutFilterInput
     jobs?: FilterJobUncheckedCreateNestedManyWithoutFilterInput
     filter_scoring_instructions?: FilterScoringInstructionUncheckedCreateNestedManyWithoutFilterInput
+    audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutFilterInput
   }
 
   export type FilterCreateOrConnectWithoutUserInput = {
@@ -49925,6 +52202,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     members?: ContactListMemberCreateNestedManyWithoutListInput
+    audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutContactListInput
   }
 
   export type ContactListUncheckedCreateWithoutUserInput = {
@@ -49935,6 +52213,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     members?: ContactListMemberUncheckedCreateNestedManyWithoutListInput
+    audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutContactListInput
   }
 
   export type ContactListCreateOrConnectWithoutUserInput = {
@@ -49944,6 +52223,55 @@ export namespace Prisma {
 
   export type ContactListCreateManyUserInputEnvelope = {
     data: ContactListCreateManyUserInput | ContactListCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ContactAudienceAnalysisCreateWithoutUserInput = {
+    uuid?: string
+    scope: $Enums.ContactAudienceAnalysisScope
+    audience_name: string
+    stats_snapshot: JsonNullValueInput | InputJsonValue
+    analysis?: JsonNullValueInput | InputJsonValue
+    status?: $Enums.ContactAudienceAnalysisStatus
+    error?: string | null
+    provider?: string | null
+    model?: string | null
+    input_tokens?: number | null
+    output_tokens?: number | null
+    cost_usd?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    filter?: FilterCreateNestedOneWithoutAudience_analysesInput
+    contactList?: ContactListCreateNestedOneWithoutAudience_analysesInput
+  }
+
+  export type ContactAudienceAnalysisUncheckedCreateWithoutUserInput = {
+    id?: number
+    uuid?: string
+    scope: $Enums.ContactAudienceAnalysisScope
+    filter_uuid?: string | null
+    contact_list_uuid?: string | null
+    audience_name: string
+    stats_snapshot: JsonNullValueInput | InputJsonValue
+    analysis?: JsonNullValueInput | InputJsonValue
+    status?: $Enums.ContactAudienceAnalysisStatus
+    error?: string | null
+    provider?: string | null
+    model?: string | null
+    input_tokens?: number | null
+    output_tokens?: number | null
+    cost_usd?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type ContactAudienceAnalysisCreateOrConnectWithoutUserInput = {
+    where: ContactAudienceAnalysisWhereUniqueInput
+    create: XOR<ContactAudienceAnalysisCreateWithoutUserInput, ContactAudienceAnalysisUncheckedCreateWithoutUserInput>
+  }
+
+  export type ContactAudienceAnalysisCreateManyUserInputEnvelope = {
+    data: ContactAudienceAnalysisCreateManyUserInput | ContactAudienceAnalysisCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -50454,6 +52782,46 @@ export namespace Prisma {
     updated_at?: DateTimeFilter<"ContactList"> | Date | string
   }
 
+  export type ContactAudienceAnalysisUpsertWithWhereUniqueWithoutUserInput = {
+    where: ContactAudienceAnalysisWhereUniqueInput
+    update: XOR<ContactAudienceAnalysisUpdateWithoutUserInput, ContactAudienceAnalysisUncheckedUpdateWithoutUserInput>
+    create: XOR<ContactAudienceAnalysisCreateWithoutUserInput, ContactAudienceAnalysisUncheckedCreateWithoutUserInput>
+  }
+
+  export type ContactAudienceAnalysisUpdateWithWhereUniqueWithoutUserInput = {
+    where: ContactAudienceAnalysisWhereUniqueInput
+    data: XOR<ContactAudienceAnalysisUpdateWithoutUserInput, ContactAudienceAnalysisUncheckedUpdateWithoutUserInput>
+  }
+
+  export type ContactAudienceAnalysisUpdateManyWithWhereWithoutUserInput = {
+    where: ContactAudienceAnalysisScalarWhereInput
+    data: XOR<ContactAudienceAnalysisUpdateManyMutationInput, ContactAudienceAnalysisUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type ContactAudienceAnalysisScalarWhereInput = {
+    AND?: ContactAudienceAnalysisScalarWhereInput | ContactAudienceAnalysisScalarWhereInput[]
+    OR?: ContactAudienceAnalysisScalarWhereInput[]
+    NOT?: ContactAudienceAnalysisScalarWhereInput | ContactAudienceAnalysisScalarWhereInput[]
+    id?: IntFilter<"ContactAudienceAnalysis"> | number
+    uuid?: StringFilter<"ContactAudienceAnalysis"> | string
+    user_uuid?: StringFilter<"ContactAudienceAnalysis"> | string
+    scope?: EnumContactAudienceAnalysisScopeFilter<"ContactAudienceAnalysis"> | $Enums.ContactAudienceAnalysisScope
+    filter_uuid?: StringNullableFilter<"ContactAudienceAnalysis"> | string | null
+    contact_list_uuid?: StringNullableFilter<"ContactAudienceAnalysis"> | string | null
+    audience_name?: StringFilter<"ContactAudienceAnalysis"> | string
+    stats_snapshot?: JsonFilter<"ContactAudienceAnalysis">
+    analysis?: JsonFilter<"ContactAudienceAnalysis">
+    status?: EnumContactAudienceAnalysisStatusFilter<"ContactAudienceAnalysis"> | $Enums.ContactAudienceAnalysisStatus
+    error?: StringNullableFilter<"ContactAudienceAnalysis"> | string | null
+    provider?: StringNullableFilter<"ContactAudienceAnalysis"> | string | null
+    model?: StringNullableFilter<"ContactAudienceAnalysis"> | string | null
+    input_tokens?: IntNullableFilter<"ContactAudienceAnalysis"> | number | null
+    output_tokens?: IntNullableFilter<"ContactAudienceAnalysis"> | number | null
+    cost_usd?: FloatNullableFilter<"ContactAudienceAnalysis"> | number | null
+    created_at?: DateTimeFilter<"ContactAudienceAnalysis"> | Date | string
+    updated_at?: DateTimeFilter<"ContactAudienceAnalysis"> | Date | string
+  }
+
   export type UserCreateWithoutFiltersInput = {
     uuid?: string
     email: string
@@ -50475,6 +52843,7 @@ export namespace Prisma {
     forms?: FormCreateNestedManyWithoutUserInput
     form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
+    contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutFiltersInput = {
@@ -50499,6 +52868,7 @@ export namespace Prisma {
     forms?: FormUncheckedCreateNestedManyWithoutUserInput
     form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
+    contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutFiltersInput = {
@@ -50669,6 +53039,55 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ContactAudienceAnalysisCreateWithoutFilterInput = {
+    uuid?: string
+    scope: $Enums.ContactAudienceAnalysisScope
+    audience_name: string
+    stats_snapshot: JsonNullValueInput | InputJsonValue
+    analysis?: JsonNullValueInput | InputJsonValue
+    status?: $Enums.ContactAudienceAnalysisStatus
+    error?: string | null
+    provider?: string | null
+    model?: string | null
+    input_tokens?: number | null
+    output_tokens?: number | null
+    cost_usd?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    user: UserCreateNestedOneWithoutContact_audience_analysesInput
+    contactList?: ContactListCreateNestedOneWithoutAudience_analysesInput
+  }
+
+  export type ContactAudienceAnalysisUncheckedCreateWithoutFilterInput = {
+    id?: number
+    uuid?: string
+    user_uuid: string
+    scope: $Enums.ContactAudienceAnalysisScope
+    contact_list_uuid?: string | null
+    audience_name: string
+    stats_snapshot: JsonNullValueInput | InputJsonValue
+    analysis?: JsonNullValueInput | InputJsonValue
+    status?: $Enums.ContactAudienceAnalysisStatus
+    error?: string | null
+    provider?: string | null
+    model?: string | null
+    input_tokens?: number | null
+    output_tokens?: number | null
+    cost_usd?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type ContactAudienceAnalysisCreateOrConnectWithoutFilterInput = {
+    where: ContactAudienceAnalysisWhereUniqueInput
+    create: XOR<ContactAudienceAnalysisCreateWithoutFilterInput, ContactAudienceAnalysisUncheckedCreateWithoutFilterInput>
+  }
+
+  export type ContactAudienceAnalysisCreateManyFilterInputEnvelope = {
+    data: ContactAudienceAnalysisCreateManyFilterInput | ContactAudienceAnalysisCreateManyFilterInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserUpsertWithoutFiltersInput = {
     update: XOR<UserUpdateWithoutFiltersInput, UserUncheckedUpdateWithoutFiltersInput>
     create: XOR<UserCreateWithoutFiltersInput, UserUncheckedCreateWithoutFiltersInput>
@@ -50701,6 +53120,7 @@ export namespace Prisma {
     forms?: FormUpdateManyWithoutUserNestedInput
     form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
+    contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFiltersInput = {
@@ -50725,6 +53145,7 @@ export namespace Prisma {
     forms?: FormUncheckedUpdateManyWithoutUserNestedInput
     form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
+    contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type RawLeadUpsertWithWhereUniqueWithoutFilterInput = {
@@ -50832,6 +53253,22 @@ export namespace Prisma {
     created_at?: DateTimeFilter<"FilterScoringInstruction"> | Date | string
   }
 
+  export type ContactAudienceAnalysisUpsertWithWhereUniqueWithoutFilterInput = {
+    where: ContactAudienceAnalysisWhereUniqueInput
+    update: XOR<ContactAudienceAnalysisUpdateWithoutFilterInput, ContactAudienceAnalysisUncheckedUpdateWithoutFilterInput>
+    create: XOR<ContactAudienceAnalysisCreateWithoutFilterInput, ContactAudienceAnalysisUncheckedCreateWithoutFilterInput>
+  }
+
+  export type ContactAudienceAnalysisUpdateWithWhereUniqueWithoutFilterInput = {
+    where: ContactAudienceAnalysisWhereUniqueInput
+    data: XOR<ContactAudienceAnalysisUpdateWithoutFilterInput, ContactAudienceAnalysisUncheckedUpdateWithoutFilterInput>
+  }
+
+  export type ContactAudienceAnalysisUpdateManyWithWhereWithoutFilterInput = {
+    where: ContactAudienceAnalysisScalarWhereInput
+    data: XOR<ContactAudienceAnalysisUpdateManyMutationInput, ContactAudienceAnalysisUncheckedUpdateManyWithoutFilterInput>
+  }
+
   export type UserCreateWithoutScoring_instructionsInput = {
     uuid?: string
     email: string
@@ -50853,6 +53290,7 @@ export namespace Prisma {
     forms?: FormCreateNestedManyWithoutUserInput
     form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
+    contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutScoring_instructionsInput = {
@@ -50877,6 +53315,7 @@ export namespace Prisma {
     forms?: FormUncheckedCreateNestedManyWithoutUserInput
     form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
+    contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutScoring_instructionsInput = {
@@ -50959,6 +53398,7 @@ export namespace Prisma {
     forms?: FormUpdateManyWithoutUserNestedInput
     form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
+    contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutScoring_instructionsInput = {
@@ -50983,6 +53423,7 @@ export namespace Prisma {
     forms?: FormUncheckedUpdateManyWithoutUserNestedInput
     form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
+    contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type FilterScoringInstructionUpsertWithWhereUniqueWithoutScoring_instructionInput = {
@@ -51044,6 +53485,7 @@ export namespace Prisma {
     raw_leads?: RawLeadCreateNestedManyWithoutFilterInput
     contacts?: ContactCreateNestedManyWithoutFilterInput
     jobs?: FilterJobCreateNestedManyWithoutFilterInput
+    audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutFilterInput
   }
 
   export type FilterUncheckedCreateWithoutFilter_scoring_instructionsInput = {
@@ -51063,6 +53505,7 @@ export namespace Prisma {
     raw_leads?: RawLeadUncheckedCreateNestedManyWithoutFilterInput
     contacts?: ContactUncheckedCreateNestedManyWithoutFilterInput
     jobs?: FilterJobUncheckedCreateNestedManyWithoutFilterInput
+    audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutFilterInput
   }
 
   export type FilterCreateOrConnectWithoutFilter_scoring_instructionsInput = {
@@ -51123,6 +53566,7 @@ export namespace Prisma {
     raw_leads?: RawLeadUpdateManyWithoutFilterNestedInput
     contacts?: ContactUpdateManyWithoutFilterNestedInput
     jobs?: FilterJobUpdateManyWithoutFilterNestedInput
+    audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutFilterNestedInput
   }
 
   export type FilterUncheckedUpdateWithoutFilter_scoring_instructionsInput = {
@@ -51142,6 +53586,7 @@ export namespace Prisma {
     raw_leads?: RawLeadUncheckedUpdateManyWithoutFilterNestedInput
     contacts?: ContactUncheckedUpdateManyWithoutFilterNestedInput
     jobs?: FilterJobUncheckedUpdateManyWithoutFilterNestedInput
+    audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutFilterNestedInput
   }
 
   export type ScoringInstructionUpsertWithoutFilter_linksInput = {
@@ -51192,6 +53637,7 @@ export namespace Prisma {
     contacts?: ContactCreateNestedManyWithoutFilterInput
     jobs?: FilterJobCreateNestedManyWithoutFilterInput
     filter_scoring_instructions?: FilterScoringInstructionCreateNestedManyWithoutFilterInput
+    audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutFilterInput
   }
 
   export type FilterUncheckedCreateWithoutRaw_leadsInput = {
@@ -51211,6 +53657,7 @@ export namespace Prisma {
     contacts?: ContactUncheckedCreateNestedManyWithoutFilterInput
     jobs?: FilterJobUncheckedCreateNestedManyWithoutFilterInput
     filter_scoring_instructions?: FilterScoringInstructionUncheckedCreateNestedManyWithoutFilterInput
+    audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutFilterInput
   }
 
   export type FilterCreateOrConnectWithoutRaw_leadsInput = {
@@ -51297,6 +53744,7 @@ export namespace Prisma {
     contacts?: ContactUpdateManyWithoutFilterNestedInput
     jobs?: FilterJobUpdateManyWithoutFilterNestedInput
     filter_scoring_instructions?: FilterScoringInstructionUpdateManyWithoutFilterNestedInput
+    audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutFilterNestedInput
   }
 
   export type FilterUncheckedUpdateWithoutRaw_leadsInput = {
@@ -51316,6 +53764,7 @@ export namespace Prisma {
     contacts?: ContactUncheckedUpdateManyWithoutFilterNestedInput
     jobs?: FilterJobUncheckedUpdateManyWithoutFilterNestedInput
     filter_scoring_instructions?: FilterScoringInstructionUncheckedUpdateManyWithoutFilterNestedInput
+    audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutFilterNestedInput
   }
 
   export type LeadUpsertWithoutRaw_leadInput = {
@@ -51727,6 +54176,7 @@ export namespace Prisma {
     forms?: FormCreateNestedManyWithoutUserInput
     form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
+    contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutContactsInput = {
@@ -51751,6 +54201,7 @@ export namespace Prisma {
     forms?: FormUncheckedCreateNestedManyWithoutUserInput
     form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
+    contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutContactsInput = {
@@ -51826,6 +54277,7 @@ export namespace Prisma {
     raw_leads?: RawLeadCreateNestedManyWithoutFilterInput
     jobs?: FilterJobCreateNestedManyWithoutFilterInput
     filter_scoring_instructions?: FilterScoringInstructionCreateNestedManyWithoutFilterInput
+    audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutFilterInput
   }
 
   export type FilterUncheckedCreateWithoutContactsInput = {
@@ -51845,6 +54297,7 @@ export namespace Prisma {
     raw_leads?: RawLeadUncheckedCreateNestedManyWithoutFilterInput
     jobs?: FilterJobUncheckedCreateNestedManyWithoutFilterInput
     filter_scoring_instructions?: FilterScoringInstructionUncheckedCreateNestedManyWithoutFilterInput
+    audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutFilterInput
   }
 
   export type FilterCreateOrConnectWithoutContactsInput = {
@@ -52144,6 +54597,7 @@ export namespace Prisma {
     forms?: FormUpdateManyWithoutUserNestedInput
     form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
+    contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutContactsInput = {
@@ -52168,6 +54622,7 @@ export namespace Prisma {
     forms?: FormUncheckedUpdateManyWithoutUserNestedInput
     form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
+    contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type LeadUpsertWithoutContactsInput = {
@@ -52255,6 +54710,7 @@ export namespace Prisma {
     raw_leads?: RawLeadUpdateManyWithoutFilterNestedInput
     jobs?: FilterJobUpdateManyWithoutFilterNestedInput
     filter_scoring_instructions?: FilterScoringInstructionUpdateManyWithoutFilterNestedInput
+    audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutFilterNestedInput
   }
 
   export type FilterUncheckedUpdateWithoutContactsInput = {
@@ -52274,6 +54730,7 @@ export namespace Prisma {
     raw_leads?: RawLeadUncheckedUpdateManyWithoutFilterNestedInput
     jobs?: FilterJobUncheckedUpdateManyWithoutFilterNestedInput
     filter_scoring_instructions?: FilterScoringInstructionUncheckedUpdateManyWithoutFilterNestedInput
+    audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutFilterNestedInput
   }
 
   export type ContactTagUpsertWithWhereUniqueWithoutContactInput = {
@@ -52667,6 +55124,7 @@ export namespace Prisma {
     reminders?: ReminderCreateNestedManyWithoutUserInput
     forms?: FormCreateNestedManyWithoutUserInput
     form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
+    contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutContact_listsInput = {
@@ -52691,6 +55149,7 @@ export namespace Prisma {
     reminders?: ReminderUncheckedCreateNestedManyWithoutUserInput
     forms?: FormUncheckedCreateNestedManyWithoutUserInput
     form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
+    contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutContact_listsInput = {
@@ -52718,6 +55177,55 @@ export namespace Prisma {
 
   export type ContactListMemberCreateManyListInputEnvelope = {
     data: ContactListMemberCreateManyListInput | ContactListMemberCreateManyListInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ContactAudienceAnalysisCreateWithoutContactListInput = {
+    uuid?: string
+    scope: $Enums.ContactAudienceAnalysisScope
+    audience_name: string
+    stats_snapshot: JsonNullValueInput | InputJsonValue
+    analysis?: JsonNullValueInput | InputJsonValue
+    status?: $Enums.ContactAudienceAnalysisStatus
+    error?: string | null
+    provider?: string | null
+    model?: string | null
+    input_tokens?: number | null
+    output_tokens?: number | null
+    cost_usd?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    user: UserCreateNestedOneWithoutContact_audience_analysesInput
+    filter?: FilterCreateNestedOneWithoutAudience_analysesInput
+  }
+
+  export type ContactAudienceAnalysisUncheckedCreateWithoutContactListInput = {
+    id?: number
+    uuid?: string
+    user_uuid: string
+    scope: $Enums.ContactAudienceAnalysisScope
+    filter_uuid?: string | null
+    audience_name: string
+    stats_snapshot: JsonNullValueInput | InputJsonValue
+    analysis?: JsonNullValueInput | InputJsonValue
+    status?: $Enums.ContactAudienceAnalysisStatus
+    error?: string | null
+    provider?: string | null
+    model?: string | null
+    input_tokens?: number | null
+    output_tokens?: number | null
+    cost_usd?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type ContactAudienceAnalysisCreateOrConnectWithoutContactListInput = {
+    where: ContactAudienceAnalysisWhereUniqueInput
+    create: XOR<ContactAudienceAnalysisCreateWithoutContactListInput, ContactAudienceAnalysisUncheckedCreateWithoutContactListInput>
+  }
+
+  export type ContactAudienceAnalysisCreateManyContactListInputEnvelope = {
+    data: ContactAudienceAnalysisCreateManyContactListInput | ContactAudienceAnalysisCreateManyContactListInput[]
     skipDuplicates?: boolean
   }
 
@@ -52753,6 +55261,7 @@ export namespace Prisma {
     reminders?: ReminderUpdateManyWithoutUserNestedInput
     forms?: FormUpdateManyWithoutUserNestedInput
     form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
+    contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutContact_listsInput = {
@@ -52777,6 +55286,7 @@ export namespace Prisma {
     reminders?: ReminderUncheckedUpdateManyWithoutUserNestedInput
     forms?: FormUncheckedUpdateManyWithoutUserNestedInput
     form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
+    contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ContactListMemberUpsertWithWhereUniqueWithoutListInput = {
@@ -52795,6 +55305,22 @@ export namespace Prisma {
     data: XOR<ContactListMemberUpdateManyMutationInput, ContactListMemberUncheckedUpdateManyWithoutListInput>
   }
 
+  export type ContactAudienceAnalysisUpsertWithWhereUniqueWithoutContactListInput = {
+    where: ContactAudienceAnalysisWhereUniqueInput
+    update: XOR<ContactAudienceAnalysisUpdateWithoutContactListInput, ContactAudienceAnalysisUncheckedUpdateWithoutContactListInput>
+    create: XOR<ContactAudienceAnalysisCreateWithoutContactListInput, ContactAudienceAnalysisUncheckedCreateWithoutContactListInput>
+  }
+
+  export type ContactAudienceAnalysisUpdateWithWhereUniqueWithoutContactListInput = {
+    where: ContactAudienceAnalysisWhereUniqueInput
+    data: XOR<ContactAudienceAnalysisUpdateWithoutContactListInput, ContactAudienceAnalysisUncheckedUpdateWithoutContactListInput>
+  }
+
+  export type ContactAudienceAnalysisUpdateManyWithWhereWithoutContactListInput = {
+    where: ContactAudienceAnalysisScalarWhereInput
+    data: XOR<ContactAudienceAnalysisUpdateManyMutationInput, ContactAudienceAnalysisUncheckedUpdateManyWithoutContactListInput>
+  }
+
   export type ContactListCreateWithoutMembersInput = {
     uuid?: string
     title: string
@@ -52802,6 +55328,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutContact_listsInput
+    audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutContactListInput
   }
 
   export type ContactListUncheckedCreateWithoutMembersInput = {
@@ -52812,6 +55339,7 @@ export namespace Prisma {
     description?: string | null
     created_at?: Date | string
     updated_at?: Date | string
+    audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutContactListInput
   }
 
   export type ContactListCreateOrConnectWithoutMembersInput = {
@@ -52907,6 +55435,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutContact_listsNestedInput
+    audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutContactListNestedInput
   }
 
   export type ContactListUncheckedUpdateWithoutMembersInput = {
@@ -52917,6 +55446,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutContactListNestedInput
   }
 
   export type ContactUpsertWithoutList_membershipsInput = {
@@ -53232,6 +55762,7 @@ export namespace Prisma {
     forms?: FormCreateNestedManyWithoutUserInput
     form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
+    contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutInteractionsInput = {
@@ -53256,6 +55787,7 @@ export namespace Prisma {
     forms?: FormUncheckedCreateNestedManyWithoutUserInput
     form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
+    contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutInteractionsInput = {
@@ -53511,6 +56043,7 @@ export namespace Prisma {
     forms?: FormUpdateManyWithoutUserNestedInput
     form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
+    contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutInteractionsInput = {
@@ -53535,6 +56068,7 @@ export namespace Prisma {
     forms?: FormUncheckedUpdateManyWithoutUserNestedInput
     form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
+    contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type OutreachMessageUpsertWithoutInteractionInput = {
@@ -53710,6 +56244,7 @@ export namespace Prisma {
     forms?: FormCreateNestedManyWithoutUserInput
     form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
+    contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOutreach_messagesInput = {
@@ -53734,6 +56269,7 @@ export namespace Prisma {
     forms?: FormUncheckedCreateNestedManyWithoutUserInput
     form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
+    contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOutreach_messagesInput = {
@@ -53963,6 +56499,7 @@ export namespace Prisma {
     forms?: FormUpdateManyWithoutUserNestedInput
     form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
+    contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOutreach_messagesInput = {
@@ -53987,6 +56524,7 @@ export namespace Prisma {
     forms?: FormUncheckedUpdateManyWithoutUserNestedInput
     form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
+    contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ContactUpsertWithoutOutreach_messagesInput = {
@@ -54218,6 +56756,7 @@ export namespace Prisma {
     forms?: FormCreateNestedManyWithoutUserInput
     form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
+    contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOutreach_sequencesInput = {
@@ -54242,6 +56781,7 @@ export namespace Prisma {
     forms?: FormUncheckedCreateNestedManyWithoutUserInput
     form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
+    contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOutreach_sequencesInput = {
@@ -54281,6 +56821,7 @@ export namespace Prisma {
     forms?: FormUpdateManyWithoutUserNestedInput
     form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
+    contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOutreach_sequencesInput = {
@@ -54305,6 +56846,7 @@ export namespace Prisma {
     forms?: FormUncheckedUpdateManyWithoutUserNestedInput
     form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
+    contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type FilterCreateWithoutJobsInput = {
@@ -54323,6 +56865,7 @@ export namespace Prisma {
     raw_leads?: RawLeadCreateNestedManyWithoutFilterInput
     contacts?: ContactCreateNestedManyWithoutFilterInput
     filter_scoring_instructions?: FilterScoringInstructionCreateNestedManyWithoutFilterInput
+    audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutFilterInput
   }
 
   export type FilterUncheckedCreateWithoutJobsInput = {
@@ -54342,6 +56885,7 @@ export namespace Prisma {
     raw_leads?: RawLeadUncheckedCreateNestedManyWithoutFilterInput
     contacts?: ContactUncheckedCreateNestedManyWithoutFilterInput
     filter_scoring_instructions?: FilterScoringInstructionUncheckedCreateNestedManyWithoutFilterInput
+    audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutFilterInput
   }
 
   export type FilterCreateOrConnectWithoutJobsInput = {
@@ -54376,6 +56920,7 @@ export namespace Prisma {
     raw_leads?: RawLeadUpdateManyWithoutFilterNestedInput
     contacts?: ContactUpdateManyWithoutFilterNestedInput
     filter_scoring_instructions?: FilterScoringInstructionUpdateManyWithoutFilterNestedInput
+    audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutFilterNestedInput
   }
 
   export type FilterUncheckedUpdateWithoutJobsInput = {
@@ -54395,6 +56940,7 @@ export namespace Prisma {
     raw_leads?: RawLeadUncheckedUpdateManyWithoutFilterNestedInput
     contacts?: ContactUncheckedUpdateManyWithoutFilterNestedInput
     filter_scoring_instructions?: FilterScoringInstructionUncheckedUpdateManyWithoutFilterNestedInput
+    audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutFilterNestedInput
   }
 
   export type UserCreateWithoutSender_profilesInput = {
@@ -54418,6 +56964,7 @@ export namespace Prisma {
     forms?: FormCreateNestedManyWithoutUserInput
     form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
+    contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSender_profilesInput = {
@@ -54442,6 +56989,7 @@ export namespace Prisma {
     forms?: FormUncheckedCreateNestedManyWithoutUserInput
     form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
+    contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSender_profilesInput = {
@@ -54574,6 +57122,7 @@ export namespace Prisma {
     forms?: FormUpdateManyWithoutUserNestedInput
     form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
+    contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSender_profilesInput = {
@@ -54598,6 +57147,7 @@ export namespace Prisma {
     forms?: FormUncheckedUpdateManyWithoutUserNestedInput
     form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
+    contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type MarketingCampaignUpsertWithWhereUniqueWithoutSender_profileInput = {
@@ -54637,6 +57187,7 @@ export namespace Prisma {
     forms?: FormCreateNestedManyWithoutUserInput
     form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
+    contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutMarketing_campaignsInput = {
@@ -54661,6 +57212,7 @@ export namespace Prisma {
     forms?: FormUncheckedCreateNestedManyWithoutUserInput
     form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
+    contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutMarketing_campaignsInput = {
@@ -54887,6 +57439,7 @@ export namespace Prisma {
     forms?: FormUpdateManyWithoutUserNestedInput
     form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
+    contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMarketing_campaignsInput = {
@@ -54911,6 +57464,7 @@ export namespace Prisma {
     forms?: FormUncheckedUpdateManyWithoutUserNestedInput
     form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
+    contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type SenderProfileUpsertWithoutMarketing_campaignsInput = {
@@ -55374,6 +57928,7 @@ export namespace Prisma {
     forms?: FormCreateNestedManyWithoutUserInput
     form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
+    contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOpenai_batch_jobsInput = {
@@ -55398,6 +57953,7 @@ export namespace Prisma {
     forms?: FormUncheckedCreateNestedManyWithoutUserInput
     form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
+    contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOpenai_batch_jobsInput = {
@@ -55437,6 +57993,7 @@ export namespace Prisma {
     forms?: FormUpdateManyWithoutUserNestedInput
     form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
+    contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOpenai_batch_jobsInput = {
@@ -55461,6 +58018,7 @@ export namespace Prisma {
     forms?: FormUncheckedUpdateManyWithoutUserNestedInput
     form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
+    contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutIntegrationsInput = {
@@ -55484,6 +58042,7 @@ export namespace Prisma {
     forms?: FormCreateNestedManyWithoutUserInput
     form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
+    contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutIntegrationsInput = {
@@ -55508,6 +58067,7 @@ export namespace Prisma {
     forms?: FormUncheckedCreateNestedManyWithoutUserInput
     form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
+    contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutIntegrationsInput = {
@@ -55578,6 +58138,7 @@ export namespace Prisma {
     forms?: FormUpdateManyWithoutUserNestedInput
     form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
+    contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutIntegrationsInput = {
@@ -55602,6 +58163,7 @@ export namespace Prisma {
     forms?: FormUncheckedUpdateManyWithoutUserNestedInput
     form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
+    contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type IntegrationKeyUpsertWithWhereUniqueWithoutIntegrationInput = {
@@ -55710,6 +58272,7 @@ export namespace Prisma {
     forms?: FormCreateNestedManyWithoutUserInput
     form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
+    contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutRemindersInput = {
@@ -55734,6 +58297,7 @@ export namespace Prisma {
     forms?: FormUncheckedCreateNestedManyWithoutUserInput
     form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
+    contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutRemindersInput = {
@@ -55843,6 +58407,7 @@ export namespace Prisma {
     forms?: FormUpdateManyWithoutUserNestedInput
     form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
+    contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRemindersInput = {
@@ -55867,6 +58432,7 @@ export namespace Prisma {
     forms?: FormUncheckedUpdateManyWithoutUserNestedInput
     form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
+    contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ContactUpsertWithoutRemindersInput = {
@@ -55966,6 +58532,7 @@ export namespace Prisma {
     reminders?: ReminderCreateNestedManyWithoutUserInput
     form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
+    contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutFormsInput = {
@@ -55990,6 +58557,7 @@ export namespace Prisma {
     reminders?: ReminderUncheckedCreateNestedManyWithoutUserInput
     form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
+    contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutFormsInput = {
@@ -56101,6 +58669,7 @@ export namespace Prisma {
     reminders?: ReminderUpdateManyWithoutUserNestedInput
     form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
+    contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFormsInput = {
@@ -56125,6 +58694,7 @@ export namespace Prisma {
     reminders?: ReminderUncheckedUpdateManyWithoutUserNestedInput
     form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
+    contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type FormFieldUpsertWithWhereUniqueWithoutFormInput = {
@@ -56410,6 +58980,7 @@ export namespace Prisma {
     reminders?: ReminderCreateNestedManyWithoutUserInput
     forms?: FormCreateNestedManyWithoutUserInput
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
+    contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutForm_completionsInput = {
@@ -56434,6 +59005,7 @@ export namespace Prisma {
     reminders?: ReminderUncheckedCreateNestedManyWithoutUserInput
     forms?: FormUncheckedCreateNestedManyWithoutUserInput
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
+    contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutForm_completionsInput = {
@@ -56608,6 +59180,7 @@ export namespace Prisma {
     reminders?: ReminderUpdateManyWithoutUserNestedInput
     forms?: FormUpdateManyWithoutUserNestedInput
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
+    contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutForm_completionsInput = {
@@ -56632,6 +59205,7 @@ export namespace Prisma {
     reminders?: ReminderUncheckedUpdateManyWithoutUserNestedInput
     forms?: FormUncheckedUpdateManyWithoutUserNestedInput
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
+    contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type FormCompletionValueUpsertWithWhereUniqueWithoutCompletionInput = {
@@ -56784,6 +59358,272 @@ export namespace Prisma {
     enabled?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserCreateWithoutContact_audience_analysesInput = {
+    uuid?: string
+    email: string
+    phone?: string | null
+    password: string
+    role?: $Enums.AuthRole
+    created_at?: Date | string
+    updated_at?: Date | string
+    filters?: FilterCreateNestedManyWithoutUserInput
+    contacts?: ContactCreateNestedManyWithoutUserInput
+    outreach_messages?: OutreachMessageCreateNestedManyWithoutUserInput
+    outreach_sequences?: OutreachSequenceCreateNestedManyWithoutUserInput
+    interactions?: InteractionCreateNestedManyWithoutUserInput
+    sender_profiles?: SenderProfileCreateNestedManyWithoutUserInput
+    marketing_campaigns?: MarketingCampaignCreateNestedManyWithoutUserInput
+    scoring_instructions?: ScoringInstructionCreateNestedManyWithoutUserInput
+    openai_batch_jobs?: OpenAiBatchJobCreateNestedManyWithoutUserInput
+    integrations?: IntegrationCreateNestedManyWithoutUserInput
+    reminders?: ReminderCreateNestedManyWithoutUserInput
+    forms?: FormCreateNestedManyWithoutUserInput
+    form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
+    contact_lists?: ContactListCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutContact_audience_analysesInput = {
+    id?: number
+    uuid?: string
+    email: string
+    phone?: string | null
+    password: string
+    role?: $Enums.AuthRole
+    created_at?: Date | string
+    updated_at?: Date | string
+    filters?: FilterUncheckedCreateNestedManyWithoutUserInput
+    contacts?: ContactUncheckedCreateNestedManyWithoutUserInput
+    outreach_messages?: OutreachMessageUncheckedCreateNestedManyWithoutUserInput
+    outreach_sequences?: OutreachSequenceUncheckedCreateNestedManyWithoutUserInput
+    interactions?: InteractionUncheckedCreateNestedManyWithoutUserInput
+    sender_profiles?: SenderProfileUncheckedCreateNestedManyWithoutUserInput
+    marketing_campaigns?: MarketingCampaignUncheckedCreateNestedManyWithoutUserInput
+    scoring_instructions?: ScoringInstructionUncheckedCreateNestedManyWithoutUserInput
+    openai_batch_jobs?: OpenAiBatchJobUncheckedCreateNestedManyWithoutUserInput
+    integrations?: IntegrationUncheckedCreateNestedManyWithoutUserInput
+    reminders?: ReminderUncheckedCreateNestedManyWithoutUserInput
+    forms?: FormUncheckedCreateNestedManyWithoutUserInput
+    form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
+    contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutContact_audience_analysesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutContact_audience_analysesInput, UserUncheckedCreateWithoutContact_audience_analysesInput>
+  }
+
+  export type FilterCreateWithoutAudience_analysesInput = {
+    uuid?: string
+    name: string
+    source_type: $Enums.SourceType
+    query_config: JsonNullValueInput | InputJsonValue
+    enrichment_sources?: FilterCreateenrichment_sourcesInput | $Enums.EnrichmentSource[]
+    enabled?: boolean
+    cron_schedule?: string | null
+    channels?: FilterCreatechannelsInput | $Enums.Channel[]
+    outreach_instructions?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    user: UserCreateNestedOneWithoutFiltersInput
+    raw_leads?: RawLeadCreateNestedManyWithoutFilterInput
+    contacts?: ContactCreateNestedManyWithoutFilterInput
+    jobs?: FilterJobCreateNestedManyWithoutFilterInput
+    filter_scoring_instructions?: FilterScoringInstructionCreateNestedManyWithoutFilterInput
+  }
+
+  export type FilterUncheckedCreateWithoutAudience_analysesInput = {
+    id?: number
+    uuid?: string
+    user_uuid: string
+    name: string
+    source_type: $Enums.SourceType
+    query_config: JsonNullValueInput | InputJsonValue
+    enrichment_sources?: FilterCreateenrichment_sourcesInput | $Enums.EnrichmentSource[]
+    enabled?: boolean
+    cron_schedule?: string | null
+    channels?: FilterCreatechannelsInput | $Enums.Channel[]
+    outreach_instructions?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    raw_leads?: RawLeadUncheckedCreateNestedManyWithoutFilterInput
+    contacts?: ContactUncheckedCreateNestedManyWithoutFilterInput
+    jobs?: FilterJobUncheckedCreateNestedManyWithoutFilterInput
+    filter_scoring_instructions?: FilterScoringInstructionUncheckedCreateNestedManyWithoutFilterInput
+  }
+
+  export type FilterCreateOrConnectWithoutAudience_analysesInput = {
+    where: FilterWhereUniqueInput
+    create: XOR<FilterCreateWithoutAudience_analysesInput, FilterUncheckedCreateWithoutAudience_analysesInput>
+  }
+
+  export type ContactListCreateWithoutAudience_analysesInput = {
+    uuid?: string
+    title: string
+    description?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    user: UserCreateNestedOneWithoutContact_listsInput
+    members?: ContactListMemberCreateNestedManyWithoutListInput
+  }
+
+  export type ContactListUncheckedCreateWithoutAudience_analysesInput = {
+    id?: number
+    uuid?: string
+    user_uuid: string
+    title: string
+    description?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    members?: ContactListMemberUncheckedCreateNestedManyWithoutListInput
+  }
+
+  export type ContactListCreateOrConnectWithoutAudience_analysesInput = {
+    where: ContactListWhereUniqueInput
+    create: XOR<ContactListCreateWithoutAudience_analysesInput, ContactListUncheckedCreateWithoutAudience_analysesInput>
+  }
+
+  export type UserUpsertWithoutContact_audience_analysesInput = {
+    update: XOR<UserUpdateWithoutContact_audience_analysesInput, UserUncheckedUpdateWithoutContact_audience_analysesInput>
+    create: XOR<UserCreateWithoutContact_audience_analysesInput, UserUncheckedCreateWithoutContact_audience_analysesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutContact_audience_analysesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutContact_audience_analysesInput, UserUncheckedUpdateWithoutContact_audience_analysesInput>
+  }
+
+  export type UserUpdateWithoutContact_audience_analysesInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    filters?: FilterUpdateManyWithoutUserNestedInput
+    contacts?: ContactUpdateManyWithoutUserNestedInput
+    outreach_messages?: OutreachMessageUpdateManyWithoutUserNestedInput
+    outreach_sequences?: OutreachSequenceUpdateManyWithoutUserNestedInput
+    interactions?: InteractionUpdateManyWithoutUserNestedInput
+    sender_profiles?: SenderProfileUpdateManyWithoutUserNestedInput
+    marketing_campaigns?: MarketingCampaignUpdateManyWithoutUserNestedInput
+    scoring_instructions?: ScoringInstructionUpdateManyWithoutUserNestedInput
+    openai_batch_jobs?: OpenAiBatchJobUpdateManyWithoutUserNestedInput
+    integrations?: IntegrationUpdateManyWithoutUserNestedInput
+    reminders?: ReminderUpdateManyWithoutUserNestedInput
+    forms?: FormUpdateManyWithoutUserNestedInput
+    form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
+    contact_lists?: ContactListUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutContact_audience_analysesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    filters?: FilterUncheckedUpdateManyWithoutUserNestedInput
+    contacts?: ContactUncheckedUpdateManyWithoutUserNestedInput
+    outreach_messages?: OutreachMessageUncheckedUpdateManyWithoutUserNestedInput
+    outreach_sequences?: OutreachSequenceUncheckedUpdateManyWithoutUserNestedInput
+    interactions?: InteractionUncheckedUpdateManyWithoutUserNestedInput
+    sender_profiles?: SenderProfileUncheckedUpdateManyWithoutUserNestedInput
+    marketing_campaigns?: MarketingCampaignUncheckedUpdateManyWithoutUserNestedInput
+    scoring_instructions?: ScoringInstructionUncheckedUpdateManyWithoutUserNestedInput
+    openai_batch_jobs?: OpenAiBatchJobUncheckedUpdateManyWithoutUserNestedInput
+    integrations?: IntegrationUncheckedUpdateManyWithoutUserNestedInput
+    reminders?: ReminderUncheckedUpdateManyWithoutUserNestedInput
+    forms?: FormUncheckedUpdateManyWithoutUserNestedInput
+    form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
+    contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type FilterUpsertWithoutAudience_analysesInput = {
+    update: XOR<FilterUpdateWithoutAudience_analysesInput, FilterUncheckedUpdateWithoutAudience_analysesInput>
+    create: XOR<FilterCreateWithoutAudience_analysesInput, FilterUncheckedCreateWithoutAudience_analysesInput>
+    where?: FilterWhereInput
+  }
+
+  export type FilterUpdateToOneWithWhereWithoutAudience_analysesInput = {
+    where?: FilterWhereInput
+    data: XOR<FilterUpdateWithoutAudience_analysesInput, FilterUncheckedUpdateWithoutAudience_analysesInput>
+  }
+
+  export type FilterUpdateWithoutAudience_analysesInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    source_type?: EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
+    query_config?: JsonNullValueInput | InputJsonValue
+    enrichment_sources?: FilterUpdateenrichment_sourcesInput | $Enums.EnrichmentSource[]
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    cron_schedule?: NullableStringFieldUpdateOperationsInput | string | null
+    channels?: FilterUpdatechannelsInput | $Enums.Channel[]
+    outreach_instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutFiltersNestedInput
+    raw_leads?: RawLeadUpdateManyWithoutFilterNestedInput
+    contacts?: ContactUpdateManyWithoutFilterNestedInput
+    jobs?: FilterJobUpdateManyWithoutFilterNestedInput
+    filter_scoring_instructions?: FilterScoringInstructionUpdateManyWithoutFilterNestedInput
+  }
+
+  export type FilterUncheckedUpdateWithoutAudience_analysesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    source_type?: EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
+    query_config?: JsonNullValueInput | InputJsonValue
+    enrichment_sources?: FilterUpdateenrichment_sourcesInput | $Enums.EnrichmentSource[]
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    cron_schedule?: NullableStringFieldUpdateOperationsInput | string | null
+    channels?: FilterUpdatechannelsInput | $Enums.Channel[]
+    outreach_instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    raw_leads?: RawLeadUncheckedUpdateManyWithoutFilterNestedInput
+    contacts?: ContactUncheckedUpdateManyWithoutFilterNestedInput
+    jobs?: FilterJobUncheckedUpdateManyWithoutFilterNestedInput
+    filter_scoring_instructions?: FilterScoringInstructionUncheckedUpdateManyWithoutFilterNestedInput
+  }
+
+  export type ContactListUpsertWithoutAudience_analysesInput = {
+    update: XOR<ContactListUpdateWithoutAudience_analysesInput, ContactListUncheckedUpdateWithoutAudience_analysesInput>
+    create: XOR<ContactListCreateWithoutAudience_analysesInput, ContactListUncheckedCreateWithoutAudience_analysesInput>
+    where?: ContactListWhereInput
+  }
+
+  export type ContactListUpdateToOneWithWhereWithoutAudience_analysesInput = {
+    where?: ContactListWhereInput
+    data: XOR<ContactListUpdateWithoutAudience_analysesInput, ContactListUncheckedUpdateWithoutAudience_analysesInput>
+  }
+
+  export type ContactListUpdateWithoutAudience_analysesInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutContact_listsNestedInput
+    members?: ContactListMemberUpdateManyWithoutListNestedInput
+  }
+
+  export type ContactListUncheckedUpdateWithoutAudience_analysesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: ContactListMemberUncheckedUpdateManyWithoutListNestedInput
   }
 
   export type FilterCreateManyUserInput = {
@@ -57013,6 +59853,26 @@ export namespace Prisma {
     updated_at?: Date | string
   }
 
+  export type ContactAudienceAnalysisCreateManyUserInput = {
+    id?: number
+    uuid?: string
+    scope: $Enums.ContactAudienceAnalysisScope
+    filter_uuid?: string | null
+    contact_list_uuid?: string | null
+    audience_name: string
+    stats_snapshot: JsonNullValueInput | InputJsonValue
+    analysis?: JsonNullValueInput | InputJsonValue
+    status?: $Enums.ContactAudienceAnalysisStatus
+    error?: string | null
+    provider?: string | null
+    model?: string | null
+    input_tokens?: number | null
+    output_tokens?: number | null
+    cost_usd?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
   export type FilterUpdateWithoutUserInput = {
     uuid?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -57029,6 +59889,7 @@ export namespace Prisma {
     contacts?: ContactUpdateManyWithoutFilterNestedInput
     jobs?: FilterJobUpdateManyWithoutFilterNestedInput
     filter_scoring_instructions?: FilterScoringInstructionUpdateManyWithoutFilterNestedInput
+    audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutFilterNestedInput
   }
 
   export type FilterUncheckedUpdateWithoutUserInput = {
@@ -57048,6 +59909,7 @@ export namespace Prisma {
     contacts?: ContactUncheckedUpdateManyWithoutFilterNestedInput
     jobs?: FilterJobUncheckedUpdateManyWithoutFilterNestedInput
     filter_scoring_instructions?: FilterScoringInstructionUncheckedUpdateManyWithoutFilterNestedInput
+    audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutFilterNestedInput
   }
 
   export type FilterUncheckedUpdateManyWithoutUserInput = {
@@ -57708,6 +60570,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: ContactListMemberUpdateManyWithoutListNestedInput
+    audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutContactListNestedInput
   }
 
   export type ContactListUncheckedUpdateWithoutUserInput = {
@@ -57718,6 +60581,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: ContactListMemberUncheckedUpdateManyWithoutListNestedInput
+    audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutContactListNestedInput
   }
 
   export type ContactListUncheckedUpdateManyWithoutUserInput = {
@@ -57725,6 +60589,65 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ContactAudienceAnalysisUpdateWithoutUserInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    scope?: EnumContactAudienceAnalysisScopeFieldUpdateOperationsInput | $Enums.ContactAudienceAnalysisScope
+    audience_name?: StringFieldUpdateOperationsInput | string
+    stats_snapshot?: JsonNullValueInput | InputJsonValue
+    analysis?: JsonNullValueInput | InputJsonValue
+    status?: EnumContactAudienceAnalysisStatusFieldUpdateOperationsInput | $Enums.ContactAudienceAnalysisStatus
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    provider?: NullableStringFieldUpdateOperationsInput | string | null
+    model?: NullableStringFieldUpdateOperationsInput | string | null
+    input_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    output_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    cost_usd?: NullableFloatFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    filter?: FilterUpdateOneWithoutAudience_analysesNestedInput
+    contactList?: ContactListUpdateOneWithoutAudience_analysesNestedInput
+  }
+
+  export type ContactAudienceAnalysisUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    scope?: EnumContactAudienceAnalysisScopeFieldUpdateOperationsInput | $Enums.ContactAudienceAnalysisScope
+    filter_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    contact_list_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    audience_name?: StringFieldUpdateOperationsInput | string
+    stats_snapshot?: JsonNullValueInput | InputJsonValue
+    analysis?: JsonNullValueInput | InputJsonValue
+    status?: EnumContactAudienceAnalysisStatusFieldUpdateOperationsInput | $Enums.ContactAudienceAnalysisStatus
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    provider?: NullableStringFieldUpdateOperationsInput | string | null
+    model?: NullableStringFieldUpdateOperationsInput | string | null
+    input_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    output_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    cost_usd?: NullableFloatFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ContactAudienceAnalysisUncheckedUpdateManyWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    scope?: EnumContactAudienceAnalysisScopeFieldUpdateOperationsInput | $Enums.ContactAudienceAnalysisScope
+    filter_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    contact_list_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    audience_name?: StringFieldUpdateOperationsInput | string
+    stats_snapshot?: JsonNullValueInput | InputJsonValue
+    analysis?: JsonNullValueInput | InputJsonValue
+    status?: EnumContactAudienceAnalysisStatusFieldUpdateOperationsInput | $Enums.ContactAudienceAnalysisStatus
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    provider?: NullableStringFieldUpdateOperationsInput | string | null
+    model?: NullableStringFieldUpdateOperationsInput | string | null
+    input_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    output_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    cost_usd?: NullableFloatFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -57781,6 +60704,26 @@ export namespace Prisma {
   export type FilterScoringInstructionCreateManyFilterInput = {
     scoring_instruction_uuid: string
     created_at?: Date | string
+  }
+
+  export type ContactAudienceAnalysisCreateManyFilterInput = {
+    id?: number
+    uuid?: string
+    user_uuid: string
+    scope: $Enums.ContactAudienceAnalysisScope
+    contact_list_uuid?: string | null
+    audience_name: string
+    stats_snapshot: JsonNullValueInput | InputJsonValue
+    analysis?: JsonNullValueInput | InputJsonValue
+    status?: $Enums.ContactAudienceAnalysisStatus
+    error?: string | null
+    provider?: string | null
+    model?: string | null
+    input_tokens?: number | null
+    output_tokens?: number | null
+    cost_usd?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
   }
 
   export type RawLeadUpdateWithoutFilterInput = {
@@ -57958,6 +60901,65 @@ export namespace Prisma {
   export type FilterScoringInstructionUncheckedUpdateManyWithoutFilterInput = {
     scoring_instruction_uuid?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ContactAudienceAnalysisUpdateWithoutFilterInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    scope?: EnumContactAudienceAnalysisScopeFieldUpdateOperationsInput | $Enums.ContactAudienceAnalysisScope
+    audience_name?: StringFieldUpdateOperationsInput | string
+    stats_snapshot?: JsonNullValueInput | InputJsonValue
+    analysis?: JsonNullValueInput | InputJsonValue
+    status?: EnumContactAudienceAnalysisStatusFieldUpdateOperationsInput | $Enums.ContactAudienceAnalysisStatus
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    provider?: NullableStringFieldUpdateOperationsInput | string | null
+    model?: NullableStringFieldUpdateOperationsInput | string | null
+    input_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    output_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    cost_usd?: NullableFloatFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutContact_audience_analysesNestedInput
+    contactList?: ContactListUpdateOneWithoutAudience_analysesNestedInput
+  }
+
+  export type ContactAudienceAnalysisUncheckedUpdateWithoutFilterInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    scope?: EnumContactAudienceAnalysisScopeFieldUpdateOperationsInput | $Enums.ContactAudienceAnalysisScope
+    contact_list_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    audience_name?: StringFieldUpdateOperationsInput | string
+    stats_snapshot?: JsonNullValueInput | InputJsonValue
+    analysis?: JsonNullValueInput | InputJsonValue
+    status?: EnumContactAudienceAnalysisStatusFieldUpdateOperationsInput | $Enums.ContactAudienceAnalysisStatus
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    provider?: NullableStringFieldUpdateOperationsInput | string | null
+    model?: NullableStringFieldUpdateOperationsInput | string | null
+    input_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    output_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    cost_usd?: NullableFloatFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ContactAudienceAnalysisUncheckedUpdateManyWithoutFilterInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    scope?: EnumContactAudienceAnalysisScopeFieldUpdateOperationsInput | $Enums.ContactAudienceAnalysisScope
+    contact_list_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    audience_name?: StringFieldUpdateOperationsInput | string
+    stats_snapshot?: JsonNullValueInput | InputJsonValue
+    analysis?: JsonNullValueInput | InputJsonValue
+    status?: EnumContactAudienceAnalysisStatusFieldUpdateOperationsInput | $Enums.ContactAudienceAnalysisStatus
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    provider?: NullableStringFieldUpdateOperationsInput | string | null
+    model?: NullableStringFieldUpdateOperationsInput | string | null
+    input_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    output_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    cost_usd?: NullableFloatFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type FilterScoringInstructionCreateManyScoring_instructionInput = {
@@ -58548,6 +61550,26 @@ export namespace Prisma {
     created_at?: Date | string
   }
 
+  export type ContactAudienceAnalysisCreateManyContactListInput = {
+    id?: number
+    uuid?: string
+    user_uuid: string
+    scope: $Enums.ContactAudienceAnalysisScope
+    filter_uuid?: string | null
+    audience_name: string
+    stats_snapshot: JsonNullValueInput | InputJsonValue
+    analysis?: JsonNullValueInput | InputJsonValue
+    status?: $Enums.ContactAudienceAnalysisStatus
+    error?: string | null
+    provider?: string | null
+    model?: string | null
+    input_tokens?: number | null
+    output_tokens?: number | null
+    cost_usd?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
   export type ContactListMemberUpdateWithoutListInput = {
     uuid?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -58566,6 +61588,65 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     contact_uuid?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ContactAudienceAnalysisUpdateWithoutContactListInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    scope?: EnumContactAudienceAnalysisScopeFieldUpdateOperationsInput | $Enums.ContactAudienceAnalysisScope
+    audience_name?: StringFieldUpdateOperationsInput | string
+    stats_snapshot?: JsonNullValueInput | InputJsonValue
+    analysis?: JsonNullValueInput | InputJsonValue
+    status?: EnumContactAudienceAnalysisStatusFieldUpdateOperationsInput | $Enums.ContactAudienceAnalysisStatus
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    provider?: NullableStringFieldUpdateOperationsInput | string | null
+    model?: NullableStringFieldUpdateOperationsInput | string | null
+    input_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    output_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    cost_usd?: NullableFloatFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutContact_audience_analysesNestedInput
+    filter?: FilterUpdateOneWithoutAudience_analysesNestedInput
+  }
+
+  export type ContactAudienceAnalysisUncheckedUpdateWithoutContactListInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    scope?: EnumContactAudienceAnalysisScopeFieldUpdateOperationsInput | $Enums.ContactAudienceAnalysisScope
+    filter_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    audience_name?: StringFieldUpdateOperationsInput | string
+    stats_snapshot?: JsonNullValueInput | InputJsonValue
+    analysis?: JsonNullValueInput | InputJsonValue
+    status?: EnumContactAudienceAnalysisStatusFieldUpdateOperationsInput | $Enums.ContactAudienceAnalysisStatus
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    provider?: NullableStringFieldUpdateOperationsInput | string | null
+    model?: NullableStringFieldUpdateOperationsInput | string | null
+    input_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    output_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    cost_usd?: NullableFloatFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ContactAudienceAnalysisUncheckedUpdateManyWithoutContactListInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    scope?: EnumContactAudienceAnalysisScopeFieldUpdateOperationsInput | $Enums.ContactAudienceAnalysisScope
+    filter_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    audience_name?: StringFieldUpdateOperationsInput | string
+    stats_snapshot?: JsonNullValueInput | InputJsonValue
+    analysis?: JsonNullValueInput | InputJsonValue
+    status?: EnumContactAudienceAnalysisStatusFieldUpdateOperationsInput | $Enums.ContactAudienceAnalysisStatus
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    provider?: NullableStringFieldUpdateOperationsInput | string | null
+    model?: NullableStringFieldUpdateOperationsInput | string | null
+    input_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    output_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    cost_usd?: NullableFloatFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type MarketingCampaignCreateManySender_profileInput = {

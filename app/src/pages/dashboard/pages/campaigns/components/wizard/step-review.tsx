@@ -1,4 +1,4 @@
-import { Chip } from "@heroui/react";
+import { Checkbox, Chip } from "@heroui/react";
 import { Calendar, Link2, Mail, MessageSquare, Sparkles, Users } from "lucide-react";
 import { Channel } from "@/features/contacts/interfaces/contact.interface";
 import { CampaignType } from "@/features/marketing-campaigns/interfaces/campaign.interface";
@@ -10,9 +10,10 @@ interface StepReviewProps {
     audienceCount: number | null;
     message: MessageComposerValue;
     aiPrompt: string;
+    onBasicsChange: (patch: Partial<BasicsValues>) => void;
 }
 
-export function StepReview({ basics, audienceCount, message, aiPrompt }: StepReviewProps) {
+export function StepReview({ basics, audienceCount, message, aiPrompt, onBasicsChange }: StepReviewProps) {
     const isPersonalized = basics.campaign_type === CampaignType.PERSONALIZED;
 
     return (
@@ -64,10 +65,22 @@ export function StepReview({ basics, audienceCount, message, aiPrompt }: StepRev
                     <p className="text-sm text-foreground whitespace-pre-wrap">
                         {aiPrompt || <span className="text-muted italic">— no prompt set —</span>}
                     </p>
+                    <Checkbox
+                        isSelected={basics.use_openai_batch}
+                        onChange={(checked: boolean) => onBasicsChange({ use_openai_batch: checked })}
+                    >
+                        <Checkbox.Control>
+                            <Checkbox.Indicator />
+                        </Checkbox.Control>
+                        <span className="text-sm text-foreground">
+                            Use OpenAI Batch API to generate drafts (50% cheaper, typically within 24
+                            hours)
+                        </span>
+                    </Checkbox>
                     <p className="text-xs text-muted">
                         {basics.use_openai_batch
-                            ? 'Drafts will be created via the OpenAI Batch API when you click "Generate Drafts" (typically within 24 hours).'
-                            : 'The AI will generate a unique message for each contact when you click "Generate Drafts".'}
+                            ? 'When you click "Generate Drafts", drafts will be queued via the OpenAI Batch API and usually ready within 24 hours.'
+                            : 'When you click "Generate Drafts", the AI will generate a unique message for each contact right away.'}
                     </p>
                 </section>
             )}

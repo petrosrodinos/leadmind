@@ -23,20 +23,21 @@ model User {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  filters              Filter[]
-  contacts             Contact[]
-  outreach_messages    OutreachMessage[]
-  outreach_sequences   OutreachSequence[]
-  interactions         Interaction[]
-  sender_profiles      SenderProfile[]
-  marketing_campaigns  MarketingCampaign[]
-  scoring_instructions ScoringInstruction[]
-  openai_batch_jobs    OpenAiBatchJob[]
-  integrations         Integration[]
-  reminders            Reminder[]
-  forms                Form[]
-  form_completions     FormCompletion[]     @relation("CompletedByUser")
-  contact_lists        ContactList[]
+  filters                   Filter[]
+  contacts                  Contact[]
+  outreach_messages         OutreachMessage[]
+  outreach_sequences        OutreachSequence[]
+  interactions              Interaction[]
+  sender_profiles           SenderProfile[]
+  marketing_campaigns       MarketingCampaign[]
+  scoring_instructions      ScoringInstruction[]
+  openai_batch_jobs         OpenAiBatchJob[]
+  integrations              Integration[]
+  reminders                 Reminder[]
+  forms                     Form[]
+  form_completions          FormCompletion[]          @relation("CompletedByUser")
+  contact_lists             ContactList[]
+  contact_audience_analyses ContactAudienceAnalysis[]
 
   @@index([email])
   @@index([phone])
@@ -64,6 +65,7 @@ model Filter {
   contacts                    Contact[]
   jobs                        FilterJob[]
   filter_scoring_instructions FilterScoringInstruction[]
+  audience_analyses           ContactAudienceAnalysis[]
 
   @@index([user_uuid])
 }
@@ -240,8 +242,9 @@ model ContactList {
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
 
-  user    User                @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
-  members ContactListMember[]
+  user              User                      @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
+  members           ContactListMember[]
+  audience_analyses ContactAudienceAnalysis[]
 
   @@index([user_uuid])
   @@map("contact_lists")
@@ -820,4 +823,46 @@ model FormCompletionValue {
   @@index([completion_uuid])
   @@index([field_uuid])
   @@map("form_completion_values")
+}
+
+enum ContactAudienceAnalysisScope {
+  FILTER
+  LIST
+}
+
+enum ContactAudienceAnalysisStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+model ContactAudienceAnalysis {
+  id                Int                           @id @default(autoincrement())
+  uuid              String                        @unique @default(uuid())
+  user_uuid         String
+  scope             ContactAudienceAnalysisScope
+  filter_uuid       String?
+  contact_list_uuid String?
+  audience_name     String
+  stats_snapshot    Json
+  analysis          Json                          @default("{}")
+  status            ContactAudienceAnalysisStatus @default(PENDING)
+  error             String?
+  provider          String?
+  model             String?
+  input_tokens      Int?
+  output_tokens     Int?
+  cost_usd          Float?
+  created_at        DateTime                      @default(now())
+  updated_at        DateTime                      @updatedAt
+
+  user        User         @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
+  filter      Filter?      @relation(fields: [filter_uuid], references: [uuid], onDelete: Cascade)
+  contactList ContactList? @relation(fields: [contact_list_uuid], references: [uuid], onDelete: Cascade)
+
+  @@index([user_uuid])
+  @@index([filter_uuid])
+  @@index([contact_list_uuid])
+  @@index([scope])
+  @@map("contact_audience_analyses")
 }

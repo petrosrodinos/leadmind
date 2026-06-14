@@ -200,6 +200,7 @@ export function CampaignWizard({ campaign }: CampaignWizardProps) {
                         audienceCount={audienceCount}
                         message={message}
                         aiPrompt={aiPrompt}
+                        onBasicsChange={(patch) => setBasics((v) => ({ ...v, ...patch }))}
                     />
                 )}
             </WizardShell>
