@@ -110,4 +110,14 @@ export class FiltersController {
     ) {
         return this.contactAudienceAnalysisService.createFilterAnalysis(user_uuid, uuid);
     }
+
+    @Delete(':uuid/analyses/:analysisUuid')
+    @ApiOperation({ summary: 'Delete an AI audience analysis for a filter' })
+    deleteAnalysis(
+        @CurrentUser('uuid') user_uuid: string,
+        @Param('uuid') uuid: string,
+        @Param('analysisUuid') analysisUuid: string,
+    ) {
+        return this.contactAudienceAnalysisService.deleteFilterAnalysis(user_uuid, uuid, analysisUuid);
+    }
 }

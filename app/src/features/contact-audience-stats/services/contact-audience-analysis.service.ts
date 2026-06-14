@@ -13,6 +13,12 @@ function analysesRoute(scope: ContactAudienceScope): string {
         : ApiRoutes.contact_lists.analyses(scope.uuid);
 }
 
+function analysisRoute(scope: ContactAudienceScope, analysisUuid: string): string {
+    return scope.type === "filter"
+        ? ApiRoutes.filters.analysis(scope.uuid, analysisUuid)
+        : ApiRoutes.contact_lists.analysis(scope.uuid, analysisUuid);
+}
+
 export const listAudienceAnalyses = async (
     scope: ContactAudienceScope,
     query?: ListContactAudienceAnalysesQuery,
@@ -37,5 +43,19 @@ export const createAudienceAnalysis = async (
         const message =
             (error as { response?: { data?: { message?: string } } })?.response?.data?.message;
         throw new Error(message || "Failed to run audience analysis.");
+    }
+};
+
+export const deleteAudienceAnalysis = async (
+    scope: ContactAudienceScope,
+    analysisUuid: string,
+): Promise<{ uuid: string }> => {
+    try {
+        const response = await axiosInstance.delete(analysisRoute(scope, analysisUuid));
+        return response.data;
+    } catch (error: unknown) {
+        const message =
+            (error as { response?: { data?: { message?: string } } })?.response?.data?.message;
+        throw new Error(message || "Failed to delete audience analysis.");
     }
 };

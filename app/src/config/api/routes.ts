@@ -77,6 +77,8 @@ export const ApiRoutes = {
         jobs: (uuid: string) => `/filters/${uuid}/jobs`,
         stats: (uuid: string) => `/filters/${uuid}/stats`,
         analyses: (uuid: string) => `/filters/${uuid}/analyses`,
+        analysis: (filterUuid: string, analysisUuid: string) =>
+            `/filters/${filterUuid}/analyses/${analysisUuid}`,
     },
     gemi: {
         prefectures: "/gemi/prefectures",
@@ -175,5 +177,7 @@ export const ApiRoutes = {
             `/contact-lists/${listUuid}/contacts/${contactUuid}`,
         stats: (uuid: string) => `/contact-lists/${uuid}/stats`,
         analyses: (uuid: string) => `/contact-lists/${uuid}/analyses`,
+        analysis: (listUuid: string, analysisUuid: string) =>
+            `/contact-lists/${listUuid}/analyses/${analysisUuid}`,
     },
 }

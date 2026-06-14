@@ -120,6 +120,30 @@ export class ContactAudienceAnalysisService {
         }, query);
     }
 
+    async deleteFilterAnalysis(
+        user_uuid: string,
+        filterUuid: string,
+        analysisUuid: string,
+    ): Promise<{ uuid: string }> {
+        await this.assertFilterOwnership(user_uuid, filterUuid);
+        return this.deleteAnalysis(user_uuid, analysisUuid, {
+            scope: ContactAudienceAnalysisScope.FILTER,
+            filter_uuid: filterUuid,
+        });
+    }
+
+    async deleteListAnalysis(
+        user_uuid: string,
+        listUuid: string,
+        analysisUuid: string,
+    ): Promise<{ uuid: string }> {
+        await this.assertListOwnership(user_uuid, listUuid);
+        return this.deleteAnalysis(user_uuid, analysisUuid, {
+            scope: ContactAudienceAnalysisScope.LIST,
+            contact_list_uuid: listUuid,
+        });
+    }
+
     private async runAnalysis(input: {
         user_uuid: string;
         scope: ContactAudienceAnalysisScope;
@@ -265,6 +289,24 @@ export class ContactAudienceAnalysisService {
             select: { uuid: true },
         });
         if (!list) throw new NotFoundException('Contact list not found');
+    }
+
+    private async deleteAnalysis(
+        user_uuid: string,
+        analysisUuid: string,
+        where: Prisma.ContactAudienceAnalysisWhereInput,
+    ): Promise<{ uuid: string }> {
+        const existing = await this.prisma.contactAudienceAnalysis.findFirst({
+            where: { ...where, user_uuid, uuid: analysisUuid },
+            select: { uuid: true },
+        });
+        if (!existing) throw new NotFoundException('Analysis not found');
+
+        await this.prisma.contactAudienceAnalysis.delete({
+            where: { uuid: analysisUuid },
+        });
+
+        return { uuid: analysisUuid };
     }
 
     private toRecord(row: AnalysisRow): ContactAudienceAnalysisRecord {

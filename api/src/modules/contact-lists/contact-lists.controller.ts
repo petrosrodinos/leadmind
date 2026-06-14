@@ -137,4 +137,14 @@ export class ContactListsController {
     ) {
         return this.contactAudienceAnalysisService.createListAnalysis(user_uuid, uuid);
     }
+
+    @Delete(':uuid/analyses/:analysisUuid')
+    @ApiOperation({ summary: 'Delete an AI audience analysis for a contact list' })
+    deleteAnalysis(
+        @CurrentUser('uuid') user_uuid: string,
+        @Param('uuid') uuid: string,
+        @Param('analysisUuid') analysisUuid: string,
+    ) {
+        return this.contactAudienceAnalysisService.deleteListAnalysis(user_uuid, uuid, analysisUuid);
+    }
 }
