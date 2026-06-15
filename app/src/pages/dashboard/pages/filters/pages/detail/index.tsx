@@ -20,6 +20,7 @@ const CHANNEL_LABEL: Record<Channel, string> = {
   [Channel.EMAIL]: "Email",
   [Channel.SMS]: "SMS",
   [Channel.LINKEDIN]: "LinkedIn",
+  [Channel.PHONE_CALL]: "Call",
 };
 
 const TABS = [

@@ -10,6 +10,7 @@ const CHANNEL_ICON: Record<Channel, React.ComponentType<{ className?: string }>>
   [Channel.EMAIL]: Mail,
   [Channel.SMS]: Phone,
   [Channel.LINKEDIN]: MessageCircle,
+  [Channel.PHONE_CALL]: Phone,
 };
 
 interface DashboardPendingDraftsCardProps {

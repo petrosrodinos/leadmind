@@ -60,7 +60,7 @@ const gemiConfigSchema = z.object({
 const manualConfigSchema = z.record(z.string(), z.string());
 
 const channelSchema = z
-    .array(z.enum([Channel.EMAIL, Channel.SMS, Channel.LINKEDIN]))
+    .array(z.enum([Channel.EMAIL, Channel.SMS, Channel.LINKEDIN, Channel.PHONE_CALL]))
     .min(1, "Select at least one channel");
 
 const enrichmentSourcesSchema = z.array(z.nativeEnum(EnrichmentSource));
