@@ -1,5 +1,6 @@
 import { useMemo } from "react";
-import { Button, Table } from "@heroui/react";
+import type { Selection } from "@heroui/react";
+import { Button, Checkbox, Table } from "@heroui/react";
 import { Trash2 } from "lucide-react";
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { TablePagination } from "@/components/ui/table-pagination";
@@ -26,6 +27,8 @@ interface ListMembersTableProps {
     totalPages: number;
     onPageChange: (page: number) => void;
     onContactOpen?: (contactUuid: string) => void;
+    selectedKeys: Set<string>;
+    onSelectionChange: (keys: Set<string>) => void;
 }
 
 export function ListMembersTable({
@@ -39,6 +42,8 @@ export function ListMembersTable({
     totalPages,
     onPageChange,
     onContactOpen,
+    selectedKeys,
+    onSelectionChange,
 }: ListMembersTableProps) {
     const removeContact = useRemoveListContact();
 
@@ -119,6 +124,14 @@ export function ListMembersTable({
         pageCount: totalPages,
     });
 
+    const handleSelectionChange = (keys: Selection) => {
+        if (keys === "all") {
+            onSelectionChange(new Set(contacts.map((c) => c.uuid)));
+        } else {
+            onSelectionChange(new Set(Array.from(keys, String)));
+        }
+    };
+
     return (
         <div className="bg-surface rounded-xl border border-border overflow-hidden">
             <Table>
@@ -126,8 +139,19 @@ export function ListMembersTable({
                     <Table.Content
                         aria-label="List members"
                         className="min-w-[640px]"
+                        selectionMode="multiple"
+                        selectionBehavior="toggle"
+                        selectedKeys={selectedKeys}
+                        onSelectionChange={handleSelectionChange}
                     >
                         <Table.Header>
+                            <Table.Column className="pr-0 w-10">
+                                <Checkbox aria-label="Select all" slot="selection">
+                                    <Checkbox.Control>
+                                        <Checkbox.Indicator />
+                                    </Checkbox.Control>
+                                </Checkbox>
+                            </Table.Column>
                             {table.getHeaderGroups()[0]!.headers.map((header) => (
                                 <Table.Column
                                     key={header.id}
@@ -153,6 +177,9 @@ export function ListMembersTable({
                             {isLoading
                                 ? Array.from({ length: 5 }).map((_, i) => (
                                       <Table.Row key={`sk-${i}`} id={`sk-${i}`}>
+                                          <Table.Cell className="pr-0">
+                                              <div className="h-4 w-4 rounded bg-surface-secondary animate-pulse" />
+                                          </Table.Cell>
                                           {columns.map((c) => (
                                               <Table.Cell key={c.id}>
                                                   <div className="h-4 w-3/4 rounded bg-surface-secondary animate-pulse" />
@@ -162,6 +189,16 @@ export function ListMembersTable({
                                   ))
                                 : table.getRowModel().rows.map((row) => (
                                       <Table.Row key={row.id} id={row.id} className={tableNavRowClassName}>
+                                          <Table.Cell className={`pr-0 ${tableNavInteractiveCellClassName}`}>
+                                              <Checkbox
+                                                  aria-label={`Select ${row.original.name ?? "contact"}`}
+                                                  slot="selection"
+                                              >
+                                                  <Checkbox.Control>
+                                                      <Checkbox.Indicator />
+                                                  </Checkbox.Control>
+                                              </Checkbox>
+                                          </Table.Cell>
                                           {row.getVisibleCells().map((cell) => {
                                               const content = flexRender(
                                                   cell.column.columnDef.cell,

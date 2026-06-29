@@ -3,6 +3,7 @@ import {
     getDashboardPendingDrafts,
     getDashboardStats,
     getDashboardTopContacts,
+    unwrapContactList,
 } from "../services/dashboard.service";
 
 export const dashboardQueryKeys = {
@@ -23,6 +24,7 @@ export function useDashboardTopContacts(limit = 5) {
     return useQuery({
         queryKey: dashboardQueryKeys.topContacts(limit),
         queryFn: () => getDashboardTopContacts(limit),
+        select: unwrapContactList,
     });
 }
 

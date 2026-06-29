@@ -51,6 +51,7 @@ export const ApiRoutes = {
         enrichments: (uuid: string) => `/contacts/${uuid}/enrichments`,
         bulk_score: "/contacts/bulk-score",
         bulk_enrich: "/contacts/bulk-enrich",
+        bulk_scrape_emails: "/contacts/bulk-scrape-emails",
         bulk_ai_draft_messages: "/contacts/bulk-ai-draft-messages",
         messages: (uuid: string) => `/contacts/${uuid}/messages`,
         from_lead: (lead_uuid: string) => `/contacts/from-lead/${lead_uuid}`,

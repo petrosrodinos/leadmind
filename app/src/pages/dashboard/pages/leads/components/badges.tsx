@@ -22,13 +22,14 @@ export function ScoreBadge({ score }: { score: number | null | undefined }) {
 }
 
 export function maxContactScore(rows: ContactScoreRow[] | null | undefined): number | null {
-  if (!rows?.length) return null;
+  if (!Array.isArray(rows) || rows.length === 0) return null;
   return Math.max(...rows.map((r) => r.score));
 }
 
 function contactScoresTooltip(contact: Contact): string {
   const defs = contact.filter?.scoring_instructions ?? [];
-  const byInstr = new Map((contact.contact_scores ?? []).map((r) => [r.scoring_instruction_uuid, r.score]));
+  const scoreRows = Array.isArray(contact.contact_scores) ? contact.contact_scores : [];
+  const byInstr = new Map(scoreRows.map((r) => [r.scoring_instruction_uuid, r.score]));
   if (defs.length > 0) {
     return defs
       .map((d) => {
@@ -37,7 +38,7 @@ function contactScoresTooltip(contact: Contact): string {
       })
       .join("\n");
   }
-  const rows = contact.contact_scores ?? [];
+  const rows = scoreRows;
   if (!rows.length) return "";
   return rows.map((r) => `${r.score}/10`).join("\n");
 }

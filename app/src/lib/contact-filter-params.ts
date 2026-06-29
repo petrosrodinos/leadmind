@@ -106,6 +106,18 @@ export function contactFiltersToListQuery(
     };
 }
 
+export function hasActiveContactFilters(filters: ContactFilters): boolean {
+    const serialized = serializeContactFiltersToSearchParams(filters);
+    return Object.values(serialized).some((value) => value != null && value !== "");
+}
+
+export function contactFiltersToBulkScrapePayload(
+    filters: ContactFilters,
+): Omit<ListContactsQuery, "page" | "limit"> {
+    const { page: _page, limit: _limit, ...rest } = contactFiltersToListQuery(filters);
+    return rest;
+}
+
 export function buildContactListApiParams(
     query: ListContactsQuery = {},
 ): Record<string, string | number | undefined> {

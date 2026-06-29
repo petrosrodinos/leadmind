@@ -1,6 +1,6 @@
 import type { FC } from "react";
 import { Button, Dropdown } from "@heroui/react";
-import { ChevronDown, ChevronsUpDown, Gauge, Mail, Plus, Sparkles } from "lucide-react";
+import { ChevronDown, ChevronsUpDown, Gauge, Globe, Mail, Plus, Sparkles } from "lucide-react";
 
 interface ContactsActionsDropdownProps {
     onAddContact: () => void;
@@ -12,6 +12,9 @@ interface ContactsActionsDropdownProps {
     draftMessagesDisabled?: boolean;
     onEnrichSelected?: () => void;
     enrichDisabled?: boolean;
+    onScrapeEmailsSelected?: () => void;
+    scrapeEmailsDisabled?: boolean;
+    scrapeEmailsPending?: boolean;
 }
 
 export const ContactsActionsDropdown: FC<ContactsActionsDropdownProps> = ({
@@ -24,6 +27,9 @@ export const ContactsActionsDropdown: FC<ContactsActionsDropdownProps> = ({
     draftMessagesDisabled = false,
     onEnrichSelected,
     enrichDisabled = false,
+    onScrapeEmailsSelected,
+    scrapeEmailsDisabled = false,
+    scrapeEmailsPending = false,
 }) => (
     <Dropdown>
         <Dropdown.Trigger>
@@ -43,6 +49,7 @@ export const ContactsActionsDropdown: FC<ContactsActionsDropdownProps> = ({
                     if (key === "score-selected") onScoreSelected?.();
                     if (key === "draft-messages-selected") onDraftMessagesSelected?.();
                     if (key === "enrich-selected") onEnrichSelected?.();
+                    if (key === "scrape-emails-selected") onScrapeEmailsSelected?.();
                     if (key === "add-contact") onAddContact();
                 }}
             >
@@ -79,6 +86,18 @@ export const ContactsActionsDropdown: FC<ContactsActionsDropdownProps> = ({
                         <span className="flex items-center gap-2.5 antialiased">
                             <Sparkles className="size-4 shrink-0 text-violet-500" strokeWidth={2} />
                             <span className="font-medium text-violet-400">Enrich selected</span>
+                        </span>
+                    </Dropdown.Item>
+                ) : null}
+                {onScrapeEmailsSelected ? (
+                    <Dropdown.Item
+                        id="scrape-emails-selected"
+                        textValue="Find emails from websites"
+                        isDisabled={scrapeEmailsDisabled || scrapeEmailsPending}
+                    >
+                        <span className="flex items-center gap-2.5 antialiased">
+                            <Globe className="size-4 shrink-0 text-muted" strokeWidth={2} />
+                            <span className="font-medium text-foreground">Find emails from websites</span>
                         </span>
                     </Dropdown.Item>
                 ) : null}

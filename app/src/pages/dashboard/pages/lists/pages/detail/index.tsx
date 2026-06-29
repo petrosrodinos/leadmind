@@ -1,20 +1,20 @@
 import { useState, type Key } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
-import { Button, Tabs } from "@heroui/react";
-import { ArrowLeft, List, Pencil, UserPlus } from "lucide-react";
+import { Tabs } from "@heroui/react";
+import { ArrowLeft, List } from "lucide-react";
 import { Routes, ListDetailTabIds } from "@/routes/routes";
 import {
     useContactList,
     useContactListMembers,
 } from "@/features/contact-lists/hooks/use-contact-lists";
+import { useBulkScrapeContactEmails } from "@/features/contacts/hooks/use-contacts";
 import { ContactListFormModal } from "../../components/contact-list-form-modal";
 import { ListMembersTable } from "./components/list-members-table";
 import { AddContactsModal } from "./components/add-contacts-modal";
+import { ListActionsDropdown } from "./components/list-actions-dropdown";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { ContactAudienceAnalyticsPanel } from "@/pages/dashboard/components/audience-analytics/contact-audience-analytics-panel";
-import {
-    ContactQuickBrowseTrigger,
-    ContactStackViewerScope,
-} from "@/pages/dashboard/components/contact-stack-viewer";
+import { ContactStackViewerScope } from "@/pages/dashboard/components/contact-stack-viewer";
 import { ListDetailSkeleton } from "./components/list-detail-skeleton";
 
 const MEMBERS_PAGE_SIZE = 20;
@@ -29,6 +29,10 @@ export default function ListDetailPage() {
     const [searchParams, setSearchParams] = useSearchParams();
     const [editOpen, setEditOpen] = useState(false);
     const [addContactsOpen, setAddContactsOpen] = useState(false);
+    const [selectedKeys, setSelectedKeys] = useState<Set<string>>(new Set());
+    const [scrapeConfirmOpen, setScrapeConfirmOpen] = useState(false);
+
+    const scrapeEmailsBulk = useBulkScrapeContactEmails();
 
     const allowedTabIds = new Set<string>(TABS.map((t) => t.id));
     const rawTab = searchParams.get(Routes.dashboard.lists_detail_tab_query);
@@ -63,6 +67,30 @@ export default function ListDetailPage() {
         next.set(Routes.dashboard.lists_detail_tab_query, String(key));
         setSearchParams(next, { replace: true });
     };
+
+    const handleScrapeEmails = async () => {
+        if (!uuid) return;
+        if (selectedKeys.size > 0) {
+            await scrapeEmailsBulk.mutateAsync({
+                contact_uuids: [...selectedKeys],
+                list_uuid: uuid,
+            });
+            setSelectedKeys(new Set());
+            setScrapeConfirmOpen(false);
+            return;
+        }
+        await scrapeEmailsBulk.mutateAsync({ list_uuid: uuid });
+        setScrapeConfirmOpen(false);
+    };
+
+    const scrapeConfirmDescription =
+        selectedKeys.size > 0
+            ? `We'll visit each selected contact's website to look for an email. Only contacts without an email but with a website are processed. Target: ${selectedKeys.size} selected contact${selectedKeys.size === 1 ? "" : "s"} in this list.`
+            : `We'll visit each contact's website in this list to look for an email. Only contacts without an email but with a website are processed. Target: all contacts in this list.`;
+
+    const canScrapeEmails =
+        currentTab === ListDetailTabIds.CONTACTS &&
+        (selectedKeys.size > 0 || total > 0);
 
     if (listLoading) {
         return <ListDetailSkeleton />;
@@ -113,24 +141,28 @@ export default function ListDetailPage() {
                                     </p>
                                 </div>
                             </div>
-                            <div className="flex flex-wrap items-center gap-2">
-                                {currentTab === ListDetailTabIds.CONTACTS ? (
-                                    <>
-                                        <ContactQuickBrowseTrigger
-                                            isDisabled={!quickBrowse.hasContacts}
-                                            onPress={quickBrowse.openFirst}
-                                        />
-                                        <Button size="sm" onPress={() => setAddContactsOpen(true)}>
-                                            <UserPlus className="size-4" />
-                                            Add contacts
-                                        </Button>
-                                    </>
-                                ) : null}
-                                <Button size="sm" variant="tertiary" onPress={() => setEditOpen(true)}>
-                                    <Pencil className="size-4" />
-                                    Edit list
-                                </Button>
-                            </div>
+                            <ListActionsDropdown
+                                showContactsActions={currentTab === ListDetailTabIds.CONTACTS}
+                                onQuickBrowse={
+                                    currentTab === ListDetailTabIds.CONTACTS
+                                        ? quickBrowse.openFirst
+                                        : undefined
+                                }
+                                quickBrowseDisabled={!quickBrowse.hasContacts}
+                                onAddContacts={
+                                    currentTab === ListDetailTabIds.CONTACTS
+                                        ? () => setAddContactsOpen(true)
+                                        : undefined
+                                }
+                                onEditList={() => setEditOpen(true)}
+                                onScrapeEmails={
+                                    currentTab === ListDetailTabIds.CONTACTS
+                                        ? () => setScrapeConfirmOpen(true)
+                                        : undefined
+                                }
+                                scrapeEmailsDisabled={!canScrapeEmails}
+                                scrapeEmailsPending={scrapeEmailsBulk.isPending}
+                            />
                         </div>
                     </div>
 
@@ -168,6 +200,8 @@ export default function ListDetailPage() {
                                     totalPages={totalPages}
                                     onPageChange={handleMembersPageChange}
                                     onContactOpen={quickBrowse.openAt}
+                                    selectedKeys={selectedKeys}
+                                    onSelectionChange={setSelectedKeys}
                                 />
                             </section>
                         )}
@@ -181,6 +215,15 @@ export default function ListDetailPage() {
                         listUuid={uuid}
                         isOpen={addContactsOpen}
                         onOpenChange={setAddContactsOpen}
+                    />
+                    <ConfirmDialog
+                        isOpen={scrapeConfirmOpen}
+                        onOpenChange={setScrapeConfirmOpen}
+                        title="Find emails from websites?"
+                        description={scrapeConfirmDescription}
+                        confirmLabel="Start lookup"
+                        isPending={scrapeEmailsBulk.isPending}
+                        onConfirm={handleScrapeEmails}
                     />
                 </div>
             )}

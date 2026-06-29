@@ -13,6 +13,7 @@ interface DashboardTopContactsCardProps {
 
 export function DashboardTopContactsCard({ contacts, isLoading }: DashboardTopContactsCardProps) {
   const navigate = useNavigate();
+  const rows = Array.isArray(contacts) ? contacts : [];
 
   return (
     <section className="overflow-hidden rounded-xl border border-border/60 bg-surface">
@@ -25,7 +26,7 @@ export function DashboardTopContactsCard({ contacts, isLoading }: DashboardTopCo
 
       {isLoading ? (
         <DashboardListSkeleton />
-      ) : contacts.length === 0 ? (
+      ) : rows.length === 0 ? (
         <DashboardEmptyState
           icon={Users}
           title="No scored contacts yet"
@@ -33,7 +34,7 @@ export function DashboardTopContactsCard({ contacts, isLoading }: DashboardTopCo
         />
       ) : (
         <ul className="divide-y divide-border/40">
-          {contacts.map((c) => (
+          {rows.map((c) => (
             <li key={c.uuid}>
               <Link
                 to={Routes.dashboard.contacts_detail.replace(":uuid", c.uuid)}

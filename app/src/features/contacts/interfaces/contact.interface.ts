@@ -338,3 +338,16 @@ export interface BulkTriggerContactScorePayload {
 export type BulkTriggerContactScoreResult =
     | { jobIds: string[]; queued: number; skipped_contacts: number; is_batch: false }
     | { batch_id: string; queued: number; skipped_contacts: number; is_batch: true };
+
+export type BulkScrapeContactEmailsFilters = Omit<ListContactsQuery, "page" | "limit">;
+
+export interface BulkScrapeContactEmailsPayload {
+    contact_uuids?: string[];
+    list_uuid?: string;
+    filters?: BulkScrapeContactEmailsFilters;
+}
+
+export interface BulkScrapeContactEmailsResult {
+    queued: number;
+    skipped: number;
+}

@@ -22,6 +22,7 @@ import { AddNoteDto } from './dto/add-note.dto';
 import { AiDraftMessageDto } from './dto/ai-draft-message.dto';
 import { BulkAiDraftMessagesDto } from './dto/bulk-ai-draft-messages.dto';
 import { BulkEnrichContactsDto } from './dto/bulk-enrich-contacts.dto';
+import { BulkScrapeContactEmailsDto } from './dto/bulk-scrape-contact-emails.dto';
 import { BulkTriggerScoreDto } from './dto/bulk-trigger-score.dto';
 import { CreateContactDto } from './dto/create-contact.dto';
 import { ListContactsDto } from './dto/list-contacts.dto';
@@ -108,6 +109,20 @@ export class ContactsController {
         @Body() dto: BulkTriggerScoreDto,
     ) {
         return this.contactsService.triggerBulkScore(user_uuid, dto);
+    }
+
+    @Post('bulk-scrape-emails')
+    @ApiOperation({
+        summary: 'Scrape contact websites to find missing emails (no email + has website only)',
+    })
+    @ApiResponse({ status: 201 })
+    @ApiResponse({ status: 400 })
+    @ApiResponse({ status: 404 })
+    triggerBulkScrapeEmails(
+        @CurrentUser('uuid') user_uuid: string,
+        @Body() dto: BulkScrapeContactEmailsDto,
+    ) {
+        return this.contactsService.triggerBulkScrapeEmailsFromWebsites(user_uuid, dto);
     }
 
     @Get(':uuid')

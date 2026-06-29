@@ -9,6 +9,8 @@ import type {
     BulkCreateMessageResult,
     BulkTriggerContactScorePayload,
     BulkTriggerContactScoreResult,
+    BulkScrapeContactEmailsPayload,
+    BulkScrapeContactEmailsResult,
     Contact,
     CreateContactPayload,
     Interaction,
@@ -151,6 +153,17 @@ export const triggerContactsBulkScore = async (
         return response.data;
     } catch (error: any) {
         throw new Error(error?.response?.data?.message || "Failed to enqueue bulk scoring.");
+    }
+};
+
+export const bulkScrapeContactEmails = async (
+    payload: BulkScrapeContactEmailsPayload,
+): Promise<BulkScrapeContactEmailsResult> => {
+    try {
+        const response = await axiosInstance.post(ApiRoutes.contacts.bulk_scrape_emails, payload);
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error?.response?.data?.message || "Failed to start website email lookup.");
     }
 };
 

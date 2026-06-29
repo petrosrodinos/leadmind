@@ -8,6 +8,7 @@ import { NewContactModal } from "./components/new-contact-modal";
 import { BulkScoreContactsPopover } from "./components/bulk-score-contacts-popover";
 import { ComposeMessageModal } from "@/features/messaging/components/compose-message-modal";
 import { BulkEnrichmentRunModal } from "@/components/ui/bulk-enrichment-run-modal";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { ContactsActionsDropdown } from "./components/contacts-actions-dropdown";
 import {
     DEFAULT_ENRICHMENT_SOURCES,
@@ -16,10 +17,12 @@ import {
 import { useEnrichContactsBulk } from "@/features/enrichment/hooks/use-enrichment";
 import { ContactFiltersForm } from "@/pages/dashboard/components/contact-filters-form";
 import { ContactStackViewerScope } from "@/pages/dashboard/components/contact-stack-viewer";
-import { useContacts } from "@/features/contacts/hooks/use-contacts";
+import { useContacts, useBulkScrapeContactEmails } from "@/features/contacts/hooks/use-contacts";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import {
   contactFiltersToListQuery,
+  contactFiltersToBulkScrapePayload,
+  hasActiveContactFilters,
   parseContactFiltersFromSearchParams,
   serializeContactFiltersToSearchParams,
 } from "@/lib/contact-filter-params";
@@ -60,8 +63,10 @@ export default function ContactsPage() {
   const [scoreOpen, setScoreOpen] = useState(false);
   const [composeOpen, setComposeOpen] = useState(false);
   const [enrichOpen, setEnrichOpen] = useState(false);
+  const [scrapeConfirmOpen, setScrapeConfirmOpen] = useState(false);
 
   const enrichBulk = useEnrichContactsBulk();
+  const scrapeEmailsBulk = useBulkScrapeContactEmails();
 
   const updateFilters = (patch: Partial<ContactFilters>, resetPage = true) => {
     const next = { ...filters, ...patch };
@@ -78,6 +83,29 @@ export default function ContactsPage() {
 
   const debouncedFilters = useDebouncedValue(filters, 300);
   const pageSize = view === "pipeline" ? PIPELINE_PAGE_SIZE : TABLE_PAGE_SIZE;
+
+  const hasFilterScope = hasActiveContactFilters(debouncedFilters);
+  const canScrapeEmails = view === "table" && (selectedKeys.size > 0 || hasFilterScope);
+
+  const handleScrapeEmails = async () => {
+    if (selectedKeys.size > 0) {
+      await scrapeEmailsBulk.mutateAsync({ contact_uuids: [...selectedKeys] });
+      setSelectedKeys(new Set());
+      setScrapeConfirmOpen(false);
+      return;
+    }
+    if (hasFilterScope) {
+      await scrapeEmailsBulk.mutateAsync({
+        filters: contactFiltersToBulkScrapePayload(debouncedFilters),
+      });
+      setScrapeConfirmOpen(false);
+    }
+  };
+
+  const scrapeConfirmDescription =
+    selectedKeys.size > 0
+      ? `We'll visit each selected contact's website to look for an email. Only contacts without an email but with a website are processed. Target: ${selectedKeys.size} selected contact${selectedKeys.size === 1 ? "" : "s"}.`
+      : `We'll visit each matching contact's website to look for an email. Only contacts without an email but with a website are processed. Target: all contacts matching your current filters.`;
 
   const query = useMemo(
     () =>
@@ -129,6 +157,9 @@ export default function ContactsPage() {
                 draftMessagesDisabled={selectedKeys.size === 0}
                 onEnrichSelected={view === "table" ? () => setEnrichOpen(true) : undefined}
                 enrichDisabled={selectedKeys.size === 0 || enrichBulk.isPending}
+                onScrapeEmailsSelected={view === "table" ? () => setScrapeConfirmOpen(true) : undefined}
+                scrapeEmailsDisabled={!canScrapeEmails}
+                scrapeEmailsPending={scrapeEmailsBulk.isPending}
               />
               <Tabs selectedKey={view} onSelectionChange={(key) => setView(String(key) as View)}>
                 <Tabs.List className="inline-flex gap-1 rounded-lg bg-surface-secondary p-1 border border-border">
@@ -212,6 +243,17 @@ export default function ContactsPage() {
                   { onSuccess: () => setSelectedKeys(new Set()) },
                 );
               }}
+            />
+          ) : null}
+          {view === "table" ? (
+            <ConfirmDialog
+              isOpen={scrapeConfirmOpen}
+              onOpenChange={setScrapeConfirmOpen}
+              title="Find emails from websites?"
+              description={scrapeConfirmDescription}
+              confirmLabel="Start lookup"
+              isPending={scrapeEmailsBulk.isPending}
+              onConfirm={handleScrapeEmails}
             />
           ) : null}
         </div>

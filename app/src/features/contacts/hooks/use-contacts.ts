@@ -17,6 +17,7 @@ import {
     logSms,
     triggerContactScore,
     triggerContactsBulkScore,
+    bulkScrapeContactEmails,
     triggerDraftMessages,
     updateContact,
     updateContactNotes,
@@ -28,6 +29,7 @@ import type {
     BulkAiDraftMessagesPayload,
     BulkCreateMessageResult,
     BulkTriggerContactScorePayload,
+    BulkScrapeContactEmailsPayload,
     Contact,
     CreateContactPayload,
     LeadStatus,
@@ -40,6 +42,7 @@ import type {
     UpdateContactPayload,
 } from "../interfaces/contact.interface";
 import { enrichmentQueryKeys } from "@/features/enrichment/hooks/use-enrichment";
+import { contactListQueryKeys } from "@/features/contact-lists/hooks/use-contact-lists";
 import type { EnrichmentSource } from "@/features/enrichment/constants/enrichment-sources";
 import { toast } from "@/hooks/use-toast";
 
@@ -366,6 +369,34 @@ export function useBulkTriggerContactScore() {
         onError: (error: Error) => {
             toast({
                 title: "Could not enqueue scoring",
+                description: error.message,
+                duration: 4000,
+                variant: "error",
+            });
+        },
+    });
+}
+
+export function useBulkScrapeContactEmails() {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: (payload: BulkScrapeContactEmailsPayload) => bulkScrapeContactEmails(payload),
+        onSuccess: (data) => {
+            const skip =
+                data.skipped > 0
+                    ? ` (${data.skipped} skipped — already have email or no website)`
+                    : "";
+            toast({
+                title: "Website email lookup started",
+                description: `${data.queued} contact${data.queued === 1 ? "" : "s"} queued${skip}. Results will appear as crawls finish.`,
+                duration: 4500,
+            });
+            qc.invalidateQueries({ queryKey: contactsQueryKeys.all });
+            qc.invalidateQueries({ queryKey: contactListQueryKeys.all });
+        },
+        onError: (error: Error) => {
+            toast({
+                title: "Could not start email lookup",
                 description: error.message,
                 duration: 4000,
                 variant: "error",

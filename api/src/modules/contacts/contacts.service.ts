@@ -28,6 +28,7 @@ import { BulkTriggerScoreDto } from './dto/bulk-trigger-score.dto';
 import { CreateContactDto } from './dto/create-contact.dto';
 import { EnrichContactDto } from './dto/enrich-contact.dto';
 import { BulkEnrichContactsDto } from './dto/bulk-enrich-contacts.dto';
+import { BulkScrapeContactEmailsDto } from './dto/bulk-scrape-contact-emails.dto';
 import { ListContactsDto } from './dto/list-contacts.dto';
 import { buildContactProfileFieldWhere } from './utils/contact-profile-field-filter.utils';
 import { mergeContactWhereClauses } from './utils/contact-where-merge.utils';
@@ -60,6 +61,12 @@ import { EnrichmentOrchestrator } from '@/modules/enrichment/services/enrichment
 import { OutreachService } from '@/modules/outreach/outreach.service';
 import { enqueueContactScoreJob } from './utils/contact-score-queue.utils';
 import { BulkAiDraftMessagesDto } from './dto/bulk-ai-draft-messages.dto';
+import { WebsiteContentCrawlerAdapter } from '@/integrations/apify/website-content-crawler/website-content-crawler.adapter';
+import { normalizeWebsiteUrl } from '@/modules/leads/utils/enrichment-data.utils';
+import {
+    extractEmailsFromCrawledPage,
+    pickBestContactEmail,
+} from './utils/contact-website-email.utils';
 
 @Injectable()
 export class ContactsService {
@@ -72,6 +79,7 @@ export class ContactsService {
         private readonly enrichmentQueryService: EnrichmentQueryService,
         private readonly enrichmentOrchestrator: EnrichmentOrchestrator,
         private readonly outreachService: OutreachService,
+        private readonly websiteCrawler: WebsiteContentCrawlerAdapter,
         @InjectQueue(AI_PROCESS_QUEUE) private readonly aiProcessQueue: Queue,
     ) { }
 
@@ -899,6 +907,123 @@ export class ContactsService {
         }
 
         return { queued: rows.length };
+    }
+
+    async triggerBulkScrapeEmailsFromWebsites(
+        user_uuid: string,
+        dto: BulkScrapeContactEmailsDto,
+    ): Promise<{ queued: number; skipped: number }> {
+        const hasUuids = Boolean(dto.contact_uuids?.length);
+        const hasList = Boolean(dto.list_uuid);
+        const hasFilters = dto.filters !== undefined && dto.filters !== null;
+
+        if (!hasUuids && !hasList && !hasFilters) {
+            throw new BadRequestException('Provide contact_uuids, list_uuid, or filters');
+        }
+
+        let candidateUuids: string[];
+
+        if (hasUuids) {
+            candidateUuids = [...new Set(dto.contact_uuids!)];
+            const owned = await this.prisma.contact.findMany({
+                where: { user_uuid, uuid: { in: candidateUuids } },
+                select: { uuid: true },
+            });
+            if (owned.length !== candidateUuids.length) {
+                const found = new Set(owned.map((r) => r.uuid));
+                const missing = candidateUuids.filter((u) => !found.has(u));
+                throw new NotFoundException(`Contact(s) not found: ${missing.join(', ')}`);
+            }
+
+            if (hasList) {
+                const list = await this.prisma.contactList.findFirst({
+                    where: { uuid: dto.list_uuid!, user_uuid },
+                    select: { uuid: true },
+                });
+                if (!list) {
+                    throw new NotFoundException('Contact list not found');
+                }
+                const members = await this.prisma.contactListMember.findMany({
+                    where: {
+                        list_uuid: dto.list_uuid!,
+                        contact_uuid: { in: candidateUuids },
+                    },
+                    select: { contact_uuid: true },
+                });
+                const memberSet = new Set(members.map((m) => m.contact_uuid));
+                const notInList = candidateUuids.filter((u) => !memberSet.has(u));
+                if (notInList.length > 0) {
+                    throw new BadRequestException(
+                        `Contact(s) not in list: ${notInList.join(', ')}`,
+                    );
+                }
+            }
+        } else if (hasList) {
+            const list = await this.prisma.contactList.findFirst({
+                where: { uuid: dto.list_uuid!, user_uuid },
+                select: { uuid: true },
+            });
+            if (!list) {
+                throw new NotFoundException('Contact list not found');
+            }
+            const members = await this.prisma.contactListMember.findMany({
+                where: { list_uuid: dto.list_uuid! },
+                select: { contact_uuid: true },
+            });
+            candidateUuids = members.map((m) => m.contact_uuid);
+        } else {
+            const where = this.buildWhereInput(user_uuid, dto.filters!);
+            this.applyAudienceFilters(where, dto.filters!);
+            const rows = await this.prisma.contact.findMany({
+                where,
+                select: { uuid: true },
+            });
+            candidateUuids = rows.map((r) => r.uuid);
+        }
+
+        if (candidateUuids.length === 0) {
+            return { queued: 0, skipped: 0 };
+        }
+
+        const resolved = await this.prisma.contact.findMany({
+            where: { user_uuid, uuid: { in: candidateUuids } },
+            select: { uuid: true, website: true, email: true },
+        });
+
+        const eligible = resolved.filter(
+            (row) =>
+                row.website?.trim() &&
+                (!row.email || row.email.trim() === ''),
+        );
+
+        for (const row of eligible) {
+            void this.scrapeAndSaveContactEmail(row.uuid, row.website!.trim()).catch((error) => {
+                this.logger.error(
+                    `Contact ${row.uuid} website email scrape failed: ${error instanceof Error ? error.message : error}`,
+                );
+            });
+        }
+
+        return {
+            queued: eligible.length,
+            skipped: resolved.length - eligible.length,
+        };
+    }
+
+    private async scrapeAndSaveContactEmail(contactUuid: string, website: string): Promise<void> {
+        const url = normalizeWebsiteUrl(website);
+        const page = await this.websiteCrawler.crawlSinglePage(url);
+        const emails = extractEmailsFromCrawledPage(page);
+        const email = pickBestContactEmail(emails);
+        if (!email) {
+            return;
+        }
+
+        await this.prisma.contact.update({
+            where: { uuid: contactUuid },
+            data: { email },
+        });
+        await this.reindexContact(contactUuid);
     }
 
     async findEnrichmentsForContact(
