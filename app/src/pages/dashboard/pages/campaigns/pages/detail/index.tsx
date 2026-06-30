@@ -139,10 +139,15 @@ export default function CampaignDetailPage() {
             </header>
 
             {batchDraftsPending && (
-                <p className="rounded-xl border border-border bg-surface-secondary/40 px-4 py-3 text-sm text-muted">
-                    Personalized drafts are being generated via the OpenAI Batch API. This usually
-                    completes within 24 hours — refresh this page when status shows Drafts ready.
-                </p>
+                <div className="rounded-xl border border-border bg-surface-secondary/40 px-4 py-3 text-sm text-muted flex flex-wrap items-center justify-between gap-3">
+                    <p>
+                        Personalized drafts are being generated via the OpenAI Batch API. This usually
+                        completes within 24 hours — refresh this page when status shows Drafts ready.
+                    </p>
+                    <p className="text-xs shrink-0">
+                        Changed your mind? Use <span className="font-medium text-foreground">Cancel campaign</span> in the menu above.
+                    </p>
+                </div>
             )}
 
             <CampaignStatsSection campaign={campaign} />

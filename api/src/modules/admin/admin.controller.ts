@@ -15,6 +15,12 @@ import { ListBatchJobsDto } from './dto/list-batch-jobs.dto';
 export class AdminController {
     constructor(private readonly adminService: AdminService) { }
 
+    @Get('system-status')
+    @ApiOperation({ summary: 'Get API, database, and Redis health (admin only)' })
+    getSystemStatus() {
+        return this.adminService.getSystemStatus();
+    }
+
     @Get('batch-jobs')
     @ApiOperation({ summary: 'List all OpenAI batch jobs (admin only)' })
     listBatchJobs(@Query() query: ListBatchJobsDto) {

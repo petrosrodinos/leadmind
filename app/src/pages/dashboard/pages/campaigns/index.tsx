@@ -109,7 +109,7 @@ export default function CampaignsPage() {
 
 function CampaignRow({ campaign }: { campaign: MarketingCampaign }) {
     const href =
-        campaign.status === CampaignStatuses.DRAFT
+        campaign.status === CampaignStatuses.DRAFT && !campaign.draft_batch_id
             ? `/dashboard/campaigns/${campaign.uuid}/edit`
             : `/dashboard/campaigns/${campaign.uuid}`;
     return (

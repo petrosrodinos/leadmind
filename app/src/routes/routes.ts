@@ -37,6 +37,7 @@ export const Routes = {
         lists_detail: "/dashboard/lists/:uuid",
         lists_detail_tab_query: "tab",
         admin_batch_jobs: "/dashboard/admin/batch-jobs",
+        admin_system_status: "/dashboard/admin/system-status",
     },
 };
 

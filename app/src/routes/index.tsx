@@ -25,6 +25,7 @@ import NewCampaignPage from "@/pages/dashboard/pages/campaigns/pages/new";
 import EditCampaignPage from "@/pages/dashboard/pages/campaigns/pages/edit";
 import CampaignDetailPage from "@/pages/dashboard/pages/campaigns/pages/detail";
 import AdminBatchJobsPage from "@/pages/dashboard/pages/admin/batch-jobs";
+import AdminSystemStatusPage from "@/pages/dashboard/pages/admin/system-status";
 import SettingsUsagePage from "@/pages/dashboard/pages/settings/usage";
 import RemindersPage from "@/pages/dashboard/pages/reminders";
 import FormsPage from "@/pages/dashboard/pages/forms";
@@ -114,6 +115,14 @@ export default function AppRoutes() {
           element={
             <ProtectedRoute requiredRoles={Permissions.admin_batch_jobs}>
               <AdminBatchJobsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="admin/system-status"
+          element={
+            <ProtectedRoute requiredRoles={Permissions.admin_batch_jobs}>
+              <AdminSystemStatusPage />
             </ProtectedRoute>
           }
         />

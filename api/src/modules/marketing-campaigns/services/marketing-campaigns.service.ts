@@ -15,6 +15,7 @@ import {
     Contact,
     Lead,
     MarketingCampaign,
+    OpenAiBatchStatus,
     Prisma,
 } from '@/generated/prisma';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
@@ -721,15 +722,33 @@ export class MarketingCampaignsService {
             throw new ConflictException(`Cannot cancel a ${campaign.status} campaign`);
         }
 
+        const pendingBatchId = campaign.draft_batch_id;
+
         await this.prisma.marketingCampaign.update({
             where: { uuid },
-            data: { status: CampaignStatus.CANCELLED, cancelled_at: new Date() },
+            data: {
+                status: CampaignStatus.CANCELLED,
+                cancelled_at: new Date(),
+            },
         });
 
         await this.removePendingJobsForCampaign(uuid);
 
-        if (campaign.status === CampaignStatus.DRAFTS_READY) {
-            // Discard un-sent drafts before user sends them
+        if (pendingBatchId) {
+            await this.prisma.openAiBatchJob.updateMany({
+                where: {
+                    batch_id: pendingBatchId,
+                    status: OpenAiBatchStatus.IN_PROGRESS,
+                },
+                data: {
+                    status: OpenAiBatchStatus.CANCELLED,
+                    finished_at: new Date(),
+                },
+            });
+        }
+
+        if (campaign.status === CampaignStatus.DRAFTS_READY || pendingBatchId) {
+            // Discard un-sent drafts before user sends them (or after batch cancel)
             await this.prisma.outreachMessage.deleteMany({ where: { campaign_uuid: uuid } });
         }
 

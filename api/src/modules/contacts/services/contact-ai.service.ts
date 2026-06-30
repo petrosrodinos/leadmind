@@ -551,6 +551,26 @@ export class ContactAiService {
             return;
         }
 
+        const linkedCampaign = await this.prisma.marketingCampaign.findFirst({
+            where: { draft_batch_id: batchId },
+            select: { uuid: true, status: true },
+        });
+        if (!linkedCampaign || linkedCampaign.status === CampaignStatus.CANCELLED) {
+            await this.prisma.openAiBatchJob.update({
+                where: { batch_id: batchId },
+                data: {
+                    status: OpenAiBatchStatus.CANCELLED,
+                    finished_at: new Date(),
+                },
+            });
+            if (linkedCampaign) {
+                this.logger.log(
+                    `Skipping batch ${batchId} — campaign ${linkedCampaign.uuid} was cancelled`,
+                );
+            }
+            return;
+        }
+
         const batchStatus = await this.openAiBatchService.getBatchStatus(job.user_uuid, batchId);
         if (!batchStatus.output_file_id) {
             this.logger.warn(`Batch ${batchId} has no output file yet`);
@@ -680,7 +700,11 @@ export class ContactAiService {
             const campaign = await this.prisma.marketingCampaign.findUnique({
                 where: { uuid: campaign_uuid },
             });
-            if (campaign && campaign.draft_batch_id === batchId) {
+            if (
+                campaign &&
+                campaign.draft_batch_id === batchId &&
+                campaign.status !== CampaignStatus.CANCELLED
+            ) {
                 await this.prisma.marketingCampaign.update({
                     where: { uuid: campaign_uuid },
                     data: {
@@ -691,6 +715,10 @@ export class ContactAiService {
                 });
                 this.logger.log(
                     `Campaign ${campaign_uuid}: batch ${batchId} complete, ${generated} drafts created`,
+                );
+            } else if (campaign?.status === CampaignStatus.CANCELLED) {
+                this.logger.log(
+                    `Campaign ${campaign_uuid}: batch ${batchId} complete but campaign was cancelled — drafts not promoted`,
                 );
             }
         }

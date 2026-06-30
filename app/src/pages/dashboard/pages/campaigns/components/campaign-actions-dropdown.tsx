@@ -25,10 +25,13 @@ export function CampaignActionsDropdown({ campaign, onDeleted }: CampaignActions
     const [confirmRerun, setConfirmRerun] = useState(false);
     const [confirmDelete, setConfirmDelete] = useState(false);
 
+    const batchDraftsQueued =
+        campaign.status === CampaignStatuses.DRAFT && !!campaign.draft_batch_id;
     const canCancel =
         campaign.status === CampaignStatuses.SENDING ||
         campaign.status === CampaignStatuses.SCHEDULED ||
-        campaign.status === CampaignStatuses.DRAFTS_READY;
+        campaign.status === CampaignStatuses.DRAFTS_READY ||
+        batchDraftsQueued;
     const canRerun =
         campaign.status === CampaignStatuses.COMPLETED ||
         campaign.status === CampaignStatuses.CANCELLED ||
@@ -92,7 +95,11 @@ export function CampaignActionsDropdown({ campaign, onDeleted }: CampaignActions
                 isOpen={confirmCancel}
                 onOpenChange={setConfirmCancel}
                 title="Cancel this campaign?"
-                description="In-flight sends will short-circuit and pending recipients will be marked skipped. This cannot be undone."
+                description={
+                    batchDraftsQueued
+                        ? "OpenAI batch draft generation will be stopped and this campaign will be marked cancelled. This cannot be undone."
+                        : "In-flight sends will short-circuit and pending recipients will be marked skipped. This cannot be undone."
+                }
                 confirmLabel="Cancel campaign"
                 variant="danger"
                 isPending={cancelMutation.isPending}
