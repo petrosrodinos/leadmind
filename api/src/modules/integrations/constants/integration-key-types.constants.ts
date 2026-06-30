@@ -16,6 +16,13 @@ export const PROVIDER_KEY_TYPES: Record<
         IntegrationKeyType.API_KEY,
         IntegrationKeyType.WEBHOOK_SECRET,
     ],
+    [ExternalIntegrationProvider.SMTP]: [
+        IntegrationKeyType.HOST,
+        IntegrationKeyType.PORT,
+        IntegrationKeyType.USERNAME,
+        IntegrationKeyType.PASSWORD,
+        IntegrationKeyType.FROM_EMAIL,
+    ],
     [ExternalIntegrationProvider.TWILIO]: [
         IntegrationKeyType.ACCOUNT_SID,
         IntegrationKeyType.AUTH_TOKEN,
@@ -30,6 +37,11 @@ export const KEY_TYPE_LABELS: Record<IntegrationKeyType, string> = {
     [IntegrationKeyType.ACCOUNT_SID]: 'Account SID',
     [IntegrationKeyType.AUTH_TOKEN]: 'Auth token',
     [IntegrationKeyType.ACCESS_TOKEN]: 'Access token',
+    [IntegrationKeyType.HOST]: 'Host',
+    [IntegrationKeyType.PORT]: 'Port',
+    [IntegrationKeyType.USERNAME]: 'Username',
+    [IntegrationKeyType.PASSWORD]: 'Password',
+    [IntegrationKeyType.FROM_EMAIL]: 'From email',
 };
 
 export const KEY_TYPE_PLACEHOLDERS: Record<IntegrationKeyType, string> = {
@@ -38,6 +50,11 @@ export const KEY_TYPE_PLACEHOLDERS: Record<IntegrationKeyType, string> = {
     [IntegrationKeyType.ACCOUNT_SID]: 'AC...',
     [IntegrationKeyType.AUTH_TOKEN]: 'Auth token',
     [IntegrationKeyType.ACCESS_TOKEN]: 'pat-...',
+    [IntegrationKeyType.HOST]: 'smtp.example.com',
+    [IntegrationKeyType.PORT]: '587',
+    [IntegrationKeyType.USERNAME]: 'user@example.com',
+    [IntegrationKeyType.PASSWORD]: 'App password',
+    [IntegrationKeyType.FROM_EMAIL]: 'noreply@example.com',
 };
 
 export function isKeyTypeAllowedForProvider(
@@ -57,6 +74,7 @@ export function formatIntegrationKeyEnvName(
 
 export const MULTI_ACCOUNT_INTEGRATION_PROVIDERS: ExternalIntegrationProvider[] = [
     ExternalIntegrationProvider.RESEND,
+    ExternalIntegrationProvider.SMTP,
     ExternalIntegrationProvider.TWILIO,
 ];
 

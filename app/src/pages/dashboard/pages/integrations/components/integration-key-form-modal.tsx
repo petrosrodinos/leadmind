@@ -17,6 +17,7 @@ import {
 import {
     formatIntegrationKeyEnvName,
     KEY_TYPE_PLACEHOLDERS,
+    MASKED_INTEGRATION_KEY_TYPES,
     providerAllowsMultipleAccounts,
 } from "@/features/integrations/constants/integration-key-types";
 import type {
@@ -209,11 +210,15 @@ export function IntegrationKeyFormModal({
                                         together. Example: account{" "}
                                         <span className="font-mono">1</span> gives{" "}
                                         <span className="font-mono">
-                                            {providerView.provider}_API_KEY_1
-                                        </span>{" "}
-                                        and{" "}
+                                            {providerView.provider}_HOST_1
+                                        </span>
+                                        ,{" "}
                                         <span className="font-mono">
-                                            {providerView.provider}_WEBHOOK_SECRET_1
+                                            {providerView.provider}_PORT_1
+                                        </span>
+                                        , and{" "}
+                                        <span className="font-mono">
+                                            {providerView.provider}_PASSWORD_1
                                         </span>
                                         .
                                     </p>
@@ -236,7 +241,11 @@ export function IntegrationKeyFormModal({
                                 </Label>
                                 <Input
                                     id="integration-key-secret"
-                                    type="password"
+                                    type={
+                                        MASKED_INTEGRATION_KEY_TYPES.has(keyType)
+                                            ? "password"
+                                            : "text"
+                                    }
                                     autoComplete="off"
                                     placeholder={
                                         keyTypeMeta?.placeholder ??

@@ -123,8 +123,8 @@ export function IntegrationDetailModal({
 
                                 {groupedKeys.length === 0 ? (
                                     <div className="rounded-lg border border-dashed border-border p-6 text-center text-sm text-muted">
-                                        No keys yet. Add an API key or webhook secret
-                                        for {providerView.label}.
+                                        No keys yet. Add credentials for{" "}
+                                        {providerView.label}.
                                     </div>
                                 ) : (
                                     <div className="space-y-4">

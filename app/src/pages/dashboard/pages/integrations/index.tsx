@@ -6,6 +6,7 @@ import {
     Mail,
     MessageSquare,
     Plug,
+    Server,
     Sparkles,
 } from "lucide-react";
 import { DISABLED_INTEGRATION_PROVIDERS, canShowAddKeyButton } from "@/features/integrations/constants/integration-key-types";
@@ -17,6 +18,7 @@ import { IntegrationKeyFormModal } from "./components/integration-key-form-modal
 const providerIcons: Record<string, ComponentType<{ className?: string }>> = {
     OPENAI: Sparkles,
     RESEND: Mail,
+    SMTP: Server,
     TWILIO: MessageSquare,
     APIFY: Cloud,
     HUBSPOT: Plug,
@@ -49,6 +51,26 @@ const FALLBACK_PROVIDERS: IntegrationProviderView[] = [
                 key_type: "WEBHOOK_SECRET",
                 label: "Webhook secret",
                 placeholder: "whsec_...",
+            },
+        ],
+        keys: [],
+    },
+    {
+        provider: "SMTP",
+        uuid: null,
+        label: "SMTP",
+        description:
+            "Custom SMTP servers for outbound email. Add multiple accounts with host, port, username, password, and from address.",
+        allows_multiple_accounts: true,
+        keyTypes: [
+            { key_type: "HOST", label: "Host", placeholder: "smtp.example.com" },
+            { key_type: "PORT", label: "Port", placeholder: "587" },
+            { key_type: "USERNAME", label: "Username", placeholder: "user@example.com" },
+            { key_type: "PASSWORD", label: "Password", placeholder: "App password" },
+            {
+                key_type: "FROM_EMAIL",
+                label: "From email",
+                placeholder: "noreply@example.com",
             },
         ],
         keys: [],
@@ -123,10 +145,12 @@ export default function IntegrationsPage() {
                     Integrations
                 </h1>
                 <p className="text-sm text-muted max-w-2xl">
-                    Store one credential per type for most providers. Resend and
-                    Twilio support multiple accounts, e.g.{" "}
-                    <span className="font-mono">RESEND_API_KEY_1</span> and{" "}
-                    <span className="font-mono">RESEND_API_KEY_2</span>.
+                    Store one credential per type for most providers. Resend, SMTP,
+                    and Twilio support multiple accounts, e.g.{" "}
+                    <span className="font-mono">SMTP_HOST_1</span>,{" "}
+                    <span className="font-mono">SMTP_PORT_1</span>, and{" "}
+                    <span className="font-mono">SMTP_PASSWORD_1</span> for the same
+                    account reference.
                 </p>
             </header>
 
@@ -268,7 +292,7 @@ function IntegrationCard({
 function SkeletonGrid() {
     return (
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            {Array.from({ length: 5 }).map((_, i) => (
+            {Array.from({ length: 6 }).map((_, i) => (
                 <div
                     key={i}
                     className="rounded-xl border border-border bg-surface p-4 space-y-3 animate-pulse h-40"

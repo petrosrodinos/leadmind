@@ -673,6 +673,7 @@ enum ExternalIntegrationProvider {
   OPENAI
   ANTHROPIC
   RESEND
+  SMTP
   TWILIO
   APIFY
   HUBSPOT
@@ -684,6 +685,11 @@ enum IntegrationKeyType {
   ACCOUNT_SID
   AUTH_TOKEN
   ACCESS_TOKEN
+  HOST
+  PORT
+  USERNAME
+  PASSWORD
+  FROM_EMAIL
 }
 
 model Integration {

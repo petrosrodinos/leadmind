@@ -10,6 +10,7 @@ export const PROVIDER_KEY_TYPES: Record<IntegrationProvider, IntegrationKeyType[
         OPENAI: ["API_KEY", "WEBHOOK_SECRET"],
         ANTHROPIC: ["API_KEY"],
         RESEND: ["API_KEY", "WEBHOOK_SECRET"],
+        SMTP: ["HOST", "PORT", "USERNAME", "PASSWORD", "FROM_EMAIL"],
         TWILIO: ["ACCOUNT_SID", "AUTH_TOKEN"],
         APIFY: ["API_KEY"],
         HUBSPOT: ["ACCESS_TOKEN"],
@@ -26,6 +27,11 @@ export const KEY_TYPE_LABELS: Record<IntegrationKeyType, string> = {
     ACCOUNT_SID: "Account SID",
     AUTH_TOKEN: "Auth token",
     ACCESS_TOKEN: "Access token",
+    HOST: "Host",
+    PORT: "Port",
+    USERNAME: "Username",
+    PASSWORD: "Password",
+    FROM_EMAIL: "From email",
 };
 
 export const KEY_TYPE_PLACEHOLDERS: Record<IntegrationKeyType, string> = {
@@ -34,7 +40,20 @@ export const KEY_TYPE_PLACEHOLDERS: Record<IntegrationKeyType, string> = {
     ACCOUNT_SID: "AC...",
     AUTH_TOKEN: "Auth token",
     ACCESS_TOKEN: "pat-...",
+    HOST: "smtp.example.com",
+    PORT: "587",
+    USERNAME: "user@example.com",
+    PASSWORD: "App password",
+    FROM_EMAIL: "noreply@example.com",
 };
+
+export const MASKED_INTEGRATION_KEY_TYPES = new Set<IntegrationKeyType>([
+    "API_KEY",
+    "WEBHOOK_SECRET",
+    "AUTH_TOKEN",
+    "ACCESS_TOKEN",
+    "PASSWORD",
+]);
 
 export function formatIntegrationKeyEnvName(
     provider: IntegrationProvider,
@@ -63,6 +82,7 @@ export function groupKeysByAccount(keys: IntegrationKey[]) {
 
 export const MULTI_ACCOUNT_INTEGRATION_PROVIDERS: IntegrationProvider[] = [
     "RESEND",
+    "SMTP",
     "TWILIO",
 ];
 

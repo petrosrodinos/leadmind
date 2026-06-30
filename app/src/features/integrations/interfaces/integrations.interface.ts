@@ -2,6 +2,7 @@ export const IntegrationProviders = {
     OPENAI: "OPENAI",
     ANTHROPIC: "ANTHROPIC",
     RESEND: "RESEND",
+    SMTP: "SMTP",
     TWILIO: "TWILIO",
     APIFY: "APIFY",
     HUBSPOT: "HUBSPOT",
@@ -16,6 +17,11 @@ export const IntegrationKeyTypes = {
     ACCOUNT_SID: "ACCOUNT_SID",
     AUTH_TOKEN: "AUTH_TOKEN",
     ACCESS_TOKEN: "ACCESS_TOKEN",
+    HOST: "HOST",
+    PORT: "PORT",
+    USERNAME: "USERNAME",
+    PASSWORD: "PASSWORD",
+    FROM_EMAIL: "FROM_EMAIL",
 } as const;
 
 export type IntegrationKeyType =
