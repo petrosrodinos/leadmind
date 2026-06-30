@@ -109,6 +109,8 @@ export const ApiRoutes = {
         prefix: "/integrations",
         list: "/integrations",
         createKey: (provider: string) => `/integrations/${provider}/keys`,
+        setDefaultAccount: (provider: string) =>
+            `/integrations/${provider}/default-account`,
         updateKey: (uuid: string) => `/integrations/keys/${uuid}`,
         removeKey: (uuid: string) => `/integrations/keys/${uuid}`,
     },

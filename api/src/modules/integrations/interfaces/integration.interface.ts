@@ -27,6 +27,8 @@ export interface IntegrationResponse {
     description: string;
     disabled?: boolean;
     allows_multiple_accounts: boolean;
+    supports_default_account_selection: boolean;
+    default_account: string | null;
     keyTypes: IntegrationKeyTypeOption[];
     keys: IntegrationKeyResponse[];
 }

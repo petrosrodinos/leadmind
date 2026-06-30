@@ -29,10 +29,14 @@ import {
     isKeyTypeAllowedForProvider,
     KEY_TYPE_LABELS,
     KEY_TYPE_PLACEHOLDERS,
+    listDistinctIntegrationAccounts,
     PROVIDER_KEY_TYPES,
     providerAllowsMultipleAccounts,
+    providerSupportsDefaultAccountSelection,
+    resolveEffectiveDefaultAccount,
 } from './constants/integration-key-types.constants';
 import { CreateIntegrationKeyDto } from './dto/create-integration-key.dto';
+import { SetDefaultIntegrationAccountDto } from './dto/set-default-integration-account.dto';
 import { UpdateIntegrationKeyDto } from './dto/update-integration-key.dto';
 import {
     IntegrationKeyResponse,
@@ -120,6 +124,12 @@ export class IntegrationsService {
                     last4: secretLast4(dto.secret),
                 },
             });
+
+            await this.ensureDefaultAccountAfterKeyChange(
+                integration.uuid,
+                provider,
+            );
+
             return this.toKeyResponse(key, provider);
         } catch (error) {
             if (
@@ -157,38 +167,112 @@ export class IntegrationsService {
         user_uuid: string,
         key_uuid: string,
     ): Promise<{ uuid: string }> {
-        await this.requireOwnedKey(user_uuid, key_uuid);
+        const owned = await this.requireOwnedKey(user_uuid, key_uuid);
         await this.prisma.integrationKey.delete({ where: { uuid: key_uuid } });
+
+        await this.ensureDefaultAccountAfterKeyChange(
+            owned.integration.uuid,
+            owned.integration.provider,
+        );
+
         return { uuid: key_uuid };
+    }
+
+    async setDefaultAccount(
+        user_uuid: string,
+        provider: ExternalIntegrationProvider,
+        dto: SetDefaultIntegrationAccountDto,
+    ): Promise<IntegrationResponse> {
+        if (!providerSupportsDefaultAccountSelection(provider)) {
+            throw new BadRequestException(
+                `${INTEGRATION_PROVIDER_LABELS[provider]} does not support default account selection`,
+            );
+        }
+
+        const account = dto.account.trim();
+        const integration = await this.prisma.integration.findUnique({
+            where: { user_uuid_provider: { user_uuid, provider } },
+            include: { keys: true },
+        });
+        if (!integration) {
+            throw new NotFoundException(
+                `${INTEGRATION_PROVIDER_LABELS[provider]} integration is not configured`,
+            );
+        }
+
+        const accounts = listDistinctIntegrationAccounts(integration.keys);
+        if (!accounts.includes(account)) {
+            throw new BadRequestException(
+                `Account "${account}" has no stored keys for ${INTEGRATION_PROVIDER_LABELS[provider]}`,
+            );
+        }
+
+        const updated = await this.prisma.integration.update({
+            where: { uuid: integration.uuid },
+            data: { default_account: account },
+            include: {
+                keys: {
+                    orderBy: [{ account: 'asc' }, { key_type: 'asc' }],
+                },
+            },
+        });
+
+        return this.toIntegrationResponse(provider, updated);
+    }
+
+    async getDefaultAccount(
+        user_uuid: string,
+        provider: ExternalIntegrationProvider,
+    ): Promise<string | null> {
+        const integration = await this.prisma.integration.findUnique({
+            where: { user_uuid_provider: { user_uuid, provider } },
+            include: { keys: true },
+        });
+        if (!integration) {
+            return null;
+        }
+        return resolveEffectiveDefaultAccount(
+            integration.default_account,
+            integration.keys,
+        );
     }
 
     async getDecryptedSecret(
         user_uuid: string,
         provider: ExternalIntegrationProvider,
         key_type: IntegrationKeyType,
-        account: string,
+        account?: string,
     ): Promise<string> {
         const integration = await this.prisma.integration.findUnique({
             where: { user_uuid_provider: { user_uuid, provider } },
+            include: { keys: true },
         });
         if (!integration) {
             throw new NotFoundException(
-                `Credential ${formatIntegrationKeyEnvName(provider, key_type, account)} not found`,
+                `Credential ${formatIntegrationKeyEnvName(provider, key_type, account ?? '1')} not found`,
             );
         }
+
+        const resolvedAccount =
+            account?.trim() ||
+            resolveEffectiveDefaultAccount(
+                integration.default_account,
+                integration.keys,
+            ) ||
+            '1';
 
         const key = await this.prisma.integrationKey.findUnique({
             where: {
                 integration_uuid_key_type_account: {
                     integration_uuid: integration.uuid,
                     key_type,
-                    account: account.trim(),
+                    account: resolvedAccount,
                 },
             },
         });
         if (!key) {
             throw new NotFoundException(
-                `Credential ${formatIntegrationKeyEnvName(provider, key_type, account)} not found`,
+                `Credential ${formatIntegrationKeyEnvName(provider, key_type, resolvedAccount)} not found`,
             );
         }
         return decryptIntegrationSecret(key.secret, this.encryptionKey());
@@ -225,6 +309,37 @@ export class IntegrationsService {
         return key;
     }
 
+    private async ensureDefaultAccountAfterKeyChange(
+        integration_uuid: string,
+        provider: ExternalIntegrationProvider,
+    ): Promise<void> {
+        if (!providerSupportsDefaultAccountSelection(provider)) {
+            return;
+        }
+
+        const integration = await this.prisma.integration.findUnique({
+            where: { uuid: integration_uuid },
+            include: { keys: true },
+        });
+        if (!integration) {
+            return;
+        }
+
+        const effective = resolveEffectiveDefaultAccount(
+            integration.default_account,
+            integration.keys,
+        );
+
+        if (effective === integration.default_account) {
+            return;
+        }
+
+        await this.prisma.integration.update({
+            where: { uuid: integration_uuid },
+            data: { default_account: effective },
+        });
+    }
+
     private encryptionKey(): string {
         const key =
             this.config.get<string>('INTEGRATIONS_ENCRYPTION_KEY') ??
@@ -251,6 +366,7 @@ export class IntegrationsService {
         provider: ExternalIntegrationProvider,
         row?: Integration & { keys: IntegrationKey[] },
     ): IntegrationResponse {
+        const keys = row?.keys ?? [];
         return {
             provider,
             uuid: row?.uuid ?? null,
@@ -258,8 +374,14 @@ export class IntegrationsService {
             description: INTEGRATION_PROVIDER_DESCRIPTIONS[provider],
             disabled: DISABLED_INTEGRATION_PROVIDERS.includes(provider),
             allows_multiple_accounts: providerAllowsMultipleAccounts(provider),
+            supports_default_account_selection:
+                providerSupportsDefaultAccountSelection(provider),
+            default_account: resolveEffectiveDefaultAccount(
+                row?.default_account,
+                keys,
+            ),
             keyTypes: this.keyTypeOptions(provider),
-            keys: (row?.keys ?? []).map((key) => this.toKeyResponse(key, provider)),
+            keys: keys.map((key) => this.toKeyResponse(key, provider)),
         };
     }
 

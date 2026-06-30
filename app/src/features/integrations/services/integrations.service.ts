@@ -6,6 +6,7 @@ import type {
     IntegrationKey,
     IntegrationProvider,
     IntegrationProviderView,
+    SetDefaultIntegrationAccountPayload,
     UpdateIntegrationKeyPayload,
 } from "../interfaces/integrations.interface";
 
@@ -69,5 +70,22 @@ export const deleteIntegrationKey = async (
         return response.data;
     } catch (error) {
         throw new Error(apiErrorMessage(error, "Failed to delete key."));
+    }
+};
+
+export const setDefaultIntegrationAccount = async (
+    provider: IntegrationProvider,
+    payload: SetDefaultIntegrationAccountPayload,
+): Promise<IntegrationProviderView> => {
+    try {
+        const response = await axiosInstance.patch(
+            ApiRoutes.integrations.setDefaultAccount(provider),
+            payload,
+        );
+        return response.data;
+    } catch (error) {
+        throw new Error(
+            apiErrorMessage(error, "Failed to set default account."),
+        );
     }
 };

@@ -31166,6 +31166,7 @@ export namespace Prisma {
     user_uuid: string | null
     provider: $Enums.ExternalIntegrationProvider | null
     title: string | null
+    default_account: string | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -31176,6 +31177,7 @@ export namespace Prisma {
     user_uuid: string | null
     provider: $Enums.ExternalIntegrationProvider | null
     title: string | null
+    default_account: string | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -31186,6 +31188,7 @@ export namespace Prisma {
     user_uuid: number
     provider: number
     title: number
+    default_account: number
     created_at: number
     updated_at: number
     _all: number
@@ -31206,6 +31209,7 @@ export namespace Prisma {
     user_uuid?: true
     provider?: true
     title?: true
+    default_account?: true
     created_at?: true
     updated_at?: true
   }
@@ -31216,6 +31220,7 @@ export namespace Prisma {
     user_uuid?: true
     provider?: true
     title?: true
+    default_account?: true
     created_at?: true
     updated_at?: true
   }
@@ -31226,6 +31231,7 @@ export namespace Prisma {
     user_uuid?: true
     provider?: true
     title?: true
+    default_account?: true
     created_at?: true
     updated_at?: true
     _all?: true
@@ -31323,6 +31329,7 @@ export namespace Prisma {
     user_uuid: string
     provider: $Enums.ExternalIntegrationProvider
     title: string
+    default_account: string | null
     created_at: Date
     updated_at: Date
     _count: IntegrationCountAggregateOutputType | null
@@ -31352,6 +31359,7 @@ export namespace Prisma {
     user_uuid?: boolean
     provider?: boolean
     title?: boolean
+    default_account?: boolean
     created_at?: boolean
     updated_at?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -31365,6 +31373,7 @@ export namespace Prisma {
     user_uuid?: boolean
     provider?: boolean
     title?: boolean
+    default_account?: boolean
     created_at?: boolean
     updated_at?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -31376,6 +31385,7 @@ export namespace Prisma {
     user_uuid?: boolean
     provider?: boolean
     title?: boolean
+    default_account?: boolean
     created_at?: boolean
     updated_at?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -31387,11 +31397,12 @@ export namespace Prisma {
     user_uuid?: boolean
     provider?: boolean
     title?: boolean
+    default_account?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type IntegrationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "provider" | "title" | "created_at" | "updated_at", ExtArgs["result"]["integration"]>
+  export type IntegrationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "provider" | "title" | "default_account" | "created_at" | "updated_at", ExtArgs["result"]["integration"]>
   export type IntegrationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     keys?: boolean | Integration$keysArgs<ExtArgs>
@@ -31416,6 +31427,7 @@ export namespace Prisma {
       user_uuid: string
       provider: $Enums.ExternalIntegrationProvider
       title: string
+      default_account: string | null
       created_at: Date
       updated_at: Date
     }, ExtArgs["result"]["integration"]>
@@ -31848,6 +31860,7 @@ export namespace Prisma {
     readonly user_uuid: FieldRef<"Integration", 'String'>
     readonly provider: FieldRef<"Integration", 'ExternalIntegrationProvider'>
     readonly title: FieldRef<"Integration", 'String'>
+    readonly default_account: FieldRef<"Integration", 'String'>
     readonly created_at: FieldRef<"Integration", 'DateTime'>
     readonly updated_at: FieldRef<"Integration", 'DateTime'>
   }
@@ -43599,6 +43612,7 @@ export namespace Prisma {
     user_uuid: 'user_uuid',
     provider: 'provider',
     title: 'title',
+    default_account: 'default_account',
     created_at: 'created_at',
     updated_at: 'updated_at'
   };
@@ -46472,6 +46486,7 @@ export namespace Prisma {
     user_uuid?: StringFilter<"Integration"> | string
     provider?: EnumExternalIntegrationProviderFilter<"Integration"> | $Enums.ExternalIntegrationProvider
     title?: StringFilter<"Integration"> | string
+    default_account?: StringNullableFilter<"Integration"> | string | null
     created_at?: DateTimeFilter<"Integration"> | Date | string
     updated_at?: DateTimeFilter<"Integration"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -46484,6 +46499,7 @@ export namespace Prisma {
     user_uuid?: SortOrder
     provider?: SortOrder
     title?: SortOrder
+    default_account?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     user?: UserOrderByWithRelationInput
@@ -46500,6 +46516,7 @@ export namespace Prisma {
     user_uuid?: StringFilter<"Integration"> | string
     provider?: EnumExternalIntegrationProviderFilter<"Integration"> | $Enums.ExternalIntegrationProvider
     title?: StringFilter<"Integration"> | string
+    default_account?: StringNullableFilter<"Integration"> | string | null
     created_at?: DateTimeFilter<"Integration"> | Date | string
     updated_at?: DateTimeFilter<"Integration"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -46512,6 +46529,7 @@ export namespace Prisma {
     user_uuid?: SortOrder
     provider?: SortOrder
     title?: SortOrder
+    default_account?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     _count?: IntegrationCountOrderByAggregateInput
@@ -46530,6 +46548,7 @@ export namespace Prisma {
     user_uuid?: StringWithAggregatesFilter<"Integration"> | string
     provider?: EnumExternalIntegrationProviderWithAggregatesFilter<"Integration"> | $Enums.ExternalIntegrationProvider
     title?: StringWithAggregatesFilter<"Integration"> | string
+    default_account?: StringNullableWithAggregatesFilter<"Integration"> | string | null
     created_at?: DateTimeWithAggregatesFilter<"Integration"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"Integration"> | Date | string
   }
@@ -49809,6 +49828,7 @@ export namespace Prisma {
     uuid?: string
     provider: $Enums.ExternalIntegrationProvider
     title: string
+    default_account?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutIntegrationsInput
@@ -49821,6 +49841,7 @@ export namespace Prisma {
     user_uuid: string
     provider: $Enums.ExternalIntegrationProvider
     title: string
+    default_account?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     keys?: IntegrationKeyUncheckedCreateNestedManyWithoutIntegrationInput
@@ -49830,6 +49851,7 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     provider?: EnumExternalIntegrationProviderFieldUpdateOperationsInput | $Enums.ExternalIntegrationProvider
     title?: StringFieldUpdateOperationsInput | string
+    default_account?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutIntegrationsNestedInput
@@ -49842,6 +49864,7 @@ export namespace Prisma {
     user_uuid?: StringFieldUpdateOperationsInput | string
     provider?: EnumExternalIntegrationProviderFieldUpdateOperationsInput | $Enums.ExternalIntegrationProvider
     title?: StringFieldUpdateOperationsInput | string
+    default_account?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     keys?: IntegrationKeyUncheckedUpdateManyWithoutIntegrationNestedInput
@@ -49853,6 +49876,7 @@ export namespace Prisma {
     user_uuid: string
     provider: $Enums.ExternalIntegrationProvider
     title: string
+    default_account?: string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -49861,6 +49885,7 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     provider?: EnumExternalIntegrationProviderFieldUpdateOperationsInput | $Enums.ExternalIntegrationProvider
     title?: StringFieldUpdateOperationsInput | string
+    default_account?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -49871,6 +49896,7 @@ export namespace Prisma {
     user_uuid?: StringFieldUpdateOperationsInput | string
     provider?: EnumExternalIntegrationProviderFieldUpdateOperationsInput | $Enums.ExternalIntegrationProvider
     title?: StringFieldUpdateOperationsInput | string
+    default_account?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -52946,6 +52972,7 @@ export namespace Prisma {
     user_uuid?: SortOrder
     provider?: SortOrder
     title?: SortOrder
+    default_account?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -52960,6 +52987,7 @@ export namespace Prisma {
     user_uuid?: SortOrder
     provider?: SortOrder
     title?: SortOrder
+    default_account?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -52970,6 +52998,7 @@ export namespace Prisma {
     user_uuid?: SortOrder
     provider?: SortOrder
     title?: SortOrder
+    default_account?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -57819,6 +57848,7 @@ export namespace Prisma {
     uuid?: string
     provider: $Enums.ExternalIntegrationProvider
     title: string
+    default_account?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     keys?: IntegrationKeyCreateNestedManyWithoutIntegrationInput
@@ -57829,6 +57859,7 @@ export namespace Prisma {
     uuid?: string
     provider: $Enums.ExternalIntegrationProvider
     title: string
+    default_account?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     keys?: IntegrationKeyUncheckedCreateNestedManyWithoutIntegrationInput
@@ -58504,6 +58535,7 @@ export namespace Prisma {
     user_uuid?: StringFilter<"Integration"> | string
     provider?: EnumExternalIntegrationProviderFilter<"Integration"> | $Enums.ExternalIntegrationProvider
     title?: StringFilter<"Integration"> | string
+    default_account?: StringNullableFilter<"Integration"> | string | null
     created_at?: DateTimeFilter<"Integration"> | Date | string
     updated_at?: DateTimeFilter<"Integration"> | Date | string
   }
@@ -64528,6 +64560,7 @@ export namespace Prisma {
     uuid?: string
     provider: $Enums.ExternalIntegrationProvider
     title: string
+    default_account?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutIntegrationsInput
@@ -64539,6 +64572,7 @@ export namespace Prisma {
     user_uuid: string
     provider: $Enums.ExternalIntegrationProvider
     title: string
+    default_account?: string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -64563,6 +64597,7 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     provider?: EnumExternalIntegrationProviderFieldUpdateOperationsInput | $Enums.ExternalIntegrationProvider
     title?: StringFieldUpdateOperationsInput | string
+    default_account?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutIntegrationsNestedInput
@@ -64574,6 +64609,7 @@ export namespace Prisma {
     user_uuid?: StringFieldUpdateOperationsInput | string
     provider?: EnumExternalIntegrationProviderFieldUpdateOperationsInput | $Enums.ExternalIntegrationProvider
     title?: StringFieldUpdateOperationsInput | string
+    default_account?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -66438,6 +66474,7 @@ export namespace Prisma {
     uuid?: string
     provider: $Enums.ExternalIntegrationProvider
     title: string
+    default_account?: string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -67120,6 +67157,7 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     provider?: EnumExternalIntegrationProviderFieldUpdateOperationsInput | $Enums.ExternalIntegrationProvider
     title?: StringFieldUpdateOperationsInput | string
+    default_account?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     keys?: IntegrationKeyUpdateManyWithoutIntegrationNestedInput
@@ -67130,6 +67168,7 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     provider?: EnumExternalIntegrationProviderFieldUpdateOperationsInput | $Enums.ExternalIntegrationProvider
     title?: StringFieldUpdateOperationsInput | string
+    default_account?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     keys?: IntegrationKeyUncheckedUpdateManyWithoutIntegrationNestedInput
@@ -67140,6 +67179,7 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     provider?: EnumExternalIntegrationProviderFieldUpdateOperationsInput | $Enums.ExternalIntegrationProvider
     title?: StringFieldUpdateOperationsInput | string
+    default_account?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }

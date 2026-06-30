@@ -86,10 +86,21 @@ export const MULTI_ACCOUNT_INTEGRATION_PROVIDERS: IntegrationProvider[] = [
     "TWILIO",
 ];
 
+export const DEFAULT_ACCOUNT_SELECTION_PROVIDERS: IntegrationProvider[] = [
+    "RESEND",
+    "SMTP",
+];
+
 export function providerAllowsMultipleAccounts(
     provider: IntegrationProvider,
 ): boolean {
     return MULTI_ACCOUNT_INTEGRATION_PROVIDERS.includes(provider);
+}
+
+export function providerSupportsDefaultAccountSelection(
+    provider: IntegrationProvider,
+): boolean {
+    return DEFAULT_ACCOUNT_SELECTION_PROVIDERS.includes(provider);
 }
 
 export function canShowAddKeyButton(providerView: IntegrationProviderView): boolean {

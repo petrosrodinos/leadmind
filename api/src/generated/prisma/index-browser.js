@@ -458,6 +458,7 @@ exports.Prisma.IntegrationScalarFieldEnum = {
   user_uuid: 'user_uuid',
   provider: 'provider',
   title: 'title',
+  default_account: 'default_account',
   created_at: 'created_at',
   updated_at: 'updated_at'
 };

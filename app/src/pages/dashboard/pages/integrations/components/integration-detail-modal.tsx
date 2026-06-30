@@ -1,12 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
-import { Button, Modal } from "@heroui/react";
-import { KeyRound, Pencil, Plus, Trash2 } from "lucide-react";
+import { Button, Chip, Modal } from "@heroui/react";
+import { KeyRound, Pencil, Plus, Star, Trash2 } from "lucide-react";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
-import { useDeleteIntegrationKey } from "@/features/integrations/hooks/use-integrations";
+import {
+    useDeleteIntegrationKey,
+    useSetDefaultIntegrationAccount,
+} from "@/features/integrations/hooks/use-integrations";
 import {
     groupKeysByAccount,
     canShowAddKeyButton,
     providerAllowsMultipleAccounts,
+    providerSupportsDefaultAccountSelection,
 } from "@/features/integrations/constants/integration-key-types";
 import type {
     IntegrationKey,
@@ -27,6 +31,7 @@ export function IntegrationDetailModal({
     providerView,
 }: IntegrationDetailModalProps) {
     const deleteKey = useDeleteIntegrationKey();
+    const setDefaultAccount = useSetDefaultIntegrationAccount();
 
     const [formOpen, setFormOpen] = useState(false);
     const [editingKey, setEditingKey] = useState<IntegrationKey | null>(null);
@@ -55,6 +60,14 @@ export function IntegrationDetailModal({
         providerView.allows_multiple_accounts ??
         providerAllowsMultipleAccounts(providerView.provider);
 
+    const supportsDefaultAccountSelection =
+        providerView.supports_default_account_selection ??
+        providerSupportsDefaultAccountSelection(providerView.provider);
+
+    const defaultAccount = providerView.default_account;
+    const showDefaultAccountControls =
+        supportsDefaultAccountSelection && groupedKeys.length > 1;
+
     const canAddKey = canShowAddKeyButton(providerView);
     const canAddWebhookSecret =
         providerView.keyTypes.some((row) => row.key_type === "WEBHOOK_SECRET") &&
@@ -78,6 +91,17 @@ export function IntegrationDetailModal({
         try {
             await deleteKey.mutateAsync(keyToDelete.uuid);
             setKeyToDelete(null);
+        } catch {
+        }
+    };
+
+    const handleSetDefaultAccount = async (account: string) => {
+        if (!providerView || account === defaultAccount) return;
+        try {
+            await setDefaultAccount.mutateAsync({
+                provider: providerView.provider,
+                payload: { account },
+            });
         } catch {
         }
     };
@@ -128,19 +152,56 @@ export function IntegrationDetailModal({
                                     </div>
                                 ) : (
                                     <div className="space-y-4">
-                                        {groupedKeys.map((group) => (
+                                        {groupedKeys.map((group) => {
+                                            const isDefault =
+                                                defaultAccount === group.account;
+
+                                            return (
                                             <section
                                                 key={group.account}
                                                 className="rounded-lg border border-border bg-surface-secondary/20"
                                             >
                                                 {allowsMultipleAccounts && (
-                                                    <div className="px-3 py-2 border-b border-border">
-                                                        <p className="text-xs font-medium uppercase tracking-wide text-muted">
-                                                            Account
-                                                        </p>
-                                                        <p className="text-sm font-semibold text-foreground">
-                                                            {group.account}
-                                                        </p>
+                                                    <div className="px-3 py-2 border-b border-border flex items-center justify-between gap-2">
+                                                        <div>
+                                                            <p className="text-xs font-medium uppercase tracking-wide text-muted">
+                                                                Account
+                                                            </p>
+                                                            <p className="text-sm font-semibold text-foreground">
+                                                                {group.account}
+                                                            </p>
+                                                        </div>
+                                                        {supportsDefaultAccountSelection && (
+                                                            <div className="flex items-center gap-2 shrink-0">
+                                                                {isDefault ? (
+                                                                    <Chip
+                                                                        size="sm"
+                                                                        variant="soft"
+                                                                        color="warning"
+                                                                    >
+                                                                        <Chip.Label className="inline-flex items-center gap-1">
+                                                                            <Star className="size-3 fill-current" />
+                                                                            Default
+                                                                        </Chip.Label>
+                                                                    </Chip>
+                                                                ) : showDefaultAccountControls ? (
+                                                                    <Button
+                                                                        size="sm"
+                                                                        variant="secondary"
+                                                                        isDisabled={
+                                                                            setDefaultAccount.isPending
+                                                                        }
+                                                                        onPress={() =>
+                                                                            handleSetDefaultAccount(
+                                                                                group.account,
+                                                                            )
+                                                                        }
+                                                                    >
+                                                                        Set as default
+                                                                    </Button>
+                                                                ) : null}
+                                                            </div>
+                                                        )}
                                                     </div>
                                                 )}
                                                 <ul className="divide-y divide-border">
@@ -185,7 +246,8 @@ export function IntegrationDetailModal({
                                                     ))}
                                                 </ul>
                                             </section>
-                                        ))}
+                                            );
+                                        })}
                                     </div>
                                 )}
                             </Modal.Body>

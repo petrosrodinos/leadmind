@@ -78,8 +78,39 @@ export const MULTI_ACCOUNT_INTEGRATION_PROVIDERS: ExternalIntegrationProvider[] 
     ExternalIntegrationProvider.TWILIO,
 ];
 
+export const DEFAULT_ACCOUNT_SELECTION_PROVIDERS: ExternalIntegrationProvider[] = [
+    ExternalIntegrationProvider.RESEND,
+    ExternalIntegrationProvider.SMTP,
+];
+
 export function providerAllowsMultipleAccounts(
     provider: ExternalIntegrationProvider,
 ): boolean {
     return MULTI_ACCOUNT_INTEGRATION_PROVIDERS.includes(provider);
+}
+
+export function providerSupportsDefaultAccountSelection(
+    provider: ExternalIntegrationProvider,
+): boolean {
+    return DEFAULT_ACCOUNT_SELECTION_PROVIDERS.includes(provider);
+}
+
+export function listDistinctIntegrationAccounts(keys: { account: string }[]): string[] {
+    return [...new Set(keys.map((key) => key.account.trim()))].sort((left, right) =>
+        left.localeCompare(right, undefined, { numeric: true }),
+    );
+}
+
+export function resolveEffectiveDefaultAccount(
+    stored: string | null | undefined,
+    keys: { account: string }[],
+): string | null {
+    const accounts = listDistinctIntegrationAccounts(keys);
+    if (accounts.length === 0) {
+        return null;
+    }
+    if (stored?.trim() && accounts.includes(stored.trim())) {
+        return stored.trim();
+    }
+    return accounts[0];
 }

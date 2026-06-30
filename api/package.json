@@ -8,6 +8,7 @@
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "migrate": "dotenv -e .env.staging -- npx prisma migrate dev --name new-migration && dotenv -e .env.staging -- npx prisma generate && dotenv -e .env.staging -- npx prisma migrate deploy && dotenv -e .env.staging -- nest start --watch",
     "migrate:local": "dotenv -e .env.local -o -- npx prisma migrate dev --name new-migration && npx prisma generate",
     "migrate:dev": "dotenv -e .env.development -o -- npx prisma migrate dev --name init && npx prisma generate",
     "migrate:prod": "dotenv -e .env.production -o -- npx prisma migrate deploy",

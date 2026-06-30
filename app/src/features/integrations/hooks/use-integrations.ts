@@ -4,11 +4,13 @@ import {
     createIntegrationKey,
     deleteIntegrationKey,
     listIntegrations,
+    setDefaultIntegrationAccount,
     updateIntegrationKey,
 } from "../services/integrations.service";
 import type {
     CreateIntegrationKeyPayload,
     IntegrationProvider,
+    SetDefaultIntegrationAccountPayload,
     UpdateIntegrationKeyPayload,
 } from "../interfaces/integrations.interface";
 
@@ -77,6 +79,28 @@ export function useDeleteIntegrationKey() {
         onError: (error: Error) => {
             toast({
                 title: "Could not delete key",
+                description: error.message,
+                variant: "error",
+                duration: 4000,
+            });
+        },
+    });
+}
+
+export function useSetDefaultIntegrationAccount() {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: (vars: {
+            provider: IntegrationProvider;
+            payload: SetDefaultIntegrationAccountPayload;
+        }) => setDefaultIntegrationAccount(vars.provider, vars.payload),
+        onSuccess: () => {
+            qc.invalidateQueries({ queryKey: integrationsQueryKeys.all });
+            toast({ title: "Default account updated", duration: 1500 });
+        },
+        onError: (error: Error) => {
+            toast({
+                title: "Could not set default account",
                 description: error.message,
                 variant: "error",
                 duration: 4000,

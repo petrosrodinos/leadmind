@@ -30,6 +30,7 @@ const FALLBACK_PROVIDERS: IntegrationProviderView[] = [
         uuid: null,
         label: "OpenAI",
         description: "GPT models for enrichment, scoring, and message drafting.",
+        default_account: null,
         keyTypes: [
             { key_type: "API_KEY", label: "API key", placeholder: "sk-..." },
             {
@@ -45,6 +46,9 @@ const FALLBACK_PROVIDERS: IntegrationProviderView[] = [
         uuid: null,
         label: "Resend",
         description: "Transactional email and inbound webhooks.",
+        allows_multiple_accounts: true,
+        supports_default_account_selection: true,
+        default_account: null,
         keyTypes: [
             { key_type: "API_KEY", label: "API key", placeholder: "re_..." },
             {
@@ -62,6 +66,8 @@ const FALLBACK_PROVIDERS: IntegrationProviderView[] = [
         description:
             "Custom SMTP servers for outbound email. Add multiple accounts with host, port, username, password, and from address.",
         allows_multiple_accounts: true,
+        supports_default_account_selection: true,
+        default_account: null,
         keyTypes: [
             { key_type: "HOST", label: "Host", placeholder: "smtp.example.com" },
             { key_type: "PORT", label: "Port", placeholder: "587" },
@@ -81,6 +87,7 @@ const FALLBACK_PROVIDERS: IntegrationProviderView[] = [
         label: "Twilio",
         description: "SMS outreach credentials.",
         disabled: true,
+        default_account: null,
         keyTypes: [
             { key_type: "ACCOUNT_SID", label: "Account SID", placeholder: "AC..." },
             { key_type: "AUTH_TOKEN", label: "Auth token", placeholder: "Auth token" },
@@ -92,6 +99,7 @@ const FALLBACK_PROVIDERS: IntegrationProviderView[] = [
         uuid: null,
         label: "Apify",
         description: "Lead scraping from LinkedIn, Google Maps, and more.",
+        default_account: null,
         keyTypes: [{ key_type: "API_KEY", label: "API token", placeholder: "apify_api_..." }],
         keys: [],
     },
@@ -101,6 +109,7 @@ const FALLBACK_PROVIDERS: IntegrationProviderView[] = [
         label: "HubSpot",
         description: "CRM sync and marketing automation.",
         disabled: true,
+        default_account: null,
         keyTypes: [
             {
                 key_type: "ACCESS_TOKEN",
@@ -145,8 +154,9 @@ export default function IntegrationsPage() {
                     Integrations
                 </h1>
                 <p className="text-sm text-muted max-w-2xl">
-                    Store one credential per type for most providers. Resend, SMTP,
-                    and Twilio support multiple accounts, e.g.{" "}
+                    Store one credential per type for most providers. Resend and SMTP
+                    support multiple accounts — pick a default account for outbound
+                    email. Twilio also supports multiple accounts, e.g.{" "}
                     <span className="font-mono">SMTP_HOST_1</span>,{" "}
                     <span className="font-mono">SMTP_PORT_1</span>, and{" "}
                     <span className="font-mono">SMTP_PASSWORD_1</span> for the same
