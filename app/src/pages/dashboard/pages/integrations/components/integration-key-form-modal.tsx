@@ -190,11 +190,11 @@ export function IntegrationKeyFormModal({
                                     together. Example: account{" "}
                                     <span className="font-mono">1</span> gives{" "}
                                     <span className="font-mono">
-                                        RESEND_API_KEY_1
+                                        {providerView.provider}_API_KEY_1
                                     </span>{" "}
                                     and{" "}
                                     <span className="font-mono">
-                                        RESEND_WEBHOOK_SECRET_1
+                                        {providerView.provider}_WEBHOOK_SECRET_1
                                     </span>
                                     .
                                 </p>

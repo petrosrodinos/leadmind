@@ -2,10 +2,14 @@ import { ExternalIntegrationProvider } from '@/generated/prisma';
 
 export const INTEGRATION_PROVIDERS: ExternalIntegrationProvider[] = [
     ExternalIntegrationProvider.OPENAI,
-    ExternalIntegrationProvider.ANTHROPIC,
     ExternalIntegrationProvider.RESEND,
     ExternalIntegrationProvider.TWILIO,
     ExternalIntegrationProvider.APIFY,
+    ExternalIntegrationProvider.HUBSPOT,
+];
+
+export const DISABLED_INTEGRATION_PROVIDERS: ExternalIntegrationProvider[] = [
+    ExternalIntegrationProvider.TWILIO,
     ExternalIntegrationProvider.HUBSPOT,
 ];
 

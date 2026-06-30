@@ -6,13 +6,18 @@ import type {
 
 export const PROVIDER_KEY_TYPES: Record<IntegrationProvider, IntegrationKeyType[]> =
     {
-        OPENAI: ["API_KEY"],
+        OPENAI: ["API_KEY", "WEBHOOK_SECRET"],
         ANTHROPIC: ["API_KEY"],
         RESEND: ["API_KEY", "WEBHOOK_SECRET"],
         TWILIO: ["ACCOUNT_SID", "AUTH_TOKEN"],
         APIFY: ["API_KEY"],
         HUBSPOT: ["ACCESS_TOKEN"],
     };
+
+export const DISABLED_INTEGRATION_PROVIDERS: IntegrationProvider[] = [
+    "TWILIO",
+    "HUBSPOT",
+];
 
 export const KEY_TYPE_LABELS: Record<IntegrationKeyType, string> = {
     API_KEY: "API key",

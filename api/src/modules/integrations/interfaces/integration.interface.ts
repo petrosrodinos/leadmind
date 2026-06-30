@@ -25,6 +25,7 @@ export interface IntegrationResponse {
     uuid: string | null;
     label: string;
     description: string;
+    disabled?: boolean;
     keyTypes: IntegrationKeyTypeOption[];
     keys: IntegrationKeyResponse[];
 }

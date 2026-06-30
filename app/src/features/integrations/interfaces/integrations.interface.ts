@@ -43,6 +43,7 @@ export interface IntegrationProviderView {
     uuid: string | null;
     label: string;
     description: string;
+    disabled?: boolean;
     keyTypes: IntegrationKeyTypeOption[];
     keys: IntegrationKey[];
 }

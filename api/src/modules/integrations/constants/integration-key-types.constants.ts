@@ -7,7 +7,10 @@ export const PROVIDER_KEY_TYPES: Record<
     ExternalIntegrationProvider,
     IntegrationKeyType[]
 > = {
-    [ExternalIntegrationProvider.OPENAI]: [IntegrationKeyType.API_KEY],
+    [ExternalIntegrationProvider.OPENAI]: [
+        IntegrationKeyType.API_KEY,
+        IntegrationKeyType.WEBHOOK_SECRET,
+    ],
     [ExternalIntegrationProvider.ANTHROPIC]: [IntegrationKeyType.API_KEY],
     [ExternalIntegrationProvider.RESEND]: [
         IntegrationKeyType.API_KEY,
