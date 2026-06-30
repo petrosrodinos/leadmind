@@ -26,6 +26,7 @@ export type Channel = (typeof Channel)[keyof typeof Channel];
 
 export const MsgStatus = {
     PENDING: "PENDING",
+    QUEUED: "QUEUED",
     SENT: "SENT",
     FAILED: "FAILED",
 } as const;
