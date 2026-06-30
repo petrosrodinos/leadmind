@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
+import { ApifyUsageOperation } from '@/generated/prisma';
 import { ApifyClient } from '../apify.client';
 import { APIFY_ACTORS } from '../apify.constants';
 import { ApifyAdapter, ApifyRunInput, NormalizedLead } from '../interfaces/apify.interfaces';
+import { ApifyUsageOptions } from '../interfaces/apify-usage.interface';
+import { ApifyCredentialsService } from '../services/apify-credentials.service';
 import {
     GoogleSearchOrganicResult,
     GoogleSearchQueryConfig,
@@ -15,7 +18,10 @@ const LINKEDIN_REGEX = /https?:\/\/(?:[a-z]{2,3}\.)?linkedin\.com\/(?:in|company
 export class GoogleSearchAdapter
     implements ApifyAdapter<GoogleSearchQueryConfig, GoogleSearchRawItem> {
 
-    constructor(private readonly apifyClient: ApifyClient) { }
+    constructor(
+        private readonly apifyClient: ApifyClient,
+        private readonly credentials: ApifyCredentialsService,
+    ) { }
 
     buildInput(query_config: GoogleSearchQueryConfig): ApifyRunInput {
         const { queries, results_per_page, max_pages_per_query, country_code, language_code } =
@@ -35,9 +41,18 @@ export class GoogleSearchAdapter
         return input;
     }
 
-    async fetchRawItems(query_config: GoogleSearchQueryConfig): Promise<GoogleSearchRawItem[]> {
+    async fetchRawItems(
+        user_uuid: string,
+        query_config: GoogleSearchQueryConfig,
+        usage?: ApifyUsageOptions,
+    ): Promise<GoogleSearchRawItem[]> {
         const input = this.buildInput(query_config);
-        return this.apifyClient.runActor<GoogleSearchRawItem>(APIFY_ACTORS.GOOGLE_SEARCH, input);
+        return this.runActorWithUserToken(
+            user_uuid,
+            APIFY_ACTORS.GOOGLE_SEARCH,
+            input,
+            usage ?? { operation: ApifyUsageOperation.ENRICHMENT_GOOGLE_SEARCH },
+        );
     }
 
     normalize(raw_items: GoogleSearchRawItem[]): NormalizedLead[] {
@@ -52,6 +67,16 @@ export class GoogleSearchAdapter
         }
 
         return leads;
+    }
+
+    private async runActorWithUserToken<T>(
+        user_uuid: string,
+        actor_id: string,
+        input: ApifyRunInput,
+        usage: ApifyUsageOptions,
+    ): Promise<T[]> {
+        const token = await this.credentials.getApifyApiToken(user_uuid);
+        return this.apifyClient.runActor<T>(token, actor_id, input, { user_uuid, ...usage });
     }
 
     private mapResult(result: GoogleSearchOrganicResult): NormalizedLead {

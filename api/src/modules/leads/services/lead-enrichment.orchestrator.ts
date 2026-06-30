@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { EnrichmentSource, Lead } from '@/generated/prisma';
+import { EnrichmentSource, Lead, ApifyUsageOperation } from '@/generated/prisma';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { LinkedInCompanyAdapter } from '@/integrations/apify/linkedin-company/linkedin-company.adapter';
 import { LinkedInProfileAdapter } from '@/integrations/apify/linkedin-profile/linkedin-profile.adapter';
@@ -117,16 +117,25 @@ export class LeadEnrichmentOrchestrator extends EnrichmentOrchestrator {
         if (!url) {
             throw new Error('Lead has no linkedin_url');
         }
+        const user_uuid = await this.resolveUserUuidForTarget({ kind: 'lead', uuid: lead.uuid });
+        if (!user_uuid) {
+            throw new Error('Lead has no user context for Apify');
+        }
+        const apifyUsage = {
+            operation: ApifyUsageOperation.ENRICHMENT_LINKEDIN,
+            reference_type: 'lead' as const,
+            reference_uuid: lead.uuid,
+        };
         let plain: Record<string, unknown> | null = null;
         let subtype: 'profile' | 'company' = 'profile';
         if (isLinkedInCompanyUrl(url)) {
-            plain = toPlainRecord(await this.linkedInCompany.fetchCompany(url));
+            plain = toPlainRecord(await this.linkedInCompany.fetchCompany(user_uuid, url, apifyUsage));
             subtype = 'company';
         } else if (isLinkedInProfileUrl(url)) {
-            plain = toPlainRecord(await this.linkedInProfile.fetchProfile(url));
+            plain = toPlainRecord(await this.linkedInProfile.fetchProfile(user_uuid, url, apifyUsage));
             subtype = 'profile';
         } else {
-            plain = toPlainRecord(await this.linkedInProfile.fetchProfile(url));
+            plain = toPlainRecord(await this.linkedInProfile.fetchProfile(user_uuid, url, apifyUsage));
             subtype = 'profile';
         }
         if (!plain) {
@@ -157,7 +166,20 @@ export class LeadEnrichmentOrchestrator extends EnrichmentOrchestrator {
             throw new Error('Lead has no website for crawl');
         }
         const url = normalizeWebsiteUrl(w);
-        const page = await this.websiteCrawler.crawlSinglePage(url);
+        const user_uuid = await this.resolveUserUuidForTarget({ kind: 'lead', uuid: lead.uuid });
+        if (!user_uuid) {
+            throw new Error('Lead has no user context for Apify');
+        }
+        const page = await this.websiteCrawler.crawlSinglePage(
+            user_uuid,
+            url,
+            {},
+            {
+                operation: ApifyUsageOperation.ENRICHMENT_WEBSITE,
+                reference_type: 'lead',
+                reference_uuid: lead.uuid,
+            },
+        );
         const textFull = page ? plainTextFromCrawledPage(page) : null;
         const textSample = textFull?.slice(0, 12000) ?? null;
         const mdSample = page?.markdown?.slice(0, 12000) ?? null;
@@ -200,11 +222,23 @@ export class LeadEnrichmentOrchestrator extends EnrichmentOrchestrator {
         if (!query) {
             throw new Error('Lead has no company/name for Google Search');
         }
-        const raw = await this.googleSearch.fetchRawItems({
-            queries: query,
-            results_per_page: 8,
-            max_pages_per_query: 1,
-        });
+        const user_uuid = await this.resolveUserUuidForTarget({ kind: 'lead', uuid: lead.uuid });
+        if (!user_uuid) {
+            throw new Error('Lead has no user context for Apify');
+        }
+        const raw = await this.googleSearch.fetchRawItems(
+            user_uuid,
+            {
+                queries: query,
+                results_per_page: 8,
+                max_pages_per_query: 1,
+            },
+            {
+                operation: ApifyUsageOperation.ENRICHMENT_GOOGLE_SEARCH,
+                reference_type: 'lead',
+                reference_uuid: lead.uuid,
+            },
+        );
         const summaries: { title?: string; url?: string; snippet?: string }[] = [];
         for (const item of raw) {
             const organic = [...(item.organicResults ?? []), ...(item.paidResults ?? [])];

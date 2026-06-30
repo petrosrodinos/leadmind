@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { Queue } from 'bullmq';
 import {
+    ApifyUsageOperation,
     CampaignContactStatus,
     Channel,
     Contact,
@@ -997,7 +998,7 @@ export class ContactsService {
         );
 
         for (const row of eligible) {
-            void this.scrapeAndSaveContactEmail(row.uuid, row.website!.trim()).catch((error) => {
+            void this.scrapeAndSaveContactEmail(user_uuid, row.uuid, row.website!.trim()).catch((error) => {
                 this.logger.error(
                     `Contact ${row.uuid} website email scrape failed: ${error instanceof Error ? error.message : error}`,
                 );
@@ -1010,9 +1011,22 @@ export class ContactsService {
         };
     }
 
-    private async scrapeAndSaveContactEmail(contactUuid: string, website: string): Promise<void> {
+    private async scrapeAndSaveContactEmail(
+        user_uuid: string,
+        contactUuid: string,
+        website: string,
+    ): Promise<void> {
         const url = normalizeWebsiteUrl(website);
-        const page = await this.websiteCrawler.crawlSinglePage(url);
+        const page = await this.websiteCrawler.crawlSinglePage(
+            user_uuid,
+            url,
+            {},
+            {
+                operation: ApifyUsageOperation.CONTACT_EMAIL_SCRAPE,
+                reference_type: 'contact',
+                reference_uuid: contactUuid,
+            },
+        );
         const emails = extractEmailsFromCrawledPage(page);
         const email = pickBestContactEmail(emails);
         if (!email) {

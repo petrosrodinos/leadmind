@@ -10,6 +10,7 @@ import { Prisma, Filter, ScoringInstruction, SourceType } from '@/generated/pris
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { FILTER_SCRAPE_QUEUE } from '@/core/queues/queues.constants';
 import { ScoringInstructionsService } from '@/modules/scoring-instructions/scoring-instructions.service';
+import { ApifyCredentialsService } from '@/integrations/apify/services/apify-credentials.service';
 import { CreateFilterDto } from './dto/create-filter.dto';
 import { UpdateFilterDto } from './dto/update-filter.dto';
 import { ListJobsDto } from './dto/list-jobs.dto';
@@ -48,11 +49,13 @@ export class FiltersService {
     constructor(
         private readonly prisma: PrismaService,
         private readonly scoringInstructionsService: ScoringInstructionsService,
+        private readonly apifyCredentials: ApifyCredentialsService,
         @InjectQueue(FILTER_SCRAPE_QUEUE) private readonly scrapeQueue: Queue,
     ) {}
 
     async create(user_uuid: string, dto: CreateFilterDto): Promise<FilterResponse> {
         this.validateQueryConfig(dto.source_type, dto.query_config);
+        await this.assertApifyForSourceType(user_uuid, dto.source_type);
         const uuids = dto.scoring_instruction_uuids ?? [];
         await this.scoringInstructionsService.assertAllOwnedByUser(user_uuid, uuids);
 
@@ -111,6 +114,7 @@ export class FiltersService {
         const next_query_config = dto.query_config ?? (existing.query_config as Record<string, any>);
         if (dto.source_type !== undefined || dto.query_config !== undefined) {
             this.validateQueryConfig(next_source_type, next_query_config);
+            await this.assertApifyForSourceType(user_uuid, next_source_type);
         }
 
         if (dto.scoring_instruction_uuids !== undefined) {
@@ -254,6 +258,22 @@ export class FiltersService {
 
     private jobName(filter_uuid: string): string {
         return `filter-scrape:${filter_uuid}`;
+    }
+
+    private async assertApifyForSourceType(
+        user_uuid: string,
+        source_type: SourceType,
+    ): Promise<void> {
+        const apify_sources: SourceType[] = [
+            SourceType.LINKEDIN,
+            SourceType.GOOGLE_MAPS,
+            SourceType.GOOGLE_SEARCH,
+            SourceType.GENERIC_LEAD,
+            SourceType.WEBSITE_CRAWLER,
+        ];
+        if (apify_sources.includes(source_type)) {
+            await this.apifyCredentials.assertApifyConfigured(user_uuid);
+        }
     }
 
     private validateQueryConfig(source_type: SourceType, query_config: Record<string, any>): void {

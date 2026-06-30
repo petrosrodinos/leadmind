@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
+import { ApifyUsageOperation } from '@/generated/prisma';
 import { ApifyClient } from '../apify.client';
 import { APIFY_ACTORS } from '../apify.constants';
 import { ApifyAdapter, ApifyRunInput, NormalizedLead } from '../interfaces/apify.interfaces';
+import { ApifyUsageOptions } from '../interfaces/apify-usage.interface';
+import { ApifyCredentialsService } from '../services/apify-credentials.service';
 import {
     LinkedInCompanyHeadquarters,
     LinkedInCompanyLocation,
@@ -16,7 +19,10 @@ const LINKEDIN_COMPANY_URL_PREFIX = 'https://www.linkedin.com/company/';
 export class LinkedInCompanyAdapter
     implements ApifyAdapter<LinkedInCompanyQueryConfig, LinkedInCompanyRawItem> {
 
-    constructor(private readonly apifyClient: ApifyClient) { }
+    constructor(
+        private readonly apifyClient: ApifyClient,
+        private readonly credentials: ApifyCredentialsService,
+    ) { }
 
     buildInput(query_config: LinkedInCompanyQueryConfig): ApifyRunInput {
         const input: ApifyRunInput = {};
@@ -47,24 +53,52 @@ export class LinkedInCompanyAdapter
     }
 
     /** Run the actor and return the unmodified dataset items. */
-    async run(query_config: LinkedInCompanyQueryConfig): Promise<LinkedInCompanyRawItem[]> {
+    async run(
+        user_uuid: string,
+        query_config: LinkedInCompanyQueryConfig,
+        usage?: ApifyUsageOptions,
+    ): Promise<LinkedInCompanyRawItem[]> {
         const input = this.buildInput(query_config);
-        return this.apifyClient.runActor<LinkedInCompanyRawItem>(
+        return this.runActorWithUserToken(
+            user_uuid,
             APIFY_ACTORS.LINKEDIN_COMPANY,
             input,
+            usage ?? { operation: ApifyUsageOperation.ENRICHMENT_LINKEDIN },
         );
     }
 
     /** Run the actor and return typed `NormalizedCompany` records. */
-    async fetchCompanies(query_config: LinkedInCompanyQueryConfig): Promise<NormalizedCompany[]> {
-        const items = await this.run(query_config);
+    async fetchCompanies(
+        user_uuid: string,
+        query_config: LinkedInCompanyQueryConfig,
+        usage?: ApifyUsageOptions,
+    ): Promise<NormalizedCompany[]> {
+        const items = await this.run(user_uuid, query_config, usage);
         return items.map((item) => this.toNormalizedCompany(item));
     }
 
     /** Convenience: fetch a single company by URL or username. */
-    async fetchCompany(url_or_username: string): Promise<NormalizedCompany | null> {
-        const companies = await this.fetchCompanies({ company_urls: [url_or_username] });
+    async fetchCompany(
+        user_uuid: string,
+        url_or_username: string,
+        usage?: ApifyUsageOptions,
+    ): Promise<NormalizedCompany | null> {
+        const companies = await this.fetchCompanies(
+            user_uuid,
+            { company_urls: [url_or_username] },
+            usage,
+        );
         return companies[0] ?? null;
+    }
+
+    private async runActorWithUserToken<T>(
+        user_uuid: string,
+        actor_id: string,
+        input: ApifyRunInput,
+        usage: ApifyUsageOptions,
+    ): Promise<T[]> {
+        const token = await this.credentials.getApifyApiToken(user_uuid);
+        return this.apifyClient.runActor<T>(token, actor_id, input, { user_uuid, ...usage });
     }
 
     private toNormalizedCompany(item: LinkedInCompanyRawItem): NormalizedCompany {

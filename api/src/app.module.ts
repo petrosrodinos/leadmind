@@ -33,6 +33,7 @@ import { ContactListsModule } from './modules/contact-lists/contact-lists.module
 import { ContactAudienceStatsModule } from './modules/contact-audience-stats/contact-audience-stats.module';
 import { GatewaysModule } from './gateways/gateways.module';
 import { AiUsageModule } from './modules/ai-usage/ai-usage.module';
+import { ApifyUsageModule } from './modules/apify-usage/apify-usage.module';
 
 @Module({
   imports: [
@@ -69,6 +70,7 @@ import { AiUsageModule } from './modules/ai-usage/ai-usage.module';
     ContactAudienceStatsModule,
     GatewaysModule,
     AiUsageModule,
+    ApifyUsageModule,
   ],
   controllers: [AppController],
   providers: [AppService],

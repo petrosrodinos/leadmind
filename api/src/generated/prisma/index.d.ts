@@ -163,6 +163,11 @@ export type ContactAudienceAnalysis = $Result.DefaultSelection<Prisma.$ContactAu
  * 
  */
 export type AiUsageLog = $Result.DefaultSelection<Prisma.$AiUsageLogPayload>
+/**
+ * Model ApifyUsageLog
+ * 
+ */
+export type ApifyUsageLog = $Result.DefaultSelection<Prisma.$ApifyUsageLogPayload>
 
 /**
  * Enums
@@ -456,6 +461,27 @@ export const AiUsageStatus: {
 
 export type AiUsageStatus = (typeof AiUsageStatus)[keyof typeof AiUsageStatus]
 
+
+export const ApifyUsageOperation: {
+  FILTER_SCRAPE: 'FILTER_SCRAPE',
+  ENRICHMENT_LINKEDIN: 'ENRICHMENT_LINKEDIN',
+  ENRICHMENT_WEBSITE: 'ENRICHMENT_WEBSITE',
+  ENRICHMENT_GOOGLE_SEARCH: 'ENRICHMENT_GOOGLE_SEARCH',
+  CONTACT_EMAIL_SCRAPE: 'CONTACT_EMAIL_SCRAPE',
+  AI_WEBSITE_CONTEXT: 'AI_WEBSITE_CONTEXT',
+  OTHER: 'OTHER'
+};
+
+export type ApifyUsageOperation = (typeof ApifyUsageOperation)[keyof typeof ApifyUsageOperation]
+
+
+export const ApifyUsageStatus: {
+  SUCCESS: 'SUCCESS',
+  ERROR: 'ERROR'
+};
+
+export type ApifyUsageStatus = (typeof ApifyUsageStatus)[keyof typeof ApifyUsageStatus]
+
 }
 
 export type AuthRole = $Enums.AuthRole
@@ -553,6 +579,14 @@ export const AiUsageRequestMode: typeof $Enums.AiUsageRequestMode
 export type AiUsageStatus = $Enums.AiUsageStatus
 
 export const AiUsageStatus: typeof $Enums.AiUsageStatus
+
+export type ApifyUsageOperation = $Enums.ApifyUsageOperation
+
+export const ApifyUsageOperation: typeof $Enums.ApifyUsageOperation
+
+export type ApifyUsageStatus = $Enums.ApifyUsageStatus
+
+export const ApifyUsageStatus: typeof $Enums.ApifyUsageStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -970,6 +1004,16 @@ export class PrismaClient<
     * ```
     */
   get aiUsageLog(): Prisma.AiUsageLogDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.apifyUsageLog`: Exposes CRUD operations for the **ApifyUsageLog** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ApifyUsageLogs
+    * const apifyUsageLogs = await prisma.apifyUsageLog.findMany()
+    * ```
+    */
+  get apifyUsageLog(): Prisma.ApifyUsageLogDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1433,7 +1477,8 @@ export namespace Prisma {
     FormCompletion: 'FormCompletion',
     FormCompletionValue: 'FormCompletionValue',
     ContactAudienceAnalysis: 'ContactAudienceAnalysis',
-    AiUsageLog: 'AiUsageLog'
+    AiUsageLog: 'AiUsageLog',
+    ApifyUsageLog: 'ApifyUsageLog'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1449,7 +1494,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "filter" | "scoringInstruction" | "filterScoringInstruction" | "rawLead" | "lead" | "leadEnrichment" | "contact" | "contactEnrichment" | "contactScore" | "contactList" | "contactListMember" | "contactTag" | "interaction" | "outreachMessage" | "outreachSequence" | "filterJob" | "senderProfile" | "marketingCampaign" | "marketingCampaignContact" | "openAiBatchJob" | "integration" | "integrationKey" | "reminder" | "form" | "formField" | "formCompletion" | "formCompletionValue" | "contactAudienceAnalysis" | "aiUsageLog"
+      modelProps: "user" | "filter" | "scoringInstruction" | "filterScoringInstruction" | "rawLead" | "lead" | "leadEnrichment" | "contact" | "contactEnrichment" | "contactScore" | "contactList" | "contactListMember" | "contactTag" | "interaction" | "outreachMessage" | "outreachSequence" | "filterJob" | "senderProfile" | "marketingCampaign" | "marketingCampaignContact" | "openAiBatchJob" | "integration" | "integrationKey" | "reminder" | "form" | "formField" | "formCompletion" | "formCompletionValue" | "contactAudienceAnalysis" | "aiUsageLog" | "apifyUsageLog"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3673,6 +3718,80 @@ export namespace Prisma {
           }
         }
       }
+      ApifyUsageLog: {
+        payload: Prisma.$ApifyUsageLogPayload<ExtArgs>
+        fields: Prisma.ApifyUsageLogFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ApifyUsageLogFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApifyUsageLogPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ApifyUsageLogFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApifyUsageLogPayload>
+          }
+          findFirst: {
+            args: Prisma.ApifyUsageLogFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApifyUsageLogPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ApifyUsageLogFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApifyUsageLogPayload>
+          }
+          findMany: {
+            args: Prisma.ApifyUsageLogFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApifyUsageLogPayload>[]
+          }
+          create: {
+            args: Prisma.ApifyUsageLogCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApifyUsageLogPayload>
+          }
+          createMany: {
+            args: Prisma.ApifyUsageLogCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ApifyUsageLogCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApifyUsageLogPayload>[]
+          }
+          delete: {
+            args: Prisma.ApifyUsageLogDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApifyUsageLogPayload>
+          }
+          update: {
+            args: Prisma.ApifyUsageLogUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApifyUsageLogPayload>
+          }
+          deleteMany: {
+            args: Prisma.ApifyUsageLogDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ApifyUsageLogUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ApifyUsageLogUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApifyUsageLogPayload>[]
+          }
+          upsert: {
+            args: Prisma.ApifyUsageLogUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApifyUsageLogPayload>
+          }
+          aggregate: {
+            args: Prisma.ApifyUsageLogAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateApifyUsageLog>
+          }
+          groupBy: {
+            args: Prisma.ApifyUsageLogGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ApifyUsageLogGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ApifyUsageLogCountArgs<ExtArgs>
+            result: $Utils.Optional<ApifyUsageLogCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -3811,6 +3930,7 @@ export namespace Prisma {
     formCompletionValue?: FormCompletionValueOmit
     contactAudienceAnalysis?: ContactAudienceAnalysisOmit
     aiUsageLog?: AiUsageLogOmit
+    apifyUsageLog?: ApifyUsageLogOmit
   }
 
   /* Types for Logging */
@@ -3907,6 +4027,7 @@ export namespace Prisma {
     contact_lists: number
     contact_audience_analyses: number
     ai_usage_logs: number
+    apify_usage_logs: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3926,6 +4047,7 @@ export namespace Prisma {
     contact_lists?: boolean | UserCountOutputTypeCountContact_listsArgs
     contact_audience_analyses?: boolean | UserCountOutputTypeCountContact_audience_analysesArgs
     ai_usage_logs?: boolean | UserCountOutputTypeCountAi_usage_logsArgs
+    apify_usage_logs?: boolean | UserCountOutputTypeCountApify_usage_logsArgs
   }
 
   // Custom InputTypes
@@ -4049,6 +4171,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountAi_usage_logsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: AiUsageLogWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountApify_usage_logsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ApifyUsageLogWhereInput
   }
 
 
@@ -4797,6 +4926,7 @@ export namespace Prisma {
     contact_lists?: boolean | User$contact_listsArgs<ExtArgs>
     contact_audience_analyses?: boolean | User$contact_audience_analysesArgs<ExtArgs>
     ai_usage_logs?: boolean | User$ai_usage_logsArgs<ExtArgs>
+    apify_usage_logs?: boolean | User$apify_usage_logsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -4851,6 +4981,7 @@ export namespace Prisma {
     contact_lists?: boolean | User$contact_listsArgs<ExtArgs>
     contact_audience_analyses?: boolean | User$contact_audience_analysesArgs<ExtArgs>
     ai_usage_logs?: boolean | User$ai_usage_logsArgs<ExtArgs>
+    apify_usage_logs?: boolean | User$apify_usage_logsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -4875,6 +5006,7 @@ export namespace Prisma {
       contact_lists: Prisma.$ContactListPayload<ExtArgs>[]
       contact_audience_analyses: Prisma.$ContactAudienceAnalysisPayload<ExtArgs>[]
       ai_usage_logs: Prisma.$AiUsageLogPayload<ExtArgs>[]
+      apify_usage_logs: Prisma.$ApifyUsageLogPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -5295,6 +5427,7 @@ export namespace Prisma {
     contact_lists<T extends User$contact_listsArgs<ExtArgs> = {}>(args?: Subset<T, User$contact_listsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactListPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     contact_audience_analyses<T extends User$contact_audience_analysesArgs<ExtArgs> = {}>(args?: Subset<T, User$contact_audience_analysesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactAudienceAnalysisPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     ai_usage_logs<T extends User$ai_usage_logsArgs<ExtArgs> = {}>(args?: Subset<T, User$ai_usage_logsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AiUsageLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    apify_usage_logs<T extends User$apify_usage_logsArgs<ExtArgs> = {}>(args?: Subset<T, User$apify_usage_logsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApifyUsageLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6101,6 +6234,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: AiUsageLogScalarFieldEnum | AiUsageLogScalarFieldEnum[]
+  }
+
+  /**
+   * User.apify_usage_logs
+   */
+  export type User$apify_usage_logsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApifyUsageLog
+     */
+    select?: ApifyUsageLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApifyUsageLog
+     */
+    omit?: ApifyUsageLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApifyUsageLogInclude<ExtArgs> | null
+    where?: ApifyUsageLogWhereInput
+    orderBy?: ApifyUsageLogOrderByWithRelationInput | ApifyUsageLogOrderByWithRelationInput[]
+    cursor?: ApifyUsageLogWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ApifyUsageLogScalarFieldEnum | ApifyUsageLogScalarFieldEnum[]
   }
 
   /**
@@ -41798,6 +41955,1236 @@ export namespace Prisma {
 
 
   /**
+   * Model ApifyUsageLog
+   */
+
+  export type AggregateApifyUsageLog = {
+    _count: ApifyUsageLogCountAggregateOutputType | null
+    _avg: ApifyUsageLogAvgAggregateOutputType | null
+    _sum: ApifyUsageLogSumAggregateOutputType | null
+    _min: ApifyUsageLogMinAggregateOutputType | null
+    _max: ApifyUsageLogMaxAggregateOutputType | null
+  }
+
+  export type ApifyUsageLogAvgAggregateOutputType = {
+    result_count: number | null
+    duration_ms: number | null
+    compute_units: Decimal | null
+    total_cost_usd: Decimal | null
+  }
+
+  export type ApifyUsageLogSumAggregateOutputType = {
+    result_count: number | null
+    duration_ms: number | null
+    compute_units: Decimal | null
+    total_cost_usd: Decimal | null
+  }
+
+  export type ApifyUsageLogMinAggregateOutputType = {
+    uuid: string | null
+    user_uuid: string | null
+    actor_id: string | null
+    operation: $Enums.ApifyUsageOperation | null
+    status: $Enums.ApifyUsageStatus | null
+    result_count: number | null
+    duration_ms: number | null
+    compute_units: Decimal | null
+    total_cost_usd: Decimal | null
+    run_id: string | null
+    reference_type: string | null
+    reference_uuid: string | null
+    error_message: string | null
+    created_at: Date | null
+  }
+
+  export type ApifyUsageLogMaxAggregateOutputType = {
+    uuid: string | null
+    user_uuid: string | null
+    actor_id: string | null
+    operation: $Enums.ApifyUsageOperation | null
+    status: $Enums.ApifyUsageStatus | null
+    result_count: number | null
+    duration_ms: number | null
+    compute_units: Decimal | null
+    total_cost_usd: Decimal | null
+    run_id: string | null
+    reference_type: string | null
+    reference_uuid: string | null
+    error_message: string | null
+    created_at: Date | null
+  }
+
+  export type ApifyUsageLogCountAggregateOutputType = {
+    uuid: number
+    user_uuid: number
+    actor_id: number
+    operation: number
+    status: number
+    result_count: number
+    duration_ms: number
+    compute_units: number
+    total_cost_usd: number
+    run_id: number
+    reference_type: number
+    reference_uuid: number
+    error_message: number
+    metadata: number
+    created_at: number
+    _all: number
+  }
+
+
+  export type ApifyUsageLogAvgAggregateInputType = {
+    result_count?: true
+    duration_ms?: true
+    compute_units?: true
+    total_cost_usd?: true
+  }
+
+  export type ApifyUsageLogSumAggregateInputType = {
+    result_count?: true
+    duration_ms?: true
+    compute_units?: true
+    total_cost_usd?: true
+  }
+
+  export type ApifyUsageLogMinAggregateInputType = {
+    uuid?: true
+    user_uuid?: true
+    actor_id?: true
+    operation?: true
+    status?: true
+    result_count?: true
+    duration_ms?: true
+    compute_units?: true
+    total_cost_usd?: true
+    run_id?: true
+    reference_type?: true
+    reference_uuid?: true
+    error_message?: true
+    created_at?: true
+  }
+
+  export type ApifyUsageLogMaxAggregateInputType = {
+    uuid?: true
+    user_uuid?: true
+    actor_id?: true
+    operation?: true
+    status?: true
+    result_count?: true
+    duration_ms?: true
+    compute_units?: true
+    total_cost_usd?: true
+    run_id?: true
+    reference_type?: true
+    reference_uuid?: true
+    error_message?: true
+    created_at?: true
+  }
+
+  export type ApifyUsageLogCountAggregateInputType = {
+    uuid?: true
+    user_uuid?: true
+    actor_id?: true
+    operation?: true
+    status?: true
+    result_count?: true
+    duration_ms?: true
+    compute_units?: true
+    total_cost_usd?: true
+    run_id?: true
+    reference_type?: true
+    reference_uuid?: true
+    error_message?: true
+    metadata?: true
+    created_at?: true
+    _all?: true
+  }
+
+  export type ApifyUsageLogAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ApifyUsageLog to aggregate.
+     */
+    where?: ApifyUsageLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ApifyUsageLogs to fetch.
+     */
+    orderBy?: ApifyUsageLogOrderByWithRelationInput | ApifyUsageLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ApifyUsageLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ApifyUsageLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ApifyUsageLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ApifyUsageLogs
+    **/
+    _count?: true | ApifyUsageLogCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ApifyUsageLogAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ApifyUsageLogSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ApifyUsageLogMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ApifyUsageLogMaxAggregateInputType
+  }
+
+  export type GetApifyUsageLogAggregateType<T extends ApifyUsageLogAggregateArgs> = {
+        [P in keyof T & keyof AggregateApifyUsageLog]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateApifyUsageLog[P]>
+      : GetScalarType<T[P], AggregateApifyUsageLog[P]>
+  }
+
+
+
+
+  export type ApifyUsageLogGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ApifyUsageLogWhereInput
+    orderBy?: ApifyUsageLogOrderByWithAggregationInput | ApifyUsageLogOrderByWithAggregationInput[]
+    by: ApifyUsageLogScalarFieldEnum[] | ApifyUsageLogScalarFieldEnum
+    having?: ApifyUsageLogScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ApifyUsageLogCountAggregateInputType | true
+    _avg?: ApifyUsageLogAvgAggregateInputType
+    _sum?: ApifyUsageLogSumAggregateInputType
+    _min?: ApifyUsageLogMinAggregateInputType
+    _max?: ApifyUsageLogMaxAggregateInputType
+  }
+
+  export type ApifyUsageLogGroupByOutputType = {
+    uuid: string
+    user_uuid: string
+    actor_id: string
+    operation: $Enums.ApifyUsageOperation
+    status: $Enums.ApifyUsageStatus
+    result_count: number | null
+    duration_ms: number | null
+    compute_units: Decimal | null
+    total_cost_usd: Decimal | null
+    run_id: string | null
+    reference_type: string | null
+    reference_uuid: string | null
+    error_message: string | null
+    metadata: JsonValue | null
+    created_at: Date
+    _count: ApifyUsageLogCountAggregateOutputType | null
+    _avg: ApifyUsageLogAvgAggregateOutputType | null
+    _sum: ApifyUsageLogSumAggregateOutputType | null
+    _min: ApifyUsageLogMinAggregateOutputType | null
+    _max: ApifyUsageLogMaxAggregateOutputType | null
+  }
+
+  type GetApifyUsageLogGroupByPayload<T extends ApifyUsageLogGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ApifyUsageLogGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ApifyUsageLogGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ApifyUsageLogGroupByOutputType[P]>
+            : GetScalarType<T[P], ApifyUsageLogGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ApifyUsageLogSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    uuid?: boolean
+    user_uuid?: boolean
+    actor_id?: boolean
+    operation?: boolean
+    status?: boolean
+    result_count?: boolean
+    duration_ms?: boolean
+    compute_units?: boolean
+    total_cost_usd?: boolean
+    run_id?: boolean
+    reference_type?: boolean
+    reference_uuid?: boolean
+    error_message?: boolean
+    metadata?: boolean
+    created_at?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["apifyUsageLog"]>
+
+  export type ApifyUsageLogSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    uuid?: boolean
+    user_uuid?: boolean
+    actor_id?: boolean
+    operation?: boolean
+    status?: boolean
+    result_count?: boolean
+    duration_ms?: boolean
+    compute_units?: boolean
+    total_cost_usd?: boolean
+    run_id?: boolean
+    reference_type?: boolean
+    reference_uuid?: boolean
+    error_message?: boolean
+    metadata?: boolean
+    created_at?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["apifyUsageLog"]>
+
+  export type ApifyUsageLogSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    uuid?: boolean
+    user_uuid?: boolean
+    actor_id?: boolean
+    operation?: boolean
+    status?: boolean
+    result_count?: boolean
+    duration_ms?: boolean
+    compute_units?: boolean
+    total_cost_usd?: boolean
+    run_id?: boolean
+    reference_type?: boolean
+    reference_uuid?: boolean
+    error_message?: boolean
+    metadata?: boolean
+    created_at?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["apifyUsageLog"]>
+
+  export type ApifyUsageLogSelectScalar = {
+    uuid?: boolean
+    user_uuid?: boolean
+    actor_id?: boolean
+    operation?: boolean
+    status?: boolean
+    result_count?: boolean
+    duration_ms?: boolean
+    compute_units?: boolean
+    total_cost_usd?: boolean
+    run_id?: boolean
+    reference_type?: boolean
+    reference_uuid?: boolean
+    error_message?: boolean
+    metadata?: boolean
+    created_at?: boolean
+  }
+
+  export type ApifyUsageLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"uuid" | "user_uuid" | "actor_id" | "operation" | "status" | "result_count" | "duration_ms" | "compute_units" | "total_cost_usd" | "run_id" | "reference_type" | "reference_uuid" | "error_message" | "metadata" | "created_at", ExtArgs["result"]["apifyUsageLog"]>
+  export type ApifyUsageLogInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type ApifyUsageLogIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type ApifyUsageLogIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $ApifyUsageLogPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ApifyUsageLog"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      uuid: string
+      user_uuid: string
+      actor_id: string
+      operation: $Enums.ApifyUsageOperation
+      status: $Enums.ApifyUsageStatus
+      result_count: number | null
+      duration_ms: number | null
+      compute_units: Prisma.Decimal | null
+      total_cost_usd: Prisma.Decimal | null
+      run_id: string | null
+      reference_type: string | null
+      reference_uuid: string | null
+      error_message: string | null
+      metadata: Prisma.JsonValue | null
+      created_at: Date
+    }, ExtArgs["result"]["apifyUsageLog"]>
+    composites: {}
+  }
+
+  type ApifyUsageLogGetPayload<S extends boolean | null | undefined | ApifyUsageLogDefaultArgs> = $Result.GetResult<Prisma.$ApifyUsageLogPayload, S>
+
+  type ApifyUsageLogCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ApifyUsageLogFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ApifyUsageLogCountAggregateInputType | true
+    }
+
+  export interface ApifyUsageLogDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ApifyUsageLog'], meta: { name: 'ApifyUsageLog' } }
+    /**
+     * Find zero or one ApifyUsageLog that matches the filter.
+     * @param {ApifyUsageLogFindUniqueArgs} args - Arguments to find a ApifyUsageLog
+     * @example
+     * // Get one ApifyUsageLog
+     * const apifyUsageLog = await prisma.apifyUsageLog.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ApifyUsageLogFindUniqueArgs>(args: SelectSubset<T, ApifyUsageLogFindUniqueArgs<ExtArgs>>): Prisma__ApifyUsageLogClient<$Result.GetResult<Prisma.$ApifyUsageLogPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ApifyUsageLog that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ApifyUsageLogFindUniqueOrThrowArgs} args - Arguments to find a ApifyUsageLog
+     * @example
+     * // Get one ApifyUsageLog
+     * const apifyUsageLog = await prisma.apifyUsageLog.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ApifyUsageLogFindUniqueOrThrowArgs>(args: SelectSubset<T, ApifyUsageLogFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ApifyUsageLogClient<$Result.GetResult<Prisma.$ApifyUsageLogPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ApifyUsageLog that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApifyUsageLogFindFirstArgs} args - Arguments to find a ApifyUsageLog
+     * @example
+     * // Get one ApifyUsageLog
+     * const apifyUsageLog = await prisma.apifyUsageLog.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ApifyUsageLogFindFirstArgs>(args?: SelectSubset<T, ApifyUsageLogFindFirstArgs<ExtArgs>>): Prisma__ApifyUsageLogClient<$Result.GetResult<Prisma.$ApifyUsageLogPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ApifyUsageLog that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApifyUsageLogFindFirstOrThrowArgs} args - Arguments to find a ApifyUsageLog
+     * @example
+     * // Get one ApifyUsageLog
+     * const apifyUsageLog = await prisma.apifyUsageLog.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ApifyUsageLogFindFirstOrThrowArgs>(args?: SelectSubset<T, ApifyUsageLogFindFirstOrThrowArgs<ExtArgs>>): Prisma__ApifyUsageLogClient<$Result.GetResult<Prisma.$ApifyUsageLogPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ApifyUsageLogs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApifyUsageLogFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ApifyUsageLogs
+     * const apifyUsageLogs = await prisma.apifyUsageLog.findMany()
+     * 
+     * // Get first 10 ApifyUsageLogs
+     * const apifyUsageLogs = await prisma.apifyUsageLog.findMany({ take: 10 })
+     * 
+     * // Only select the `uuid`
+     * const apifyUsageLogWithUuidOnly = await prisma.apifyUsageLog.findMany({ select: { uuid: true } })
+     * 
+     */
+    findMany<T extends ApifyUsageLogFindManyArgs>(args?: SelectSubset<T, ApifyUsageLogFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApifyUsageLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ApifyUsageLog.
+     * @param {ApifyUsageLogCreateArgs} args - Arguments to create a ApifyUsageLog.
+     * @example
+     * // Create one ApifyUsageLog
+     * const ApifyUsageLog = await prisma.apifyUsageLog.create({
+     *   data: {
+     *     // ... data to create a ApifyUsageLog
+     *   }
+     * })
+     * 
+     */
+    create<T extends ApifyUsageLogCreateArgs>(args: SelectSubset<T, ApifyUsageLogCreateArgs<ExtArgs>>): Prisma__ApifyUsageLogClient<$Result.GetResult<Prisma.$ApifyUsageLogPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ApifyUsageLogs.
+     * @param {ApifyUsageLogCreateManyArgs} args - Arguments to create many ApifyUsageLogs.
+     * @example
+     * // Create many ApifyUsageLogs
+     * const apifyUsageLog = await prisma.apifyUsageLog.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ApifyUsageLogCreateManyArgs>(args?: SelectSubset<T, ApifyUsageLogCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ApifyUsageLogs and returns the data saved in the database.
+     * @param {ApifyUsageLogCreateManyAndReturnArgs} args - Arguments to create many ApifyUsageLogs.
+     * @example
+     * // Create many ApifyUsageLogs
+     * const apifyUsageLog = await prisma.apifyUsageLog.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ApifyUsageLogs and only return the `uuid`
+     * const apifyUsageLogWithUuidOnly = await prisma.apifyUsageLog.createManyAndReturn({
+     *   select: { uuid: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ApifyUsageLogCreateManyAndReturnArgs>(args?: SelectSubset<T, ApifyUsageLogCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApifyUsageLogPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ApifyUsageLog.
+     * @param {ApifyUsageLogDeleteArgs} args - Arguments to delete one ApifyUsageLog.
+     * @example
+     * // Delete one ApifyUsageLog
+     * const ApifyUsageLog = await prisma.apifyUsageLog.delete({
+     *   where: {
+     *     // ... filter to delete one ApifyUsageLog
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ApifyUsageLogDeleteArgs>(args: SelectSubset<T, ApifyUsageLogDeleteArgs<ExtArgs>>): Prisma__ApifyUsageLogClient<$Result.GetResult<Prisma.$ApifyUsageLogPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ApifyUsageLog.
+     * @param {ApifyUsageLogUpdateArgs} args - Arguments to update one ApifyUsageLog.
+     * @example
+     * // Update one ApifyUsageLog
+     * const apifyUsageLog = await prisma.apifyUsageLog.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ApifyUsageLogUpdateArgs>(args: SelectSubset<T, ApifyUsageLogUpdateArgs<ExtArgs>>): Prisma__ApifyUsageLogClient<$Result.GetResult<Prisma.$ApifyUsageLogPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ApifyUsageLogs.
+     * @param {ApifyUsageLogDeleteManyArgs} args - Arguments to filter ApifyUsageLogs to delete.
+     * @example
+     * // Delete a few ApifyUsageLogs
+     * const { count } = await prisma.apifyUsageLog.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ApifyUsageLogDeleteManyArgs>(args?: SelectSubset<T, ApifyUsageLogDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ApifyUsageLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApifyUsageLogUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ApifyUsageLogs
+     * const apifyUsageLog = await prisma.apifyUsageLog.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ApifyUsageLogUpdateManyArgs>(args: SelectSubset<T, ApifyUsageLogUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ApifyUsageLogs and returns the data updated in the database.
+     * @param {ApifyUsageLogUpdateManyAndReturnArgs} args - Arguments to update many ApifyUsageLogs.
+     * @example
+     * // Update many ApifyUsageLogs
+     * const apifyUsageLog = await prisma.apifyUsageLog.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ApifyUsageLogs and only return the `uuid`
+     * const apifyUsageLogWithUuidOnly = await prisma.apifyUsageLog.updateManyAndReturn({
+     *   select: { uuid: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ApifyUsageLogUpdateManyAndReturnArgs>(args: SelectSubset<T, ApifyUsageLogUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApifyUsageLogPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ApifyUsageLog.
+     * @param {ApifyUsageLogUpsertArgs} args - Arguments to update or create a ApifyUsageLog.
+     * @example
+     * // Update or create a ApifyUsageLog
+     * const apifyUsageLog = await prisma.apifyUsageLog.upsert({
+     *   create: {
+     *     // ... data to create a ApifyUsageLog
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ApifyUsageLog we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ApifyUsageLogUpsertArgs>(args: SelectSubset<T, ApifyUsageLogUpsertArgs<ExtArgs>>): Prisma__ApifyUsageLogClient<$Result.GetResult<Prisma.$ApifyUsageLogPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ApifyUsageLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApifyUsageLogCountArgs} args - Arguments to filter ApifyUsageLogs to count.
+     * @example
+     * // Count the number of ApifyUsageLogs
+     * const count = await prisma.apifyUsageLog.count({
+     *   where: {
+     *     // ... the filter for the ApifyUsageLogs we want to count
+     *   }
+     * })
+    **/
+    count<T extends ApifyUsageLogCountArgs>(
+      args?: Subset<T, ApifyUsageLogCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ApifyUsageLogCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ApifyUsageLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApifyUsageLogAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ApifyUsageLogAggregateArgs>(args: Subset<T, ApifyUsageLogAggregateArgs>): Prisma.PrismaPromise<GetApifyUsageLogAggregateType<T>>
+
+    /**
+     * Group by ApifyUsageLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApifyUsageLogGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ApifyUsageLogGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ApifyUsageLogGroupByArgs['orderBy'] }
+        : { orderBy?: ApifyUsageLogGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ApifyUsageLogGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetApifyUsageLogGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ApifyUsageLog model
+   */
+  readonly fields: ApifyUsageLogFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ApifyUsageLog.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ApifyUsageLogClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ApifyUsageLog model
+   */
+  interface ApifyUsageLogFieldRefs {
+    readonly uuid: FieldRef<"ApifyUsageLog", 'String'>
+    readonly user_uuid: FieldRef<"ApifyUsageLog", 'String'>
+    readonly actor_id: FieldRef<"ApifyUsageLog", 'String'>
+    readonly operation: FieldRef<"ApifyUsageLog", 'ApifyUsageOperation'>
+    readonly status: FieldRef<"ApifyUsageLog", 'ApifyUsageStatus'>
+    readonly result_count: FieldRef<"ApifyUsageLog", 'Int'>
+    readonly duration_ms: FieldRef<"ApifyUsageLog", 'Int'>
+    readonly compute_units: FieldRef<"ApifyUsageLog", 'Decimal'>
+    readonly total_cost_usd: FieldRef<"ApifyUsageLog", 'Decimal'>
+    readonly run_id: FieldRef<"ApifyUsageLog", 'String'>
+    readonly reference_type: FieldRef<"ApifyUsageLog", 'String'>
+    readonly reference_uuid: FieldRef<"ApifyUsageLog", 'String'>
+    readonly error_message: FieldRef<"ApifyUsageLog", 'String'>
+    readonly metadata: FieldRef<"ApifyUsageLog", 'Json'>
+    readonly created_at: FieldRef<"ApifyUsageLog", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ApifyUsageLog findUnique
+   */
+  export type ApifyUsageLogFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApifyUsageLog
+     */
+    select?: ApifyUsageLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApifyUsageLog
+     */
+    omit?: ApifyUsageLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApifyUsageLogInclude<ExtArgs> | null
+    /**
+     * Filter, which ApifyUsageLog to fetch.
+     */
+    where: ApifyUsageLogWhereUniqueInput
+  }
+
+  /**
+   * ApifyUsageLog findUniqueOrThrow
+   */
+  export type ApifyUsageLogFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApifyUsageLog
+     */
+    select?: ApifyUsageLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApifyUsageLog
+     */
+    omit?: ApifyUsageLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApifyUsageLogInclude<ExtArgs> | null
+    /**
+     * Filter, which ApifyUsageLog to fetch.
+     */
+    where: ApifyUsageLogWhereUniqueInput
+  }
+
+  /**
+   * ApifyUsageLog findFirst
+   */
+  export type ApifyUsageLogFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApifyUsageLog
+     */
+    select?: ApifyUsageLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApifyUsageLog
+     */
+    omit?: ApifyUsageLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApifyUsageLogInclude<ExtArgs> | null
+    /**
+     * Filter, which ApifyUsageLog to fetch.
+     */
+    where?: ApifyUsageLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ApifyUsageLogs to fetch.
+     */
+    orderBy?: ApifyUsageLogOrderByWithRelationInput | ApifyUsageLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ApifyUsageLogs.
+     */
+    cursor?: ApifyUsageLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ApifyUsageLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ApifyUsageLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ApifyUsageLogs.
+     */
+    distinct?: ApifyUsageLogScalarFieldEnum | ApifyUsageLogScalarFieldEnum[]
+  }
+
+  /**
+   * ApifyUsageLog findFirstOrThrow
+   */
+  export type ApifyUsageLogFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApifyUsageLog
+     */
+    select?: ApifyUsageLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApifyUsageLog
+     */
+    omit?: ApifyUsageLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApifyUsageLogInclude<ExtArgs> | null
+    /**
+     * Filter, which ApifyUsageLog to fetch.
+     */
+    where?: ApifyUsageLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ApifyUsageLogs to fetch.
+     */
+    orderBy?: ApifyUsageLogOrderByWithRelationInput | ApifyUsageLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ApifyUsageLogs.
+     */
+    cursor?: ApifyUsageLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ApifyUsageLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ApifyUsageLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ApifyUsageLogs.
+     */
+    distinct?: ApifyUsageLogScalarFieldEnum | ApifyUsageLogScalarFieldEnum[]
+  }
+
+  /**
+   * ApifyUsageLog findMany
+   */
+  export type ApifyUsageLogFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApifyUsageLog
+     */
+    select?: ApifyUsageLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApifyUsageLog
+     */
+    omit?: ApifyUsageLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApifyUsageLogInclude<ExtArgs> | null
+    /**
+     * Filter, which ApifyUsageLogs to fetch.
+     */
+    where?: ApifyUsageLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ApifyUsageLogs to fetch.
+     */
+    orderBy?: ApifyUsageLogOrderByWithRelationInput | ApifyUsageLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ApifyUsageLogs.
+     */
+    cursor?: ApifyUsageLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ApifyUsageLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ApifyUsageLogs.
+     */
+    skip?: number
+    distinct?: ApifyUsageLogScalarFieldEnum | ApifyUsageLogScalarFieldEnum[]
+  }
+
+  /**
+   * ApifyUsageLog create
+   */
+  export type ApifyUsageLogCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApifyUsageLog
+     */
+    select?: ApifyUsageLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApifyUsageLog
+     */
+    omit?: ApifyUsageLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApifyUsageLogInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ApifyUsageLog.
+     */
+    data: XOR<ApifyUsageLogCreateInput, ApifyUsageLogUncheckedCreateInput>
+  }
+
+  /**
+   * ApifyUsageLog createMany
+   */
+  export type ApifyUsageLogCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ApifyUsageLogs.
+     */
+    data: ApifyUsageLogCreateManyInput | ApifyUsageLogCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ApifyUsageLog createManyAndReturn
+   */
+  export type ApifyUsageLogCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApifyUsageLog
+     */
+    select?: ApifyUsageLogSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApifyUsageLog
+     */
+    omit?: ApifyUsageLogOmit<ExtArgs> | null
+    /**
+     * The data used to create many ApifyUsageLogs.
+     */
+    data: ApifyUsageLogCreateManyInput | ApifyUsageLogCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApifyUsageLogIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ApifyUsageLog update
+   */
+  export type ApifyUsageLogUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApifyUsageLog
+     */
+    select?: ApifyUsageLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApifyUsageLog
+     */
+    omit?: ApifyUsageLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApifyUsageLogInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ApifyUsageLog.
+     */
+    data: XOR<ApifyUsageLogUpdateInput, ApifyUsageLogUncheckedUpdateInput>
+    /**
+     * Choose, which ApifyUsageLog to update.
+     */
+    where: ApifyUsageLogWhereUniqueInput
+  }
+
+  /**
+   * ApifyUsageLog updateMany
+   */
+  export type ApifyUsageLogUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ApifyUsageLogs.
+     */
+    data: XOR<ApifyUsageLogUpdateManyMutationInput, ApifyUsageLogUncheckedUpdateManyInput>
+    /**
+     * Filter which ApifyUsageLogs to update
+     */
+    where?: ApifyUsageLogWhereInput
+    /**
+     * Limit how many ApifyUsageLogs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ApifyUsageLog updateManyAndReturn
+   */
+  export type ApifyUsageLogUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApifyUsageLog
+     */
+    select?: ApifyUsageLogSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApifyUsageLog
+     */
+    omit?: ApifyUsageLogOmit<ExtArgs> | null
+    /**
+     * The data used to update ApifyUsageLogs.
+     */
+    data: XOR<ApifyUsageLogUpdateManyMutationInput, ApifyUsageLogUncheckedUpdateManyInput>
+    /**
+     * Filter which ApifyUsageLogs to update
+     */
+    where?: ApifyUsageLogWhereInput
+    /**
+     * Limit how many ApifyUsageLogs to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApifyUsageLogIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ApifyUsageLog upsert
+   */
+  export type ApifyUsageLogUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApifyUsageLog
+     */
+    select?: ApifyUsageLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApifyUsageLog
+     */
+    omit?: ApifyUsageLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApifyUsageLogInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ApifyUsageLog to update in case it exists.
+     */
+    where: ApifyUsageLogWhereUniqueInput
+    /**
+     * In case the ApifyUsageLog found by the `where` argument doesn't exist, create a new ApifyUsageLog with this data.
+     */
+    create: XOR<ApifyUsageLogCreateInput, ApifyUsageLogUncheckedCreateInput>
+    /**
+     * In case the ApifyUsageLog was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ApifyUsageLogUpdateInput, ApifyUsageLogUncheckedUpdateInput>
+  }
+
+  /**
+   * ApifyUsageLog delete
+   */
+  export type ApifyUsageLogDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApifyUsageLog
+     */
+    select?: ApifyUsageLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApifyUsageLog
+     */
+    omit?: ApifyUsageLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApifyUsageLogInclude<ExtArgs> | null
+    /**
+     * Filter which ApifyUsageLog to delete.
+     */
+    where: ApifyUsageLogWhereUniqueInput
+  }
+
+  /**
+   * ApifyUsageLog deleteMany
+   */
+  export type ApifyUsageLogDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ApifyUsageLogs to delete
+     */
+    where?: ApifyUsageLogWhereInput
+    /**
+     * Limit how many ApifyUsageLogs to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ApifyUsageLog without action
+   */
+  export type ApifyUsageLogDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApifyUsageLog
+     */
+    select?: ApifyUsageLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApifyUsageLog
+     */
+    omit?: ApifyUsageLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApifyUsageLogInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -42361,6 +43748,27 @@ export namespace Prisma {
   export type AiUsageLogScalarFieldEnum = (typeof AiUsageLogScalarFieldEnum)[keyof typeof AiUsageLogScalarFieldEnum]
 
 
+  export const ApifyUsageLogScalarFieldEnum: {
+    uuid: 'uuid',
+    user_uuid: 'user_uuid',
+    actor_id: 'actor_id',
+    operation: 'operation',
+    status: 'status',
+    result_count: 'result_count',
+    duration_ms: 'duration_ms',
+    compute_units: 'compute_units',
+    total_cost_usd: 'total_cost_usd',
+    run_id: 'run_id',
+    reference_type: 'reference_type',
+    reference_uuid: 'reference_uuid',
+    error_message: 'error_message',
+    metadata: 'metadata',
+    created_at: 'created_at'
+  };
+
+  export type ApifyUsageLogScalarFieldEnum = (typeof ApifyUsageLogScalarFieldEnum)[keyof typeof ApifyUsageLogScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -42839,6 +44247,34 @@ export namespace Prisma {
    */
   export type ListEnumAiUsageStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AiUsageStatus[]'>
     
+
+
+  /**
+   * Reference to a field of type 'ApifyUsageOperation'
+   */
+  export type EnumApifyUsageOperationFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ApifyUsageOperation'>
+    
+
+
+  /**
+   * Reference to a field of type 'ApifyUsageOperation[]'
+   */
+  export type ListEnumApifyUsageOperationFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ApifyUsageOperation[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'ApifyUsageStatus'
+   */
+  export type EnumApifyUsageStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ApifyUsageStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'ApifyUsageStatus[]'
+   */
+  export type ListEnumApifyUsageStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ApifyUsageStatus[]'>
+    
   /**
    * Deep Input Types
    */
@@ -42872,6 +44308,7 @@ export namespace Prisma {
     contact_lists?: ContactListListRelationFilter
     contact_audience_analyses?: ContactAudienceAnalysisListRelationFilter
     ai_usage_logs?: AiUsageLogListRelationFilter
+    apify_usage_logs?: ApifyUsageLogListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -42899,6 +44336,7 @@ export namespace Prisma {
     contact_lists?: ContactListOrderByRelationAggregateInput
     contact_audience_analyses?: ContactAudienceAnalysisOrderByRelationAggregateInput
     ai_usage_logs?: AiUsageLogOrderByRelationAggregateInput
+    apify_usage_logs?: ApifyUsageLogOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -42929,6 +44367,7 @@ export namespace Prisma {
     contact_lists?: ContactListListRelationFilter
     contact_audience_analyses?: ContactAudienceAnalysisListRelationFilter
     ai_usage_logs?: AiUsageLogListRelationFilter
+    apify_usage_logs?: ApifyUsageLogListRelationFilter
   }, "id" | "uuid" | "email" | "phone">
 
   export type UserOrderByWithAggregationInput = {
@@ -45852,6 +47291,113 @@ export namespace Prisma {
     created_at?: DateTimeWithAggregatesFilter<"AiUsageLog"> | Date | string
   }
 
+  export type ApifyUsageLogWhereInput = {
+    AND?: ApifyUsageLogWhereInput | ApifyUsageLogWhereInput[]
+    OR?: ApifyUsageLogWhereInput[]
+    NOT?: ApifyUsageLogWhereInput | ApifyUsageLogWhereInput[]
+    uuid?: StringFilter<"ApifyUsageLog"> | string
+    user_uuid?: StringFilter<"ApifyUsageLog"> | string
+    actor_id?: StringFilter<"ApifyUsageLog"> | string
+    operation?: EnumApifyUsageOperationFilter<"ApifyUsageLog"> | $Enums.ApifyUsageOperation
+    status?: EnumApifyUsageStatusFilter<"ApifyUsageLog"> | $Enums.ApifyUsageStatus
+    result_count?: IntNullableFilter<"ApifyUsageLog"> | number | null
+    duration_ms?: IntNullableFilter<"ApifyUsageLog"> | number | null
+    compute_units?: DecimalNullableFilter<"ApifyUsageLog"> | Decimal | DecimalJsLike | number | string | null
+    total_cost_usd?: DecimalNullableFilter<"ApifyUsageLog"> | Decimal | DecimalJsLike | number | string | null
+    run_id?: StringNullableFilter<"ApifyUsageLog"> | string | null
+    reference_type?: StringNullableFilter<"ApifyUsageLog"> | string | null
+    reference_uuid?: StringNullableFilter<"ApifyUsageLog"> | string | null
+    error_message?: StringNullableFilter<"ApifyUsageLog"> | string | null
+    metadata?: JsonNullableFilter<"ApifyUsageLog">
+    created_at?: DateTimeFilter<"ApifyUsageLog"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type ApifyUsageLogOrderByWithRelationInput = {
+    uuid?: SortOrder
+    user_uuid?: SortOrder
+    actor_id?: SortOrder
+    operation?: SortOrder
+    status?: SortOrder
+    result_count?: SortOrderInput | SortOrder
+    duration_ms?: SortOrderInput | SortOrder
+    compute_units?: SortOrderInput | SortOrder
+    total_cost_usd?: SortOrderInput | SortOrder
+    run_id?: SortOrderInput | SortOrder
+    reference_type?: SortOrderInput | SortOrder
+    reference_uuid?: SortOrderInput | SortOrder
+    error_message?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type ApifyUsageLogWhereUniqueInput = Prisma.AtLeast<{
+    uuid?: string
+    AND?: ApifyUsageLogWhereInput | ApifyUsageLogWhereInput[]
+    OR?: ApifyUsageLogWhereInput[]
+    NOT?: ApifyUsageLogWhereInput | ApifyUsageLogWhereInput[]
+    user_uuid?: StringFilter<"ApifyUsageLog"> | string
+    actor_id?: StringFilter<"ApifyUsageLog"> | string
+    operation?: EnumApifyUsageOperationFilter<"ApifyUsageLog"> | $Enums.ApifyUsageOperation
+    status?: EnumApifyUsageStatusFilter<"ApifyUsageLog"> | $Enums.ApifyUsageStatus
+    result_count?: IntNullableFilter<"ApifyUsageLog"> | number | null
+    duration_ms?: IntNullableFilter<"ApifyUsageLog"> | number | null
+    compute_units?: DecimalNullableFilter<"ApifyUsageLog"> | Decimal | DecimalJsLike | number | string | null
+    total_cost_usd?: DecimalNullableFilter<"ApifyUsageLog"> | Decimal | DecimalJsLike | number | string | null
+    run_id?: StringNullableFilter<"ApifyUsageLog"> | string | null
+    reference_type?: StringNullableFilter<"ApifyUsageLog"> | string | null
+    reference_uuid?: StringNullableFilter<"ApifyUsageLog"> | string | null
+    error_message?: StringNullableFilter<"ApifyUsageLog"> | string | null
+    metadata?: JsonNullableFilter<"ApifyUsageLog">
+    created_at?: DateTimeFilter<"ApifyUsageLog"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "uuid">
+
+  export type ApifyUsageLogOrderByWithAggregationInput = {
+    uuid?: SortOrder
+    user_uuid?: SortOrder
+    actor_id?: SortOrder
+    operation?: SortOrder
+    status?: SortOrder
+    result_count?: SortOrderInput | SortOrder
+    duration_ms?: SortOrderInput | SortOrder
+    compute_units?: SortOrderInput | SortOrder
+    total_cost_usd?: SortOrderInput | SortOrder
+    run_id?: SortOrderInput | SortOrder
+    reference_type?: SortOrderInput | SortOrder
+    reference_uuid?: SortOrderInput | SortOrder
+    error_message?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    _count?: ApifyUsageLogCountOrderByAggregateInput
+    _avg?: ApifyUsageLogAvgOrderByAggregateInput
+    _max?: ApifyUsageLogMaxOrderByAggregateInput
+    _min?: ApifyUsageLogMinOrderByAggregateInput
+    _sum?: ApifyUsageLogSumOrderByAggregateInput
+  }
+
+  export type ApifyUsageLogScalarWhereWithAggregatesInput = {
+    AND?: ApifyUsageLogScalarWhereWithAggregatesInput | ApifyUsageLogScalarWhereWithAggregatesInput[]
+    OR?: ApifyUsageLogScalarWhereWithAggregatesInput[]
+    NOT?: ApifyUsageLogScalarWhereWithAggregatesInput | ApifyUsageLogScalarWhereWithAggregatesInput[]
+    uuid?: StringWithAggregatesFilter<"ApifyUsageLog"> | string
+    user_uuid?: StringWithAggregatesFilter<"ApifyUsageLog"> | string
+    actor_id?: StringWithAggregatesFilter<"ApifyUsageLog"> | string
+    operation?: EnumApifyUsageOperationWithAggregatesFilter<"ApifyUsageLog"> | $Enums.ApifyUsageOperation
+    status?: EnumApifyUsageStatusWithAggregatesFilter<"ApifyUsageLog"> | $Enums.ApifyUsageStatus
+    result_count?: IntNullableWithAggregatesFilter<"ApifyUsageLog"> | number | null
+    duration_ms?: IntNullableWithAggregatesFilter<"ApifyUsageLog"> | number | null
+    compute_units?: DecimalNullableWithAggregatesFilter<"ApifyUsageLog"> | Decimal | DecimalJsLike | number | string | null
+    total_cost_usd?: DecimalNullableWithAggregatesFilter<"ApifyUsageLog"> | Decimal | DecimalJsLike | number | string | null
+    run_id?: StringNullableWithAggregatesFilter<"ApifyUsageLog"> | string | null
+    reference_type?: StringNullableWithAggregatesFilter<"ApifyUsageLog"> | string | null
+    reference_uuid?: StringNullableWithAggregatesFilter<"ApifyUsageLog"> | string | null
+    error_message?: StringNullableWithAggregatesFilter<"ApifyUsageLog"> | string | null
+    metadata?: JsonNullableWithAggregatesFilter<"ApifyUsageLog">
+    created_at?: DateTimeWithAggregatesFilter<"ApifyUsageLog"> | Date | string
+  }
+
   export type UserCreateInput = {
     uuid?: string
     email: string
@@ -45876,6 +47422,7 @@ export namespace Prisma {
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
+    apify_usage_logs?: ApifyUsageLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -45903,6 +47450,7 @@ export namespace Prisma {
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
+    apify_usage_logs?: ApifyUsageLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -45929,6 +47477,7 @@ export namespace Prisma {
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
+    apify_usage_logs?: ApifyUsageLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -45956,6 +47505,7 @@ export namespace Prisma {
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
+    apify_usage_logs?: ApifyUsageLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -49132,6 +50682,131 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ApifyUsageLogCreateInput = {
+    uuid?: string
+    actor_id: string
+    operation: $Enums.ApifyUsageOperation
+    status: $Enums.ApifyUsageStatus
+    result_count?: number | null
+    duration_ms?: number | null
+    compute_units?: Decimal | DecimalJsLike | number | string | null
+    total_cost_usd?: Decimal | DecimalJsLike | number | string | null
+    run_id?: string | null
+    reference_type?: string | null
+    reference_uuid?: string | null
+    error_message?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    user: UserCreateNestedOneWithoutApify_usage_logsInput
+  }
+
+  export type ApifyUsageLogUncheckedCreateInput = {
+    uuid?: string
+    user_uuid: string
+    actor_id: string
+    operation: $Enums.ApifyUsageOperation
+    status: $Enums.ApifyUsageStatus
+    result_count?: number | null
+    duration_ms?: number | null
+    compute_units?: Decimal | DecimalJsLike | number | string | null
+    total_cost_usd?: Decimal | DecimalJsLike | number | string | null
+    run_id?: string | null
+    reference_type?: string | null
+    reference_uuid?: string | null
+    error_message?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+  }
+
+  export type ApifyUsageLogUpdateInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    actor_id?: StringFieldUpdateOperationsInput | string
+    operation?: EnumApifyUsageOperationFieldUpdateOperationsInput | $Enums.ApifyUsageOperation
+    status?: EnumApifyUsageStatusFieldUpdateOperationsInput | $Enums.ApifyUsageStatus
+    result_count?: NullableIntFieldUpdateOperationsInput | number | null
+    duration_ms?: NullableIntFieldUpdateOperationsInput | number | null
+    compute_units?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    total_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    run_id?: NullableStringFieldUpdateOperationsInput | string | null
+    reference_type?: NullableStringFieldUpdateOperationsInput | string | null
+    reference_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutApify_usage_logsNestedInput
+  }
+
+  export type ApifyUsageLogUncheckedUpdateInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    actor_id?: StringFieldUpdateOperationsInput | string
+    operation?: EnumApifyUsageOperationFieldUpdateOperationsInput | $Enums.ApifyUsageOperation
+    status?: EnumApifyUsageStatusFieldUpdateOperationsInput | $Enums.ApifyUsageStatus
+    result_count?: NullableIntFieldUpdateOperationsInput | number | null
+    duration_ms?: NullableIntFieldUpdateOperationsInput | number | null
+    compute_units?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    total_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    run_id?: NullableStringFieldUpdateOperationsInput | string | null
+    reference_type?: NullableStringFieldUpdateOperationsInput | string | null
+    reference_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApifyUsageLogCreateManyInput = {
+    uuid?: string
+    user_uuid: string
+    actor_id: string
+    operation: $Enums.ApifyUsageOperation
+    status: $Enums.ApifyUsageStatus
+    result_count?: number | null
+    duration_ms?: number | null
+    compute_units?: Decimal | DecimalJsLike | number | string | null
+    total_cost_usd?: Decimal | DecimalJsLike | number | string | null
+    run_id?: string | null
+    reference_type?: string | null
+    reference_uuid?: string | null
+    error_message?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+  }
+
+  export type ApifyUsageLogUpdateManyMutationInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    actor_id?: StringFieldUpdateOperationsInput | string
+    operation?: EnumApifyUsageOperationFieldUpdateOperationsInput | $Enums.ApifyUsageOperation
+    status?: EnumApifyUsageStatusFieldUpdateOperationsInput | $Enums.ApifyUsageStatus
+    result_count?: NullableIntFieldUpdateOperationsInput | number | null
+    duration_ms?: NullableIntFieldUpdateOperationsInput | number | null
+    compute_units?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    total_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    run_id?: NullableStringFieldUpdateOperationsInput | string | null
+    reference_type?: NullableStringFieldUpdateOperationsInput | string | null
+    reference_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApifyUsageLogUncheckedUpdateManyInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    actor_id?: StringFieldUpdateOperationsInput | string
+    operation?: EnumApifyUsageOperationFieldUpdateOperationsInput | $Enums.ApifyUsageOperation
+    status?: EnumApifyUsageStatusFieldUpdateOperationsInput | $Enums.ApifyUsageStatus
+    result_count?: NullableIntFieldUpdateOperationsInput | number | null
+    duration_ms?: NullableIntFieldUpdateOperationsInput | number | null
+    compute_units?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    total_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    run_id?: NullableStringFieldUpdateOperationsInput | string | null
+    reference_type?: NullableStringFieldUpdateOperationsInput | string | null
+    reference_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -49287,6 +50962,12 @@ export namespace Prisma {
     none?: AiUsageLogWhereInput
   }
 
+  export type ApifyUsageLogListRelationFilter = {
+    every?: ApifyUsageLogWhereInput
+    some?: ApifyUsageLogWhereInput
+    none?: ApifyUsageLogWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -49353,6 +51034,10 @@ export namespace Prisma {
   }
 
   export type AiUsageLogOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ApifyUsageLogOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -51947,6 +53632,106 @@ export namespace Prisma {
     _max?: NestedEnumAiUsageStatusFilter<$PrismaModel>
   }
 
+  export type EnumApifyUsageOperationFilter<$PrismaModel = never> = {
+    equals?: $Enums.ApifyUsageOperation | EnumApifyUsageOperationFieldRefInput<$PrismaModel>
+    in?: $Enums.ApifyUsageOperation[] | ListEnumApifyUsageOperationFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ApifyUsageOperation[] | ListEnumApifyUsageOperationFieldRefInput<$PrismaModel>
+    not?: NestedEnumApifyUsageOperationFilter<$PrismaModel> | $Enums.ApifyUsageOperation
+  }
+
+  export type EnumApifyUsageStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.ApifyUsageStatus | EnumApifyUsageStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ApifyUsageStatus[] | ListEnumApifyUsageStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ApifyUsageStatus[] | ListEnumApifyUsageStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumApifyUsageStatusFilter<$PrismaModel> | $Enums.ApifyUsageStatus
+  }
+
+  export type ApifyUsageLogCountOrderByAggregateInput = {
+    uuid?: SortOrder
+    user_uuid?: SortOrder
+    actor_id?: SortOrder
+    operation?: SortOrder
+    status?: SortOrder
+    result_count?: SortOrder
+    duration_ms?: SortOrder
+    compute_units?: SortOrder
+    total_cost_usd?: SortOrder
+    run_id?: SortOrder
+    reference_type?: SortOrder
+    reference_uuid?: SortOrder
+    error_message?: SortOrder
+    metadata?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type ApifyUsageLogAvgOrderByAggregateInput = {
+    result_count?: SortOrder
+    duration_ms?: SortOrder
+    compute_units?: SortOrder
+    total_cost_usd?: SortOrder
+  }
+
+  export type ApifyUsageLogMaxOrderByAggregateInput = {
+    uuid?: SortOrder
+    user_uuid?: SortOrder
+    actor_id?: SortOrder
+    operation?: SortOrder
+    status?: SortOrder
+    result_count?: SortOrder
+    duration_ms?: SortOrder
+    compute_units?: SortOrder
+    total_cost_usd?: SortOrder
+    run_id?: SortOrder
+    reference_type?: SortOrder
+    reference_uuid?: SortOrder
+    error_message?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type ApifyUsageLogMinOrderByAggregateInput = {
+    uuid?: SortOrder
+    user_uuid?: SortOrder
+    actor_id?: SortOrder
+    operation?: SortOrder
+    status?: SortOrder
+    result_count?: SortOrder
+    duration_ms?: SortOrder
+    compute_units?: SortOrder
+    total_cost_usd?: SortOrder
+    run_id?: SortOrder
+    reference_type?: SortOrder
+    reference_uuid?: SortOrder
+    error_message?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type ApifyUsageLogSumOrderByAggregateInput = {
+    result_count?: SortOrder
+    duration_ms?: SortOrder
+    compute_units?: SortOrder
+    total_cost_usd?: SortOrder
+  }
+
+  export type EnumApifyUsageOperationWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ApifyUsageOperation | EnumApifyUsageOperationFieldRefInput<$PrismaModel>
+    in?: $Enums.ApifyUsageOperation[] | ListEnumApifyUsageOperationFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ApifyUsageOperation[] | ListEnumApifyUsageOperationFieldRefInput<$PrismaModel>
+    not?: NestedEnumApifyUsageOperationWithAggregatesFilter<$PrismaModel> | $Enums.ApifyUsageOperation
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumApifyUsageOperationFilter<$PrismaModel>
+    _max?: NestedEnumApifyUsageOperationFilter<$PrismaModel>
+  }
+
+  export type EnumApifyUsageStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ApifyUsageStatus | EnumApifyUsageStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ApifyUsageStatus[] | ListEnumApifyUsageStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ApifyUsageStatus[] | ListEnumApifyUsageStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumApifyUsageStatusWithAggregatesFilter<$PrismaModel> | $Enums.ApifyUsageStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumApifyUsageStatusFilter<$PrismaModel>
+    _max?: NestedEnumApifyUsageStatusFilter<$PrismaModel>
+  }
+
   export type FilterCreateNestedManyWithoutUserInput = {
     create?: XOR<FilterCreateWithoutUserInput, FilterUncheckedCreateWithoutUserInput> | FilterCreateWithoutUserInput[] | FilterUncheckedCreateWithoutUserInput[]
     connectOrCreate?: FilterCreateOrConnectWithoutUserInput | FilterCreateOrConnectWithoutUserInput[]
@@ -52059,6 +53844,13 @@ export namespace Prisma {
     connect?: AiUsageLogWhereUniqueInput | AiUsageLogWhereUniqueInput[]
   }
 
+  export type ApifyUsageLogCreateNestedManyWithoutUserInput = {
+    create?: XOR<ApifyUsageLogCreateWithoutUserInput, ApifyUsageLogUncheckedCreateWithoutUserInput> | ApifyUsageLogCreateWithoutUserInput[] | ApifyUsageLogUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ApifyUsageLogCreateOrConnectWithoutUserInput | ApifyUsageLogCreateOrConnectWithoutUserInput[]
+    createMany?: ApifyUsageLogCreateManyUserInputEnvelope
+    connect?: ApifyUsageLogWhereUniqueInput | ApifyUsageLogWhereUniqueInput[]
+  }
+
   export type FilterUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<FilterCreateWithoutUserInput, FilterUncheckedCreateWithoutUserInput> | FilterCreateWithoutUserInput[] | FilterUncheckedCreateWithoutUserInput[]
     connectOrCreate?: FilterCreateOrConnectWithoutUserInput | FilterCreateOrConnectWithoutUserInput[]
@@ -52169,6 +53961,13 @@ export namespace Prisma {
     connectOrCreate?: AiUsageLogCreateOrConnectWithoutUserInput | AiUsageLogCreateOrConnectWithoutUserInput[]
     createMany?: AiUsageLogCreateManyUserInputEnvelope
     connect?: AiUsageLogWhereUniqueInput | AiUsageLogWhereUniqueInput[]
+  }
+
+  export type ApifyUsageLogUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<ApifyUsageLogCreateWithoutUserInput, ApifyUsageLogUncheckedCreateWithoutUserInput> | ApifyUsageLogCreateWithoutUserInput[] | ApifyUsageLogUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ApifyUsageLogCreateOrConnectWithoutUserInput | ApifyUsageLogCreateOrConnectWithoutUserInput[]
+    createMany?: ApifyUsageLogCreateManyUserInputEnvelope
+    connect?: ApifyUsageLogWhereUniqueInput | ApifyUsageLogWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -52411,6 +54210,20 @@ export namespace Prisma {
     deleteMany?: AiUsageLogScalarWhereInput | AiUsageLogScalarWhereInput[]
   }
 
+  export type ApifyUsageLogUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ApifyUsageLogCreateWithoutUserInput, ApifyUsageLogUncheckedCreateWithoutUserInput> | ApifyUsageLogCreateWithoutUserInput[] | ApifyUsageLogUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ApifyUsageLogCreateOrConnectWithoutUserInput | ApifyUsageLogCreateOrConnectWithoutUserInput[]
+    upsert?: ApifyUsageLogUpsertWithWhereUniqueWithoutUserInput | ApifyUsageLogUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ApifyUsageLogCreateManyUserInputEnvelope
+    set?: ApifyUsageLogWhereUniqueInput | ApifyUsageLogWhereUniqueInput[]
+    disconnect?: ApifyUsageLogWhereUniqueInput | ApifyUsageLogWhereUniqueInput[]
+    delete?: ApifyUsageLogWhereUniqueInput | ApifyUsageLogWhereUniqueInput[]
+    connect?: ApifyUsageLogWhereUniqueInput | ApifyUsageLogWhereUniqueInput[]
+    update?: ApifyUsageLogUpdateWithWhereUniqueWithoutUserInput | ApifyUsageLogUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ApifyUsageLogUpdateManyWithWhereWithoutUserInput | ApifyUsageLogUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ApifyUsageLogScalarWhereInput | ApifyUsageLogScalarWhereInput[]
+  }
+
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -52641,6 +54454,20 @@ export namespace Prisma {
     update?: AiUsageLogUpdateWithWhereUniqueWithoutUserInput | AiUsageLogUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: AiUsageLogUpdateManyWithWhereWithoutUserInput | AiUsageLogUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: AiUsageLogScalarWhereInput | AiUsageLogScalarWhereInput[]
+  }
+
+  export type ApifyUsageLogUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ApifyUsageLogCreateWithoutUserInput, ApifyUsageLogUncheckedCreateWithoutUserInput> | ApifyUsageLogCreateWithoutUserInput[] | ApifyUsageLogUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ApifyUsageLogCreateOrConnectWithoutUserInput | ApifyUsageLogCreateOrConnectWithoutUserInput[]
+    upsert?: ApifyUsageLogUpsertWithWhereUniqueWithoutUserInput | ApifyUsageLogUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ApifyUsageLogCreateManyUserInputEnvelope
+    set?: ApifyUsageLogWhereUniqueInput | ApifyUsageLogWhereUniqueInput[]
+    disconnect?: ApifyUsageLogWhereUniqueInput | ApifyUsageLogWhereUniqueInput[]
+    delete?: ApifyUsageLogWhereUniqueInput | ApifyUsageLogWhereUniqueInput[]
+    connect?: ApifyUsageLogWhereUniqueInput | ApifyUsageLogWhereUniqueInput[]
+    update?: ApifyUsageLogUpdateWithWhereUniqueWithoutUserInput | ApifyUsageLogUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ApifyUsageLogUpdateManyWithWhereWithoutUserInput | ApifyUsageLogUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ApifyUsageLogScalarWhereInput | ApifyUsageLogScalarWhereInput[]
   }
 
   export type FilterCreateenrichment_sourcesInput = {
@@ -54750,6 +56577,28 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAi_usage_logsInput, UserUpdateWithoutAi_usage_logsInput>, UserUncheckedUpdateWithoutAi_usage_logsInput>
   }
 
+  export type UserCreateNestedOneWithoutApify_usage_logsInput = {
+    create?: XOR<UserCreateWithoutApify_usage_logsInput, UserUncheckedCreateWithoutApify_usage_logsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutApify_usage_logsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumApifyUsageOperationFieldUpdateOperationsInput = {
+    set?: $Enums.ApifyUsageOperation
+  }
+
+  export type EnumApifyUsageStatusFieldUpdateOperationsInput = {
+    set?: $Enums.ApifyUsageStatus
+  }
+
+  export type UserUpdateOneRequiredWithoutApify_usage_logsNestedInput = {
+    create?: XOR<UserCreateWithoutApify_usage_logsInput, UserUncheckedCreateWithoutApify_usage_logsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutApify_usage_logsInput
+    upsert?: UserUpsertWithoutApify_usage_logsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutApify_usage_logsInput, UserUpdateWithoutApify_usage_logsInput>, UserUncheckedUpdateWithoutApify_usage_logsInput>
+  }
+
   export type NestedIntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -55446,6 +57295,40 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumAiUsageStatusFilter<$PrismaModel>
     _max?: NestedEnumAiUsageStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumApifyUsageOperationFilter<$PrismaModel = never> = {
+    equals?: $Enums.ApifyUsageOperation | EnumApifyUsageOperationFieldRefInput<$PrismaModel>
+    in?: $Enums.ApifyUsageOperation[] | ListEnumApifyUsageOperationFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ApifyUsageOperation[] | ListEnumApifyUsageOperationFieldRefInput<$PrismaModel>
+    not?: NestedEnumApifyUsageOperationFilter<$PrismaModel> | $Enums.ApifyUsageOperation
+  }
+
+  export type NestedEnumApifyUsageStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.ApifyUsageStatus | EnumApifyUsageStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ApifyUsageStatus[] | ListEnumApifyUsageStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ApifyUsageStatus[] | ListEnumApifyUsageStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumApifyUsageStatusFilter<$PrismaModel> | $Enums.ApifyUsageStatus
+  }
+
+  export type NestedEnumApifyUsageOperationWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ApifyUsageOperation | EnumApifyUsageOperationFieldRefInput<$PrismaModel>
+    in?: $Enums.ApifyUsageOperation[] | ListEnumApifyUsageOperationFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ApifyUsageOperation[] | ListEnumApifyUsageOperationFieldRefInput<$PrismaModel>
+    not?: NestedEnumApifyUsageOperationWithAggregatesFilter<$PrismaModel> | $Enums.ApifyUsageOperation
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumApifyUsageOperationFilter<$PrismaModel>
+    _max?: NestedEnumApifyUsageOperationFilter<$PrismaModel>
+  }
+
+  export type NestedEnumApifyUsageStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ApifyUsageStatus | EnumApifyUsageStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ApifyUsageStatus[] | ListEnumApifyUsageStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ApifyUsageStatus[] | ListEnumApifyUsageStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumApifyUsageStatusWithAggregatesFilter<$PrismaModel> | $Enums.ApifyUsageStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumApifyUsageStatusFilter<$PrismaModel>
+    _max?: NestedEnumApifyUsageStatusFilter<$PrismaModel>
   }
 
   export type FilterCreateWithoutUserInput = {
@@ -56192,6 +58075,50 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ApifyUsageLogCreateWithoutUserInput = {
+    uuid?: string
+    actor_id: string
+    operation: $Enums.ApifyUsageOperation
+    status: $Enums.ApifyUsageStatus
+    result_count?: number | null
+    duration_ms?: number | null
+    compute_units?: Decimal | DecimalJsLike | number | string | null
+    total_cost_usd?: Decimal | DecimalJsLike | number | string | null
+    run_id?: string | null
+    reference_type?: string | null
+    reference_uuid?: string | null
+    error_message?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+  }
+
+  export type ApifyUsageLogUncheckedCreateWithoutUserInput = {
+    uuid?: string
+    actor_id: string
+    operation: $Enums.ApifyUsageOperation
+    status: $Enums.ApifyUsageStatus
+    result_count?: number | null
+    duration_ms?: number | null
+    compute_units?: Decimal | DecimalJsLike | number | string | null
+    total_cost_usd?: Decimal | DecimalJsLike | number | string | null
+    run_id?: string | null
+    reference_type?: string | null
+    reference_uuid?: string | null
+    error_message?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+  }
+
+  export type ApifyUsageLogCreateOrConnectWithoutUserInput = {
+    where: ApifyUsageLogWhereUniqueInput
+    create: XOR<ApifyUsageLogCreateWithoutUserInput, ApifyUsageLogUncheckedCreateWithoutUserInput>
+  }
+
+  export type ApifyUsageLogCreateManyUserInputEnvelope = {
+    data: ApifyUsageLogCreateManyUserInput | ApifyUsageLogCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type FilterUpsertWithWhereUniqueWithoutUserInput = {
     where: FilterWhereUniqueInput
     update: XOR<FilterUpdateWithoutUserInput, FilterUncheckedUpdateWithoutUserInput>
@@ -56784,6 +58711,43 @@ export namespace Prisma {
     created_at?: DateTimeFilter<"AiUsageLog"> | Date | string
   }
 
+  export type ApifyUsageLogUpsertWithWhereUniqueWithoutUserInput = {
+    where: ApifyUsageLogWhereUniqueInput
+    update: XOR<ApifyUsageLogUpdateWithoutUserInput, ApifyUsageLogUncheckedUpdateWithoutUserInput>
+    create: XOR<ApifyUsageLogCreateWithoutUserInput, ApifyUsageLogUncheckedCreateWithoutUserInput>
+  }
+
+  export type ApifyUsageLogUpdateWithWhereUniqueWithoutUserInput = {
+    where: ApifyUsageLogWhereUniqueInput
+    data: XOR<ApifyUsageLogUpdateWithoutUserInput, ApifyUsageLogUncheckedUpdateWithoutUserInput>
+  }
+
+  export type ApifyUsageLogUpdateManyWithWhereWithoutUserInput = {
+    where: ApifyUsageLogScalarWhereInput
+    data: XOR<ApifyUsageLogUpdateManyMutationInput, ApifyUsageLogUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type ApifyUsageLogScalarWhereInput = {
+    AND?: ApifyUsageLogScalarWhereInput | ApifyUsageLogScalarWhereInput[]
+    OR?: ApifyUsageLogScalarWhereInput[]
+    NOT?: ApifyUsageLogScalarWhereInput | ApifyUsageLogScalarWhereInput[]
+    uuid?: StringFilter<"ApifyUsageLog"> | string
+    user_uuid?: StringFilter<"ApifyUsageLog"> | string
+    actor_id?: StringFilter<"ApifyUsageLog"> | string
+    operation?: EnumApifyUsageOperationFilter<"ApifyUsageLog"> | $Enums.ApifyUsageOperation
+    status?: EnumApifyUsageStatusFilter<"ApifyUsageLog"> | $Enums.ApifyUsageStatus
+    result_count?: IntNullableFilter<"ApifyUsageLog"> | number | null
+    duration_ms?: IntNullableFilter<"ApifyUsageLog"> | number | null
+    compute_units?: DecimalNullableFilter<"ApifyUsageLog"> | Decimal | DecimalJsLike | number | string | null
+    total_cost_usd?: DecimalNullableFilter<"ApifyUsageLog"> | Decimal | DecimalJsLike | number | string | null
+    run_id?: StringNullableFilter<"ApifyUsageLog"> | string | null
+    reference_type?: StringNullableFilter<"ApifyUsageLog"> | string | null
+    reference_uuid?: StringNullableFilter<"ApifyUsageLog"> | string | null
+    error_message?: StringNullableFilter<"ApifyUsageLog"> | string | null
+    metadata?: JsonNullableFilter<"ApifyUsageLog">
+    created_at?: DateTimeFilter<"ApifyUsageLog"> | Date | string
+  }
+
   export type UserCreateWithoutFiltersInput = {
     uuid?: string
     email: string
@@ -56807,6 +58771,7 @@ export namespace Prisma {
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
+    apify_usage_logs?: ApifyUsageLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutFiltersInput = {
@@ -56833,6 +58798,7 @@ export namespace Prisma {
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
+    apify_usage_logs?: ApifyUsageLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutFiltersInput = {
@@ -57092,6 +59058,7 @@ export namespace Prisma {
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
+    apify_usage_logs?: ApifyUsageLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFiltersInput = {
@@ -57118,6 +59085,7 @@ export namespace Prisma {
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
+    apify_usage_logs?: ApifyUsageLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type RawLeadUpsertWithWhereUniqueWithoutFilterInput = {
@@ -57264,6 +59232,7 @@ export namespace Prisma {
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
+    apify_usage_logs?: ApifyUsageLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutScoring_instructionsInput = {
@@ -57290,6 +59259,7 @@ export namespace Prisma {
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
+    apify_usage_logs?: ApifyUsageLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutScoring_instructionsInput = {
@@ -57374,6 +59344,7 @@ export namespace Prisma {
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
+    apify_usage_logs?: ApifyUsageLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutScoring_instructionsInput = {
@@ -57400,6 +59371,7 @@ export namespace Prisma {
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
+    apify_usage_logs?: ApifyUsageLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type FilterScoringInstructionUpsertWithWhereUniqueWithoutScoring_instructionInput = {
@@ -58160,6 +60132,7 @@ export namespace Prisma {
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
+    apify_usage_logs?: ApifyUsageLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutContactsInput = {
@@ -58186,6 +60159,7 @@ export namespace Prisma {
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
+    apify_usage_logs?: ApifyUsageLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutContactsInput = {
@@ -58620,6 +60594,7 @@ export namespace Prisma {
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
+    apify_usage_logs?: ApifyUsageLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutContactsInput = {
@@ -58646,6 +60621,7 @@ export namespace Prisma {
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
+    apify_usage_logs?: ApifyUsageLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type LeadUpsertWithoutContactsInput = {
@@ -59353,6 +61329,7 @@ export namespace Prisma {
     form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
+    apify_usage_logs?: ApifyUsageLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutContact_listsInput = {
@@ -59379,6 +61356,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
+    apify_usage_logs?: ApifyUsageLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutContact_listsInput = {
@@ -59492,6 +61470,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
+    apify_usage_logs?: ApifyUsageLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutContact_listsInput = {
@@ -59518,6 +61497,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
+    apify_usage_logs?: ApifyUsageLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ContactListMemberUpsertWithWhereUniqueWithoutListInput = {
@@ -60025,6 +62005,7 @@ export namespace Prisma {
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
+    apify_usage_logs?: ApifyUsageLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutInteractionsInput = {
@@ -60051,6 +62032,7 @@ export namespace Prisma {
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
+    apify_usage_logs?: ApifyUsageLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutInteractionsInput = {
@@ -60314,6 +62296,7 @@ export namespace Prisma {
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
+    apify_usage_logs?: ApifyUsageLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutInteractionsInput = {
@@ -60340,6 +62323,7 @@ export namespace Prisma {
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
+    apify_usage_logs?: ApifyUsageLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type OutreachMessageUpsertWithoutInteractionInput = {
@@ -60517,6 +62501,7 @@ export namespace Prisma {
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
+    apify_usage_logs?: ApifyUsageLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOutreach_messagesInput = {
@@ -60543,6 +62528,7 @@ export namespace Prisma {
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
+    apify_usage_logs?: ApifyUsageLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOutreach_messagesInput = {
@@ -60780,6 +62766,7 @@ export namespace Prisma {
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
+    apify_usage_logs?: ApifyUsageLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOutreach_messagesInput = {
@@ -60806,6 +62793,7 @@ export namespace Prisma {
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
+    apify_usage_logs?: ApifyUsageLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ContactUpsertWithoutOutreach_messagesInput = {
@@ -61045,6 +63033,7 @@ export namespace Prisma {
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
+    apify_usage_logs?: ApifyUsageLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOutreach_sequencesInput = {
@@ -61071,6 +63060,7 @@ export namespace Prisma {
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
+    apify_usage_logs?: ApifyUsageLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOutreach_sequencesInput = {
@@ -61112,6 +63102,7 @@ export namespace Prisma {
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
+    apify_usage_logs?: ApifyUsageLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOutreach_sequencesInput = {
@@ -61138,6 +63129,7 @@ export namespace Prisma {
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
+    apify_usage_logs?: ApifyUsageLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type FilterCreateWithoutJobsInput = {
@@ -61257,6 +63249,7 @@ export namespace Prisma {
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
+    apify_usage_logs?: ApifyUsageLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSender_profilesInput = {
@@ -61283,6 +63276,7 @@ export namespace Prisma {
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
+    apify_usage_logs?: ApifyUsageLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSender_profilesInput = {
@@ -61417,6 +63411,7 @@ export namespace Prisma {
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
+    apify_usage_logs?: ApifyUsageLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSender_profilesInput = {
@@ -61443,6 +63438,7 @@ export namespace Prisma {
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
+    apify_usage_logs?: ApifyUsageLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type MarketingCampaignUpsertWithWhereUniqueWithoutSender_profileInput = {
@@ -61484,6 +63480,7 @@ export namespace Prisma {
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
+    apify_usage_logs?: ApifyUsageLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutMarketing_campaignsInput = {
@@ -61510,6 +63507,7 @@ export namespace Prisma {
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
+    apify_usage_logs?: ApifyUsageLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutMarketing_campaignsInput = {
@@ -61738,6 +63736,7 @@ export namespace Prisma {
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
+    apify_usage_logs?: ApifyUsageLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMarketing_campaignsInput = {
@@ -61764,6 +63763,7 @@ export namespace Prisma {
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
+    apify_usage_logs?: ApifyUsageLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type SenderProfileUpsertWithoutMarketing_campaignsInput = {
@@ -62241,6 +64241,7 @@ export namespace Prisma {
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
+    apify_usage_logs?: ApifyUsageLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOpenai_batch_jobsInput = {
@@ -62267,6 +64268,7 @@ export namespace Prisma {
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
+    apify_usage_logs?: ApifyUsageLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOpenai_batch_jobsInput = {
@@ -62308,6 +64310,7 @@ export namespace Prisma {
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
+    apify_usage_logs?: ApifyUsageLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOpenai_batch_jobsInput = {
@@ -62334,6 +64337,7 @@ export namespace Prisma {
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
+    apify_usage_logs?: ApifyUsageLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutIntegrationsInput = {
@@ -62359,6 +64363,7 @@ export namespace Prisma {
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
+    apify_usage_logs?: ApifyUsageLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutIntegrationsInput = {
@@ -62385,6 +64390,7 @@ export namespace Prisma {
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
+    apify_usage_logs?: ApifyUsageLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutIntegrationsInput = {
@@ -62457,6 +64463,7 @@ export namespace Prisma {
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
+    apify_usage_logs?: ApifyUsageLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutIntegrationsInput = {
@@ -62483,6 +64490,7 @@ export namespace Prisma {
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
+    apify_usage_logs?: ApifyUsageLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type IntegrationKeyUpsertWithWhereUniqueWithoutIntegrationInput = {
@@ -62593,6 +64601,7 @@ export namespace Prisma {
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
+    apify_usage_logs?: ApifyUsageLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutRemindersInput = {
@@ -62619,6 +64628,7 @@ export namespace Prisma {
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
+    apify_usage_logs?: ApifyUsageLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutRemindersInput = {
@@ -62736,6 +64746,7 @@ export namespace Prisma {
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
+    apify_usage_logs?: ApifyUsageLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRemindersInput = {
@@ -62762,6 +64773,7 @@ export namespace Prisma {
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
+    apify_usage_logs?: ApifyUsageLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ContactUpsertWithoutRemindersInput = {
@@ -62869,6 +64881,7 @@ export namespace Prisma {
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
+    apify_usage_logs?: ApifyUsageLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutFormsInput = {
@@ -62895,6 +64908,7 @@ export namespace Prisma {
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
+    apify_usage_logs?: ApifyUsageLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutFormsInput = {
@@ -63008,6 +65022,7 @@ export namespace Prisma {
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
+    apify_usage_logs?: ApifyUsageLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFormsInput = {
@@ -63034,6 +65049,7 @@ export namespace Prisma {
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
+    apify_usage_logs?: ApifyUsageLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type FormFieldUpsertWithWhereUniqueWithoutFormInput = {
@@ -63327,6 +65343,7 @@ export namespace Prisma {
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
+    apify_usage_logs?: ApifyUsageLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutForm_completionsInput = {
@@ -63353,6 +65370,7 @@ export namespace Prisma {
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
+    apify_usage_logs?: ApifyUsageLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutForm_completionsInput = {
@@ -63535,6 +65553,7 @@ export namespace Prisma {
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
+    apify_usage_logs?: ApifyUsageLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutForm_completionsInput = {
@@ -63561,6 +65580,7 @@ export namespace Prisma {
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
+    apify_usage_logs?: ApifyUsageLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type FormCompletionValueUpsertWithWhereUniqueWithoutCompletionInput = {
@@ -63738,6 +65758,7 @@ export namespace Prisma {
     form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
+    apify_usage_logs?: ApifyUsageLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutContact_audience_analysesInput = {
@@ -63764,6 +65785,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
+    apify_usage_logs?: ApifyUsageLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutContact_audience_analysesInput = {
@@ -63875,6 +65897,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
+    apify_usage_logs?: ApifyUsageLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutContact_audience_analysesInput = {
@@ -63901,6 +65924,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
+    apify_usage_logs?: ApifyUsageLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type FilterUpsertWithoutAudience_analysesInput = {
@@ -64008,6 +66032,7 @@ export namespace Prisma {
     form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
+    apify_usage_logs?: ApifyUsageLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAi_usage_logsInput = {
@@ -64034,6 +66059,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
+    apify_usage_logs?: ApifyUsageLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAi_usage_logsInput = {
@@ -64075,6 +66101,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
+    apify_usage_logs?: ApifyUsageLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAi_usage_logsInput = {
@@ -64101,6 +66128,129 @@ export namespace Prisma {
     form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
+    apify_usage_logs?: ApifyUsageLogUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutApify_usage_logsInput = {
+    uuid?: string
+    email: string
+    phone?: string | null
+    password: string
+    role?: $Enums.AuthRole
+    created_at?: Date | string
+    updated_at?: Date | string
+    filters?: FilterCreateNestedManyWithoutUserInput
+    contacts?: ContactCreateNestedManyWithoutUserInput
+    outreach_messages?: OutreachMessageCreateNestedManyWithoutUserInput
+    outreach_sequences?: OutreachSequenceCreateNestedManyWithoutUserInput
+    interactions?: InteractionCreateNestedManyWithoutUserInput
+    sender_profiles?: SenderProfileCreateNestedManyWithoutUserInput
+    marketing_campaigns?: MarketingCampaignCreateNestedManyWithoutUserInput
+    scoring_instructions?: ScoringInstructionCreateNestedManyWithoutUserInput
+    openai_batch_jobs?: OpenAiBatchJobCreateNestedManyWithoutUserInput
+    integrations?: IntegrationCreateNestedManyWithoutUserInput
+    reminders?: ReminderCreateNestedManyWithoutUserInput
+    forms?: FormCreateNestedManyWithoutUserInput
+    form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
+    contact_lists?: ContactListCreateNestedManyWithoutUserInput
+    contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
+    ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutApify_usage_logsInput = {
+    id?: number
+    uuid?: string
+    email: string
+    phone?: string | null
+    password: string
+    role?: $Enums.AuthRole
+    created_at?: Date | string
+    updated_at?: Date | string
+    filters?: FilterUncheckedCreateNestedManyWithoutUserInput
+    contacts?: ContactUncheckedCreateNestedManyWithoutUserInput
+    outreach_messages?: OutreachMessageUncheckedCreateNestedManyWithoutUserInput
+    outreach_sequences?: OutreachSequenceUncheckedCreateNestedManyWithoutUserInput
+    interactions?: InteractionUncheckedCreateNestedManyWithoutUserInput
+    sender_profiles?: SenderProfileUncheckedCreateNestedManyWithoutUserInput
+    marketing_campaigns?: MarketingCampaignUncheckedCreateNestedManyWithoutUserInput
+    scoring_instructions?: ScoringInstructionUncheckedCreateNestedManyWithoutUserInput
+    openai_batch_jobs?: OpenAiBatchJobUncheckedCreateNestedManyWithoutUserInput
+    integrations?: IntegrationUncheckedCreateNestedManyWithoutUserInput
+    reminders?: ReminderUncheckedCreateNestedManyWithoutUserInput
+    forms?: FormUncheckedCreateNestedManyWithoutUserInput
+    form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
+    contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
+    contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
+    ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutApify_usage_logsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutApify_usage_logsInput, UserUncheckedCreateWithoutApify_usage_logsInput>
+  }
+
+  export type UserUpsertWithoutApify_usage_logsInput = {
+    update: XOR<UserUpdateWithoutApify_usage_logsInput, UserUncheckedUpdateWithoutApify_usage_logsInput>
+    create: XOR<UserCreateWithoutApify_usage_logsInput, UserUncheckedCreateWithoutApify_usage_logsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutApify_usage_logsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutApify_usage_logsInput, UserUncheckedUpdateWithoutApify_usage_logsInput>
+  }
+
+  export type UserUpdateWithoutApify_usage_logsInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    filters?: FilterUpdateManyWithoutUserNestedInput
+    contacts?: ContactUpdateManyWithoutUserNestedInput
+    outreach_messages?: OutreachMessageUpdateManyWithoutUserNestedInput
+    outreach_sequences?: OutreachSequenceUpdateManyWithoutUserNestedInput
+    interactions?: InteractionUpdateManyWithoutUserNestedInput
+    sender_profiles?: SenderProfileUpdateManyWithoutUserNestedInput
+    marketing_campaigns?: MarketingCampaignUpdateManyWithoutUserNestedInput
+    scoring_instructions?: ScoringInstructionUpdateManyWithoutUserNestedInput
+    openai_batch_jobs?: OpenAiBatchJobUpdateManyWithoutUserNestedInput
+    integrations?: IntegrationUpdateManyWithoutUserNestedInput
+    reminders?: ReminderUpdateManyWithoutUserNestedInput
+    forms?: FormUpdateManyWithoutUserNestedInput
+    form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
+    contact_lists?: ContactListUpdateManyWithoutUserNestedInput
+    contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
+    ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutApify_usage_logsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    filters?: FilterUncheckedUpdateManyWithoutUserNestedInput
+    contacts?: ContactUncheckedUpdateManyWithoutUserNestedInput
+    outreach_messages?: OutreachMessageUncheckedUpdateManyWithoutUserNestedInput
+    outreach_sequences?: OutreachSequenceUncheckedUpdateManyWithoutUserNestedInput
+    interactions?: InteractionUncheckedUpdateManyWithoutUserNestedInput
+    sender_profiles?: SenderProfileUncheckedUpdateManyWithoutUserNestedInput
+    marketing_campaigns?: MarketingCampaignUncheckedUpdateManyWithoutUserNestedInput
+    scoring_instructions?: ScoringInstructionUncheckedUpdateManyWithoutUserNestedInput
+    openai_batch_jobs?: OpenAiBatchJobUncheckedUpdateManyWithoutUserNestedInput
+    integrations?: IntegrationUncheckedUpdateManyWithoutUserNestedInput
+    reminders?: ReminderUncheckedUpdateManyWithoutUserNestedInput
+    forms?: FormUncheckedUpdateManyWithoutUserNestedInput
+    form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
+    contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
+    contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
+    ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type FilterCreateManyUserInput = {
@@ -64370,6 +66520,23 @@ export namespace Prisma {
     reference_uuid?: string | null
     batch_id?: string | null
     custom_id?: string | null
+    error_message?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+  }
+
+  export type ApifyUsageLogCreateManyUserInput = {
+    uuid?: string
+    actor_id: string
+    operation: $Enums.ApifyUsageOperation
+    status: $Enums.ApifyUsageStatus
+    result_count?: number | null
+    duration_ms?: number | null
+    compute_units?: Decimal | DecimalJsLike | number | string | null
+    total_cost_usd?: Decimal | DecimalJsLike | number | string | null
+    run_id?: string | null
+    reference_type?: string | null
+    reference_uuid?: string | null
     error_message?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
@@ -65226,6 +67393,57 @@ export namespace Prisma {
     reference_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     batch_id?: NullableStringFieldUpdateOperationsInput | string | null
     custom_id?: NullableStringFieldUpdateOperationsInput | string | null
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApifyUsageLogUpdateWithoutUserInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    actor_id?: StringFieldUpdateOperationsInput | string
+    operation?: EnumApifyUsageOperationFieldUpdateOperationsInput | $Enums.ApifyUsageOperation
+    status?: EnumApifyUsageStatusFieldUpdateOperationsInput | $Enums.ApifyUsageStatus
+    result_count?: NullableIntFieldUpdateOperationsInput | number | null
+    duration_ms?: NullableIntFieldUpdateOperationsInput | number | null
+    compute_units?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    total_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    run_id?: NullableStringFieldUpdateOperationsInput | string | null
+    reference_type?: NullableStringFieldUpdateOperationsInput | string | null
+    reference_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApifyUsageLogUncheckedUpdateWithoutUserInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    actor_id?: StringFieldUpdateOperationsInput | string
+    operation?: EnumApifyUsageOperationFieldUpdateOperationsInput | $Enums.ApifyUsageOperation
+    status?: EnumApifyUsageStatusFieldUpdateOperationsInput | $Enums.ApifyUsageStatus
+    result_count?: NullableIntFieldUpdateOperationsInput | number | null
+    duration_ms?: NullableIntFieldUpdateOperationsInput | number | null
+    compute_units?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    total_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    run_id?: NullableStringFieldUpdateOperationsInput | string | null
+    reference_type?: NullableStringFieldUpdateOperationsInput | string | null
+    reference_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApifyUsageLogUncheckedUpdateManyWithoutUserInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    actor_id?: StringFieldUpdateOperationsInput | string
+    operation?: EnumApifyUsageOperationFieldUpdateOperationsInput | $Enums.ApifyUsageOperation
+    status?: EnumApifyUsageStatusFieldUpdateOperationsInput | $Enums.ApifyUsageStatus
+    result_count?: NullableIntFieldUpdateOperationsInput | number | null
+    duration_ms?: NullableIntFieldUpdateOperationsInput | number | null
+    compute_units?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    total_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    run_id?: NullableStringFieldUpdateOperationsInput | string | null
+    reference_type?: NullableStringFieldUpdateOperationsInput | string | null
+    reference_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string

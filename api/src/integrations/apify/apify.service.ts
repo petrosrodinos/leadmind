@@ -1,13 +1,15 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
-import { SourceType } from '@/generated/prisma';
+import { ApifyUsageOperation, SourceType } from '@/generated/prisma';
 import { ApifyClient } from './apify.client';
 import { APIFY_ACTORS } from './apify.constants';
 import { ApifyAdapter, NormalizedLead } from './interfaces/apify.interfaces';
+import { ApifyUsageOptions } from './interfaces/apify-usage.interface';
 import { LinkedInLeadsAdapter } from './linkedin-leads/linkedin-leads.adapter';
 import { GoogleMapsAdapter } from './google-maps/google-maps.adapter';
 import { GoogleSearchAdapter } from './google-search/google-search.adapter';
 import { GenericLeadFinderAdapter } from './generic-lead-finder/generic-lead-finder.adapter';
 import { WebsiteContentCrawlerAdapter } from './website-content-crawler/website-content-crawler.adapter';
+import { ApifyCredentialsService } from './services/apify-credentials.service';
 
 @Injectable()
 export class ApifyService {
@@ -15,6 +17,7 @@ export class ApifyService {
 
     constructor(
         private readonly client: ApifyClient,
+        private readonly credentials: ApifyCredentialsService,
         private readonly linkedinLeadsAdapter: LinkedInLeadsAdapter,
         private readonly googleMapsAdapter: GoogleMapsAdapter,
         private readonly googleSearchAdapter: GoogleSearchAdapter,
@@ -22,13 +25,25 @@ export class ApifyService {
         private readonly websiteContentCrawlerAdapter: WebsiteContentCrawlerAdapter,
     ) { }
 
-    async scrapeLeads(source_type: SourceType, query_config: object): Promise<NormalizedLead[]> {
+    async scrapeLeads(
+        user_uuid: string,
+        source_type: SourceType,
+        query_config: object,
+        usage?: ApifyUsageOptions,
+    ): Promise<NormalizedLead[]> {
         const { adapter, actor_id } = this.resolve(source_type);
 
         const input = adapter.buildInput(query_config as never);
         this.logger.debug(`Running Apify actor ${actor_id} for source ${source_type}`);
 
-        const raw_items = await this.client.runActor(actor_id, input);
+        const token = await this.credentials.getApifyApiToken(user_uuid);
+        const raw_items = await this.client.runActor(token, actor_id, input, {
+            user_uuid,
+            operation: usage?.operation ?? ApifyUsageOperation.FILTER_SCRAPE,
+            reference_type: usage?.reference_type,
+            reference_uuid: usage?.reference_uuid,
+            metadata: usage?.metadata,
+        });
         return adapter.normalize(raw_items);
     }
 

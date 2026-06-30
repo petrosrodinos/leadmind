@@ -37,6 +37,9 @@ describe('LeadEnrichmentOrchestrator', () => {
             lead: {
                 findUnique: jest.fn().mockResolvedValue(lead),
             },
+            contact: {
+                findFirst: jest.fn().mockResolvedValue({ user_uuid: 'user-1' }),
+            },
             leadEnrichment: {
                 findFirst: jest.fn().mockResolvedValue(null),
             },
@@ -106,7 +109,17 @@ describe('LeadEnrichmentOrchestrator', () => {
         expect(tx.leadEnrichment.create.mock.calls[0][0].data.metadata.status).toBe('failed');
         expect(tx.leadEnrichment.create.mock.calls[1][0].data.source).toBe(EnrichmentSource.GOOGLE_SEARCH);
         expect(tx.leadEnrichment.create.mock.calls[1][0].data.metadata.status).toBe('success');
-        expect(googleSearch.fetchRawItems).toHaveBeenCalledTimes(1);
+        expect(googleSearch.fetchRawItems).toHaveBeenCalledWith(
+            'user-1',
+            expect.objectContaining({
+                queries: 'Navy Grace Hopper',
+            }),
+            expect.objectContaining({
+                operation: 'ENRICHMENT_GOOGLE_SEARCH',
+                reference_type: 'lead',
+                reference_uuid: lead.uuid,
+            }),
+        );
         expect(summaryService.regenerate).toHaveBeenCalledTimes(2);
         expect(summaryService.regenerate).toHaveBeenCalledWith({ kind: 'lead', uuid: lead.uuid });
     });
@@ -114,6 +127,7 @@ describe('LeadEnrichmentOrchestrator', () => {
     it('persists contact enrichment rows to contact_enrichments', async () => {
         const contact = {
             uuid: 'contact-1',
+            user_uuid: 'user-1',
             name: 'Grace Hopper',
             email: null,
             phone: null,

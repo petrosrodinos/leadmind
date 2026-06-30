@@ -30,7 +30,6 @@ const EnvSchema = z.object({
     ANTHROPIC_API_KEY: z.string().optional(),
     BULL_BOARD_USER: z.string().optional(),
     BULL_BOARD_PASSWORD: z.string().optional(),
-    APIFY_API_TOKEN: z.string().min(1),
     GEMI_API_KEY: z.string().optional(),
     ELASTICSEARCH_URL: z.string().url().optional(),
     ELASTICSEARCH_API_KEY: z.string().optional(),

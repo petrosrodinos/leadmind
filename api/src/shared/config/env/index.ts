@@ -28,6 +28,5 @@ export default () => ({
     ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY,
     BULL_BOARD_USER: process.env.BULL_BOARD_USER,
     BULL_BOARD_PASSWORD: process.env.BULL_BOARD_PASSWORD,
-    APIFY_API_TOKEN: process.env.APIFY_API_TOKEN,
     GEMI_API_KEY: process.env.GEMI_API_KEY,
 });

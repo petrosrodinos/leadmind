@@ -1,7 +1,10 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { PrismaModule } from '@/core/databases/prisma/prisma.module';
+import { IntegrationsModule } from '@/modules/integrations/integrations.module';
+import { ApifyUsageModule } from '@/modules/apify-usage/apify-usage.module';
 import { ApifyClient } from './apify.client';
 import { ApifyService } from './apify.service';
+import { ApifyCredentialsService } from './services/apify-credentials.service';
 import { LinkedInLeadsAdapter } from './linkedin-leads/linkedin-leads.adapter';
 import { GoogleMapsAdapter } from './google-maps/google-maps.adapter';
 import { GoogleSearchAdapter } from './google-search/google-search.adapter';
@@ -11,9 +14,10 @@ import { LinkedInCompanyAdapter } from './linkedin-company/linkedin-company.adap
 import { LinkedInProfileAdapter } from './linkedin-profile/linkedin-profile.adapter';
 
 @Module({
-    imports: [ConfigModule],
+    imports: [PrismaModule, IntegrationsModule, ApifyUsageModule],
     providers: [
         ApifyClient,
+        ApifyCredentialsService,
         LinkedInLeadsAdapter,
         GoogleMapsAdapter,
         GoogleSearchAdapter,
@@ -25,6 +29,7 @@ import { LinkedInProfileAdapter } from './linkedin-profile/linkedin-profile.adap
     ],
     exports: [
         ApifyService,
+        ApifyCredentialsService,
         WebsiteContentCrawlerAdapter,
         LinkedInCompanyAdapter,
         LinkedInProfileAdapter,

@@ -39,6 +39,7 @@ model User {
   contact_lists       ContactList[]
   contact_audience_analyses ContactAudienceAnalysis[]
   ai_usage_logs       AiUsageLog[]
+  apify_usage_logs    ApifyUsageLog[]
 
   @@index([email])
   @@index([phone])
@@ -951,4 +952,45 @@ model AiUsageLog {
   @@index([user_uuid, provider])
   @@index([batch_id])
   @@map("ai_usage_logs")
+}
+
+enum ApifyUsageOperation {
+  FILTER_SCRAPE
+  ENRICHMENT_LINKEDIN
+  ENRICHMENT_WEBSITE
+  ENRICHMENT_GOOGLE_SEARCH
+  CONTACT_EMAIL_SCRAPE
+  AI_WEBSITE_CONTEXT
+  OTHER
+}
+
+enum ApifyUsageStatus {
+  SUCCESS
+  ERROR
+}
+
+model ApifyUsageLog {
+  uuid           String              @id @default(uuid())
+  user_uuid      String
+  actor_id       String
+  operation      ApifyUsageOperation
+  status         ApifyUsageStatus
+  result_count   Int?
+  duration_ms    Int?
+  compute_units  Decimal?            @db.Decimal(12, 6)
+  total_cost_usd Decimal?            @db.Decimal(12, 8)
+  run_id         String?
+  reference_type String?
+  reference_uuid String?
+  error_message  String?             @db.Text
+  metadata       Json?
+  created_at     DateTime            @default(now())
+
+  user User @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
+
+  @@index([user_uuid, created_at])
+  @@index([user_uuid, operation])
+  @@index([user_uuid, actor_id])
+  @@index([run_id])
+  @@map("apify_usage_logs")
 }

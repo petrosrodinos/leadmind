@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
+import { ApifyUsageOperation } from '@/generated/prisma';
 import { ApifyClient } from '../apify.client';
 import { APIFY_ACTORS } from '../apify.constants';
 import { ApifyAdapter, ApifyRunInput, NormalizedLead } from '../interfaces/apify.interfaces';
+import { ApifyUsageOptions } from '../interfaces/apify-usage.interface';
+import { ApifyCredentialsService } from '../services/apify-credentials.service';
 import {
     LinkedInProfileExperience,
     LinkedInProfileQueryConfig,
@@ -15,7 +18,10 @@ const LINKEDIN_PROFILE_URL_PREFIX = 'https://www.linkedin.com/in/';
 export class LinkedInProfileAdapter
     implements ApifyAdapter<LinkedInProfileQueryConfig, LinkedInProfileRawItem> {
 
-    constructor(private readonly apifyClient: ApifyClient) { }
+    constructor(
+        private readonly apifyClient: ApifyClient,
+        private readonly credentials: ApifyCredentialsService,
+    ) { }
 
     buildInput(query_config: LinkedInProfileQueryConfig): ApifyRunInput {
         const profileUrls = query_config.profile_urls
@@ -35,17 +41,27 @@ export class LinkedInProfileAdapter
     }
 
     /** Run the actor and return the unmodified dataset items. */
-    async run(query_config: LinkedInProfileQueryConfig): Promise<LinkedInProfileRawItem[]> {
+    async run(
+        user_uuid: string,
+        query_config: LinkedInProfileQueryConfig,
+        usage?: ApifyUsageOptions,
+    ): Promise<LinkedInProfileRawItem[]> {
         const input = this.buildInput(query_config);
-        return this.apifyClient.runActor<LinkedInProfileRawItem>(
+        return this.runActorWithUserToken(
+            user_uuid,
             APIFY_ACTORS.LINKEDIN_PROFILE,
             input,
+            usage ?? { operation: ApifyUsageOperation.ENRICHMENT_LINKEDIN },
         );
     }
 
     /** Run the actor and return typed `NormalizedProfile` records. */
-    async fetchProfiles(query_config: LinkedInProfileQueryConfig): Promise<NormalizedProfile[]> {
-        const items = await this.run(query_config);
+    async fetchProfiles(
+        user_uuid: string,
+        query_config: LinkedInProfileQueryConfig,
+        usage?: ApifyUsageOptions,
+    ): Promise<NormalizedProfile[]> {
+        const items = await this.run(user_uuid, query_config, usage);
         const resolved_urls = query_config.profile_urls
             .map((entry) => this.toProfileUrl(entry))
             .filter((url): url is string => Boolean(url));
@@ -55,9 +71,27 @@ export class LinkedInProfileAdapter
     }
 
     /** Convenience: fetch a single profile by URL or username. */
-    async fetchProfile(url_or_username: string): Promise<NormalizedProfile | null> {
-        const profiles = await this.fetchProfiles({ profile_urls: [url_or_username] });
+    async fetchProfile(
+        user_uuid: string,
+        url_or_username: string,
+        usage?: ApifyUsageOptions,
+    ): Promise<NormalizedProfile | null> {
+        const profiles = await this.fetchProfiles(
+            user_uuid,
+            { profile_urls: [url_or_username] },
+            usage,
+        );
         return profiles[0] ?? null;
+    }
+
+    private async runActorWithUserToken<T>(
+        user_uuid: string,
+        actor_id: string,
+        input: ApifyRunInput,
+        usage: ApifyUsageOptions,
+    ): Promise<T[]> {
+        const token = await this.credentials.getApifyApiToken(user_uuid);
+        return this.apifyClient.runActor<T>(token, actor_id, input, { user_uuid, ...usage });
     }
 
     private toNormalizedProfile(

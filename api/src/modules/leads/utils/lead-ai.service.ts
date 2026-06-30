@@ -1,10 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { EnrichmentSource, Lead, Prisma } from '@/generated/prisma';
+import { EnrichmentSource, Lead, Prisma, ApifyUsageOperation } from '@/generated/prisma';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { AiService } from '@/integrations/ai/services/ai.service';
 import { AiConfig } from '@/integrations/ai/utils/ai.config';
 import { AiProviders } from '@/integrations/ai/interfaces/ai.interface';
 import { WebsiteContentCrawlerAdapter } from '@/integrations/apify/website-content-crawler/website-content-crawler.adapter';
+import { ApifyCredentialsService } from '@/integrations/apify/services/apify-credentials.service';
 import { plainTextFromCrawledPage } from '@/integrations/apify/website-content-crawler/crawl-page-text.utils';
 import {
     LEAD_ENRICHMENT_SUMMARY_MODEL,
@@ -45,6 +46,7 @@ export class LeadAiService {
         private readonly aiService: AiService,
         private readonly aiConfig: AiConfig,
         private readonly websiteCrawler: WebsiteContentCrawlerAdapter,
+        private readonly apifyCredentials: ApifyCredentialsService,
         private readonly summaryService: LeadEnrichmentSummaryService,
     ) {}
 
@@ -299,7 +301,12 @@ export class LeadAiService {
             return null;
         }
 
-        let websiteExcerpt = await this.resolveWebsiteExcerpt(lead, opts, historyTarget);
+        let websiteExcerpt = await this.resolveWebsiteExcerpt(
+            lead,
+            opts,
+            historyTarget,
+            user_uuid,
+        );
 
         const linkedinExcerpt = await this.resolveLinkedinExcerpt(historyTarget, opts);
 
@@ -372,15 +379,16 @@ export class LeadAiService {
         };
     }
 
-    async fetchWebsiteText(url: string): Promise<string | null> {
+    async fetchWebsiteText(user_uuid: string, url: string): Promise<string | null> {
         const normalized = url.startsWith('http') ? url : `https://${url}`;
-        return this.getPageTextFromApifyCrawl(normalized);
+        return this.getPageTextFromApifyCrawl(user_uuid, normalized);
     }
 
     private async resolveWebsiteExcerpt(
         lead: Lead,
         opts: { prefetchedPageText?: string | null },
         historyTarget: EnrichmentHistoryTarget,
+        user_uuid: string | null,
     ): Promise<string | null> {
         if (opts.prefetchedPageText !== undefined) {
             const t = opts.prefetchedPageText?.trim();
@@ -399,7 +407,10 @@ export class LeadAiService {
         if (lead.website?.trim()) {
             const w = lead.website.trim();
             const url = w.startsWith('http') ? w : `https://${w}`;
-            return this.getPageTextFromApifyCrawl(url);
+            if (!user_uuid) {
+                return null;
+            }
+            return this.getPageTextFromApifyCrawl(user_uuid, url);
         }
         return null;
     }
@@ -444,9 +455,24 @@ export class LeadAiService {
         });
     }
 
-    private async getPageTextFromApifyCrawl(url: string): Promise<string | null> {
+    private async getPageTextFromApifyCrawl(
+        user_uuid: string,
+        url: string,
+    ): Promise<string | null> {
         try {
-            const page = await this.websiteCrawler.crawlSinglePage(url);
+            if (!(await this.apifyCredentials.hasApifyApiKey(user_uuid))) {
+                this.logger.warn(`Apify not configured for user ${user_uuid}, skipping crawl for ${url}`);
+                return null;
+            }
+            const page = await this.websiteCrawler.crawlSinglePage(
+                user_uuid,
+                url,
+                {},
+                {
+                    operation: ApifyUsageOperation.AI_WEBSITE_CONTEXT,
+                    metadata: { url },
+                },
+            );
             if (!page) {
                 this.logger.warn(`Apify crawl returned no page for ${url}`);
                 return null;

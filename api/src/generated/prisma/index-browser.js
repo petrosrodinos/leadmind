@@ -580,6 +580,24 @@ exports.Prisma.AiUsageLogScalarFieldEnum = {
   created_at: 'created_at'
 };
 
+exports.Prisma.ApifyUsageLogScalarFieldEnum = {
+  uuid: 'uuid',
+  user_uuid: 'user_uuid',
+  actor_id: 'actor_id',
+  operation: 'operation',
+  status: 'status',
+  result_count: 'result_count',
+  duration_ms: 'duration_ms',
+  compute_units: 'compute_units',
+  total_cost_usd: 'total_cost_usd',
+  run_id: 'run_id',
+  reference_type: 'reference_type',
+  reference_uuid: 'reference_uuid',
+  error_message: 'error_message',
+  metadata: 'metadata',
+  created_at: 'created_at'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -826,6 +844,21 @@ exports.AiUsageStatus = exports.$Enums.AiUsageStatus = {
   ERROR: 'ERROR'
 };
 
+exports.ApifyUsageOperation = exports.$Enums.ApifyUsageOperation = {
+  FILTER_SCRAPE: 'FILTER_SCRAPE',
+  ENRICHMENT_LINKEDIN: 'ENRICHMENT_LINKEDIN',
+  ENRICHMENT_WEBSITE: 'ENRICHMENT_WEBSITE',
+  ENRICHMENT_GOOGLE_SEARCH: 'ENRICHMENT_GOOGLE_SEARCH',
+  CONTACT_EMAIL_SCRAPE: 'CONTACT_EMAIL_SCRAPE',
+  AI_WEBSITE_CONTEXT: 'AI_WEBSITE_CONTEXT',
+  OTHER: 'OTHER'
+};
+
+exports.ApifyUsageStatus = exports.$Enums.ApifyUsageStatus = {
+  SUCCESS: 'SUCCESS',
+  ERROR: 'ERROR'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Filter: 'Filter',
@@ -856,7 +889,8 @@ exports.Prisma.ModelName = {
   FormCompletion: 'FormCompletion',
   FormCompletionValue: 'FormCompletionValue',
   ContactAudienceAnalysis: 'ContactAudienceAnalysis',
-  AiUsageLog: 'AiUsageLog'
+  AiUsageLog: 'AiUsageLog',
+  ApifyUsageLog: 'ApifyUsageLog'
 };
 
 /**

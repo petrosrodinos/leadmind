@@ -188,4 +188,8 @@ export const ApiRoutes = {
         list: "/ai-usage",
         summary: "/ai-usage/summary",
     },
+    apify_usage: {
+        list: "/apify-usage",
+        summary: "/apify-usage/summary",
+    },
 }
