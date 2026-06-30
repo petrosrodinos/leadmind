@@ -1,10 +1,22 @@
 import { z } from 'zod';
 
+export interface AiUsageContext {
+    operation?: string;
+    request_mode?: 'SYNC' | 'BATCH' | 'STREAM';
+    reference_type?: string;
+    reference_uuid?: string;
+    batch_id?: string;
+    custom_id?: string;
+    metadata?: Record<string, unknown>;
+}
+
 export interface AIGenerateOptions {
+    user_uuid: string;
     provider?: AiProvider;
     model?: AiModel;
     system?: string;
     prompt: string;
+    usage?: AiUsageContext;
     schema?: z.ZodSchema;
     output?: 'json' | 'no-schema';
     temperature?: number;

@@ -556,6 +556,30 @@ exports.Prisma.ContactAudienceAnalysisScalarFieldEnum = {
   updated_at: 'updated_at'
 };
 
+exports.Prisma.AiUsageLogScalarFieldEnum = {
+  uuid: 'uuid',
+  user_uuid: 'user_uuid',
+  provider: 'provider',
+  model: 'model',
+  operation: 'operation',
+  request_mode: 'request_mode',
+  status: 'status',
+  input_tokens: 'input_tokens',
+  output_tokens: 'output_tokens',
+  total_tokens: 'total_tokens',
+  input_cost_usd: 'input_cost_usd',
+  output_cost_usd: 'output_cost_usd',
+  total_cost_usd: 'total_cost_usd',
+  duration_ms: 'duration_ms',
+  reference_type: 'reference_type',
+  reference_uuid: 'reference_uuid',
+  batch_id: 'batch_id',
+  custom_id: 'custom_id',
+  error_message: 'error_message',
+  metadata: 'metadata',
+  created_at: 'created_at'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -772,6 +796,30 @@ exports.ContactAudienceAnalysisStatus = exports.$Enums.ContactAudienceAnalysisSt
   FAILED: 'FAILED'
 };
 
+exports.AiUsageOperation = exports.$Enums.AiUsageOperation = {
+  LEAD_ENRICH: 'LEAD_ENRICH',
+  CONTACT_SCORE: 'CONTACT_SCORE',
+  CONTACT_DRAFT: 'CONTACT_DRAFT',
+  CAMPAIGN_DRAFT: 'CAMPAIGN_DRAFT',
+  ENRICHMENT_SUMMARY: 'ENRICHMENT_SUMMARY',
+  AUDIENCE_ANALYSIS: 'AUDIENCE_ANALYSIS',
+  EMBEDDING: 'EMBEDDING',
+  ADMIN_GENERATE: 'ADMIN_GENERATE',
+  BATCH_JOB: 'BATCH_JOB',
+  OTHER: 'OTHER'
+};
+
+exports.AiUsageRequestMode = exports.$Enums.AiUsageRequestMode = {
+  SYNC: 'SYNC',
+  BATCH: 'BATCH',
+  STREAM: 'STREAM'
+};
+
+exports.AiUsageStatus = exports.$Enums.AiUsageStatus = {
+  SUCCESS: 'SUCCESS',
+  ERROR: 'ERROR'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Filter: 'Filter',
@@ -801,7 +849,8 @@ exports.Prisma.ModelName = {
   FormField: 'FormField',
   FormCompletion: 'FormCompletion',
   FormCompletionValue: 'FormCompletionValue',
-  ContactAudienceAnalysis: 'ContactAudienceAnalysis'
+  ContactAudienceAnalysis: 'ContactAudienceAnalysis',
+  AiUsageLog: 'AiUsageLog'
 };
 
 /**

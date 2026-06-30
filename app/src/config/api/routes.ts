@@ -184,4 +184,8 @@ export const ApiRoutes = {
         analysis: (listUuid: string, analysisUuid: string) =>
             `/contact-lists/${listUuid}/analyses/${analysisUuid}`,
     },
+    ai_usage: {
+        list: "/ai-usage",
+        summary: "/ai-usage/summary",
+    },
 }

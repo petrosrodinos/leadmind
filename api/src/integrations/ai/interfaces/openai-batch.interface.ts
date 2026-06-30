@@ -16,6 +16,10 @@ export interface OpenAiBatchResult {
     status_code: number;
     content: string | null;
     error: string | null;
+    model?: string | null;
+    input_tokens?: number | null;
+    output_tokens?: number | null;
+    total_tokens?: number | null;
 }
 
 // Keep in sync with Prisma enums OpenAiBatchJobType / OpenAiBatchStatus

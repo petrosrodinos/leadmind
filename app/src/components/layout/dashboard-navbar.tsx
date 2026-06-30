@@ -16,6 +16,7 @@ const pageTitles: Record<string, string> = {
   [Routes.dashboard.map]: "Map Search",
   [Routes.dashboard.analytics]: "Analytics",
   [Routes.dashboard.settings]: "Settings",
+  [Routes.dashboard.settings_usage]: "Usage",
 };
 
 export default function DashboardNavbar({ onMenuClick }: DashboardNavbarProps) {

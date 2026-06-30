@@ -27,7 +27,7 @@ export class OpenAiBatchDispatchService {
             return;
         }
 
-        const batchStatus = await this.openAiBatchService.waitForBatchReady(batchId);
+        const batchStatus = await this.openAiBatchService.waitForBatchReady(job.user_uuid, batchId);
 
         if (['failed', 'expired', 'cancelled'].includes(batchStatus.status)) {
             await this.prisma.openAiBatchJob.update({

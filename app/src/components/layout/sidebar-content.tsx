@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { Disclosure } from "@heroui/react";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, Users, Globe, Filter, IdCard, Megaphone, Layers, ShieldCheck, ChevronDown, Plug, Bell, ClipboardList, List } from "lucide-react";
+import { LayoutDashboard, Users, Globe, Filter, IdCard, Megaphone, Layers, ShieldCheck, ChevronDown, Plug, Bell, ClipboardList, List, Settings, BarChart2 } from "lucide-react";
 import { Routes } from "@/routes/routes";
 import { usePermission } from "@/hooks/use-permission";
 
@@ -28,8 +28,19 @@ const adminSubItems = [
   { label: "Batch Jobs", icon: Layers, href: Routes.dashboard.admin_batch_jobs, end: false },
 ];
 
+const settingsSubItems = [
+  { label: "Usage", icon: BarChart2, href: Routes.dashboard.settings_usage, end: false },
+];
+
 function pathMatchesAnyAdminRoute(pathname: string) {
   return adminSubItems.some(({ href }) => pathname === href || pathname.startsWith(`${href}/`));
+}
+
+function pathMatchesAnySettingsRoute(pathname: string) {
+  return (
+    pathname === Routes.dashboard.settings ||
+    settingsSubItems.some(({ href }) => pathname === href || pathname.startsWith(`${href}/`))
+  );
 }
 
 function NavItem({
@@ -102,60 +113,144 @@ export default function SidebarContent({ collapsed, onNavigate }: SidebarContent
   const canViewAdminNav = usePermission("admin_nav");
   const prevPathname = useRef(pathname);
   const [adminOpen, setAdminOpen] = useState(() => pathMatchesAnyAdminRoute(pathname));
+  const [settingsOpen, setSettingsOpen] = useState(() => pathMatchesAnySettingsRoute(pathname));
 
   useEffect(() => {
-    const now = pathMatchesAnyAdminRoute(pathname);
-    const prev = pathMatchesAnyAdminRoute(prevPathname.current);
+    const nowAdmin = pathMatchesAnyAdminRoute(pathname);
+    const prevAdmin = pathMatchesAnyAdminRoute(prevPathname.current);
+    const nowSettings = pathMatchesAnySettingsRoute(pathname);
+    const prevSettings = pathMatchesAnySettingsRoute(prevPathname.current);
     prevPathname.current = pathname;
-    if (now && !prev) {
+    if (nowAdmin && !prevAdmin) {
       setAdminOpen(true);
+    }
+    if (nowSettings && !prevSettings) {
+      setSettingsOpen(true);
     }
   }, [pathname]);
 
+  const disclosureTriggerClass = cn(
+    'group flex w-full rounded-xl transition-all duration-200 outline-none',
+    'focus-visible:ring-1 focus-visible:ring-accent/50',
+    'text-muted hover:text-foreground hover:bg-surface-secondary',
+    collapsed ? 'justify-center py-2.5 px-0' : 'items-center justify-between gap-2 px-2.5 py-[8px]',
+  );
+
   return (
-    <div className="flex flex-col gap-4">
+    <ul className="space-y-0.5">
       {canViewAdminNav && (
+        <li>
+          <Disclosure
+            isExpanded={adminOpen}
+            onExpandedChange={setAdminOpen}
+            className="w-full min-w-0 gap-0"
+          >
+            <Disclosure.Heading className="w-full p-0 m-0">
+              <Disclosure.Trigger
+                aria-label={collapsed ? "Admin" : undefined}
+                className={disclosureTriggerClass}
+              >
+                <span
+                  className={cn(
+                    'flex items-center min-w-0',
+                    collapsed ? 'justify-center' : 'gap-2.5 flex-1',
+                  )}
+                >
+                  <ShieldCheck style={{ width: 16, height: 16 }} className="shrink-0" />
+                  {!collapsed && (
+                    <span
+                      className="text-[13px] font-medium truncate leading-none"
+                      style={{ letterSpacing: '-0.005em' }}
+                    >
+                      Admin
+                    </span>
+                  )}
+                </span>
+                {!collapsed && (
+                  <ChevronDown
+                    className={cn(
+                      'size-4 shrink-0 text-muted transition-transform duration-200',
+                      adminOpen && 'rotate-180',
+                    )}
+                  />
+                )}
+              </Disclosure.Trigger>
+            </Disclosure.Heading>
+            <Disclosure.Content className="p-0 m-0">
+              <Disclosure.Body className="p-0 m-0">
+                <ul className="space-y-0.5">
+                  {adminSubItems.map(({ label, icon, href, end }) => (
+                    <NavItem
+                      key={href}
+                      label={label}
+                      icon={icon}
+                      href={href}
+                      end={end}
+                      collapsed={collapsed}
+                      onNavigate={onNavigate}
+                      indent={true}
+                    />
+                  ))}
+                </ul>
+              </Disclosure.Body>
+            </Disclosure.Content>
+          </Disclosure>
+        </li>
+      )}
+
+      {navItems.map(({ label, icon, href, end }) => (
+        <NavItem
+          key={href}
+          label={label}
+          icon={icon}
+          href={href}
+          end={end}
+          collapsed={collapsed}
+          onNavigate={onNavigate}
+        />
+      ))}
+
+      <li>
         <Disclosure
-          isExpanded={adminOpen}
-          onExpandedChange={setAdminOpen}
-          className="w-full min-w-0"
+          isExpanded={settingsOpen}
+          onExpandedChange={setSettingsOpen}
+          className="w-full min-w-0 gap-0"
         >
-          <Disclosure.Heading className="w-full">
+          <Disclosure.Heading className="w-full p-0 m-0">
             <Disclosure.Trigger
-              aria-label={collapsed ? "Admin" : undefined}
-              className={cn(
-                'group flex w-full rounded-xl transition-all duration-200 outline-none',
-                'focus-visible:ring-1 focus-visible:ring-accent/50',
-                'text-muted hover:text-foreground hover:bg-surface-secondary',
-                collapsed ? 'flex-col items-center justify-center gap-0.5 py-2' : 'items-center justify-between gap-2 px-2.5 py-[8px]',
-              )}
+              aria-label={collapsed ? "Settings" : undefined}
+              className={disclosureTriggerClass}
             >
               <span
                 className={cn(
                   'flex items-center min-w-0',
-                  collapsed ? 'flex-col gap-0.5' : 'gap-2.5 flex-1',
+                  collapsed ? 'justify-center' : 'gap-2.5 flex-1',
                 )}
               >
-                <ShieldCheck style={{ width: 16, height: 16 }} className="shrink-0 text-muted" />
+                <Settings style={{ width: 16, height: 16 }} className="shrink-0" />
                 {!collapsed && (
-                  <span className="text-[11px] font-semibold uppercase tracking-widest text-muted select-none truncate">
-                    Admin
+                  <span
+                    className="text-[13px] font-medium truncate leading-none"
+                    style={{ letterSpacing: '-0.005em' }}
+                  >
+                    Settings
                   </span>
                 )}
               </span>
-              <ChevronDown
-                className={cn(
-                  'shrink-0 text-muted transition-transform duration-200',
-                  collapsed ? 'size-3' : 'size-4',
-                  adminOpen && 'rotate-180',
-                )}
-              />
+              {!collapsed && (
+                <ChevronDown
+                  className={cn(
+                    'size-4 shrink-0 text-muted transition-transform duration-200',
+                    settingsOpen && 'rotate-180',
+                  )}
+                />
+              )}
             </Disclosure.Trigger>
           </Disclosure.Heading>
-          <Disclosure.Content>
-            <Disclosure.Body className="pt-0.5 pb-0 px-0">
+          <Disclosure.Content className="p-0 m-0">
+            <Disclosure.Body className="p-0 m-0">
               <ul className="space-y-0.5">
-                {adminSubItems.map(({ label, icon, href, end }) => (
+                {settingsSubItems.map(({ label, icon, href, end }) => (
                   <NavItem
                     key={href}
                     label={label}
@@ -171,21 +266,7 @@ export default function SidebarContent({ collapsed, onNavigate }: SidebarContent
             </Disclosure.Body>
           </Disclosure.Content>
         </Disclosure>
-      )}
-
-      <ul className="space-y-0.5">
-        {navItems.map(({ label, icon, href, end }) => (
-          <NavItem
-            key={href}
-            label={label}
-            icon={icon}
-            href={href}
-            end={end}
-            collapsed={collapsed}
-            onNavigate={onNavigate}
-          />
-        ))}
-      </ul>
-    </div>
+      </li>
+    </ul>
   );
 }

@@ -6,6 +6,7 @@ import { AiIntegrationModule } from '@/integrations/ai/ai.module';
 import { ApifyModule } from '@/integrations/apify/apify.module';
 import { GemiModule } from '@/integrations/gemi/gemi.module';
 import { EnrichmentModule } from '@/modules/enrichment/enrichment.module';
+import { AiUsageModule } from '@/modules/ai-usage/ai-usage.module';
 import { LeadsController } from './leads.controller';
 import { LeadsService } from './leads.service';
 import { LeadAiService } from './utils/lead-ai.service';
@@ -21,6 +22,7 @@ import { LeadEnrichmentBatchService } from './services/lead-enrichment-batch.ser
         GemiModule,
         forwardRef(() => EnrichmentModule),
         BullModule.registerQueue({ name: AI_PROCESS_QUEUE }),
+        AiUsageModule,
     ],
     controllers: [LeadsController],
     providers: [

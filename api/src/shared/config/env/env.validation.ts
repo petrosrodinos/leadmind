@@ -26,7 +26,6 @@ const EnvSchema = z.object({
     STRIPE_PUBLISHABLE_KEY: z.string().optional(),
     STRIPE_SECRET_KEY: z.string().optional(),
     STRIPE_WEBHOOK_SECRET: z.string().optional(),
-    OPENAI_API_KEY: z.string().optional(),
     PERPLEXITY_API_KEY: z.string().optional(),
     ANTHROPIC_API_KEY: z.string().optional(),
     BULL_BOARD_USER: z.string().optional(),

@@ -183,6 +183,7 @@ export class ContactAudienceAnalysisService {
 
         try {
             const { response, usage } = await this.aiService.generateObjectWithSchema({
+                user_uuid: input.user_uuid,
                 provider: AiProviders.openai,
                 model: AiModels.openai.gpt4oMini,
                 system: AUDIENCE_ANALYSIS_SYSTEM_PROMPT,
@@ -194,6 +195,10 @@ export class ContactAudienceAnalysisService {
                 ),
                 schema: CONTACT_AUDIENCE_ANALYSIS_SCHEMA,
                 temperature: 0.4,
+                usage: {
+                    operation: 'AUDIENCE_ANALYSIS',
+                    reference_uuid: row.uuid,
+                },
             });
 
             const updated = await this.prisma.contactAudienceAnalysis.update({

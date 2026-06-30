@@ -6,6 +6,7 @@ import { ApifyModule } from '@/integrations/apify/apify.module';
 import { AI_PROCESS_QUEUE } from '@/core/queues/queues.constants';
 import { OutreachModule } from '@/modules/outreach/outreach.module';
 import { EnrichmentModule } from '@/modules/enrichment/enrichment.module';
+import { AiUsageModule } from '@/modules/ai-usage/ai-usage.module';
 import { ContactsController } from './contacts.controller';
 import { ContactsService } from './contacts.service';
 import { ContactAiService } from './services/contact-ai.service';
@@ -18,6 +19,7 @@ import { ContactAiService } from './services/contact-ai.service';
         OutreachModule,
         EnrichmentModule,
         BullModule.registerQueue({ name: AI_PROCESS_QUEUE }),
+        AiUsageModule,
     ],
     controllers: [ContactsController],
     providers: [ContactsService, ContactAiService],

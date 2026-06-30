@@ -1,6 +1,7 @@
 import { Global, Logger, Module, Provider } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Client, ClientOptions } from '@elastic/elasticsearch';
+import { PrismaModule } from '@/core/databases/prisma/prisma.module';
 import { AiIntegrationModule } from '@/integrations/ai/ai.module';
 import { ELASTICSEARCH_CLIENT } from './elasticsearch.constants';
 import { ElasticsearchService } from './elasticsearch.service';
@@ -37,7 +38,7 @@ const elasticsearchClientProvider: Provider = {
 
 @Global()
 @Module({
-    imports: [ConfigModule, AiIntegrationModule],
+    imports: [ConfigModule, PrismaModule, AiIntegrationModule],
     providers: [elasticsearchClientProvider, ElasticsearchService],
     exports: [ELASTICSEARCH_CLIENT, ElasticsearchService],
 })

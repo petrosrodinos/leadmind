@@ -38,6 +38,7 @@ model User {
   form_completions          FormCompletion[]          @relation("CompletedByUser")
   contact_lists             ContactList[]
   contact_audience_analyses ContactAudienceAnalysis[]
+  ai_usage_logs             AiUsageLog[]
 
   @@index([email])
   @@index([phone])
@@ -889,4 +890,59 @@ model ContactAudienceAnalysis {
   @@index([contact_list_uuid])
   @@index([scope])
   @@map("contact_audience_analyses")
+}
+
+enum AiUsageOperation {
+  LEAD_ENRICH
+  CONTACT_SCORE
+  CONTACT_DRAFT
+  CAMPAIGN_DRAFT
+  ENRICHMENT_SUMMARY
+  AUDIENCE_ANALYSIS
+  EMBEDDING
+  ADMIN_GENERATE
+  BATCH_JOB
+  OTHER
+}
+
+enum AiUsageRequestMode {
+  SYNC
+  BATCH
+  STREAM
+}
+
+enum AiUsageStatus {
+  SUCCESS
+  ERROR
+}
+
+model AiUsageLog {
+  uuid            String             @id @default(uuid())
+  user_uuid       String
+  provider        String
+  model           String
+  operation       AiUsageOperation
+  request_mode    AiUsageRequestMode @default(SYNC)
+  status          AiUsageStatus
+  input_tokens    Int?
+  output_tokens   Int?
+  total_tokens    Int?
+  input_cost_usd  Decimal?           @db.Decimal(12, 8)
+  output_cost_usd Decimal?           @db.Decimal(12, 8)
+  total_cost_usd  Decimal?           @db.Decimal(12, 8)
+  duration_ms     Int?
+  reference_type  String?
+  reference_uuid  String?
+  batch_id        String?
+  custom_id       String?
+  error_message   String?            @db.Text
+  metadata        Json?
+  created_at      DateTime           @default(now())
+
+  user User @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
+
+  @@index([user_uuid, created_at])
+  @@index([user_uuid, provider])
+  @@index([batch_id])
+  @@map("ai_usage_logs")
 }

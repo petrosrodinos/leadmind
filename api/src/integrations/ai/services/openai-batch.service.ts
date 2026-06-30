@@ -1,21 +1,22 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 import { Readable } from 'stream';
 import { OpenAiBatchCreateResult, OpenAiBatchRequest, OpenAiBatchResult } from '../interfaces/openai-batch.interface';
+import { AiCredentialsService } from './ai-credentials.service';
 
 @Injectable()
 export class OpenAiBatchService {
     private readonly logger = new Logger(OpenAiBatchService.name);
-    private readonly client: OpenAI;
 
-    constructor(private readonly configService: ConfigService) {
-        this.client = new OpenAI({
-            apiKey: this.configService.get<string>('OPENAI_API_KEY'),
-        });
+    constructor(private readonly aiCredentials: AiCredentialsService) {}
+
+    private async getClient(user_uuid: string): Promise<OpenAI> {
+        const apiKey = await this.aiCredentials.getOpenAiApiKey(user_uuid);
+        return new OpenAI({ apiKey });
     }
 
-    async createBatch(requests: OpenAiBatchRequest[]): Promise<OpenAiBatchCreateResult> {
+    async createBatch(user_uuid: string, requests: OpenAiBatchRequest[]): Promise<OpenAiBatchCreateResult> {
+        const client = await this.getClient(user_uuid);
         const jsonl = requests
             .map((req) =>
                 JSON.stringify({
@@ -35,14 +36,14 @@ export class OpenAiBatchService {
         const stream = Readable.from(buffer);
         (stream as any).name = 'batch.jsonl';
 
-        const uploadedFile = await this.client.files.create({
+        const uploadedFile = await client.files.create({
             file: stream as any,
             purpose: 'batch',
         });
 
         this.logger.log(`Batch file uploaded: ${uploadedFile.id} (${requests.length} requests)`);
 
-        const batch = await this.client.batches.create({
+        const batch = await client.batches.create({
             input_file_id: uploadedFile.id,
             endpoint: '/v1/chat/completions',
             completion_window: '24h',
@@ -57,7 +58,7 @@ export class OpenAiBatchService {
         };
     }
 
-    async getBatchStatus(batchId: string): Promise<{
+    async getBatchStatus(user_uuid: string, batchId: string): Promise<{
         status: string;
         output_file_id: string | null;
         error_file_id: string | null;
@@ -65,7 +66,8 @@ export class OpenAiBatchService {
         failed_requests: number;
         total_requests: number;
     }> {
-        const batch = await this.client.batches.retrieve(batchId);
+        const client = await this.getClient(user_uuid);
+        const batch = await client.batches.retrieve(batchId);
         return {
             status: batch.status,
             output_file_id: batch.output_file_id ?? null,
@@ -77,6 +79,7 @@ export class OpenAiBatchService {
     }
 
     async waitForBatchReady(
+        user_uuid: string,
         batchId: string,
         maxAttempts = 8,
         delayMs = 1500,
@@ -88,7 +91,7 @@ export class OpenAiBatchService {
         failed_requests: number;
         total_requests: number;
     }> {
-        let last = await this.getBatchStatus(batchId);
+        let last = await this.getBatchStatus(user_uuid, batchId);
         for (let attempt = 1; attempt < maxAttempts; attempt += 1) {
             if (last.output_file_id) {
                 return last;
@@ -100,13 +103,14 @@ export class OpenAiBatchService {
                 return last;
             }
             await new Promise((resolve) => setTimeout(resolve, delayMs));
-            last = await this.getBatchStatus(batchId);
+            last = await this.getBatchStatus(user_uuid, batchId);
         }
         return last;
     }
 
-    async getBatchResults(outputFileId: string): Promise<OpenAiBatchResult[]> {
-        const fileResponse = await this.client.files.content(outputFileId);
+    async getBatchResults(user_uuid: string, outputFileId: string): Promise<OpenAiBatchResult[]> {
+        const client = await this.getClient(user_uuid);
+        const fileResponse = await client.files.content(outputFileId);
         const text = await fileResponse.text();
 
         const results: OpenAiBatchResult[] = [];
@@ -131,7 +135,11 @@ export class OpenAiBatchService {
                     }
                 }
 
-                const bodyObj = body as { choices?: Array<{ message?: { content?: string | null } }> } | null;
+                const bodyObj = body as {
+                    choices?: Array<{ message?: { content?: string | null } }>;
+                    usage?: { prompt_tokens?: number; completion_tokens?: number; total_tokens?: number };
+                    model?: string;
+                } | null;
                 const choice = bodyObj?.choices?.[0];
                 const content =
                     typeof choice?.message?.content === 'string' ? choice.message.content : null;
@@ -148,6 +156,10 @@ export class OpenAiBatchService {
                     status_code: statusCode ?? 0,
                     content,
                     error,
+                    model: bodyObj?.model ?? null,
+                    input_tokens: bodyObj?.usage?.prompt_tokens ?? null,
+                    output_tokens: bodyObj?.usage?.completion_tokens ?? null,
+                    total_tokens: bodyObj?.usage?.total_tokens ?? null,
                 });
             } catch (err) {
                 const message = err instanceof Error ? err.message : 'parse error';
@@ -158,8 +170,12 @@ export class OpenAiBatchService {
         return results;
     }
 
-    async verifyWebhookEvent(rawBody: string, headers: Record<string, string>): Promise<unknown> {
-        const secret = this.configService.get<string>('OPENAI_WEBHOOK_SECRET');
-        return this.client.webhooks.unwrap(rawBody, headers, secret);
+    async verifyWebhookEvent(
+        rawBody: string,
+        headers: Record<string, string>,
+        webhookSecret: string,
+    ): Promise<unknown> {
+        const client = new OpenAI({ apiKey: 'unused-for-webhook-verify' });
+        return client.webhooks.unwrap(rawBody, headers, webhookSecret);
     }
 }

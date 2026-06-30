@@ -23,6 +23,7 @@ export const Routes = {
         map: "/dashboard/map",
         analytics: "/dashboard/analytics",
         settings: "/dashboard/settings",
+        settings_usage: "/dashboard/settings/usage",
         sender_profiles: "/dashboard/sender-profiles",
         integrations: "/dashboard/integrations",
         campaigns: "/dashboard/campaigns",

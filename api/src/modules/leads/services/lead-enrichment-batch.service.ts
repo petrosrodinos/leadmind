@@ -1,5 +1,7 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import {
+    AiUsageOperation,
+    AiUsageStatus,
     EnrichmentSource,
     Lead,
     OpenAiBatchJobType,
@@ -10,7 +12,7 @@ import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { OpenAiBatchService } from '@/integrations/ai/services/openai-batch.service';
 import { OpenAiBatchRequest, OpenAiBatchResult } from '@/integrations/ai/interfaces/openai-batch.interface';
 import { AiModels, AiProviders } from '@/integrations/ai/interfaces/ai.interface';
-import { LEAD_ENRICHMENT_AI_MODEL } from '@/integrations/ai/constants/lead-enrichment-ai.constants';
+import { LEAD_ENRICHMENT_AI_MODEL, LEAD_ENRICHMENT_SUMMARY_MODEL } from '@/integrations/ai/constants/lead-enrichment-ai.constants';
 import {
     buildGoogleDeterministicSummary,
     buildLinkedInDeterministicSummary,
@@ -37,6 +39,8 @@ import type {
     LeadEnrichmentBatchPhase,
 } from '../interfaces/lead-enrichment-batch.interface';
 import { AiConfig } from '@/integrations/ai/utils/ai.config';
+import { AiUsageService } from '@/modules/ai-usage/ai-usage.service';
+import { calculateAiCost } from '@/integrations/ai/utils/ai-cost';
 
 @Injectable()
 export class LeadEnrichmentBatchService {
@@ -48,6 +52,7 @@ export class LeadEnrichmentBatchService {
         private readonly openAiBatchService: OpenAiBatchService,
         private readonly summaryService: LeadEnrichmentSummaryService,
         private readonly aiConfig: AiConfig,
+        private readonly aiUsageService: AiUsageService,
     ) {}
 
     async findBatchJob(batchId: string) {
@@ -100,7 +105,7 @@ export class LeadEnrichmentBatchService {
             );
         }
 
-        const result = await this.openAiBatchService.createBatch(requests);
+        const result = await this.openAiBatchService.createBatch(user_uuid, requests);
 
         const context: LeadEnrichmentBatchContext = {
             phase: 'source_summaries',
@@ -150,13 +155,13 @@ export class LeadEnrichmentBatchService {
             return;
         }
 
-        const batchStatus = prefetchedStatus ?? (await this.openAiBatchService.waitForBatchReady(batchId));
+        const batchStatus = prefetchedStatus ?? (await this.openAiBatchService.waitForBatchReady(job.user_uuid, batchId));
         if (!batchStatus.output_file_id) {
             this.logger.warn(`Batch ${batchId} has no output file yet (status may still be finalizing)`);
             return;
         }
 
-        const results = await this.openAiBatchService.getBatchResults(batchStatus.output_file_id);
+        const results = await this.openAiBatchService.getBatchResults(job.user_uuid, batchStatus.output_file_id);
         const storedContext = job.context as unknown as LeadEnrichmentBatchContext | null;
         const phase = storedContext?.phase ?? this.inferBatchPhase(results);
 
@@ -178,6 +183,13 @@ export class LeadEnrichmentBatchService {
         for (const result of results) {
             if (!result.content || result.error) {
                 this.logger.warn(`Batch result ${result.custom_id} failed: ${result.error}`);
+                this.logLeadBatchUsage(
+                    job.user_uuid,
+                    batchId,
+                    result,
+                    AiUsageStatus.ERROR,
+                    result.error,
+                );
                 continue;
             }
 
@@ -198,6 +210,15 @@ export class LeadEnrichmentBatchService {
                 if (persisted) {
                     leadsForCombined.add(lead_uuid);
                 }
+                this.logLeadBatchUsage(
+                    job.user_uuid,
+                    batchId,
+                    result,
+                    AiUsageStatus.SUCCESS,
+                    undefined,
+                    'lead',
+                    lead_uuid,
+                );
             } catch (err) {
                 const message = err instanceof Error ? err.message : 'Unknown error';
                 this.logger.warn(`Failed to persist batch result ${result.custom_id}: ${message}`);
@@ -249,7 +270,7 @@ export class LeadEnrichmentBatchService {
         parentContext: LeadEnrichmentBatchContext,
         parentBatchId: string,
     ): Promise<void> {
-        if (!this.aiConfig.isOpenAiConfigured()) {
+        if (!(await this.aiConfig.isOpenAiConfigured(user_uuid))) {
             for (const leadUuid of leadUuids) {
                 await this.summaryService.regenerate(leadUuid);
             }
@@ -286,7 +307,7 @@ export class LeadEnrichmentBatchService {
             return;
         }
 
-        const result = await this.openAiBatchService.createBatch(requests);
+        const result = await this.openAiBatchService.createBatch(user_uuid, requests);
         const context: LeadEnrichmentBatchContext = {
             phase: 'combined_summaries',
             user_uuid,
@@ -329,10 +350,19 @@ export class LeadEnrichmentBatchService {
     ): Promise<void> {
         const results =
             prefetchedResults ??
-            (await this.openAiBatchService.getBatchResults(batchStatus.output_file_id!));
+            (await this.openAiBatchService.getBatchResults(user_uuid, batchStatus.output_file_id!));
 
         for (const result of results) {
-            if (!result.content || result.error) continue;
+            if (!result.content || result.error) {
+                this.logLeadBatchUsage(
+                    user_uuid,
+                    batchId,
+                    result,
+                    AiUsageStatus.ERROR,
+                    result.error,
+                );
+                continue;
+            }
 
             const parts = result.custom_id.split('|');
             if (parts.length !== 3 || parts[0] !== 'lead_enrich' || parts[1] !== 'combined') {
@@ -366,6 +396,16 @@ export class LeadEnrichmentBatchService {
                     data: { enrichment_summary: fallback, enrichment_metadata: null },
                 });
             }
+
+            this.logLeadBatchUsage(
+                user_uuid,
+                batchId,
+                result,
+                AiUsageStatus.SUCCESS,
+                undefined,
+                'lead',
+                lead_uuid,
+            );
         }
 
         await this.prisma.openAiBatchJob.update({
@@ -623,5 +663,42 @@ export class LeadEnrichmentBatchService {
             }
         }
         return data;
+    }
+
+    private logLeadBatchUsage(
+        user_uuid: string,
+        batchId: string,
+        result: OpenAiBatchResult,
+        status: AiUsageStatus,
+        error_message?: string | null,
+        reference_type?: string,
+        reference_uuid?: string,
+    ): void {
+        const model = result.model ?? LEAD_ENRICHMENT_SUMMARY_MODEL;
+        const cost =
+            result.input_tokens != null && result.output_tokens != null
+                ? calculateAiCost({
+                      provider: AiProviders.openai,
+                      model,
+                      inputTokens: result.input_tokens,
+                      outputTokens: result.output_tokens,
+                  })
+                : null;
+
+        this.aiUsageService.logBatchResult({
+            user_uuid,
+            model,
+            operation: AiUsageOperation.LEAD_ENRICH,
+            input_tokens: result.input_tokens,
+            output_tokens: result.output_tokens,
+            total_tokens: result.total_tokens,
+            total_cost_usd: cost?.totalCost ?? null,
+            batch_id: batchId,
+            custom_id: result.custom_id,
+            status,
+            reference_type: reference_type ?? null,
+            reference_uuid: reference_uuid ?? null,
+            error_message: error_message ?? undefined,
+        });
     }
 }

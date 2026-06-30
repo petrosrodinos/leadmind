@@ -158,6 +158,11 @@ export type FormCompletionValue = $Result.DefaultSelection<Prisma.$FormCompletio
  * 
  */
 export type ContactAudienceAnalysis = $Result.DefaultSelection<Prisma.$ContactAudienceAnalysisPayload>
+/**
+ * Model AiUsageLog
+ * 
+ */
+export type AiUsageLog = $Result.DefaultSelection<Prisma.$AiUsageLogPayload>
 
 /**
  * Enums
@@ -412,6 +417,39 @@ export const ContactAudienceAnalysisStatus: {
 
 export type ContactAudienceAnalysisStatus = (typeof ContactAudienceAnalysisStatus)[keyof typeof ContactAudienceAnalysisStatus]
 
+
+export const AiUsageOperation: {
+  LEAD_ENRICH: 'LEAD_ENRICH',
+  CONTACT_SCORE: 'CONTACT_SCORE',
+  CONTACT_DRAFT: 'CONTACT_DRAFT',
+  CAMPAIGN_DRAFT: 'CAMPAIGN_DRAFT',
+  ENRICHMENT_SUMMARY: 'ENRICHMENT_SUMMARY',
+  AUDIENCE_ANALYSIS: 'AUDIENCE_ANALYSIS',
+  EMBEDDING: 'EMBEDDING',
+  ADMIN_GENERATE: 'ADMIN_GENERATE',
+  BATCH_JOB: 'BATCH_JOB',
+  OTHER: 'OTHER'
+};
+
+export type AiUsageOperation = (typeof AiUsageOperation)[keyof typeof AiUsageOperation]
+
+
+export const AiUsageRequestMode: {
+  SYNC: 'SYNC',
+  BATCH: 'BATCH',
+  STREAM: 'STREAM'
+};
+
+export type AiUsageRequestMode = (typeof AiUsageRequestMode)[keyof typeof AiUsageRequestMode]
+
+
+export const AiUsageStatus: {
+  SUCCESS: 'SUCCESS',
+  ERROR: 'ERROR'
+};
+
+export type AiUsageStatus = (typeof AiUsageStatus)[keyof typeof AiUsageStatus]
+
 }
 
 export type AuthRole = $Enums.AuthRole
@@ -497,6 +535,18 @@ export const ContactAudienceAnalysisScope: typeof $Enums.ContactAudienceAnalysis
 export type ContactAudienceAnalysisStatus = $Enums.ContactAudienceAnalysisStatus
 
 export const ContactAudienceAnalysisStatus: typeof $Enums.ContactAudienceAnalysisStatus
+
+export type AiUsageOperation = $Enums.AiUsageOperation
+
+export const AiUsageOperation: typeof $Enums.AiUsageOperation
+
+export type AiUsageRequestMode = $Enums.AiUsageRequestMode
+
+export const AiUsageRequestMode: typeof $Enums.AiUsageRequestMode
+
+export type AiUsageStatus = $Enums.AiUsageStatus
+
+export const AiUsageStatus: typeof $Enums.AiUsageStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -904,6 +954,16 @@ export class PrismaClient<
     * ```
     */
   get contactAudienceAnalysis(): Prisma.ContactAudienceAnalysisDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.aiUsageLog`: Exposes CRUD operations for the **AiUsageLog** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more AiUsageLogs
+    * const aiUsageLogs = await prisma.aiUsageLog.findMany()
+    * ```
+    */
+  get aiUsageLog(): Prisma.AiUsageLogDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1366,7 +1426,8 @@ export namespace Prisma {
     FormField: 'FormField',
     FormCompletion: 'FormCompletion',
     FormCompletionValue: 'FormCompletionValue',
-    ContactAudienceAnalysis: 'ContactAudienceAnalysis'
+    ContactAudienceAnalysis: 'ContactAudienceAnalysis',
+    AiUsageLog: 'AiUsageLog'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1382,7 +1443,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "filter" | "scoringInstruction" | "filterScoringInstruction" | "rawLead" | "lead" | "leadEnrichment" | "contact" | "contactEnrichment" | "contactScore" | "contactList" | "contactListMember" | "contactTag" | "interaction" | "outreachMessage" | "outreachSequence" | "filterJob" | "senderProfile" | "marketingCampaign" | "marketingCampaignContact" | "openAiBatchJob" | "integration" | "integrationKey" | "reminder" | "form" | "formField" | "formCompletion" | "formCompletionValue" | "contactAudienceAnalysis"
+      modelProps: "user" | "filter" | "scoringInstruction" | "filterScoringInstruction" | "rawLead" | "lead" | "leadEnrichment" | "contact" | "contactEnrichment" | "contactScore" | "contactList" | "contactListMember" | "contactTag" | "interaction" | "outreachMessage" | "outreachSequence" | "filterJob" | "senderProfile" | "marketingCampaign" | "marketingCampaignContact" | "openAiBatchJob" | "integration" | "integrationKey" | "reminder" | "form" | "formField" | "formCompletion" | "formCompletionValue" | "contactAudienceAnalysis" | "aiUsageLog"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3532,6 +3593,80 @@ export namespace Prisma {
           }
         }
       }
+      AiUsageLog: {
+        payload: Prisma.$AiUsageLogPayload<ExtArgs>
+        fields: Prisma.AiUsageLogFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.AiUsageLogFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AiUsageLogPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AiUsageLogFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AiUsageLogPayload>
+          }
+          findFirst: {
+            args: Prisma.AiUsageLogFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AiUsageLogPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.AiUsageLogFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AiUsageLogPayload>
+          }
+          findMany: {
+            args: Prisma.AiUsageLogFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AiUsageLogPayload>[]
+          }
+          create: {
+            args: Prisma.AiUsageLogCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AiUsageLogPayload>
+          }
+          createMany: {
+            args: Prisma.AiUsageLogCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.AiUsageLogCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AiUsageLogPayload>[]
+          }
+          delete: {
+            args: Prisma.AiUsageLogDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AiUsageLogPayload>
+          }
+          update: {
+            args: Prisma.AiUsageLogUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AiUsageLogPayload>
+          }
+          deleteMany: {
+            args: Prisma.AiUsageLogDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.AiUsageLogUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.AiUsageLogUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AiUsageLogPayload>[]
+          }
+          upsert: {
+            args: Prisma.AiUsageLogUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AiUsageLogPayload>
+          }
+          aggregate: {
+            args: Prisma.AiUsageLogAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAiUsageLog>
+          }
+          groupBy: {
+            args: Prisma.AiUsageLogGroupByArgs<ExtArgs>
+            result: $Utils.Optional<AiUsageLogGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.AiUsageLogCountArgs<ExtArgs>
+            result: $Utils.Optional<AiUsageLogCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -3669,6 +3804,7 @@ export namespace Prisma {
     formCompletion?: FormCompletionOmit
     formCompletionValue?: FormCompletionValueOmit
     contactAudienceAnalysis?: ContactAudienceAnalysisOmit
+    aiUsageLog?: AiUsageLogOmit
   }
 
   /* Types for Logging */
@@ -3764,6 +3900,7 @@ export namespace Prisma {
     form_completions: number
     contact_lists: number
     contact_audience_analyses: number
+    ai_usage_logs: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3782,6 +3919,7 @@ export namespace Prisma {
     form_completions?: boolean | UserCountOutputTypeCountForm_completionsArgs
     contact_lists?: boolean | UserCountOutputTypeCountContact_listsArgs
     contact_audience_analyses?: boolean | UserCountOutputTypeCountContact_audience_analysesArgs
+    ai_usage_logs?: boolean | UserCountOutputTypeCountAi_usage_logsArgs
   }
 
   // Custom InputTypes
@@ -3898,6 +4036,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountContact_audience_analysesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ContactAudienceAnalysisWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountAi_usage_logsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AiUsageLogWhereInput
   }
 
 
@@ -4645,6 +4790,7 @@ export namespace Prisma {
     form_completions?: boolean | User$form_completionsArgs<ExtArgs>
     contact_lists?: boolean | User$contact_listsArgs<ExtArgs>
     contact_audience_analyses?: boolean | User$contact_audience_analysesArgs<ExtArgs>
+    ai_usage_logs?: boolean | User$ai_usage_logsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -4698,6 +4844,7 @@ export namespace Prisma {
     form_completions?: boolean | User$form_completionsArgs<ExtArgs>
     contact_lists?: boolean | User$contact_listsArgs<ExtArgs>
     contact_audience_analyses?: boolean | User$contact_audience_analysesArgs<ExtArgs>
+    ai_usage_logs?: boolean | User$ai_usage_logsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -4721,6 +4868,7 @@ export namespace Prisma {
       form_completions: Prisma.$FormCompletionPayload<ExtArgs>[]
       contact_lists: Prisma.$ContactListPayload<ExtArgs>[]
       contact_audience_analyses: Prisma.$ContactAudienceAnalysisPayload<ExtArgs>[]
+      ai_usage_logs: Prisma.$AiUsageLogPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -5140,6 +5288,7 @@ export namespace Prisma {
     form_completions<T extends User$form_completionsArgs<ExtArgs> = {}>(args?: Subset<T, User$form_completionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FormCompletionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     contact_lists<T extends User$contact_listsArgs<ExtArgs> = {}>(args?: Subset<T, User$contact_listsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactListPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     contact_audience_analyses<T extends User$contact_audience_analysesArgs<ExtArgs> = {}>(args?: Subset<T, User$contact_audience_analysesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactAudienceAnalysisPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    ai_usage_logs<T extends User$ai_usage_logsArgs<ExtArgs> = {}>(args?: Subset<T, User$ai_usage_logsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AiUsageLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5922,6 +6071,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ContactAudienceAnalysisScalarFieldEnum | ContactAudienceAnalysisScalarFieldEnum[]
+  }
+
+  /**
+   * User.ai_usage_logs
+   */
+  export type User$ai_usage_logsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiUsageLog
+     */
+    select?: AiUsageLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AiUsageLog
+     */
+    omit?: AiUsageLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AiUsageLogInclude<ExtArgs> | null
+    where?: AiUsageLogWhereInput
+    orderBy?: AiUsageLogOrderByWithRelationInput | AiUsageLogOrderByWithRelationInput[]
+    cursor?: AiUsageLogWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AiUsageLogScalarFieldEnum | AiUsageLogScalarFieldEnum[]
   }
 
   /**
@@ -40299,6 +40472,1326 @@ export namespace Prisma {
 
 
   /**
+   * Model AiUsageLog
+   */
+
+  export type AggregateAiUsageLog = {
+    _count: AiUsageLogCountAggregateOutputType | null
+    _avg: AiUsageLogAvgAggregateOutputType | null
+    _sum: AiUsageLogSumAggregateOutputType | null
+    _min: AiUsageLogMinAggregateOutputType | null
+    _max: AiUsageLogMaxAggregateOutputType | null
+  }
+
+  export type AiUsageLogAvgAggregateOutputType = {
+    input_tokens: number | null
+    output_tokens: number | null
+    total_tokens: number | null
+    input_cost_usd: Decimal | null
+    output_cost_usd: Decimal | null
+    total_cost_usd: Decimal | null
+    duration_ms: number | null
+  }
+
+  export type AiUsageLogSumAggregateOutputType = {
+    input_tokens: number | null
+    output_tokens: number | null
+    total_tokens: number | null
+    input_cost_usd: Decimal | null
+    output_cost_usd: Decimal | null
+    total_cost_usd: Decimal | null
+    duration_ms: number | null
+  }
+
+  export type AiUsageLogMinAggregateOutputType = {
+    uuid: string | null
+    user_uuid: string | null
+    provider: string | null
+    model: string | null
+    operation: $Enums.AiUsageOperation | null
+    request_mode: $Enums.AiUsageRequestMode | null
+    status: $Enums.AiUsageStatus | null
+    input_tokens: number | null
+    output_tokens: number | null
+    total_tokens: number | null
+    input_cost_usd: Decimal | null
+    output_cost_usd: Decimal | null
+    total_cost_usd: Decimal | null
+    duration_ms: number | null
+    reference_type: string | null
+    reference_uuid: string | null
+    batch_id: string | null
+    custom_id: string | null
+    error_message: string | null
+    created_at: Date | null
+  }
+
+  export type AiUsageLogMaxAggregateOutputType = {
+    uuid: string | null
+    user_uuid: string | null
+    provider: string | null
+    model: string | null
+    operation: $Enums.AiUsageOperation | null
+    request_mode: $Enums.AiUsageRequestMode | null
+    status: $Enums.AiUsageStatus | null
+    input_tokens: number | null
+    output_tokens: number | null
+    total_tokens: number | null
+    input_cost_usd: Decimal | null
+    output_cost_usd: Decimal | null
+    total_cost_usd: Decimal | null
+    duration_ms: number | null
+    reference_type: string | null
+    reference_uuid: string | null
+    batch_id: string | null
+    custom_id: string | null
+    error_message: string | null
+    created_at: Date | null
+  }
+
+  export type AiUsageLogCountAggregateOutputType = {
+    uuid: number
+    user_uuid: number
+    provider: number
+    model: number
+    operation: number
+    request_mode: number
+    status: number
+    input_tokens: number
+    output_tokens: number
+    total_tokens: number
+    input_cost_usd: number
+    output_cost_usd: number
+    total_cost_usd: number
+    duration_ms: number
+    reference_type: number
+    reference_uuid: number
+    batch_id: number
+    custom_id: number
+    error_message: number
+    metadata: number
+    created_at: number
+    _all: number
+  }
+
+
+  export type AiUsageLogAvgAggregateInputType = {
+    input_tokens?: true
+    output_tokens?: true
+    total_tokens?: true
+    input_cost_usd?: true
+    output_cost_usd?: true
+    total_cost_usd?: true
+    duration_ms?: true
+  }
+
+  export type AiUsageLogSumAggregateInputType = {
+    input_tokens?: true
+    output_tokens?: true
+    total_tokens?: true
+    input_cost_usd?: true
+    output_cost_usd?: true
+    total_cost_usd?: true
+    duration_ms?: true
+  }
+
+  export type AiUsageLogMinAggregateInputType = {
+    uuid?: true
+    user_uuid?: true
+    provider?: true
+    model?: true
+    operation?: true
+    request_mode?: true
+    status?: true
+    input_tokens?: true
+    output_tokens?: true
+    total_tokens?: true
+    input_cost_usd?: true
+    output_cost_usd?: true
+    total_cost_usd?: true
+    duration_ms?: true
+    reference_type?: true
+    reference_uuid?: true
+    batch_id?: true
+    custom_id?: true
+    error_message?: true
+    created_at?: true
+  }
+
+  export type AiUsageLogMaxAggregateInputType = {
+    uuid?: true
+    user_uuid?: true
+    provider?: true
+    model?: true
+    operation?: true
+    request_mode?: true
+    status?: true
+    input_tokens?: true
+    output_tokens?: true
+    total_tokens?: true
+    input_cost_usd?: true
+    output_cost_usd?: true
+    total_cost_usd?: true
+    duration_ms?: true
+    reference_type?: true
+    reference_uuid?: true
+    batch_id?: true
+    custom_id?: true
+    error_message?: true
+    created_at?: true
+  }
+
+  export type AiUsageLogCountAggregateInputType = {
+    uuid?: true
+    user_uuid?: true
+    provider?: true
+    model?: true
+    operation?: true
+    request_mode?: true
+    status?: true
+    input_tokens?: true
+    output_tokens?: true
+    total_tokens?: true
+    input_cost_usd?: true
+    output_cost_usd?: true
+    total_cost_usd?: true
+    duration_ms?: true
+    reference_type?: true
+    reference_uuid?: true
+    batch_id?: true
+    custom_id?: true
+    error_message?: true
+    metadata?: true
+    created_at?: true
+    _all?: true
+  }
+
+  export type AiUsageLogAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AiUsageLog to aggregate.
+     */
+    where?: AiUsageLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AiUsageLogs to fetch.
+     */
+    orderBy?: AiUsageLogOrderByWithRelationInput | AiUsageLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AiUsageLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AiUsageLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AiUsageLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned AiUsageLogs
+    **/
+    _count?: true | AiUsageLogCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: AiUsageLogAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: AiUsageLogSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AiUsageLogMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AiUsageLogMaxAggregateInputType
+  }
+
+  export type GetAiUsageLogAggregateType<T extends AiUsageLogAggregateArgs> = {
+        [P in keyof T & keyof AggregateAiUsageLog]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAiUsageLog[P]>
+      : GetScalarType<T[P], AggregateAiUsageLog[P]>
+  }
+
+
+
+
+  export type AiUsageLogGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AiUsageLogWhereInput
+    orderBy?: AiUsageLogOrderByWithAggregationInput | AiUsageLogOrderByWithAggregationInput[]
+    by: AiUsageLogScalarFieldEnum[] | AiUsageLogScalarFieldEnum
+    having?: AiUsageLogScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AiUsageLogCountAggregateInputType | true
+    _avg?: AiUsageLogAvgAggregateInputType
+    _sum?: AiUsageLogSumAggregateInputType
+    _min?: AiUsageLogMinAggregateInputType
+    _max?: AiUsageLogMaxAggregateInputType
+  }
+
+  export type AiUsageLogGroupByOutputType = {
+    uuid: string
+    user_uuid: string
+    provider: string
+    model: string
+    operation: $Enums.AiUsageOperation
+    request_mode: $Enums.AiUsageRequestMode
+    status: $Enums.AiUsageStatus
+    input_tokens: number | null
+    output_tokens: number | null
+    total_tokens: number | null
+    input_cost_usd: Decimal | null
+    output_cost_usd: Decimal | null
+    total_cost_usd: Decimal | null
+    duration_ms: number | null
+    reference_type: string | null
+    reference_uuid: string | null
+    batch_id: string | null
+    custom_id: string | null
+    error_message: string | null
+    metadata: JsonValue | null
+    created_at: Date
+    _count: AiUsageLogCountAggregateOutputType | null
+    _avg: AiUsageLogAvgAggregateOutputType | null
+    _sum: AiUsageLogSumAggregateOutputType | null
+    _min: AiUsageLogMinAggregateOutputType | null
+    _max: AiUsageLogMaxAggregateOutputType | null
+  }
+
+  type GetAiUsageLogGroupByPayload<T extends AiUsageLogGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<AiUsageLogGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AiUsageLogGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AiUsageLogGroupByOutputType[P]>
+            : GetScalarType<T[P], AiUsageLogGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AiUsageLogSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    uuid?: boolean
+    user_uuid?: boolean
+    provider?: boolean
+    model?: boolean
+    operation?: boolean
+    request_mode?: boolean
+    status?: boolean
+    input_tokens?: boolean
+    output_tokens?: boolean
+    total_tokens?: boolean
+    input_cost_usd?: boolean
+    output_cost_usd?: boolean
+    total_cost_usd?: boolean
+    duration_ms?: boolean
+    reference_type?: boolean
+    reference_uuid?: boolean
+    batch_id?: boolean
+    custom_id?: boolean
+    error_message?: boolean
+    metadata?: boolean
+    created_at?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["aiUsageLog"]>
+
+  export type AiUsageLogSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    uuid?: boolean
+    user_uuid?: boolean
+    provider?: boolean
+    model?: boolean
+    operation?: boolean
+    request_mode?: boolean
+    status?: boolean
+    input_tokens?: boolean
+    output_tokens?: boolean
+    total_tokens?: boolean
+    input_cost_usd?: boolean
+    output_cost_usd?: boolean
+    total_cost_usd?: boolean
+    duration_ms?: boolean
+    reference_type?: boolean
+    reference_uuid?: boolean
+    batch_id?: boolean
+    custom_id?: boolean
+    error_message?: boolean
+    metadata?: boolean
+    created_at?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["aiUsageLog"]>
+
+  export type AiUsageLogSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    uuid?: boolean
+    user_uuid?: boolean
+    provider?: boolean
+    model?: boolean
+    operation?: boolean
+    request_mode?: boolean
+    status?: boolean
+    input_tokens?: boolean
+    output_tokens?: boolean
+    total_tokens?: boolean
+    input_cost_usd?: boolean
+    output_cost_usd?: boolean
+    total_cost_usd?: boolean
+    duration_ms?: boolean
+    reference_type?: boolean
+    reference_uuid?: boolean
+    batch_id?: boolean
+    custom_id?: boolean
+    error_message?: boolean
+    metadata?: boolean
+    created_at?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["aiUsageLog"]>
+
+  export type AiUsageLogSelectScalar = {
+    uuid?: boolean
+    user_uuid?: boolean
+    provider?: boolean
+    model?: boolean
+    operation?: boolean
+    request_mode?: boolean
+    status?: boolean
+    input_tokens?: boolean
+    output_tokens?: boolean
+    total_tokens?: boolean
+    input_cost_usd?: boolean
+    output_cost_usd?: boolean
+    total_cost_usd?: boolean
+    duration_ms?: boolean
+    reference_type?: boolean
+    reference_uuid?: boolean
+    batch_id?: boolean
+    custom_id?: boolean
+    error_message?: boolean
+    metadata?: boolean
+    created_at?: boolean
+  }
+
+  export type AiUsageLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"uuid" | "user_uuid" | "provider" | "model" | "operation" | "request_mode" | "status" | "input_tokens" | "output_tokens" | "total_tokens" | "input_cost_usd" | "output_cost_usd" | "total_cost_usd" | "duration_ms" | "reference_type" | "reference_uuid" | "batch_id" | "custom_id" | "error_message" | "metadata" | "created_at", ExtArgs["result"]["aiUsageLog"]>
+  export type AiUsageLogInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type AiUsageLogIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type AiUsageLogIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $AiUsageLogPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "AiUsageLog"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      uuid: string
+      user_uuid: string
+      provider: string
+      model: string
+      operation: $Enums.AiUsageOperation
+      request_mode: $Enums.AiUsageRequestMode
+      status: $Enums.AiUsageStatus
+      input_tokens: number | null
+      output_tokens: number | null
+      total_tokens: number | null
+      input_cost_usd: Prisma.Decimal | null
+      output_cost_usd: Prisma.Decimal | null
+      total_cost_usd: Prisma.Decimal | null
+      duration_ms: number | null
+      reference_type: string | null
+      reference_uuid: string | null
+      batch_id: string | null
+      custom_id: string | null
+      error_message: string | null
+      metadata: Prisma.JsonValue | null
+      created_at: Date
+    }, ExtArgs["result"]["aiUsageLog"]>
+    composites: {}
+  }
+
+  type AiUsageLogGetPayload<S extends boolean | null | undefined | AiUsageLogDefaultArgs> = $Result.GetResult<Prisma.$AiUsageLogPayload, S>
+
+  type AiUsageLogCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<AiUsageLogFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: AiUsageLogCountAggregateInputType | true
+    }
+
+  export interface AiUsageLogDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AiUsageLog'], meta: { name: 'AiUsageLog' } }
+    /**
+     * Find zero or one AiUsageLog that matches the filter.
+     * @param {AiUsageLogFindUniqueArgs} args - Arguments to find a AiUsageLog
+     * @example
+     * // Get one AiUsageLog
+     * const aiUsageLog = await prisma.aiUsageLog.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends AiUsageLogFindUniqueArgs>(args: SelectSubset<T, AiUsageLogFindUniqueArgs<ExtArgs>>): Prisma__AiUsageLogClient<$Result.GetResult<Prisma.$AiUsageLogPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one AiUsageLog that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {AiUsageLogFindUniqueOrThrowArgs} args - Arguments to find a AiUsageLog
+     * @example
+     * // Get one AiUsageLog
+     * const aiUsageLog = await prisma.aiUsageLog.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends AiUsageLogFindUniqueOrThrowArgs>(args: SelectSubset<T, AiUsageLogFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AiUsageLogClient<$Result.GetResult<Prisma.$AiUsageLogPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AiUsageLog that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AiUsageLogFindFirstArgs} args - Arguments to find a AiUsageLog
+     * @example
+     * // Get one AiUsageLog
+     * const aiUsageLog = await prisma.aiUsageLog.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends AiUsageLogFindFirstArgs>(args?: SelectSubset<T, AiUsageLogFindFirstArgs<ExtArgs>>): Prisma__AiUsageLogClient<$Result.GetResult<Prisma.$AiUsageLogPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AiUsageLog that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AiUsageLogFindFirstOrThrowArgs} args - Arguments to find a AiUsageLog
+     * @example
+     * // Get one AiUsageLog
+     * const aiUsageLog = await prisma.aiUsageLog.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends AiUsageLogFindFirstOrThrowArgs>(args?: SelectSubset<T, AiUsageLogFindFirstOrThrowArgs<ExtArgs>>): Prisma__AiUsageLogClient<$Result.GetResult<Prisma.$AiUsageLogPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more AiUsageLogs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AiUsageLogFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all AiUsageLogs
+     * const aiUsageLogs = await prisma.aiUsageLog.findMany()
+     * 
+     * // Get first 10 AiUsageLogs
+     * const aiUsageLogs = await prisma.aiUsageLog.findMany({ take: 10 })
+     * 
+     * // Only select the `uuid`
+     * const aiUsageLogWithUuidOnly = await prisma.aiUsageLog.findMany({ select: { uuid: true } })
+     * 
+     */
+    findMany<T extends AiUsageLogFindManyArgs>(args?: SelectSubset<T, AiUsageLogFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AiUsageLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a AiUsageLog.
+     * @param {AiUsageLogCreateArgs} args - Arguments to create a AiUsageLog.
+     * @example
+     * // Create one AiUsageLog
+     * const AiUsageLog = await prisma.aiUsageLog.create({
+     *   data: {
+     *     // ... data to create a AiUsageLog
+     *   }
+     * })
+     * 
+     */
+    create<T extends AiUsageLogCreateArgs>(args: SelectSubset<T, AiUsageLogCreateArgs<ExtArgs>>): Prisma__AiUsageLogClient<$Result.GetResult<Prisma.$AiUsageLogPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many AiUsageLogs.
+     * @param {AiUsageLogCreateManyArgs} args - Arguments to create many AiUsageLogs.
+     * @example
+     * // Create many AiUsageLogs
+     * const aiUsageLog = await prisma.aiUsageLog.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends AiUsageLogCreateManyArgs>(args?: SelectSubset<T, AiUsageLogCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many AiUsageLogs and returns the data saved in the database.
+     * @param {AiUsageLogCreateManyAndReturnArgs} args - Arguments to create many AiUsageLogs.
+     * @example
+     * // Create many AiUsageLogs
+     * const aiUsageLog = await prisma.aiUsageLog.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many AiUsageLogs and only return the `uuid`
+     * const aiUsageLogWithUuidOnly = await prisma.aiUsageLog.createManyAndReturn({
+     *   select: { uuid: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends AiUsageLogCreateManyAndReturnArgs>(args?: SelectSubset<T, AiUsageLogCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AiUsageLogPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a AiUsageLog.
+     * @param {AiUsageLogDeleteArgs} args - Arguments to delete one AiUsageLog.
+     * @example
+     * // Delete one AiUsageLog
+     * const AiUsageLog = await prisma.aiUsageLog.delete({
+     *   where: {
+     *     // ... filter to delete one AiUsageLog
+     *   }
+     * })
+     * 
+     */
+    delete<T extends AiUsageLogDeleteArgs>(args: SelectSubset<T, AiUsageLogDeleteArgs<ExtArgs>>): Prisma__AiUsageLogClient<$Result.GetResult<Prisma.$AiUsageLogPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one AiUsageLog.
+     * @param {AiUsageLogUpdateArgs} args - Arguments to update one AiUsageLog.
+     * @example
+     * // Update one AiUsageLog
+     * const aiUsageLog = await prisma.aiUsageLog.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends AiUsageLogUpdateArgs>(args: SelectSubset<T, AiUsageLogUpdateArgs<ExtArgs>>): Prisma__AiUsageLogClient<$Result.GetResult<Prisma.$AiUsageLogPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more AiUsageLogs.
+     * @param {AiUsageLogDeleteManyArgs} args - Arguments to filter AiUsageLogs to delete.
+     * @example
+     * // Delete a few AiUsageLogs
+     * const { count } = await prisma.aiUsageLog.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends AiUsageLogDeleteManyArgs>(args?: SelectSubset<T, AiUsageLogDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AiUsageLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AiUsageLogUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many AiUsageLogs
+     * const aiUsageLog = await prisma.aiUsageLog.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends AiUsageLogUpdateManyArgs>(args: SelectSubset<T, AiUsageLogUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AiUsageLogs and returns the data updated in the database.
+     * @param {AiUsageLogUpdateManyAndReturnArgs} args - Arguments to update many AiUsageLogs.
+     * @example
+     * // Update many AiUsageLogs
+     * const aiUsageLog = await prisma.aiUsageLog.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more AiUsageLogs and only return the `uuid`
+     * const aiUsageLogWithUuidOnly = await prisma.aiUsageLog.updateManyAndReturn({
+     *   select: { uuid: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends AiUsageLogUpdateManyAndReturnArgs>(args: SelectSubset<T, AiUsageLogUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AiUsageLogPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one AiUsageLog.
+     * @param {AiUsageLogUpsertArgs} args - Arguments to update or create a AiUsageLog.
+     * @example
+     * // Update or create a AiUsageLog
+     * const aiUsageLog = await prisma.aiUsageLog.upsert({
+     *   create: {
+     *     // ... data to create a AiUsageLog
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the AiUsageLog we want to update
+     *   }
+     * })
+     */
+    upsert<T extends AiUsageLogUpsertArgs>(args: SelectSubset<T, AiUsageLogUpsertArgs<ExtArgs>>): Prisma__AiUsageLogClient<$Result.GetResult<Prisma.$AiUsageLogPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of AiUsageLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AiUsageLogCountArgs} args - Arguments to filter AiUsageLogs to count.
+     * @example
+     * // Count the number of AiUsageLogs
+     * const count = await prisma.aiUsageLog.count({
+     *   where: {
+     *     // ... the filter for the AiUsageLogs we want to count
+     *   }
+     * })
+    **/
+    count<T extends AiUsageLogCountArgs>(
+      args?: Subset<T, AiUsageLogCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AiUsageLogCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a AiUsageLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AiUsageLogAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AiUsageLogAggregateArgs>(args: Subset<T, AiUsageLogAggregateArgs>): Prisma.PrismaPromise<GetAiUsageLogAggregateType<T>>
+
+    /**
+     * Group by AiUsageLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AiUsageLogGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AiUsageLogGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AiUsageLogGroupByArgs['orderBy'] }
+        : { orderBy?: AiUsageLogGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AiUsageLogGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAiUsageLogGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the AiUsageLog model
+   */
+  readonly fields: AiUsageLogFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for AiUsageLog.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__AiUsageLogClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the AiUsageLog model
+   */
+  interface AiUsageLogFieldRefs {
+    readonly uuid: FieldRef<"AiUsageLog", 'String'>
+    readonly user_uuid: FieldRef<"AiUsageLog", 'String'>
+    readonly provider: FieldRef<"AiUsageLog", 'String'>
+    readonly model: FieldRef<"AiUsageLog", 'String'>
+    readonly operation: FieldRef<"AiUsageLog", 'AiUsageOperation'>
+    readonly request_mode: FieldRef<"AiUsageLog", 'AiUsageRequestMode'>
+    readonly status: FieldRef<"AiUsageLog", 'AiUsageStatus'>
+    readonly input_tokens: FieldRef<"AiUsageLog", 'Int'>
+    readonly output_tokens: FieldRef<"AiUsageLog", 'Int'>
+    readonly total_tokens: FieldRef<"AiUsageLog", 'Int'>
+    readonly input_cost_usd: FieldRef<"AiUsageLog", 'Decimal'>
+    readonly output_cost_usd: FieldRef<"AiUsageLog", 'Decimal'>
+    readonly total_cost_usd: FieldRef<"AiUsageLog", 'Decimal'>
+    readonly duration_ms: FieldRef<"AiUsageLog", 'Int'>
+    readonly reference_type: FieldRef<"AiUsageLog", 'String'>
+    readonly reference_uuid: FieldRef<"AiUsageLog", 'String'>
+    readonly batch_id: FieldRef<"AiUsageLog", 'String'>
+    readonly custom_id: FieldRef<"AiUsageLog", 'String'>
+    readonly error_message: FieldRef<"AiUsageLog", 'String'>
+    readonly metadata: FieldRef<"AiUsageLog", 'Json'>
+    readonly created_at: FieldRef<"AiUsageLog", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * AiUsageLog findUnique
+   */
+  export type AiUsageLogFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiUsageLog
+     */
+    select?: AiUsageLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AiUsageLog
+     */
+    omit?: AiUsageLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AiUsageLogInclude<ExtArgs> | null
+    /**
+     * Filter, which AiUsageLog to fetch.
+     */
+    where: AiUsageLogWhereUniqueInput
+  }
+
+  /**
+   * AiUsageLog findUniqueOrThrow
+   */
+  export type AiUsageLogFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiUsageLog
+     */
+    select?: AiUsageLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AiUsageLog
+     */
+    omit?: AiUsageLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AiUsageLogInclude<ExtArgs> | null
+    /**
+     * Filter, which AiUsageLog to fetch.
+     */
+    where: AiUsageLogWhereUniqueInput
+  }
+
+  /**
+   * AiUsageLog findFirst
+   */
+  export type AiUsageLogFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiUsageLog
+     */
+    select?: AiUsageLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AiUsageLog
+     */
+    omit?: AiUsageLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AiUsageLogInclude<ExtArgs> | null
+    /**
+     * Filter, which AiUsageLog to fetch.
+     */
+    where?: AiUsageLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AiUsageLogs to fetch.
+     */
+    orderBy?: AiUsageLogOrderByWithRelationInput | AiUsageLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AiUsageLogs.
+     */
+    cursor?: AiUsageLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AiUsageLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AiUsageLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AiUsageLogs.
+     */
+    distinct?: AiUsageLogScalarFieldEnum | AiUsageLogScalarFieldEnum[]
+  }
+
+  /**
+   * AiUsageLog findFirstOrThrow
+   */
+  export type AiUsageLogFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiUsageLog
+     */
+    select?: AiUsageLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AiUsageLog
+     */
+    omit?: AiUsageLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AiUsageLogInclude<ExtArgs> | null
+    /**
+     * Filter, which AiUsageLog to fetch.
+     */
+    where?: AiUsageLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AiUsageLogs to fetch.
+     */
+    orderBy?: AiUsageLogOrderByWithRelationInput | AiUsageLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AiUsageLogs.
+     */
+    cursor?: AiUsageLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AiUsageLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AiUsageLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AiUsageLogs.
+     */
+    distinct?: AiUsageLogScalarFieldEnum | AiUsageLogScalarFieldEnum[]
+  }
+
+  /**
+   * AiUsageLog findMany
+   */
+  export type AiUsageLogFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiUsageLog
+     */
+    select?: AiUsageLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AiUsageLog
+     */
+    omit?: AiUsageLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AiUsageLogInclude<ExtArgs> | null
+    /**
+     * Filter, which AiUsageLogs to fetch.
+     */
+    where?: AiUsageLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AiUsageLogs to fetch.
+     */
+    orderBy?: AiUsageLogOrderByWithRelationInput | AiUsageLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing AiUsageLogs.
+     */
+    cursor?: AiUsageLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AiUsageLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AiUsageLogs.
+     */
+    skip?: number
+    distinct?: AiUsageLogScalarFieldEnum | AiUsageLogScalarFieldEnum[]
+  }
+
+  /**
+   * AiUsageLog create
+   */
+  export type AiUsageLogCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiUsageLog
+     */
+    select?: AiUsageLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AiUsageLog
+     */
+    omit?: AiUsageLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AiUsageLogInclude<ExtArgs> | null
+    /**
+     * The data needed to create a AiUsageLog.
+     */
+    data: XOR<AiUsageLogCreateInput, AiUsageLogUncheckedCreateInput>
+  }
+
+  /**
+   * AiUsageLog createMany
+   */
+  export type AiUsageLogCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many AiUsageLogs.
+     */
+    data: AiUsageLogCreateManyInput | AiUsageLogCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AiUsageLog createManyAndReturn
+   */
+  export type AiUsageLogCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiUsageLog
+     */
+    select?: AiUsageLogSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AiUsageLog
+     */
+    omit?: AiUsageLogOmit<ExtArgs> | null
+    /**
+     * The data used to create many AiUsageLogs.
+     */
+    data: AiUsageLogCreateManyInput | AiUsageLogCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AiUsageLogIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AiUsageLog update
+   */
+  export type AiUsageLogUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiUsageLog
+     */
+    select?: AiUsageLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AiUsageLog
+     */
+    omit?: AiUsageLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AiUsageLogInclude<ExtArgs> | null
+    /**
+     * The data needed to update a AiUsageLog.
+     */
+    data: XOR<AiUsageLogUpdateInput, AiUsageLogUncheckedUpdateInput>
+    /**
+     * Choose, which AiUsageLog to update.
+     */
+    where: AiUsageLogWhereUniqueInput
+  }
+
+  /**
+   * AiUsageLog updateMany
+   */
+  export type AiUsageLogUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update AiUsageLogs.
+     */
+    data: XOR<AiUsageLogUpdateManyMutationInput, AiUsageLogUncheckedUpdateManyInput>
+    /**
+     * Filter which AiUsageLogs to update
+     */
+    where?: AiUsageLogWhereInput
+    /**
+     * Limit how many AiUsageLogs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * AiUsageLog updateManyAndReturn
+   */
+  export type AiUsageLogUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiUsageLog
+     */
+    select?: AiUsageLogSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AiUsageLog
+     */
+    omit?: AiUsageLogOmit<ExtArgs> | null
+    /**
+     * The data used to update AiUsageLogs.
+     */
+    data: XOR<AiUsageLogUpdateManyMutationInput, AiUsageLogUncheckedUpdateManyInput>
+    /**
+     * Filter which AiUsageLogs to update
+     */
+    where?: AiUsageLogWhereInput
+    /**
+     * Limit how many AiUsageLogs to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AiUsageLogIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AiUsageLog upsert
+   */
+  export type AiUsageLogUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiUsageLog
+     */
+    select?: AiUsageLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AiUsageLog
+     */
+    omit?: AiUsageLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AiUsageLogInclude<ExtArgs> | null
+    /**
+     * The filter to search for the AiUsageLog to update in case it exists.
+     */
+    where: AiUsageLogWhereUniqueInput
+    /**
+     * In case the AiUsageLog found by the `where` argument doesn't exist, create a new AiUsageLog with this data.
+     */
+    create: XOR<AiUsageLogCreateInput, AiUsageLogUncheckedCreateInput>
+    /**
+     * In case the AiUsageLog was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AiUsageLogUpdateInput, AiUsageLogUncheckedUpdateInput>
+  }
+
+  /**
+   * AiUsageLog delete
+   */
+  export type AiUsageLogDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiUsageLog
+     */
+    select?: AiUsageLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AiUsageLog
+     */
+    omit?: AiUsageLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AiUsageLogInclude<ExtArgs> | null
+    /**
+     * Filter which AiUsageLog to delete.
+     */
+    where: AiUsageLogWhereUniqueInput
+  }
+
+  /**
+   * AiUsageLog deleteMany
+   */
+  export type AiUsageLogDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AiUsageLogs to delete
+     */
+    where?: AiUsageLogWhereInput
+    /**
+     * Limit how many AiUsageLogs to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * AiUsageLog without action
+   */
+  export type AiUsageLogDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiUsageLog
+     */
+    select?: AiUsageLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AiUsageLog
+     */
+    omit?: AiUsageLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AiUsageLogInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -40835,6 +42328,33 @@ export namespace Prisma {
   export type ContactAudienceAnalysisScalarFieldEnum = (typeof ContactAudienceAnalysisScalarFieldEnum)[keyof typeof ContactAudienceAnalysisScalarFieldEnum]
 
 
+  export const AiUsageLogScalarFieldEnum: {
+    uuid: 'uuid',
+    user_uuid: 'user_uuid',
+    provider: 'provider',
+    model: 'model',
+    operation: 'operation',
+    request_mode: 'request_mode',
+    status: 'status',
+    input_tokens: 'input_tokens',
+    output_tokens: 'output_tokens',
+    total_tokens: 'total_tokens',
+    input_cost_usd: 'input_cost_usd',
+    output_cost_usd: 'output_cost_usd',
+    total_cost_usd: 'total_cost_usd',
+    duration_ms: 'duration_ms',
+    reference_type: 'reference_type',
+    reference_uuid: 'reference_uuid',
+    batch_id: 'batch_id',
+    custom_id: 'custom_id',
+    error_message: 'error_message',
+    metadata: 'metadata',
+    created_at: 'created_at'
+  };
+
+  export type AiUsageLogScalarFieldEnum = (typeof AiUsageLogScalarFieldEnum)[keyof typeof AiUsageLogScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -41271,6 +42791,48 @@ export namespace Prisma {
    */
   export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
+
+
+  /**
+   * Reference to a field of type 'AiUsageOperation'
+   */
+  export type EnumAiUsageOperationFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AiUsageOperation'>
+    
+
+
+  /**
+   * Reference to a field of type 'AiUsageOperation[]'
+   */
+  export type ListEnumAiUsageOperationFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AiUsageOperation[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'AiUsageRequestMode'
+   */
+  export type EnumAiUsageRequestModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AiUsageRequestMode'>
+    
+
+
+  /**
+   * Reference to a field of type 'AiUsageRequestMode[]'
+   */
+  export type ListEnumAiUsageRequestModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AiUsageRequestMode[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'AiUsageStatus'
+   */
+  export type EnumAiUsageStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AiUsageStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'AiUsageStatus[]'
+   */
+  export type ListEnumAiUsageStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AiUsageStatus[]'>
+    
   /**
    * Deep Input Types
    */
@@ -41303,6 +42865,7 @@ export namespace Prisma {
     form_completions?: FormCompletionListRelationFilter
     contact_lists?: ContactListListRelationFilter
     contact_audience_analyses?: ContactAudienceAnalysisListRelationFilter
+    ai_usage_logs?: AiUsageLogListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -41329,6 +42892,7 @@ export namespace Prisma {
     form_completions?: FormCompletionOrderByRelationAggregateInput
     contact_lists?: ContactListOrderByRelationAggregateInput
     contact_audience_analyses?: ContactAudienceAnalysisOrderByRelationAggregateInput
+    ai_usage_logs?: AiUsageLogOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -41358,6 +42922,7 @@ export namespace Prisma {
     form_completions?: FormCompletionListRelationFilter
     contact_lists?: ContactListListRelationFilter
     contact_audience_analyses?: ContactAudienceAnalysisListRelationFilter
+    ai_usage_logs?: AiUsageLogListRelationFilter
   }, "id" | "uuid" | "email" | "phone">
 
   export type UserOrderByWithAggregationInput = {
@@ -44144,6 +45709,143 @@ export namespace Prisma {
     updated_at?: DateTimeWithAggregatesFilter<"ContactAudienceAnalysis"> | Date | string
   }
 
+  export type AiUsageLogWhereInput = {
+    AND?: AiUsageLogWhereInput | AiUsageLogWhereInput[]
+    OR?: AiUsageLogWhereInput[]
+    NOT?: AiUsageLogWhereInput | AiUsageLogWhereInput[]
+    uuid?: StringFilter<"AiUsageLog"> | string
+    user_uuid?: StringFilter<"AiUsageLog"> | string
+    provider?: StringFilter<"AiUsageLog"> | string
+    model?: StringFilter<"AiUsageLog"> | string
+    operation?: EnumAiUsageOperationFilter<"AiUsageLog"> | $Enums.AiUsageOperation
+    request_mode?: EnumAiUsageRequestModeFilter<"AiUsageLog"> | $Enums.AiUsageRequestMode
+    status?: EnumAiUsageStatusFilter<"AiUsageLog"> | $Enums.AiUsageStatus
+    input_tokens?: IntNullableFilter<"AiUsageLog"> | number | null
+    output_tokens?: IntNullableFilter<"AiUsageLog"> | number | null
+    total_tokens?: IntNullableFilter<"AiUsageLog"> | number | null
+    input_cost_usd?: DecimalNullableFilter<"AiUsageLog"> | Decimal | DecimalJsLike | number | string | null
+    output_cost_usd?: DecimalNullableFilter<"AiUsageLog"> | Decimal | DecimalJsLike | number | string | null
+    total_cost_usd?: DecimalNullableFilter<"AiUsageLog"> | Decimal | DecimalJsLike | number | string | null
+    duration_ms?: IntNullableFilter<"AiUsageLog"> | number | null
+    reference_type?: StringNullableFilter<"AiUsageLog"> | string | null
+    reference_uuid?: StringNullableFilter<"AiUsageLog"> | string | null
+    batch_id?: StringNullableFilter<"AiUsageLog"> | string | null
+    custom_id?: StringNullableFilter<"AiUsageLog"> | string | null
+    error_message?: StringNullableFilter<"AiUsageLog"> | string | null
+    metadata?: JsonNullableFilter<"AiUsageLog">
+    created_at?: DateTimeFilter<"AiUsageLog"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type AiUsageLogOrderByWithRelationInput = {
+    uuid?: SortOrder
+    user_uuid?: SortOrder
+    provider?: SortOrder
+    model?: SortOrder
+    operation?: SortOrder
+    request_mode?: SortOrder
+    status?: SortOrder
+    input_tokens?: SortOrderInput | SortOrder
+    output_tokens?: SortOrderInput | SortOrder
+    total_tokens?: SortOrderInput | SortOrder
+    input_cost_usd?: SortOrderInput | SortOrder
+    output_cost_usd?: SortOrderInput | SortOrder
+    total_cost_usd?: SortOrderInput | SortOrder
+    duration_ms?: SortOrderInput | SortOrder
+    reference_type?: SortOrderInput | SortOrder
+    reference_uuid?: SortOrderInput | SortOrder
+    batch_id?: SortOrderInput | SortOrder
+    custom_id?: SortOrderInput | SortOrder
+    error_message?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type AiUsageLogWhereUniqueInput = Prisma.AtLeast<{
+    uuid?: string
+    AND?: AiUsageLogWhereInput | AiUsageLogWhereInput[]
+    OR?: AiUsageLogWhereInput[]
+    NOT?: AiUsageLogWhereInput | AiUsageLogWhereInput[]
+    user_uuid?: StringFilter<"AiUsageLog"> | string
+    provider?: StringFilter<"AiUsageLog"> | string
+    model?: StringFilter<"AiUsageLog"> | string
+    operation?: EnumAiUsageOperationFilter<"AiUsageLog"> | $Enums.AiUsageOperation
+    request_mode?: EnumAiUsageRequestModeFilter<"AiUsageLog"> | $Enums.AiUsageRequestMode
+    status?: EnumAiUsageStatusFilter<"AiUsageLog"> | $Enums.AiUsageStatus
+    input_tokens?: IntNullableFilter<"AiUsageLog"> | number | null
+    output_tokens?: IntNullableFilter<"AiUsageLog"> | number | null
+    total_tokens?: IntNullableFilter<"AiUsageLog"> | number | null
+    input_cost_usd?: DecimalNullableFilter<"AiUsageLog"> | Decimal | DecimalJsLike | number | string | null
+    output_cost_usd?: DecimalNullableFilter<"AiUsageLog"> | Decimal | DecimalJsLike | number | string | null
+    total_cost_usd?: DecimalNullableFilter<"AiUsageLog"> | Decimal | DecimalJsLike | number | string | null
+    duration_ms?: IntNullableFilter<"AiUsageLog"> | number | null
+    reference_type?: StringNullableFilter<"AiUsageLog"> | string | null
+    reference_uuid?: StringNullableFilter<"AiUsageLog"> | string | null
+    batch_id?: StringNullableFilter<"AiUsageLog"> | string | null
+    custom_id?: StringNullableFilter<"AiUsageLog"> | string | null
+    error_message?: StringNullableFilter<"AiUsageLog"> | string | null
+    metadata?: JsonNullableFilter<"AiUsageLog">
+    created_at?: DateTimeFilter<"AiUsageLog"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "uuid">
+
+  export type AiUsageLogOrderByWithAggregationInput = {
+    uuid?: SortOrder
+    user_uuid?: SortOrder
+    provider?: SortOrder
+    model?: SortOrder
+    operation?: SortOrder
+    request_mode?: SortOrder
+    status?: SortOrder
+    input_tokens?: SortOrderInput | SortOrder
+    output_tokens?: SortOrderInput | SortOrder
+    total_tokens?: SortOrderInput | SortOrder
+    input_cost_usd?: SortOrderInput | SortOrder
+    output_cost_usd?: SortOrderInput | SortOrder
+    total_cost_usd?: SortOrderInput | SortOrder
+    duration_ms?: SortOrderInput | SortOrder
+    reference_type?: SortOrderInput | SortOrder
+    reference_uuid?: SortOrderInput | SortOrder
+    batch_id?: SortOrderInput | SortOrder
+    custom_id?: SortOrderInput | SortOrder
+    error_message?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    _count?: AiUsageLogCountOrderByAggregateInput
+    _avg?: AiUsageLogAvgOrderByAggregateInput
+    _max?: AiUsageLogMaxOrderByAggregateInput
+    _min?: AiUsageLogMinOrderByAggregateInput
+    _sum?: AiUsageLogSumOrderByAggregateInput
+  }
+
+  export type AiUsageLogScalarWhereWithAggregatesInput = {
+    AND?: AiUsageLogScalarWhereWithAggregatesInput | AiUsageLogScalarWhereWithAggregatesInput[]
+    OR?: AiUsageLogScalarWhereWithAggregatesInput[]
+    NOT?: AiUsageLogScalarWhereWithAggregatesInput | AiUsageLogScalarWhereWithAggregatesInput[]
+    uuid?: StringWithAggregatesFilter<"AiUsageLog"> | string
+    user_uuid?: StringWithAggregatesFilter<"AiUsageLog"> | string
+    provider?: StringWithAggregatesFilter<"AiUsageLog"> | string
+    model?: StringWithAggregatesFilter<"AiUsageLog"> | string
+    operation?: EnumAiUsageOperationWithAggregatesFilter<"AiUsageLog"> | $Enums.AiUsageOperation
+    request_mode?: EnumAiUsageRequestModeWithAggregatesFilter<"AiUsageLog"> | $Enums.AiUsageRequestMode
+    status?: EnumAiUsageStatusWithAggregatesFilter<"AiUsageLog"> | $Enums.AiUsageStatus
+    input_tokens?: IntNullableWithAggregatesFilter<"AiUsageLog"> | number | null
+    output_tokens?: IntNullableWithAggregatesFilter<"AiUsageLog"> | number | null
+    total_tokens?: IntNullableWithAggregatesFilter<"AiUsageLog"> | number | null
+    input_cost_usd?: DecimalNullableWithAggregatesFilter<"AiUsageLog"> | Decimal | DecimalJsLike | number | string | null
+    output_cost_usd?: DecimalNullableWithAggregatesFilter<"AiUsageLog"> | Decimal | DecimalJsLike | number | string | null
+    total_cost_usd?: DecimalNullableWithAggregatesFilter<"AiUsageLog"> | Decimal | DecimalJsLike | number | string | null
+    duration_ms?: IntNullableWithAggregatesFilter<"AiUsageLog"> | number | null
+    reference_type?: StringNullableWithAggregatesFilter<"AiUsageLog"> | string | null
+    reference_uuid?: StringNullableWithAggregatesFilter<"AiUsageLog"> | string | null
+    batch_id?: StringNullableWithAggregatesFilter<"AiUsageLog"> | string | null
+    custom_id?: StringNullableWithAggregatesFilter<"AiUsageLog"> | string | null
+    error_message?: StringNullableWithAggregatesFilter<"AiUsageLog"> | string | null
+    metadata?: JsonNullableWithAggregatesFilter<"AiUsageLog">
+    created_at?: DateTimeWithAggregatesFilter<"AiUsageLog"> | Date | string
+  }
+
   export type UserCreateInput = {
     uuid?: string
     email: string
@@ -44167,6 +45869,7 @@ export namespace Prisma {
     form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
+    ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -44193,6 +45896,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
+    ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -44218,6 +45922,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
+    ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -44244,6 +45949,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
+    ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -47253,6 +48959,173 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type AiUsageLogCreateInput = {
+    uuid?: string
+    provider: string
+    model: string
+    operation: $Enums.AiUsageOperation
+    request_mode?: $Enums.AiUsageRequestMode
+    status: $Enums.AiUsageStatus
+    input_tokens?: number | null
+    output_tokens?: number | null
+    total_tokens?: number | null
+    input_cost_usd?: Decimal | DecimalJsLike | number | string | null
+    output_cost_usd?: Decimal | DecimalJsLike | number | string | null
+    total_cost_usd?: Decimal | DecimalJsLike | number | string | null
+    duration_ms?: number | null
+    reference_type?: string | null
+    reference_uuid?: string | null
+    batch_id?: string | null
+    custom_id?: string | null
+    error_message?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    user: UserCreateNestedOneWithoutAi_usage_logsInput
+  }
+
+  export type AiUsageLogUncheckedCreateInput = {
+    uuid?: string
+    user_uuid: string
+    provider: string
+    model: string
+    operation: $Enums.AiUsageOperation
+    request_mode?: $Enums.AiUsageRequestMode
+    status: $Enums.AiUsageStatus
+    input_tokens?: number | null
+    output_tokens?: number | null
+    total_tokens?: number | null
+    input_cost_usd?: Decimal | DecimalJsLike | number | string | null
+    output_cost_usd?: Decimal | DecimalJsLike | number | string | null
+    total_cost_usd?: Decimal | DecimalJsLike | number | string | null
+    duration_ms?: number | null
+    reference_type?: string | null
+    reference_uuid?: string | null
+    batch_id?: string | null
+    custom_id?: string | null
+    error_message?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+  }
+
+  export type AiUsageLogUpdateInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    provider?: StringFieldUpdateOperationsInput | string
+    model?: StringFieldUpdateOperationsInput | string
+    operation?: EnumAiUsageOperationFieldUpdateOperationsInput | $Enums.AiUsageOperation
+    request_mode?: EnumAiUsageRequestModeFieldUpdateOperationsInput | $Enums.AiUsageRequestMode
+    status?: EnumAiUsageStatusFieldUpdateOperationsInput | $Enums.AiUsageStatus
+    input_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    output_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    total_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    input_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    output_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    total_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    duration_ms?: NullableIntFieldUpdateOperationsInput | number | null
+    reference_type?: NullableStringFieldUpdateOperationsInput | string | null
+    reference_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    batch_id?: NullableStringFieldUpdateOperationsInput | string | null
+    custom_id?: NullableStringFieldUpdateOperationsInput | string | null
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutAi_usage_logsNestedInput
+  }
+
+  export type AiUsageLogUncheckedUpdateInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    provider?: StringFieldUpdateOperationsInput | string
+    model?: StringFieldUpdateOperationsInput | string
+    operation?: EnumAiUsageOperationFieldUpdateOperationsInput | $Enums.AiUsageOperation
+    request_mode?: EnumAiUsageRequestModeFieldUpdateOperationsInput | $Enums.AiUsageRequestMode
+    status?: EnumAiUsageStatusFieldUpdateOperationsInput | $Enums.AiUsageStatus
+    input_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    output_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    total_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    input_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    output_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    total_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    duration_ms?: NullableIntFieldUpdateOperationsInput | number | null
+    reference_type?: NullableStringFieldUpdateOperationsInput | string | null
+    reference_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    batch_id?: NullableStringFieldUpdateOperationsInput | string | null
+    custom_id?: NullableStringFieldUpdateOperationsInput | string | null
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AiUsageLogCreateManyInput = {
+    uuid?: string
+    user_uuid: string
+    provider: string
+    model: string
+    operation: $Enums.AiUsageOperation
+    request_mode?: $Enums.AiUsageRequestMode
+    status: $Enums.AiUsageStatus
+    input_tokens?: number | null
+    output_tokens?: number | null
+    total_tokens?: number | null
+    input_cost_usd?: Decimal | DecimalJsLike | number | string | null
+    output_cost_usd?: Decimal | DecimalJsLike | number | string | null
+    total_cost_usd?: Decimal | DecimalJsLike | number | string | null
+    duration_ms?: number | null
+    reference_type?: string | null
+    reference_uuid?: string | null
+    batch_id?: string | null
+    custom_id?: string | null
+    error_message?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+  }
+
+  export type AiUsageLogUpdateManyMutationInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    provider?: StringFieldUpdateOperationsInput | string
+    model?: StringFieldUpdateOperationsInput | string
+    operation?: EnumAiUsageOperationFieldUpdateOperationsInput | $Enums.AiUsageOperation
+    request_mode?: EnumAiUsageRequestModeFieldUpdateOperationsInput | $Enums.AiUsageRequestMode
+    status?: EnumAiUsageStatusFieldUpdateOperationsInput | $Enums.AiUsageStatus
+    input_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    output_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    total_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    input_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    output_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    total_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    duration_ms?: NullableIntFieldUpdateOperationsInput | number | null
+    reference_type?: NullableStringFieldUpdateOperationsInput | string | null
+    reference_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    batch_id?: NullableStringFieldUpdateOperationsInput | string | null
+    custom_id?: NullableStringFieldUpdateOperationsInput | string | null
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AiUsageLogUncheckedUpdateManyInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    provider?: StringFieldUpdateOperationsInput | string
+    model?: StringFieldUpdateOperationsInput | string
+    operation?: EnumAiUsageOperationFieldUpdateOperationsInput | $Enums.AiUsageOperation
+    request_mode?: EnumAiUsageRequestModeFieldUpdateOperationsInput | $Enums.AiUsageRequestMode
+    status?: EnumAiUsageStatusFieldUpdateOperationsInput | $Enums.AiUsageStatus
+    input_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    output_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    total_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    input_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    output_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    total_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    duration_ms?: NullableIntFieldUpdateOperationsInput | number | null
+    reference_type?: NullableStringFieldUpdateOperationsInput | string | null
+    reference_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    batch_id?: NullableStringFieldUpdateOperationsInput | string | null
+    custom_id?: NullableStringFieldUpdateOperationsInput | string | null
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -47402,6 +49275,12 @@ export namespace Prisma {
     none?: ContactAudienceAnalysisWhereInput
   }
 
+  export type AiUsageLogListRelationFilter = {
+    every?: AiUsageLogWhereInput
+    some?: AiUsageLogWhereInput
+    none?: AiUsageLogWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -47464,6 +49343,10 @@ export namespace Prisma {
   }
 
   export type ContactAudienceAnalysisOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type AiUsageLogOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -49917,6 +51800,147 @@ export namespace Prisma {
     _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
+  export type EnumAiUsageOperationFilter<$PrismaModel = never> = {
+    equals?: $Enums.AiUsageOperation | EnumAiUsageOperationFieldRefInput<$PrismaModel>
+    in?: $Enums.AiUsageOperation[] | ListEnumAiUsageOperationFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AiUsageOperation[] | ListEnumAiUsageOperationFieldRefInput<$PrismaModel>
+    not?: NestedEnumAiUsageOperationFilter<$PrismaModel> | $Enums.AiUsageOperation
+  }
+
+  export type EnumAiUsageRequestModeFilter<$PrismaModel = never> = {
+    equals?: $Enums.AiUsageRequestMode | EnumAiUsageRequestModeFieldRefInput<$PrismaModel>
+    in?: $Enums.AiUsageRequestMode[] | ListEnumAiUsageRequestModeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AiUsageRequestMode[] | ListEnumAiUsageRequestModeFieldRefInput<$PrismaModel>
+    not?: NestedEnumAiUsageRequestModeFilter<$PrismaModel> | $Enums.AiUsageRequestMode
+  }
+
+  export type EnumAiUsageStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.AiUsageStatus | EnumAiUsageStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.AiUsageStatus[] | ListEnumAiUsageStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AiUsageStatus[] | ListEnumAiUsageStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumAiUsageStatusFilter<$PrismaModel> | $Enums.AiUsageStatus
+  }
+
+  export type AiUsageLogCountOrderByAggregateInput = {
+    uuid?: SortOrder
+    user_uuid?: SortOrder
+    provider?: SortOrder
+    model?: SortOrder
+    operation?: SortOrder
+    request_mode?: SortOrder
+    status?: SortOrder
+    input_tokens?: SortOrder
+    output_tokens?: SortOrder
+    total_tokens?: SortOrder
+    input_cost_usd?: SortOrder
+    output_cost_usd?: SortOrder
+    total_cost_usd?: SortOrder
+    duration_ms?: SortOrder
+    reference_type?: SortOrder
+    reference_uuid?: SortOrder
+    batch_id?: SortOrder
+    custom_id?: SortOrder
+    error_message?: SortOrder
+    metadata?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type AiUsageLogAvgOrderByAggregateInput = {
+    input_tokens?: SortOrder
+    output_tokens?: SortOrder
+    total_tokens?: SortOrder
+    input_cost_usd?: SortOrder
+    output_cost_usd?: SortOrder
+    total_cost_usd?: SortOrder
+    duration_ms?: SortOrder
+  }
+
+  export type AiUsageLogMaxOrderByAggregateInput = {
+    uuid?: SortOrder
+    user_uuid?: SortOrder
+    provider?: SortOrder
+    model?: SortOrder
+    operation?: SortOrder
+    request_mode?: SortOrder
+    status?: SortOrder
+    input_tokens?: SortOrder
+    output_tokens?: SortOrder
+    total_tokens?: SortOrder
+    input_cost_usd?: SortOrder
+    output_cost_usd?: SortOrder
+    total_cost_usd?: SortOrder
+    duration_ms?: SortOrder
+    reference_type?: SortOrder
+    reference_uuid?: SortOrder
+    batch_id?: SortOrder
+    custom_id?: SortOrder
+    error_message?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type AiUsageLogMinOrderByAggregateInput = {
+    uuid?: SortOrder
+    user_uuid?: SortOrder
+    provider?: SortOrder
+    model?: SortOrder
+    operation?: SortOrder
+    request_mode?: SortOrder
+    status?: SortOrder
+    input_tokens?: SortOrder
+    output_tokens?: SortOrder
+    total_tokens?: SortOrder
+    input_cost_usd?: SortOrder
+    output_cost_usd?: SortOrder
+    total_cost_usd?: SortOrder
+    duration_ms?: SortOrder
+    reference_type?: SortOrder
+    reference_uuid?: SortOrder
+    batch_id?: SortOrder
+    custom_id?: SortOrder
+    error_message?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type AiUsageLogSumOrderByAggregateInput = {
+    input_tokens?: SortOrder
+    output_tokens?: SortOrder
+    total_tokens?: SortOrder
+    input_cost_usd?: SortOrder
+    output_cost_usd?: SortOrder
+    total_cost_usd?: SortOrder
+    duration_ms?: SortOrder
+  }
+
+  export type EnumAiUsageOperationWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AiUsageOperation | EnumAiUsageOperationFieldRefInput<$PrismaModel>
+    in?: $Enums.AiUsageOperation[] | ListEnumAiUsageOperationFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AiUsageOperation[] | ListEnumAiUsageOperationFieldRefInput<$PrismaModel>
+    not?: NestedEnumAiUsageOperationWithAggregatesFilter<$PrismaModel> | $Enums.AiUsageOperation
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAiUsageOperationFilter<$PrismaModel>
+    _max?: NestedEnumAiUsageOperationFilter<$PrismaModel>
+  }
+
+  export type EnumAiUsageRequestModeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AiUsageRequestMode | EnumAiUsageRequestModeFieldRefInput<$PrismaModel>
+    in?: $Enums.AiUsageRequestMode[] | ListEnumAiUsageRequestModeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AiUsageRequestMode[] | ListEnumAiUsageRequestModeFieldRefInput<$PrismaModel>
+    not?: NestedEnumAiUsageRequestModeWithAggregatesFilter<$PrismaModel> | $Enums.AiUsageRequestMode
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAiUsageRequestModeFilter<$PrismaModel>
+    _max?: NestedEnumAiUsageRequestModeFilter<$PrismaModel>
+  }
+
+  export type EnumAiUsageStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AiUsageStatus | EnumAiUsageStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.AiUsageStatus[] | ListEnumAiUsageStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AiUsageStatus[] | ListEnumAiUsageStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumAiUsageStatusWithAggregatesFilter<$PrismaModel> | $Enums.AiUsageStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAiUsageStatusFilter<$PrismaModel>
+    _max?: NestedEnumAiUsageStatusFilter<$PrismaModel>
+  }
+
   export type FilterCreateNestedManyWithoutUserInput = {
     create?: XOR<FilterCreateWithoutUserInput, FilterUncheckedCreateWithoutUserInput> | FilterCreateWithoutUserInput[] | FilterUncheckedCreateWithoutUserInput[]
     connectOrCreate?: FilterCreateOrConnectWithoutUserInput | FilterCreateOrConnectWithoutUserInput[]
@@ -50022,6 +52046,13 @@ export namespace Prisma {
     connect?: ContactAudienceAnalysisWhereUniqueInput | ContactAudienceAnalysisWhereUniqueInput[]
   }
 
+  export type AiUsageLogCreateNestedManyWithoutUserInput = {
+    create?: XOR<AiUsageLogCreateWithoutUserInput, AiUsageLogUncheckedCreateWithoutUserInput> | AiUsageLogCreateWithoutUserInput[] | AiUsageLogUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AiUsageLogCreateOrConnectWithoutUserInput | AiUsageLogCreateOrConnectWithoutUserInput[]
+    createMany?: AiUsageLogCreateManyUserInputEnvelope
+    connect?: AiUsageLogWhereUniqueInput | AiUsageLogWhereUniqueInput[]
+  }
+
   export type FilterUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<FilterCreateWithoutUserInput, FilterUncheckedCreateWithoutUserInput> | FilterCreateWithoutUserInput[] | FilterUncheckedCreateWithoutUserInput[]
     connectOrCreate?: FilterCreateOrConnectWithoutUserInput | FilterCreateOrConnectWithoutUserInput[]
@@ -50125,6 +52156,13 @@ export namespace Prisma {
     connectOrCreate?: ContactAudienceAnalysisCreateOrConnectWithoutUserInput | ContactAudienceAnalysisCreateOrConnectWithoutUserInput[]
     createMany?: ContactAudienceAnalysisCreateManyUserInputEnvelope
     connect?: ContactAudienceAnalysisWhereUniqueInput | ContactAudienceAnalysisWhereUniqueInput[]
+  }
+
+  export type AiUsageLogUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<AiUsageLogCreateWithoutUserInput, AiUsageLogUncheckedCreateWithoutUserInput> | AiUsageLogCreateWithoutUserInput[] | AiUsageLogUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AiUsageLogCreateOrConnectWithoutUserInput | AiUsageLogCreateOrConnectWithoutUserInput[]
+    createMany?: AiUsageLogCreateManyUserInputEnvelope
+    connect?: AiUsageLogWhereUniqueInput | AiUsageLogWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -50353,6 +52391,20 @@ export namespace Prisma {
     deleteMany?: ContactAudienceAnalysisScalarWhereInput | ContactAudienceAnalysisScalarWhereInput[]
   }
 
+  export type AiUsageLogUpdateManyWithoutUserNestedInput = {
+    create?: XOR<AiUsageLogCreateWithoutUserInput, AiUsageLogUncheckedCreateWithoutUserInput> | AiUsageLogCreateWithoutUserInput[] | AiUsageLogUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AiUsageLogCreateOrConnectWithoutUserInput | AiUsageLogCreateOrConnectWithoutUserInput[]
+    upsert?: AiUsageLogUpsertWithWhereUniqueWithoutUserInput | AiUsageLogUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: AiUsageLogCreateManyUserInputEnvelope
+    set?: AiUsageLogWhereUniqueInput | AiUsageLogWhereUniqueInput[]
+    disconnect?: AiUsageLogWhereUniqueInput | AiUsageLogWhereUniqueInput[]
+    delete?: AiUsageLogWhereUniqueInput | AiUsageLogWhereUniqueInput[]
+    connect?: AiUsageLogWhereUniqueInput | AiUsageLogWhereUniqueInput[]
+    update?: AiUsageLogUpdateWithWhereUniqueWithoutUserInput | AiUsageLogUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: AiUsageLogUpdateManyWithWhereWithoutUserInput | AiUsageLogUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: AiUsageLogScalarWhereInput | AiUsageLogScalarWhereInput[]
+  }
+
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -50569,6 +52621,20 @@ export namespace Prisma {
     update?: ContactAudienceAnalysisUpdateWithWhereUniqueWithoutUserInput | ContactAudienceAnalysisUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: ContactAudienceAnalysisUpdateManyWithWhereWithoutUserInput | ContactAudienceAnalysisUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: ContactAudienceAnalysisScalarWhereInput | ContactAudienceAnalysisScalarWhereInput[]
+  }
+
+  export type AiUsageLogUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<AiUsageLogCreateWithoutUserInput, AiUsageLogUncheckedCreateWithoutUserInput> | AiUsageLogCreateWithoutUserInput[] | AiUsageLogUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AiUsageLogCreateOrConnectWithoutUserInput | AiUsageLogCreateOrConnectWithoutUserInput[]
+    upsert?: AiUsageLogUpsertWithWhereUniqueWithoutUserInput | AiUsageLogUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: AiUsageLogCreateManyUserInputEnvelope
+    set?: AiUsageLogWhereUniqueInput | AiUsageLogWhereUniqueInput[]
+    disconnect?: AiUsageLogWhereUniqueInput | AiUsageLogWhereUniqueInput[]
+    delete?: AiUsageLogWhereUniqueInput | AiUsageLogWhereUniqueInput[]
+    connect?: AiUsageLogWhereUniqueInput | AiUsageLogWhereUniqueInput[]
+    update?: AiUsageLogUpdateWithWhereUniqueWithoutUserInput | AiUsageLogUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: AiUsageLogUpdateManyWithWhereWithoutUserInput | AiUsageLogUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: AiUsageLogScalarWhereInput | AiUsageLogScalarWhereInput[]
   }
 
   export type FilterCreateenrichment_sourcesInput = {
@@ -52652,6 +54718,32 @@ export namespace Prisma {
     update?: XOR<XOR<ContactListUpdateToOneWithWhereWithoutAudience_analysesInput, ContactListUpdateWithoutAudience_analysesInput>, ContactListUncheckedUpdateWithoutAudience_analysesInput>
   }
 
+  export type UserCreateNestedOneWithoutAi_usage_logsInput = {
+    create?: XOR<UserCreateWithoutAi_usage_logsInput, UserUncheckedCreateWithoutAi_usage_logsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAi_usage_logsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumAiUsageOperationFieldUpdateOperationsInput = {
+    set?: $Enums.AiUsageOperation
+  }
+
+  export type EnumAiUsageRequestModeFieldUpdateOperationsInput = {
+    set?: $Enums.AiUsageRequestMode
+  }
+
+  export type EnumAiUsageStatusFieldUpdateOperationsInput = {
+    set?: $Enums.AiUsageStatus
+  }
+
+  export type UserUpdateOneRequiredWithoutAi_usage_logsNestedInput = {
+    create?: XOR<UserCreateWithoutAi_usage_logsInput, UserUncheckedCreateWithoutAi_usage_logsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAi_usage_logsInput
+    upsert?: UserUpsertWithoutAi_usage_logsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAi_usage_logsInput, UserUpdateWithoutAi_usage_logsInput>, UserUncheckedUpdateWithoutAi_usage_logsInput>
+  }
+
   export type NestedIntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -53297,6 +55389,57 @@ export namespace Prisma {
     _sum?: NestedFloatNullableFilter<$PrismaModel>
     _min?: NestedFloatNullableFilter<$PrismaModel>
     _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumAiUsageOperationFilter<$PrismaModel = never> = {
+    equals?: $Enums.AiUsageOperation | EnumAiUsageOperationFieldRefInput<$PrismaModel>
+    in?: $Enums.AiUsageOperation[] | ListEnumAiUsageOperationFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AiUsageOperation[] | ListEnumAiUsageOperationFieldRefInput<$PrismaModel>
+    not?: NestedEnumAiUsageOperationFilter<$PrismaModel> | $Enums.AiUsageOperation
+  }
+
+  export type NestedEnumAiUsageRequestModeFilter<$PrismaModel = never> = {
+    equals?: $Enums.AiUsageRequestMode | EnumAiUsageRequestModeFieldRefInput<$PrismaModel>
+    in?: $Enums.AiUsageRequestMode[] | ListEnumAiUsageRequestModeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AiUsageRequestMode[] | ListEnumAiUsageRequestModeFieldRefInput<$PrismaModel>
+    not?: NestedEnumAiUsageRequestModeFilter<$PrismaModel> | $Enums.AiUsageRequestMode
+  }
+
+  export type NestedEnumAiUsageStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.AiUsageStatus | EnumAiUsageStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.AiUsageStatus[] | ListEnumAiUsageStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AiUsageStatus[] | ListEnumAiUsageStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumAiUsageStatusFilter<$PrismaModel> | $Enums.AiUsageStatus
+  }
+
+  export type NestedEnumAiUsageOperationWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AiUsageOperation | EnumAiUsageOperationFieldRefInput<$PrismaModel>
+    in?: $Enums.AiUsageOperation[] | ListEnumAiUsageOperationFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AiUsageOperation[] | ListEnumAiUsageOperationFieldRefInput<$PrismaModel>
+    not?: NestedEnumAiUsageOperationWithAggregatesFilter<$PrismaModel> | $Enums.AiUsageOperation
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAiUsageOperationFilter<$PrismaModel>
+    _max?: NestedEnumAiUsageOperationFilter<$PrismaModel>
+  }
+
+  export type NestedEnumAiUsageRequestModeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AiUsageRequestMode | EnumAiUsageRequestModeFieldRefInput<$PrismaModel>
+    in?: $Enums.AiUsageRequestMode[] | ListEnumAiUsageRequestModeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AiUsageRequestMode[] | ListEnumAiUsageRequestModeFieldRefInput<$PrismaModel>
+    not?: NestedEnumAiUsageRequestModeWithAggregatesFilter<$PrismaModel> | $Enums.AiUsageRequestMode
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAiUsageRequestModeFilter<$PrismaModel>
+    _max?: NestedEnumAiUsageRequestModeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumAiUsageStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AiUsageStatus | EnumAiUsageStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.AiUsageStatus[] | ListEnumAiUsageStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AiUsageStatus[] | ListEnumAiUsageStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumAiUsageStatusWithAggregatesFilter<$PrismaModel> | $Enums.AiUsageStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAiUsageStatusFilter<$PrismaModel>
+    _max?: NestedEnumAiUsageStatusFilter<$PrismaModel>
   }
 
   export type FilterCreateWithoutUserInput = {
@@ -53987,6 +56130,62 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type AiUsageLogCreateWithoutUserInput = {
+    uuid?: string
+    provider: string
+    model: string
+    operation: $Enums.AiUsageOperation
+    request_mode?: $Enums.AiUsageRequestMode
+    status: $Enums.AiUsageStatus
+    input_tokens?: number | null
+    output_tokens?: number | null
+    total_tokens?: number | null
+    input_cost_usd?: Decimal | DecimalJsLike | number | string | null
+    output_cost_usd?: Decimal | DecimalJsLike | number | string | null
+    total_cost_usd?: Decimal | DecimalJsLike | number | string | null
+    duration_ms?: number | null
+    reference_type?: string | null
+    reference_uuid?: string | null
+    batch_id?: string | null
+    custom_id?: string | null
+    error_message?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+  }
+
+  export type AiUsageLogUncheckedCreateWithoutUserInput = {
+    uuid?: string
+    provider: string
+    model: string
+    operation: $Enums.AiUsageOperation
+    request_mode?: $Enums.AiUsageRequestMode
+    status: $Enums.AiUsageStatus
+    input_tokens?: number | null
+    output_tokens?: number | null
+    total_tokens?: number | null
+    input_cost_usd?: Decimal | DecimalJsLike | number | string | null
+    output_cost_usd?: Decimal | DecimalJsLike | number | string | null
+    total_cost_usd?: Decimal | DecimalJsLike | number | string | null
+    duration_ms?: number | null
+    reference_type?: string | null
+    reference_uuid?: string | null
+    batch_id?: string | null
+    custom_id?: string | null
+    error_message?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+  }
+
+  export type AiUsageLogCreateOrConnectWithoutUserInput = {
+    where: AiUsageLogWhereUniqueInput
+    create: XOR<AiUsageLogCreateWithoutUserInput, AiUsageLogUncheckedCreateWithoutUserInput>
+  }
+
+  export type AiUsageLogCreateManyUserInputEnvelope = {
+    data: AiUsageLogCreateManyUserInput | AiUsageLogCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type FilterUpsertWithWhereUniqueWithoutUserInput = {
     where: FilterWhereUniqueInput
     update: XOR<FilterUpdateWithoutUserInput, FilterUncheckedUpdateWithoutUserInput>
@@ -54536,6 +56735,49 @@ export namespace Prisma {
     updated_at?: DateTimeFilter<"ContactAudienceAnalysis"> | Date | string
   }
 
+  export type AiUsageLogUpsertWithWhereUniqueWithoutUserInput = {
+    where: AiUsageLogWhereUniqueInput
+    update: XOR<AiUsageLogUpdateWithoutUserInput, AiUsageLogUncheckedUpdateWithoutUserInput>
+    create: XOR<AiUsageLogCreateWithoutUserInput, AiUsageLogUncheckedCreateWithoutUserInput>
+  }
+
+  export type AiUsageLogUpdateWithWhereUniqueWithoutUserInput = {
+    where: AiUsageLogWhereUniqueInput
+    data: XOR<AiUsageLogUpdateWithoutUserInput, AiUsageLogUncheckedUpdateWithoutUserInput>
+  }
+
+  export type AiUsageLogUpdateManyWithWhereWithoutUserInput = {
+    where: AiUsageLogScalarWhereInput
+    data: XOR<AiUsageLogUpdateManyMutationInput, AiUsageLogUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type AiUsageLogScalarWhereInput = {
+    AND?: AiUsageLogScalarWhereInput | AiUsageLogScalarWhereInput[]
+    OR?: AiUsageLogScalarWhereInput[]
+    NOT?: AiUsageLogScalarWhereInput | AiUsageLogScalarWhereInput[]
+    uuid?: StringFilter<"AiUsageLog"> | string
+    user_uuid?: StringFilter<"AiUsageLog"> | string
+    provider?: StringFilter<"AiUsageLog"> | string
+    model?: StringFilter<"AiUsageLog"> | string
+    operation?: EnumAiUsageOperationFilter<"AiUsageLog"> | $Enums.AiUsageOperation
+    request_mode?: EnumAiUsageRequestModeFilter<"AiUsageLog"> | $Enums.AiUsageRequestMode
+    status?: EnumAiUsageStatusFilter<"AiUsageLog"> | $Enums.AiUsageStatus
+    input_tokens?: IntNullableFilter<"AiUsageLog"> | number | null
+    output_tokens?: IntNullableFilter<"AiUsageLog"> | number | null
+    total_tokens?: IntNullableFilter<"AiUsageLog"> | number | null
+    input_cost_usd?: DecimalNullableFilter<"AiUsageLog"> | Decimal | DecimalJsLike | number | string | null
+    output_cost_usd?: DecimalNullableFilter<"AiUsageLog"> | Decimal | DecimalJsLike | number | string | null
+    total_cost_usd?: DecimalNullableFilter<"AiUsageLog"> | Decimal | DecimalJsLike | number | string | null
+    duration_ms?: IntNullableFilter<"AiUsageLog"> | number | null
+    reference_type?: StringNullableFilter<"AiUsageLog"> | string | null
+    reference_uuid?: StringNullableFilter<"AiUsageLog"> | string | null
+    batch_id?: StringNullableFilter<"AiUsageLog"> | string | null
+    custom_id?: StringNullableFilter<"AiUsageLog"> | string | null
+    error_message?: StringNullableFilter<"AiUsageLog"> | string | null
+    metadata?: JsonNullableFilter<"AiUsageLog">
+    created_at?: DateTimeFilter<"AiUsageLog"> | Date | string
+  }
+
   export type UserCreateWithoutFiltersInput = {
     uuid?: string
     email: string
@@ -54558,6 +56800,7 @@ export namespace Prisma {
     form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
+    ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutFiltersInput = {
@@ -54583,6 +56826,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
+    ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutFiltersInput = {
@@ -54841,6 +57085,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
+    ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFiltersInput = {
@@ -54866,6 +57111,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
+    ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type RawLeadUpsertWithWhereUniqueWithoutFilterInput = {
@@ -55011,6 +57257,7 @@ export namespace Prisma {
     form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
+    ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutScoring_instructionsInput = {
@@ -55036,6 +57283,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
+    ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutScoring_instructionsInput = {
@@ -55119,6 +57367,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
+    ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutScoring_instructionsInput = {
@@ -55144,6 +57393,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
+    ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type FilterScoringInstructionUpsertWithWhereUniqueWithoutScoring_instructionInput = {
@@ -55903,6 +58153,7 @@ export namespace Prisma {
     form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
+    ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutContactsInput = {
@@ -55928,6 +58179,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
+    ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutContactsInput = {
@@ -56361,6 +58613,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
+    ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutContactsInput = {
@@ -56386,6 +58639,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
+    ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type LeadUpsertWithoutContactsInput = {
@@ -57092,6 +59346,7 @@ export namespace Prisma {
     forms?: FormCreateNestedManyWithoutUserInput
     form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
+    ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutContact_listsInput = {
@@ -57117,6 +59372,7 @@ export namespace Prisma {
     forms?: FormUncheckedCreateNestedManyWithoutUserInput
     form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
+    ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutContact_listsInput = {
@@ -57229,6 +59485,7 @@ export namespace Prisma {
     forms?: FormUpdateManyWithoutUserNestedInput
     form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
+    ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutContact_listsInput = {
@@ -57254,6 +59511,7 @@ export namespace Prisma {
     forms?: FormUncheckedUpdateManyWithoutUserNestedInput
     form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
+    ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ContactListMemberUpsertWithWhereUniqueWithoutListInput = {
@@ -57760,6 +60018,7 @@ export namespace Prisma {
     form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
+    ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutInteractionsInput = {
@@ -57785,6 +60044,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
+    ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutInteractionsInput = {
@@ -58047,6 +60307,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
+    ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutInteractionsInput = {
@@ -58072,6 +60333,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
+    ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type OutreachMessageUpsertWithoutInteractionInput = {
@@ -58248,6 +60510,7 @@ export namespace Prisma {
     form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
+    ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOutreach_messagesInput = {
@@ -58273,6 +60536,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
+    ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOutreach_messagesInput = {
@@ -58509,6 +60773,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
+    ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOutreach_messagesInput = {
@@ -58534,6 +60799,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
+    ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ContactUpsertWithoutOutreach_messagesInput = {
@@ -58772,6 +61038,7 @@ export namespace Prisma {
     form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
+    ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOutreach_sequencesInput = {
@@ -58797,6 +61064,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
+    ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOutreach_sequencesInput = {
@@ -58837,6 +61105,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
+    ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOutreach_sequencesInput = {
@@ -58862,6 +61131,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
+    ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type FilterCreateWithoutJobsInput = {
@@ -58980,6 +61250,7 @@ export namespace Prisma {
     form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
+    ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSender_profilesInput = {
@@ -59005,6 +61276,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
+    ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSender_profilesInput = {
@@ -59138,6 +61410,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
+    ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSender_profilesInput = {
@@ -59163,6 +61436,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
+    ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type MarketingCampaignUpsertWithWhereUniqueWithoutSender_profileInput = {
@@ -59203,6 +61477,7 @@ export namespace Prisma {
     form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
+    ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutMarketing_campaignsInput = {
@@ -59228,6 +61503,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
+    ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutMarketing_campaignsInput = {
@@ -59455,6 +61731,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
+    ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMarketing_campaignsInput = {
@@ -59480,6 +61757,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
+    ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type SenderProfileUpsertWithoutMarketing_campaignsInput = {
@@ -59956,6 +62234,7 @@ export namespace Prisma {
     form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
+    ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOpenai_batch_jobsInput = {
@@ -59981,6 +62260,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
+    ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOpenai_batch_jobsInput = {
@@ -60021,6 +62301,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
+    ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOpenai_batch_jobsInput = {
@@ -60046,6 +62327,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
+    ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutIntegrationsInput = {
@@ -60070,6 +62352,7 @@ export namespace Prisma {
     form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
+    ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutIntegrationsInput = {
@@ -60095,6 +62378,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
+    ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutIntegrationsInput = {
@@ -60166,6 +62450,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
+    ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutIntegrationsInput = {
@@ -60191,6 +62476,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
+    ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type IntegrationKeyUpsertWithWhereUniqueWithoutIntegrationInput = {
@@ -60300,6 +62586,7 @@ export namespace Prisma {
     form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
+    ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutRemindersInput = {
@@ -60325,6 +62612,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
+    ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutRemindersInput = {
@@ -60441,6 +62729,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
+    ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRemindersInput = {
@@ -60466,6 +62755,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
+    ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ContactUpsertWithoutRemindersInput = {
@@ -60572,6 +62862,7 @@ export namespace Prisma {
     form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
+    ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutFormsInput = {
@@ -60597,6 +62888,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
+    ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutFormsInput = {
@@ -60709,6 +63001,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
+    ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFormsInput = {
@@ -60734,6 +63027,7 @@ export namespace Prisma {
     form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
+    ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type FormFieldUpsertWithWhereUniqueWithoutFormInput = {
@@ -61026,6 +63320,7 @@ export namespace Prisma {
     forms?: FormCreateNestedManyWithoutUserInput
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
+    ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutForm_completionsInput = {
@@ -61051,6 +63346,7 @@ export namespace Prisma {
     forms?: FormUncheckedCreateNestedManyWithoutUserInput
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
+    ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutForm_completionsInput = {
@@ -61232,6 +63528,7 @@ export namespace Prisma {
     forms?: FormUpdateManyWithoutUserNestedInput
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
+    ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutForm_completionsInput = {
@@ -61257,6 +63554,7 @@ export namespace Prisma {
     forms?: FormUncheckedUpdateManyWithoutUserNestedInput
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
+    ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type FormCompletionValueUpsertWithWhereUniqueWithoutCompletionInput = {
@@ -61433,6 +63731,7 @@ export namespace Prisma {
     forms?: FormCreateNestedManyWithoutUserInput
     form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
+    ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutContact_audience_analysesInput = {
@@ -61458,6 +63757,7 @@ export namespace Prisma {
     forms?: FormUncheckedCreateNestedManyWithoutUserInput
     form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
+    ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutContact_audience_analysesInput = {
@@ -61568,6 +63868,7 @@ export namespace Prisma {
     forms?: FormUpdateManyWithoutUserNestedInput
     form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
+    ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutContact_audience_analysesInput = {
@@ -61593,6 +63894,7 @@ export namespace Prisma {
     forms?: FormUncheckedUpdateManyWithoutUserNestedInput
     form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
+    ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type FilterUpsertWithoutAudience_analysesInput = {
@@ -61675,6 +63977,124 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: ContactListMemberUncheckedUpdateManyWithoutListNestedInput
+  }
+
+  export type UserCreateWithoutAi_usage_logsInput = {
+    uuid?: string
+    email: string
+    phone?: string | null
+    password: string
+    role?: $Enums.AuthRole
+    created_at?: Date | string
+    updated_at?: Date | string
+    filters?: FilterCreateNestedManyWithoutUserInput
+    contacts?: ContactCreateNestedManyWithoutUserInput
+    outreach_messages?: OutreachMessageCreateNestedManyWithoutUserInput
+    outreach_sequences?: OutreachSequenceCreateNestedManyWithoutUserInput
+    interactions?: InteractionCreateNestedManyWithoutUserInput
+    sender_profiles?: SenderProfileCreateNestedManyWithoutUserInput
+    marketing_campaigns?: MarketingCampaignCreateNestedManyWithoutUserInput
+    scoring_instructions?: ScoringInstructionCreateNestedManyWithoutUserInput
+    openai_batch_jobs?: OpenAiBatchJobCreateNestedManyWithoutUserInput
+    integrations?: IntegrationCreateNestedManyWithoutUserInput
+    reminders?: ReminderCreateNestedManyWithoutUserInput
+    forms?: FormCreateNestedManyWithoutUserInput
+    form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
+    contact_lists?: ContactListCreateNestedManyWithoutUserInput
+    contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutAi_usage_logsInput = {
+    id?: number
+    uuid?: string
+    email: string
+    phone?: string | null
+    password: string
+    role?: $Enums.AuthRole
+    created_at?: Date | string
+    updated_at?: Date | string
+    filters?: FilterUncheckedCreateNestedManyWithoutUserInput
+    contacts?: ContactUncheckedCreateNestedManyWithoutUserInput
+    outreach_messages?: OutreachMessageUncheckedCreateNestedManyWithoutUserInput
+    outreach_sequences?: OutreachSequenceUncheckedCreateNestedManyWithoutUserInput
+    interactions?: InteractionUncheckedCreateNestedManyWithoutUserInput
+    sender_profiles?: SenderProfileUncheckedCreateNestedManyWithoutUserInput
+    marketing_campaigns?: MarketingCampaignUncheckedCreateNestedManyWithoutUserInput
+    scoring_instructions?: ScoringInstructionUncheckedCreateNestedManyWithoutUserInput
+    openai_batch_jobs?: OpenAiBatchJobUncheckedCreateNestedManyWithoutUserInput
+    integrations?: IntegrationUncheckedCreateNestedManyWithoutUserInput
+    reminders?: ReminderUncheckedCreateNestedManyWithoutUserInput
+    forms?: FormUncheckedCreateNestedManyWithoutUserInput
+    form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
+    contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
+    contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutAi_usage_logsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutAi_usage_logsInput, UserUncheckedCreateWithoutAi_usage_logsInput>
+  }
+
+  export type UserUpsertWithoutAi_usage_logsInput = {
+    update: XOR<UserUpdateWithoutAi_usage_logsInput, UserUncheckedUpdateWithoutAi_usage_logsInput>
+    create: XOR<UserCreateWithoutAi_usage_logsInput, UserUncheckedCreateWithoutAi_usage_logsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutAi_usage_logsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutAi_usage_logsInput, UserUncheckedUpdateWithoutAi_usage_logsInput>
+  }
+
+  export type UserUpdateWithoutAi_usage_logsInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    filters?: FilterUpdateManyWithoutUserNestedInput
+    contacts?: ContactUpdateManyWithoutUserNestedInput
+    outreach_messages?: OutreachMessageUpdateManyWithoutUserNestedInput
+    outreach_sequences?: OutreachSequenceUpdateManyWithoutUserNestedInput
+    interactions?: InteractionUpdateManyWithoutUserNestedInput
+    sender_profiles?: SenderProfileUpdateManyWithoutUserNestedInput
+    marketing_campaigns?: MarketingCampaignUpdateManyWithoutUserNestedInput
+    scoring_instructions?: ScoringInstructionUpdateManyWithoutUserNestedInput
+    openai_batch_jobs?: OpenAiBatchJobUpdateManyWithoutUserNestedInput
+    integrations?: IntegrationUpdateManyWithoutUserNestedInput
+    reminders?: ReminderUpdateManyWithoutUserNestedInput
+    forms?: FormUpdateManyWithoutUserNestedInput
+    form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
+    contact_lists?: ContactListUpdateManyWithoutUserNestedInput
+    contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutAi_usage_logsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    filters?: FilterUncheckedUpdateManyWithoutUserNestedInput
+    contacts?: ContactUncheckedUpdateManyWithoutUserNestedInput
+    outreach_messages?: OutreachMessageUncheckedUpdateManyWithoutUserNestedInput
+    outreach_sequences?: OutreachSequenceUncheckedUpdateManyWithoutUserNestedInput
+    interactions?: InteractionUncheckedUpdateManyWithoutUserNestedInput
+    sender_profiles?: SenderProfileUncheckedUpdateManyWithoutUserNestedInput
+    marketing_campaigns?: MarketingCampaignUncheckedUpdateManyWithoutUserNestedInput
+    scoring_instructions?: ScoringInstructionUncheckedUpdateManyWithoutUserNestedInput
+    openai_batch_jobs?: OpenAiBatchJobUncheckedUpdateManyWithoutUserNestedInput
+    integrations?: IntegrationUncheckedUpdateManyWithoutUserNestedInput
+    reminders?: ReminderUncheckedUpdateManyWithoutUserNestedInput
+    forms?: FormUncheckedUpdateManyWithoutUserNestedInput
+    form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
+    contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
+    contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type FilterCreateManyUserInput = {
@@ -61924,6 +64344,29 @@ export namespace Prisma {
     cost_usd?: number | null
     created_at?: Date | string
     updated_at?: Date | string
+  }
+
+  export type AiUsageLogCreateManyUserInput = {
+    uuid?: string
+    provider: string
+    model: string
+    operation: $Enums.AiUsageOperation
+    request_mode?: $Enums.AiUsageRequestMode
+    status: $Enums.AiUsageStatus
+    input_tokens?: number | null
+    output_tokens?: number | null
+    total_tokens?: number | null
+    input_cost_usd?: Decimal | DecimalJsLike | number | string | null
+    output_cost_usd?: Decimal | DecimalJsLike | number | string | null
+    total_cost_usd?: Decimal | DecimalJsLike | number | string | null
+    duration_ms?: number | null
+    reference_type?: string | null
+    reference_uuid?: string | null
+    batch_id?: string | null
+    custom_id?: string | null
+    error_message?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
   }
 
   export type FilterUpdateWithoutUserInput = {
@@ -62711,6 +65154,75 @@ export namespace Prisma {
     cost_usd?: NullableFloatFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AiUsageLogUpdateWithoutUserInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    provider?: StringFieldUpdateOperationsInput | string
+    model?: StringFieldUpdateOperationsInput | string
+    operation?: EnumAiUsageOperationFieldUpdateOperationsInput | $Enums.AiUsageOperation
+    request_mode?: EnumAiUsageRequestModeFieldUpdateOperationsInput | $Enums.AiUsageRequestMode
+    status?: EnumAiUsageStatusFieldUpdateOperationsInput | $Enums.AiUsageStatus
+    input_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    output_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    total_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    input_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    output_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    total_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    duration_ms?: NullableIntFieldUpdateOperationsInput | number | null
+    reference_type?: NullableStringFieldUpdateOperationsInput | string | null
+    reference_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    batch_id?: NullableStringFieldUpdateOperationsInput | string | null
+    custom_id?: NullableStringFieldUpdateOperationsInput | string | null
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AiUsageLogUncheckedUpdateWithoutUserInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    provider?: StringFieldUpdateOperationsInput | string
+    model?: StringFieldUpdateOperationsInput | string
+    operation?: EnumAiUsageOperationFieldUpdateOperationsInput | $Enums.AiUsageOperation
+    request_mode?: EnumAiUsageRequestModeFieldUpdateOperationsInput | $Enums.AiUsageRequestMode
+    status?: EnumAiUsageStatusFieldUpdateOperationsInput | $Enums.AiUsageStatus
+    input_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    output_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    total_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    input_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    output_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    total_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    duration_ms?: NullableIntFieldUpdateOperationsInput | number | null
+    reference_type?: NullableStringFieldUpdateOperationsInput | string | null
+    reference_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    batch_id?: NullableStringFieldUpdateOperationsInput | string | null
+    custom_id?: NullableStringFieldUpdateOperationsInput | string | null
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AiUsageLogUncheckedUpdateManyWithoutUserInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    provider?: StringFieldUpdateOperationsInput | string
+    model?: StringFieldUpdateOperationsInput | string
+    operation?: EnumAiUsageOperationFieldUpdateOperationsInput | $Enums.AiUsageOperation
+    request_mode?: EnumAiUsageRequestModeFieldUpdateOperationsInput | $Enums.AiUsageRequestMode
+    status?: EnumAiUsageStatusFieldUpdateOperationsInput | $Enums.AiUsageStatus
+    input_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    output_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    total_tokens?: NullableIntFieldUpdateOperationsInput | number | null
+    input_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    output_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    total_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    duration_ms?: NullableIntFieldUpdateOperationsInput | number | null
+    reference_type?: NullableStringFieldUpdateOperationsInput | string | null
+    reference_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    batch_id?: NullableStringFieldUpdateOperationsInput | string | null
+    custom_id?: NullableStringFieldUpdateOperationsInput | string | null
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type RawLeadCreateManyFilterInput = {

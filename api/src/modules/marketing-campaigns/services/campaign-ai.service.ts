@@ -6,9 +6,10 @@ import { generateWithCampaignPrompt } from '@/shared/utils/outreach-ai-generate.
 
 @Injectable()
 export class CampaignAiService {
-    constructor(private readonly aiService: AiService) { }
+    constructor(private readonly aiService: AiService) {}
 
     generate(
+        user_uuid: string,
         dto: GenerateCampaignMessageDto,
         ctx: {
             campaign_name?: string;
@@ -16,7 +17,7 @@ export class CampaignAiService {
             sender_business_description?: string;
         },
     ): Promise<{ subject: string | null; content: string }> {
-        return generateWithCampaignPrompt(this.aiService, dto.channel, dto.action, {
+        return generateWithCampaignPrompt(this.aiService, user_uuid, dto.channel, dto.action, {
             campaign_name: ctx.campaign_name,
             campaign_description: ctx.campaign_description,
             sender_business_description: ctx.sender_business_description,

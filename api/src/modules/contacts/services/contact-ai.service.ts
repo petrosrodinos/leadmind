@@ -1,5 +1,12 @@
-import { BadRequestException, ForbiddenException, Injectable, Logger } from '@nestjs/common';
 import {
+    BadRequestException,
+    ForbiddenException,
+    Injectable,
+    Logger,
+} from '@nestjs/common';
+import {
+    AiUsageOperation,
+    AiUsageStatus,
     CampaignStatus,
     Channel,
     Contact,
@@ -30,6 +37,8 @@ import { generateWithCampaignPrompt, parseEmailDraft } from '@/shared/utils/outr
 import { CONTACT_AI_SCORE_SCHEMA, type ContactAiScoreResult } from '../schemas/contact-ai-score.schema';
 import { sanitizeEmailHtml } from '@/shared/utils/sanitize-html.util';
 import { OutreachRenderService } from '@/modules/outreach/services/outreach-render.service';
+import { AiUsageService } from '@/modules/ai-usage/ai-usage.service';
+import { calculateAiCost } from '@/integrations/ai/utils/ai-cost';
 
 const filterForScoreInclude = {
     filter_scoring_instructions: { include: { scoring_instruction: true } },
@@ -52,6 +61,7 @@ export class ContactAiService {
         private readonly openAiBatchService: OpenAiBatchService,
         private readonly elasticsearchService: ElasticsearchService,
         private readonly outreachRenderService: OutreachRenderService,
+        private readonly aiUsageService: AiUsageService,
     ) { }
 
     async scoreContact(
@@ -82,11 +92,17 @@ export class ContactAiService {
             if (done.has(instr.uuid)) continue;
 
             const { response, usage } = await this.aiService.generateObjectWithSchema<ContactAiScoreResult>({
+                user_uuid: contact.user_uuid,
                 provider: AiProviders.openai,
                 model: AiModels.openai.gpt4oMini,
                 schema: CONTACT_AI_SCORE_SCHEMA,
                 prompt: buildScorePrompt(contact, lead, instr.instructions),
                 system: AiScoringSystemPrompt,
+                usage: {
+                    operation: 'CONTACT_SCORE',
+                    reference_type: 'contact',
+                    reference_uuid: contact.uuid,
+                },
             });
 
             await this.prisma.contactScore.upsert({
@@ -179,7 +195,7 @@ export class ContactAiService {
             throw new BadRequestException('All selected contacts are already scored for the chosen rules.');
         }
 
-        const result = await this.openAiBatchService.createBatch(requests);
+        const result = await this.openAiBatchService.createBatch(user_uuid, requests);
 
         await this.prisma.openAiBatchJob.create({
             data: {
@@ -208,18 +224,42 @@ export class ContactAiService {
             return;
         }
 
-        const batchStatus = await this.openAiBatchService.getBatchStatus(batchId);
+        const batchStatus = await this.openAiBatchService.getBatchStatus(job.user_uuid, batchId);
         if (!batchStatus.output_file_id) {
             this.logger.warn(`Batch ${batchId} has no output file yet`);
             return;
         }
 
-        const results = await this.openAiBatchService.getBatchResults(batchStatus.output_file_id);
+        const results = await this.openAiBatchService.getBatchResults(job.user_uuid, batchStatus.output_file_id);
         const updatedContactUuids = new Set<string>();
 
         for (const result of results) {
+            const model = result.model ?? AiModels.openai.gpt4oMini;
+            const cost =
+                result.input_tokens != null && result.output_tokens != null
+                    ? calculateAiCost({
+                          provider: AiProviders.openai,
+                          model,
+                          inputTokens: result.input_tokens,
+                          outputTokens: result.output_tokens,
+                      })
+                    : null;
+
             if (!result.content || result.error) {
                 this.logger.warn(`Batch result ${result.custom_id} failed: ${result.error}`);
+                this.aiUsageService.logBatchResult({
+                    user_uuid: job.user_uuid,
+                    model,
+                    operation: AiUsageOperation.CONTACT_SCORE,
+                    input_tokens: result.input_tokens,
+                    output_tokens: result.output_tokens,
+                    total_tokens: result.total_tokens,
+                    total_cost_usd: cost?.totalCost ?? null,
+                    batch_id: batchId,
+                    custom_id: result.custom_id,
+                    status: AiUsageStatus.ERROR,
+                    error_message: result.error ?? 'Empty batch response',
+                });
                 continue;
             }
 
@@ -238,6 +278,20 @@ export class ContactAiService {
                     update: { score },
                 });
                 updatedContactUuids.add(contact_uuid);
+                this.aiUsageService.logBatchResult({
+                    user_uuid: job.user_uuid,
+                    model,
+                    operation: AiUsageOperation.CONTACT_SCORE,
+                    input_tokens: result.input_tokens,
+                    output_tokens: result.output_tokens,
+                    total_tokens: result.total_tokens,
+                    total_cost_usd: cost?.totalCost ?? null,
+                    batch_id: batchId,
+                    custom_id: result.custom_id,
+                    status: AiUsageStatus.SUCCESS,
+                    reference_type: 'contact',
+                    reference_uuid: contact_uuid,
+                });
             } catch {
                 this.logger.warn(`Failed to parse batch result for ${result.custom_id}`);
             }
@@ -470,7 +524,7 @@ export class ContactAiService {
             );
         }
 
-        const result = await this.openAiBatchService.createBatch(requests);
+        const result = await this.openAiBatchService.createBatch(user_uuid, requests);
 
         await this.prisma.openAiBatchJob.create({
             data: {
@@ -497,19 +551,43 @@ export class ContactAiService {
             return;
         }
 
-        const batchStatus = await this.openAiBatchService.getBatchStatus(batchId);
+        const batchStatus = await this.openAiBatchService.getBatchStatus(job.user_uuid, batchId);
         if (!batchStatus.output_file_id) {
             this.logger.warn(`Batch ${batchId} has no output file yet`);
             return;
         }
 
-        const results = await this.openAiBatchService.getBatchResults(batchStatus.output_file_id);
+        const results = await this.openAiBatchService.getBatchResults(job.user_uuid, batchStatus.output_file_id);
         let generated = 0;
         let campaign_uuid: string | null = null;
 
         for (const result of results) {
+            const model = result.model ?? AiModels.openai.gpt4oMini;
+            const cost =
+                result.input_tokens != null && result.output_tokens != null
+                    ? calculateAiCost({
+                          provider: AiProviders.openai,
+                          model,
+                          inputTokens: result.input_tokens,
+                          outputTokens: result.output_tokens,
+                      })
+                    : null;
+
             if (!result.content || result.error) {
                 this.logger.warn(`Batch result ${result.custom_id} failed: ${result.error}`);
+                this.aiUsageService.logBatchResult({
+                    user_uuid: job.user_uuid,
+                    model,
+                    operation: AiUsageOperation.CONTACT_DRAFT,
+                    input_tokens: result.input_tokens,
+                    output_tokens: result.output_tokens,
+                    total_tokens: result.total_tokens,
+                    total_cost_usd: cost?.totalCost ?? null,
+                    batch_id: batchId,
+                    custom_id: result.custom_id,
+                    status: AiUsageStatus.ERROR,
+                    error_message: result.error ?? 'Empty batch response',
+                });
                 continue;
             }
 
@@ -565,6 +643,20 @@ export class ContactAiService {
                     },
                 });
                 generated++;
+                this.aiUsageService.logBatchResult({
+                    user_uuid: job.user_uuid,
+                    model,
+                    operation: AiUsageOperation.CONTACT_DRAFT,
+                    input_tokens: result.input_tokens,
+                    output_tokens: result.output_tokens,
+                    total_tokens: result.total_tokens,
+                    total_cost_usd: cost?.totalCost ?? null,
+                    batch_id: batchId,
+                    custom_id: result.custom_id,
+                    status: AiUsageStatus.SUCCESS,
+                    reference_type: 'contact',
+                    reference_uuid: contact_uuid,
+                });
             } catch (err) {
                 const message = err instanceof Error ? err.message : 'Unknown error';
                 this.logger.warn(`Failed to persist batch draft ${result.custom_id}: ${message}`);
@@ -622,7 +714,7 @@ export class ContactAiService {
         const action = dto.action ?? 'generate';
 
         if (action !== 'generate') {
-            return generateWithCampaignPrompt(this.aiService, dto.channel, action, {
+            return generateWithCampaignPrompt(this.aiService, user_uuid, dto.channel, action, {
                 sender_business_description,
                 user_prompt: dto.prompt,
                 current_subject: dto.current_subject,
@@ -694,10 +786,16 @@ export class ContactAiService {
         );
 
         const { response } = await this.aiService.generateText({
+            user_uuid: contact.user_uuid,
             provider: AiProviders.openai,
             model: AiModels.openai.gpt4o,
             prompt,
             system: 'You are an expert B2B outreach copywriter. Produce drafts ready for human review.',
+            usage: {
+                operation: 'CONTACT_DRAFT',
+                reference_type: 'contact',
+                reference_uuid: contact.uuid,
+            },
         });
 
         if (channel === Channel.EMAIL) {

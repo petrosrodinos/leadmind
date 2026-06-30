@@ -72,6 +72,21 @@ export class EnrichmentOrchestrator {
         return this.runInternal({ kind: 'contact', uuid: contactUuid }, sources, opts);
     }
 
+    protected async resolveUserUuidForTarget(target: EnrichmentTarget): Promise<string | null> {
+        if (target.kind === 'contact') {
+            const contact = await this.prisma.contact.findUnique({
+                where: { uuid: target.uuid },
+                select: { user_uuid: true },
+            });
+            return contact?.user_uuid ?? null;
+        }
+        const contact = await this.prisma.contact.findFirst({
+            where: { lead_uuid: target.uuid },
+            select: { user_uuid: true },
+        });
+        return contact?.user_uuid ?? null;
+    }
+
     private async runInternal(
         target: EnrichmentTarget,
         sources: EnrichmentSource[],
@@ -213,11 +228,11 @@ export class EnrichmentOrchestrator {
     ): Promise<EnrichmentSourceResult> {
         switch (source) {
             case EnrichmentSource.LINKEDIN:
-                return this.executeLinkedIn(subject);
+                return this.executeLinkedIn(target, subject);
             case EnrichmentSource.WEBSITE:
-                return this.executeWebsite(subject);
+                return this.executeWebsite(target, subject);
             case EnrichmentSource.GOOGLE_SEARCH:
-                return this.executeGoogleSearch(subject);
+                return this.executeGoogleSearch(target, subject);
             case EnrichmentSource.AI:
                 return this.executeAiSearch(target, subject, force);
             case EnrichmentSource.GEMI:
@@ -229,7 +244,10 @@ export class EnrichmentOrchestrator {
         }
     }
 
-    private async executeLinkedIn(subject: EnrichmentSubject): Promise<EnrichmentSourceResult> {
+    private async executeLinkedIn(
+        target: EnrichmentTarget,
+        subject: EnrichmentSubject,
+    ): Promise<EnrichmentSourceResult> {
         const url = subject.linkedin_url?.trim();
         if (!url) {
             throw new Error('Entity has no linkedin_url');
@@ -249,7 +267,8 @@ export class EnrichmentOrchestrator {
         if (!plain) {
             throw new Error('LinkedIn scraper returned no data');
         }
-        const li = await this.leadAi.summarizeLinkedInEnrichment(plain, subtype);
+        const user_uuid = await this.resolveUserUuidForTarget(target);
+        const li = await this.leadAi.summarizeLinkedInEnrichment(user_uuid, plain, subtype);
         return {
             source: EnrichmentSource.LINKEDIN,
             source_url: url,
@@ -338,7 +357,10 @@ export class EnrichmentOrchestrator {
         return data;
     }
 
-    private async executeWebsite(subject: EnrichmentSubject): Promise<EnrichmentSourceResult> {
+    private async executeWebsite(
+        target: EnrichmentTarget,
+        subject: EnrichmentSubject,
+    ): Promise<EnrichmentSourceResult> {
         const w = subject.website?.trim();
         if (!w) {
             throw new Error('Entity has no website for crawl');
@@ -348,7 +370,8 @@ export class EnrichmentOrchestrator {
         const textFull = page ? plainTextFromCrawledPage(page) : null;
         const textSample = textFull?.slice(0, 12000) ?? null;
         const mdSample = page?.markdown?.slice(0, 12000) ?? null;
-        const ws = await this.leadAi.summarizeWebsiteEnrichment({
+        const user_uuid = await this.resolveUserUuidForTarget(target);
+        const ws = await this.leadAi.summarizeWebsiteEnrichment(user_uuid, {
             url,
             title: page?.title ?? null,
             textSample,
@@ -371,7 +394,10 @@ export class EnrichmentOrchestrator {
         };
     }
 
-    private async executeGoogleSearch(subject: EnrichmentSubject): Promise<EnrichmentSourceResult> {
+    private async executeGoogleSearch(
+        target: EnrichmentTarget,
+        subject: EnrichmentSubject,
+    ): Promise<EnrichmentSourceResult> {
         const parts = [subject.company, subject.name]
             .filter((x): x is string => Boolean(x?.trim()))
             .map((x) => x.trim());
@@ -401,7 +427,8 @@ export class EnrichmentOrchestrator {
                 break;
             }
         }
-        const gs = await this.leadAi.summarizeGoogleSearchEnrichment({ query, results: summaries });
+        const user_uuid = await this.resolveUserUuidForTarget(target);
+        const gs = await this.leadAi.summarizeGoogleSearchEnrichment(user_uuid, { query, results: summaries });
         return {
             source: EnrichmentSource.GOOGLE_SEARCH,
             source_url: query,

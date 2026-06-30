@@ -25,6 +25,7 @@ import NewCampaignPage from "@/pages/dashboard/pages/campaigns/pages/new";
 import EditCampaignPage from "@/pages/dashboard/pages/campaigns/pages/edit";
 import CampaignDetailPage from "@/pages/dashboard/pages/campaigns/pages/detail";
 import AdminBatchJobsPage from "@/pages/dashboard/pages/admin/batch-jobs";
+import SettingsUsagePage from "@/pages/dashboard/pages/settings/usage";
 import RemindersPage from "@/pages/dashboard/pages/reminders";
 import FormsPage from "@/pages/dashboard/pages/forms";
 import FormDetailPage from "@/pages/dashboard/pages/forms/pages/detail";
@@ -92,6 +93,8 @@ export default function AppRoutes() {
         <Route path="forms/:uuid" element={<FormDetailPage />} />
         <Route path="sender-profiles" element={<SenderProfilesPage />} />
         <Route path="integrations" element={<IntegrationsPage />} />
+        <Route path="settings" element={<Navigate to={Routes.dashboard.settings_usage} replace />} />
+        <Route path="settings/usage" element={<SettingsUsagePage />} />
         <Route path="campaigns" element={<CampaignsPage />} />
         <Route path="campaigns/new" element={<NewCampaignPage />} />
         <Route path="campaigns/:uuid" element={<CampaignDetailPage />} />

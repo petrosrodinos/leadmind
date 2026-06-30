@@ -42,16 +42,28 @@ export class EnrichmentSummaryService {
             return null;
         }
 
+        const contact = await this.prisma.contact.findFirst({
+            where: { lead_uuid: leadUuid },
+            select: { user_uuid: true },
+        });
+        const user_uuid = contact?.user_uuid ?? null;
+
         const rows = await this.prisma.leadEnrichment.findMany({
             where: { lead_uuid: leadUuid },
             orderBy: { created_at: 'desc' },
         });
-        return this.regenerateFromRows(lead, rows, async (summary, metadata) => {
-            await this.prisma.lead.update({
-                where: { uuid: leadUuid },
-                data: { enrichment_summary: summary, enrichment_metadata: metadata },
-            });
-        }, leadUuid);
+        return this.regenerateFromRows(
+            lead,
+            rows,
+            user_uuid,
+            async (summary, metadata) => {
+                await this.prisma.lead.update({
+                    where: { uuid: leadUuid },
+                    data: { enrichment_summary: summary, enrichment_metadata: metadata },
+                });
+            },
+            leadUuid,
+        );
     }
 
     async regenerateContact(contactUuid: string): Promise<string | null> {
@@ -84,12 +96,18 @@ export class EnrichmentSummaryService {
             source_type: contact.lead.source_type,
             raw_data: contact.lead.raw_data,
         });
-        return this.regenerateFromRows(leadLike, rows, async (summary, metadata) => {
-            await this.prisma.contact.update({
-                where: { uuid: contactUuid },
-                data: { enrichment_summary: summary, enrichment_metadata: metadata },
-            });
-        }, contactUuid);
+        return this.regenerateFromRows(
+            leadLike,
+            rows,
+            contact.user_uuid,
+            async (summary, metadata) => {
+                await this.prisma.contact.update({
+                    where: { uuid: contactUuid },
+                    data: { enrichment_summary: summary, enrichment_metadata: metadata },
+                });
+            },
+            contactUuid,
+        );
     }
 
     private async regenerateFromRows(
@@ -102,6 +120,7 @@ export class EnrichmentSummaryService {
             metadata: Prisma.JsonValue | null;
             created_at: Date;
         }>,
+        user_uuid: string | null,
         persist: (summary: string | null, metadata: Prisma.InputJsonValue | null) => Promise<void>,
         entityLabel: string,
     ): Promise<string | null> {
@@ -112,7 +131,7 @@ export class EnrichmentSummaryService {
             return null;
         }
 
-        if (!this.aiConfig.isOpenAiConfigured()) {
+        if (!user_uuid || !(await this.aiConfig.isOpenAiConfigured(user_uuid))) {
             await persist(fallback, null);
             return fallback;
         }
@@ -122,12 +141,18 @@ export class EnrichmentSummaryService {
             const model = LEAD_ENRICHMENT_SUMMARY_MODEL;
             const prompt = buildLeadEnrichmentSummaryPrompt(leadLike, sourceContext);
             const { response } = await this.aiService.generateObjectWithSchema({
+                user_uuid,
                 provider: AiProviders.openai,
                 model,
                 prompt,
                 system: LEAD_ENRICHMENT_SUMMARY_SYSTEM_PROMPT,
                 schema: leadEnrichmentSummaryAiResponseSchema,
                 maxTokens: 1_536,
+                usage: {
+                    operation: 'ENRICHMENT_SUMMARY',
+                    reference_type: 'lead',
+                    reference_uuid: leadLike.uuid,
+                },
             });
             const summary = response.summary?.trim() || fallback;
             const metadata = coerceEnrichmentMetadata(response.metadata);

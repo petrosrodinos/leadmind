@@ -12,6 +12,7 @@ import {
     Lead,
     ScoringInstruction,
 } from '@/generated/prisma';
+import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { AiService } from '@/integrations/ai/services/ai.service';
 import {
     CONTACTS_INDEX,
@@ -40,6 +41,7 @@ export class ElasticsearchService implements OnModuleInit {
     constructor(
         @Inject(ELASTICSEARCH_CLIENT) private readonly client: Client | null,
         private readonly aiService: AiService,
+        private readonly prisma: PrismaService,
     ) {}
 
     get enabled(): boolean {
@@ -73,7 +75,8 @@ export class ElasticsearchService implements OnModuleInit {
         if (!this.client) return;
         try {
             const metadata = this.buildLeadMetadata(lead);
-            const embedding = await this.embed(metadata);
+            const user_uuid = await this.resolveUserUuidForLead(lead.uuid);
+            const embedding = user_uuid ? await this.embed(user_uuid, metadata) : [];
             await this.client.index({
                 index: LEADS_INDEX,
                 id: lead.uuid,
@@ -103,7 +106,7 @@ export class ElasticsearchService implements OnModuleInit {
         try {
             const tags = contact.tags.map((t) => t.tag);
             const metadata = this.buildContactMetadata(contact, tags);
-            const embedding = await this.embed(metadata);
+            const embedding = await this.embed(contact.user_uuid, metadata);
             const scores =
                 contact.contact_scores?.map((cs) => ({
                     scoring_instruction_uuid: cs.scoring_instruction_uuid,
@@ -199,13 +202,14 @@ export class ElasticsearchService implements OnModuleInit {
         }
         if (query.tags && query.tags.length > 0) filter.push({ terms: { tags: query.tags } });
 
-        return this.runSearch(CONTACTS_INDEX, query, filter);
+        return this.runSearch(CONTACTS_INDEX, query, filter, userUuid);
     }
 
     private async runSearch(
         index: string,
         query: SearchQuery,
         filter: any[],
+        userUuid?: string,
     ): Promise<SearchResult> {
         if (!this.client) return { hits: [], total: 0 };
 
@@ -213,8 +217,8 @@ export class ElasticsearchService implements OnModuleInit {
         const page = query.page ?? 1;
         const from = (page - 1) * limit;
 
-        if (query.q) {
-            const vector = await this.embed(query.q);
+        if (query.q && userUuid) {
+            const vector = await this.embed(userUuid, query.q);
             const response = await this.client.search({
                 index,
                 from,
@@ -303,8 +307,18 @@ export class ElasticsearchService implements OnModuleInit {
         return parts.filter(Boolean).join('\n');
     }
 
-    private async embed(text: string): Promise<number[]> {
-        return this.aiService.embedText(text.trim() || ' ');
+    private async embed(user_uuid: string, text: string): Promise<number[]> {
+        return this.aiService.embedText(user_uuid, text.trim() || ' ', {
+            operation: 'EMBEDDING',
+        });
+    }
+
+    private async resolveUserUuidForLead(leadUuid: string): Promise<string | null> {
+        const contact = await this.prisma.contact.findFirst({
+            where: { lead_uuid: leadUuid },
+            select: { user_uuid: true },
+        });
+        return contact?.user_uuid ?? null;
     }
 
     private formatResponse(response: any): SearchResult {

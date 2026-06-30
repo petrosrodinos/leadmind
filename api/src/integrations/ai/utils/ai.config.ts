@@ -8,10 +8,14 @@ import {
     isLeadEnrichmentAiProvider,
     LEAD_ENRICHMENT_AI_PROVIDER,
 } from '../constants/lead-enrichment-ai.constants';
+import { AiCredentialsService } from '../services/ai-credentials.service';
 
 @Injectable()
 export class AiConfig {
-    constructor(private readonly configService: ConfigService) { }
+    constructor(
+        private readonly configService: ConfigService,
+        private readonly aiCredentials: AiCredentialsService,
+    ) {}
 
     private readonly supportedModels: AIModelInfo[] = [
         { provider: AiProviders.openai, model: AiModels.openai.gpt4o },
@@ -38,8 +42,8 @@ export class AiConfig {
         return DEFAULT_LEAD_ENRICHMENT_AI_PROVIDER;
     }
 
-    isOpenAiConfigured(): boolean {
-        return Boolean(this.configService.get<string>('OPENAI_API_KEY')?.trim());
+    async isOpenAiConfigured(user_uuid: string): Promise<boolean> {
+        return this.aiCredentials.hasOpenAiApiKey(user_uuid);
     }
 
     isPerplexityConfigured(): boolean {
@@ -50,9 +54,9 @@ export class AiConfig {
         return Boolean(this.configService.get<string>('ANTHROPIC_API_KEY')?.trim());
     }
 
-    isLeadEnrichmentAiConfigured(provider: AiProvider): boolean {
+    async isLeadEnrichmentAiConfigured(user_uuid: string, provider: AiProvider): Promise<boolean> {
         if (provider === AiProviders.openai) {
-            return this.isOpenAiConfigured();
+            return this.isOpenAiConfigured(user_uuid);
         }
         if (provider === AiProviders.perplexity) {
             return this.isPerplexityConfigured();
@@ -63,10 +67,17 @@ export class AiConfig {
         return false;
     }
 
-    getModelAdapter(provider: AiProvider = AiProviders.openai, model: string = AiModels.openai.gpt4o) {
+    async getModelAdapter(
+        user_uuid: string,
+        provider: AiProvider = AiProviders.openai,
+        model: string = AiModels.openai.gpt4o,
+    ) {
         switch (provider) {
-            case AiProviders.openai:
-                return openai(model);
+            case AiProviders.openai: {
+                const apiKey = await this.aiCredentials.getOpenAiApiKey(user_uuid);
+                const openAi = createOpenAI({ apiKey });
+                return openAi(model);
+            }
             case AiProviders.perplexity: {
                 const apiKey = this.configService.get<string>('PERPLEXITY_API_KEY');
                 if (!apiKey?.trim()) {
@@ -96,10 +107,14 @@ export class AiConfig {
         }
     }
 
+    async getOpenAiProvider(user_uuid: string) {
+        const apiKey = await this.aiCredentials.getOpenAiApiKey(user_uuid);
+        return createOpenAI({ apiKey });
+    }
 
     isModelSupported(provider: AiProvider, model: string): boolean {
         return this.supportedModels.some(
-            supportedModel => supportedModel.provider === provider && supportedModel.model === model
+            (supportedModel) => supportedModel.provider === provider && supportedModel.model === model,
         );
     }
 
@@ -108,18 +123,18 @@ export class AiConfig {
     }
 
     getModelsByProvider(provider: AiProvider): AIModelInfo[] {
-        return this.supportedModels.filter(model => model.provider === provider);
+        return this.supportedModels.filter((model) => model.provider === provider);
     }
 
     validateProviderAndModel(provider: AiProvider, model: string): void {
         if (!this.isModelSupported(provider, model)) {
             const availableModels = this.getModelsByProvider(provider)
-                .map(m => m.model)
+                .map((m) => m.model)
                 .join(', ');
 
             throw new Error(
                 `Model ${model} is not supported for provider ${provider}. ` +
-                `Available models for ${provider}: ${availableModels || 'none'}`
+                    `Available models for ${provider}: ${availableModels || 'none'}`,
             );
         }
     }

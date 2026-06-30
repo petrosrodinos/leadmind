@@ -32,6 +32,7 @@ import { FormsModule } from './modules/forms/forms.module';
 import { ContactListsModule } from './modules/contact-lists/contact-lists.module';
 import { ContactAudienceStatsModule } from './modules/contact-audience-stats/contact-audience-stats.module';
 import { GatewaysModule } from './gateways/gateways.module';
+import { AiUsageModule } from './modules/ai-usage/ai-usage.module';
 
 @Module({
   imports: [
@@ -67,6 +68,7 @@ import { GatewaysModule } from './gateways/gateways.module';
     ContactListsModule,
     ContactAudienceStatsModule,
     GatewaysModule,
+    AiUsageModule,
   ],
   controllers: [AppController],
   providers: [AppService],

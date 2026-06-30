@@ -638,7 +638,7 @@ export class MarketingCampaignsService {
             user_uuid,
             campaign.sender_profile_uuid,
         );
-        return this.aiService.generate(dto, {
+        return this.aiService.generate(user_uuid, dto, {
             campaign_name: campaign.name,
             campaign_description: campaign.description ?? undefined,
             sender_business_description: senderDescription,
