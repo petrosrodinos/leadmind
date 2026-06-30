@@ -54,6 +54,44 @@ export class AiService {
         }
     }
 
+    async generateTextWithOpenAiWebSearch(options: AIGenerateOptions): Promise<AIGenerateTextResponse> {
+        try {
+            const model = options.model ?? 'gpt-4o-mini';
+            const modelAdapter = openai.responses(model);
+
+            const { text, usage, sources } = await generateText({
+                prompt: options.prompt,
+                model: modelAdapter,
+                system: options?.system || 'You are a helpful assistant.',
+                maxTokens: options.maxTokens,
+                tools: {
+                    web_search_preview: openai.tools.webSearchPreview(),
+                },
+                toolChoice: { type: 'tool', toolName: 'web_search_preview' },
+            });
+
+            const cost = calculateAiCost({
+                provider: 'openai',
+                model,
+                inputTokens: usage.promptTokens,
+                outputTokens: usage.completionTokens,
+            });
+
+            return {
+                response: text,
+                usage: cost,
+                sources: sources?.map((source) => ({
+                    type: source.sourceType,
+                    url: 'url' in source ? source.url : undefined,
+                    title: 'title' in source ? source.title : undefined,
+                })),
+            };
+        } catch (error) {
+            this.logger.error(`Error generating text with OpenAI web search: ${error.message}`);
+            throw new Error(`Failed to generate text with OpenAI web search: ${error.message}`);
+        }
+    }
+
 
     async generateObjectWithSchema<T>(options: AIGenerateOptions & { schema: z.ZodSchema<T> }): Promise<{ response: T; usage: AICostResponse }> {
         const maxRetries = 3;

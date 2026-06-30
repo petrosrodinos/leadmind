@@ -51,6 +51,9 @@ export class AiConfig {
     }
 
     isLeadEnrichmentAiConfigured(provider: AiProvider): boolean {
+        if (provider === AiProviders.openai) {
+            return this.isOpenAiConfigured();
+        }
         if (provider === AiProviders.perplexity) {
             return this.isPerplexityConfigured();
         }

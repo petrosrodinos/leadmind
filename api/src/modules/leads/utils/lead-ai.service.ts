@@ -273,7 +273,11 @@ export class LeadAiService {
         const provider = this.aiConfig.resolveLeadEnrichmentAiProvider();
         if (!this.aiConfig.isLeadEnrichmentAiConfigured(provider)) {
             const keyHint =
-                provider === AiProviders.claude ? 'ANTHROPIC_API_KEY' : 'PERPLEXITY_API_KEY';
+                provider === AiProviders.openai
+                    ? 'OPENAI_API_KEY'
+                    : provider === AiProviders.claude
+                      ? 'ANTHROPIC_API_KEY'
+                      : 'PERPLEXITY_API_KEY';
             this.logger.warn(`Lead ${lead.uuid}: ${keyHint} not set, skipping AI enrichment`);
             return null;
         }
@@ -304,7 +308,12 @@ export class LeadAiService {
         );
         const model = leadEnrichmentModelForProvider(provider);
 
-        const { response, usage } = await this.aiService.generateText({
+        const generate =
+            provider === AiProviders.openai
+                ? this.aiService.generateTextWithOpenAiWebSearch.bind(this.aiService)
+                : this.aiService.generateText.bind(this.aiService);
+
+        const { response, usage, sources } = await generate({
             provider,
             model,
             prompt,
@@ -329,11 +338,14 @@ export class LeadAiService {
                 website_context_used: Boolean(websiteExcerpt?.trim()),
                 linkedin_context_used: Boolean(linkedinExcerpt?.trim()),
                 google_search_context_used: Boolean(googleExcerpt?.trim()),
+                web_search_used: provider === AiProviders.openai,
+                ...(sources?.length ? { web_search_sources: sources } : {}),
             },
             metadata: {
                 model,
                 provider,
                 total_tokens: usage?.totalTokens,
+                ...(provider === AiProviders.openai ? { web_search: true } : {}),
             },
             cost_usd: usage?.totalCost ?? null,
             input_tokens: usage?.inputTokens ?? null,

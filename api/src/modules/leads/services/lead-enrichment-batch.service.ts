@@ -10,6 +10,7 @@ import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { OpenAiBatchService } from '@/integrations/ai/services/openai-batch.service';
 import { OpenAiBatchRequest, OpenAiBatchResult } from '@/integrations/ai/interfaces/openai-batch.interface';
 import { AiModels, AiProviders } from '@/integrations/ai/interfaces/ai.interface';
+import { LEAD_ENRICHMENT_AI_MODEL } from '@/integrations/ai/constants/lead-enrichment-ai.constants';
 import {
     buildGoogleDeterministicSummary,
     buildLinkedInDeterministicSummary,
@@ -530,14 +531,20 @@ export class LeadEnrichmentBatchService {
                         summary: content.trim(),
                         payload: {
                             provider: AiProviders.openai,
-                            model: AiModels.openai.gpt4o,
+                            model: LEAD_ENRICHMENT_AI_MODEL[AiProviders.openai],
                             generated_at: new Date().toISOString(),
                             website_context_used: Boolean(staging?.ai?.websiteExcerpt?.trim()),
                             linkedin_context_used: Boolean(staging?.ai?.linkedinExcerpt?.trim()),
                             google_search_context_used: Boolean(staging?.ai?.googleExcerpt?.trim()),
+                            web_search_used: true,
                             batch: true,
                         },
-                        metadata: { model: AiModels.openai.gpt4o, provider: AiProviders.openai, batch: true },
+                        metadata: {
+                            model: LEAD_ENRICHMENT_AI_MODEL[AiProviders.openai],
+                            provider: AiProviders.openai,
+                            web_search: true,
+                            batch: true,
+                        },
                         status: 'success',
                     },
                     { skipSummaryRegen: true },

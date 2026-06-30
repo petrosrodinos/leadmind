@@ -28,14 +28,11 @@ import { OpenAiBatchRequest } from '@/integrations/ai/interfaces/openai-batch.in
 import { AiModels } from '@/integrations/ai/interfaces/ai.interface';
 import {
     buildGoogleEnrichmentSummaryUserPrompt,
-    buildLeadAiResearchPrompt,
     buildLinkedInEnrichmentSummaryUserPrompt,
     buildWebsiteEnrichmentSummaryUserPrompt,
     GOOGLE_ENRICHMENT_SUMMARY_SYSTEM_PROMPT,
-    LEAD_ENRICHMENT_SYSTEM_PROMPT,
     LINKEDIN_ENRICHMENT_SUMMARY_SYSTEM_PROMPT,
     WEBSITE_ENRICHMENT_SUMMARY_SYSTEM_PROMPT,
-    leadHasAiResearchSeed,
 } from '../constants/ai-config';
 import type { LeadEnrichmentBatchLeadStaging } from '../interfaces/lead-enrichment-batch.interface';
 
@@ -103,7 +100,7 @@ export class LeadEnrichmentOrchestrator extends EnrichmentOrchestrator {
             case EnrichmentSource.GOOGLE_SEARCH:
                 return this.prepareGoogleBatch(lead);
             case EnrichmentSource.AI:
-                return this.prepareAiBatch(lead);
+                return null;
             case EnrichmentSource.GEMI:
                 return null;
             default: {
@@ -243,57 +240,6 @@ export class LeadEnrichmentOrchestrator extends EnrichmentOrchestrator {
         };
     }
 
-    private async prepareAiBatch(
-        lead: Lead,
-        stagingHint?: LeadEnrichmentBatchLeadStaging,
-    ): Promise<{ request: OpenAiBatchRequest; staging: LeadEnrichmentBatchLeadStaging } | null> {
-        const websiteExcerpt = stagingHint?.website
-            ? (stagingHint.website.textSample?.trim() ||
-                  stagingHint.website.markdownSample?.trim() ||
-                  null)
-            : null;
-        const linkedinExcerpt = stagingHint?.linkedin
-            ? linkedInPlainForAiContext(stagingHint.linkedin.plain, stagingHint.linkedin.subtype)
-            : null;
-        const googleExcerpt = stagingHint?.google
-            ? googleSearchPayloadToContext({ results: stagingHint.google.results })
-            : null;
-
-        if (
-            !leadHasAiResearchSeed(lead) &&
-            !websiteExcerpt?.trim() &&
-            !linkedinExcerpt?.trim() &&
-            !googleExcerpt?.trim()
-        ) {
-            throw new Error('Insufficient identity fields for AI research');
-        }
-
-        const prompt = buildLeadAiResearchPrompt(
-            lead,
-            websiteExcerpt,
-            linkedinExcerpt,
-            googleExcerpt,
-        );
-
-        return {
-            staging: {
-                ai: {
-                    websiteExcerpt,
-                    linkedinExcerpt,
-                    googleExcerpt,
-                },
-            },
-            request: {
-                custom_id: `lead_enrich|ai|${lead.uuid}`,
-                model: AiModels.openai.gpt4o,
-                messages: [
-                    { role: 'system', content: LEAD_ENRICHMENT_SYSTEM_PROMPT },
-                    { role: 'user', content: prompt },
-                ],
-            },
-        };
-    }
-
     async prepareLeadBatchRequests(
         lead: Lead,
         sources: EnrichmentSource[],
@@ -326,10 +272,38 @@ export class LeadEnrichmentOrchestrator extends EnrichmentOrchestrator {
                 (await this.prisma.lead.findUnique({ where: { uuid: lead.uuid } })) ?? lead;
 
             if (src === EnrichmentSource.AI) {
-                const prep = await this.prepareAiBatch(currentLead, staging);
-                if (prep) {
-                    requests.push(prep.request);
-                    Object.assign(staging, prep.staging);
+                try {
+                    const prefetchedPageText =
+                        staging.website?.textSample?.trim() ||
+                        staging.website?.markdownSample?.trim() ||
+                        null;
+                    const linkedinProfileExcerpt = staging.linkedin
+                        ? linkedInPlainForAiContext(
+                              staging.linkedin.plain,
+                              staging.linkedin.subtype,
+                          )
+                        : null;
+                    const result = await this.leadAi.buildAiEnrichmentResult(currentLead, {
+                        prefetchedPageText,
+                        linkedinProfileExcerpt,
+                        historyTarget: { kind: 'lead', uuid: currentLead.uuid },
+                    });
+                    if (result) {
+                        await this.persistEnrichmentAttempt(
+                            currentLead.uuid,
+                            { ...result, status: 'success' },
+                            { skipSummaryRegen: true },
+                        );
+                    }
+                } catch (error) {
+                    this.batchLogger.warn(
+                        `Lead ${lead.uuid} AI enrichment failed: ${error instanceof Error ? error.message : error}`,
+                    );
+                    await this.persistEnrichmentAttempt(
+                        lead.uuid,
+                        this.buildFailedAttempt(leadToEnrichmentSubject(currentLead), src, error),
+                        { skipSummaryRegen: true },
+                    );
                 }
                 continue;
             }

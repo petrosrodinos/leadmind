@@ -1,20 +1,28 @@
 import { AiModels, AiProviders, type AiProvider } from '../interfaces/ai.interface';
 
-export const LEAD_ENRICHMENT_AI_PROVIDER = 'claude';
+export const LEAD_ENRICHMENT_AI_PROVIDER = 'openai';
 
-export type LeadEnrichmentAiProvider = typeof AiProviders.perplexity | typeof AiProviders.claude;
+export type LeadEnrichmentAiProvider =
+    | typeof AiProviders.openai
+    | typeof AiProviders.perplexity
+    | typeof AiProviders.claude;
 
-export const DEFAULT_LEAD_ENRICHMENT_AI_PROVIDER: LeadEnrichmentAiProvider = AiProviders.claude;
+export const DEFAULT_LEAD_ENRICHMENT_AI_PROVIDER: LeadEnrichmentAiProvider = AiProviders.openai;
 
 export const LEAD_ENRICHMENT_SUMMARY_MODEL = AiModels.openai.gpt4oMini;
 
 export const LEAD_ENRICHMENT_AI_MODEL: Record<LeadEnrichmentAiProvider, string> = {
+    [AiProviders.openai]: AiModels.openai.gpt4oMini,
     [AiProviders.perplexity]: AiModels.perplexity.sonarPro,
     [AiProviders.claude]: AiModels.claude.sonnet,
 };
 
 export function isLeadEnrichmentAiProvider(value: string | undefined): value is LeadEnrichmentAiProvider {
-    return value === AiProviders.perplexity || value === AiProviders.claude;
+    return (
+        value === AiProviders.openai ||
+        value === AiProviders.perplexity ||
+        value === AiProviders.claude
+    );
 }
 
 export function leadEnrichmentModelForProvider(provider: AiProvider): string {

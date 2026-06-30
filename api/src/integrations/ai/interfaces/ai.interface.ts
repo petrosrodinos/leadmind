@@ -14,9 +14,16 @@ export interface AIGenerateOptions {
     presencePenalty?: number;
 }
 
+export interface AIWebSearchSource {
+    type: string;
+    url?: string;
+    title?: string;
+}
+
 export interface AIGenerateTextResponse {
     response: string;
-    usage?: AICostResponse
+    usage?: AICostResponse;
+    sources?: AIWebSearchSource[];
 }
 
 export interface AIGenerateObjectResponse {
