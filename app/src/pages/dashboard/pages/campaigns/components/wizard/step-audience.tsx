@@ -15,6 +15,7 @@ interface StepAudienceProps {
     channels: Channel[];
     value: CampaignFilters;
     onChange: (filters: CampaignFilters) => void;
+    onCountsChange?: (counts: { sendable: number; email: number }) => void;
 }
 
 export function StepAudience({
@@ -22,6 +23,7 @@ export function StepAudience({
     channels,
     value,
     onChange,
+    onCountsChange,
 }: StepAudienceProps) {
     const preview = usePreviewCampaignContacts();
     const [result, setResult] = useState<PreviewContactsResult | null>(null);
@@ -75,6 +77,15 @@ export function StepAudience({
         if (channels.includes(Channel.SMS)) count = Math.min(count, result.with_phone);
         return Math.max(0, count - excluded.size);
     }, [result, channels, excluded.size, matchingCount]);
+
+    const emailSendableCount = useMemo(() => {
+        if (!result || !channels.includes(Channel.EMAIL)) return 0;
+        return Math.max(0, Math.min(result.with_email, result.total) - excluded.size);
+    }, [result, channels, excluded.size]);
+
+    useEffect(() => {
+        onCountsChange?.({ sendable: sendableCount, email: emailSendableCount });
+    }, [emailSendableCount, onCountsChange, sendableCount]);
 
     return (
         <div className="flex flex-col gap-6">

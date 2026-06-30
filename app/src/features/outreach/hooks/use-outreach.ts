@@ -8,6 +8,7 @@ import {
 } from "../services/outreach.service";
 import type {
     CreateMessagePayload,
+    SendMessagePayload,
     UpdateMessagePayload,
 } from "@/features/contacts/interfaces/contact.interface";
 import { contactsQueryKeys } from "@/features/contacts/hooks/use-contacts";
@@ -56,8 +57,8 @@ export function useUpdateOutreachMessage() {
 export function useSendOutreachMessage() {
     const qc = useQueryClient();
     return useMutation({
-        mutationFn: (vars: { uuid: string } & MessageMutationContext) =>
-            sendOutreachMessage(vars.uuid),
+        mutationFn: (vars: { uuid: string; payload?: SendMessagePayload } & MessageMutationContext) =>
+            sendOutreachMessage(vars.uuid, vars.payload),
         onSuccess: (_data, vars) => {
             invalidateAfterMessageChange(qc, vars);
             toast({

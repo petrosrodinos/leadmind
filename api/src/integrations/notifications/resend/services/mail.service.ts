@@ -8,9 +8,9 @@ export class ResendMailService {
 
   constructor(private readonly resendAdapter: ResendAdapter) {}
 
-  public async sendEmail(createEmail: CreateEmail) {
+  public async sendEmail(createEmail: CreateEmail, apiKey?: string) {
     try {
-      return await this.resendAdapter.sendEmail(createEmail);
+      return await this.resendAdapter.sendEmail(createEmail, apiKey);
     } catch (error) {
       this.logger.error(error);
       throw new InternalServerErrorException('Failed to send email with Resend');

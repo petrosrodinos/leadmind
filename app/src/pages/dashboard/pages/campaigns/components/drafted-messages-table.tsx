@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Chip } from "@heroui/react";
 import { Check, ChevronDown, ChevronUp, Copy, Pencil, Send, Trash2 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
@@ -7,8 +7,10 @@ import { ActionButtonWithPending } from "@/components/ui/action-button-with-pend
 import { useCampaignDraftMessages, useDeleteCampaignDraftMessage, useSendCampaignDraftMessage } from "@/features/marketing-campaigns/hooks/use-marketing-campaigns";
 import type { DraftMessage } from "@/features/marketing-campaigns/interfaces/campaign.interface";
 import { CampaignContactStatuses } from "@/features/marketing-campaigns/interfaces/campaign.interface";
+import type { EmailProviderTarget } from "@/features/integrations/interfaces/integrations.interface";
 import { Channel, MsgStatus } from "@/features/contacts/interfaces/contact.interface";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { EmailProviderSelect } from "@/features/messaging/components/email-provider-select";
 import { EditCampaignDraftMessageModal } from "./edit-campaign-draft-message-modal";
 
 interface DraftedMessagesTableProps {
@@ -62,8 +64,18 @@ export function DraftedMessagesTable({ campaignUuid }: DraftedMessagesTableProps
     const [editMsg, setEditMsg] = useState<DraftMessage | null>(null);
     const [deleteMsg, setDeleteMsg] = useState<DraftMessage | null>(null);
     const [sendMsg, setSendMsg] = useState<DraftMessage | null>(null);
+    const [sendEmailProvider, setSendEmailProvider] = useState<EmailProviderTarget | null>(null);
     const deleteMu = useDeleteCampaignDraftMessage();
     const sendMu = useSendCampaignDraftMessage();
+
+    useEffect(() => {
+        if (!sendMsg) {
+            setSendEmailProvider(null);
+        }
+    }, [sendMsg]);
+
+    const sendRequiresEmailProvider = sendMsg?.channel === Channel.EMAIL;
+    const sendEmailProviderReady = !sendRequiresEmailProvider || sendEmailProvider != null;
 
     if (isLoading) {
         return <DraftedMessagesTableSkeleton />;
@@ -91,20 +103,42 @@ export function DraftedMessagesTable({ campaignUuid }: DraftedMessagesTableProps
                 }}
                 title="Send this message?"
                 description={
-                    sendMsg
-                        ? `This will queue the ${sendMsg.channel} message for delivery to ${draftContactLabel(sendMsg)}. You won't be able to edit it after sending.`
-                        : undefined
+                    sendMsg ? (
+                        <>
+                            <p>
+                                This will queue the {sendMsg.channel} message for delivery to{" "}
+                                {draftContactLabel(sendMsg)}. You won&apos;t be able to edit it after
+                                sending.
+                            </p>
+                            {sendRequiresEmailProvider ? (
+                                <div className="mt-4">
+                                    <EmailProviderSelect
+                                        value={sendEmailProvider}
+                                        onChange={setSendEmailProvider}
+                                        disabled={sendMu.isPending}
+                                    />
+                                </div>
+                            ) : null}
+                        </>
+                    ) : undefined
                 }
                 confirmLabel="Send"
                 cancelLabel="Cancel"
                 variant="default"
                 isPending={sendMu.isPending}
+                isConfirmDisabled={!sendEmailProviderReady}
                 onConfirm={async () => {
                     if (!sendMsg) return;
                     await sendMu.mutateAsync({
                         campaignUuid,
                         messageUuid: sendMsg.uuid,
                         contactUuid: sendMsg.contact_uuid,
+                        ...(sendRequiresEmailProvider && sendEmailProvider
+                            ? {
+                                  email_provider: sendEmailProvider.provider,
+                                  email_account: sendEmailProvider.account,
+                              }
+                            : {}),
                     });
                     setSendMsg(null);
                 }}

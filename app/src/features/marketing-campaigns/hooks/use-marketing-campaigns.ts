@@ -23,6 +23,9 @@ import type {
     CampaignStatuses,
     CreateCampaignPayload,
     GenerateCampaignMessagePayload,
+    SendCampaignDraftsPayload,
+    SendCampaignDraftMessagePayload,
+    StartCampaignPayload,
     ListCampaignContactsQuery,
     ListCampaignsQuery,
     MarketingCampaign,
@@ -169,9 +172,12 @@ export function usePreviewCampaignContacts() {
 export function useStartCampaign() {
     const qc = useQueryClient();
     return useMutation({
-        mutationFn: (uuid: string) => startCampaign(uuid),
-        onSuccess: (data, uuid) => {
-            qc.invalidateQueries({ queryKey: campaignsQueryKeys.detail(uuid) });
+        mutationFn: (vars: { uuid: string } & StartCampaignPayload) =>
+            startCampaign(vars.uuid, {
+                email_provider_allocations: vars.email_provider_allocations,
+            }),
+        onSuccess: (data, vars) => {
+            qc.invalidateQueries({ queryKey: campaignsQueryKeys.detail(vars.uuid) });
             qc.invalidateQueries({ queryKey: campaignsQueryKeys.all });
             const isPersonalized = data.campaign_type === CampaignType.PERSONALIZED;
             const batchQueued = isPersonalized && !!data.draft_batch_id;
@@ -298,9 +304,12 @@ export function useCampaignAiGenerate() {
 export function useSendPersonalizedDrafts() {
     const qc = useQueryClient();
     return useMutation({
-        mutationFn: (uuid: string) => sendPersonalizedDrafts(uuid),
-        onSuccess: (_data, uuid) => {
-            qc.invalidateQueries({ queryKey: campaignsQueryKeys.detail(uuid) });
+        mutationFn: (vars: { uuid: string } & SendCampaignDraftsPayload) =>
+            sendPersonalizedDrafts(vars.uuid, {
+                email_provider_allocations: vars.email_provider_allocations,
+            }),
+        onSuccess: (_data, vars) => {
+            qc.invalidateQueries({ queryKey: campaignsQueryKeys.detail(vars.uuid) });
             qc.invalidateQueries({ queryKey: campaignsQueryKeys.all });
             toast({ title: "Campaign dispatching", description: "Messages are being sent.", duration: 2500 });
         },
@@ -347,8 +356,15 @@ export function useDeleteCampaignDraftMessage() {
 export function useSendCampaignDraftMessage() {
     const qc = useQueryClient();
     return useMutation({
-        mutationFn: (vars: { campaignUuid: string; messageUuid: string; contactUuid?: string }) =>
-            sendCampaignDraftMessage(vars.campaignUuid, vars.messageUuid),
+        mutationFn: (vars: {
+            campaignUuid: string;
+            messageUuid: string;
+            contactUuid?: string;
+        } & SendCampaignDraftMessagePayload) =>
+            sendCampaignDraftMessage(vars.campaignUuid, vars.messageUuid, {
+                email_provider: vars.email_provider,
+                email_account: vars.email_account,
+            }),
         onSuccess: (_data, vars) => {
             invalidateCampaignDraftMessageQueries(qc, vars);
             toast({

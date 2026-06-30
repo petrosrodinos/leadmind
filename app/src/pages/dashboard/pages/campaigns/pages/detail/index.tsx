@@ -14,7 +14,14 @@ import {
     CampaignStatuses,
     type CampaignContactStatuses as CampaignContactStatus,
 } from "@/features/marketing-campaigns/interfaces/campaign.interface";
+import type { EmailProviderAllocation } from "@/features/integrations/interfaces/integrations.interface";
+import { Channel } from "@/features/contacts/interfaces/contact.interface";
 import { Routes } from "@/routes/routes";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import {
+    EmailProviderAllocationPicker,
+    isEmailProviderAllocationValid,
+} from "@/features/messaging/components/email-provider-allocation-picker";
 import { CampaignStatusBadge } from "../../components/campaign-status-badge";
 import { CampaignStatsSection } from "../../components/campaign-stats-section";
 import { RecipientsTable } from "../../components/recipients-table";
@@ -41,10 +48,17 @@ export default function CampaignDetailPage() {
     const { uuid } = useParams<{ uuid: string }>();
     const navigate = useNavigate();
     const [recipientStatus, setRecipientStatus] = useState<CampaignContactStatus | "ALL">("ALL");
+    const [confirmSend, setConfirmSend] = useState(false);
+    const [emailAllocations, setEmailAllocations] = useState<EmailProviderAllocation[]>([]);
     const { data: campaign, isLoading } = useCampaign(uuid);
     const { data: contactsPage } = useCampaignContacts(uuid, {
         limit: 100,
         status: recipientStatus === "ALL" ? undefined : recipientStatus,
+    });
+    const { data: pendingEmailContacts } = useCampaignContacts(uuid, {
+        status: CampaignContactStatuses.PENDING,
+        channel: Channel.EMAIL,
+        limit: 1,
     });
     const sendDraftsMutation = useSendPersonalizedDrafts();
 
@@ -55,6 +69,23 @@ export default function CampaignDetailPage() {
     const isPersonalized = campaign.campaign_type === CampaignType.PERSONALIZED;
     const isDraftsReady = campaign.status === CampaignStatuses.DRAFTS_READY;
     const batchDraftsPending = isPersonalized && !!campaign.draft_batch_id;
+    const includesEmail = campaign.channels.includes(Channel.EMAIL);
+    const pendingEmailCount = pendingEmailContacts?.total ?? 0;
+    const showEmailAllocation = isPersonalized && includesEmail && isDraftsReady;
+    const emailAllocationValid =
+        !showEmailAllocation ||
+        isEmailProviderAllocationValid(emailAllocations, pendingEmailCount);
+
+    const handleSendCampaign = async () => {
+        if (showEmailAllocation && !emailAllocationValid) return;
+        await sendDraftsMutation.mutateAsync({
+            uuid: campaign.uuid,
+            ...(showEmailAllocation
+                ? { email_provider_allocations: emailAllocations }
+                : {}),
+        });
+        setConfirmSend(false);
+    };
 
     return (
         <div className="space-y-6">
@@ -84,7 +115,7 @@ export default function CampaignDetailPage() {
                 <div className="flex items-center gap-2">
                     {isPersonalized && isDraftsReady && (
                         <ActionButtonWithPending
-                            onPress={() => sendDraftsMutation.mutate(campaign.uuid)}
+                            onPress={() => setConfirmSend(true)}
                             isPending={sendDraftsMutation.isPending}
                             idleLeading={<Send className="size-4" />}
                         >
@@ -150,6 +181,33 @@ export default function CampaignDetailPage() {
                     )}
                 </section>
             )}
+
+            <ConfirmDialog
+                isOpen={confirmSend}
+                onOpenChange={setConfirmSend}
+                title="Send personalized campaign?"
+                description={
+                    <>
+                        This will queue {pendingEmailCount} email
+                        {pendingEmailCount === 1 ? "" : "s"} for delivery using your selected
+                        provider accounts.
+                        {showEmailAllocation ? (
+                            <div className="mt-4">
+                                <EmailProviderAllocationPicker
+                                    totalCount={pendingEmailCount}
+                                    value={emailAllocations}
+                                    onChange={setEmailAllocations}
+                                    disabled={sendDraftsMutation.isPending}
+                                />
+                            </div>
+                        ) : null}
+                    </>
+                }
+                confirmLabel="Send now"
+                isPending={sendDraftsMutation.isPending}
+                isConfirmDisabled={showEmailAllocation && !emailAllocationValid}
+                onConfirm={handleSendCampaign}
+            />
         </div>
     );
 }

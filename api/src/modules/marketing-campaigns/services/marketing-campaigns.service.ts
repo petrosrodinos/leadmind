@@ -35,6 +35,20 @@ import { CampaignContactResolverService } from './campaign-contact-resolver.serv
 import { CampaignAiService } from './campaign-ai.service';
 import { CampaignMessageSendService } from './campaign-message-send.service';
 import { ContactAiService } from '@/modules/contacts/services/contact-ai.service';
+import { EmailCredentialsService } from '@/modules/integrations/services/email-credentials.service';
+import { EmailProviderAllocationDto } from '@/modules/outreach/dto/email-provider.dto';
+import {
+    buildEqualAllocations,
+    validateEmailProviderAllocations,
+} from '@/modules/outreach/utils/email-provider-allocation.util';
+import { StartCampaignDto } from '../dto/email-provider-campaign.dto';
+import { SendCampaignDraftsDto } from '../dto/email-provider-campaign.dto';
+import {
+    assignEmailProviders,
+    parseStoredEmailProviderAllocations,
+} from '@/modules/outreach/utils/email-provider-allocation.util';
+import { SendExistingMessageDto } from '@/modules/outreach/dto/email-provider.dto';
+import { MessageSendJobData } from '@/workers/marketing-message-send.worker';
 
 @Injectable()
 export class MarketingCampaignsService {
@@ -46,6 +60,7 @@ export class MarketingCampaignsService {
         private readonly aiService: CampaignAiService,
         private readonly campaignMessageSend: CampaignMessageSendService,
         private readonly contactAiService: ContactAiService,
+        private readonly emailCredentialsService: EmailCredentialsService,
         @InjectQueue(MARKETING_CAMPAIGN_DISPATCH_QUEUE)
         private readonly dispatchQueue: Queue,
         @InjectQueue(MARKETING_MESSAGE_SEND_QUEUE)
@@ -79,6 +94,9 @@ export class MarketingCampaignsService {
                 sender_profile_uuid: dto.sender_profile_uuid ?? null,
                 scheduled_at: dto.scheduled_at ? new Date(dto.scheduled_at) : null,
                 filters_snapshot: (dto.filters ?? {}) as unknown as Prisma.InputJsonValue,
+                email_provider_allocations: dto.email_provider_allocations
+                    ? (dto.email_provider_allocations as unknown as Prisma.InputJsonValue)
+                    : undefined,
             },
         });
     }
@@ -146,6 +164,9 @@ export class MarketingCampaignsService {
                 }),
                 ...(dto.filters !== undefined && {
                     filters_snapshot: (dto.filters ?? {}) as unknown as Prisma.InputJsonValue,
+                }),
+                ...(dto.email_provider_allocations !== undefined && {
+                    email_provider_allocations: dto.email_provider_allocations as unknown as Prisma.InputJsonValue,
                 }),
             },
         });
@@ -264,7 +285,11 @@ export class MarketingCampaignsService {
         return this.resolver.previewContacts(user_uuid, dto.filters, 50);
     }
 
-    async start(user_uuid: string, uuid: string): Promise<MarketingCampaign> {
+    async start(
+        user_uuid: string,
+        uuid: string,
+        dto?: StartCampaignDto,
+    ): Promise<MarketingCampaign> {
         const campaign = await this.requireOwned(user_uuid, uuid);
         if (campaign.status !== CampaignStatus.DRAFT) {
             throw new ConflictException(`Only DRAFT campaigns can be started (is ${campaign.status})`);
@@ -286,6 +311,20 @@ export class MarketingCampaignsService {
             campaign.linkedin_content,
         );
 
+        const filters = campaign.filters_snapshot as unknown as CampaignFiltersDto;
+        const contactUuids = await this.resolver.resolveContactUuids(user_uuid, filters, {
+            channels: campaign.channels as Channel[],
+        });
+
+        const allocations = await this.resolveCampaignEmailAllocations(
+            user_uuid,
+            campaign.channels as Channel[],
+            contactUuids.length,
+            dto?.email_provider_allocations ?? parseStoredEmailProviderAllocations(
+                campaign.email_provider_allocations,
+            ) ?? undefined,
+        );
+
         const now = new Date();
         const scheduled =
             campaign.scheduled_at && campaign.scheduled_at.getTime() > now.getTime()
@@ -297,6 +336,12 @@ export class MarketingCampaignsService {
             data: {
                 status: scheduled ? CampaignStatus.SCHEDULED : CampaignStatus.SENDING,
                 ...(scheduled ? {} : { started_at: now }),
+                ...(allocations
+                    ? {
+                          email_provider_allocations:
+                              allocations as unknown as Prisma.InputJsonValue,
+                      }
+                    : {}),
             },
         });
 
@@ -408,7 +453,11 @@ export class MarketingCampaignsService {
         });
     }
 
-    async sendPersonalizedDrafts(user_uuid: string, uuid: string): Promise<MarketingCampaign> {
+    async sendPersonalizedDrafts(
+        user_uuid: string,
+        uuid: string,
+        dto?: SendCampaignDraftsDto,
+    ): Promise<MarketingCampaign> {
         const campaign = await this.requireOwned(user_uuid, uuid);
         if (campaign.campaign_type !== CampaignType.PERSONALIZED) {
             throw new ConflictException('Only PERSONALIZED campaigns support this action');
@@ -427,22 +476,56 @@ export class MarketingCampaignsService {
             throw new BadRequestException('No pending draft contacts found for this campaign');
         }
 
+        const emailMccs = mccs.filter((mcc) => mcc.channel === Channel.EMAIL);
+        const allocations = await this.resolveCampaignEmailAllocations(
+            user_uuid,
+            campaign.channels as Channel[],
+            emailMccs.length,
+            dto?.email_provider_allocations ?? parseStoredEmailProviderAllocations(
+                campaign.email_provider_allocations,
+            ) ?? undefined,
+        );
+
+        const providerAssignments =
+            allocations && emailMccs.length > 0
+                ? assignEmailProviders(
+                      emailMccs.map((mcc) => mcc.contact_uuid),
+                      allocations,
+                  )
+                : new Map<string, { provider: EmailProviderAllocationDto['provider']; account: string }>();
+
         await this.prisma.marketingCampaignContact.updateMany({
             where: { campaign_uuid: uuid, status: CampaignContactStatus.PENDING },
             data: { status: CampaignContactStatus.QUEUED },
         });
 
-        const jobs = mccs.map((mcc) => ({
-            name: `send-${mcc.uuid}`,
-            data: { campaign_uuid: uuid, mcc_uuid: mcc.uuid },
-            opts: {
-                jobId: `mcc-${mcc.uuid}`,
-                attempts: 3,
-                backoff: { type: 'exponential' as const, delay: 30_000 },
-                removeOnComplete: 100,
-                removeOnFail: 100,
-            },
-        }));
+        const jobs = mccs.map((mcc) => {
+            const assignment =
+                mcc.channel === Channel.EMAIL
+                    ? providerAssignments.get(mcc.contact_uuid)
+                    : undefined;
+            const data: MessageSendJobData = {
+                campaign_uuid: uuid,
+                mcc_uuid: mcc.uuid,
+                ...(assignment
+                    ? {
+                          email_provider: assignment.provider,
+                          email_account: assignment.account,
+                      }
+                    : {}),
+            };
+            return {
+                name: `send-${mcc.uuid}`,
+                data,
+                opts: {
+                    jobId: `mcc-${mcc.uuid}`,
+                    attempts: 3,
+                    backoff: { type: 'exponential' as const, delay: 30_000 },
+                    removeOnComplete: 100,
+                    removeOnFail: 100,
+                },
+            };
+        });
         await this.messageSendQueue.addBulk(jobs);
 
         this.logger.log(`PERSONALIZED campaign ${uuid}: queued ${mccs.length} send jobs`);
@@ -454,6 +537,12 @@ export class MarketingCampaignsService {
                 started_at: new Date(),
                 queued_count: mccs.length,
                 total_messages: mccs.length,
+                ...(allocations
+                    ? {
+                          email_provider_allocations:
+                              allocations as unknown as Prisma.InputJsonValue,
+                      }
+                    : {}),
             },
         });
     }
@@ -498,12 +587,21 @@ export class MarketingCampaignsService {
         user_uuid: string,
         campaign_uuid: string,
         message_uuid: string,
+        dto: SendExistingMessageDto = {},
     ): Promise<{ jobId: string }> {
         await this.requireOwned(user_uuid, campaign_uuid);
+        const providerOverride =
+            dto.email_provider && dto.email_account
+                ? {
+                      provider: dto.email_provider,
+                      account: dto.email_account.trim(),
+                  }
+                : undefined;
         return this.campaignMessageSend.queueDraftMessageSend(
             user_uuid,
             campaign_uuid,
             message_uuid,
+            providerOverride,
         );
     }
 
@@ -679,6 +777,36 @@ export class MarketingCampaignsService {
         if (!profile) {
             throw new NotFoundException(`Sender profile ${uuid} not found`);
         }
+    }
+
+    private async resolveCampaignEmailAllocations(
+        user_uuid: string,
+        channels: Channel[],
+        emailRecipientCount: number,
+        provided?: EmailProviderAllocationDto[],
+    ) {
+        if (!channels.includes(Channel.EMAIL) || emailRecipientCount <= 0) {
+            return null;
+        }
+
+        if (provided?.length) {
+            const validated = validateEmailProviderAllocations(provided, emailRecipientCount);
+            for (const row of validated ?? []) {
+                await this.emailCredentialsService.assertSendableAccount(
+                    user_uuid,
+                    row.provider,
+                    row.account,
+                );
+            }
+            return validated ?? null;
+        }
+
+        const accounts = await this.emailCredentialsService.resolveSendableAccounts(user_uuid);
+        if (accounts.length === 0) {
+            return null;
+        }
+
+        return buildEqualAllocations(accounts, emailRecipientCount);
     }
 
     private validateContent(

@@ -62,6 +62,14 @@ import { EnrichmentOrchestrator } from '@/modules/enrichment/services/enrichment
 import { OutreachService } from '@/modules/outreach/outreach.service';
 import { enqueueContactScoreJob } from './utils/contact-score-queue.utils';
 import { BulkAiDraftMessagesDto } from './dto/bulk-ai-draft-messages.dto';
+import { EmailCredentialsService } from '@/modules/integrations/services/email-credentials.service';
+import type { EmailProviderTarget } from '@/modules/integrations/interfaces/email-credentials.interface';
+import {
+    assignEmailProviders,
+    buildEmailProviderMetadata,
+    buildEqualAllocations,
+    validateEmailProviderAllocations,
+} from '@/modules/outreach/utils/email-provider-allocation.util';
 import { WebsiteContentCrawlerAdapter } from '@/integrations/apify/website-content-crawler/website-content-crawler.adapter';
 import { normalizeWebsiteUrl } from '@/modules/leads/utils/enrichment-data.utils';
 import {
@@ -80,6 +88,7 @@ export class ContactsService {
         private readonly enrichmentQueryService: EnrichmentQueryService,
         private readonly enrichmentOrchestrator: EnrichmentOrchestrator,
         private readonly outreachService: OutreachService,
+        private readonly emailCredentialsService: EmailCredentialsService,
         private readonly websiteCrawler: WebsiteContentCrawlerAdapter,
         @InjectQueue(AI_PROCESS_QUEUE) private readonly aiProcessQueue: Queue,
     ) { }
@@ -817,13 +826,59 @@ export class ContactsService {
 
         let queued = 0;
         if (dto.send && message_uuids.length > 0) {
-            for (const messageUuid of message_uuids) {
+            const messages = await this.prisma.outreachMessage.findMany({
+                where: { uuid: { in: message_uuids }, user_uuid },
+                select: { uuid: true, contact_uuid: true, channel: true },
+            });
+
+            let providerAssignments = new Map<string, EmailProviderTarget>();
+
+            if (dto.channel === Channel.EMAIL) {
+                const emailMessages = messages.filter((m) => m.channel === Channel.EMAIL);
+                let allocations = dto.email_provider_allocations?.length
+                    ? validateEmailProviderAllocations(
+                          dto.email_provider_allocations,
+                          emailMessages.length,
+                      )
+                    : null;
+
+                if (!allocations?.length) {
+                    const accounts =
+                        await this.emailCredentialsService.resolveSendableAccounts(user_uuid);
+                    allocations = buildEqualAllocations(accounts, emailMessages.length);
+                }
+
+                if (allocations?.length) {
+                    for (const row of allocations) {
+                        await this.emailCredentialsService.assertSendableAccount(
+                            user_uuid,
+                            row.provider,
+                            row.account,
+                        );
+                    }
+                    providerAssignments = assignEmailProviders(
+                        emailMessages.map((m) => m.contact_uuid),
+                        allocations,
+                    );
+                }
+            }
+
+            for (const message of messages) {
                 try {
-                    await this.outreachService.sendMessage(user_uuid, messageUuid);
+                    const assignment = providerAssignments.get(message.contact_uuid);
+                    if (assignment && message.channel === Channel.EMAIL) {
+                        await this.prisma.outreachMessage.update({
+                            where: { uuid: message.uuid },
+                            data: {
+                                metadata: buildEmailProviderMetadata(assignment) as Prisma.InputJsonValue,
+                            },
+                        });
+                    }
+                    await this.outreachService.sendMessage(user_uuid, message.uuid);
                     queued++;
                 } catch (error) {
                     this.logger.error(
-                        `Bulk AI draft send ${messageUuid} failed: ${error instanceof Error ? error.message : error}`,
+                        `Bulk AI draft send ${message.uuid} failed: ${error instanceof Error ? error.message : error}`,
                     );
                 }
             }

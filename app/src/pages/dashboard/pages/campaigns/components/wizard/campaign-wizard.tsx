@@ -5,6 +5,7 @@ import { ArrowLeft, ArrowRight, Save, Send, Sparkles } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { isEmailHtmlEmpty } from "@/lib/sanitize-html";
 import {
+    usePreviewCampaignContacts,
     useStartCampaign,
     useUpdateCampaign,
 } from "@/features/marketing-campaigns/hooks/use-marketing-campaigns";
@@ -13,10 +14,15 @@ import type {
     CampaignFilters,
 } from "@/features/marketing-campaigns/interfaces/campaign.interface";
 import { CampaignType, CampaignStatuses } from "@/features/marketing-campaigns/interfaces/campaign.interface";
+import type { EmailProviderAllocation } from "@/features/integrations/interfaces/integrations.interface";
 import { Channel } from "@/features/contacts/interfaces/contact.interface";
 import { Routes } from "@/routes/routes";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import type { MessageComposerValue } from "@/features/messaging/components/message-composer";
+import {
+    EmailProviderAllocationPicker,
+    isEmailProviderAllocationValid,
+} from "@/features/messaging/components/email-provider-allocation-picker";
 import { WizardShell, type WizardStepKey, WIZARD_STEPS } from "./wizard-shell";
 import { StepBasics, type BasicsValues } from "./step-basics";
 import { StepAudience } from "./step-audience";
@@ -32,6 +38,7 @@ export function CampaignWizard({ campaign }: CampaignWizardProps) {
     const [searchParams] = useSearchParams();
     const updateMutation = useUpdateCampaign();
     const startMutation = useStartCampaign();
+    const previewContacts = usePreviewCampaignContacts();
 
     const initialStep = ((): WizardStepKey => {
         const requested = searchParams.get("step") as WizardStepKey | null;
@@ -77,10 +84,59 @@ export function CampaignWizard({ campaign }: CampaignWizardProps) {
     const [audienceCount, setAudienceCount] = useState<number | null>(
         campaign.selected_contact_count > 0 ? campaign.selected_contact_count : null,
     );
+    const [emailAudienceCount, setEmailAudienceCount] = useState<number>(
+        campaign.selected_contact_count > 0 ? campaign.selected_contact_count : 0,
+    );
+    const [emailAllocations, setEmailAllocations] = useState<EmailProviderAllocation[]>(
+        (campaign.email_provider_allocations as EmailProviderAllocation[] | null) ?? [],
+    );
     const [confirmStart, setConfirmStart] = useState(false);
+
+    const serializedFilters = useMemo(() => JSON.stringify(filters), [filters]);
 
     const isDraft = campaign.status === CampaignStatuses.DRAFT;
     const isPersonalized = basics.campaign_type === CampaignType.PERSONALIZED;
+    const includesEmail = basics.channels.includes(Channel.EMAIL);
+    const showEmailAllocation = includesEmail && !isPersonalized;
+    const emailAllocationValid =
+        !showEmailAllocation ||
+        isEmailProviderAllocationValid(emailAllocations, emailAudienceCount);
+
+    useEffect(() => {
+        if (activeStep !== "review") return;
+
+        let cancelled = false;
+        void previewContacts
+            .mutateAsync({ uuid: campaign.uuid, filters })
+            .then((result) => {
+                if (cancelled) return;
+                const excluded = new Set(filters.exclude_uuids ?? []);
+                let sendable = result.total;
+                if (basics.channels.includes(Channel.EMAIL)) {
+                    sendable = Math.min(sendable, result.with_email);
+                }
+                if (basics.channels.includes(Channel.SMS)) {
+                    sendable = Math.min(sendable, result.with_phone);
+                }
+                setAudienceCount(Math.max(0, sendable - excluded.size));
+                if (basics.channels.includes(Channel.EMAIL)) {
+                    setEmailAudienceCount(
+                        Math.max(
+                            0,
+                            Math.min(result.with_email, result.total) - excluded.size,
+                        ),
+                    );
+                }
+            })
+            .catch(() => {
+                // preview errors surfaced by hook
+            });
+
+        return () => {
+            cancelled = true;
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [activeStep, campaign.uuid, serializedFilters, basics.channels]);
 
     const stepIndex = WIZARD_STEPS.findIndex((s) => s.key === activeStep);
     const isLastStep = stepIndex === WIZARD_STEPS.length - 1;
@@ -121,6 +177,9 @@ export function CampaignWizard({ campaign }: CampaignWizardProps) {
                           ? message.linkedinContent || undefined
                           : null,
                   }),
+            ...(showEmailAllocation
+                ? { email_provider_allocations: emailAllocations }
+                : {}),
             ...extra,
         };
         return updateMutation.mutateAsync({ uuid: campaign.uuid, payload: payload as any });
@@ -146,9 +205,15 @@ export function CampaignWizard({ campaign }: CampaignWizardProps) {
     };
 
     const handleStart = async () => {
+        if (showEmailAllocation && !emailAllocationValid) return;
         try {
             await persist();
-            await startMutation.mutateAsync(campaign.uuid);
+            await startMutation.mutateAsync({
+                uuid: campaign.uuid,
+                ...(showEmailAllocation
+                    ? { email_provider_allocations: emailAllocations }
+                    : {}),
+            });
             navigate(`/dashboard/campaigns/${campaign.uuid}`);
         } catch {
             // toast surfaced
@@ -182,6 +247,10 @@ export function CampaignWizard({ campaign }: CampaignWizardProps) {
                         channels={basics.channels}
                         value={filters}
                         onChange={setFilters}
+                        onCountsChange={({ sendable, email }) => {
+                            setAudienceCount(sendable);
+                            setEmailAudienceCount(email);
+                        }}
                     />
                 )}
                 {activeStep === "message" && (
@@ -260,39 +329,51 @@ export function CampaignWizard({ campaign }: CampaignWizardProps) {
                         : "Start this campaign?"
                 }
                 description={
-                    isPersonalized ? (
-                        <>
-                            {basics.use_openai_batch ? (
-                                <>
-                                    Drafts will be queued via the OpenAI Batch API (typically within 24
-                                    hours). You can review them before sending once they are ready.
-                                </>
-                            ) : (
-                                <>
-                                    The AI will generate a unique message for each matched contact. You
-                                    can review the drafts before sending.
-                                </>
-                            )}
-                        </>
-                    ) : basics.scheduled_at ? (
-                        <>
-                            The campaign will dispatch at{" "}
-                            <span className="font-medium">
-                                {new Date(basics.scheduled_at).toLocaleString()}
-                            </span>
-                            . You can cancel any time before then.
-                        </>
-                    ) : (
-                        <>This will dispatch the campaign to all matched contacts immediately.</>
-                    )
+                    <>
+                        {isPersonalized ? (
+                            <>
+                                {basics.use_openai_batch ? (
+                                    <>
+                                        Drafts will be queued via the OpenAI Batch API (typically within 24
+                                        hours). You can review them before sending once they are ready.
+                                    </>
+                                ) : (
+                                    <>
+                                        The AI will generate a unique message for each matched contact. You
+                                        can review the drafts before sending.
+                                    </>
+                                )}
+                            </>
+                        ) : basics.scheduled_at ? (
+                            <>
+                                The campaign will dispatch at{" "}
+                                <span className="font-medium">
+                                    {new Date(basics.scheduled_at).toLocaleString()}
+                                </span>
+                                . You can cancel any time before then.
+                            </>
+                        ) : (
+                            <>This will dispatch the campaign to all matched contacts immediately.</>
+                        )}
+                        {showEmailAllocation ? (
+                            <div className="mt-4">
+                                <EmailProviderAllocationPicker
+                                    totalCount={emailAudienceCount}
+                                    value={emailAllocations}
+                                    onChange={setEmailAllocations}
+                                    disabled={startMutation.isPending || updateMutation.isPending}
+                                />
+                            </div>
+                        ) : null}
+                    </>
                 }
                 confirmLabel={
                     isPersonalized ? "Generate Drafts" : basics.scheduled_at ? "Schedule" : "Start now"
                 }
                 isPending={startMutation.isPending || updateMutation.isPending}
+                isConfirmDisabled={showEmailAllocation && !emailAllocationValid}
                 onConfirm={handleStart}
             />
-            <AudienceCountSync onCountChange={setAudienceCount} count={audienceCount} />
         </div>
     );
 }
@@ -301,16 +382,4 @@ function toLocalInputValue(iso: string): string {
     const d = new Date(iso);
     const pad = (n: number) => n.toString().padStart(2, "0");
     return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
-}
-
-// Trivial component just to satisfy hook usage; the actual count comes from StepAudience.
-function AudienceCountSync({
-    onCountChange: _onCountChange,
-    count: _count,
-}: {
-    onCountChange: (n: number) => void;
-    count: number | null;
-}) {
-    useEffect(() => {}, []);
-    return null;
 }

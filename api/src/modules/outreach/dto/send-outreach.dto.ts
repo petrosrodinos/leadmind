@@ -1,6 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Channel } from '@/generated/prisma';
-import { IsDateString, IsEnum, IsOptional, IsString, IsUUID, MaxLength, MinLength } from 'class-validator';
+import { IsDateString, IsEnum, IsIn, IsOptional, IsString, IsUUID, MaxLength, MinLength } from 'class-validator';
+import { EMAIL_DELIVERY_PROVIDERS } from './email-provider.dto';
 
 export class SendOutreachDto {
     @ApiProperty({ enum: Channel })
@@ -26,4 +27,15 @@ export class SendOutreachDto {
     @IsOptional()
     @IsDateString()
     scheduled_at?: string;
+
+    @ApiPropertyOptional({ enum: EMAIL_DELIVERY_PROVIDERS })
+    @IsOptional()
+    @IsIn(EMAIL_DELIVERY_PROVIDERS)
+    email_provider?: (typeof EMAIL_DELIVERY_PROVIDERS)[number];
+
+    @ApiPropertyOptional()
+    @IsOptional()
+    @IsString()
+    @MinLength(1)
+    email_account?: string;
 }

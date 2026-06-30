@@ -26,6 +26,8 @@ import { ScheduleCampaignDto } from './dto/schedule-campaign.dto';
 import { GenerateCampaignMessageDto } from './dto/generate-campaign-message.dto';
 import { PreviewContactsDto } from './dto/preview-contacts.dto';
 import { ListDraftMessagesDto } from './dto/list-draft-messages.dto';
+import { StartCampaignDto, SendCampaignDraftsDto } from './dto/email-provider-campaign.dto';
+import { SendExistingMessageDto } from '@/modules/outreach/dto/email-provider.dto';
 import { MarketingCampaignsService } from './services/marketing-campaigns.service';
 
 @ApiTags('marketing-campaigns')
@@ -101,8 +103,9 @@ export class MarketingCampaignsController {
     start(
         @CurrentUser('uuid') user_uuid: string,
         @Param('uuid', ParseUUIDPipe) uuid: string,
+        @Body() dto: StartCampaignDto,
     ) {
-        return this.service.start(user_uuid, uuid);
+        return this.service.start(user_uuid, uuid, dto);
     }
 
     @Post(':uuid/schedule')
@@ -157,8 +160,9 @@ export class MarketingCampaignsController {
     sendPersonalizedDrafts(
         @CurrentUser('uuid') user_uuid: string,
         @Param('uuid', ParseUUIDPipe) uuid: string,
+        @Body() dto: SendCampaignDraftsDto,
     ) {
-        return this.service.sendPersonalizedDrafts(user_uuid, uuid);
+        return this.service.sendPersonalizedDrafts(user_uuid, uuid, dto);
     }
 
     @Get(':uuid/draft-messages')
@@ -192,7 +196,8 @@ export class MarketingCampaignsController {
         @CurrentUser('uuid') user_uuid: string,
         @Param('uuid', ParseUUIDPipe) uuid: string,
         @Param('message_uuid', ParseUUIDPipe) message_uuid: string,
+        @Body() dto: SendExistingMessageDto = {},
     ) {
-        return this.service.sendDraftMessage(user_uuid, uuid, message_uuid);
+        return this.service.sendDraftMessage(user_uuid, uuid, message_uuid, dto);
     }
 }

@@ -2,6 +2,10 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Resend } from 'resend';
 
+export function createResendClient(apiKey: string): Resend {
+  return new Resend(apiKey);
+}
+
 @Injectable()
 export class ResendConfig {
   private resendClient: Resend | null = null;
@@ -28,5 +32,9 @@ export class ResendConfig {
     }
 
     return this.resendClient;
+  }
+
+  createClient(apiKey: string): Resend {
+    return createResendClient(apiKey);
   }
 }

@@ -451,6 +451,7 @@ model MarketingCampaign {
   use_openai_batch    Boolean        @default(false)
   draft_batch_id      String?
   sender_profile_uuid String?
+  email_provider_allocations Json?
   scheduled_at        DateTime?
   started_at          DateTime?
   completed_at        DateTime?

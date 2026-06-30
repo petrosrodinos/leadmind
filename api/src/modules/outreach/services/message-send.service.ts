@@ -1,14 +1,28 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as crypto from 'crypto';
-import { Channel, Contact, InteractionType, MsgStatus, OutreachMessage, Prisma } from '@/generated/prisma';
+import {
+    Channel,
+    Contact,
+    ExternalIntegrationProvider,
+    InteractionType,
+    MsgStatus,
+    OutreachMessage,
+    Prisma,
+} from '@/generated/prisma';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { ResendMailService } from '@/integrations/notifications/resend/services/mail.service';
+import { SmtpMailService } from '@/integrations/notifications/smtp/services/mail.service';
 import { CallsService } from '@/integrations/notifications/twillio/services/calls.service';
 import { TwillioSmsService } from '@/integrations/notifications/twillio/services/sms.service';
 import { EmailConfig } from '@/shared/config/email';
 import { sanitizeEmailHtml } from '@/shared/utils/sanitize-html.util';
+import { EmailCredentialsService } from '@/modules/integrations/services/email-credentials.service';
+import { EmailProviderTarget } from '@/modules/integrations/interfaces/email-credentials.interface';
 import { SenderProfilesService } from '@/modules/sender-profiles/sender-profiles.service';
+import {
+    parseEmailProviderMetadata,
+} from '@/modules/outreach/utils/email-provider-allocation.util';
 import { OutreachRenderService } from './outreach-render.service';
 
 export interface DeliveredMessage {
@@ -23,6 +37,8 @@ export class MessageSendService {
         private readonly prisma: PrismaService,
         private readonly configService: ConfigService,
         private readonly resendMailService: ResendMailService,
+        private readonly smtpMailService: SmtpMailService,
+        private readonly emailCredentialsService: EmailCredentialsService,
         private readonly twillioSmsService: TwillioSmsService,
         private readonly callsService: CallsService,
         private readonly outreachRenderService: OutreachRenderService,
@@ -31,6 +47,7 @@ export class MessageSendService {
 
     async deliverOutreachMessage(
         message: OutreachMessage & { contact: Contact },
+        providerOverride?: EmailProviderTarget,
     ): Promise<DeliveredMessage> {
         if (message.channel === Channel.PHONE_CALL) {
             if (!message.contact.phone) {
@@ -73,13 +90,24 @@ export class MessageSendService {
                 headers['X-Campaign-Uuid'] = message.campaign_uuid;
             }
             const replyTo = await this.resolveReplyTo(message);
-            const result: any = await this.resendMailService.sendEmail({
+            const createEmail = {
                 to: message.contact.email,
                 subject: rendered.subject ?? 'Outreach message',
                 html,
                 headers,
                 replyTo,
-            });
+            };
+
+            const target =
+                providerOverride ??
+                parseEmailProviderMetadata(message.metadata) ??
+                (await this.emailCredentialsService.resolveDefaultTarget(message.user_uuid));
+
+            const result: any = await this.sendEmailWithProvider(
+                message.user_uuid,
+                createEmail,
+                target,
+            );
             const provider_message_id =
                 result?.data?.id ?? result?.id ?? null;
             return { provider_message_id };
@@ -100,6 +128,44 @@ export class MessageSendService {
         throw new Error(`Channel ${message.channel} not implemented`);
     }
 
+    private async sendEmailWithProvider(
+        user_uuid: string,
+        createEmail: {
+            to: string;
+            subject: string;
+            html: string;
+            headers: Record<string, string>;
+            replyTo: string;
+        },
+        target: EmailProviderTarget | null,
+    ) {
+        if (target?.provider === ExternalIntegrationProvider.SMTP) {
+            const smtpConfig = await this.emailCredentialsService.getSmtpConfig(
+                user_uuid,
+                target.account,
+            );
+            return this.smtpMailService.sendEmail(
+                { ...createEmail, from: smtpConfig.fromEmail },
+                smtpConfig,
+            );
+        }
+
+        if (target?.provider === ExternalIntegrationProvider.RESEND) {
+            const apiKey = await this.emailCredentialsService.getResendApiKey(
+                user_uuid,
+                target.account,
+            );
+            return this.resendMailService.sendEmail(createEmail, apiKey);
+        }
+
+        const envKey = this.configService.get<string>('RESEND_API_KEY');
+        if (envKey) {
+            return this.resendMailService.sendEmail(createEmail, envKey);
+        }
+
+        throw new Error('No email provider configured');
+    }
+
     messageSentOperation(message_uuid: string, provider_message_id: string | null) {
         return this.prisma.outreachMessage.update({
             where: { uuid: message_uuid },
@@ -110,7 +176,30 @@ export class MessageSendService {
     messageFailedOperation(message_uuid: string, error_message: string) {
         return this.prisma.outreachMessage.update({
             where: { uuid: message_uuid },
-            data: { status: MsgStatus.FAILED, metadata: { error: error_message } },
+            data: {
+                status: MsgStatus.FAILED,
+                metadata: { error: error_message } as Prisma.InputJsonValue,
+            },
+        });
+    }
+
+    messageFailedOperationPreservingProvider(
+        message_uuid: string,
+        error_message: string,
+        existingMetadata?: unknown,
+    ) {
+        const provider = parseEmailProviderMetadata(existingMetadata ?? null);
+        const metadata: Record<string, unknown> = { error: error_message };
+        if (provider) {
+            metadata.email_provider = provider.provider;
+            metadata.email_account = provider.account;
+        }
+        return this.prisma.outreachMessage.update({
+            where: { uuid: message_uuid },
+            data: {
+                status: MsgStatus.FAILED,
+                metadata: metadata as Prisma.InputJsonValue,
+            },
         });
     }
 

@@ -27196,6 +27196,7 @@ export namespace Prisma {
     use_openai_batch: number
     draft_batch_id: number
     sender_profile_uuid: number
+    email_provider_allocations: number
     scheduled_at: number
     started_at: number
     completed_at: number
@@ -27350,6 +27351,7 @@ export namespace Prisma {
     use_openai_batch?: true
     draft_batch_id?: true
     sender_profile_uuid?: true
+    email_provider_allocations?: true
     scheduled_at?: true
     started_at?: true
     completed_at?: true
@@ -27477,6 +27479,7 @@ export namespace Prisma {
     use_openai_batch: boolean
     draft_batch_id: string | null
     sender_profile_uuid: string | null
+    email_provider_allocations: JsonValue | null
     scheduled_at: Date | null
     started_at: Date | null
     completed_at: Date | null
@@ -27536,6 +27539,7 @@ export namespace Prisma {
     use_openai_batch?: boolean
     draft_batch_id?: boolean
     sender_profile_uuid?: boolean
+    email_provider_allocations?: boolean
     scheduled_at?: boolean
     started_at?: boolean
     completed_at?: boolean
@@ -27582,6 +27586,7 @@ export namespace Prisma {
     use_openai_batch?: boolean
     draft_batch_id?: boolean
     sender_profile_uuid?: boolean
+    email_provider_allocations?: boolean
     scheduled_at?: boolean
     started_at?: boolean
     completed_at?: boolean
@@ -27624,6 +27629,7 @@ export namespace Prisma {
     use_openai_batch?: boolean
     draft_batch_id?: boolean
     sender_profile_uuid?: boolean
+    email_provider_allocations?: boolean
     scheduled_at?: boolean
     started_at?: boolean
     completed_at?: boolean
@@ -27666,6 +27672,7 @@ export namespace Prisma {
     use_openai_batch?: boolean
     draft_batch_id?: boolean
     sender_profile_uuid?: boolean
+    email_provider_allocations?: boolean
     scheduled_at?: boolean
     started_at?: boolean
     completed_at?: boolean
@@ -27688,7 +27695,7 @@ export namespace Prisma {
     updated_at?: boolean
   }
 
-  export type MarketingCampaignOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "name" | "description" | "status" | "campaign_type" | "channels" | "filters_snapshot" | "email_subject" | "email_content" | "sms_content" | "linkedin_content" | "ai_prompt" | "use_openai_batch" | "draft_batch_id" | "sender_profile_uuid" | "scheduled_at" | "started_at" | "completed_at" | "cancelled_at" | "selected_contact_count" | "total_messages" | "queued_count" | "sent_count" | "failed_count" | "skipped_count" | "delivered_count" | "opened_count" | "clicked_count" | "replied_count" | "website_visit_count" | "booking_visit_count" | "bounced_count" | "unsubscribed_count" | "created_at" | "updated_at", ExtArgs["result"]["marketingCampaign"]>
+  export type MarketingCampaignOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "name" | "description" | "status" | "campaign_type" | "channels" | "filters_snapshot" | "email_subject" | "email_content" | "sms_content" | "linkedin_content" | "ai_prompt" | "use_openai_batch" | "draft_batch_id" | "sender_profile_uuid" | "email_provider_allocations" | "scheduled_at" | "started_at" | "completed_at" | "cancelled_at" | "selected_contact_count" | "total_messages" | "queued_count" | "sent_count" | "failed_count" | "skipped_count" | "delivered_count" | "opened_count" | "clicked_count" | "replied_count" | "website_visit_count" | "booking_visit_count" | "bounced_count" | "unsubscribed_count" | "created_at" | "updated_at", ExtArgs["result"]["marketingCampaign"]>
   export type MarketingCampaignInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     sender_profile?: boolean | MarketingCampaign$sender_profileArgs<ExtArgs>
@@ -27733,6 +27740,7 @@ export namespace Prisma {
       use_openai_batch: boolean
       draft_batch_id: string | null
       sender_profile_uuid: string | null
+      email_provider_allocations: Prisma.JsonValue | null
       scheduled_at: Date | null
       started_at: Date | null
       completed_at: Date | null
@@ -28198,6 +28206,7 @@ export namespace Prisma {
     readonly use_openai_batch: FieldRef<"MarketingCampaign", 'Boolean'>
     readonly draft_batch_id: FieldRef<"MarketingCampaign", 'String'>
     readonly sender_profile_uuid: FieldRef<"MarketingCampaign", 'String'>
+    readonly email_provider_allocations: FieldRef<"MarketingCampaign", 'Json'>
     readonly scheduled_at: FieldRef<"MarketingCampaign", 'DateTime'>
     readonly started_at: FieldRef<"MarketingCampaign", 'DateTime'>
     readonly completed_at: FieldRef<"MarketingCampaign", 'DateTime'>
@@ -43542,6 +43551,7 @@ export namespace Prisma {
     use_openai_batch: 'use_openai_batch',
     draft_batch_id: 'draft_batch_id',
     sender_profile_uuid: 'sender_profile_uuid',
+    email_provider_allocations: 'email_provider_allocations',
     scheduled_at: 'scheduled_at',
     started_at: 'started_at',
     completed_at: 'completed_at',
@@ -46066,6 +46076,7 @@ export namespace Prisma {
     use_openai_batch?: BoolFilter<"MarketingCampaign"> | boolean
     draft_batch_id?: StringNullableFilter<"MarketingCampaign"> | string | null
     sender_profile_uuid?: StringNullableFilter<"MarketingCampaign"> | string | null
+    email_provider_allocations?: JsonNullableFilter<"MarketingCampaign">
     scheduled_at?: DateTimeNullableFilter<"MarketingCampaign"> | Date | string | null
     started_at?: DateTimeNullableFilter<"MarketingCampaign"> | Date | string | null
     completed_at?: DateTimeNullableFilter<"MarketingCampaign"> | Date | string | null
@@ -46111,6 +46122,7 @@ export namespace Prisma {
     use_openai_batch?: SortOrder
     draft_batch_id?: SortOrderInput | SortOrder
     sender_profile_uuid?: SortOrderInput | SortOrder
+    email_provider_allocations?: SortOrderInput | SortOrder
     scheduled_at?: SortOrderInput | SortOrder
     started_at?: SortOrderInput | SortOrder
     completed_at?: SortOrderInput | SortOrder
@@ -46159,6 +46171,7 @@ export namespace Prisma {
     use_openai_batch?: BoolFilter<"MarketingCampaign"> | boolean
     draft_batch_id?: StringNullableFilter<"MarketingCampaign"> | string | null
     sender_profile_uuid?: StringNullableFilter<"MarketingCampaign"> | string | null
+    email_provider_allocations?: JsonNullableFilter<"MarketingCampaign">
     scheduled_at?: DateTimeNullableFilter<"MarketingCampaign"> | Date | string | null
     started_at?: DateTimeNullableFilter<"MarketingCampaign"> | Date | string | null
     completed_at?: DateTimeNullableFilter<"MarketingCampaign"> | Date | string | null
@@ -46204,6 +46217,7 @@ export namespace Prisma {
     use_openai_batch?: SortOrder
     draft_batch_id?: SortOrderInput | SortOrder
     sender_profile_uuid?: SortOrderInput | SortOrder
+    email_provider_allocations?: SortOrderInput | SortOrder
     scheduled_at?: SortOrderInput | SortOrder
     started_at?: SortOrderInput | SortOrder
     completed_at?: SortOrderInput | SortOrder
@@ -46252,6 +46266,7 @@ export namespace Prisma {
     use_openai_batch?: BoolWithAggregatesFilter<"MarketingCampaign"> | boolean
     draft_batch_id?: StringNullableWithAggregatesFilter<"MarketingCampaign"> | string | null
     sender_profile_uuid?: StringNullableWithAggregatesFilter<"MarketingCampaign"> | string | null
+    email_provider_allocations?: JsonNullableWithAggregatesFilter<"MarketingCampaign">
     scheduled_at?: DateTimeNullableWithAggregatesFilter<"MarketingCampaign"> | Date | string | null
     started_at?: DateTimeNullableWithAggregatesFilter<"MarketingCampaign"> | Date | string | null
     completed_at?: DateTimeNullableWithAggregatesFilter<"MarketingCampaign"> | Date | string | null
@@ -49327,6 +49342,7 @@ export namespace Prisma {
     ai_prompt?: string | null
     use_openai_batch?: boolean
     draft_batch_id?: string | null
+    email_provider_allocations?: NullableJsonNullValueInput | InputJsonValue
     scheduled_at?: Date | string | null
     started_at?: Date | string | null
     completed_at?: Date | string | null
@@ -49372,6 +49388,7 @@ export namespace Prisma {
     use_openai_batch?: boolean
     draft_batch_id?: string | null
     sender_profile_uuid?: string | null
+    email_provider_allocations?: NullableJsonNullValueInput | InputJsonValue
     scheduled_at?: Date | string | null
     started_at?: Date | string | null
     completed_at?: Date | string | null
@@ -49412,6 +49429,7 @@ export namespace Prisma {
     ai_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     use_openai_batch?: BoolFieldUpdateOperationsInput | boolean
     draft_batch_id?: NullableStringFieldUpdateOperationsInput | string | null
+    email_provider_allocations?: NullableJsonNullValueInput | InputJsonValue
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -49457,6 +49475,7 @@ export namespace Prisma {
     use_openai_batch?: BoolFieldUpdateOperationsInput | boolean
     draft_batch_id?: NullableStringFieldUpdateOperationsInput | string | null
     sender_profile_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    email_provider_allocations?: NullableJsonNullValueInput | InputJsonValue
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -49500,6 +49519,7 @@ export namespace Prisma {
     use_openai_batch?: boolean
     draft_batch_id?: string | null
     sender_profile_uuid?: string | null
+    email_provider_allocations?: NullableJsonNullValueInput | InputJsonValue
     scheduled_at?: Date | string | null
     started_at?: Date | string | null
     completed_at?: Date | string | null
@@ -49537,6 +49557,7 @@ export namespace Prisma {
     ai_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     use_openai_batch?: BoolFieldUpdateOperationsInput | boolean
     draft_batch_id?: NullableStringFieldUpdateOperationsInput | string | null
+    email_provider_allocations?: NullableJsonNullValueInput | InputJsonValue
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -49577,6 +49598,7 @@ export namespace Prisma {
     use_openai_batch?: BoolFieldUpdateOperationsInput | boolean
     draft_batch_id?: NullableStringFieldUpdateOperationsInput | string | null
     sender_profile_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    email_provider_allocations?: NullableJsonNullValueInput | InputJsonValue
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -52611,6 +52633,7 @@ export namespace Prisma {
     use_openai_batch?: SortOrder
     draft_batch_id?: SortOrder
     sender_profile_uuid?: SortOrder
+    email_provider_allocations?: SortOrder
     scheduled_at?: SortOrder
     started_at?: SortOrder
     completed_at?: SortOrder
@@ -57689,6 +57712,7 @@ export namespace Prisma {
     ai_prompt?: string | null
     use_openai_batch?: boolean
     draft_batch_id?: string | null
+    email_provider_allocations?: NullableJsonNullValueInput | InputJsonValue
     scheduled_at?: Date | string | null
     started_at?: Date | string | null
     completed_at?: Date | string | null
@@ -57732,6 +57756,7 @@ export namespace Prisma {
     use_openai_batch?: boolean
     draft_batch_id?: string | null
     sender_profile_uuid?: string | null
+    email_provider_allocations?: NullableJsonNullValueInput | InputJsonValue
     scheduled_at?: Date | string | null
     started_at?: Date | string | null
     completed_at?: Date | string | null
@@ -58421,6 +58446,7 @@ export namespace Prisma {
     use_openai_batch?: BoolFilter<"MarketingCampaign"> | boolean
     draft_batch_id?: StringNullableFilter<"MarketingCampaign"> | string | null
     sender_profile_uuid?: StringNullableFilter<"MarketingCampaign"> | string | null
+    email_provider_allocations?: JsonNullableFilter<"MarketingCampaign">
     scheduled_at?: DateTimeNullableFilter<"MarketingCampaign"> | Date | string | null
     started_at?: DateTimeNullableFilter<"MarketingCampaign"> | Date | string | null
     completed_at?: DateTimeNullableFilter<"MarketingCampaign"> | Date | string | null
@@ -62139,6 +62165,7 @@ export namespace Prisma {
     ai_prompt?: string | null
     use_openai_batch?: boolean
     draft_batch_id?: string | null
+    email_provider_allocations?: NullableJsonNullValueInput | InputJsonValue
     scheduled_at?: Date | string | null
     started_at?: Date | string | null
     completed_at?: Date | string | null
@@ -62183,6 +62210,7 @@ export namespace Prisma {
     use_openai_batch?: boolean
     draft_batch_id?: string | null
     sender_profile_uuid?: string | null
+    email_provider_allocations?: NullableJsonNullValueInput | InputJsonValue
     scheduled_at?: Date | string | null
     started_at?: Date | string | null
     completed_at?: Date | string | null
@@ -62442,6 +62470,7 @@ export namespace Prisma {
     ai_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     use_openai_batch?: BoolFieldUpdateOperationsInput | boolean
     draft_batch_id?: NullableStringFieldUpdateOperationsInput | string | null
+    email_provider_allocations?: NullableJsonNullValueInput | InputJsonValue
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -62486,6 +62515,7 @@ export namespace Prisma {
     use_openai_batch?: BoolFieldUpdateOperationsInput | boolean
     draft_batch_id?: NullableStringFieldUpdateOperationsInput | string | null
     sender_profile_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    email_provider_allocations?: NullableJsonNullValueInput | InputJsonValue
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -62659,6 +62689,7 @@ export namespace Prisma {
     ai_prompt?: string | null
     use_openai_batch?: boolean
     draft_batch_id?: string | null
+    email_provider_allocations?: NullableJsonNullValueInput | InputJsonValue
     scheduled_at?: Date | string | null
     started_at?: Date | string | null
     completed_at?: Date | string | null
@@ -62703,6 +62734,7 @@ export namespace Prisma {
     use_openai_batch?: boolean
     draft_batch_id?: string | null
     sender_profile_uuid?: string | null
+    email_provider_allocations?: NullableJsonNullValueInput | InputJsonValue
     scheduled_at?: Date | string | null
     started_at?: Date | string | null
     completed_at?: Date | string | null
@@ -62936,6 +62968,7 @@ export namespace Prisma {
     ai_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     use_openai_batch?: BoolFieldUpdateOperationsInput | boolean
     draft_batch_id?: NullableStringFieldUpdateOperationsInput | string | null
+    email_provider_allocations?: NullableJsonNullValueInput | InputJsonValue
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -62980,6 +63013,7 @@ export namespace Prisma {
     use_openai_batch?: BoolFieldUpdateOperationsInput | boolean
     draft_batch_id?: NullableStringFieldUpdateOperationsInput | string | null
     sender_profile_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    email_provider_allocations?: NullableJsonNullValueInput | InputJsonValue
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -63331,6 +63365,7 @@ export namespace Prisma {
     ai_prompt?: string | null
     use_openai_batch?: boolean
     draft_batch_id?: string | null
+    email_provider_allocations?: NullableJsonNullValueInput | InputJsonValue
     scheduled_at?: Date | string | null
     started_at?: Date | string | null
     completed_at?: Date | string | null
@@ -63374,6 +63409,7 @@ export namespace Prisma {
     ai_prompt?: string | null
     use_openai_batch?: boolean
     draft_batch_id?: string | null
+    email_provider_allocations?: NullableJsonNullValueInput | InputJsonValue
     scheduled_at?: Date | string | null
     started_at?: Date | string | null
     completed_at?: Date | string | null
@@ -63925,6 +63961,7 @@ export namespace Prisma {
     ai_prompt?: string | null
     use_openai_batch?: boolean
     draft_batch_id?: string | null
+    email_provider_allocations?: NullableJsonNullValueInput | InputJsonValue
     scheduled_at?: Date | string | null
     started_at?: Date | string | null
     completed_at?: Date | string | null
@@ -63969,6 +64006,7 @@ export namespace Prisma {
     use_openai_batch?: boolean
     draft_batch_id?: string | null
     sender_profile_uuid?: string | null
+    email_provider_allocations?: NullableJsonNullValueInput | InputJsonValue
     scheduled_at?: Date | string | null
     started_at?: Date | string | null
     completed_at?: Date | string | null
@@ -64100,6 +64138,7 @@ export namespace Prisma {
     ai_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     use_openai_batch?: BoolFieldUpdateOperationsInput | boolean
     draft_batch_id?: NullableStringFieldUpdateOperationsInput | string | null
+    email_provider_allocations?: NullableJsonNullValueInput | InputJsonValue
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -64144,6 +64183,7 @@ export namespace Prisma {
     use_openai_batch?: BoolFieldUpdateOperationsInput | boolean
     draft_batch_id?: NullableStringFieldUpdateOperationsInput | string | null
     sender_profile_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    email_provider_allocations?: NullableJsonNullValueInput | InputJsonValue
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -66420,6 +66460,7 @@ export namespace Prisma {
     use_openai_batch?: boolean
     draft_batch_id?: string | null
     sender_profile_uuid?: string | null
+    email_provider_allocations?: NullableJsonNullValueInput | InputJsonValue
     scheduled_at?: Date | string | null
     started_at?: Date | string | null
     completed_at?: Date | string | null
@@ -66962,6 +67003,7 @@ export namespace Prisma {
     ai_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     use_openai_batch?: BoolFieldUpdateOperationsInput | boolean
     draft_batch_id?: NullableStringFieldUpdateOperationsInput | string | null
+    email_provider_allocations?: NullableJsonNullValueInput | InputJsonValue
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -67005,6 +67047,7 @@ export namespace Prisma {
     use_openai_batch?: BoolFieldUpdateOperationsInput | boolean
     draft_batch_id?: NullableStringFieldUpdateOperationsInput | string | null
     sender_profile_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    email_provider_allocations?: NullableJsonNullValueInput | InputJsonValue
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -67047,6 +67090,7 @@ export namespace Prisma {
     use_openai_batch?: BoolFieldUpdateOperationsInput | boolean
     draft_batch_id?: NullableStringFieldUpdateOperationsInput | string | null
     sender_profile_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    email_provider_allocations?: NullableJsonNullValueInput | InputJsonValue
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -68578,6 +68622,7 @@ export namespace Prisma {
     ai_prompt?: string | null
     use_openai_batch?: boolean
     draft_batch_id?: string | null
+    email_provider_allocations?: NullableJsonNullValueInput | InputJsonValue
     scheduled_at?: Date | string | null
     started_at?: Date | string | null
     completed_at?: Date | string | null
@@ -68615,6 +68660,7 @@ export namespace Prisma {
     ai_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     use_openai_batch?: BoolFieldUpdateOperationsInput | boolean
     draft_batch_id?: NullableStringFieldUpdateOperationsInput | string | null
+    email_provider_allocations?: NullableJsonNullValueInput | InputJsonValue
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -68658,6 +68704,7 @@ export namespace Prisma {
     ai_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     use_openai_batch?: BoolFieldUpdateOperationsInput | boolean
     draft_batch_id?: NullableStringFieldUpdateOperationsInput | string | null
+    email_provider_allocations?: NullableJsonNullValueInput | InputJsonValue
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -68700,6 +68747,7 @@ export namespace Prisma {
     ai_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     use_openai_batch?: BoolFieldUpdateOperationsInput | boolean
     draft_batch_id?: NullableStringFieldUpdateOperationsInput | string | null
+    email_provider_allocations?: NullableJsonNullValueInput | InputJsonValue
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null

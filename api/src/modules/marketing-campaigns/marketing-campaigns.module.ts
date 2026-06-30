@@ -7,6 +7,7 @@ import {
 } from '@/core/queues/queues.constants';
 import { ContactsModule } from '@/modules/contacts/contacts.module';
 import { OutreachModule } from '@/modules/outreach/outreach.module';
+import { IntegrationsModule } from '@/modules/integrations/integrations.module';
 import { AiIntegrationModule } from '@/integrations/ai/ai.module';
 import { MarketingCampaignsController } from './marketing-campaigns.controller';
 import { MarketingCampaignsService } from './services/marketing-campaigns.service';
@@ -19,6 +20,7 @@ import { CampaignAiService } from './services/campaign-ai.service';
         PrismaModule,
         ContactsModule,
         OutreachModule,
+        IntegrationsModule,
         AiIntegrationModule,
         BullModule.registerQueue({ name: MARKETING_CAMPAIGN_DISPATCH_QUEUE }),
         BullModule.registerQueue({ name: MARKETING_MESSAGE_SEND_QUEUE }),

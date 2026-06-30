@@ -6,10 +6,12 @@ import {
     Channel,
     type OutreachMessage,
 } from "@/features/contacts/interfaces/contact.interface";
+import type { EmailProviderTarget } from "@/features/integrations/interfaces/integrations.interface";
 import {
     useSendOutreachMessage,
     useUpdateOutreachMessage,
 } from "@/features/outreach/hooks/use-outreach";
+import { EmailProviderSelect } from "@/features/messaging/components/email-provider-select";
 import { RichTextEditor } from "@/components/ui/rich-text-editor";
 
 interface EditMessageModalProps {
@@ -53,6 +55,7 @@ interface MessageFormProps {
 function MessageForm({ message, contact_uuid, onClose }: MessageFormProps) {
     const [subject, setSubject] = useState(message.subject ?? "");
     const [content, setContent] = useState(message.content ?? "");
+    const [emailProvider, setEmailProvider] = useState<EmailProviderTarget | null>(null);
 
     const update = useUpdateOutreachMessage();
     const send = useSendOutreachMessage();
@@ -74,6 +77,7 @@ function MessageForm({ message, contact_uuid, onClose }: MessageFormProps) {
     };
 
     const handleSend = async () => {
+        if (isEmail && !emailProvider) return;
         if (dirty) {
             await update.mutateAsync({
                 uuid: message.uuid,
@@ -84,7 +88,18 @@ function MessageForm({ message, contact_uuid, onClose }: MessageFormProps) {
                 contact_uuid,
             });
         }
-        await send.mutateAsync({ uuid: message.uuid, contact_uuid });
+        await send.mutateAsync({
+            uuid: message.uuid,
+            contact_uuid,
+            ...(isEmail && emailProvider
+                ? {
+                      payload: {
+                          email_provider: emailProvider.provider,
+                          email_account: emailProvider.account,
+                      },
+                  }
+                : {}),
+        });
         onClose();
     };
 
@@ -123,6 +138,13 @@ function MessageForm({ message, contact_uuid, onClose }: MessageFormProps) {
                             />
                         )}
                     </div>
+                    {isEmail ? (
+                        <EmailProviderSelect
+                            value={emailProvider}
+                            onChange={setEmailProvider}
+                            disabled={send.isPending || update.isPending}
+                        />
+                    ) : null}
                 </div>
             </Modal.Body>
             <Modal.Footer>
@@ -139,7 +161,7 @@ function MessageForm({ message, contact_uuid, onClose }: MessageFormProps) {
                     Save draft
                 </ActionButtonWithPending>
                 <ActionButtonWithPending
-                    isDisabled={send.isPending || update.isPending}
+                    isDisabled={send.isPending || update.isPending || (isEmail && !emailProvider)}
                     isPending={send.isPending}
                     onPress={handleSend}
                     idleLeading={<Send className="size-4" />}

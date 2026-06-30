@@ -397,6 +397,7 @@ exports.Prisma.MarketingCampaignScalarFieldEnum = {
   use_openai_batch: 'use_openai_batch',
   draft_batch_id: 'draft_batch_id',
   sender_profile_uuid: 'sender_profile_uuid',
+  email_provider_allocations: 'email_provider_allocations',
   scheduled_at: 'scheduled_at',
   started_at: 'started_at',
   completed_at: 'completed_at',

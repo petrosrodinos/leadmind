@@ -434,27 +434,28 @@ model SenderProfile {
 }
 
 model MarketingCampaign {
-  id                  Int            @id @default(autoincrement())
-  uuid                String         @unique @default(uuid())
-  user_uuid           String
-  name                String
-  description         String?
-  status              CampaignStatus @default(DRAFT)
-  campaign_type       CampaignType   @default(STANDARD)
-  channels            Channel[]      @default([EMAIL])
-  filters_snapshot    Json?
-  email_subject       String?
-  email_content       String?        @db.Text
-  sms_content         String?        @db.Text
-  linkedin_content    String?        @db.Text
-  ai_prompt           String?        @db.Text
-  use_openai_batch    Boolean        @default(false)
-  draft_batch_id      String?
-  sender_profile_uuid String?
-  scheduled_at        DateTime?
-  started_at          DateTime?
-  completed_at        DateTime?
-  cancelled_at        DateTime?
+  id                         Int            @id @default(autoincrement())
+  uuid                       String         @unique @default(uuid())
+  user_uuid                  String
+  name                       String
+  description                String?
+  status                     CampaignStatus @default(DRAFT)
+  campaign_type              CampaignType   @default(STANDARD)
+  channels                   Channel[]      @default([EMAIL])
+  filters_snapshot           Json?
+  email_subject              String?
+  email_content              String?        @db.Text
+  sms_content                String?        @db.Text
+  linkedin_content           String?        @db.Text
+  ai_prompt                  String?        @db.Text
+  use_openai_batch           Boolean        @default(false)
+  draft_batch_id             String?
+  sender_profile_uuid        String?
+  email_provider_allocations Json?
+  scheduled_at               DateTime?
+  started_at                 DateTime?
+  completed_at               DateTime?
+  cancelled_at               DateTime?
 
   selected_contact_count Int @default(0)
   total_messages         Int @default(0)

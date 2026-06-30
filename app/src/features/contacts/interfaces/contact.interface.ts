@@ -1,6 +1,7 @@
 import type { ContactProfileField } from "../constants/contact-profile-fields.constants";
 import type { Lead, SourceType } from "@/features/leads/interfaces/lead.interface";
 import type { EnrichmentSource } from "@/features/lead-enrichment/constants/enrichment-sources";
+import type { EmailProviderAllocation } from "@/features/integrations/interfaces/integrations.interface";
 
 export const LeadStatus = {
     NEW: "NEW",
@@ -253,6 +254,11 @@ export interface PaginatedContacts {
     totalPages: number;
 }
 
+export interface SendMessagePayload {
+    email_provider?: "RESEND" | "SMTP";
+    email_account?: string;
+}
+
 export interface UpdateMessagePayload {
     subject?: string;
     content?: string;
@@ -263,6 +269,8 @@ export interface CreateMessagePayload {
     content: string;
     subject?: string;
     contact_uuid: string;
+    email_provider?: "RESEND" | "SMTP";
+    email_account?: string;
 }
 
 export interface BulkCreateMessageResult {
@@ -278,6 +286,7 @@ export interface BulkAiDraftMessagesPayload {
     prompt: string;
     language?: string;
     send?: boolean;
+    email_provider_allocations?: EmailProviderAllocation[];
 }
 
 export interface AiDraftMessagePayload {

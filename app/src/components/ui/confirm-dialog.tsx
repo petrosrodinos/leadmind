@@ -13,6 +13,7 @@ interface ConfirmDialogProps {
     cancelLabel?: string;
     variant?: ConfirmVariant;
     isPending?: boolean;
+    isConfirmDisabled?: boolean;
     onConfirm: () => void | Promise<void>;
 }
 
@@ -25,6 +26,7 @@ export function ConfirmDialog({
     cancelLabel = "Cancel",
     variant = "default",
     isPending = false,
+    isConfirmDisabled = false,
     onConfirm,
 }: ConfirmDialogProps) {
     const handleConfirm = async () => {
@@ -44,11 +46,11 @@ export function ConfirmDialog({
                         </AlertDialog.Icon>
                         <AlertDialog.Heading>{title}</AlertDialog.Heading>
                     </AlertDialog.Header>
-                    {description && (
+                    {description ? (
                         <AlertDialog.Body>
-                            <p className="text-sm text-muted">{description}</p>
+                            <div className="text-sm text-muted">{description}</div>
                         </AlertDialog.Body>
-                    )}
+                    ) : null}
                     <AlertDialog.Footer>
                         <Button
                             slot="close"
@@ -59,7 +61,7 @@ export function ConfirmDialog({
                         </Button>
                         <ActionButtonWithPending
                             variant={variant === "danger" ? "danger" : "primary"}
-                            isDisabled={isPending}
+                            isDisabled={isPending || isConfirmDisabled}
                             isPending={isPending}
                             onPress={handleConfirm}
                         >

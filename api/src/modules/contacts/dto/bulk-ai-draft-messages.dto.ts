@@ -10,8 +10,11 @@ import {
     IsUUID,
     MaxLength,
     MinLength,
+    ValidateNested,
 } from 'class-validator';
+import { Type } from 'class-transformer';
 import { OUTREACH_LANGUAGES, OutreachLanguage } from '../constants/outreach-languages';
+import { EmailProviderAllocationDto } from '@/modules/outreach/dto/email-provider.dto';
 
 export class BulkAiDraftMessagesDto {
     @ApiProperty({ type: [String] })
@@ -39,4 +42,11 @@ export class BulkAiDraftMessagesDto {
     @IsOptional()
     @IsBoolean()
     send?: boolean;
+
+    @ApiPropertyOptional({ type: [EmailProviderAllocationDto] })
+    @IsOptional()
+    @IsArray()
+    @ValidateNested({ each: true })
+    @Type(() => EmailProviderAllocationDto)
+    email_provider_allocations?: EmailProviderAllocationDto[];
 }

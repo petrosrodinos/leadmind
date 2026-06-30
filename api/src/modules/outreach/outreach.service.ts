@@ -23,11 +23,18 @@ import { CreateSequenceDto } from './dto/create-sequence.dto';
 import { ListMessagesDto } from './dto/list-messages.dto';
 import { SendOutreachDto } from './dto/send-outreach.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
+import {
+    buildEmailProviderMetadata,
+    mergeEmailProviderMetadata,
+} from './utils/email-provider-allocation.util';
+import { EmailCredentialsService } from '@/modules/integrations/services/email-credentials.service';
+import { SendExistingMessageDto } from './dto/email-provider.dto';
 
 @Injectable()
 export class OutreachService {
     constructor(
         private readonly prisma: PrismaService,
+        private readonly emailCredentialsService: EmailCredentialsService,
         @InjectQueue(OUTREACH_SEND_QUEUE) private readonly outreachSendQueue: Queue,
     ) { }
 
@@ -35,6 +42,7 @@ export class OutreachService {
         const { content } = this.normalizeContentForChannel(dto.channel, dto.content);
         const contact = await this.requireOwnedContact(user_uuid, dto.contact_uuid);
         const scheduled_at = dto.scheduled_at ? new Date(dto.scheduled_at) : undefined;
+        const metadata = await this.resolveEmailMetadata(user_uuid, dto);
         const message = await this.prisma.outreachMessage.create({
             data: {
                 user_uuid,
@@ -44,6 +52,7 @@ export class OutreachService {
                 content,
                 status: MsgStatus.PENDING,
                 scheduled_at,
+                ...(metadata ? { metadata: metadata as Prisma.InputJsonValue } : {}),
             },
         });
         await this.enqueueMessage(message.uuid, scheduled_at);
@@ -53,6 +62,7 @@ export class OutreachService {
     async createDraft(user_uuid: string, dto: SendOutreachDto): Promise<OutreachMessage> {
         const { content } = this.normalizeContentForChannel(dto.channel, dto.content);
         const contact = await this.requireOwnedContact(user_uuid, dto.contact_uuid);
+        const metadata = await this.resolveEmailMetadata(user_uuid, dto);
         return this.prisma.outreachMessage.create({
             data: {
                 user_uuid,
@@ -61,8 +71,31 @@ export class OutreachService {
                 subject: dto.subject,
                 content,
                 status: MsgStatus.PENDING,
+                ...(metadata ? { metadata: metadata as Prisma.InputJsonValue } : {}),
             },
         });
+    }
+
+    private async resolveEmailMetadata(user_uuid: string, dto: SendOutreachDto) {
+        if (dto.channel !== Channel.EMAIL) {
+            return null;
+        }
+        if (dto.email_provider && dto.email_account) {
+            await this.emailCredentialsService.assertSendableAccount(
+                user_uuid,
+                dto.email_provider,
+                dto.email_account,
+            );
+            return buildEmailProviderMetadata({
+                provider: dto.email_provider,
+                account: dto.email_account.trim(),
+            });
+        }
+        const defaultTarget = await this.emailCredentialsService.resolveDefaultTarget(user_uuid);
+        if (!defaultTarget) {
+            return null;
+        }
+        return buildEmailProviderMetadata(defaultTarget);
     }
 
     private normalizeContentForChannel(channel: Channel, content: string): { content: string } {
@@ -100,8 +133,33 @@ export class OutreachService {
         });
     }
 
-    async sendMessage(user_uuid: string, message_uuid: string): Promise<{ jobId: string }> {
-        const message = await this.requireOwnedMessage(user_uuid, message_uuid);
+    async sendMessage(
+        user_uuid: string,
+        message_uuid: string,
+        dto: SendExistingMessageDto = {},
+    ): Promise<{ jobId: string }> {
+        let message = await this.requireOwnedMessage(user_uuid, message_uuid);
+
+        if (
+            message.channel === Channel.EMAIL &&
+            dto.email_provider &&
+            dto.email_account
+        ) {
+            await this.emailCredentialsService.assertSendableAccount(
+                user_uuid,
+                dto.email_provider,
+                dto.email_account,
+            );
+            message = await this.prisma.outreachMessage.update({
+                where: { uuid: message_uuid },
+                data: {
+                    metadata: mergeEmailProviderMetadata(message.metadata, {
+                        provider: dto.email_provider,
+                        account: dto.email_account.trim(),
+                    }) as Prisma.InputJsonValue,
+                },
+            });
+        }
 
         if (message.status === MsgStatus.PENDING) {
             const job = await this.enqueueMessage(message.uuid, message.scheduled_at ?? undefined);
@@ -109,12 +167,13 @@ export class OutreachService {
         }
 
         if (message.status === MsgStatus.FAILED) {
+            const preservedMetadata = message.metadata;
             await this.prisma.outreachMessage.update({
                 where: { uuid: message_uuid },
                 data: {
                     status: MsgStatus.PENDING,
                     sent_at: null,
-                    metadata: null,
+                    metadata: preservedMetadata,
                 },
             });
             const fresh = await this.requireOwnedMessage(user_uuid, message_uuid);

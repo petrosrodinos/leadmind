@@ -11,6 +11,9 @@ import type {
     PaginatedCampaigns,
     PaginatedDraftMessages,
     PreviewContactsResult,
+    SendCampaignDraftsPayload,
+    SendCampaignDraftMessagePayload,
+    StartCampaignPayload,
     UpdateCampaignPayload,
 } from "../interfaces/campaign.interface";
 import type { CampaignFilters } from "../interfaces/campaign.interface";
@@ -113,10 +116,14 @@ export async function previewCampaignContacts(
     }
 }
 
-export async function startCampaign(uuid: string): Promise<MarketingCampaign> {
+export async function startCampaign(
+    uuid: string,
+    payload: StartCampaignPayload = {},
+): Promise<MarketingCampaign> {
     try {
         const response = await axiosInstance.post(
             ApiRoutes.marketing_campaigns.start(uuid),
+            payload,
         );
         return response.data;
     } catch (error: any) {
@@ -187,10 +194,14 @@ export async function generateCampaignMessage(
     }
 }
 
-export async function sendPersonalizedDrafts(uuid: string): Promise<MarketingCampaign> {
+export async function sendPersonalizedDrafts(
+    uuid: string,
+    payload: SendCampaignDraftsPayload = {},
+): Promise<MarketingCampaign> {
     try {
         const response = await axiosInstance.post(
             ApiRoutes.marketing_campaigns.send_drafts(uuid),
+            payload,
         );
         return response.data;
     } catch (error: any) {
@@ -230,10 +241,12 @@ export async function deleteCampaignDraftMessage(
 export async function sendCampaignDraftMessage(
     campaignUuid: string,
     messageUuid: string,
+    payload: SendCampaignDraftMessagePayload = {},
 ): Promise<{ jobId: string }> {
     try {
         const response = await axiosInstance.post(
             ApiRoutes.marketing_campaigns.send_draft_message(campaignUuid, messageUuid),
+            payload,
         );
         return response.data;
     } catch (error: any) {

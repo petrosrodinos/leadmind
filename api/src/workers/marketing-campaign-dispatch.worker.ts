@@ -14,6 +14,12 @@ import {
 import { CampaignContactResolverService } from '@/modules/marketing-campaigns/services/campaign-contact-resolver.service';
 import { CampaignFiltersDto } from '@/modules/marketing-campaigns/dto/campaign-filters.dto';
 import { CampaignMessageSendService } from '@/modules/marketing-campaigns/services/campaign-message-send.service';
+import {
+    assignEmailProviders,
+    parseStoredEmailProviderAllocations,
+} from '@/modules/outreach/utils/email-provider-allocation.util';
+import { MessageSendJobData } from './marketing-message-send.worker';
+import { EmailProviderTarget } from '@/modules/integrations/interfaces/email-credentials.interface';
 
 interface DispatchJobData {
     campaign_uuid: string;
@@ -52,7 +58,6 @@ export class MarketingCampaignDispatchWorker extends WorkerHost {
             return;
         }
 
-        // If we're firing from a delayed scheduled job, promote SCHEDULED → SENDING + set started_at.
         if (campaign.status === CampaignStatus.SCHEDULED) {
             await this.prisma.marketingCampaign.update({
                 where: { uuid: campaign_uuid },
@@ -99,10 +104,9 @@ export class MarketingCampaignDispatchWorker extends WorkerHost {
             `Campaign ${campaign_uuid}: ${created.count} MCC rows created (${contact_uuids.length} contacts × ${channels.length} channels)`,
         );
 
-        // Look up the MCC uuids for this campaign so we can stable-id BullMQ jobs by mcc_uuid
         const mccs = await this.prisma.marketingCampaignContact.findMany({
             where: { campaign_uuid },
-            select: { uuid: true },
+            select: { uuid: true, contact_uuid: true, channel: true },
         });
 
         await this.prisma.marketingCampaign.update({
@@ -114,27 +118,53 @@ export class MarketingCampaignDispatchWorker extends WorkerHost {
             },
         });
 
-        // Enqueue all send jobs in chunks
+        const emailMccs = mccs.filter((mcc) => mcc.channel === Channel.EMAIL);
+        const allocations = parseStoredEmailProviderAllocations(
+            campaign.email_provider_allocations,
+        );
+        const providerAssignments =
+            allocations && emailMccs.length > 0
+                ? assignEmailProviders(
+                      emailMccs.map((mcc) => mcc.contact_uuid),
+                      allocations,
+                  )
+                : new Map<string, EmailProviderTarget>();
+
         for (let i = 0; i < mccs.length; i += CHUNK_SIZE) {
             const chunk = mccs.slice(i, i + CHUNK_SIZE);
             await this.messageSendQueue.addBulk(
-                chunk.map((mcc) => ({
-                    name: `send-${mcc.uuid}`,
-                    data: { campaign_uuid, mcc_uuid: mcc.uuid },
-                    opts: {
-                        jobId: `mcc-${mcc.uuid}`,
-                        attempts: 5,
-                        backoff: { type: 'exponential', delay: 60_000 },
-                        removeOnComplete: 1000,
-                        removeOnFail: 1000,
-                    },
-                })),
+                chunk.map((mcc) => {
+                    const assignment =
+                        mcc.channel === Channel.EMAIL
+                            ? providerAssignments.get(mcc.contact_uuid)
+                            : undefined;
+                    const data: MessageSendJobData = {
+                        campaign_uuid,
+                        mcc_uuid: mcc.uuid,
+                        ...(assignment
+                            ? {
+                                  email_provider: assignment.provider,
+                                  email_account: assignment.account,
+                              }
+                            : {}),
+                    };
+                    return {
+                        name: `send-${mcc.uuid}`,
+                        data,
+                        opts: {
+                            jobId: `mcc-${mcc.uuid}`,
+                            attempts: 5,
+                            backoff: { type: 'exponential', delay: 60_000 },
+                            removeOnComplete: 1000,
+                            removeOnFail: 1000,
+                        },
+                    };
+                }),
             );
         }
 
         this.logger.log(`Campaign ${campaign_uuid}: enqueued ${mccs.length} send jobs`);
 
-        // Check completion immediately in case all rows were already terminal (e.g. retry)
         await this.sendService.checkCompletion(campaign_uuid);
     }
 }

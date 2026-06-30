@@ -23,6 +23,7 @@ import { AssignSequenceDto } from './dto/assign-sequence.dto';
 import { CreateSequenceDto } from './dto/create-sequence.dto';
 import { ListMessagesDto } from './dto/list-messages.dto';
 import { SendOutreachDto } from './dto/send-outreach.dto';
+import { SendExistingMessageDto } from './dto/email-provider.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
 import { OutreachService } from './outreach.service';
 
@@ -58,8 +59,12 @@ export class OutreachController {
     @ApiOperation({ summary: 'Enqueue outreach message for sending (or retry a failed message)' })
     @ApiResponse({ status: 201 })
     @ApiResponse({ status: 409, description: 'Only pending or failed messages can be sent' })
-    sendMessage(@CurrentUser('uuid') user_uuid: string, @Param('uuid') message_uuid: string) {
-        return this.outreachService.sendMessage(user_uuid, message_uuid);
+    sendMessage(
+        @CurrentUser('uuid') user_uuid: string,
+        @Param('uuid') message_uuid: string,
+        @Body() dto: SendExistingMessageDto = {},
+    ) {
+        return this.outreachService.sendMessage(user_uuid, message_uuid, dto);
     }
 
     @Delete('messages/:uuid')

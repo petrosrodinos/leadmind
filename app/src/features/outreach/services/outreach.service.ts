@@ -3,6 +3,7 @@ import { ApiRoutes } from "@/config/api/routes";
 import type {
     CreateMessagePayload,
     OutreachMessage,
+    SendMessagePayload,
     UpdateMessagePayload,
 } from "@/features/contacts/interfaces/contact.interface";
 
@@ -43,9 +44,15 @@ export const createAndSendMessage = async (
     }
 };
 
-export const sendOutreachMessage = async (uuid: string): Promise<OutreachMessage> => {
+export const sendOutreachMessage = async (
+    uuid: string,
+    payload: SendMessagePayload = {},
+): Promise<OutreachMessage> => {
     try {
-        const response = await axiosInstance.post(ApiRoutes.outreach.send_message(uuid));
+        const response = await axiosInstance.post(
+            ApiRoutes.outreach.send_message(uuid),
+            payload,
+        );
         return response.data;
     } catch (error: any) {
         if (error?.response?.status === 409) {

@@ -1,5 +1,6 @@
 import type { Channel, Contact } from "@/features/contacts/interfaces/contact.interface";
 import type { ContactFilters } from "@/interfaces/contact-filters.interface";
+import type { EmailProviderAllocation } from "@/features/integrations/interfaces/integrations.interface";
 
 export const CampaignType = {
     STANDARD: "STANDARD",
@@ -80,6 +81,7 @@ export interface MarketingCampaign {
     unsubscribed_count: number;
     created_at: string;
     updated_at: string;
+    email_provider_allocations?: EmailProviderAllocation[] | null;
 }
 
 export interface MarketingCampaignContact {
@@ -142,9 +144,23 @@ export interface CreateCampaignPayload {
     sender_profile_uuid?: string;
     scheduled_at?: string;
     filters?: CampaignFilters;
+    email_provider_allocations?: EmailProviderAllocation[];
 }
 
 export type UpdateCampaignPayload = Partial<CreateCampaignPayload>;
+
+export interface StartCampaignPayload {
+    email_provider_allocations?: EmailProviderAllocation[];
+}
+
+export interface SendCampaignDraftsPayload {
+    email_provider_allocations?: EmailProviderAllocation[];
+}
+
+export interface SendCampaignDraftMessagePayload {
+    email_provider?: "RESEND" | "SMTP";
+    email_account?: string;
+}
 
 export interface PreviewContactsResult {
     total: number;

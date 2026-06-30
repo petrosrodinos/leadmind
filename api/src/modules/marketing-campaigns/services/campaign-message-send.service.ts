@@ -19,6 +19,13 @@ import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { MARKETING_MESSAGE_SEND_QUEUE } from '@/core/queues/queues.constants';
 import { sanitizeEmailHtml } from '@/shared/utils/sanitize-html.util';
 import { MessageSendService } from '@/modules/outreach/services/message-send.service';
+import { EmailProviderTarget } from '@/modules/integrations/interfaces/email-credentials.interface';
+import { EmailCredentialsService } from '@/modules/integrations/services/email-credentials.service';
+import {
+    buildEmailProviderMetadata,
+    mergeEmailProviderMetadata,
+    parseEmailProviderMetadata,
+} from '@/modules/outreach/utils/email-provider-allocation.util';
 
 interface SendResult {
     status: 'sent' | 'failed' | 'skipped' | 'noop';
@@ -32,11 +39,12 @@ export class CampaignMessageSendService {
     constructor(
         private readonly prisma: PrismaService,
         private readonly messageSendService: MessageSendService,
+        private readonly emailCredentialsService: EmailCredentialsService,
         @InjectQueue(MARKETING_MESSAGE_SEND_QUEUE)
         private readonly messageSendQueue: Queue,
     ) { }
 
-    async sendByMcc(mcc_uuid: string): Promise<SendResult> {
+    async sendByMcc(mcc_uuid: string, providerOverride?: EmailProviderTarget): Promise<SendResult> {
         const mcc = await this.prisma.marketingCampaignContact.findUnique({
             where: { uuid: mcc_uuid },
             include: {
@@ -103,6 +111,13 @@ export class CampaignMessageSendService {
                         content,
                         status: MsgStatus.QUEUED,
                         idempotency_key,
+                        ...(providerOverride && mcc.channel === Channel.EMAIL
+                            ? {
+                                  metadata: buildEmailProviderMetadata(
+                                      providerOverride,
+                                  ) as Prisma.InputJsonValue,
+                              }
+                            : {}),
                     },
                 });
             } catch (error) {
@@ -125,11 +140,33 @@ export class CampaignMessageSendService {
             return { status: 'noop', reason: `Already ${message.status}` };
         }
 
-        try {
-            const { provider_message_id } = await this.messageSendService.deliverOutreachMessage({
-                ...message,
-                contact: mcc.contact,
+        if (providerOverride && mcc.channel === Channel.EMAIL) {
+            await this.prisma.outreachMessage.update({
+                where: { uuid: message.uuid },
+                data: {
+                    metadata: mergeEmailProviderMetadata(
+                        message.metadata,
+                        providerOverride,
+                    ) as Prisma.InputJsonValue,
+                },
             });
+            message = {
+                ...message,
+                metadata: mergeEmailProviderMetadata(
+                    message.metadata,
+                    providerOverride,
+                ) as Prisma.JsonValue,
+            };
+        }
+
+        try {
+            const { provider_message_id } = await this.messageSendService.deliverOutreachMessage(
+                {
+                    ...message,
+                    contact: mcc.contact,
+                },
+                providerOverride,
+            );
 
             await this.prisma.$transaction([
                 this.messageSendService.messageSentOperation(message.uuid, provider_message_id),
@@ -166,7 +203,11 @@ export class CampaignMessageSendService {
         } catch (error) {
             const error_message = error instanceof Error ? error.message : 'Unknown error';
             await this.prisma.$transaction([
-                this.messageSendService.messageFailedOperation(message.uuid, error_message),
+                this.messageSendService.messageFailedOperationPreservingProvider(
+                    message.uuid,
+                    error_message,
+                    message.metadata,
+                ),
                 this.prisma.marketingCampaignContact.update({
                     where: { uuid: mcc.uuid },
                     data: {
@@ -203,8 +244,9 @@ export class CampaignMessageSendService {
         user_uuid: string,
         campaign_uuid: string,
         message_uuid: string,
+        providerOverride?: EmailProviderTarget,
     ): Promise<{ jobId: string }> {
-        const message = await this.prisma.outreachMessage.findFirst({
+        let message = await this.prisma.outreachMessage.findFirst({
             where: { uuid: message_uuid, campaign_uuid, user_uuid },
             include: {
                 contact: { select: { email: true, phone: true, unsubscribed_at: true } },
@@ -262,6 +304,26 @@ export class CampaignMessageSendService {
             throw new BadRequestException('Contact has no phone');
         }
 
+        if (providerOverride && message.channel === Channel.EMAIL) {
+            await this.emailCredentialsService.assertSendableAccount(
+                user_uuid,
+                providerOverride.provider,
+                providerOverride.account,
+            );
+            message = await this.prisma.outreachMessage.update({
+                where: { uuid: message_uuid },
+                data: {
+                    metadata: mergeEmailProviderMetadata(
+                        message.metadata,
+                        providerOverride,
+                    ) as Prisma.InputJsonValue,
+                },
+                include: {
+                    contact: { select: { email: true, phone: true, unsubscribed_at: true } },
+                },
+            });
+        }
+
         const mccWasFailed = mcc.status === CampaignContactStatus.FAILED;
 
         await this.prisma.$transaction(async (tx) => {
@@ -270,7 +332,7 @@ export class CampaignMessageSendService {
                     where: { uuid: message_uuid },
                     data: {
                         status: MsgStatus.PENDING,
-                        metadata: null,
+                        metadata: message.metadata,
                         sent_at: null,
                         provider_message_id: null,
                     },
@@ -301,9 +363,19 @@ export class CampaignMessageSendService {
             });
         });
 
+        const provider = parseEmailProviderMetadata(message.metadata);
         const job = await this.messageSendQueue.add(
             `send-${mcc.uuid}`,
-            { campaign_uuid, mcc_uuid: mcc.uuid },
+            {
+                campaign_uuid,
+                mcc_uuid: mcc.uuid,
+                ...(provider
+                    ? {
+                          email_provider: provider.provider,
+                          email_account: provider.account,
+                      }
+                    : {}),
+            },
             {
                 jobId: `mcc-${mcc.uuid}`,
                 attempts: 3,

@@ -22,9 +22,11 @@ export class ResendAdapter {
     }
   }
 
-  public async sendEmail(createEmail: CreateEmail) {
+  public async sendEmail(createEmail: CreateEmail, apiKey?: string) {
     try {
-      const resendClient = this.resendConfig.getResendClient();
+      const resendClient = apiKey
+        ? this.resendConfig.createClient(apiKey)
+        : this.resendConfig.getResendClient();
       return await resendClient.emails.send({
         from: createEmail.from || this.emailFromAddresses.confirmation,
         to: createEmail.to,

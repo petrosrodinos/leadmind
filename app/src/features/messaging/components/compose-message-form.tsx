@@ -8,6 +8,7 @@ import {
     useCreateAndSendMessage,
     useCreateDraftMessage,
 } from "@/features/outreach/hooks/use-outreach";
+import type { EmailProviderAllocation, EmailProviderTarget } from "@/features/integrations/interfaces/integrations.interface";
 import {
     MessageComposer,
     MessageChannelToggle,
@@ -15,6 +16,11 @@ import {
     type AiGenerateArgs,
 } from "@/features/messaging/components/message-composer";
 import { PersonalizedMessageGoalField } from "@/features/messaging/components/personalized-message-goal-field";
+import {
+    EmailProviderAllocationPicker,
+    isEmailProviderAllocationValid,
+} from "@/features/messaging/components/email-provider-allocation-picker";
+import { EmailProviderSelect } from "@/features/messaging/components/email-provider-select";
 import { DEFAULT_CAMPAIGN_ACTIONS } from "@/features/messaging/constants/ai-actions";
 import {
     EMPTY_MESSAGE_COMPOSER_VALUE,
@@ -44,6 +50,8 @@ export function ComposeMessageForm({
     const [activeChannel, setActiveChannel] = useState<Channel>(Channel.EMAIL);
     const [value, setValue] = useState<MessageComposerValue>(EMPTY_MESSAGE_COMPOSER_VALUE);
     const [bulkPrompt, setBulkPrompt] = useState("");
+    const [emailProvider, setEmailProvider] = useState<EmailProviderTarget | null>(null);
+    const [emailAllocations, setEmailAllocations] = useState<EmailProviderAllocation[]>([]);
 
     const aiDraft = useAiDraftMessage();
     const createDraft = useCreateDraftMessage();
@@ -53,6 +61,12 @@ export function ComposeMessageForm({
     const isBulk = mode === "bulk";
     const bulkCount = contactUuids.length;
     const bulkPromptEmpty = bulkPrompt.trim().length === 0;
+    const showEmailProviders = activeChannel === Channel.EMAIL;
+    const bulkEmailSendCount = bulkCount;
+    const emailAllocationValid =
+        !showEmailProviders ||
+        !isBulk ||
+        isEmailProviderAllocationValid(emailAllocations, bulkEmailSendCount);
 
     const isPending =
         aiDraft.isPending ||
@@ -80,12 +94,16 @@ export function ComposeMessageForm({
 
     const handleBulkDraft = async (send: boolean) => {
         if (bulkPromptEmpty || isPending) return;
+        if (send && showEmailProviders && !emailAllocationValid) return;
         try {
             await bulkAiDraft.mutateAsync({
                 contact_uuids: contactUuids,
                 channel: activeChannel,
                 prompt: bulkPrompt.trim(),
                 send,
+                ...(send && showEmailProviders
+                    ? { email_provider_allocations: emailAllocations }
+                    : {}),
             });
             onBulkComplete?.();
             onClose();
@@ -100,9 +118,10 @@ export function ComposeMessageForm({
             return;
         }
         if (contentEmpty || isPending || !contactUuid) return;
+        if (showEmailProviders && !emailProvider) return;
         try {
             await createDraft.mutateAsync(
-                buildCreateMessagePayload(activeChannel, value, contactUuid),
+                buildCreateMessagePayload(activeChannel, value, contactUuid, emailProvider),
             );
             onClose();
         } catch {
@@ -116,9 +135,10 @@ export function ComposeMessageForm({
             return;
         }
         if (contentEmpty || isPending || !contactUuid) return;
+        if (showEmailProviders && !emailProvider) return;
         try {
             await createAndSend.mutateAsync(
-                buildCreateMessagePayload(activeChannel, value, contactUuid),
+                buildCreateMessagePayload(activeChannel, value, contactUuid, emailProvider),
             );
             onClose();
         } catch {
@@ -129,6 +149,15 @@ export function ComposeMessageForm({
     const heading = isBulk
         ? `Draft messages for ${bulkCount} contact${bulkCount === 1 ? "" : "s"}`
         : "Compose new message";
+
+    const saveDisabled =
+        (isBulk ? bulkPromptEmpty : contentEmpty) ||
+        isPending ||
+        (!isBulk && showEmailProviders && emailProvider == null);
+
+    const sendDisabled =
+        saveDisabled ||
+        (isBulk && showEmailProviders && !emailAllocationValid);
 
     return (
         <>
@@ -153,22 +182,39 @@ export function ComposeMessageForm({
                                 onChange={setBulkPrompt}
                                 disabled={isPending}
                             />
+                            {showEmailProviders ? (
+                                <EmailProviderAllocationPicker
+                                    totalCount={bulkEmailSendCount}
+                                    value={emailAllocations}
+                                    onChange={setEmailAllocations}
+                                    disabled={isPending}
+                                />
+                            ) : null}
                         </div>
                     ) : (
-                        <MessageComposer
-                            channels={BULK_CHANNELS}
-                            activeChannel={activeChannel}
-                            onActiveChannelChange={(c) => {
-                                if (isPending) return;
-                                setActiveChannel(c);
-                            }}
-                            value={value}
-                            onChange={(patch) => setValue((v) => ({ ...v, ...patch }))}
-                            onAiGenerate={contactUuid ? handleAi : undefined}
-                            aiActions={DEFAULT_CAMPAIGN_ACTIONS}
-                            isAiPending={aiDraft.isPending}
-                            disabled={isPending}
-                        />
+                        <div className="flex flex-col gap-5">
+                            <MessageComposer
+                                channels={BULK_CHANNELS}
+                                activeChannel={activeChannel}
+                                onActiveChannelChange={(c) => {
+                                    if (isPending) return;
+                                    setActiveChannel(c);
+                                }}
+                                value={value}
+                                onChange={(patch) => setValue((v) => ({ ...v, ...patch }))}
+                                onAiGenerate={contactUuid ? handleAi : undefined}
+                                aiActions={DEFAULT_CAMPAIGN_ACTIONS}
+                                isAiPending={aiDraft.isPending}
+                                disabled={isPending}
+                            />
+                            {showEmailProviders ? (
+                                <EmailProviderSelect
+                                    value={emailProvider}
+                                    onChange={setEmailProvider}
+                                    disabled={isPending}
+                                />
+                            ) : null}
+                        </div>
                     )}
                 </Modal.Body>
                 <Modal.Footer>
@@ -177,7 +223,7 @@ export function ComposeMessageForm({
                     </Button>
                     <ActionButtonWithPending
                         variant="tertiary"
-                        isDisabled={(isBulk ? bulkPromptEmpty : contentEmpty) || isPending}
+                        isDisabled={saveDisabled}
                         isPending={isBulk ? bulkAiDraft.isPending : createDraft.isPending}
                         onPress={handleSaveDraft}
                         idleLeading={<Save className="size-4" />}
@@ -185,7 +231,7 @@ export function ComposeMessageForm({
                         {isBulk ? "Generate drafts" : "Save draft"}
                     </ActionButtonWithPending>
                     <ActionButtonWithPending
-                        isDisabled={(isBulk ? bulkPromptEmpty : contentEmpty) || isPending}
+                        isDisabled={sendDisabled}
                         isPending={isBulk ? bulkAiDraft.isPending : createAndSend.isPending}
                         onPress={handleSend}
                         idleLeading={<Send className="size-4" />}

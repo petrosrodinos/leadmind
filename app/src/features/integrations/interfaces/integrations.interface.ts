@@ -61,6 +61,17 @@ export interface SetDefaultIntegrationAccountPayload {
     account: string;
 }
 
+export type EmailDeliveryProvider = "RESEND" | "SMTP";
+
+export interface EmailProviderTarget {
+    provider: EmailDeliveryProvider;
+    account: string;
+}
+
+export interface EmailProviderAllocation extends EmailProviderTarget {
+    count: number;
+}
+
 export interface CreateIntegrationKeyPayload {
     key_type: IntegrationKeyType;
     account: string;

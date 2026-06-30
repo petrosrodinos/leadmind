@@ -1,4 +1,5 @@
 import { Channel, type CreateMessagePayload } from "@/features/contacts/interfaces/contact.interface";
+import type { EmailProviderTarget } from "@/features/integrations/interfaces/integrations.interface";
 import { isEmailHtmlEmpty } from "@/lib/sanitize-html";
 import type { MessageComposerValue } from "@/features/messaging/components/message-composer";
 
@@ -26,6 +27,7 @@ export function buildCreateMessagePayload(
     channel: Channel,
     value: MessageComposerValue,
     contact_uuid: string,
+    emailProvider?: EmailProviderTarget | null,
 ): CreateMessagePayload {
     const content = getComposerBodyContent(channel, value);
     const subject =
@@ -35,5 +37,11 @@ export function buildCreateMessagePayload(
         content,
         contact_uuid,
         ...(subject ? { subject } : {}),
+        ...(channel === Channel.EMAIL && emailProvider
+            ? {
+                  email_provider: emailProvider.provider,
+                  email_account: emailProvider.account,
+              }
+            : {}),
     };
 }

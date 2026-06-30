@@ -16,6 +16,7 @@ import {
 } from 'class-validator';
 import { Channel, CampaignType } from '@/generated/prisma';
 import { CampaignFiltersDto } from './campaign-filters.dto';
+import { EmailProviderAllocationDto } from '@/modules/outreach/dto/email-provider.dto';
 
 export class CreateCampaignDto {
     @ApiPropertyOptional({ enum: CampaignType, description: 'STANDARD (template) or PERSONALIZED (AI draft per contact)' })
@@ -94,4 +95,11 @@ export class CreateCampaignDto {
     @ValidateNested()
     @Type(() => CampaignFiltersDto)
     filters?: CampaignFiltersDto;
+
+    @ApiPropertyOptional({ type: [EmailProviderAllocationDto] })
+    @IsOptional()
+    @IsArray()
+    @ValidateNested({ each: true })
+    @Type(() => EmailProviderAllocationDto)
+    email_provider_allocations?: EmailProviderAllocationDto[];
 }
