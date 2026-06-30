@@ -2,6 +2,7 @@ import type {
     IntegrationKey,
     IntegrationKeyType,
     IntegrationProvider,
+    IntegrationProviderView,
 } from "../interfaces/integrations.interface";
 
 export const PROVIDER_KEY_TYPES: Record<IntegrationProvider, IntegrationKeyType[]> =
@@ -58,4 +59,27 @@ export function groupKeysByAccount(keys: IntegrationKey[]) {
                 left.key_type.localeCompare(right.key_type),
             ),
         }));
+}
+
+export const MULTI_ACCOUNT_INTEGRATION_PROVIDERS: IntegrationProvider[] = [
+    "RESEND",
+    "TWILIO",
+];
+
+export function providerAllowsMultipleAccounts(
+    provider: IntegrationProvider,
+): boolean {
+    return MULTI_ACCOUNT_INTEGRATION_PROVIDERS.includes(provider);
+}
+
+export function canShowAddKeyButton(providerView: IntegrationProviderView): boolean {
+    const allowsMultipleAccounts =
+        providerView.allows_multiple_accounts ??
+        providerAllowsMultipleAccounts(providerView.provider);
+
+    if (allowsMultipleAccounts) {
+        return true;
+    }
+
+    return providerView.keys.length === 0;
 }

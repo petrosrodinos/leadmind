@@ -30,6 +30,7 @@ import {
     KEY_TYPE_LABELS,
     KEY_TYPE_PLACEHOLDERS,
     PROVIDER_KEY_TYPES,
+    providerAllowsMultipleAccounts,
 } from './constants/integration-key-types.constants';
 import { CreateIntegrationKeyDto } from './dto/create-integration-key.dto';
 import { UpdateIntegrationKeyDto } from './dto/update-integration-key.dto';
@@ -81,8 +82,30 @@ export class IntegrationsService {
             );
         }
 
-        const account = dto.account.trim();
+        const allowsMultipleAccounts = providerAllowsMultipleAccounts(provider);
+        const account = allowsMultipleAccounts ? dto.account.trim() : '1';
+
+        if (!allowsMultipleAccounts && dto.account.trim() !== '1') {
+            throw new BadRequestException(
+                `${INTEGRATION_PROVIDER_LABELS[provider]} supports only one credential set`,
+            );
+        }
+
         const integration = await this.ensureIntegration(user_uuid, provider);
+
+        if (!allowsMultipleAccounts) {
+            const existing = await this.prisma.integrationKey.findFirst({
+                where: {
+                    integration_uuid: integration.uuid,
+                    key_type: dto.key_type,
+                },
+            });
+            if (existing) {
+                throw new ConflictException(
+                    `${KEY_TYPE_LABELS[dto.key_type]} is already configured for ${INTEGRATION_PROVIDER_LABELS[provider]}. Update the existing key instead.`,
+                );
+            }
+        }
 
         try {
             const key = await this.prisma.integrationKey.create({
@@ -234,6 +257,7 @@ export class IntegrationsService {
             label: INTEGRATION_PROVIDER_LABELS[provider],
             description: INTEGRATION_PROVIDER_DESCRIPTIONS[provider],
             disabled: DISABLED_INTEGRATION_PROVIDERS.includes(provider),
+            allows_multiple_accounts: providerAllowsMultipleAccounts(provider),
             keyTypes: this.keyTypeOptions(provider),
             keys: (row?.keys ?? []).map((key) => this.toKeyResponse(key, provider)),
         };

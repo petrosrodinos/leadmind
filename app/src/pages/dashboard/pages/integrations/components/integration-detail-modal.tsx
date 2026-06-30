@@ -3,7 +3,11 @@ import { Button, Modal } from "@heroui/react";
 import { KeyRound, Pencil, Plus, Trash2 } from "lucide-react";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { useDeleteIntegrationKey } from "@/features/integrations/hooks/use-integrations";
-import { groupKeysByAccount } from "@/features/integrations/constants/integration-key-types";
+import {
+    groupKeysByAccount,
+    canShowAddKeyButton,
+    providerAllowsMultipleAccounts,
+} from "@/features/integrations/constants/integration-key-types";
 import type {
     IntegrationKey,
     IntegrationKeyType,
@@ -47,6 +51,16 @@ export function IntegrationDetailModal({
         return null;
     }
 
+    const allowsMultipleAccounts =
+        providerView.allows_multiple_accounts ??
+        providerAllowsMultipleAccounts(providerView.provider);
+
+    const canAddKey = canShowAddKeyButton(providerView);
+    const canAddWebhookSecret =
+        providerView.keyTypes.some((row) => row.key_type === "WEBHOOK_SECRET") &&
+        (allowsMultipleAccounts ||
+            !providerView.keys.some((key) => key.key_type === "WEBHOOK_SECRET"));
+
     const openCreate = (keyType?: IntegrationKeyType) => {
         setEditingKey(null);
         setInitialKeyType(keyType);
@@ -87,9 +101,7 @@ export function IntegrationDetailModal({
                                         Keys
                                     </h3>
                                     <div className="flex items-center gap-2">
-                                        {providerView.keyTypes.some(
-                                            (row) => row.key_type === "WEBHOOK_SECRET",
-                                        ) && (
+                                        {canAddWebhookSecret && (
                                             <Button
                                                 size="sm"
                                                 variant="secondary"
@@ -100,10 +112,12 @@ export function IntegrationDetailModal({
                                                 Add webhook secret
                                             </Button>
                                         )}
-                                        <Button size="sm" onPress={() => openCreate()}>
-                                            <Plus className="size-4" />
-                                            Add key
-                                        </Button>
+                                        {canAddKey && (
+                                            <Button size="sm" onPress={() => openCreate()}>
+                                                <Plus className="size-4" />
+                                                Add key
+                                            </Button>
+                                        )}
                                     </div>
                                 </div>
 
@@ -119,14 +133,16 @@ export function IntegrationDetailModal({
                                                 key={group.account}
                                                 className="rounded-lg border border-border bg-surface-secondary/20"
                                             >
-                                                <div className="px-3 py-2 border-b border-border">
-                                                    <p className="text-xs font-medium uppercase tracking-wide text-muted">
-                                                        Account
-                                                    </p>
-                                                    <p className="text-sm font-semibold text-foreground">
-                                                        {group.account}
-                                                    </p>
-                                                </div>
+                                                {allowsMultipleAccounts && (
+                                                    <div className="px-3 py-2 border-b border-border">
+                                                        <p className="text-xs font-medium uppercase tracking-wide text-muted">
+                                                            Account
+                                                        </p>
+                                                        <p className="text-sm font-semibold text-foreground">
+                                                            {group.account}
+                                                        </p>
+                                                    </div>
+                                                )}
                                                 <ul className="divide-y divide-border">
                                                     {group.keys.map((key) => (
                                                         <li

@@ -8,7 +8,7 @@ import {
     Plug,
     Sparkles,
 } from "lucide-react";
-import { DISABLED_INTEGRATION_PROVIDERS } from "@/features/integrations/constants/integration-key-types";
+import { DISABLED_INTEGRATION_PROVIDERS, canShowAddKeyButton } from "@/features/integrations/constants/integration-key-types";
 import { useIntegrations } from "@/features/integrations/hooks/use-integrations";
 import type { IntegrationProviderView } from "@/features/integrations/interfaces/integrations.interface";
 import { IntegrationDetailModal } from "./components/integration-detail-modal";
@@ -123,12 +123,10 @@ export default function IntegrationsPage() {
                     Integrations
                 </h1>
                 <p className="text-sm text-muted max-w-2xl">
-                    Store keys per provider. Use the same account name for related
-                    secrets, e.g.{" "}
-                    <span className="font-mono">OPENAI_API_KEY_1</span> and{" "}
-                    <span className="font-mono">OPENAI_WEBHOOK_SECRET_1</span>, or{" "}
+                    Store one credential per type for most providers. Resend and
+                    Twilio support multiple accounts, e.g.{" "}
                     <span className="font-mono">RESEND_API_KEY_1</span> and{" "}
-                    <span className="font-mono">RESEND_WEBHOOK_SECRET_1</span>.
+                    <span className="font-mono">RESEND_API_KEY_2</span>.
                 </p>
             </header>
 
@@ -188,6 +186,7 @@ function IntegrationCard({
     const keyCount = providerView.keys.length;
     const accountCount = new Set(providerView.keys.map((row) => row.account)).size;
     const configured = keyCount > 0;
+    const showAddKey = canShowAddKeyButton(providerView);
 
     return (
         <article
@@ -254,7 +253,7 @@ function IntegrationCard({
                           ? "No keys"
                           : `${keyCount} key${keyCount === 1 ? "" : "s"} · ${accountCount} account${accountCount === 1 ? "" : "s"}`}
                 </span>
-                {!disabled && (
+                {!disabled && showAddKey && (
                     <span onClick={(e) => e.stopPropagation()}>
                         <Button size="sm" variant="secondary" onPress={onQuickAdd}>
                             Add key

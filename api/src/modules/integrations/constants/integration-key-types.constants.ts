@@ -54,3 +54,14 @@ export function formatIntegrationKeyEnvName(
 ): string {
     return `${provider}_${key_type}_${account.trim()}`;
 }
+
+export const MULTI_ACCOUNT_INTEGRATION_PROVIDERS: ExternalIntegrationProvider[] = [
+    ExternalIntegrationProvider.RESEND,
+    ExternalIntegrationProvider.TWILIO,
+];
+
+export function providerAllowsMultipleAccounts(
+    provider: ExternalIntegrationProvider,
+): boolean {
+    return MULTI_ACCOUNT_INTEGRATION_PROVIDERS.includes(provider);
+}

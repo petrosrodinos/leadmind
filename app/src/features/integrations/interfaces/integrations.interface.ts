@@ -44,6 +44,7 @@ export interface IntegrationProviderView {
     label: string;
     description: string;
     disabled?: boolean;
+    allows_multiple_accounts?: boolean;
     keyTypes: IntegrationKeyTypeOption[];
     keys: IntegrationKey[];
 }

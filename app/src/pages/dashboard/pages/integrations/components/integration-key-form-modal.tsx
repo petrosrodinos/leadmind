@@ -17,6 +17,7 @@ import {
 import {
     formatIntegrationKeyEnvName,
     KEY_TYPE_PLACEHOLDERS,
+    providerAllowsMultipleAccounts,
 } from "@/features/integrations/constants/integration-key-types";
 import type {
     IntegrationKey,
@@ -43,9 +44,22 @@ export function IntegrationKeyFormModal({
     const updateKey = useUpdateIntegrationKey();
     const isEdit = !!keyItem;
 
+    const allowsMultipleAccounts =
+        providerView.allows_multiple_accounts ??
+        providerAllowsMultipleAccounts(providerView.provider);
+
+    const availableKeyTypes = useMemo(() => {
+        if (allowsMultipleAccounts || isEdit) {
+            return providerView.keyTypes;
+        }
+        const used = new Set(providerView.keys.map((key) => key.key_type));
+        return providerView.keyTypes.filter((row) => !used.has(row.key_type));
+    }, [allowsMultipleAccounts, isEdit, providerView.keyTypes, providerView.keys]);
+
     const defaultKeyType =
         initialKeyType ??
         keyItem?.key_type ??
+        availableKeyTypes[0]?.key_type ??
         providerView.keyTypes[0]?.key_type ??
         "API_KEY";
 
@@ -79,7 +93,7 @@ export function IntegrationKeyFormModal({
     );
 
     const handleSubmit = async () => {
-        const trimmedAccount = account.trim();
+        const trimmedAccount = allowsMultipleAccounts ? account.trim() : "1";
         const trimmedSecret = secret.trim();
         let valid = true;
 
@@ -90,9 +104,13 @@ export function IntegrationKeyFormModal({
             setKeyTypeError(null);
         }
 
-        if (!/^[a-zA-Z0-9_-]+$/.test(trimmedAccount)) {
-            setAccountError("Use letters, numbers, underscores, or hyphens");
-            valid = false;
+        if (allowsMultipleAccounts) {
+            if (!/^[a-zA-Z0-9_-]+$/.test(trimmedAccount)) {
+                setAccountError("Use letters, numbers, underscores, or hyphens");
+                valid = false;
+            } else {
+                setAccountError(null);
+            }
         } else {
             setAccountError(null);
         }
@@ -156,7 +174,7 @@ export function IntegrationKeyFormModal({
                                     </Select.Trigger>
                                     <Select.Popover>
                                         <ListBox>
-                                            {providerView.keyTypes.map((row) => (
+                                            {availableKeyTypes.map((row) => (
                                                 <ListBox.Item
                                                     key={row.key_type}
                                                     id={row.key_type}
@@ -174,34 +192,36 @@ export function IntegrationKeyFormModal({
                                 )}
                             </div>
 
-                            <div className="flex flex-col gap-1.5">
-                                <Label htmlFor="integration-key-account">
-                                    Account
-                                </Label>
-                                <Input
-                                    id="integration-key-account"
-                                    disabled={isEdit}
-                                    placeholder="1, production, main"
-                                    value={account}
-                                    onChange={(e) => setAccount(e.target.value)}
-                                />
-                                <p className="text-xs text-muted">
-                                    Use the same account for keys that belong
-                                    together. Example: account{" "}
-                                    <span className="font-mono">1</span> gives{" "}
-                                    <span className="font-mono">
-                                        {providerView.provider}_API_KEY_1
-                                    </span>{" "}
-                                    and{" "}
-                                    <span className="font-mono">
-                                        {providerView.provider}_WEBHOOK_SECRET_1
-                                    </span>
-                                    .
-                                </p>
-                                {accountError && (
-                                    <FieldError>{accountError}</FieldError>
-                                )}
-                            </div>
+                            {allowsMultipleAccounts && (
+                                <div className="flex flex-col gap-1.5">
+                                    <Label htmlFor="integration-key-account">
+                                        Account
+                                    </Label>
+                                    <Input
+                                        id="integration-key-account"
+                                        disabled={isEdit}
+                                        placeholder="1, production, main"
+                                        value={account}
+                                        onChange={(e) => setAccount(e.target.value)}
+                                    />
+                                    <p className="text-xs text-muted">
+                                        Use the same account for keys that belong
+                                        together. Example: account{" "}
+                                        <span className="font-mono">1</span> gives{" "}
+                                        <span className="font-mono">
+                                            {providerView.provider}_API_KEY_1
+                                        </span>{" "}
+                                        and{" "}
+                                        <span className="font-mono">
+                                            {providerView.provider}_WEBHOOK_SECRET_1
+                                        </span>
+                                        .
+                                    </p>
+                                    {accountError && (
+                                        <FieldError>{accountError}</FieldError>
+                                    )}
+                                </div>
+                            )}
 
                             <div className="rounded-lg border border-border bg-surface-secondary/40 px-3 py-2">
                                 <p className="text-xs text-muted">Reference name</p>
