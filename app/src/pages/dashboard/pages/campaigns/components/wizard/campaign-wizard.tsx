@@ -23,6 +23,7 @@ import {
     EmailProviderAllocationPicker,
     isEmailProviderAllocationValid,
 } from "@/features/messaging/components/email-provider-allocation-picker";
+import { SenderProfileSelect } from "@/features/messaging/components/sender-profile-select";
 import { WizardShell, type WizardStepKey, WIZARD_STEPS } from "./wizard-shell";
 import { StepBasics, type BasicsValues } from "./step-basics";
 import { StepAudience } from "./step-audience";
@@ -89,6 +90,9 @@ export function CampaignWizard({ campaign }: CampaignWizardProps) {
     );
     const [emailAllocations, setEmailAllocations] = useState<EmailProviderAllocation[]>(
         (campaign.email_provider_allocations as EmailProviderAllocation[] | null) ?? [],
+    );
+    const [senderProfileUuid, setSenderProfileUuid] = useState<string | null>(
+        campaign.sender_profile_uuid,
     );
     const [confirmStart, setConfirmStart] = useState(false);
 
@@ -180,6 +184,7 @@ export function CampaignWizard({ campaign }: CampaignWizardProps) {
             ...(showEmailAllocation
                 ? { email_provider_allocations: emailAllocations }
                 : {}),
+            ...(senderProfileUuid ? { sender_profile_uuid: senderProfileUuid } : {}),
             ...extra,
         };
         return updateMutation.mutateAsync({ uuid: campaign.uuid, payload: payload as any });
@@ -206,6 +211,7 @@ export function CampaignWizard({ campaign }: CampaignWizardProps) {
 
     const handleStart = async () => {
         if (showEmailAllocation && !emailAllocationValid) return;
+        if (!senderProfileUuid) return;
         try {
             await persist();
             await startMutation.mutateAsync({
@@ -213,6 +219,7 @@ export function CampaignWizard({ campaign }: CampaignWizardProps) {
                 ...(showEmailAllocation
                     ? { email_provider_allocations: emailAllocations }
                     : {}),
+                sender_profile_uuid: senderProfileUuid,
             });
             navigate(`/dashboard/campaigns/${campaign.uuid}`);
         } catch {
@@ -365,13 +372,22 @@ export function CampaignWizard({ campaign }: CampaignWizardProps) {
                                 />
                             </div>
                         ) : null}
+                        <div className="mt-4">
+                            <SenderProfileSelect
+                                value={senderProfileUuid}
+                                onChange={setSenderProfileUuid}
+                                disabled={startMutation.isPending || updateMutation.isPending}
+                            />
+                        </div>
                     </>
                 }
                 confirmLabel={
                     isPersonalized ? "Generate Drafts" : basics.scheduled_at ? "Schedule" : "Start now"
                 }
                 isPending={startMutation.isPending || updateMutation.isPending}
-                isConfirmDisabled={showEmailAllocation && !emailAllocationValid}
+                isConfirmDisabled={
+                    (showEmailAllocation && !emailAllocationValid) || !senderProfileUuid
+                }
                 onConfirm={handleStart}
             />
         </div>

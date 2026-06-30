@@ -23,6 +23,7 @@ import { SenderProfilesService } from '@/modules/sender-profiles/sender-profiles
 import {
     parseEmailProviderMetadata,
 } from '@/modules/outreach/utils/email-provider-allocation.util';
+import { parseSenderProfileMetadata } from '@/modules/outreach/utils/sender-profile-metadata.util';
 import { OutreachRenderService } from './outreach-render.service';
 
 export interface DeliveredMessage {
@@ -71,6 +72,7 @@ export class MessageSendService {
                 subject: message.subject,
                 content: message.content,
                 campaign_uuid: message.campaign_uuid,
+                metadata: message.metadata,
             },
             message.contact,
         );
@@ -249,6 +251,21 @@ export class MessageSendService {
         const inbound = this.configService.get<string>('RESEND_INBOUND_REPLY_TO');
         if (inbound?.trim()) {
             return inbound.trim();
+        }
+
+        const metadataUuid = parseSenderProfileMetadata(message.metadata);
+        if (metadataUuid) {
+            try {
+                const profile = await this.senderProfilesService.findOne(
+                    message.user_uuid,
+                    metadataUuid,
+                );
+                if (profile.email?.trim()) {
+                    return profile.email.trim();
+                }
+            } catch {
+                // fall through
+            }
         }
 
         if (message.campaign_uuid) {

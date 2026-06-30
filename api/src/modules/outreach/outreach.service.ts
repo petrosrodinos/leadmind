@@ -29,12 +29,17 @@ import {
 } from './utils/email-provider-allocation.util';
 import { EmailCredentialsService } from '@/modules/integrations/services/email-credentials.service';
 import { SendExistingMessageDto } from './dto/email-provider.dto';
+import { SenderProfilesService } from '@/modules/sender-profiles/sender-profiles.service';
+import {
+    mergeSenderProfileMetadata,
+} from './utils/sender-profile-metadata.util';
 
 @Injectable()
 export class OutreachService {
     constructor(
         private readonly prisma: PrismaService,
         private readonly emailCredentialsService: EmailCredentialsService,
+        private readonly senderProfilesService: SenderProfilesService,
         @InjectQueue(OUTREACH_SEND_QUEUE) private readonly outreachSendQueue: Queue,
     ) { }
 
@@ -42,7 +47,7 @@ export class OutreachService {
         const { content } = this.normalizeContentForChannel(dto.channel, dto.content);
         const contact = await this.requireOwnedContact(user_uuid, dto.contact_uuid);
         const scheduled_at = dto.scheduled_at ? new Date(dto.scheduled_at) : undefined;
-        const metadata = await this.resolveEmailMetadata(user_uuid, dto);
+        const metadata = await this.resolveMessageMetadata(user_uuid, dto);
         const message = await this.prisma.outreachMessage.create({
             data: {
                 user_uuid,
@@ -62,7 +67,7 @@ export class OutreachService {
     async createDraft(user_uuid: string, dto: SendOutreachDto): Promise<OutreachMessage> {
         const { content } = this.normalizeContentForChannel(dto.channel, dto.content);
         const contact = await this.requireOwnedContact(user_uuid, dto.contact_uuid);
-        const metadata = await this.resolveEmailMetadata(user_uuid, dto);
+        const metadata = await this.resolveMessageMetadata(user_uuid, dto);
         return this.prisma.outreachMessage.create({
             data: {
                 user_uuid,
@@ -76,26 +81,52 @@ export class OutreachService {
         });
     }
 
-    private async resolveEmailMetadata(user_uuid: string, dto: SendOutreachDto) {
-        if (dto.channel !== Channel.EMAIL) {
-            return null;
+    private async resolveMessageMetadata(user_uuid: string, dto: SendOutreachDto) {
+        let metadata: Record<string, unknown> = {};
+
+        if (dto.channel === Channel.EMAIL) {
+            if (dto.email_provider && dto.email_account) {
+                await this.emailCredentialsService.assertSendableAccount(
+                    user_uuid,
+                    dto.email_provider,
+                    dto.email_account,
+                );
+                metadata = {
+                    ...metadata,
+                    ...buildEmailProviderMetadata({
+                        provider: dto.email_provider,
+                        account: dto.email_account.trim(),
+                    }),
+                };
+            } else {
+                const defaultTarget = await this.emailCredentialsService.resolveDefaultTarget(user_uuid);
+                if (defaultTarget) {
+                    metadata = {
+                        ...metadata,
+                        ...buildEmailProviderMetadata(defaultTarget),
+                    };
+                }
+            }
         }
-        if (dto.email_provider && dto.email_account) {
-            await this.emailCredentialsService.assertSendableAccount(
-                user_uuid,
-                dto.email_provider,
-                dto.email_account,
-            );
-            return buildEmailProviderMetadata({
-                provider: dto.email_provider,
-                account: dto.email_account.trim(),
-            });
+
+        const senderUuid = await this.resolveSenderProfileUuid(user_uuid, dto.sender_profile_uuid);
+        if (senderUuid) {
+            metadata = mergeSenderProfileMetadata(metadata, senderUuid);
         }
-        const defaultTarget = await this.emailCredentialsService.resolveDefaultTarget(user_uuid);
-        if (!defaultTarget) {
-            return null;
+
+        return Object.keys(metadata).length > 0 ? metadata : null;
+    }
+
+    private async resolveSenderProfileUuid(
+        user_uuid: string,
+        requestedUuid?: string,
+    ): Promise<string | null> {
+        if (requestedUuid) {
+            await this.senderProfilesService.findOne(user_uuid, requestedUuid);
+            return requestedUuid;
         }
-        return buildEmailProviderMetadata(defaultTarget);
+        const defaultProfile = await this.senderProfilesService.findDefault(user_uuid);
+        return defaultProfile?.uuid ?? null;
     }
 
     private normalizeContentForChannel(channel: Channel, content: string): { content: string } {
@@ -113,7 +144,7 @@ export class OutreachService {
         dto: UpdateMessageDto,
     ): Promise<OutreachMessage> {
         const message = await this.requireOwnedMessage(user_uuid, message_uuid);
-        this.ensurePending(message);
+        this.ensureEditable(message);
 
         let content = dto.content;
         if (content != null && message.channel === Channel.EMAIL) {
@@ -157,6 +188,19 @@ export class OutreachService {
                         provider: dto.email_provider,
                         account: dto.email_account.trim(),
                     }) as Prisma.InputJsonValue,
+                },
+            });
+        }
+
+        if (dto.sender_profile_uuid) {
+            await this.senderProfilesService.findOne(user_uuid, dto.sender_profile_uuid);
+            message = await this.prisma.outreachMessage.update({
+                where: { uuid: message_uuid },
+                data: {
+                    metadata: mergeSenderProfileMetadata(
+                        message.metadata,
+                        dto.sender_profile_uuid,
+                    ) as Prisma.InputJsonValue,
                 },
             });
         }
@@ -318,6 +362,16 @@ export class OutreachService {
         if (message.status !== MsgStatus.PENDING) {
             throw new ConflictException('Only PENDING messages can be modified');
         }
+    }
+
+    private ensureEditable(message: OutreachMessage): void {
+        if (message.status === MsgStatus.QUEUED) {
+            throw new ConflictException('Cannot modify a message while it is queued for send');
+        }
+        if (message.campaign_uuid) {
+            return;
+        }
+        this.ensurePending(message);
     }
 
     private parseSequenceSteps(steps: Prisma.JsonValue): Array<{

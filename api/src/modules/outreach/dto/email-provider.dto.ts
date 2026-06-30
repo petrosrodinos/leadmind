@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ExternalIntegrationProvider } from '@/generated/prisma';
-import { IsEnum, IsIn, IsInt, IsOptional, IsString, Min, MinLength } from 'class-validator';
+import { IsIn, IsInt, IsOptional, IsString, IsUUID, Min, MinLength } from 'class-validator';
 
 export const EMAIL_DELIVERY_PROVIDERS = [
     ExternalIntegrationProvider.RESEND,
@@ -38,4 +38,9 @@ export class SendExistingMessageDto {
     @IsString()
     @MinLength(1)
     email_account?: string;
+
+    @ApiProperty({ required: false })
+    @IsOptional()
+    @IsUUID()
+    sender_profile_uuid?: string;
 }

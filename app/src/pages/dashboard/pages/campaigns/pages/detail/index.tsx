@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Label, ListBox, Select } from "@heroui/react";
 import { ChevronLeft, Send } from "lucide-react";
@@ -22,6 +22,7 @@ import {
     EmailProviderAllocationPicker,
     isEmailProviderAllocationValid,
 } from "@/features/messaging/components/email-provider-allocation-picker";
+import { SenderProfileSelect } from "@/features/messaging/components/sender-profile-select";
 import { CampaignStatusBadge } from "../../components/campaign-status-badge";
 import { CampaignStatsSection } from "../../components/campaign-stats-section";
 import { RecipientsTable } from "../../components/recipients-table";
@@ -50,6 +51,7 @@ export default function CampaignDetailPage() {
     const [recipientStatus, setRecipientStatus] = useState<CampaignContactStatus | "ALL">("ALL");
     const [confirmSend, setConfirmSend] = useState(false);
     const [emailAllocations, setEmailAllocations] = useState<EmailProviderAllocation[]>([]);
+    const [senderProfileUuid, setSenderProfileUuid] = useState<string | null>(null);
     const { data: campaign, isLoading } = useCampaign(uuid);
     const { data: contactsPage } = useCampaignContacts(uuid, {
         limit: 100,
@@ -61,6 +63,11 @@ export default function CampaignDetailPage() {
         limit: 1,
     });
     const sendDraftsMutation = useSendPersonalizedDrafts();
+
+    useEffect(() => {
+        if (!campaign?.sender_profile_uuid || senderProfileUuid) return;
+        setSenderProfileUuid(campaign.sender_profile_uuid);
+    }, [campaign?.sender_profile_uuid, senderProfileUuid]);
 
     if (isLoading || !campaign) {
         return <CampaignDetailSkeleton />;
@@ -78,11 +85,13 @@ export default function CampaignDetailPage() {
 
     const handleSendCampaign = async () => {
         if (showEmailAllocation && !emailAllocationValid) return;
+        if (!senderProfileUuid) return;
         await sendDraftsMutation.mutateAsync({
             uuid: campaign.uuid,
             ...(showEmailAllocation
                 ? { email_provider_allocations: emailAllocations }
                 : {}),
+            sender_profile_uuid: senderProfileUuid,
         });
         setConfirmSend(false);
     };
@@ -201,11 +210,20 @@ export default function CampaignDetailPage() {
                                 />
                             </div>
                         ) : null}
+                        <div className="mt-4">
+                            <SenderProfileSelect
+                                value={senderProfileUuid}
+                                onChange={setSenderProfileUuid}
+                                disabled={sendDraftsMutation.isPending}
+                            />
+                        </div>
                     </>
                 }
                 confirmLabel="Send now"
                 isPending={sendDraftsMutation.isPending}
-                isConfirmDisabled={showEmailAllocation && !emailAllocationValid}
+                isConfirmDisabled={
+                    (showEmailAllocation && !emailAllocationValid) || !senderProfileUuid
+                }
                 onConfirm={handleSendCampaign}
             />
         </div>

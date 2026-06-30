@@ -175,6 +175,7 @@ export function useStartCampaign() {
         mutationFn: (vars: { uuid: string } & StartCampaignPayload) =>
             startCampaign(vars.uuid, {
                 email_provider_allocations: vars.email_provider_allocations,
+                sender_profile_uuid: vars.sender_profile_uuid,
             }),
         onSuccess: (data, vars) => {
             qc.invalidateQueries({ queryKey: campaignsQueryKeys.detail(vars.uuid) });
@@ -307,6 +308,7 @@ export function useSendPersonalizedDrafts() {
         mutationFn: (vars: { uuid: string } & SendCampaignDraftsPayload) =>
             sendPersonalizedDrafts(vars.uuid, {
                 email_provider_allocations: vars.email_provider_allocations,
+                sender_profile_uuid: vars.sender_profile_uuid,
             }),
         onSuccess: (_data, vars) => {
             qc.invalidateQueries({ queryKey: campaignsQueryKeys.detail(vars.uuid) });
@@ -364,6 +366,7 @@ export function useSendCampaignDraftMessage() {
             sendCampaignDraftMessage(vars.campaignUuid, vars.messageUuid, {
                 email_provider: vars.email_provider,
                 email_account: vars.email_account,
+                sender_profile_uuid: vars.sender_profile_uuid,
             }),
         onSuccess: (_data, vars) => {
             invalidateCampaignDraftMessageQueries(qc, vars);

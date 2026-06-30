@@ -38,4 +38,9 @@ export class SendOutreachDto {
     @IsString()
     @MinLength(1)
     email_account?: string;
+
+    @ApiPropertyOptional()
+    @IsOptional()
+    @IsUUID()
+    sender_profile_uuid?: string;
 }

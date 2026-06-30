@@ -12,6 +12,7 @@ import {
     useUpdateOutreachMessage,
 } from "@/features/outreach/hooks/use-outreach";
 import { EmailProviderSelect } from "@/features/messaging/components/email-provider-select";
+import { SenderProfileSelect } from "@/features/messaging/components/sender-profile-select";
 import { RichTextEditor } from "@/components/ui/rich-text-editor";
 
 interface EditMessageModalProps {
@@ -56,6 +57,7 @@ function MessageForm({ message, contact_uuid, onClose }: MessageFormProps) {
     const [subject, setSubject] = useState(message.subject ?? "");
     const [content, setContent] = useState(message.content ?? "");
     const [emailProvider, setEmailProvider] = useState<EmailProviderTarget | null>(null);
+    const [senderProfileUuid, setSenderProfileUuid] = useState<string | null>(null);
 
     const update = useUpdateOutreachMessage();
     const send = useSendOutreachMessage();
@@ -77,6 +79,7 @@ function MessageForm({ message, contact_uuid, onClose }: MessageFormProps) {
     };
 
     const handleSend = async () => {
+        if (!senderProfileUuid) return;
         if (isEmail && !emailProvider) return;
         if (dirty) {
             await update.mutateAsync({
@@ -91,14 +94,15 @@ function MessageForm({ message, contact_uuid, onClose }: MessageFormProps) {
         await send.mutateAsync({
             uuid: message.uuid,
             contact_uuid,
-            ...(isEmail && emailProvider
-                ? {
-                      payload: {
+            payload: {
+                ...(isEmail && emailProvider
+                    ? {
                           email_provider: emailProvider.provider,
                           email_account: emailProvider.account,
-                      },
-                  }
-                : {}),
+                      }
+                    : {}),
+                sender_profile_uuid: senderProfileUuid,
+            },
         });
         onClose();
     };
@@ -145,6 +149,11 @@ function MessageForm({ message, contact_uuid, onClose }: MessageFormProps) {
                             disabled={send.isPending || update.isPending}
                         />
                     ) : null}
+                    <SenderProfileSelect
+                        value={senderProfileUuid}
+                        onChange={setSenderProfileUuid}
+                        disabled={send.isPending || update.isPending}
+                    />
                 </div>
             </Modal.Body>
             <Modal.Footer>
@@ -161,7 +170,12 @@ function MessageForm({ message, contact_uuid, onClose }: MessageFormProps) {
                     Save draft
                 </ActionButtonWithPending>
                 <ActionButtonWithPending
-                    isDisabled={send.isPending || update.isPending || (isEmail && !emailProvider)}
+                    isDisabled={
+                        send.isPending ||
+                        update.isPending ||
+                        !senderProfileUuid ||
+                        (isEmail && !emailProvider)
+                    }
                     isPending={send.isPending}
                     onPress={handleSend}
                     idleLeading={<Send className="size-4" />}

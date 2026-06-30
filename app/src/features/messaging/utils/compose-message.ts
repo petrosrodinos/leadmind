@@ -28,6 +28,7 @@ export function buildCreateMessagePayload(
     value: MessageComposerValue,
     contact_uuid: string,
     emailProvider?: EmailProviderTarget | null,
+    senderProfileUuid?: string | null,
 ): CreateMessagePayload {
     const content = getComposerBodyContent(channel, value);
     const subject =
@@ -43,5 +44,6 @@ export function buildCreateMessagePayload(
                   email_account: emailProvider.account,
               }
             : {}),
+        ...(senderProfileUuid ? { sender_profile_uuid: senderProfileUuid } : {}),
     };
 }

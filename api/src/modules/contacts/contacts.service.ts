@@ -64,6 +64,8 @@ import { enqueueContactScoreJob } from './utils/contact-score-queue.utils';
 import { BulkAiDraftMessagesDto } from './dto/bulk-ai-draft-messages.dto';
 import { EmailCredentialsService } from '@/modules/integrations/services/email-credentials.service';
 import type { EmailProviderTarget } from '@/modules/integrations/interfaces/email-credentials.interface';
+import { SenderProfilesService } from '@/modules/sender-profiles/sender-profiles.service';
+import { mergeSenderProfileMetadata } from '@/modules/outreach/utils/sender-profile-metadata.util';
 import {
     assignEmailProviders,
     buildEmailProviderMetadata,
@@ -89,6 +91,7 @@ export class ContactsService {
         private readonly enrichmentOrchestrator: EnrichmentOrchestrator,
         private readonly outreachService: OutreachService,
         private readonly emailCredentialsService: EmailCredentialsService,
+        private readonly senderProfilesService: SenderProfilesService,
         private readonly websiteCrawler: WebsiteContentCrawlerAdapter,
         @InjectQueue(AI_PROCESS_QUEUE) private readonly aiProcessQueue: Queue,
     ) { }
@@ -833,6 +836,17 @@ export class ContactsService {
 
             let providerAssignments = new Map<string, EmailProviderTarget>();
 
+            let senderProfileUuid: string | null = null;
+            if (dto.send) {
+                if (dto.sender_profile_uuid) {
+                    await this.senderProfilesService.findOne(user_uuid, dto.sender_profile_uuid);
+                    senderProfileUuid = dto.sender_profile_uuid;
+                } else {
+                    const defaultProfile = await this.senderProfilesService.findDefault(user_uuid);
+                    senderProfileUuid = defaultProfile?.uuid ?? null;
+                }
+            }
+
             if (dto.channel === Channel.EMAIL) {
                 const emailMessages = messages.filter((m) => m.channel === Channel.EMAIL);
                 let allocations = dto.email_provider_allocations?.length
@@ -866,12 +880,23 @@ export class ContactsService {
             for (const message of messages) {
                 try {
                     const assignment = providerAssignments.get(message.contact_uuid);
-                    if (assignment && message.channel === Channel.EMAIL) {
+                    const metadataUpdates: Prisma.InputJsonValue | undefined = (() => {
+                        let metadata: Record<string, unknown> = {};
+                        if (assignment && message.channel === Channel.EMAIL) {
+                            metadata = buildEmailProviderMetadata(assignment);
+                        }
+                        if (senderProfileUuid) {
+                            metadata = mergeSenderProfileMetadata(metadata, senderProfileUuid);
+                        }
+                        return Object.keys(metadata).length > 0
+                            ? (metadata as Prisma.InputJsonValue)
+                            : undefined;
+                    })();
+
+                    if (metadataUpdates) {
                         await this.prisma.outreachMessage.update({
                             where: { uuid: message.uuid },
-                            data: {
-                                metadata: buildEmailProviderMetadata(assignment) as Prisma.InputJsonValue,
-                            },
+                            data: { metadata: metadataUpdates },
                         });
                     }
                     await this.outreachService.sendMessage(user_uuid, message.uuid);

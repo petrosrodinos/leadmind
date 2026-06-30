@@ -26,6 +26,8 @@ import {
     mergeEmailProviderMetadata,
     parseEmailProviderMetadata,
 } from '@/modules/outreach/utils/email-provider-allocation.util';
+import { mergeSenderProfileMetadata } from '@/modules/outreach/utils/sender-profile-metadata.util';
+import { SenderProfilesService } from '@/modules/sender-profiles/sender-profiles.service';
 
 interface SendResult {
     status: 'sent' | 'failed' | 'skipped' | 'noop';
@@ -40,6 +42,7 @@ export class CampaignMessageSendService {
         private readonly prisma: PrismaService,
         private readonly messageSendService: MessageSendService,
         private readonly emailCredentialsService: EmailCredentialsService,
+        private readonly senderProfilesService: SenderProfilesService,
         @InjectQueue(MARKETING_MESSAGE_SEND_QUEUE)
         private readonly messageSendQueue: Queue,
     ) { }
@@ -136,8 +139,10 @@ export class CampaignMessageSendService {
         }
 
         if (message.status === MsgStatus.SENT || message.status === MsgStatus.DELIVERED) {
-            await this.checkCompletion(mcc.campaign_uuid);
-            return { status: 'noop', reason: `Already ${message.status}` };
+            if (mcc.status !== CampaignContactStatus.QUEUED) {
+                await this.checkCompletion(mcc.campaign_uuid);
+                return { status: 'noop', reason: `Already ${message.status}` };
+            }
         }
 
         if (providerOverride && mcc.channel === Channel.EMAIL) {
@@ -245,6 +250,7 @@ export class CampaignMessageSendService {
         campaign_uuid: string,
         message_uuid: string,
         providerOverride?: EmailProviderTarget,
+        senderProfileUuid?: string,
     ): Promise<{ jobId: string }> {
         let message = await this.prisma.outreachMessage.findFirst({
             where: { uuid: message_uuid, campaign_uuid, user_uuid },
@@ -256,8 +262,8 @@ export class CampaignMessageSendService {
             throw new NotFoundException('Message not found on this campaign');
         }
 
-        if (message.status !== MsgStatus.PENDING && message.status !== MsgStatus.FAILED) {
-            throw new ConflictException('Only pending or failed messages can be sent');
+        if (message.status === MsgStatus.QUEUED) {
+            throw new ConflictException('Message is already queued for send');
         }
 
         const campaign = await this.prisma.marketingCampaign.findFirst({
@@ -287,14 +293,8 @@ export class CampaignMessageSendService {
             throw new ConflictException('Contact has unsubscribed');
         }
 
-        const canQueue =
-            mcc.status === CampaignContactStatus.PENDING ||
-            mcc.status === CampaignContactStatus.FAILED;
-        if (!canQueue) {
-            if (mcc.status === CampaignContactStatus.QUEUED) {
-                throw new ConflictException('Message is already queued for send');
-            }
-            throw new ConflictException('This message cannot be sent in its current state');
+        if (mcc.status === CampaignContactStatus.QUEUED) {
+            throw new ConflictException('Message is already queued for send');
         }
 
         if (message.channel === Channel.EMAIL && !message.contact.email) {
@@ -324,16 +324,36 @@ export class CampaignMessageSendService {
             });
         }
 
+        if (senderProfileUuid) {
+            await this.senderProfilesService.findOne(user_uuid, senderProfileUuid);
+            message = await this.prisma.outreachMessage.update({
+                where: { uuid: message_uuid },
+                data: {
+                    metadata: mergeSenderProfileMetadata(
+                        message.metadata,
+                        senderProfileUuid,
+                    ) as Prisma.InputJsonValue,
+                },
+                include: {
+                    contact: { select: { email: true, phone: true, unsubscribed_at: true } },
+                },
+            });
+        }
+
         const mccWasFailed = mcc.status === CampaignContactStatus.FAILED;
 
         await this.prisma.$transaction(async (tx) => {
-            if (message.status === MsgStatus.FAILED) {
+            if (message.status !== MsgStatus.PENDING) {
                 await tx.outreachMessage.update({
                     where: { uuid: message_uuid },
                     data: {
                         status: MsgStatus.PENDING,
                         metadata: message.metadata,
                         sent_at: null,
+                        delivered_at: null,
+                        opened_at: null,
+                        clicked_at: null,
+                        replied_at: null,
                         provider_message_id: null,
                     },
                 });
@@ -341,20 +361,53 @@ export class CampaignMessageSendService {
 
             await tx.marketingCampaignContact.update({
                 where: { uuid: mcc.uuid },
-                data: { status: CampaignContactStatus.QUEUED, error_message: null },
+                data: {
+                    status: CampaignContactStatus.QUEUED,
+                    error_message: null,
+                    sent_at: null,
+                    delivered_at: null,
+                },
             });
 
             const campaignData: Prisma.MarketingCampaignUpdateInput = {
                 queued_count: { increment: 1 },
             };
 
-            if (campaign.status === CampaignStatus.DRAFTS_READY) {
+            if (
+                campaign.status === CampaignStatus.DRAFTS_READY ||
+                campaign.status === CampaignStatus.COMPLETED
+            ) {
                 campaignData.status = CampaignStatus.SENDING;
-                campaignData.started_at = new Date();
+                if (campaign.status === CampaignStatus.DRAFTS_READY) {
+                    campaignData.started_at = new Date();
+                }
+                campaignData.completed_at = null;
             }
 
             if (mccWasFailed) {
                 campaignData.failed_count = { decrement: 1 };
+            } else if (mcc.status === CampaignContactStatus.SENT) {
+                campaignData.sent_count = { decrement: 1 };
+            } else if (mcc.status === CampaignContactStatus.DELIVERED) {
+                campaignData.sent_count = { decrement: 1 };
+                campaignData.delivered_count = { decrement: 1 };
+            } else if (mcc.status === CampaignContactStatus.OPENED) {
+                campaignData.sent_count = { decrement: 1 };
+                campaignData.delivered_count = { decrement: 1 };
+                campaignData.opened_count = { decrement: 1 };
+            } else if (mcc.status === CampaignContactStatus.CLICKED) {
+                campaignData.sent_count = { decrement: 1 };
+                campaignData.delivered_count = { decrement: 1 };
+                campaignData.opened_count = { decrement: 1 };
+                campaignData.clicked_count = { decrement: 1 };
+            } else if (mcc.status === CampaignContactStatus.REPLIED) {
+                campaignData.sent_count = { decrement: 1 };
+                campaignData.delivered_count = { decrement: 1 };
+                campaignData.opened_count = { decrement: 1 };
+                campaignData.clicked_count = { decrement: 1 };
+                campaignData.replied_count = { decrement: 1 };
+            } else if (mcc.status === CampaignContactStatus.BOUNCED) {
+                campaignData.bounced_count = { decrement: 1 };
             }
 
             await tx.marketingCampaign.update({

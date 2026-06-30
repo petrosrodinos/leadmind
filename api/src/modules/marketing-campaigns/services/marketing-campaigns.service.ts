@@ -300,6 +300,13 @@ export class MarketingCampaignsService {
         }
 
         if (campaign.campaign_type === CampaignType.PERSONALIZED) {
+            if (dto?.sender_profile_uuid) {
+                await this.assertOwnedSenderProfile(user_uuid, dto.sender_profile_uuid);
+                await this.prisma.marketingCampaign.update({
+                    where: { uuid },
+                    data: { sender_profile_uuid: dto.sender_profile_uuid },
+                });
+            }
             return this.startPersonalized(user_uuid, campaign);
         }
 
@@ -325,6 +332,10 @@ export class MarketingCampaignsService {
             ) ?? undefined,
         );
 
+        if (dto?.sender_profile_uuid) {
+            await this.assertOwnedSenderProfile(user_uuid, dto.sender_profile_uuid);
+        }
+
         const now = new Date();
         const scheduled =
             campaign.scheduled_at && campaign.scheduled_at.getTime() > now.getTime()
@@ -341,6 +352,9 @@ export class MarketingCampaignsService {
                           email_provider_allocations:
                               allocations as unknown as Prisma.InputJsonValue,
                       }
+                    : {}),
+                ...(dto?.sender_profile_uuid
+                    ? { sender_profile_uuid: dto.sender_profile_uuid }
                     : {}),
             },
         });
@@ -476,6 +490,10 @@ export class MarketingCampaignsService {
             throw new BadRequestException('No pending draft contacts found for this campaign');
         }
 
+        if (dto?.sender_profile_uuid) {
+            await this.assertOwnedSenderProfile(user_uuid, dto.sender_profile_uuid);
+        }
+
         const emailMccs = mccs.filter((mcc) => mcc.channel === Channel.EMAIL);
         const allocations = await this.resolveCampaignEmailAllocations(
             user_uuid,
@@ -543,6 +561,9 @@ export class MarketingCampaignsService {
                               allocations as unknown as Prisma.InputJsonValue,
                       }
                     : {}),
+                ...(dto?.sender_profile_uuid
+                    ? { sender_profile_uuid: dto.sender_profile_uuid }
+                    : {}),
             },
         });
     }
@@ -602,6 +623,7 @@ export class MarketingCampaignsService {
             campaign_uuid,
             message_uuid,
             providerOverride,
+            dto.sender_profile_uuid,
         );
     }
 

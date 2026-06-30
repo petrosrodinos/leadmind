@@ -11,6 +11,7 @@ import type { EmailProviderTarget } from "@/features/integrations/interfaces/int
 import { Channel, MsgStatus } from "@/features/contacts/interfaces/contact.interface";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { EmailProviderSelect } from "@/features/messaging/components/email-provider-select";
+import { SenderProfileSelect } from "@/features/messaging/components/sender-profile-select";
 import { EditCampaignDraftMessageModal } from "./edit-campaign-draft-message-modal";
 
 interface DraftedMessagesTableProps {
@@ -65,17 +66,20 @@ export function DraftedMessagesTable({ campaignUuid }: DraftedMessagesTableProps
     const [deleteMsg, setDeleteMsg] = useState<DraftMessage | null>(null);
     const [sendMsg, setSendMsg] = useState<DraftMessage | null>(null);
     const [sendEmailProvider, setSendEmailProvider] = useState<EmailProviderTarget | null>(null);
+    const [sendSenderProfileUuid, setSendSenderProfileUuid] = useState<string | null>(null);
     const deleteMu = useDeleteCampaignDraftMessage();
     const sendMu = useSendCampaignDraftMessage();
 
     useEffect(() => {
         if (!sendMsg) {
             setSendEmailProvider(null);
+            setSendSenderProfileUuid(null);
         }
     }, [sendMsg]);
 
     const sendRequiresEmailProvider = sendMsg?.channel === Channel.EMAIL;
     const sendEmailProviderReady = !sendRequiresEmailProvider || sendEmailProvider != null;
+    const sendSenderProfileReady = sendSenderProfileUuid != null;
 
     if (isLoading) {
         return <DraftedMessagesTableSkeleton />;
@@ -119,6 +123,13 @@ export function DraftedMessagesTable({ campaignUuid }: DraftedMessagesTableProps
                                     />
                                 </div>
                             ) : null}
+                            <div className="mt-4">
+                                <SenderProfileSelect
+                                    value={sendSenderProfileUuid}
+                                    onChange={setSendSenderProfileUuid}
+                                    disabled={sendMu.isPending}
+                                />
+                            </div>
                         </>
                     ) : undefined
                 }
@@ -126,9 +137,9 @@ export function DraftedMessagesTable({ campaignUuid }: DraftedMessagesTableProps
                 cancelLabel="Cancel"
                 variant="default"
                 isPending={sendMu.isPending}
-                isConfirmDisabled={!sendEmailProviderReady}
+                isConfirmDisabled={!sendEmailProviderReady || !sendSenderProfileReady}
                 onConfirm={async () => {
-                    if (!sendMsg) return;
+                    if (!sendMsg || !sendSenderProfileUuid) return;
                     await sendMu.mutateAsync({
                         campaignUuid,
                         messageUuid: sendMsg.uuid,
@@ -139,6 +150,7 @@ export function DraftedMessagesTable({ campaignUuid }: DraftedMessagesTableProps
                                   email_account: sendEmailProvider.account,
                               }
                             : {}),
+                        sender_profile_uuid: sendSenderProfileUuid,
                     });
                     setSendMsg(null);
                 }}
@@ -223,8 +235,8 @@ function DraftRow({ msg, isDeletePending, isSendPending, onEdit, onSend, onDelet
     const [expanded, setExpanded] = useState(false);
     const contactName = msg.contact.name || msg.contact.email || msg.contact.phone || msg.contact_uuid.slice(0, 8);
     const preview = stripHtml(msg.content).slice(0, 120);
-    const canMutate = msg.status === MsgStatus.PENDING;
     const canSend = canSendDraft(msg);
+    const canEdit = canEditDraft(msg);
 
     return (
         <>
@@ -277,7 +289,7 @@ function DraftRow({ msg, isDeletePending, isSendPending, onEdit, onSend, onDelet
                         <Button
                             size="sm"
                             variant="tertiary"
-                            isDisabled={!canMutate}
+                            isDisabled={!canEdit}
                             onPress={onEdit}
                             aria-label="Edit draft"
                         >
@@ -346,7 +358,7 @@ function draftContactLabel(msg: DraftMessage): string {
 }
 
 function canSendDraft(msg: DraftMessage): boolean {
-    if (msg.status !== MsgStatus.PENDING && msg.status !== MsgStatus.FAILED) {
+    if (msg.status === MsgStatus.QUEUED) {
         return false;
     }
     if (msg.channel === Channel.EMAIL) {
@@ -356,6 +368,10 @@ function canSendDraft(msg: DraftMessage): boolean {
         return !!msg.contact.phone;
     }
     return true;
+}
+
+function canEditDraft(msg: DraftMessage): boolean {
+    return msg.status !== MsgStatus.QUEUED;
 }
 
 function stripHtml(html: string): string {

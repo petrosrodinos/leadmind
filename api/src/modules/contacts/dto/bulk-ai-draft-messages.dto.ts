@@ -49,4 +49,9 @@ export class BulkAiDraftMessagesDto {
     @ValidateNested({ each: true })
     @Type(() => EmailProviderAllocationDto)
     email_provider_allocations?: EmailProviderAllocationDto[];
+
+    @ApiPropertyOptional()
+    @IsOptional()
+    @IsUUID()
+    sender_profile_uuid?: string;
 }

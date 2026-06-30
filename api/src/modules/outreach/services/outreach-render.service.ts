@@ -7,6 +7,7 @@ import {
 } from '@/shared/utils/placeholder-render.util';
 import { SenderProfilesService } from '@/modules/sender-profiles/sender-profiles.service';
 import { senderProfileToPlaceholders } from '@/modules/sender-profiles/utils/sender-profile-placeholders.util';
+import { parseSenderProfileMetadata } from '@/modules/outreach/utils/sender-profile-metadata.util';
 
 export interface RenderableMessage {
     subject?: string | null;
@@ -37,7 +38,17 @@ export class OutreachRenderService {
     async buildVarsForOutreachMessage(
         user_uuid: string,
         campaign_uuid?: string | null,
+        messageMetadata?: unknown,
     ): Promise<PlaceholderVars> {
+        const metadataUuid = parseSenderProfileMetadata(messageMetadata);
+        if (metadataUuid) {
+            try {
+                const profile = await this.senderProfilesService.findOne(user_uuid, metadataUuid);
+                return senderProfileToPlaceholders(profile, { campaignUuid: campaign_uuid });
+            } catch {
+                // fall through if profile was deleted
+            }
+        }
         const profile = campaign_uuid
             ? await this.senderProfilesService.findForCampaign(user_uuid, campaign_uuid)
             : await this.senderProfilesService.findDefault(user_uuid);
@@ -67,10 +78,14 @@ export class OutreachRenderService {
 
     async renderForOutreachMessage(
         user_uuid: string,
-        message: RenderableMessage & { campaign_uuid?: string | null },
+        message: RenderableMessage & { campaign_uuid?: string | null; metadata?: unknown },
         contact?: Contact | null,
     ): Promise<RenderedMessage> {
-        const senderVars = await this.buildVarsForOutreachMessage(user_uuid, message.campaign_uuid);
+        const senderVars = await this.buildVarsForOutreachMessage(
+            user_uuid,
+            message.campaign_uuid,
+            message.metadata,
+        );
         const vars = contact ? { ...senderVars, ...contactToPlaceholders(contact) } : senderVars;
         return this.render(message, vars);
     }

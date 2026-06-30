@@ -257,6 +257,7 @@ export interface PaginatedContacts {
 export interface SendMessagePayload {
     email_provider?: "RESEND" | "SMTP";
     email_account?: string;
+    sender_profile_uuid?: string;
 }
 
 export interface UpdateMessagePayload {
@@ -271,6 +272,7 @@ export interface CreateMessagePayload {
     contact_uuid: string;
     email_provider?: "RESEND" | "SMTP";
     email_account?: string;
+    sender_profile_uuid?: string;
 }
 
 export interface BulkCreateMessageResult {
@@ -287,6 +289,7 @@ export interface BulkAiDraftMessagesPayload {
     language?: string;
     send?: boolean;
     email_provider_allocations?: EmailProviderAllocation[];
+    sender_profile_uuid?: string;
 }
 
 export interface AiDraftMessagePayload {

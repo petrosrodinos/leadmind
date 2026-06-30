@@ -151,15 +151,18 @@ export type UpdateCampaignPayload = Partial<CreateCampaignPayload>;
 
 export interface StartCampaignPayload {
     email_provider_allocations?: EmailProviderAllocation[];
+    sender_profile_uuid?: string;
 }
 
 export interface SendCampaignDraftsPayload {
     email_provider_allocations?: EmailProviderAllocation[];
+    sender_profile_uuid?: string;
 }
 
 export interface SendCampaignDraftMessagePayload {
     email_provider?: "RESEND" | "SMTP";
     email_account?: string;
+    sender_profile_uuid?: string;
 }
 
 export interface PreviewContactsResult {

@@ -21,6 +21,7 @@ import {
     isEmailProviderAllocationValid,
 } from "@/features/messaging/components/email-provider-allocation-picker";
 import { EmailProviderSelect } from "@/features/messaging/components/email-provider-select";
+import { SenderProfileSelect } from "@/features/messaging/components/sender-profile-select";
 import { DEFAULT_CAMPAIGN_ACTIONS } from "@/features/messaging/constants/ai-actions";
 import {
     EMPTY_MESSAGE_COMPOSER_VALUE,
@@ -52,6 +53,7 @@ export function ComposeMessageForm({
     const [bulkPrompt, setBulkPrompt] = useState("");
     const [emailProvider, setEmailProvider] = useState<EmailProviderTarget | null>(null);
     const [emailAllocations, setEmailAllocations] = useState<EmailProviderAllocation[]>([]);
+    const [senderProfileUuid, setSenderProfileUuid] = useState<string | null>(null);
 
     const aiDraft = useAiDraftMessage();
     const createDraft = useCreateDraftMessage();
@@ -104,6 +106,9 @@ export function ComposeMessageForm({
                 ...(send && showEmailProviders
                     ? { email_provider_allocations: emailAllocations }
                     : {}),
+                ...(send && senderProfileUuid
+                    ? { sender_profile_uuid: senderProfileUuid }
+                    : {}),
             });
             onBulkComplete?.();
             onClose();
@@ -119,9 +124,16 @@ export function ComposeMessageForm({
         }
         if (contentEmpty || isPending || !contactUuid) return;
         if (showEmailProviders && !emailProvider) return;
+        if (!senderProfileUuid) return;
         try {
             await createDraft.mutateAsync(
-                buildCreateMessagePayload(activeChannel, value, contactUuid, emailProvider),
+                buildCreateMessagePayload(
+                    activeChannel,
+                    value,
+                    contactUuid,
+                    emailProvider,
+                    senderProfileUuid,
+                ),
             );
             onClose();
         } catch {
@@ -136,9 +148,16 @@ export function ComposeMessageForm({
         }
         if (contentEmpty || isPending || !contactUuid) return;
         if (showEmailProviders && !emailProvider) return;
+        if (!senderProfileUuid) return;
         try {
             await createAndSend.mutateAsync(
-                buildCreateMessagePayload(activeChannel, value, contactUuid, emailProvider),
+                buildCreateMessagePayload(
+                    activeChannel,
+                    value,
+                    contactUuid,
+                    emailProvider,
+                    senderProfileUuid,
+                ),
             );
             onClose();
         } catch {
@@ -153,10 +172,14 @@ export function ComposeMessageForm({
     const saveDisabled =
         (isBulk ? bulkPromptEmpty : contentEmpty) ||
         isPending ||
+        (!isBulk && !senderProfileUuid) ||
         (!isBulk && showEmailProviders && emailProvider == null);
 
     const sendDisabled =
-        saveDisabled ||
+        (isBulk ? bulkPromptEmpty : contentEmpty) ||
+        isPending ||
+        !senderProfileUuid ||
+        (!isBulk && showEmailProviders && emailProvider == null) ||
         (isBulk && showEmailProviders && !emailAllocationValid);
 
     return (
@@ -190,6 +213,11 @@ export function ComposeMessageForm({
                                     disabled={isPending}
                                 />
                             ) : null}
+                            <SenderProfileSelect
+                                value={senderProfileUuid}
+                                onChange={setSenderProfileUuid}
+                                disabled={isPending}
+                            />
                         </div>
                     ) : (
                         <div className="flex flex-col gap-5">
@@ -214,6 +242,11 @@ export function ComposeMessageForm({
                                     disabled={isPending}
                                 />
                             ) : null}
+                            <SenderProfileSelect
+                                value={senderProfileUuid}
+                                onChange={setSenderProfileUuid}
+                                disabled={isPending}
+                            />
                         </div>
                     )}
                 </Modal.Body>
