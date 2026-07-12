@@ -16,8 +16,10 @@ export function contactProfileFromLead(
         | 'description'
     >,
 ) {
+    const name = lead.name?.trim() || lead.company?.trim() || null;
+
     return {
-        name: lead.name,
+        name,
         email: lead.email,
         phone: lead.phone,
         company: lead.company,
