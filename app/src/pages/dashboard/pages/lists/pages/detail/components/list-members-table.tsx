@@ -1,13 +1,17 @@
 import { useMemo } from "react";
 import type { Selection } from "@heroui/react";
-import { Button, Checkbox, Table } from "@heroui/react";
+import { Button, Checkbox, ListBox, Select, Table } from "@heroui/react";
 import { Trash2 } from "lucide-react";
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { TablePagination } from "@/components/ui/table-pagination";
 import { isTableNavInteractiveCell, tableNavInteractiveCellClassName, tableNavRowClassName } from "@/components/ui/table-row-link";
 import type { Contact } from "@/features/contacts/interfaces/contact.interface";
-import { ContactScoresCompact } from "@/pages/dashboard/pages/leads/components/badges";
+import { LeadStatus } from "@/features/contacts/interfaces/contact.interface";
+import { STATUS_OPTIONS } from "@/features/contacts/constants/contacts.constants";
 import { useRemoveListContact } from "@/features/contact-lists/hooks/use-contact-lists";
+import { useUpdateContactStatus } from "@/features/contacts/hooks/use-contacts";
+import { normalizeUrl } from "@/lib/profile";
+import { ContactScoresCompact } from "@/pages/dashboard/pages/leads/components/badges";
 import {
     ContactTableDetailLink,
     ContactTableNameCell,
@@ -46,6 +50,7 @@ export function ListMembersTable({
     onSelectionChange,
 }: ListMembersTableProps) {
     const removeContact = useRemoveListContact();
+    const updateStatus = useUpdateContactStatus();
 
     const columns = useMemo(
         () => [
@@ -72,6 +77,62 @@ export function ListMembersTable({
                 id: "email",
                 header: "Email",
                 cell: (info) => info.getValue() ?? "—",
+            }),
+            columnHelper.accessor((row) => row.website, {
+                id: "website",
+                header: "Website",
+                cell: (info) => {
+                    const website = info.getValue()?.trim();
+                    if (!website) return "—";
+                    const href = normalizeUrl(website);
+                    return (
+                        <a
+                            href={href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-accent hover:underline truncate block max-w-48"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            {website}
+                        </a>
+                    );
+                },
+            }),
+            columnHelper.accessor("status", {
+                id: "status",
+                header: "CRM status",
+                cell: (info) => {
+                    const contact = info.row.original;
+                    return (
+                        <div onClick={(e) => e.stopPropagation()}>
+                            <Select
+                                aria-label="CRM status"
+                                value={contact.status}
+                                onChange={(v) =>
+                                    updateStatus.mutate({
+                                        uuid: contact.uuid,
+                                        status: v as LeadStatus,
+                                    })
+                                }
+                            >
+                                <Select.Trigger className="min-w-32">
+                                    <Select.Value />
+                                    <Select.Indicator />
+                                </Select.Trigger>
+                                <Select.Popover>
+                                    <ListBox>
+                                        {STATUS_OPTIONS.map((opt) => (
+                                            <ListBox.Item key={opt.id} id={opt.id} textValue={opt.label}>
+                                                {opt.label}
+                                                <ListBox.ItemIndicator />
+                                            </ListBox.Item>
+                                        ))}
+                                    </ListBox>
+                                </Select.Popover>
+                            </Select>
+                        </div>
+                    );
+                },
             }),
             columnHelper.display({
                 id: "score",
@@ -112,7 +173,7 @@ export function ListMembersTable({
                 },
             }),
         ],
-        [listUuid, onContactOpen, removeContact],
+        [listUuid, onContactOpen, removeContact, updateStatus],
     );
 
     const table = useReactTable({
@@ -138,7 +199,7 @@ export function ListMembersTable({
                 <Table.ScrollContainer>
                     <Table.Content
                         aria-label="List members"
-                        className="min-w-[640px]"
+                        className="min-w-[960px]"
                         selectionMode="multiple"
                         selectionBehavior="toggle"
                         selectedKeys={selectedKeys}
@@ -204,7 +265,10 @@ export function ListMembersTable({
                                                   cell.column.columnDef.cell,
                                                   cell.getContext(),
                                               );
-                                              const isInteractive = isTableNavInteractiveCell(cell.column.id);
+                                              const isInteractive = isTableNavInteractiveCell(cell.column.id, [
+                                                  "status",
+                                                  "actions",
+                                              ]);
 
                                               return (
                                                   <Table.Cell
