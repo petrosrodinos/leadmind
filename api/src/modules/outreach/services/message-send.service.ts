@@ -21,6 +21,7 @@ import { EmailCredentialsService } from '@/modules/integrations/services/email-c
 import { EmailProviderTarget } from '@/modules/integrations/interfaces/email-credentials.interface';
 import { SenderProfilesService } from '@/modules/sender-profiles/sender-profiles.service';
 import {
+    buildEmailProviderMetadata,
     parseEmailProviderMetadata,
 } from '@/modules/outreach/utils/email-provider-allocation.util';
 import { parseSenderProfileMetadata } from '@/modules/outreach/utils/sender-profile-metadata.util';
@@ -28,6 +29,7 @@ import { OutreachRenderService } from './outreach-render.service';
 
 export interface DeliveredMessage {
     provider_message_id: string | null;
+    integration_metadata?: Record<string, string>;
 }
 
 @Injectable()
@@ -113,7 +115,7 @@ export class MessageSendService {
                 `Email send message=${message.uuid} to=${message.contact.email} subject="${rendered.subject ?? 'Outreach message'}" provider=${target?.provider ?? 'none'} account=${target?.account ?? 'none'} replyTo=${replyTo}`,
             );
 
-            const result: any = await this.sendEmailWithProvider(
+            const { result, deliveryTarget } = await this.sendEmailWithProvider(
                 message.user_uuid,
                 createEmail,
                 target,
@@ -122,14 +124,17 @@ export class MessageSendService {
                 result?.data?.id ?? result?.id ?? null;
             if (!provider_message_id) {
                 this.logger.error(
-                    `Email provider returned no message id message=${message.uuid} provider=${target?.provider ?? 'none'} account=${target?.account ?? 'none'} result=${JSON.stringify(result)}`,
+                    `Email provider returned no message id message=${message.uuid} provider=${deliveryTarget.provider} account=${deliveryTarget.account} result=${JSON.stringify(result)}`,
                 );
                 throw new Error('Email provider did not confirm delivery');
             }
             this.logger.log(
                 `Email delivered message=${message.uuid} providerMessageId=${provider_message_id}`,
             );
-            return { provider_message_id };
+            return {
+                provider_message_id,
+                integration_metadata: buildEmailProviderMetadata(deliveryTarget),
+            };
         }
 
         if (message.channel === Channel.SMS) {
@@ -141,7 +146,10 @@ export class MessageSendService {
                 body: rendered.content,
             });
             const provider_message_id = result?.sid ?? null;
-            return { provider_message_id };
+            return {
+                provider_message_id,
+                integration_metadata: { sms_provider: 'TWILIO' },
+            };
         }
 
         throw new Error(`Channel ${message.channel} not implemented`);
@@ -157,7 +165,7 @@ export class MessageSendService {
             replyTo: string;
         },
         target: EmailProviderTarget | null,
-    ) {
+    ): Promise<{ result: any; deliveryTarget: EmailProviderTarget }> {
         if (target?.provider === ExternalIntegrationProvider.SMTP) {
             this.logger.log(
                 `Using SMTP account=${target.account} user=${user_uuid} to=${createEmail.to}`,
@@ -166,10 +174,11 @@ export class MessageSendService {
                 user_uuid,
                 target.account,
             );
-            return this.smtpMailService.sendEmail(
+            const result = await this.smtpMailService.sendEmail(
                 { ...createEmail, from: smtpConfig.fromEmail },
                 smtpConfig,
             );
+            return { result, deliveryTarget: target };
         }
 
         if (target?.provider === ExternalIntegrationProvider.RESEND) {
@@ -180,7 +189,8 @@ export class MessageSendService {
                 user_uuid,
                 target.account,
             );
-            return this.resendMailService.sendEmail(createEmail, apiKey);
+            const result = await this.resendMailService.sendEmail(createEmail, apiKey);
+            return { result, deliveryTarget: target };
         }
 
         const envKey = this.configService.get<string>('RESEND_API_KEY');
@@ -188,7 +198,14 @@ export class MessageSendService {
             this.logger.log(
                 `Using Resend env RESEND_API_KEY to=${createEmail.to} (no integration target)`,
             );
-            return this.resendMailService.sendEmail(createEmail, envKey);
+            const result = await this.resendMailService.sendEmail(createEmail, envKey);
+            return {
+                result,
+                deliveryTarget: {
+                    provider: ExternalIntegrationProvider.RESEND,
+                    account: 'env',
+                },
+            };
         }
 
         this.logger.error(
@@ -197,10 +214,66 @@ export class MessageSendService {
         throw new Error('No email provider configured');
     }
 
-    messageSentOperation(message_uuid: string, provider_message_id: string | null) {
+    private integrationColumnsFromMetadata(
+        integration_metadata?: Record<string, string>,
+    ): Pick<
+        Prisma.OutreachMessageUpdateInput,
+        'email_provider' | 'email_account' | 'sms_provider'
+    > {
+        if (!integration_metadata) {
+            return {
+                email_provider: null,
+                email_account: null,
+                sms_provider: null,
+            };
+        }
+
+        const emailProvider = integration_metadata.email_provider;
+        const emailAccount = integration_metadata.email_account;
+        const smsProvider = integration_metadata.sms_provider;
+
+        return {
+            email_provider:
+                emailProvider === ExternalIntegrationProvider.RESEND ||
+                emailProvider === ExternalIntegrationProvider.SMTP
+                    ? emailProvider
+                    : null,
+            email_account: emailAccount ?? null,
+            sms_provider: smsProvider ?? null,
+        };
+    }
+
+    buildSentMetadata(
+        existing: unknown,
+        integration_metadata?: Record<string, string>,
+    ): Prisma.InputJsonValue | typeof Prisma.DbNull {
+        const base =
+            existing && typeof existing === 'object' && !Array.isArray(existing)
+                ? { ...(existing as Record<string, unknown>) }
+                : {};
+        delete base.error;
+        if (integration_metadata) {
+            Object.assign(base, integration_metadata);
+        }
+        return Object.keys(base).length > 0 ? (base as Prisma.InputJsonValue) : Prisma.DbNull;
+    }
+
+    messageSentOperation(
+        message_uuid: string,
+        provider_message_id: string | null,
+        existingMetadata: unknown,
+        integration_metadata?: Record<string, string>,
+    ) {
+        const metadata = this.buildSentMetadata(existingMetadata, integration_metadata);
         return this.prisma.outreachMessage.update({
             where: { uuid: message_uuid },
-            data: { status: MsgStatus.SENT, sent_at: new Date(), provider_message_id, metadata: null },
+            data: {
+                status: MsgStatus.SENT,
+                sent_at: new Date(),
+                provider_message_id,
+                metadata,
+                ...this.integrationColumnsFromMetadata(integration_metadata),
+            },
         });
     }
 
@@ -223,9 +296,12 @@ export class MessageSendService {
     ) {
         const provider = parseEmailProviderMetadata(existingMetadata ?? null);
         const metadata: Record<string, unknown> = { error: error_message };
+        const integration_metadata: Record<string, string> = {};
         if (provider) {
             metadata.email_provider = provider.provider;
             metadata.email_account = provider.account;
+            integration_metadata.email_provider = provider.provider;
+            integration_metadata.email_account = provider.account;
         }
         return this.prisma.outreachMessage.update({
             where: { uuid: message_uuid },
@@ -234,6 +310,7 @@ export class MessageSendService {
                 sent_at: null,
                 provider_message_id: null,
                 metadata: metadata as Prisma.InputJsonValue,
+                ...this.integrationColumnsFromMetadata(integration_metadata),
             },
         });
     }

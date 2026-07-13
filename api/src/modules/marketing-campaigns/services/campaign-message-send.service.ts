@@ -169,7 +169,8 @@ export class CampaignMessageSendService {
             this.logger.log(
                 `Campaign deliver mcc=${mcc.uuid} message=${message.uuid} channel=${mcc.channel} provider=${providerOverride?.provider ?? providerMeta?.provider ?? 'default'} account=${providerOverride?.account ?? providerMeta?.account ?? 'default'} to=${mcc.contact.email ?? mcc.contact.phone ?? 'unknown'}`,
             );
-            const { provider_message_id } = await this.messageSendService.deliverOutreachMessage(
+            const { provider_message_id, integration_metadata } =
+                await this.messageSendService.deliverOutreachMessage(
                 {
                     ...message,
                     contact: mcc.contact,
@@ -178,7 +179,12 @@ export class CampaignMessageSendService {
             );
 
             await this.prisma.$transaction([
-                this.messageSendService.messageSentOperation(message.uuid, provider_message_id),
+                this.messageSendService.messageSentOperation(
+                    message.uuid,
+                    provider_message_id,
+                    message.metadata,
+                    integration_metadata,
+                ),
                 this.prisma.marketingCampaignContact.update({
                     where: { uuid: mcc.uuid },
                     data: {

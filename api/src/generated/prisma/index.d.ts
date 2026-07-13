@@ -22073,6 +22073,9 @@ export namespace Prisma {
     opened_at: Date | null
     clicked_at: Date | null
     replied_at: Date | null
+    email_provider: $Enums.ExternalIntegrationProvider | null
+    email_account: string | null
+    sms_provider: string | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -22096,6 +22099,9 @@ export namespace Prisma {
     opened_at: Date | null
     clicked_at: Date | null
     replied_at: Date | null
+    email_provider: $Enums.ExternalIntegrationProvider | null
+    email_account: string | null
+    sms_provider: string | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -22119,6 +22125,9 @@ export namespace Prisma {
     opened_at: number
     clicked_at: number
     replied_at: number
+    email_provider: number
+    email_account: number
+    sms_provider: number
     metadata: number
     created_at: number
     updated_at: number
@@ -22153,6 +22162,9 @@ export namespace Prisma {
     opened_at?: true
     clicked_at?: true
     replied_at?: true
+    email_provider?: true
+    email_account?: true
+    sms_provider?: true
     created_at?: true
     updated_at?: true
   }
@@ -22176,6 +22188,9 @@ export namespace Prisma {
     opened_at?: true
     clicked_at?: true
     replied_at?: true
+    email_provider?: true
+    email_account?: true
+    sms_provider?: true
     created_at?: true
     updated_at?: true
   }
@@ -22199,6 +22214,9 @@ export namespace Prisma {
     opened_at?: true
     clicked_at?: true
     replied_at?: true
+    email_provider?: true
+    email_account?: true
+    sms_provider?: true
     metadata?: true
     created_at?: true
     updated_at?: true
@@ -22310,6 +22328,9 @@ export namespace Prisma {
     opened_at: Date | null
     clicked_at: Date | null
     replied_at: Date | null
+    email_provider: $Enums.ExternalIntegrationProvider | null
+    email_account: string | null
+    sms_provider: string | null
     metadata: JsonValue | null
     created_at: Date
     updated_at: Date
@@ -22353,6 +22374,9 @@ export namespace Prisma {
     opened_at?: boolean
     clicked_at?: boolean
     replied_at?: boolean
+    email_provider?: boolean
+    email_account?: boolean
+    sms_provider?: boolean
     metadata?: boolean
     created_at?: boolean
     updated_at?: boolean
@@ -22381,6 +22405,9 @@ export namespace Prisma {
     opened_at?: boolean
     clicked_at?: boolean
     replied_at?: boolean
+    email_provider?: boolean
+    email_account?: boolean
+    sms_provider?: boolean
     metadata?: boolean
     created_at?: boolean
     updated_at?: boolean
@@ -22408,6 +22435,9 @@ export namespace Prisma {
     opened_at?: boolean
     clicked_at?: boolean
     replied_at?: boolean
+    email_provider?: boolean
+    email_account?: boolean
+    sms_provider?: boolean
     metadata?: boolean
     created_at?: boolean
     updated_at?: boolean
@@ -22435,12 +22465,15 @@ export namespace Prisma {
     opened_at?: boolean
     clicked_at?: boolean
     replied_at?: boolean
+    email_provider?: boolean
+    email_account?: boolean
+    sms_provider?: boolean
     metadata?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type OutreachMessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "contact_uuid" | "campaign_uuid" | "channel" | "direction" | "subject" | "content" | "status" | "provider_message_id" | "idempotency_key" | "scheduled_at" | "sent_at" | "delivered_at" | "opened_at" | "clicked_at" | "replied_at" | "metadata" | "created_at" | "updated_at", ExtArgs["result"]["outreachMessage"]>
+  export type OutreachMessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "contact_uuid" | "campaign_uuid" | "channel" | "direction" | "subject" | "content" | "status" | "provider_message_id" | "idempotency_key" | "scheduled_at" | "sent_at" | "delivered_at" | "opened_at" | "clicked_at" | "replied_at" | "email_provider" | "email_account" | "sms_provider" | "metadata" | "created_at" | "updated_at", ExtArgs["result"]["outreachMessage"]>
   export type OutreachMessageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     contact?: boolean | ContactDefaultArgs<ExtArgs>
@@ -22485,6 +22518,9 @@ export namespace Prisma {
       opened_at: Date | null
       clicked_at: Date | null
       replied_at: Date | null
+      email_provider: $Enums.ExternalIntegrationProvider | null
+      email_account: string | null
+      sms_provider: string | null
       metadata: Prisma.JsonValue | null
       created_at: Date
       updated_at: Date
@@ -22933,6 +22969,9 @@ export namespace Prisma {
     readonly opened_at: FieldRef<"OutreachMessage", 'DateTime'>
     readonly clicked_at: FieldRef<"OutreachMessage", 'DateTime'>
     readonly replied_at: FieldRef<"OutreachMessage", 'DateTime'>
+    readonly email_provider: FieldRef<"OutreachMessage", 'ExternalIntegrationProvider'>
+    readonly email_account: FieldRef<"OutreachMessage", 'String'>
+    readonly sms_provider: FieldRef<"OutreachMessage", 'String'>
     readonly metadata: FieldRef<"OutreachMessage", 'Json'>
     readonly created_at: FieldRef<"OutreachMessage", 'DateTime'>
     readonly updated_at: FieldRef<"OutreachMessage", 'DateTime'>
@@ -43464,6 +43503,9 @@ export namespace Prisma {
     opened_at: 'opened_at',
     clicked_at: 'clicked_at',
     replied_at: 'replied_at',
+    email_provider: 'email_provider',
+    email_account: 'email_account',
+    sms_provider: 'sms_provider',
     metadata: 'metadata',
     created_at: 'created_at',
     updated_at: 'updated_at'
@@ -44036,6 +44078,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'ExternalIntegrationProvider'
+   */
+  export type EnumExternalIntegrationProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExternalIntegrationProvider'>
+    
+
+
+  /**
+   * Reference to a field of type 'ExternalIntegrationProvider[]'
+   */
+  export type ListEnumExternalIntegrationProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExternalIntegrationProvider[]'>
+    
+
+
+  /**
    * Reference to a field of type 'JobStatus'
    */
   export type EnumJobStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'JobStatus'>
@@ -44130,20 +44186,6 @@ export namespace Prisma {
    * Reference to a field of type 'OpenAiBatchStatus[]'
    */
   export type ListEnumOpenAiBatchStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OpenAiBatchStatus[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'ExternalIntegrationProvider'
-   */
-  export type EnumExternalIntegrationProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExternalIntegrationProvider'>
-    
-
-
-  /**
-   * Reference to a field of type 'ExternalIntegrationProvider[]'
-   */
-  export type ListEnumExternalIntegrationProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExternalIntegrationProvider[]'>
     
 
 
@@ -45617,6 +45659,9 @@ export namespace Prisma {
     opened_at?: DateTimeNullableFilter<"OutreachMessage"> | Date | string | null
     clicked_at?: DateTimeNullableFilter<"OutreachMessage"> | Date | string | null
     replied_at?: DateTimeNullableFilter<"OutreachMessage"> | Date | string | null
+    email_provider?: EnumExternalIntegrationProviderNullableFilter<"OutreachMessage"> | $Enums.ExternalIntegrationProvider | null
+    email_account?: StringNullableFilter<"OutreachMessage"> | string | null
+    sms_provider?: StringNullableFilter<"OutreachMessage"> | string | null
     metadata?: JsonNullableFilter<"OutreachMessage">
     created_at?: DateTimeFilter<"OutreachMessage"> | Date | string
     updated_at?: DateTimeFilter<"OutreachMessage"> | Date | string
@@ -45645,6 +45690,9 @@ export namespace Prisma {
     opened_at?: SortOrderInput | SortOrder
     clicked_at?: SortOrderInput | SortOrder
     replied_at?: SortOrderInput | SortOrder
+    email_provider?: SortOrderInput | SortOrder
+    email_account?: SortOrderInput | SortOrder
+    sms_provider?: SortOrderInput | SortOrder
     metadata?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -45676,6 +45724,9 @@ export namespace Prisma {
     opened_at?: DateTimeNullableFilter<"OutreachMessage"> | Date | string | null
     clicked_at?: DateTimeNullableFilter<"OutreachMessage"> | Date | string | null
     replied_at?: DateTimeNullableFilter<"OutreachMessage"> | Date | string | null
+    email_provider?: EnumExternalIntegrationProviderNullableFilter<"OutreachMessage"> | $Enums.ExternalIntegrationProvider | null
+    email_account?: StringNullableFilter<"OutreachMessage"> | string | null
+    sms_provider?: StringNullableFilter<"OutreachMessage"> | string | null
     metadata?: JsonNullableFilter<"OutreachMessage">
     created_at?: DateTimeFilter<"OutreachMessage"> | Date | string
     updated_at?: DateTimeFilter<"OutreachMessage"> | Date | string
@@ -45704,6 +45755,9 @@ export namespace Prisma {
     opened_at?: SortOrderInput | SortOrder
     clicked_at?: SortOrderInput | SortOrder
     replied_at?: SortOrderInput | SortOrder
+    email_provider?: SortOrderInput | SortOrder
+    email_account?: SortOrderInput | SortOrder
+    sms_provider?: SortOrderInput | SortOrder
     metadata?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -45736,6 +45790,9 @@ export namespace Prisma {
     opened_at?: DateTimeNullableWithAggregatesFilter<"OutreachMessage"> | Date | string | null
     clicked_at?: DateTimeNullableWithAggregatesFilter<"OutreachMessage"> | Date | string | null
     replied_at?: DateTimeNullableWithAggregatesFilter<"OutreachMessage"> | Date | string | null
+    email_provider?: EnumExternalIntegrationProviderNullableWithAggregatesFilter<"OutreachMessage"> | $Enums.ExternalIntegrationProvider | null
+    email_account?: StringNullableWithAggregatesFilter<"OutreachMessage"> | string | null
+    sms_provider?: StringNullableWithAggregatesFilter<"OutreachMessage"> | string | null
     metadata?: JsonNullableWithAggregatesFilter<"OutreachMessage">
     created_at?: DateTimeWithAggregatesFilter<"OutreachMessage"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"OutreachMessage"> | Date | string
@@ -48820,6 +48877,9 @@ export namespace Prisma {
     opened_at?: Date | string | null
     clicked_at?: Date | string | null
     replied_at?: Date | string | null
+    email_provider?: $Enums.ExternalIntegrationProvider | null
+    email_account?: string | null
+    sms_provider?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
@@ -48848,6 +48908,9 @@ export namespace Prisma {
     opened_at?: Date | string | null
     clicked_at?: Date | string | null
     replied_at?: Date | string | null
+    email_provider?: $Enums.ExternalIntegrationProvider | null
+    email_account?: string | null
+    sms_provider?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
@@ -48869,6 +48932,9 @@ export namespace Prisma {
     opened_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clicked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     replied_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email_provider?: NullableEnumExternalIntegrationProviderFieldUpdateOperationsInput | $Enums.ExternalIntegrationProvider | null
+    email_account?: NullableStringFieldUpdateOperationsInput | string | null
+    sms_provider?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -48897,6 +48963,9 @@ export namespace Prisma {
     opened_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clicked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     replied_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email_provider?: NullableEnumExternalIntegrationProviderFieldUpdateOperationsInput | $Enums.ExternalIntegrationProvider | null
+    email_account?: NullableStringFieldUpdateOperationsInput | string | null
+    sms_provider?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -48922,6 +48991,9 @@ export namespace Prisma {
     opened_at?: Date | string | null
     clicked_at?: Date | string | null
     replied_at?: Date | string | null
+    email_provider?: $Enums.ExternalIntegrationProvider | null
+    email_account?: string | null
+    sms_provider?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
@@ -48942,6 +49014,9 @@ export namespace Prisma {
     opened_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clicked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     replied_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email_provider?: NullableEnumExternalIntegrationProviderFieldUpdateOperationsInput | $Enums.ExternalIntegrationProvider | null
+    email_account?: NullableStringFieldUpdateOperationsInput | string | null
+    sms_provider?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -48966,6 +49041,9 @@ export namespace Prisma {
     opened_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clicked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     replied_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email_provider?: NullableEnumExternalIntegrationProviderFieldUpdateOperationsInput | $Enums.ExternalIntegrationProvider | null
+    email_account?: NullableStringFieldUpdateOperationsInput | string | null
+    sms_provider?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -52271,6 +52349,13 @@ export namespace Prisma {
     not?: NestedEnumMsgStatusFilter<$PrismaModel> | $Enums.MsgStatus
   }
 
+  export type EnumExternalIntegrationProviderNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.ExternalIntegrationProvider | EnumExternalIntegrationProviderFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ExternalIntegrationProvider[] | ListEnumExternalIntegrationProviderFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.ExternalIntegrationProvider[] | ListEnumExternalIntegrationProviderFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumExternalIntegrationProviderNullableFilter<$PrismaModel> | $Enums.ExternalIntegrationProvider | null
+  }
+
   export type InteractionNullableScalarRelationFilter = {
     is?: InteractionWhereInput | null
     isNot?: InteractionWhereInput | null
@@ -52295,6 +52380,9 @@ export namespace Prisma {
     opened_at?: SortOrder
     clicked_at?: SortOrder
     replied_at?: SortOrder
+    email_provider?: SortOrder
+    email_account?: SortOrder
+    sms_provider?: SortOrder
     metadata?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -52323,6 +52411,9 @@ export namespace Prisma {
     opened_at?: SortOrder
     clicked_at?: SortOrder
     replied_at?: SortOrder
+    email_provider?: SortOrder
+    email_account?: SortOrder
+    sms_provider?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -52346,6 +52437,9 @@ export namespace Prisma {
     opened_at?: SortOrder
     clicked_at?: SortOrder
     replied_at?: SortOrder
+    email_provider?: SortOrder
+    email_account?: SortOrder
+    sms_provider?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -52382,6 +52476,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumMsgStatusFilter<$PrismaModel>
     _max?: NestedEnumMsgStatusFilter<$PrismaModel>
+  }
+
+  export type EnumExternalIntegrationProviderNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ExternalIntegrationProvider | EnumExternalIntegrationProviderFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ExternalIntegrationProvider[] | ListEnumExternalIntegrationProviderFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.ExternalIntegrationProvider[] | ListEnumExternalIntegrationProviderFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumExternalIntegrationProviderNullableWithAggregatesFilter<$PrismaModel> | $Enums.ExternalIntegrationProvider | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumExternalIntegrationProviderNullableFilter<$PrismaModel>
+    _max?: NestedEnumExternalIntegrationProviderNullableFilter<$PrismaModel>
   }
 
   export type OutreachSequenceCountOrderByAggregateInput = {
@@ -55796,6 +55900,10 @@ export namespace Prisma {
     set?: $Enums.MsgStatus
   }
 
+  export type NullableEnumExternalIntegrationProviderFieldUpdateOperationsInput = {
+    set?: $Enums.ExternalIntegrationProvider | null
+  }
+
   export type UserUpdateOneRequiredWithoutOutreach_messagesNestedInput = {
     create?: XOR<UserCreateWithoutOutreach_messagesInput, UserUncheckedCreateWithoutOutreach_messagesInput>
     connectOrCreate?: UserCreateOrConnectWithoutOutreach_messagesInput
@@ -57031,6 +57139,13 @@ export namespace Prisma {
     not?: NestedEnumMsgStatusFilter<$PrismaModel> | $Enums.MsgStatus
   }
 
+  export type NestedEnumExternalIntegrationProviderNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.ExternalIntegrationProvider | EnumExternalIntegrationProviderFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ExternalIntegrationProvider[] | ListEnumExternalIntegrationProviderFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.ExternalIntegrationProvider[] | ListEnumExternalIntegrationProviderFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumExternalIntegrationProviderNullableFilter<$PrismaModel> | $Enums.ExternalIntegrationProvider | null
+  }
+
   export type NestedEnumChannelWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.Channel | EnumChannelFieldRefInput<$PrismaModel>
     in?: $Enums.Channel[] | ListEnumChannelFieldRefInput<$PrismaModel>
@@ -57059,6 +57174,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumMsgStatusFilter<$PrismaModel>
     _max?: NestedEnumMsgStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumExternalIntegrationProviderNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ExternalIntegrationProvider | EnumExternalIntegrationProviderFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ExternalIntegrationProvider[] | ListEnumExternalIntegrationProviderFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.ExternalIntegrationProvider[] | ListEnumExternalIntegrationProviderFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumExternalIntegrationProviderNullableWithAggregatesFilter<$PrismaModel> | $Enums.ExternalIntegrationProvider | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumExternalIntegrationProviderNullableFilter<$PrismaModel>
+    _max?: NestedEnumExternalIntegrationProviderNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumJobStatusFilter<$PrismaModel = never> = {
@@ -57528,6 +57653,9 @@ export namespace Prisma {
     opened_at?: Date | string | null
     clicked_at?: Date | string | null
     replied_at?: Date | string | null
+    email_provider?: $Enums.ExternalIntegrationProvider | null
+    email_account?: string | null
+    sms_provider?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
@@ -57554,6 +57682,9 @@ export namespace Prisma {
     opened_at?: Date | string | null
     clicked_at?: Date | string | null
     replied_at?: Date | string | null
+    email_provider?: $Enums.ExternalIntegrationProvider | null
+    email_account?: string | null
+    sms_provider?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
@@ -58295,6 +58426,9 @@ export namespace Prisma {
     opened_at?: DateTimeNullableFilter<"OutreachMessage"> | Date | string | null
     clicked_at?: DateTimeNullableFilter<"OutreachMessage"> | Date | string | null
     replied_at?: DateTimeNullableFilter<"OutreachMessage"> | Date | string | null
+    email_provider?: EnumExternalIntegrationProviderNullableFilter<"OutreachMessage"> | $Enums.ExternalIntegrationProvider | null
+    email_account?: StringNullableFilter<"OutreachMessage"> | string | null
+    sms_provider?: StringNullableFilter<"OutreachMessage"> | string | null
     metadata?: JsonNullableFilter<"OutreachMessage">
     created_at?: DateTimeFilter<"OutreachMessage"> | Date | string
     updated_at?: DateTimeFilter<"OutreachMessage"> | Date | string
@@ -60394,6 +60528,9 @@ export namespace Prisma {
     opened_at?: Date | string | null
     clicked_at?: Date | string | null
     replied_at?: Date | string | null
+    email_provider?: $Enums.ExternalIntegrationProvider | null
+    email_account?: string | null
+    sms_provider?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
@@ -60420,6 +60557,9 @@ export namespace Prisma {
     opened_at?: Date | string | null
     clicked_at?: Date | string | null
     replied_at?: Date | string | null
+    email_provider?: $Enums.ExternalIntegrationProvider | null
+    email_account?: string | null
+    sms_provider?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
@@ -62113,6 +62253,9 @@ export namespace Prisma {
     opened_at?: Date | string | null
     clicked_at?: Date | string | null
     replied_at?: Date | string | null
+    email_provider?: $Enums.ExternalIntegrationProvider | null
+    email_account?: string | null
+    sms_provider?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
@@ -62140,6 +62283,9 @@ export namespace Prisma {
     opened_at?: Date | string | null
     clicked_at?: Date | string | null
     replied_at?: Date | string | null
+    email_provider?: $Enums.ExternalIntegrationProvider | null
+    email_account?: string | null
+    sms_provider?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
@@ -62412,6 +62558,9 @@ export namespace Prisma {
     opened_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clicked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     replied_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email_provider?: NullableEnumExternalIntegrationProviderFieldUpdateOperationsInput | $Enums.ExternalIntegrationProvider | null
+    email_account?: NullableStringFieldUpdateOperationsInput | string | null
+    sms_provider?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -62439,6 +62588,9 @@ export namespace Prisma {
     opened_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clicked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     replied_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email_provider?: NullableEnumExternalIntegrationProviderFieldUpdateOperationsInput | $Enums.ExternalIntegrationProvider | null
+    email_account?: NullableStringFieldUpdateOperationsInput | string | null
+    sms_provider?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -63691,6 +63843,9 @@ export namespace Prisma {
     opened_at?: Date | string | null
     clicked_at?: Date | string | null
     replied_at?: Date | string | null
+    email_provider?: $Enums.ExternalIntegrationProvider | null
+    email_account?: string | null
+    sms_provider?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
@@ -63717,6 +63872,9 @@ export namespace Prisma {
     opened_at?: Date | string | null
     clicked_at?: Date | string | null
     replied_at?: Date | string | null
+    email_provider?: $Enums.ExternalIntegrationProvider | null
+    email_account?: string | null
+    sms_provider?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
@@ -66389,6 +66547,9 @@ export namespace Prisma {
     opened_at?: Date | string | null
     clicked_at?: Date | string | null
     replied_at?: Date | string | null
+    email_provider?: $Enums.ExternalIntegrationProvider | null
+    email_account?: string | null
+    sms_provider?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
@@ -66787,6 +66948,9 @@ export namespace Prisma {
     opened_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clicked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     replied_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email_provider?: NullableEnumExternalIntegrationProviderFieldUpdateOperationsInput | $Enums.ExternalIntegrationProvider | null
+    email_account?: NullableStringFieldUpdateOperationsInput | string | null
+    sms_provider?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -66813,6 +66977,9 @@ export namespace Prisma {
     opened_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clicked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     replied_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email_provider?: NullableEnumExternalIntegrationProviderFieldUpdateOperationsInput | $Enums.ExternalIntegrationProvider | null
+    email_account?: NullableStringFieldUpdateOperationsInput | string | null
+    sms_provider?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -66837,6 +67004,9 @@ export namespace Prisma {
     opened_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clicked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     replied_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email_provider?: NullableEnumExternalIntegrationProviderFieldUpdateOperationsInput | $Enums.ExternalIntegrationProvider | null
+    email_account?: NullableStringFieldUpdateOperationsInput | string | null
+    sms_provider?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -68118,6 +68288,9 @@ export namespace Prisma {
     opened_at?: Date | string | null
     clicked_at?: Date | string | null
     replied_at?: Date | string | null
+    email_provider?: $Enums.ExternalIntegrationProvider | null
+    email_account?: string | null
+    sms_provider?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
@@ -68259,6 +68432,9 @@ export namespace Prisma {
     opened_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clicked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     replied_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email_provider?: NullableEnumExternalIntegrationProviderFieldUpdateOperationsInput | $Enums.ExternalIntegrationProvider | null
+    email_account?: NullableStringFieldUpdateOperationsInput | string | null
+    sms_provider?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -68285,6 +68461,9 @@ export namespace Prisma {
     opened_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clicked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     replied_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email_provider?: NullableEnumExternalIntegrationProviderFieldUpdateOperationsInput | $Enums.ExternalIntegrationProvider | null
+    email_account?: NullableStringFieldUpdateOperationsInput | string | null
+    sms_provider?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -68309,6 +68488,9 @@ export namespace Prisma {
     opened_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clicked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     replied_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email_provider?: NullableEnumExternalIntegrationProviderFieldUpdateOperationsInput | $Enums.ExternalIntegrationProvider | null
+    email_account?: NullableStringFieldUpdateOperationsInput | string | null
+    sms_provider?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -68801,6 +68983,9 @@ export namespace Prisma {
     opened_at?: Date | string | null
     clicked_at?: Date | string | null
     replied_at?: Date | string | null
+    email_provider?: $Enums.ExternalIntegrationProvider | null
+    email_account?: string | null
+    sms_provider?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
@@ -68873,6 +69058,9 @@ export namespace Prisma {
     opened_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clicked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     replied_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email_provider?: NullableEnumExternalIntegrationProviderFieldUpdateOperationsInput | $Enums.ExternalIntegrationProvider | null
+    email_account?: NullableStringFieldUpdateOperationsInput | string | null
+    sms_provider?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -68899,6 +69087,9 @@ export namespace Prisma {
     opened_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clicked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     replied_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email_provider?: NullableEnumExternalIntegrationProviderFieldUpdateOperationsInput | $Enums.ExternalIntegrationProvider | null
+    email_account?: NullableStringFieldUpdateOperationsInput | string | null
+    sms_provider?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -68923,6 +69114,9 @@ export namespace Prisma {
     opened_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clicked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     replied_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email_provider?: NullableEnumExternalIntegrationProviderFieldUpdateOperationsInput | $Enums.ExternalIntegrationProvider | null
+    email_account?: NullableStringFieldUpdateOperationsInput | string | null
+    sms_provider?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string

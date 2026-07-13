@@ -322,6 +322,9 @@ exports.Prisma.OutreachMessageScalarFieldEnum = {
   opened_at: 'opened_at',
   clicked_at: 'clicked_at',
   replied_at: 'replied_at',
+  email_provider: 'email_provider',
+  email_account: 'email_account',
+  sms_provider: 'sms_provider',
   metadata: 'metadata',
   created_at: 'created_at',
   updated_at: 'updated_at'
@@ -712,6 +715,16 @@ exports.MsgStatus = exports.$Enums.MsgStatus = {
   SKIPPED: 'SKIPPED'
 };
 
+exports.ExternalIntegrationProvider = exports.$Enums.ExternalIntegrationProvider = {
+  OPENAI: 'OPENAI',
+  ANTHROPIC: 'ANTHROPIC',
+  RESEND: 'RESEND',
+  SMTP: 'SMTP',
+  TWILIO: 'TWILIO',
+  APIFY: 'APIFY',
+  HUBSPOT: 'HUBSPOT'
+};
+
 exports.JobStatus = exports.$Enums.JobStatus = {
   PENDING: 'PENDING',
   RUNNING: 'RUNNING',
@@ -765,16 +778,6 @@ exports.OpenAiBatchStatus = exports.$Enums.OpenAiBatchStatus = {
   FAILED: 'FAILED',
   EXPIRED: 'EXPIRED',
   CANCELLED: 'CANCELLED'
-};
-
-exports.ExternalIntegrationProvider = exports.$Enums.ExternalIntegrationProvider = {
-  OPENAI: 'OPENAI',
-  ANTHROPIC: 'ANTHROPIC',
-  RESEND: 'RESEND',
-  SMTP: 'SMTP',
-  TWILIO: 'TWILIO',
-  APIFY: 'APIFY',
-  HUBSPOT: 'HUBSPOT'
 };
 
 exports.IntegrationKeyType = exports.$Enums.IntegrationKeyType = {

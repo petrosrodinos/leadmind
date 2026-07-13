@@ -6,6 +6,26 @@ import type {
     SendMessagePayload,
     UpdateMessagePayload,
 } from "@/features/contacts/interfaces/contact.interface";
+import type {
+    ListSendHistoryQuery,
+    SendHistoryListResponse,
+} from "@/features/outreach/interfaces/send-history.interface";
+
+export const listOutreachMessages = async (
+    query?: ListSendHistoryQuery,
+): Promise<SendHistoryListResponse> => {
+    try {
+        const response = await axiosInstance.get(ApiRoutes.outreach.list_messages, {
+            params: {
+                ...query,
+                history_only: query?.history_only ?? true,
+            },
+        });
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error?.response?.data?.message || "Failed to load send history.");
+    }
+};
 
 export const updateOutreachMessage = async (
     uuid: string,

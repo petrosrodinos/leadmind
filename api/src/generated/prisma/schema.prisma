@@ -331,27 +331,30 @@ model Interaction {
 }
 
 model OutreachMessage {
-  id                  Int          @id @default(autoincrement())
-  uuid                String       @unique @default(uuid())
+  id                  Int                          @id @default(autoincrement())
+  uuid                String                       @unique @default(uuid())
   user_uuid           String
   contact_uuid        String
   campaign_uuid       String?
   channel             Channel
-  direction           MsgDirection @default(OUTBOUND)
+  direction           MsgDirection                 @default(OUTBOUND)
   subject             String?
   content             String
-  status              MsgStatus    @default(PENDING)
+  status              MsgStatus                    @default(PENDING)
   provider_message_id String?
-  idempotency_key     String?      @unique
+  idempotency_key     String?                      @unique
   scheduled_at        DateTime?
   sent_at             DateTime?
   delivered_at        DateTime?
   opened_at           DateTime?
   clicked_at          DateTime?
   replied_at          DateTime?
+  email_provider      ExternalIntegrationProvider?
+  email_account       String?
+  sms_provider        String?
   metadata            Json?
-  created_at          DateTime     @default(now())
-  updated_at          DateTime     @updatedAt
+  created_at          DateTime                     @default(now())
+  updated_at          DateTime                     @updatedAt
 
   user        User               @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
   contact     Contact            @relation(fields: [contact_uuid], references: [uuid], onDelete: Cascade)
@@ -363,6 +366,7 @@ model OutreachMessage {
   @@index([status])
   @@index([campaign_uuid])
   @@index([provider_message_id])
+  @@index([email_provider])
   @@index([campaign_uuid, contact_uuid, channel])
 }
 

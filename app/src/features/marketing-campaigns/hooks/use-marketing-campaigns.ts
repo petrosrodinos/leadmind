@@ -34,6 +34,7 @@ import type {
 import { CampaignStatuses as CS, CampaignType } from "../interfaces/campaign.interface";
 import { toast } from "@/hooks/use-toast";
 import { contactsQueryKeys } from "@/features/contacts/hooks/use-contacts";
+import { sendHistoryQueryKeys } from "@/features/outreach/hooks/use-send-history";
 
 export const campaignsQueryKeys = {
     all: ["marketing-campaigns"] as const,
@@ -59,6 +60,7 @@ function invalidateCampaignDraftMessageQueries(
         qc.invalidateQueries({ queryKey: contactsQueryKeys.messages(vars.contactUuid) });
     }
     qc.invalidateQueries({ queryKey: contactsQueryKeys.all });
+    qc.invalidateQueries({ queryKey: sendHistoryQueryKeys.all });
 }
 
 export function useCampaigns(query: ListCampaignsQuery) {

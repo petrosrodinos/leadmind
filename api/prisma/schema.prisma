@@ -349,6 +349,9 @@ model OutreachMessage {
   opened_at           DateTime?
   clicked_at          DateTime?
   replied_at          DateTime?
+  email_provider      ExternalIntegrationProvider?
+  email_account       String?
+  sms_provider        String?
   metadata            Json?
   created_at          DateTime     @default(now())
   updated_at          DateTime     @updatedAt
@@ -363,6 +366,7 @@ model OutreachMessage {
   @@index([status])
   @@index([campaign_uuid])
   @@index([provider_message_id])
+  @@index([email_provider])
   @@index([campaign_uuid, contact_uuid, channel])
 }
 

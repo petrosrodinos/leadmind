@@ -21,7 +21,7 @@ import { OUTREACH_SEND_QUEUE } from '@/core/queues/queues.constants';
 import { isEmailHtmlEmpty, sanitizeEmailHtml } from '@/shared/utils/sanitize-html.util';
 import { AssignSequenceDto } from './dto/assign-sequence.dto';
 import { CreateSequenceDto } from './dto/create-sequence.dto';
-import { ListMessagesDto } from './dto/list-messages.dto';
+import { ListMessagesDto, SendSource } from './dto/list-messages.dto';
 import { SendOutreachDto } from './dto/send-outreach.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
 import {
@@ -250,17 +250,56 @@ export class OutreachService {
         const page = filters.page ?? 1;
         const limit = filters.limit ?? 20;
         const skip = (page - 1) * limit;
+
         const where: Prisma.OutreachMessageWhereInput = {
             user_uuid,
             ...(filters.contact_uuid && { contact_uuid: filters.contact_uuid }),
+            ...(filters.campaign_uuid && { campaign_uuid: filters.campaign_uuid }),
             ...(filters.status && { status: filters.status }),
+            ...(filters.channel && { channel: filters.channel }),
+            ...(filters.source === SendSource.DIRECT && { campaign_uuid: null }),
+            ...(filters.source === SendSource.CAMPAIGN && { campaign_uuid: { not: null } }),
+            ...(filters.email_provider && { email_provider: filters.email_provider }),
+            ...(filters.history_only && {
+                status: { notIn: [MsgStatus.PENDING, MsgStatus.QUEUED] },
+            }),
+            ...((filters.date_from || filters.date_to) && {
+                sent_at: {
+                    ...(filters.date_from && { gte: new Date(filters.date_from) }),
+                    ...(filters.date_to && { lte: new Date(filters.date_to) }),
+                },
+            }),
+            ...(filters.search?.trim() && {
+                contact: {
+                    OR: [
+                        { name: { contains: filters.search.trim(), mode: 'insensitive' } },
+                        { email: { contains: filters.search.trim(), mode: 'insensitive' } },
+                        { phone: { contains: filters.search.trim(), mode: 'insensitive' } },
+                    ],
+                },
+            }),
         };
 
         const [data, total] = await Promise.all([
             this.prisma.outreachMessage.findMany({
                 where,
-                include: { contact: { include: { lead: true } } },
-                orderBy: { created_at: 'desc' },
+                include: {
+                    contact: {
+                        select: {
+                            uuid: true,
+                            name: true,
+                            email: true,
+                            phone: true,
+                        },
+                    },
+                    campaign: {
+                        select: {
+                            uuid: true,
+                            name: true,
+                        },
+                    },
+                },
+                orderBy: [{ sent_at: 'desc' }, { created_at: 'desc' }],
                 skip,
                 take: limit,
             }),

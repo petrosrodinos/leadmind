@@ -30,6 +30,7 @@ export const Routes = {
         campaigns_new: "/dashboard/campaigns/new",
         campaigns_detail: "/dashboard/campaigns/:uuid",
         campaigns_edit: "/dashboard/campaigns/:uuid/edit",
+        send_history: "/dashboard/send-history",
         reminders: "/dashboard/reminders",
         forms: "/dashboard/forms",
         forms_detail: "/dashboard/forms/:uuid",

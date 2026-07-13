@@ -12,6 +12,7 @@ import type {
     UpdateMessagePayload,
 } from "@/features/contacts/interfaces/contact.interface";
 import { contactsQueryKeys } from "@/features/contacts/hooks/use-contacts";
+import { sendHistoryQueryKeys } from "@/features/outreach/hooks/use-send-history";
 import { toast } from "@/hooks/use-toast";
 
 interface MessageMutationContext {
@@ -24,6 +25,7 @@ const invalidateAfterMessageChange = (
     vars: MessageMutationContext,
 ) => {
     qc.invalidateQueries({ queryKey: contactsQueryKeys.all });
+    qc.invalidateQueries({ queryKey: sendHistoryQueryKeys.all });
     if (vars.contact_uuid) {
         qc.invalidateQueries({ queryKey: contactsQueryKeys.detail(vars.contact_uuid) });
         qc.invalidateQueries({ queryKey: contactsQueryKeys.messages(vars.contact_uuid) });
