@@ -382,6 +382,21 @@ exports.Prisma.SenderProfileScalarFieldEnum = {
   updated_at: 'updated_at'
 };
 
+exports.Prisma.MessageTemplateScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  user_uuid: 'user_uuid',
+  name: 'name',
+  channels: 'channels',
+  email_subject: 'email_subject',
+  email_content: 'email_content',
+  sms_content: 'sms_content',
+  source_campaign_uuid: 'source_campaign_uuid',
+  source_message_uuid: 'source_message_uuid',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
 exports.Prisma.MarketingCampaignScalarFieldEnum = {
   id: 'id',
   uuid: 'uuid',
@@ -883,6 +898,7 @@ exports.Prisma.ModelName = {
   OutreachSequence: 'OutreachSequence',
   FilterJob: 'FilterJob',
   SenderProfile: 'SenderProfile',
+  MessageTemplate: 'MessageTemplate',
   MarketingCampaign: 'MarketingCampaign',
   MarketingCampaignContact: 'MarketingCampaignContact',
   OpenAiBatchJob: 'OpenAiBatchJob',

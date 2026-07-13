@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { Label, ListBox, Select } from "@heroui/react";
-import { ChevronLeft, Send } from "lucide-react";
+import { Button, Label, ListBox, Select } from "@heroui/react";
+import { ChevronLeft, FileText, Send } from "lucide-react";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import {
     useCampaign,
@@ -29,6 +29,7 @@ import { RecipientsTable } from "../../components/recipients-table";
 import { CampaignActionsDropdown } from "../../components/campaign-actions-dropdown";
 import { CampaignDetailSkeleton } from "../../components/campaign-detail-skeleton";
 import { DraftedMessagesTable } from "../../components/drafted-messages-table";
+import { CreateFromCampaignModal } from "@/pages/dashboard/pages/message-templates/components/create-from-campaign-modal";
 
 const RECIPIENT_STATUS_OPTIONS: { id: CampaignContactStatus | "ALL"; label: string }[] = [
     { id: "ALL", label: "All statuses" },
@@ -50,6 +51,7 @@ export default function CampaignDetailPage() {
     const navigate = useNavigate();
     const [recipientStatus, setRecipientStatus] = useState<CampaignContactStatus | "ALL">("ALL");
     const [confirmSend, setConfirmSend] = useState(false);
+    const [saveTemplateOpen, setSaveTemplateOpen] = useState(false);
     const [emailAllocations, setEmailAllocations] = useState<EmailProviderAllocation[]>([]);
     const [senderProfileUuid, setSenderProfileUuid] = useState<string | null>(null);
     const { data: campaign, isLoading } = useCampaign(uuid);
@@ -82,6 +84,9 @@ export default function CampaignDetailPage() {
     const emailAllocationValid =
         !showEmailAllocation ||
         isEmailProviderAllocationValid(emailAllocations, pendingEmailCount);
+    const hasTemplateContent = !!(
+        campaign.email_content?.trim() || campaign.sms_content?.trim()
+    );
 
     const handleSendCampaign = async () => {
         if (showEmailAllocation && !emailAllocationValid) return;
@@ -122,6 +127,12 @@ export default function CampaignDetailPage() {
                     </p>
                 </div>
                 <div className="flex items-center gap-2">
+                    {hasTemplateContent ? (
+                        <Button size="sm" variant="secondary" onPress={() => setSaveTemplateOpen(true)}>
+                            <FileText className="size-4" />
+                            Save as template
+                        </Button>
+                    ) : null}
                     {isPersonalized && isDraftsReady && (
                         <ActionButtonWithPending
                             onPress={() => setConfirmSend(true)}
@@ -230,6 +241,12 @@ export default function CampaignDetailPage() {
                     (showEmailAllocation && !emailAllocationValid) || !senderProfileUuid
                 }
                 onConfirm={handleSendCampaign}
+            />
+
+            <CreateFromCampaignModal
+                isOpen={saveTemplateOpen}
+                onOpenChange={setSaveTemplateOpen}
+                preselectedCampaignUuid={campaign.uuid}
             />
         </div>
     );

@@ -34,6 +34,7 @@ import { ContactAudienceStatsModule } from './modules/contact-audience-stats/con
 import { GatewaysModule } from './gateways/gateways.module';
 import { AiUsageModule } from './modules/ai-usage/ai-usage.module';
 import { ApifyUsageModule } from './modules/apify-usage/apify-usage.module';
+import { MessageTemplatesModule } from './modules/message-templates/message-templates.module';
 
 @Module({
   imports: [
@@ -71,6 +72,7 @@ import { ApifyUsageModule } from './modules/apify-usage/apify-usage.module';
     GatewaysModule,
     AiUsageModule,
     ApifyUsageModule,
+    MessageTemplatesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

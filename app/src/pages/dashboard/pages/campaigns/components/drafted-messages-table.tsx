@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button, Chip } from "@heroui/react";
-import { Check, ChevronDown, ChevronUp, Copy, Pencil, Send, Trash2 } from "lucide-react";
+import { Check, ChevronDown, ChevronUp, Copy, FileText, Pencil, Send, Trash2 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
@@ -13,6 +13,7 @@ import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { EmailProviderSelect } from "@/features/messaging/components/email-provider-select";
 import { SenderProfileSelect } from "@/features/messaging/components/sender-profile-select";
 import { EditCampaignDraftMessageModal } from "./edit-campaign-draft-message-modal";
+import { useCreateTemplateFromMessage } from "@/features/message-templates/hooks/use-message-templates";
 
 interface DraftedMessagesTableProps {
     campaignUuid: string;
@@ -69,6 +70,7 @@ export function DraftedMessagesTable({ campaignUuid }: DraftedMessagesTableProps
     const [sendSenderProfileUuid, setSendSenderProfileUuid] = useState<string | null>(null);
     const deleteMu = useDeleteCampaignDraftMessage();
     const sendMu = useSendCampaignDraftMessage();
+    const saveTemplateMu = useCreateTemplateFromMessage();
 
     useEffect(() => {
         if (!sendMsg) {
@@ -199,6 +201,15 @@ export function DraftedMessagesTable({ campaignUuid }: DraftedMessagesTableProps
                                 onEdit={() => setEditMsg(msg)}
                                 onSend={() => setSendMsg(msg)}
                                 onDelete={() => setDeleteMsg(msg)}
+                                onSaveAsTemplate={
+                                    msg.channel === Channel.EMAIL || msg.channel === Channel.SMS
+                                        ? () => saveTemplateMu.mutate({ messageUuid: msg.uuid })
+                                        : undefined
+                                }
+                                isSaveTemplatePending={
+                                    saveTemplateMu.isPending &&
+                                    saveTemplateMu.variables?.messageUuid === msg.uuid
+                                }
                             />
                         ))}
                     </tbody>
@@ -226,12 +237,23 @@ interface DraftRowProps {
     msg: DraftMessage;
     isDeletePending: boolean;
     isSendPending: boolean;
+    isSaveTemplatePending?: boolean;
     onEdit: () => void;
     onSend: () => void;
     onDelete: () => void;
+    onSaveAsTemplate?: () => void;
 }
 
-function DraftRow({ msg, isDeletePending, isSendPending, onEdit, onSend, onDelete }: DraftRowProps) {
+function DraftRow({
+    msg,
+    isDeletePending,
+    isSendPending,
+    isSaveTemplatePending = false,
+    onEdit,
+    onSend,
+    onDelete,
+    onSaveAsTemplate,
+}: DraftRowProps) {
     const [expanded, setExpanded] = useState(false);
     const contactName = msg.contact.name || msg.contact.email || msg.contact.phone || msg.contact_uuid.slice(0, 8);
     const preview = stripHtml(msg.content).slice(0, 120);
@@ -295,6 +317,18 @@ function DraftRow({ msg, isDeletePending, isSendPending, onEdit, onSend, onDelet
                         >
                             <Pencil className="size-3.5" />
                         </Button>
+                        {onSaveAsTemplate ? (
+                            <ActionButtonWithPending
+                                size="sm"
+                                variant="tertiary"
+                                isPending={isSaveTemplatePending}
+                                onPress={onSaveAsTemplate}
+                                aria-label="Save as template"
+                                idleLeading={<FileText className="size-3.5" />}
+                            >
+                                {null}
+                            </ActionButtonWithPending>
+                        ) : null}
                         <Button
                             size="sm"
                             variant="tertiary"

@@ -40,6 +40,7 @@ model User {
   contact_audience_analyses ContactAudienceAnalysis[]
   ai_usage_logs       AiUsageLog[]
   apify_usage_logs    ApifyUsageLog[]
+  message_templates   MessageTemplate[]
 
   @@index([email])
   @@index([phone])
@@ -435,6 +436,26 @@ model SenderProfile {
 
   @@index([user_uuid])
   @@map("sender_profiles")
+}
+
+model MessageTemplate {
+  id                   Int       @id @default(autoincrement())
+  uuid                 String    @unique @default(uuid())
+  user_uuid            String
+  name                 String
+  channels             Channel[] @default([EMAIL])
+  email_subject        String?
+  email_content        String?   @db.Text
+  sms_content          String?   @db.Text
+  source_campaign_uuid String?
+  source_message_uuid  String?
+  created_at           DateTime  @default(now())
+  updated_at           DateTime  @updatedAt
+
+  user User @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
+
+  @@index([user_uuid])
+  @@map("message_templates")
 }
 
 model MarketingCampaign {

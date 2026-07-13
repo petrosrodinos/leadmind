@@ -129,6 +129,17 @@ export const ApiRoutes = {
         complete: (uuid: string) => `/reminders/${uuid}/complete`,
         remove: (uuid: string) => `/reminders/${uuid}`,
     },
+    message_templates: {
+        prefix: "/message-templates",
+        list: "/message-templates",
+        create: "/message-templates",
+        get: (uuid: string) => `/message-templates/${uuid}`,
+        update: (uuid: string) => `/message-templates/${uuid}`,
+        remove: (uuid: string) => `/message-templates/${uuid}`,
+        ai_generate: "/message-templates/ai/generate",
+        from_campaign: (campaignUuid: string) => `/message-templates/from-campaign/${campaignUuid}`,
+        from_message: (messageUuid: string) => `/message-templates/from-message/${messageUuid}`,
+    },
     marketing_campaigns: {
         prefix: "/marketing-campaigns",
         list: "/marketing-campaigns",

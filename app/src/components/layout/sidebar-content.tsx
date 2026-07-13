@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { Disclosure } from "@heroui/react";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, Users, Globe, Filter, IdCard, Megaphone, Layers, ShieldCheck, ChevronDown, Plug, Bell, ClipboardList, List, Settings, BarChart2, Activity, Mail } from "lucide-react";
+import { LayoutDashboard, Users, Globe, Filter, IdCard, Megaphone, Layers, ShieldCheck, ChevronDown, Plug, Bell, ClipboardList, List, Settings, BarChart2, Activity, Mail, FileText } from "lucide-react";
 import { Routes } from "@/routes/routes";
 import { usePermission } from "@/hooks/use-permission";
 
@@ -22,6 +22,7 @@ const navItems = [
   { label: "Sender Profiles", icon: IdCard, href: Routes.dashboard.sender_profiles, end: false },
   { label: "Integrations", icon: Plug, href: Routes.dashboard.integrations, end: false },
   { label: "Campaigns", icon: Megaphone, href: Routes.dashboard.campaigns, end: false },
+  { label: "Templates", icon: FileText, href: Routes.dashboard.message_templates, end: false },
   { label: "Send history", icon: Mail, href: Routes.dashboard.send_history, end: false },
 ];
 

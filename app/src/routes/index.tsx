@@ -25,6 +25,7 @@ import NewCampaignPage from "@/pages/dashboard/pages/campaigns/pages/new";
 import EditCampaignPage from "@/pages/dashboard/pages/campaigns/pages/edit";
 import CampaignDetailPage from "@/pages/dashboard/pages/campaigns/pages/detail";
 import SendHistoryPage from "@/pages/dashboard/pages/send-history";
+import MessageTemplatesPage from "@/pages/dashboard/pages/message-templates";
 import AdminBatchJobsPage from "@/pages/dashboard/pages/admin/batch-jobs";
 import AdminSystemStatusPage from "@/pages/dashboard/pages/admin/system-status";
 import SettingsUsagePage from "@/pages/dashboard/pages/settings/usage";
@@ -102,6 +103,7 @@ export default function AppRoutes() {
         <Route path="campaigns/:uuid" element={<CampaignDetailPage />} />
         <Route path="campaigns/:uuid/edit" element={<EditCampaignPage />} />
         <Route path="send-history" element={<SendHistoryPage />} />
+        <Route path="message-templates" element={<MessageTemplatesPage />} />
         <Route path="filters" element={<DashboardFiltersLayout />}>
           <Route index element={<FiltersPage />} />
           <Route path="new" element={<NewFilterPage />} />

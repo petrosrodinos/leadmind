@@ -104,6 +104,11 @@ export type FilterJob = $Result.DefaultSelection<Prisma.$FilterJobPayload>
  */
 export type SenderProfile = $Result.DefaultSelection<Prisma.$SenderProfilePayload>
 /**
+ * Model MessageTemplate
+ * 
+ */
+export type MessageTemplate = $Result.DefaultSelection<Prisma.$MessageTemplatePayload>
+/**
  * Model MarketingCampaign
  * 
  */
@@ -886,6 +891,16 @@ export class PrismaClient<
   get senderProfile(): Prisma.SenderProfileDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.messageTemplate`: Exposes CRUD operations for the **MessageTemplate** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more MessageTemplates
+    * const messageTemplates = await prisma.messageTemplate.findMany()
+    * ```
+    */
+  get messageTemplate(): Prisma.MessageTemplateDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.marketingCampaign`: Exposes CRUD operations for the **MarketingCampaign** model.
     * Example usage:
     * ```ts
@@ -1466,6 +1481,7 @@ export namespace Prisma {
     OutreachSequence: 'OutreachSequence',
     FilterJob: 'FilterJob',
     SenderProfile: 'SenderProfile',
+    MessageTemplate: 'MessageTemplate',
     MarketingCampaign: 'MarketingCampaign',
     MarketingCampaignContact: 'MarketingCampaignContact',
     OpenAiBatchJob: 'OpenAiBatchJob',
@@ -1494,7 +1510,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "filter" | "scoringInstruction" | "filterScoringInstruction" | "rawLead" | "lead" | "leadEnrichment" | "contact" | "contactEnrichment" | "contactScore" | "contactList" | "contactListMember" | "contactTag" | "interaction" | "outreachMessage" | "outreachSequence" | "filterJob" | "senderProfile" | "marketingCampaign" | "marketingCampaignContact" | "openAiBatchJob" | "integration" | "integrationKey" | "reminder" | "form" | "formField" | "formCompletion" | "formCompletionValue" | "contactAudienceAnalysis" | "aiUsageLog" | "apifyUsageLog"
+      modelProps: "user" | "filter" | "scoringInstruction" | "filterScoringInstruction" | "rawLead" | "lead" | "leadEnrichment" | "contact" | "contactEnrichment" | "contactScore" | "contactList" | "contactListMember" | "contactTag" | "interaction" | "outreachMessage" | "outreachSequence" | "filterJob" | "senderProfile" | "messageTemplate" | "marketingCampaign" | "marketingCampaignContact" | "openAiBatchJob" | "integration" | "integrationKey" | "reminder" | "form" | "formField" | "formCompletion" | "formCompletionValue" | "contactAudienceAnalysis" | "aiUsageLog" | "apifyUsageLog"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2830,6 +2846,80 @@ export namespace Prisma {
           }
         }
       }
+      MessageTemplate: {
+        payload: Prisma.$MessageTemplatePayload<ExtArgs>
+        fields: Prisma.MessageTemplateFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.MessageTemplateFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessageTemplatePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.MessageTemplateFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessageTemplatePayload>
+          }
+          findFirst: {
+            args: Prisma.MessageTemplateFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessageTemplatePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.MessageTemplateFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessageTemplatePayload>
+          }
+          findMany: {
+            args: Prisma.MessageTemplateFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessageTemplatePayload>[]
+          }
+          create: {
+            args: Prisma.MessageTemplateCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessageTemplatePayload>
+          }
+          createMany: {
+            args: Prisma.MessageTemplateCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.MessageTemplateCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessageTemplatePayload>[]
+          }
+          delete: {
+            args: Prisma.MessageTemplateDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessageTemplatePayload>
+          }
+          update: {
+            args: Prisma.MessageTemplateUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessageTemplatePayload>
+          }
+          deleteMany: {
+            args: Prisma.MessageTemplateDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.MessageTemplateUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.MessageTemplateUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessageTemplatePayload>[]
+          }
+          upsert: {
+            args: Prisma.MessageTemplateUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessageTemplatePayload>
+          }
+          aggregate: {
+            args: Prisma.MessageTemplateAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateMessageTemplate>
+          }
+          groupBy: {
+            args: Prisma.MessageTemplateGroupByArgs<ExtArgs>
+            result: $Utils.Optional<MessageTemplateGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.MessageTemplateCountArgs<ExtArgs>
+            result: $Utils.Optional<MessageTemplateCountAggregateOutputType> | number
+          }
+        }
+      }
       MarketingCampaign: {
         payload: Prisma.$MarketingCampaignPayload<ExtArgs>
         fields: Prisma.MarketingCampaignFieldRefs
@@ -3918,6 +4008,7 @@ export namespace Prisma {
     outreachSequence?: OutreachSequenceOmit
     filterJob?: FilterJobOmit
     senderProfile?: SenderProfileOmit
+    messageTemplate?: MessageTemplateOmit
     marketingCampaign?: MarketingCampaignOmit
     marketingCampaignContact?: MarketingCampaignContactOmit
     openAiBatchJob?: OpenAiBatchJobOmit
@@ -4028,6 +4119,7 @@ export namespace Prisma {
     contact_audience_analyses: number
     ai_usage_logs: number
     apify_usage_logs: number
+    message_templates: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4048,6 +4140,7 @@ export namespace Prisma {
     contact_audience_analyses?: boolean | UserCountOutputTypeCountContact_audience_analysesArgs
     ai_usage_logs?: boolean | UserCountOutputTypeCountAi_usage_logsArgs
     apify_usage_logs?: boolean | UserCountOutputTypeCountApify_usage_logsArgs
+    message_templates?: boolean | UserCountOutputTypeCountMessage_templatesArgs
   }
 
   // Custom InputTypes
@@ -4178,6 +4271,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountApify_usage_logsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ApifyUsageLogWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountMessage_templatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MessageTemplateWhereInput
   }
 
 
@@ -4927,6 +5027,7 @@ export namespace Prisma {
     contact_audience_analyses?: boolean | User$contact_audience_analysesArgs<ExtArgs>
     ai_usage_logs?: boolean | User$ai_usage_logsArgs<ExtArgs>
     apify_usage_logs?: boolean | User$apify_usage_logsArgs<ExtArgs>
+    message_templates?: boolean | User$message_templatesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -4982,6 +5083,7 @@ export namespace Prisma {
     contact_audience_analyses?: boolean | User$contact_audience_analysesArgs<ExtArgs>
     ai_usage_logs?: boolean | User$ai_usage_logsArgs<ExtArgs>
     apify_usage_logs?: boolean | User$apify_usage_logsArgs<ExtArgs>
+    message_templates?: boolean | User$message_templatesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -5007,6 +5109,7 @@ export namespace Prisma {
       contact_audience_analyses: Prisma.$ContactAudienceAnalysisPayload<ExtArgs>[]
       ai_usage_logs: Prisma.$AiUsageLogPayload<ExtArgs>[]
       apify_usage_logs: Prisma.$ApifyUsageLogPayload<ExtArgs>[]
+      message_templates: Prisma.$MessageTemplatePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -5428,6 +5531,7 @@ export namespace Prisma {
     contact_audience_analyses<T extends User$contact_audience_analysesArgs<ExtArgs> = {}>(args?: Subset<T, User$contact_audience_analysesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactAudienceAnalysisPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     ai_usage_logs<T extends User$ai_usage_logsArgs<ExtArgs> = {}>(args?: Subset<T, User$ai_usage_logsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AiUsageLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     apify_usage_logs<T extends User$apify_usage_logsArgs<ExtArgs> = {}>(args?: Subset<T, User$apify_usage_logsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApifyUsageLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    message_templates<T extends User$message_templatesArgs<ExtArgs> = {}>(args?: Subset<T, User$message_templatesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessageTemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6258,6 +6362,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ApifyUsageLogScalarFieldEnum | ApifyUsageLogScalarFieldEnum[]
+  }
+
+  /**
+   * User.message_templates
+   */
+  export type User$message_templatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MessageTemplate
+     */
+    select?: MessageTemplateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MessageTemplate
+     */
+    omit?: MessageTemplateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageTemplateInclude<ExtArgs> | null
+    where?: MessageTemplateWhereInput
+    orderBy?: MessageTemplateOrderByWithRelationInput | MessageTemplateOrderByWithRelationInput[]
+    cursor?: MessageTemplateWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MessageTemplateScalarFieldEnum | MessageTemplateScalarFieldEnum[]
   }
 
   /**
@@ -27094,6 +27222,1185 @@ export namespace Prisma {
 
 
   /**
+   * Model MessageTemplate
+   */
+
+  export type AggregateMessageTemplate = {
+    _count: MessageTemplateCountAggregateOutputType | null
+    _avg: MessageTemplateAvgAggregateOutputType | null
+    _sum: MessageTemplateSumAggregateOutputType | null
+    _min: MessageTemplateMinAggregateOutputType | null
+    _max: MessageTemplateMaxAggregateOutputType | null
+  }
+
+  export type MessageTemplateAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type MessageTemplateSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type MessageTemplateMinAggregateOutputType = {
+    id: number | null
+    uuid: string | null
+    user_uuid: string | null
+    name: string | null
+    email_subject: string | null
+    email_content: string | null
+    sms_content: string | null
+    source_campaign_uuid: string | null
+    source_message_uuid: string | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type MessageTemplateMaxAggregateOutputType = {
+    id: number | null
+    uuid: string | null
+    user_uuid: string | null
+    name: string | null
+    email_subject: string | null
+    email_content: string | null
+    sms_content: string | null
+    source_campaign_uuid: string | null
+    source_message_uuid: string | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type MessageTemplateCountAggregateOutputType = {
+    id: number
+    uuid: number
+    user_uuid: number
+    name: number
+    channels: number
+    email_subject: number
+    email_content: number
+    sms_content: number
+    source_campaign_uuid: number
+    source_message_uuid: number
+    created_at: number
+    updated_at: number
+    _all: number
+  }
+
+
+  export type MessageTemplateAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type MessageTemplateSumAggregateInputType = {
+    id?: true
+  }
+
+  export type MessageTemplateMinAggregateInputType = {
+    id?: true
+    uuid?: true
+    user_uuid?: true
+    name?: true
+    email_subject?: true
+    email_content?: true
+    sms_content?: true
+    source_campaign_uuid?: true
+    source_message_uuid?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type MessageTemplateMaxAggregateInputType = {
+    id?: true
+    uuid?: true
+    user_uuid?: true
+    name?: true
+    email_subject?: true
+    email_content?: true
+    sms_content?: true
+    source_campaign_uuid?: true
+    source_message_uuid?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type MessageTemplateCountAggregateInputType = {
+    id?: true
+    uuid?: true
+    user_uuid?: true
+    name?: true
+    channels?: true
+    email_subject?: true
+    email_content?: true
+    sms_content?: true
+    source_campaign_uuid?: true
+    source_message_uuid?: true
+    created_at?: true
+    updated_at?: true
+    _all?: true
+  }
+
+  export type MessageTemplateAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MessageTemplate to aggregate.
+     */
+    where?: MessageTemplateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MessageTemplates to fetch.
+     */
+    orderBy?: MessageTemplateOrderByWithRelationInput | MessageTemplateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: MessageTemplateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MessageTemplates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MessageTemplates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned MessageTemplates
+    **/
+    _count?: true | MessageTemplateCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: MessageTemplateAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: MessageTemplateSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: MessageTemplateMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: MessageTemplateMaxAggregateInputType
+  }
+
+  export type GetMessageTemplateAggregateType<T extends MessageTemplateAggregateArgs> = {
+        [P in keyof T & keyof AggregateMessageTemplate]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateMessageTemplate[P]>
+      : GetScalarType<T[P], AggregateMessageTemplate[P]>
+  }
+
+
+
+
+  export type MessageTemplateGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MessageTemplateWhereInput
+    orderBy?: MessageTemplateOrderByWithAggregationInput | MessageTemplateOrderByWithAggregationInput[]
+    by: MessageTemplateScalarFieldEnum[] | MessageTemplateScalarFieldEnum
+    having?: MessageTemplateScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: MessageTemplateCountAggregateInputType | true
+    _avg?: MessageTemplateAvgAggregateInputType
+    _sum?: MessageTemplateSumAggregateInputType
+    _min?: MessageTemplateMinAggregateInputType
+    _max?: MessageTemplateMaxAggregateInputType
+  }
+
+  export type MessageTemplateGroupByOutputType = {
+    id: number
+    uuid: string
+    user_uuid: string
+    name: string
+    channels: $Enums.Channel[]
+    email_subject: string | null
+    email_content: string | null
+    sms_content: string | null
+    source_campaign_uuid: string | null
+    source_message_uuid: string | null
+    created_at: Date
+    updated_at: Date
+    _count: MessageTemplateCountAggregateOutputType | null
+    _avg: MessageTemplateAvgAggregateOutputType | null
+    _sum: MessageTemplateSumAggregateOutputType | null
+    _min: MessageTemplateMinAggregateOutputType | null
+    _max: MessageTemplateMaxAggregateOutputType | null
+  }
+
+  type GetMessageTemplateGroupByPayload<T extends MessageTemplateGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<MessageTemplateGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof MessageTemplateGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], MessageTemplateGroupByOutputType[P]>
+            : GetScalarType<T[P], MessageTemplateGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type MessageTemplateSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uuid?: boolean
+    user_uuid?: boolean
+    name?: boolean
+    channels?: boolean
+    email_subject?: boolean
+    email_content?: boolean
+    sms_content?: boolean
+    source_campaign_uuid?: boolean
+    source_message_uuid?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["messageTemplate"]>
+
+  export type MessageTemplateSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uuid?: boolean
+    user_uuid?: boolean
+    name?: boolean
+    channels?: boolean
+    email_subject?: boolean
+    email_content?: boolean
+    sms_content?: boolean
+    source_campaign_uuid?: boolean
+    source_message_uuid?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["messageTemplate"]>
+
+  export type MessageTemplateSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uuid?: boolean
+    user_uuid?: boolean
+    name?: boolean
+    channels?: boolean
+    email_subject?: boolean
+    email_content?: boolean
+    sms_content?: boolean
+    source_campaign_uuid?: boolean
+    source_message_uuid?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["messageTemplate"]>
+
+  export type MessageTemplateSelectScalar = {
+    id?: boolean
+    uuid?: boolean
+    user_uuid?: boolean
+    name?: boolean
+    channels?: boolean
+    email_subject?: boolean
+    email_content?: boolean
+    sms_content?: boolean
+    source_campaign_uuid?: boolean
+    source_message_uuid?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }
+
+  export type MessageTemplateOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "name" | "channels" | "email_subject" | "email_content" | "sms_content" | "source_campaign_uuid" | "source_message_uuid" | "created_at" | "updated_at", ExtArgs["result"]["messageTemplate"]>
+  export type MessageTemplateInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type MessageTemplateIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type MessageTemplateIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $MessageTemplatePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "MessageTemplate"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      uuid: string
+      user_uuid: string
+      name: string
+      channels: $Enums.Channel[]
+      email_subject: string | null
+      email_content: string | null
+      sms_content: string | null
+      source_campaign_uuid: string | null
+      source_message_uuid: string | null
+      created_at: Date
+      updated_at: Date
+    }, ExtArgs["result"]["messageTemplate"]>
+    composites: {}
+  }
+
+  type MessageTemplateGetPayload<S extends boolean | null | undefined | MessageTemplateDefaultArgs> = $Result.GetResult<Prisma.$MessageTemplatePayload, S>
+
+  type MessageTemplateCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<MessageTemplateFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: MessageTemplateCountAggregateInputType | true
+    }
+
+  export interface MessageTemplateDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['MessageTemplate'], meta: { name: 'MessageTemplate' } }
+    /**
+     * Find zero or one MessageTemplate that matches the filter.
+     * @param {MessageTemplateFindUniqueArgs} args - Arguments to find a MessageTemplate
+     * @example
+     * // Get one MessageTemplate
+     * const messageTemplate = await prisma.messageTemplate.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends MessageTemplateFindUniqueArgs>(args: SelectSubset<T, MessageTemplateFindUniqueArgs<ExtArgs>>): Prisma__MessageTemplateClient<$Result.GetResult<Prisma.$MessageTemplatePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one MessageTemplate that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {MessageTemplateFindUniqueOrThrowArgs} args - Arguments to find a MessageTemplate
+     * @example
+     * // Get one MessageTemplate
+     * const messageTemplate = await prisma.messageTemplate.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends MessageTemplateFindUniqueOrThrowArgs>(args: SelectSubset<T, MessageTemplateFindUniqueOrThrowArgs<ExtArgs>>): Prisma__MessageTemplateClient<$Result.GetResult<Prisma.$MessageTemplatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first MessageTemplate that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MessageTemplateFindFirstArgs} args - Arguments to find a MessageTemplate
+     * @example
+     * // Get one MessageTemplate
+     * const messageTemplate = await prisma.messageTemplate.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends MessageTemplateFindFirstArgs>(args?: SelectSubset<T, MessageTemplateFindFirstArgs<ExtArgs>>): Prisma__MessageTemplateClient<$Result.GetResult<Prisma.$MessageTemplatePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first MessageTemplate that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MessageTemplateFindFirstOrThrowArgs} args - Arguments to find a MessageTemplate
+     * @example
+     * // Get one MessageTemplate
+     * const messageTemplate = await prisma.messageTemplate.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends MessageTemplateFindFirstOrThrowArgs>(args?: SelectSubset<T, MessageTemplateFindFirstOrThrowArgs<ExtArgs>>): Prisma__MessageTemplateClient<$Result.GetResult<Prisma.$MessageTemplatePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more MessageTemplates that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MessageTemplateFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all MessageTemplates
+     * const messageTemplates = await prisma.messageTemplate.findMany()
+     * 
+     * // Get first 10 MessageTemplates
+     * const messageTemplates = await prisma.messageTemplate.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const messageTemplateWithIdOnly = await prisma.messageTemplate.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends MessageTemplateFindManyArgs>(args?: SelectSubset<T, MessageTemplateFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessageTemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a MessageTemplate.
+     * @param {MessageTemplateCreateArgs} args - Arguments to create a MessageTemplate.
+     * @example
+     * // Create one MessageTemplate
+     * const MessageTemplate = await prisma.messageTemplate.create({
+     *   data: {
+     *     // ... data to create a MessageTemplate
+     *   }
+     * })
+     * 
+     */
+    create<T extends MessageTemplateCreateArgs>(args: SelectSubset<T, MessageTemplateCreateArgs<ExtArgs>>): Prisma__MessageTemplateClient<$Result.GetResult<Prisma.$MessageTemplatePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many MessageTemplates.
+     * @param {MessageTemplateCreateManyArgs} args - Arguments to create many MessageTemplates.
+     * @example
+     * // Create many MessageTemplates
+     * const messageTemplate = await prisma.messageTemplate.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends MessageTemplateCreateManyArgs>(args?: SelectSubset<T, MessageTemplateCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many MessageTemplates and returns the data saved in the database.
+     * @param {MessageTemplateCreateManyAndReturnArgs} args - Arguments to create many MessageTemplates.
+     * @example
+     * // Create many MessageTemplates
+     * const messageTemplate = await prisma.messageTemplate.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many MessageTemplates and only return the `id`
+     * const messageTemplateWithIdOnly = await prisma.messageTemplate.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends MessageTemplateCreateManyAndReturnArgs>(args?: SelectSubset<T, MessageTemplateCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessageTemplatePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a MessageTemplate.
+     * @param {MessageTemplateDeleteArgs} args - Arguments to delete one MessageTemplate.
+     * @example
+     * // Delete one MessageTemplate
+     * const MessageTemplate = await prisma.messageTemplate.delete({
+     *   where: {
+     *     // ... filter to delete one MessageTemplate
+     *   }
+     * })
+     * 
+     */
+    delete<T extends MessageTemplateDeleteArgs>(args: SelectSubset<T, MessageTemplateDeleteArgs<ExtArgs>>): Prisma__MessageTemplateClient<$Result.GetResult<Prisma.$MessageTemplatePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one MessageTemplate.
+     * @param {MessageTemplateUpdateArgs} args - Arguments to update one MessageTemplate.
+     * @example
+     * // Update one MessageTemplate
+     * const messageTemplate = await prisma.messageTemplate.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends MessageTemplateUpdateArgs>(args: SelectSubset<T, MessageTemplateUpdateArgs<ExtArgs>>): Prisma__MessageTemplateClient<$Result.GetResult<Prisma.$MessageTemplatePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more MessageTemplates.
+     * @param {MessageTemplateDeleteManyArgs} args - Arguments to filter MessageTemplates to delete.
+     * @example
+     * // Delete a few MessageTemplates
+     * const { count } = await prisma.messageTemplate.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends MessageTemplateDeleteManyArgs>(args?: SelectSubset<T, MessageTemplateDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MessageTemplates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MessageTemplateUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many MessageTemplates
+     * const messageTemplate = await prisma.messageTemplate.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends MessageTemplateUpdateManyArgs>(args: SelectSubset<T, MessageTemplateUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MessageTemplates and returns the data updated in the database.
+     * @param {MessageTemplateUpdateManyAndReturnArgs} args - Arguments to update many MessageTemplates.
+     * @example
+     * // Update many MessageTemplates
+     * const messageTemplate = await prisma.messageTemplate.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more MessageTemplates and only return the `id`
+     * const messageTemplateWithIdOnly = await prisma.messageTemplate.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends MessageTemplateUpdateManyAndReturnArgs>(args: SelectSubset<T, MessageTemplateUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessageTemplatePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one MessageTemplate.
+     * @param {MessageTemplateUpsertArgs} args - Arguments to update or create a MessageTemplate.
+     * @example
+     * // Update or create a MessageTemplate
+     * const messageTemplate = await prisma.messageTemplate.upsert({
+     *   create: {
+     *     // ... data to create a MessageTemplate
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the MessageTemplate we want to update
+     *   }
+     * })
+     */
+    upsert<T extends MessageTemplateUpsertArgs>(args: SelectSubset<T, MessageTemplateUpsertArgs<ExtArgs>>): Prisma__MessageTemplateClient<$Result.GetResult<Prisma.$MessageTemplatePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of MessageTemplates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MessageTemplateCountArgs} args - Arguments to filter MessageTemplates to count.
+     * @example
+     * // Count the number of MessageTemplates
+     * const count = await prisma.messageTemplate.count({
+     *   where: {
+     *     // ... the filter for the MessageTemplates we want to count
+     *   }
+     * })
+    **/
+    count<T extends MessageTemplateCountArgs>(
+      args?: Subset<T, MessageTemplateCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], MessageTemplateCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a MessageTemplate.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MessageTemplateAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends MessageTemplateAggregateArgs>(args: Subset<T, MessageTemplateAggregateArgs>): Prisma.PrismaPromise<GetMessageTemplateAggregateType<T>>
+
+    /**
+     * Group by MessageTemplate.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MessageTemplateGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends MessageTemplateGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: MessageTemplateGroupByArgs['orderBy'] }
+        : { orderBy?: MessageTemplateGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, MessageTemplateGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMessageTemplateGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the MessageTemplate model
+   */
+  readonly fields: MessageTemplateFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for MessageTemplate.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__MessageTemplateClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the MessageTemplate model
+   */
+  interface MessageTemplateFieldRefs {
+    readonly id: FieldRef<"MessageTemplate", 'Int'>
+    readonly uuid: FieldRef<"MessageTemplate", 'String'>
+    readonly user_uuid: FieldRef<"MessageTemplate", 'String'>
+    readonly name: FieldRef<"MessageTemplate", 'String'>
+    readonly channels: FieldRef<"MessageTemplate", 'Channel[]'>
+    readonly email_subject: FieldRef<"MessageTemplate", 'String'>
+    readonly email_content: FieldRef<"MessageTemplate", 'String'>
+    readonly sms_content: FieldRef<"MessageTemplate", 'String'>
+    readonly source_campaign_uuid: FieldRef<"MessageTemplate", 'String'>
+    readonly source_message_uuid: FieldRef<"MessageTemplate", 'String'>
+    readonly created_at: FieldRef<"MessageTemplate", 'DateTime'>
+    readonly updated_at: FieldRef<"MessageTemplate", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * MessageTemplate findUnique
+   */
+  export type MessageTemplateFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MessageTemplate
+     */
+    select?: MessageTemplateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MessageTemplate
+     */
+    omit?: MessageTemplateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageTemplateInclude<ExtArgs> | null
+    /**
+     * Filter, which MessageTemplate to fetch.
+     */
+    where: MessageTemplateWhereUniqueInput
+  }
+
+  /**
+   * MessageTemplate findUniqueOrThrow
+   */
+  export type MessageTemplateFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MessageTemplate
+     */
+    select?: MessageTemplateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MessageTemplate
+     */
+    omit?: MessageTemplateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageTemplateInclude<ExtArgs> | null
+    /**
+     * Filter, which MessageTemplate to fetch.
+     */
+    where: MessageTemplateWhereUniqueInput
+  }
+
+  /**
+   * MessageTemplate findFirst
+   */
+  export type MessageTemplateFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MessageTemplate
+     */
+    select?: MessageTemplateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MessageTemplate
+     */
+    omit?: MessageTemplateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageTemplateInclude<ExtArgs> | null
+    /**
+     * Filter, which MessageTemplate to fetch.
+     */
+    where?: MessageTemplateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MessageTemplates to fetch.
+     */
+    orderBy?: MessageTemplateOrderByWithRelationInput | MessageTemplateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MessageTemplates.
+     */
+    cursor?: MessageTemplateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MessageTemplates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MessageTemplates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MessageTemplates.
+     */
+    distinct?: MessageTemplateScalarFieldEnum | MessageTemplateScalarFieldEnum[]
+  }
+
+  /**
+   * MessageTemplate findFirstOrThrow
+   */
+  export type MessageTemplateFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MessageTemplate
+     */
+    select?: MessageTemplateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MessageTemplate
+     */
+    omit?: MessageTemplateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageTemplateInclude<ExtArgs> | null
+    /**
+     * Filter, which MessageTemplate to fetch.
+     */
+    where?: MessageTemplateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MessageTemplates to fetch.
+     */
+    orderBy?: MessageTemplateOrderByWithRelationInput | MessageTemplateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MessageTemplates.
+     */
+    cursor?: MessageTemplateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MessageTemplates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MessageTemplates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MessageTemplates.
+     */
+    distinct?: MessageTemplateScalarFieldEnum | MessageTemplateScalarFieldEnum[]
+  }
+
+  /**
+   * MessageTemplate findMany
+   */
+  export type MessageTemplateFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MessageTemplate
+     */
+    select?: MessageTemplateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MessageTemplate
+     */
+    omit?: MessageTemplateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageTemplateInclude<ExtArgs> | null
+    /**
+     * Filter, which MessageTemplates to fetch.
+     */
+    where?: MessageTemplateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MessageTemplates to fetch.
+     */
+    orderBy?: MessageTemplateOrderByWithRelationInput | MessageTemplateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing MessageTemplates.
+     */
+    cursor?: MessageTemplateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MessageTemplates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MessageTemplates.
+     */
+    skip?: number
+    distinct?: MessageTemplateScalarFieldEnum | MessageTemplateScalarFieldEnum[]
+  }
+
+  /**
+   * MessageTemplate create
+   */
+  export type MessageTemplateCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MessageTemplate
+     */
+    select?: MessageTemplateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MessageTemplate
+     */
+    omit?: MessageTemplateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageTemplateInclude<ExtArgs> | null
+    /**
+     * The data needed to create a MessageTemplate.
+     */
+    data: XOR<MessageTemplateCreateInput, MessageTemplateUncheckedCreateInput>
+  }
+
+  /**
+   * MessageTemplate createMany
+   */
+  export type MessageTemplateCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many MessageTemplates.
+     */
+    data: MessageTemplateCreateManyInput | MessageTemplateCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * MessageTemplate createManyAndReturn
+   */
+  export type MessageTemplateCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MessageTemplate
+     */
+    select?: MessageTemplateSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the MessageTemplate
+     */
+    omit?: MessageTemplateOmit<ExtArgs> | null
+    /**
+     * The data used to create many MessageTemplates.
+     */
+    data: MessageTemplateCreateManyInput | MessageTemplateCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageTemplateIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * MessageTemplate update
+   */
+  export type MessageTemplateUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MessageTemplate
+     */
+    select?: MessageTemplateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MessageTemplate
+     */
+    omit?: MessageTemplateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageTemplateInclude<ExtArgs> | null
+    /**
+     * The data needed to update a MessageTemplate.
+     */
+    data: XOR<MessageTemplateUpdateInput, MessageTemplateUncheckedUpdateInput>
+    /**
+     * Choose, which MessageTemplate to update.
+     */
+    where: MessageTemplateWhereUniqueInput
+  }
+
+  /**
+   * MessageTemplate updateMany
+   */
+  export type MessageTemplateUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update MessageTemplates.
+     */
+    data: XOR<MessageTemplateUpdateManyMutationInput, MessageTemplateUncheckedUpdateManyInput>
+    /**
+     * Filter which MessageTemplates to update
+     */
+    where?: MessageTemplateWhereInput
+    /**
+     * Limit how many MessageTemplates to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * MessageTemplate updateManyAndReturn
+   */
+  export type MessageTemplateUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MessageTemplate
+     */
+    select?: MessageTemplateSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the MessageTemplate
+     */
+    omit?: MessageTemplateOmit<ExtArgs> | null
+    /**
+     * The data used to update MessageTemplates.
+     */
+    data: XOR<MessageTemplateUpdateManyMutationInput, MessageTemplateUncheckedUpdateManyInput>
+    /**
+     * Filter which MessageTemplates to update
+     */
+    where?: MessageTemplateWhereInput
+    /**
+     * Limit how many MessageTemplates to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageTemplateIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * MessageTemplate upsert
+   */
+  export type MessageTemplateUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MessageTemplate
+     */
+    select?: MessageTemplateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MessageTemplate
+     */
+    omit?: MessageTemplateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageTemplateInclude<ExtArgs> | null
+    /**
+     * The filter to search for the MessageTemplate to update in case it exists.
+     */
+    where: MessageTemplateWhereUniqueInput
+    /**
+     * In case the MessageTemplate found by the `where` argument doesn't exist, create a new MessageTemplate with this data.
+     */
+    create: XOR<MessageTemplateCreateInput, MessageTemplateUncheckedCreateInput>
+    /**
+     * In case the MessageTemplate was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<MessageTemplateUpdateInput, MessageTemplateUncheckedUpdateInput>
+  }
+
+  /**
+   * MessageTemplate delete
+   */
+  export type MessageTemplateDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MessageTemplate
+     */
+    select?: MessageTemplateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MessageTemplate
+     */
+    omit?: MessageTemplateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageTemplateInclude<ExtArgs> | null
+    /**
+     * Filter which MessageTemplate to delete.
+     */
+    where: MessageTemplateWhereUniqueInput
+  }
+
+  /**
+   * MessageTemplate deleteMany
+   */
+  export type MessageTemplateDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MessageTemplates to delete
+     */
+    where?: MessageTemplateWhereInput
+    /**
+     * Limit how many MessageTemplates to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * MessageTemplate without action
+   */
+  export type MessageTemplateDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MessageTemplate
+     */
+    select?: MessageTemplateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MessageTemplate
+     */
+    omit?: MessageTemplateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageTemplateInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model MarketingCampaign
    */
 
@@ -43575,6 +44882,24 @@ export namespace Prisma {
   export type SenderProfileScalarFieldEnum = (typeof SenderProfileScalarFieldEnum)[keyof typeof SenderProfileScalarFieldEnum]
 
 
+  export const MessageTemplateScalarFieldEnum: {
+    id: 'id',
+    uuid: 'uuid',
+    user_uuid: 'user_uuid',
+    name: 'name',
+    channels: 'channels',
+    email_subject: 'email_subject',
+    email_content: 'email_content',
+    sms_content: 'sms_content',
+    source_campaign_uuid: 'source_campaign_uuid',
+    source_message_uuid: 'source_message_uuid',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
+  };
+
+  export type MessageTemplateScalarFieldEnum = (typeof MessageTemplateScalarFieldEnum)[keyof typeof MessageTemplateScalarFieldEnum]
+
+
   export const MarketingCampaignScalarFieldEnum: {
     id: 'id',
     uuid: 'uuid',
@@ -44375,6 +45700,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisListRelationFilter
     ai_usage_logs?: AiUsageLogListRelationFilter
     apify_usage_logs?: ApifyUsageLogListRelationFilter
+    message_templates?: MessageTemplateListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -44403,6 +45729,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisOrderByRelationAggregateInput
     ai_usage_logs?: AiUsageLogOrderByRelationAggregateInput
     apify_usage_logs?: ApifyUsageLogOrderByRelationAggregateInput
+    message_templates?: MessageTemplateOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -44434,6 +45761,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisListRelationFilter
     ai_usage_logs?: AiUsageLogListRelationFilter
     apify_usage_logs?: ApifyUsageLogListRelationFilter
+    message_templates?: MessageTemplateListRelationFilter
   }, "id" | "uuid" | "email" | "phone">
 
   export type UserOrderByWithAggregationInput = {
@@ -46112,6 +47440,98 @@ export namespace Prisma {
     updated_at?: DateTimeWithAggregatesFilter<"SenderProfile"> | Date | string
   }
 
+  export type MessageTemplateWhereInput = {
+    AND?: MessageTemplateWhereInput | MessageTemplateWhereInput[]
+    OR?: MessageTemplateWhereInput[]
+    NOT?: MessageTemplateWhereInput | MessageTemplateWhereInput[]
+    id?: IntFilter<"MessageTemplate"> | number
+    uuid?: StringFilter<"MessageTemplate"> | string
+    user_uuid?: StringFilter<"MessageTemplate"> | string
+    name?: StringFilter<"MessageTemplate"> | string
+    channels?: EnumChannelNullableListFilter<"MessageTemplate">
+    email_subject?: StringNullableFilter<"MessageTemplate"> | string | null
+    email_content?: StringNullableFilter<"MessageTemplate"> | string | null
+    sms_content?: StringNullableFilter<"MessageTemplate"> | string | null
+    source_campaign_uuid?: StringNullableFilter<"MessageTemplate"> | string | null
+    source_message_uuid?: StringNullableFilter<"MessageTemplate"> | string | null
+    created_at?: DateTimeFilter<"MessageTemplate"> | Date | string
+    updated_at?: DateTimeFilter<"MessageTemplate"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type MessageTemplateOrderByWithRelationInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    user_uuid?: SortOrder
+    name?: SortOrder
+    channels?: SortOrder
+    email_subject?: SortOrderInput | SortOrder
+    email_content?: SortOrderInput | SortOrder
+    sms_content?: SortOrderInput | SortOrder
+    source_campaign_uuid?: SortOrderInput | SortOrder
+    source_message_uuid?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type MessageTemplateWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    uuid?: string
+    AND?: MessageTemplateWhereInput | MessageTemplateWhereInput[]
+    OR?: MessageTemplateWhereInput[]
+    NOT?: MessageTemplateWhereInput | MessageTemplateWhereInput[]
+    user_uuid?: StringFilter<"MessageTemplate"> | string
+    name?: StringFilter<"MessageTemplate"> | string
+    channels?: EnumChannelNullableListFilter<"MessageTemplate">
+    email_subject?: StringNullableFilter<"MessageTemplate"> | string | null
+    email_content?: StringNullableFilter<"MessageTemplate"> | string | null
+    sms_content?: StringNullableFilter<"MessageTemplate"> | string | null
+    source_campaign_uuid?: StringNullableFilter<"MessageTemplate"> | string | null
+    source_message_uuid?: StringNullableFilter<"MessageTemplate"> | string | null
+    created_at?: DateTimeFilter<"MessageTemplate"> | Date | string
+    updated_at?: DateTimeFilter<"MessageTemplate"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "uuid">
+
+  export type MessageTemplateOrderByWithAggregationInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    user_uuid?: SortOrder
+    name?: SortOrder
+    channels?: SortOrder
+    email_subject?: SortOrderInput | SortOrder
+    email_content?: SortOrderInput | SortOrder
+    sms_content?: SortOrderInput | SortOrder
+    source_campaign_uuid?: SortOrderInput | SortOrder
+    source_message_uuid?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    _count?: MessageTemplateCountOrderByAggregateInput
+    _avg?: MessageTemplateAvgOrderByAggregateInput
+    _max?: MessageTemplateMaxOrderByAggregateInput
+    _min?: MessageTemplateMinOrderByAggregateInput
+    _sum?: MessageTemplateSumOrderByAggregateInput
+  }
+
+  export type MessageTemplateScalarWhereWithAggregatesInput = {
+    AND?: MessageTemplateScalarWhereWithAggregatesInput | MessageTemplateScalarWhereWithAggregatesInput[]
+    OR?: MessageTemplateScalarWhereWithAggregatesInput[]
+    NOT?: MessageTemplateScalarWhereWithAggregatesInput | MessageTemplateScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"MessageTemplate"> | number
+    uuid?: StringWithAggregatesFilter<"MessageTemplate"> | string
+    user_uuid?: StringWithAggregatesFilter<"MessageTemplate"> | string
+    name?: StringWithAggregatesFilter<"MessageTemplate"> | string
+    channels?: EnumChannelNullableListFilter<"MessageTemplate">
+    email_subject?: StringNullableWithAggregatesFilter<"MessageTemplate"> | string | null
+    email_content?: StringNullableWithAggregatesFilter<"MessageTemplate"> | string | null
+    sms_content?: StringNullableWithAggregatesFilter<"MessageTemplate"> | string | null
+    source_campaign_uuid?: StringNullableWithAggregatesFilter<"MessageTemplate"> | string | null
+    source_message_uuid?: StringNullableWithAggregatesFilter<"MessageTemplate"> | string | null
+    created_at?: DateTimeWithAggregatesFilter<"MessageTemplate"> | Date | string
+    updated_at?: DateTimeWithAggregatesFilter<"MessageTemplate"> | Date | string
+  }
+
   export type MarketingCampaignWhereInput = {
     AND?: MarketingCampaignWhereInput | MarketingCampaignWhereInput[]
     OR?: MarketingCampaignWhereInput[]
@@ -47514,6 +48934,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
     apify_usage_logs?: ApifyUsageLogCreateNestedManyWithoutUserInput
+    message_templates?: MessageTemplateCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -47542,6 +48963,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
     apify_usage_logs?: ApifyUsageLogUncheckedCreateNestedManyWithoutUserInput
+    message_templates?: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -47569,6 +48991,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
     apify_usage_logs?: ApifyUsageLogUpdateManyWithoutUserNestedInput
+    message_templates?: MessageTemplateUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -47597,6 +49020,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
     apify_usage_logs?: ApifyUsageLogUncheckedUpdateManyWithoutUserNestedInput
+    message_templates?: MessageTemplateUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -49405,6 +50829,107 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type MessageTemplateCreateInput = {
+    uuid?: string
+    name: string
+    channels?: MessageTemplateCreatechannelsInput | $Enums.Channel[]
+    email_subject?: string | null
+    email_content?: string | null
+    sms_content?: string | null
+    source_campaign_uuid?: string | null
+    source_message_uuid?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    user: UserCreateNestedOneWithoutMessage_templatesInput
+  }
+
+  export type MessageTemplateUncheckedCreateInput = {
+    id?: number
+    uuid?: string
+    user_uuid: string
+    name: string
+    channels?: MessageTemplateCreatechannelsInput | $Enums.Channel[]
+    email_subject?: string | null
+    email_content?: string | null
+    sms_content?: string | null
+    source_campaign_uuid?: string | null
+    source_message_uuid?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type MessageTemplateUpdateInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    channels?: MessageTemplateUpdatechannelsInput | $Enums.Channel[]
+    email_subject?: NullableStringFieldUpdateOperationsInput | string | null
+    email_content?: NullableStringFieldUpdateOperationsInput | string | null
+    sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    source_campaign_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    source_message_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutMessage_templatesNestedInput
+  }
+
+  export type MessageTemplateUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    channels?: MessageTemplateUpdatechannelsInput | $Enums.Channel[]
+    email_subject?: NullableStringFieldUpdateOperationsInput | string | null
+    email_content?: NullableStringFieldUpdateOperationsInput | string | null
+    sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    source_campaign_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    source_message_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MessageTemplateCreateManyInput = {
+    id?: number
+    uuid?: string
+    user_uuid: string
+    name: string
+    channels?: MessageTemplateCreatechannelsInput | $Enums.Channel[]
+    email_subject?: string | null
+    email_content?: string | null
+    sms_content?: string | null
+    source_campaign_uuid?: string | null
+    source_message_uuid?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type MessageTemplateUpdateManyMutationInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    channels?: MessageTemplateUpdatechannelsInput | $Enums.Channel[]
+    email_subject?: NullableStringFieldUpdateOperationsInput | string | null
+    email_content?: NullableStringFieldUpdateOperationsInput | string | null
+    sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    source_campaign_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    source_message_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MessageTemplateUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    channels?: MessageTemplateUpdatechannelsInput | $Enums.Channel[]
+    email_subject?: NullableStringFieldUpdateOperationsInput | string | null
+    email_content?: NullableStringFieldUpdateOperationsInput | string | null
+    sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    source_campaign_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    source_message_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type MarketingCampaignCreateInput = {
     uuid?: string
     name: string
@@ -51094,6 +52619,12 @@ export namespace Prisma {
     none?: ApifyUsageLogWhereInput
   }
 
+  export type MessageTemplateListRelationFilter = {
+    every?: MessageTemplateWhereInput
+    some?: MessageTemplateWhereInput
+    none?: MessageTemplateWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -51164,6 +52695,10 @@ export namespace Prisma {
   }
 
   export type ApifyUsageLogOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type MessageTemplateOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -52700,6 +54235,57 @@ export namespace Prisma {
     id?: SortOrder
   }
 
+  export type MessageTemplateCountOrderByAggregateInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    user_uuid?: SortOrder
+    name?: SortOrder
+    channels?: SortOrder
+    email_subject?: SortOrder
+    email_content?: SortOrder
+    sms_content?: SortOrder
+    source_campaign_uuid?: SortOrder
+    source_message_uuid?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type MessageTemplateAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type MessageTemplateMaxOrderByAggregateInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    user_uuid?: SortOrder
+    name?: SortOrder
+    email_subject?: SortOrder
+    email_content?: SortOrder
+    sms_content?: SortOrder
+    source_campaign_uuid?: SortOrder
+    source_message_uuid?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type MessageTemplateMinOrderByAggregateInput = {
+    id?: SortOrder
+    uuid?: SortOrder
+    user_uuid?: SortOrder
+    name?: SortOrder
+    email_subject?: SortOrder
+    email_content?: SortOrder
+    sms_content?: SortOrder
+    source_campaign_uuid?: SortOrder
+    source_message_uuid?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type MessageTemplateSumOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
   export type EnumCampaignStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.CampaignStatus | EnumCampaignStatusFieldRefInput<$PrismaModel>
     in?: $Enums.CampaignStatus[] | ListEnumCampaignStatusFieldRefInput<$PrismaModel>
@@ -54007,6 +55593,13 @@ export namespace Prisma {
     connect?: ApifyUsageLogWhereUniqueInput | ApifyUsageLogWhereUniqueInput[]
   }
 
+  export type MessageTemplateCreateNestedManyWithoutUserInput = {
+    create?: XOR<MessageTemplateCreateWithoutUserInput, MessageTemplateUncheckedCreateWithoutUserInput> | MessageTemplateCreateWithoutUserInput[] | MessageTemplateUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: MessageTemplateCreateOrConnectWithoutUserInput | MessageTemplateCreateOrConnectWithoutUserInput[]
+    createMany?: MessageTemplateCreateManyUserInputEnvelope
+    connect?: MessageTemplateWhereUniqueInput | MessageTemplateWhereUniqueInput[]
+  }
+
   export type FilterUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<FilterCreateWithoutUserInput, FilterUncheckedCreateWithoutUserInput> | FilterCreateWithoutUserInput[] | FilterUncheckedCreateWithoutUserInput[]
     connectOrCreate?: FilterCreateOrConnectWithoutUserInput | FilterCreateOrConnectWithoutUserInput[]
@@ -54124,6 +55717,13 @@ export namespace Prisma {
     connectOrCreate?: ApifyUsageLogCreateOrConnectWithoutUserInput | ApifyUsageLogCreateOrConnectWithoutUserInput[]
     createMany?: ApifyUsageLogCreateManyUserInputEnvelope
     connect?: ApifyUsageLogWhereUniqueInput | ApifyUsageLogWhereUniqueInput[]
+  }
+
+  export type MessageTemplateUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<MessageTemplateCreateWithoutUserInput, MessageTemplateUncheckedCreateWithoutUserInput> | MessageTemplateCreateWithoutUserInput[] | MessageTemplateUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: MessageTemplateCreateOrConnectWithoutUserInput | MessageTemplateCreateOrConnectWithoutUserInput[]
+    createMany?: MessageTemplateCreateManyUserInputEnvelope
+    connect?: MessageTemplateWhereUniqueInput | MessageTemplateWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -54380,6 +55980,20 @@ export namespace Prisma {
     deleteMany?: ApifyUsageLogScalarWhereInput | ApifyUsageLogScalarWhereInput[]
   }
 
+  export type MessageTemplateUpdateManyWithoutUserNestedInput = {
+    create?: XOR<MessageTemplateCreateWithoutUserInput, MessageTemplateUncheckedCreateWithoutUserInput> | MessageTemplateCreateWithoutUserInput[] | MessageTemplateUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: MessageTemplateCreateOrConnectWithoutUserInput | MessageTemplateCreateOrConnectWithoutUserInput[]
+    upsert?: MessageTemplateUpsertWithWhereUniqueWithoutUserInput | MessageTemplateUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: MessageTemplateCreateManyUserInputEnvelope
+    set?: MessageTemplateWhereUniqueInput | MessageTemplateWhereUniqueInput[]
+    disconnect?: MessageTemplateWhereUniqueInput | MessageTemplateWhereUniqueInput[]
+    delete?: MessageTemplateWhereUniqueInput | MessageTemplateWhereUniqueInput[]
+    connect?: MessageTemplateWhereUniqueInput | MessageTemplateWhereUniqueInput[]
+    update?: MessageTemplateUpdateWithWhereUniqueWithoutUserInput | MessageTemplateUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: MessageTemplateUpdateManyWithWhereWithoutUserInput | MessageTemplateUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: MessageTemplateScalarWhereInput | MessageTemplateScalarWhereInput[]
+  }
+
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -54624,6 +56238,20 @@ export namespace Prisma {
     update?: ApifyUsageLogUpdateWithWhereUniqueWithoutUserInput | ApifyUsageLogUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: ApifyUsageLogUpdateManyWithWhereWithoutUserInput | ApifyUsageLogUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: ApifyUsageLogScalarWhereInput | ApifyUsageLogScalarWhereInput[]
+  }
+
+  export type MessageTemplateUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<MessageTemplateCreateWithoutUserInput, MessageTemplateUncheckedCreateWithoutUserInput> | MessageTemplateCreateWithoutUserInput[] | MessageTemplateUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: MessageTemplateCreateOrConnectWithoutUserInput | MessageTemplateCreateOrConnectWithoutUserInput[]
+    upsert?: MessageTemplateUpsertWithWhereUniqueWithoutUserInput | MessageTemplateUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: MessageTemplateCreateManyUserInputEnvelope
+    set?: MessageTemplateWhereUniqueInput | MessageTemplateWhereUniqueInput[]
+    disconnect?: MessageTemplateWhereUniqueInput | MessageTemplateWhereUniqueInput[]
+    delete?: MessageTemplateWhereUniqueInput | MessageTemplateWhereUniqueInput[]
+    connect?: MessageTemplateWhereUniqueInput | MessageTemplateWhereUniqueInput[]
+    update?: MessageTemplateUpdateWithWhereUniqueWithoutUserInput | MessageTemplateUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: MessageTemplateUpdateManyWithWhereWithoutUserInput | MessageTemplateUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: MessageTemplateScalarWhereInput | MessageTemplateScalarWhereInput[]
   }
 
   export type FilterCreateenrichment_sourcesInput = {
@@ -56040,6 +57668,29 @@ export namespace Prisma {
     update?: MarketingCampaignUpdateWithWhereUniqueWithoutSender_profileInput | MarketingCampaignUpdateWithWhereUniqueWithoutSender_profileInput[]
     updateMany?: MarketingCampaignUpdateManyWithWhereWithoutSender_profileInput | MarketingCampaignUpdateManyWithWhereWithoutSender_profileInput[]
     deleteMany?: MarketingCampaignScalarWhereInput | MarketingCampaignScalarWhereInput[]
+  }
+
+  export type MessageTemplateCreatechannelsInput = {
+    set: $Enums.Channel[]
+  }
+
+  export type UserCreateNestedOneWithoutMessage_templatesInput = {
+    create?: XOR<UserCreateWithoutMessage_templatesInput, UserUncheckedCreateWithoutMessage_templatesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutMessage_templatesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type MessageTemplateUpdatechannelsInput = {
+    set?: $Enums.Channel[]
+    push?: $Enums.Channel | $Enums.Channel[]
+  }
+
+  export type UserUpdateOneRequiredWithoutMessage_templatesNestedInput = {
+    create?: XOR<UserCreateWithoutMessage_templatesInput, UserUncheckedCreateWithoutMessage_templatesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutMessage_templatesInput
+    upsert?: UserUpsertWithoutMessage_templatesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutMessage_templatesInput, UserUpdateWithoutMessage_templatesInput>, UserUncheckedUpdateWithoutMessage_templatesInput>
   }
 
   export type MarketingCampaignCreatechannelsInput = {
@@ -58306,6 +59957,43 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type MessageTemplateCreateWithoutUserInput = {
+    uuid?: string
+    name: string
+    channels?: MessageTemplateCreatechannelsInput | $Enums.Channel[]
+    email_subject?: string | null
+    email_content?: string | null
+    sms_content?: string | null
+    source_campaign_uuid?: string | null
+    source_message_uuid?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type MessageTemplateUncheckedCreateWithoutUserInput = {
+    id?: number
+    uuid?: string
+    name: string
+    channels?: MessageTemplateCreatechannelsInput | $Enums.Channel[]
+    email_subject?: string | null
+    email_content?: string | null
+    sms_content?: string | null
+    source_campaign_uuid?: string | null
+    source_message_uuid?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type MessageTemplateCreateOrConnectWithoutUserInput = {
+    where: MessageTemplateWhereUniqueInput
+    create: XOR<MessageTemplateCreateWithoutUserInput, MessageTemplateUncheckedCreateWithoutUserInput>
+  }
+
+  export type MessageTemplateCreateManyUserInputEnvelope = {
+    data: MessageTemplateCreateManyUserInput | MessageTemplateCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type FilterUpsertWithWhereUniqueWithoutUserInput = {
     where: FilterWhereUniqueInput
     update: XOR<FilterUpdateWithoutUserInput, FilterUncheckedUpdateWithoutUserInput>
@@ -58940,6 +60628,40 @@ export namespace Prisma {
     created_at?: DateTimeFilter<"ApifyUsageLog"> | Date | string
   }
 
+  export type MessageTemplateUpsertWithWhereUniqueWithoutUserInput = {
+    where: MessageTemplateWhereUniqueInput
+    update: XOR<MessageTemplateUpdateWithoutUserInput, MessageTemplateUncheckedUpdateWithoutUserInput>
+    create: XOR<MessageTemplateCreateWithoutUserInput, MessageTemplateUncheckedCreateWithoutUserInput>
+  }
+
+  export type MessageTemplateUpdateWithWhereUniqueWithoutUserInput = {
+    where: MessageTemplateWhereUniqueInput
+    data: XOR<MessageTemplateUpdateWithoutUserInput, MessageTemplateUncheckedUpdateWithoutUserInput>
+  }
+
+  export type MessageTemplateUpdateManyWithWhereWithoutUserInput = {
+    where: MessageTemplateScalarWhereInput
+    data: XOR<MessageTemplateUpdateManyMutationInput, MessageTemplateUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type MessageTemplateScalarWhereInput = {
+    AND?: MessageTemplateScalarWhereInput | MessageTemplateScalarWhereInput[]
+    OR?: MessageTemplateScalarWhereInput[]
+    NOT?: MessageTemplateScalarWhereInput | MessageTemplateScalarWhereInput[]
+    id?: IntFilter<"MessageTemplate"> | number
+    uuid?: StringFilter<"MessageTemplate"> | string
+    user_uuid?: StringFilter<"MessageTemplate"> | string
+    name?: StringFilter<"MessageTemplate"> | string
+    channels?: EnumChannelNullableListFilter<"MessageTemplate">
+    email_subject?: StringNullableFilter<"MessageTemplate"> | string | null
+    email_content?: StringNullableFilter<"MessageTemplate"> | string | null
+    sms_content?: StringNullableFilter<"MessageTemplate"> | string | null
+    source_campaign_uuid?: StringNullableFilter<"MessageTemplate"> | string | null
+    source_message_uuid?: StringNullableFilter<"MessageTemplate"> | string | null
+    created_at?: DateTimeFilter<"MessageTemplate"> | Date | string
+    updated_at?: DateTimeFilter<"MessageTemplate"> | Date | string
+  }
+
   export type UserCreateWithoutFiltersInput = {
     uuid?: string
     email: string
@@ -58964,6 +60686,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
     apify_usage_logs?: ApifyUsageLogCreateNestedManyWithoutUserInput
+    message_templates?: MessageTemplateCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutFiltersInput = {
@@ -58991,6 +60714,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
     apify_usage_logs?: ApifyUsageLogUncheckedCreateNestedManyWithoutUserInput
+    message_templates?: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutFiltersInput = {
@@ -59251,6 +60975,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
     apify_usage_logs?: ApifyUsageLogUpdateManyWithoutUserNestedInput
+    message_templates?: MessageTemplateUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFiltersInput = {
@@ -59278,6 +61003,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
     apify_usage_logs?: ApifyUsageLogUncheckedUpdateManyWithoutUserNestedInput
+    message_templates?: MessageTemplateUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type RawLeadUpsertWithWhereUniqueWithoutFilterInput = {
@@ -59425,6 +61151,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
     apify_usage_logs?: ApifyUsageLogCreateNestedManyWithoutUserInput
+    message_templates?: MessageTemplateCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutScoring_instructionsInput = {
@@ -59452,6 +61179,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
     apify_usage_logs?: ApifyUsageLogUncheckedCreateNestedManyWithoutUserInput
+    message_templates?: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutScoring_instructionsInput = {
@@ -59537,6 +61265,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
     apify_usage_logs?: ApifyUsageLogUpdateManyWithoutUserNestedInput
+    message_templates?: MessageTemplateUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutScoring_instructionsInput = {
@@ -59564,6 +61293,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
     apify_usage_logs?: ApifyUsageLogUncheckedUpdateManyWithoutUserNestedInput
+    message_templates?: MessageTemplateUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type FilterScoringInstructionUpsertWithWhereUniqueWithoutScoring_instructionInput = {
@@ -60325,6 +62055,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
     apify_usage_logs?: ApifyUsageLogCreateNestedManyWithoutUserInput
+    message_templates?: MessageTemplateCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutContactsInput = {
@@ -60352,6 +62083,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
     apify_usage_logs?: ApifyUsageLogUncheckedCreateNestedManyWithoutUserInput
+    message_templates?: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutContactsInput = {
@@ -60793,6 +62525,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
     apify_usage_logs?: ApifyUsageLogUpdateManyWithoutUserNestedInput
+    message_templates?: MessageTemplateUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutContactsInput = {
@@ -60820,6 +62553,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
     apify_usage_logs?: ApifyUsageLogUncheckedUpdateManyWithoutUserNestedInput
+    message_templates?: MessageTemplateUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type LeadUpsertWithoutContactsInput = {
@@ -61528,6 +63262,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
     apify_usage_logs?: ApifyUsageLogCreateNestedManyWithoutUserInput
+    message_templates?: MessageTemplateCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutContact_listsInput = {
@@ -61555,6 +63290,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
     apify_usage_logs?: ApifyUsageLogUncheckedCreateNestedManyWithoutUserInput
+    message_templates?: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutContact_listsInput = {
@@ -61669,6 +63405,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
     apify_usage_logs?: ApifyUsageLogUpdateManyWithoutUserNestedInput
+    message_templates?: MessageTemplateUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutContact_listsInput = {
@@ -61696,6 +63433,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
     apify_usage_logs?: ApifyUsageLogUncheckedUpdateManyWithoutUserNestedInput
+    message_templates?: MessageTemplateUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ContactListMemberUpsertWithWhereUniqueWithoutListInput = {
@@ -62204,6 +63942,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
     apify_usage_logs?: ApifyUsageLogCreateNestedManyWithoutUserInput
+    message_templates?: MessageTemplateCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutInteractionsInput = {
@@ -62231,6 +63970,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
     apify_usage_logs?: ApifyUsageLogUncheckedCreateNestedManyWithoutUserInput
+    message_templates?: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutInteractionsInput = {
@@ -62503,6 +64243,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
     apify_usage_logs?: ApifyUsageLogUpdateManyWithoutUserNestedInput
+    message_templates?: MessageTemplateUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutInteractionsInput = {
@@ -62530,6 +64271,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
     apify_usage_logs?: ApifyUsageLogUncheckedUpdateManyWithoutUserNestedInput
+    message_templates?: MessageTemplateUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type OutreachMessageUpsertWithoutInteractionInput = {
@@ -62716,6 +64458,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
     apify_usage_logs?: ApifyUsageLogCreateNestedManyWithoutUserInput
+    message_templates?: MessageTemplateCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOutreach_messagesInput = {
@@ -62743,6 +64486,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
     apify_usage_logs?: ApifyUsageLogUncheckedCreateNestedManyWithoutUserInput
+    message_templates?: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOutreach_messagesInput = {
@@ -62983,6 +64727,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
     apify_usage_logs?: ApifyUsageLogUpdateManyWithoutUserNestedInput
+    message_templates?: MessageTemplateUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOutreach_messagesInput = {
@@ -63010,6 +64755,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
     apify_usage_logs?: ApifyUsageLogUncheckedUpdateManyWithoutUserNestedInput
+    message_templates?: MessageTemplateUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ContactUpsertWithoutOutreach_messagesInput = {
@@ -63252,6 +64998,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
     apify_usage_logs?: ApifyUsageLogCreateNestedManyWithoutUserInput
+    message_templates?: MessageTemplateCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOutreach_sequencesInput = {
@@ -63279,6 +65026,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
     apify_usage_logs?: ApifyUsageLogUncheckedCreateNestedManyWithoutUserInput
+    message_templates?: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOutreach_sequencesInput = {
@@ -63321,6 +65069,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
     apify_usage_logs?: ApifyUsageLogUpdateManyWithoutUserNestedInput
+    message_templates?: MessageTemplateUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOutreach_sequencesInput = {
@@ -63348,6 +65097,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
     apify_usage_logs?: ApifyUsageLogUncheckedUpdateManyWithoutUserNestedInput
+    message_templates?: MessageTemplateUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type FilterCreateWithoutJobsInput = {
@@ -63468,6 +65218,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
     apify_usage_logs?: ApifyUsageLogCreateNestedManyWithoutUserInput
+    message_templates?: MessageTemplateCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSender_profilesInput = {
@@ -63495,6 +65246,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
     apify_usage_logs?: ApifyUsageLogUncheckedCreateNestedManyWithoutUserInput
+    message_templates?: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSender_profilesInput = {
@@ -63632,6 +65384,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
     apify_usage_logs?: ApifyUsageLogUpdateManyWithoutUserNestedInput
+    message_templates?: MessageTemplateUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSender_profilesInput = {
@@ -63659,6 +65412,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
     apify_usage_logs?: ApifyUsageLogUncheckedUpdateManyWithoutUserNestedInput
+    message_templates?: MessageTemplateUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type MarketingCampaignUpsertWithWhereUniqueWithoutSender_profileInput = {
@@ -63675,6 +65429,132 @@ export namespace Prisma {
   export type MarketingCampaignUpdateManyWithWhereWithoutSender_profileInput = {
     where: MarketingCampaignScalarWhereInput
     data: XOR<MarketingCampaignUpdateManyMutationInput, MarketingCampaignUncheckedUpdateManyWithoutSender_profileInput>
+  }
+
+  export type UserCreateWithoutMessage_templatesInput = {
+    uuid?: string
+    email: string
+    phone?: string | null
+    password: string
+    role?: $Enums.AuthRole
+    created_at?: Date | string
+    updated_at?: Date | string
+    filters?: FilterCreateNestedManyWithoutUserInput
+    contacts?: ContactCreateNestedManyWithoutUserInput
+    outreach_messages?: OutreachMessageCreateNestedManyWithoutUserInput
+    outreach_sequences?: OutreachSequenceCreateNestedManyWithoutUserInput
+    interactions?: InteractionCreateNestedManyWithoutUserInput
+    sender_profiles?: SenderProfileCreateNestedManyWithoutUserInput
+    marketing_campaigns?: MarketingCampaignCreateNestedManyWithoutUserInput
+    scoring_instructions?: ScoringInstructionCreateNestedManyWithoutUserInput
+    openai_batch_jobs?: OpenAiBatchJobCreateNestedManyWithoutUserInput
+    integrations?: IntegrationCreateNestedManyWithoutUserInput
+    reminders?: ReminderCreateNestedManyWithoutUserInput
+    forms?: FormCreateNestedManyWithoutUserInput
+    form_completions?: FormCompletionCreateNestedManyWithoutCompleted_byInput
+    contact_lists?: ContactListCreateNestedManyWithoutUserInput
+    contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
+    ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
+    apify_usage_logs?: ApifyUsageLogCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutMessage_templatesInput = {
+    id?: number
+    uuid?: string
+    email: string
+    phone?: string | null
+    password: string
+    role?: $Enums.AuthRole
+    created_at?: Date | string
+    updated_at?: Date | string
+    filters?: FilterUncheckedCreateNestedManyWithoutUserInput
+    contacts?: ContactUncheckedCreateNestedManyWithoutUserInput
+    outreach_messages?: OutreachMessageUncheckedCreateNestedManyWithoutUserInput
+    outreach_sequences?: OutreachSequenceUncheckedCreateNestedManyWithoutUserInput
+    interactions?: InteractionUncheckedCreateNestedManyWithoutUserInput
+    sender_profiles?: SenderProfileUncheckedCreateNestedManyWithoutUserInput
+    marketing_campaigns?: MarketingCampaignUncheckedCreateNestedManyWithoutUserInput
+    scoring_instructions?: ScoringInstructionUncheckedCreateNestedManyWithoutUserInput
+    openai_batch_jobs?: OpenAiBatchJobUncheckedCreateNestedManyWithoutUserInput
+    integrations?: IntegrationUncheckedCreateNestedManyWithoutUserInput
+    reminders?: ReminderUncheckedCreateNestedManyWithoutUserInput
+    forms?: FormUncheckedCreateNestedManyWithoutUserInput
+    form_completions?: FormCompletionUncheckedCreateNestedManyWithoutCompleted_byInput
+    contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
+    contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
+    ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
+    apify_usage_logs?: ApifyUsageLogUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutMessage_templatesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutMessage_templatesInput, UserUncheckedCreateWithoutMessage_templatesInput>
+  }
+
+  export type UserUpsertWithoutMessage_templatesInput = {
+    update: XOR<UserUpdateWithoutMessage_templatesInput, UserUncheckedUpdateWithoutMessage_templatesInput>
+    create: XOR<UserCreateWithoutMessage_templatesInput, UserUncheckedCreateWithoutMessage_templatesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutMessage_templatesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutMessage_templatesInput, UserUncheckedUpdateWithoutMessage_templatesInput>
+  }
+
+  export type UserUpdateWithoutMessage_templatesInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    filters?: FilterUpdateManyWithoutUserNestedInput
+    contacts?: ContactUpdateManyWithoutUserNestedInput
+    outreach_messages?: OutreachMessageUpdateManyWithoutUserNestedInput
+    outreach_sequences?: OutreachSequenceUpdateManyWithoutUserNestedInput
+    interactions?: InteractionUpdateManyWithoutUserNestedInput
+    sender_profiles?: SenderProfileUpdateManyWithoutUserNestedInput
+    marketing_campaigns?: MarketingCampaignUpdateManyWithoutUserNestedInput
+    scoring_instructions?: ScoringInstructionUpdateManyWithoutUserNestedInput
+    openai_batch_jobs?: OpenAiBatchJobUpdateManyWithoutUserNestedInput
+    integrations?: IntegrationUpdateManyWithoutUserNestedInput
+    reminders?: ReminderUpdateManyWithoutUserNestedInput
+    forms?: FormUpdateManyWithoutUserNestedInput
+    form_completions?: FormCompletionUpdateManyWithoutCompleted_byNestedInput
+    contact_lists?: ContactListUpdateManyWithoutUserNestedInput
+    contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
+    ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
+    apify_usage_logs?: ApifyUsageLogUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutMessage_templatesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    filters?: FilterUncheckedUpdateManyWithoutUserNestedInput
+    contacts?: ContactUncheckedUpdateManyWithoutUserNestedInput
+    outreach_messages?: OutreachMessageUncheckedUpdateManyWithoutUserNestedInput
+    outreach_sequences?: OutreachSequenceUncheckedUpdateManyWithoutUserNestedInput
+    interactions?: InteractionUncheckedUpdateManyWithoutUserNestedInput
+    sender_profiles?: SenderProfileUncheckedUpdateManyWithoutUserNestedInput
+    marketing_campaigns?: MarketingCampaignUncheckedUpdateManyWithoutUserNestedInput
+    scoring_instructions?: ScoringInstructionUncheckedUpdateManyWithoutUserNestedInput
+    openai_batch_jobs?: OpenAiBatchJobUncheckedUpdateManyWithoutUserNestedInput
+    integrations?: IntegrationUncheckedUpdateManyWithoutUserNestedInput
+    reminders?: ReminderUncheckedUpdateManyWithoutUserNestedInput
+    forms?: FormUncheckedUpdateManyWithoutUserNestedInput
+    form_completions?: FormCompletionUncheckedUpdateManyWithoutCompleted_byNestedInput
+    contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
+    contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
+    ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
+    apify_usage_logs?: ApifyUsageLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutMarketing_campaignsInput = {
@@ -63701,6 +65581,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
     apify_usage_logs?: ApifyUsageLogCreateNestedManyWithoutUserInput
+    message_templates?: MessageTemplateCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutMarketing_campaignsInput = {
@@ -63728,6 +65609,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
     apify_usage_logs?: ApifyUsageLogUncheckedCreateNestedManyWithoutUserInput
+    message_templates?: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutMarketing_campaignsInput = {
@@ -63963,6 +65845,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
     apify_usage_logs?: ApifyUsageLogUpdateManyWithoutUserNestedInput
+    message_templates?: MessageTemplateUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMarketing_campaignsInput = {
@@ -63990,6 +65873,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
     apify_usage_logs?: ApifyUsageLogUncheckedUpdateManyWithoutUserNestedInput
+    message_templates?: MessageTemplateUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type SenderProfileUpsertWithoutMarketing_campaignsInput = {
@@ -64472,6 +66356,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
     apify_usage_logs?: ApifyUsageLogCreateNestedManyWithoutUserInput
+    message_templates?: MessageTemplateCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOpenai_batch_jobsInput = {
@@ -64499,6 +66384,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
     apify_usage_logs?: ApifyUsageLogUncheckedCreateNestedManyWithoutUserInput
+    message_templates?: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOpenai_batch_jobsInput = {
@@ -64541,6 +66427,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
     apify_usage_logs?: ApifyUsageLogUpdateManyWithoutUserNestedInput
+    message_templates?: MessageTemplateUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOpenai_batch_jobsInput = {
@@ -64568,6 +66455,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
     apify_usage_logs?: ApifyUsageLogUncheckedUpdateManyWithoutUserNestedInput
+    message_templates?: MessageTemplateUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutIntegrationsInput = {
@@ -64594,6 +66482,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
     apify_usage_logs?: ApifyUsageLogCreateNestedManyWithoutUserInput
+    message_templates?: MessageTemplateCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutIntegrationsInput = {
@@ -64621,6 +66510,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
     apify_usage_logs?: ApifyUsageLogUncheckedCreateNestedManyWithoutUserInput
+    message_templates?: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutIntegrationsInput = {
@@ -64694,6 +66584,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
     apify_usage_logs?: ApifyUsageLogUpdateManyWithoutUserNestedInput
+    message_templates?: MessageTemplateUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutIntegrationsInput = {
@@ -64721,6 +66612,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
     apify_usage_logs?: ApifyUsageLogUncheckedUpdateManyWithoutUserNestedInput
+    message_templates?: MessageTemplateUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type IntegrationKeyUpsertWithWhereUniqueWithoutIntegrationInput = {
@@ -64836,6 +66728,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
     apify_usage_logs?: ApifyUsageLogCreateNestedManyWithoutUserInput
+    message_templates?: MessageTemplateCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutRemindersInput = {
@@ -64863,6 +66756,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
     apify_usage_logs?: ApifyUsageLogUncheckedCreateNestedManyWithoutUserInput
+    message_templates?: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutRemindersInput = {
@@ -64981,6 +66875,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
     apify_usage_logs?: ApifyUsageLogUpdateManyWithoutUserNestedInput
+    message_templates?: MessageTemplateUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRemindersInput = {
@@ -65008,6 +66903,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
     apify_usage_logs?: ApifyUsageLogUncheckedUpdateManyWithoutUserNestedInput
+    message_templates?: MessageTemplateUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ContactUpsertWithoutRemindersInput = {
@@ -65116,6 +67012,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
     apify_usage_logs?: ApifyUsageLogCreateNestedManyWithoutUserInput
+    message_templates?: MessageTemplateCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutFormsInput = {
@@ -65143,6 +67040,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
     apify_usage_logs?: ApifyUsageLogUncheckedCreateNestedManyWithoutUserInput
+    message_templates?: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutFormsInput = {
@@ -65257,6 +67155,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
     apify_usage_logs?: ApifyUsageLogUpdateManyWithoutUserNestedInput
+    message_templates?: MessageTemplateUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFormsInput = {
@@ -65284,6 +67183,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
     apify_usage_logs?: ApifyUsageLogUncheckedUpdateManyWithoutUserNestedInput
+    message_templates?: MessageTemplateUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type FormFieldUpsertWithWhereUniqueWithoutFormInput = {
@@ -65578,6 +67478,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
     apify_usage_logs?: ApifyUsageLogCreateNestedManyWithoutUserInput
+    message_templates?: MessageTemplateCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutForm_completionsInput = {
@@ -65605,6 +67506,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
     apify_usage_logs?: ApifyUsageLogUncheckedCreateNestedManyWithoutUserInput
+    message_templates?: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutForm_completionsInput = {
@@ -65788,6 +67690,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
     apify_usage_logs?: ApifyUsageLogUpdateManyWithoutUserNestedInput
+    message_templates?: MessageTemplateUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutForm_completionsInput = {
@@ -65815,6 +67718,7 @@ export namespace Prisma {
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
     apify_usage_logs?: ApifyUsageLogUncheckedUpdateManyWithoutUserNestedInput
+    message_templates?: MessageTemplateUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type FormCompletionValueUpsertWithWhereUniqueWithoutCompletionInput = {
@@ -65993,6 +67897,7 @@ export namespace Prisma {
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
     apify_usage_logs?: ApifyUsageLogCreateNestedManyWithoutUserInput
+    message_templates?: MessageTemplateCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutContact_audience_analysesInput = {
@@ -66020,6 +67925,7 @@ export namespace Prisma {
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
     apify_usage_logs?: ApifyUsageLogUncheckedCreateNestedManyWithoutUserInput
+    message_templates?: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutContact_audience_analysesInput = {
@@ -66132,6 +68038,7 @@ export namespace Prisma {
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
     apify_usage_logs?: ApifyUsageLogUpdateManyWithoutUserNestedInput
+    message_templates?: MessageTemplateUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutContact_audience_analysesInput = {
@@ -66159,6 +68066,7 @@ export namespace Prisma {
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
     apify_usage_logs?: ApifyUsageLogUncheckedUpdateManyWithoutUserNestedInput
+    message_templates?: MessageTemplateUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type FilterUpsertWithoutAudience_analysesInput = {
@@ -66267,6 +68175,7 @@ export namespace Prisma {
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
     apify_usage_logs?: ApifyUsageLogCreateNestedManyWithoutUserInput
+    message_templates?: MessageTemplateCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAi_usage_logsInput = {
@@ -66294,6 +68203,7 @@ export namespace Prisma {
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
     apify_usage_logs?: ApifyUsageLogUncheckedCreateNestedManyWithoutUserInput
+    message_templates?: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAi_usage_logsInput = {
@@ -66336,6 +68246,7 @@ export namespace Prisma {
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
     apify_usage_logs?: ApifyUsageLogUpdateManyWithoutUserNestedInput
+    message_templates?: MessageTemplateUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAi_usage_logsInput = {
@@ -66363,6 +68274,7 @@ export namespace Prisma {
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
     apify_usage_logs?: ApifyUsageLogUncheckedUpdateManyWithoutUserNestedInput
+    message_templates?: MessageTemplateUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutApify_usage_logsInput = {
@@ -66389,6 +68301,7 @@ export namespace Prisma {
     contact_lists?: ContactListCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogCreateNestedManyWithoutUserInput
+    message_templates?: MessageTemplateCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutApify_usage_logsInput = {
@@ -66416,6 +68329,7 @@ export namespace Prisma {
     contact_lists?: ContactListUncheckedCreateNestedManyWithoutUserInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedCreateNestedManyWithoutUserInput
     ai_usage_logs?: AiUsageLogUncheckedCreateNestedManyWithoutUserInput
+    message_templates?: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutApify_usage_logsInput = {
@@ -66458,6 +68372,7 @@ export namespace Prisma {
     contact_lists?: ContactListUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUpdateManyWithoutUserNestedInput
+    message_templates?: MessageTemplateUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutApify_usage_logsInput = {
@@ -66485,6 +68400,7 @@ export namespace Prisma {
     contact_lists?: ContactListUncheckedUpdateManyWithoutUserNestedInput
     contact_audience_analyses?: ContactAudienceAnalysisUncheckedUpdateManyWithoutUserNestedInput
     ai_usage_logs?: AiUsageLogUncheckedUpdateManyWithoutUserNestedInput
+    message_templates?: MessageTemplateUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type FilterCreateManyUserInput = {
@@ -66779,6 +68695,20 @@ export namespace Prisma {
     error_message?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
+  }
+
+  export type MessageTemplateCreateManyUserInput = {
+    id?: number
+    uuid?: string
+    name: string
+    channels?: MessageTemplateCreatechannelsInput | $Enums.Channel[]
+    email_subject?: string | null
+    email_content?: string | null
+    sms_content?: string | null
+    source_campaign_uuid?: string | null
+    source_message_uuid?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
   }
 
   export type FilterUpdateWithoutUserInput = {
@@ -67701,6 +69631,47 @@ export namespace Prisma {
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MessageTemplateUpdateWithoutUserInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    channels?: MessageTemplateUpdatechannelsInput | $Enums.Channel[]
+    email_subject?: NullableStringFieldUpdateOperationsInput | string | null
+    email_content?: NullableStringFieldUpdateOperationsInput | string | null
+    sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    source_campaign_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    source_message_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MessageTemplateUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    channels?: MessageTemplateUpdatechannelsInput | $Enums.Channel[]
+    email_subject?: NullableStringFieldUpdateOperationsInput | string | null
+    email_content?: NullableStringFieldUpdateOperationsInput | string | null
+    sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    source_campaign_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    source_message_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MessageTemplateUncheckedUpdateManyWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    channels?: MessageTemplateUpdatechannelsInput | $Enums.Channel[]
+    email_subject?: NullableStringFieldUpdateOperationsInput | string | null
+    email_content?: NullableStringFieldUpdateOperationsInput | string | null
+    sms_content?: NullableStringFieldUpdateOperationsInput | string | null
+    source_campaign_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    source_message_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type RawLeadCreateManyFilterInput = {
