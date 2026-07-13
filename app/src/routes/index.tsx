@@ -1,39 +1,58 @@
+import type { ReactNode } from "react";
+import { Suspense, lazy } from "react";
+import { Spinner } from "@heroui/react";
 import { Routes as ReactRoutes, Route, Navigate, useParams } from "react-router-dom";
 import { FilterDetailTabIds, ListDetailTabIds, Routes } from "@/routes/routes";
 import ProtectedRoute from "@/routes/protected-route";
 import { Permissions } from "@/config/permissions";
-import LandingPage from "@/pages/landing";
-import SignIn from "@/pages/auth/pages/sign-in";
-import SignUp from "@/pages/auth/pages/sign-up";
-import AuthLayout from "@/pages/auth/layout";
-import DashboardLayout from "@/pages/dashboard/layout";
-import DashboardHome from "@/pages/dashboard";
-import LeadsDirectoryPage from "@/pages/dashboard/pages/leads-directory";
-import LeadDirectoryDetailPage from "@/pages/dashboard/pages/leads-directory/pages/detail";
-import LeadsPage from "@/pages/dashboard/pages/leads";
-import FiltersPage from "@/pages/dashboard/pages/filters";
-import DashboardFiltersLayout from "@/pages/dashboard/pages/filters/layout";
-import NewFilterPage from "@/pages/dashboard/pages/filters/pages/new";
-import FilterDetailPage from "@/pages/dashboard/pages/filters/pages/detail";
-import ScoringInstructionsPage from "@/pages/dashboard/pages/filters/pages/scoring-instructions";
-import ContactsPage from "@/pages/dashboard/pages/contacts";
-import ContactDetailPage from "@/pages/dashboard/pages/contacts/pages/detail";
-import SenderProfilesPage from "@/pages/dashboard/pages/sender-profiles";
-import IntegrationsPage from "@/pages/dashboard/pages/integrations";
-import CampaignsPage from "@/pages/dashboard/pages/campaigns";
-import NewCampaignPage from "@/pages/dashboard/pages/campaigns/pages/new";
-import EditCampaignPage from "@/pages/dashboard/pages/campaigns/pages/edit";
-import CampaignDetailPage from "@/pages/dashboard/pages/campaigns/pages/detail";
-import SendHistoryPage from "@/pages/dashboard/pages/send-history";
-import MessageTemplatesPage from "@/pages/dashboard/pages/message-templates";
-import AdminBatchJobsPage from "@/pages/dashboard/pages/admin/batch-jobs";
-import AdminSystemStatusPage from "@/pages/dashboard/pages/admin/system-status";
-import SettingsUsagePage from "@/pages/dashboard/pages/settings/usage";
-import RemindersPage from "@/pages/dashboard/pages/reminders";
-import FormsPage from "@/pages/dashboard/pages/forms";
-import FormDetailPage from "@/pages/dashboard/pages/forms/pages/detail";
-import ListsPage from "@/pages/dashboard/pages/lists";
-import ListDetailPage from "@/pages/dashboard/pages/lists/pages/detail";
+
+const LandingPage = lazy(() => import("@/pages/landing"));
+const AuthLayout = lazy(() => import("@/pages/auth/layout"));
+const SignIn = lazy(() => import("@/pages/auth/pages/sign-in"));
+const SignUp = lazy(() => import("@/pages/auth/pages/sign-up"));
+
+const DashboardLayout = lazy(() => import("@/pages/dashboard/layout"));
+const DashboardHome = lazy(() => import("@/pages/dashboard"));
+const LeadsDirectoryPage = lazy(() => import("@/pages/dashboard/pages/leads-directory"));
+const LeadDirectoryDetailPage = lazy(() => import("@/pages/dashboard/pages/leads-directory/pages/detail"));
+const LeadsPage = lazy(() => import("@/pages/dashboard/pages/leads"));
+const ContactsPage = lazy(() => import("@/pages/dashboard/pages/contacts"));
+const ContactDetailPage = lazy(() => import("@/pages/dashboard/pages/contacts/pages/detail"));
+const ListsPage = lazy(() => import("@/pages/dashboard/pages/lists"));
+const ListDetailPage = lazy(() => import("@/pages/dashboard/pages/lists/pages/detail"));
+const RemindersPage = lazy(() => import("@/pages/dashboard/pages/reminders"));
+const FormsPage = lazy(() => import("@/pages/dashboard/pages/forms"));
+const FormDetailPage = lazy(() => import("@/pages/dashboard/pages/forms/pages/detail"));
+const SenderProfilesPage = lazy(() => import("@/pages/dashboard/pages/sender-profiles"));
+const IntegrationsPage = lazy(() => import("@/pages/dashboard/pages/integrations"));
+const CampaignsPage = lazy(() => import("@/pages/dashboard/pages/campaigns"));
+const NewCampaignPage = lazy(() => import("@/pages/dashboard/pages/campaigns/pages/new"));
+const EditCampaignPage = lazy(() => import("@/pages/dashboard/pages/campaigns/pages/edit"));
+const CampaignDetailPage = lazy(() => import("@/pages/dashboard/pages/campaigns/pages/detail"));
+const SendHistoryPage = lazy(() => import("@/pages/dashboard/pages/send-history"));
+const MessageTemplatesPage = lazy(() => import("@/pages/dashboard/pages/message-templates"));
+const SettingsUsagePage = lazy(() => import("@/pages/dashboard/pages/settings/usage"));
+
+const DashboardFiltersLayout = lazy(() => import("@/pages/dashboard/pages/filters/layout"));
+const FiltersPage = lazy(() => import("@/pages/dashboard/pages/filters"));
+const NewFilterPage = lazy(() => import("@/pages/dashboard/pages/filters/pages/new"));
+const FilterDetailPage = lazy(() => import("@/pages/dashboard/pages/filters/pages/detail"));
+const ScoringInstructionsPage = lazy(() => import("@/pages/dashboard/pages/filters/pages/scoring-instructions"));
+
+const AdminBatchJobsPage = lazy(() => import("@/pages/dashboard/pages/admin/batch-jobs"));
+const AdminSystemStatusPage = lazy(() => import("@/pages/dashboard/pages/admin/system-status"));
+
+function RouteFallback() {
+  return (
+    <div className="flex h-full min-h-0 flex-1 items-center justify-center p-6">
+      <Spinner size="lg" />
+    </div>
+  );
+}
+
+function Lazy({ children }: { children: ReactNode }) {
+  return <Suspense fallback={<RouteFallback />}>{children}</Suspense>;
+}
 
 function NavigateToFilterTab({ tab }: { tab: (typeof FilterDetailTabIds)[keyof typeof FilterDetailTabIds] }) {
   const { uuid } = useParams<{ uuid: string }>();
@@ -63,12 +82,28 @@ export default function AppRoutes() {
         path="/auth"
         element={
           <ProtectedRoute loggedIn={false}>
-            <AuthLayout />
+            <Lazy>
+              <AuthLayout />
+            </Lazy>
           </ProtectedRoute>
         }
       >
-        <Route path="sign-up" element={<SignUp />} />
-        <Route path="sign-in" element={<SignIn />} />
+        <Route
+          path="sign-up"
+          element={
+            <Lazy>
+              <SignUp />
+            </Lazy>
+          }
+        />
+        <Route
+          path="sign-in"
+          element={
+            <Lazy>
+              <SignIn />
+            </Lazy>
+          }
+        />
         <Route index element={<Navigate to={Routes.auth.sign_in} replace />} />
       </Route>
 
@@ -77,48 +112,227 @@ export default function AppRoutes() {
         path="/dashboard/*"
         element={
           <ProtectedRoute loggedIn={true}>
-            <DashboardLayout />
+            <Lazy>
+              <DashboardLayout />
+            </Lazy>
           </ProtectedRoute>
         }
       >
-        <Route index element={<DashboardHome />} />
-        <Route path="leads-directory" element={<LeadsDirectoryPage />} />
-        <Route path="leads-directory/:uuid" element={<LeadDirectoryDetailPage />} />
-        <Route path="leads" element={<LeadsPage />} />
-        <Route path="contacts" element={<ContactsPage />} />
-        <Route path="contacts/:uuid" element={<ContactDetailPage />} />
-        <Route path="lists" element={<ListsPage />} />
+        <Route
+          index
+          element={
+            <Lazy>
+              <DashboardHome />
+            </Lazy>
+          }
+        />
+        <Route
+          path="leads-directory"
+          element={
+            <Lazy>
+              <LeadsDirectoryPage />
+            </Lazy>
+          }
+        />
+        <Route
+          path="leads-directory/:uuid"
+          element={
+            <Lazy>
+              <LeadDirectoryDetailPage />
+            </Lazy>
+          }
+        />
+        <Route
+          path="leads"
+          element={
+            <Lazy>
+              <LeadsPage />
+            </Lazy>
+          }
+        />
+        <Route
+          path="contacts"
+          element={
+            <Lazy>
+              <ContactsPage />
+            </Lazy>
+          }
+        />
+        <Route
+          path="contacts/:uuid"
+          element={
+            <Lazy>
+              <ContactDetailPage />
+            </Lazy>
+          }
+        />
+        <Route
+          path="lists"
+          element={
+            <Lazy>
+              <ListsPage />
+            </Lazy>
+          }
+        />
         <Route path="lists/:uuid/analytics" element={<NavigateToListTab tab={ListDetailTabIds.ANALYTICS} />} />
         <Route path="lists/:uuid/contacts" element={<NavigateToListTab tab={ListDetailTabIds.CONTACTS} />} />
-        <Route path="lists/:uuid" element={<ListDetailPage />} />
-        <Route path="reminders" element={<RemindersPage />} />
-        <Route path="forms" element={<FormsPage />} />
-        <Route path="forms/:uuid" element={<FormDetailPage />} />
-        <Route path="sender-profiles" element={<SenderProfilesPage />} />
-        <Route path="integrations" element={<IntegrationsPage />} />
+        <Route
+          path="lists/:uuid"
+          element={
+            <Lazy>
+              <ListDetailPage />
+            </Lazy>
+          }
+        />
+        <Route
+          path="reminders"
+          element={
+            <Lazy>
+              <RemindersPage />
+            </Lazy>
+          }
+        />
+        <Route
+          path="forms"
+          element={
+            <Lazy>
+              <FormsPage />
+            </Lazy>
+          }
+        />
+        <Route
+          path="forms/:uuid"
+          element={
+            <Lazy>
+              <FormDetailPage />
+            </Lazy>
+          }
+        />
+        <Route
+          path="sender-profiles"
+          element={
+            <Lazy>
+              <SenderProfilesPage />
+            </Lazy>
+          }
+        />
+        <Route
+          path="integrations"
+          element={
+            <Lazy>
+              <IntegrationsPage />
+            </Lazy>
+          }
+        />
         <Route path="settings" element={<Navigate to={Routes.dashboard.settings_usage} replace />} />
-        <Route path="settings/usage" element={<SettingsUsagePage />} />
-        <Route path="campaigns" element={<CampaignsPage />} />
-        <Route path="campaigns/new" element={<NewCampaignPage />} />
-        <Route path="campaigns/:uuid" element={<CampaignDetailPage />} />
-        <Route path="campaigns/:uuid/edit" element={<EditCampaignPage />} />
-        <Route path="send-history" element={<SendHistoryPage />} />
-        <Route path="message-templates" element={<MessageTemplatesPage />} />
-        <Route path="filters" element={<DashboardFiltersLayout />}>
-          <Route index element={<FiltersPage />} />
-          <Route path="new" element={<NewFilterPage />} />
-          <Route path="scoring-instructions" element={<ScoringInstructionsPage />} />
+        <Route
+          path="settings/usage"
+          element={
+            <Lazy>
+              <SettingsUsagePage />
+            </Lazy>
+          }
+        />
+        <Route
+          path="campaigns"
+          element={
+            <Lazy>
+              <CampaignsPage />
+            </Lazy>
+          }
+        />
+        <Route
+          path="campaigns/new"
+          element={
+            <Lazy>
+              <NewCampaignPage />
+            </Lazy>
+          }
+        />
+        <Route
+          path="campaigns/:uuid"
+          element={
+            <Lazy>
+              <CampaignDetailPage />
+            </Lazy>
+          }
+        />
+        <Route
+          path="campaigns/:uuid/edit"
+          element={
+            <Lazy>
+              <EditCampaignPage />
+            </Lazy>
+          }
+        />
+        <Route
+          path="send-history"
+          element={
+            <Lazy>
+              <SendHistoryPage />
+            </Lazy>
+          }
+        />
+        <Route
+          path="message-templates"
+          element={
+            <Lazy>
+              <MessageTemplatesPage />
+            </Lazy>
+          }
+        />
+        <Route
+          path="filters"
+          element={
+            <Lazy>
+              <DashboardFiltersLayout />
+            </Lazy>
+          }
+        >
+          <Route
+            index
+            element={
+              <Lazy>
+                <FiltersPage />
+              </Lazy>
+            }
+          />
+          <Route
+            path="new"
+            element={
+              <Lazy>
+                <NewFilterPage />
+              </Lazy>
+            }
+          />
+          <Route
+            path="scoring-instructions"
+            element={
+              <Lazy>
+                <ScoringInstructionsPage />
+              </Lazy>
+            }
+          />
           <Route path=":uuid/contacts" element={<NavigateToFilterTab tab={FilterDetailTabIds.CONTACTS} />} />
           <Route path=":uuid/jobs" element={<NavigateToFilterTab tab={FilterDetailTabIds.JOBS} />} />
           <Route path=":uuid/filter" element={<NavigateToFilterTab tab={FilterDetailTabIds.FILTER} />} />
           <Route path=":uuid/analytics" element={<NavigateToFilterTab tab={FilterDetailTabIds.ANALYTICS} />} />
-          <Route path=":uuid" element={<FilterDetailPage />} />
+          <Route
+            path=":uuid"
+            element={
+              <Lazy>
+                <FilterDetailPage />
+              </Lazy>
+            }
+          />
         </Route>
         <Route
           path="admin/batch-jobs"
           element={
             <ProtectedRoute requiredRoles={Permissions.admin_batch_jobs}>
-              <AdminBatchJobsPage />
+              <Lazy>
+                <AdminBatchJobsPage />
+              </Lazy>
             </ProtectedRoute>
           }
         />
@@ -126,14 +340,23 @@ export default function AppRoutes() {
           path="admin/system-status"
           element={
             <ProtectedRoute requiredRoles={Permissions.admin_batch_jobs}>
-              <AdminSystemStatusPage />
+              <Lazy>
+                <AdminSystemStatusPage />
+              </Lazy>
             </ProtectedRoute>
           }
         />
       </Route>
 
       {/* Landing page */}
-      <Route path={Routes.root} element={<LandingPage />} />
+      <Route
+        path={Routes.root}
+        element={
+          <Lazy>
+            <LandingPage />
+          </Lazy>
+        }
+      />
 
       {/* Catch all */}
       <Route path="*" element={<Navigate to={Routes.root} replace />} />
