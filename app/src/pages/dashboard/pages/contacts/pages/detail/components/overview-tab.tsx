@@ -29,9 +29,10 @@ import { profileDraftFromContact } from "../utils/profile-draft";
 
 interface OverviewTabProps {
     contact: Contact;
+    onNavigationLockChange?: (locked: boolean) => void;
 }
 
-export function OverviewTab({ contact }: OverviewTabProps) {
+export function OverviewTab({ contact, onNavigationLockChange }: OverviewTabProps) {
     const [editing, setEditing] = useState(false);
 
     return (
@@ -39,9 +40,21 @@ export function OverviewTab({ contact }: OverviewTabProps) {
             <IdentitySidebar contact={contact} />
             <div className="flex-1 min-w-0">
                 {editing ? (
-                    <EditForm contact={contact} onDone={() => setEditing(false)} />
+                    <EditForm
+                        contact={contact}
+                        onDone={() => {
+                            setEditing(false);
+                            onNavigationLockChange?.(false);
+                        }}
+                    />
                 ) : (
-                    <DetailPanel contact={contact} onEdit={() => setEditing(true)} />
+                    <DetailPanel
+                        contact={contact}
+                        onEdit={() => {
+                            setEditing(true);
+                            onNavigationLockChange?.(true);
+                        }}
+                    />
                 )}
             </div>
         </div>

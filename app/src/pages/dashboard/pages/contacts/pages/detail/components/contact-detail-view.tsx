@@ -1,4 +1,4 @@
-import { useMemo, useState, type FC, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type FC, type ReactNode } from "react";
 import { Dropdown, Tabs } from "@heroui/react";
 import { MoreVertical, Sparkles } from "lucide-react";
 import {
@@ -18,6 +18,7 @@ interface ContactDetailViewProps {
     onDeleted?: () => void;
     showDelete?: boolean;
     headerActions?: ReactNode;
+    onNavigationLockChange?: (locked: boolean) => void;
 }
 
 export const ContactDetailView: FC<ContactDetailViewProps> = ({
@@ -26,6 +27,7 @@ export const ContactDetailView: FC<ContactDetailViewProps> = ({
     onDeleted,
     showDelete = true,
     headerActions,
+    onNavigationLockChange,
 }) => {
     const { data: contact, isLoading } = useContact(contactUuid);
     const deleteContact = useDeleteContact();
@@ -35,6 +37,7 @@ export const ContactDetailView: FC<ContactDetailViewProps> = ({
     const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
     const [enrichModalOpen, setEnrichModalOpen] = useState(false);
     const [highlightOutreachUuid, setHighlightOutreachUuid] = useState<string | null>(null);
+    const [childNavLocked, setChildNavLocked] = useState(false);
 
     const enrichmentSourceOptions = useMemo(
         () => enrichmentSourceOptionsForLead(contact?.lead.source_type),
@@ -59,6 +62,12 @@ export const ContactDetailView: FC<ContactDetailViewProps> = ({
         setHighlightOutreachUuid(outreachUuid);
         setActiveTab("outreach");
     };
+
+    const navigationLocked = confirmDeleteOpen || enrichModalOpen || childNavLocked;
+
+    useEffect(() => {
+        onNavigationLockChange?.(navigationLocked);
+    }, [navigationLocked, onNavigationLockChange]);
 
     return (
         <div className="space-y-4">
@@ -143,7 +152,11 @@ export const ContactDetailView: FC<ContactDetailViewProps> = ({
                         ))}
                     </div>
                 ) : activeTab === "overview" ? (
-                    <OverviewTab key={`${contact.uuid}-${contact.updated_at}`} contact={contact} />
+                    <OverviewTab
+                        key={`${contact.uuid}-${contact.updated_at}`}
+                        contact={contact}
+                        onNavigationLockChange={setChildNavLocked}
+                    />
                 ) : activeTab === "enrichment" ? (
                     <ContactEnrichmentTab contact={contact} />
                 ) : activeTab === "outreach" ? (
@@ -151,6 +164,7 @@ export const ContactDetailView: FC<ContactDetailViewProps> = ({
                         contact={contact}
                         highlightUuid={highlightOutreachUuid}
                         onHighlightConsumed={() => setHighlightOutreachUuid(null)}
+                        onNavigationLockChange={setChildNavLocked}
                     />
                 ) : activeTab === "reminders" ? (
                     <RemindersTab contactUuid={contact.uuid} />

@@ -1,4 +1,4 @@
-import { useEffect, type FC } from "react";
+import { useEffect, useState, type FC } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Modal } from "@heroui/react";
 import { cn } from "@/lib/utils";
@@ -24,6 +24,7 @@ export const ContactStackViewerModal: FC<ContactStackViewerProps> = ({
 }) => {
     const queryClient = useQueryClient();
     const activeUuid = contactUuids[currentIndex] ?? "";
+    const [navigationLocked, setNavigationLocked] = useState(false);
 
     const { navigation, goPrev, goNext } = useContactStackNavigation({
         contactUuids,
@@ -41,6 +42,7 @@ export const ContactStackViewerModal: FC<ContactStackViewerProps> = ({
         if (!isOpen) return;
 
         const handleKeyDown = (event: KeyboardEvent) => {
+            if (navigationLocked) return;
             if (event.key === "ArrowUp" || event.key === "ArrowLeft") {
                 event.preventDefault();
                 goPrev();
@@ -52,7 +54,7 @@ export const ContactStackViewerModal: FC<ContactStackViewerProps> = ({
 
         window.addEventListener("keydown", handleKeyDown);
         return () => window.removeEventListener("keydown", handleKeyDown);
-    }, [goNext, goPrev, isOpen]);
+    }, [goNext, goPrev, isOpen, navigationLocked]);
 
     useEffect(() => {
         if (!isOpen) return;
@@ -81,6 +83,7 @@ export const ContactStackViewerModal: FC<ContactStackViewerProps> = ({
                         <ContactStackViewerToolbar
                             contactUuid={activeUuid}
                             navigation={navigation}
+                            navigationLocked={navigationLocked}
                             onClose={handleClose}
                             onPrev={goPrev}
                             onNext={goNext}
@@ -89,7 +92,12 @@ export const ContactStackViewerModal: FC<ContactStackViewerProps> = ({
 
                     <div className="flex-1 min-h-0 overflow-y-auto overscroll-y-contain px-4 py-4 sm:px-6">
                         {activeUuid ? (
-                            <ContactDetailView key={activeUuid} contactUuid={activeUuid} showDelete={false} />
+                            <ContactDetailView
+                                key={activeUuid}
+                                contactUuid={activeUuid}
+                                showDelete={false}
+                                onNavigationLockChange={setNavigationLocked}
+                            />
                         ) : (
                             <div className="flex h-full min-h-[40vh] items-center justify-center text-sm text-muted">
                                 No contacts to display.

@@ -9,6 +9,7 @@ import type { ContactStackNavigationState } from "./types";
 interface ContactStackViewerToolbarProps {
     contactUuid: string;
     navigation: ContactStackNavigationState;
+    navigationLocked?: boolean;
     onClose: () => void;
     onPrev: () => void;
     onNext: () => void;
@@ -18,6 +19,7 @@ interface ContactStackViewerToolbarProps {
 export const ContactStackViewerToolbar: FC<ContactStackViewerToolbarProps> = ({
     contactUuid,
     navigation,
+    navigationLocked = false,
     onClose,
     onPrev,
     onNext,
@@ -41,7 +43,7 @@ export const ContactStackViewerToolbar: FC<ContactStackViewerToolbarProps> = ({
                     size="sm"
                     variant="tertiary"
                     onPress={onPrev}
-                    isDisabled={!navigation.canGoPrev}
+                    isDisabled={navigationLocked || !navigation.canGoPrev}
                     aria-label="Previous contact"
                 >
                     <ChevronUp className="size-4" />
@@ -53,7 +55,7 @@ export const ContactStackViewerToolbar: FC<ContactStackViewerToolbarProps> = ({
                     size="sm"
                     variant="tertiary"
                     onPress={onNext}
-                    isDisabled={!navigation.canGoNext}
+                    isDisabled={navigationLocked || !navigation.canGoNext}
                     aria-label="Next contact"
                 >
                     <ChevronDown className="size-4" />

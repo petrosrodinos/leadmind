@@ -17,9 +17,10 @@ interface OutreachTabProps {
   contact: Contact;
   highlightUuid?: string | null;
   onHighlightConsumed?: () => void;
+  onNavigationLockChange?: (locked: boolean) => void;
 }
 
-export function OutreachTab({ contact, highlightUuid, onHighlightConsumed }: OutreachTabProps) {
+export function OutreachTab({ contact, highlightUuid, onHighlightConsumed, onNavigationLockChange }: OutreachTabProps) {
   const sendMessage = useSendOutreachMessage();
   const deleteMessage = useDeleteOutreachMessage();
 
@@ -43,6 +44,11 @@ export function OutreachTab({ contact, highlightUuid, onHighlightConsumed }: Out
       window.clearTimeout(clearT);
     };
   }, [highlightUuid, onHighlightConsumed]);
+
+  useEffect(() => {
+    const locked = composeOpen || editingMessage !== null || draftPendingDelete !== null || draftPendingSend !== null;
+    onNavigationLockChange?.(locked);
+  }, [composeOpen, draftPendingDelete, draftPendingSend, editingMessage, onNavigationLockChange]);
 
   const setCardRef = (uuid: string) => (el: HTMLDivElement | null) => {
     if (el) cardRefs.current.set(uuid, el);
