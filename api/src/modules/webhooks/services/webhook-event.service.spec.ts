@@ -1,7 +1,9 @@
+/// <reference types="jest" />
 import {
     CampaignContactStatus,
     Channel,
     InteractionType,
+    LeadStatus,
     MsgDirection,
     MsgStatus,
 } from '@/generated/prisma';
@@ -24,6 +26,7 @@ describe('WebhookEventService', () => {
         message?: { status?: MsgStatus } | null;
         mcc?: { uuid: string; status: CampaignContactStatus } | null;
         receivedEmail?: { headers?: Record<string, string> } | null;
+        contactStatus?: LeadStatus;
     }) {
         const prisma = {
             outreachMessage: {
@@ -45,6 +48,9 @@ describe('WebhookEventService', () => {
             },
             contact: {
                 findFirst: jest.fn().mockResolvedValue(null),
+                findUnique: jest.fn().mockResolvedValue({
+                    status: overrides?.contactStatus ?? LeadStatus.NEW,
+                }),
                 update: jest.fn().mockResolvedValue({}),
             },
             $transaction: jest.fn(async (ops: unknown[]) => {
@@ -61,16 +67,34 @@ describe('WebhookEventService', () => {
         const campaignSendService = {
             checkCompletion: jest.fn().mockResolvedValue(undefined),
         };
+        const contactsService = {
+            buildPromoteToContactedIfNewOps: jest.fn(() => [
+                prisma.contact.update({
+                    where: { uuid: 'contact-uuid' },
+                    data: { status: LeadStatus.CONTACTED },
+                }),
+                prisma.interaction.create({
+                    data: {
+                        contact_uuid: 'contact-uuid',
+                        user_uuid: 'user-uuid',
+                        type: InteractionType.STATUS_CHANGE,
+                    },
+                }),
+            ]),
+            syncContactSearchIndex: jest.fn().mockResolvedValue(undefined),
+        };
 
         return {
             service: new WebhookEventService(
                 prisma as any,
                 resendAdapter as any,
                 campaignSendService as any,
+                contactsService as any,
             ),
             prisma,
             resendAdapter,
             campaignSendService,
+            contactsService,
         };
     }
 
@@ -97,6 +121,45 @@ describe('WebhookEventService', () => {
                 data: { opened_count: { increment: 1 } },
             }),
         );
+    });
+
+    it('promotes contact from NEW to CONTACTED on email delivery', async () => {
+        const { service, contactsService } = createService({
+            message: { status: MsgStatus.SENT },
+            mcc: { uuid: 'mcc-uuid', status: CampaignContactStatus.SENT },
+            contactStatus: LeadStatus.NEW,
+        });
+
+        await service.ingest({
+            kind: 'delivered',
+            channel: 'email',
+            provider_message_id,
+        });
+
+        expect(contactsService.buildPromoteToContactedIfNewOps).toHaveBeenCalledWith(
+            'contact-uuid',
+            'user-uuid',
+            'email_delivered',
+            LeadStatus.NEW,
+        );
+        expect(contactsService.syncContactSearchIndex).toHaveBeenCalledWith('contact-uuid');
+    });
+
+    it('does not promote contact when status is not NEW', async () => {
+        const { service, contactsService } = createService({
+            message: { status: MsgStatus.SENT },
+            mcc: { uuid: 'mcc-uuid', status: CampaignContactStatus.SENT },
+            contactStatus: LeadStatus.CONTACTED,
+        });
+
+        await service.ingest({
+            kind: 'delivered',
+            channel: 'email',
+            provider_message_id,
+        });
+
+        expect(contactsService.buildPromoteToContactedIfNewOps).not.toHaveBeenCalled();
+        expect(contactsService.syncContactSearchIndex).not.toHaveBeenCalled();
     });
 
     it('records email reply engagement', async () => {

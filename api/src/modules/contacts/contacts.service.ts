@@ -491,6 +491,41 @@ export class ContactsService {
         return updated;
     }
 
+    buildPromoteToContactedIfNewOps(
+        contact_uuid: string,
+        user_uuid: string,
+        trigger: string,
+        currentStatus: LeadStatus,
+    ): Prisma.PrismaPromise<unknown>[] {
+        if (currentStatus !== LeadStatus.NEW) {
+            return [];
+        }
+
+        return [
+            this.prisma.contact.update({
+                where: { uuid: contact_uuid },
+                data: { status: LeadStatus.CONTACTED },
+            }),
+            this.prisma.interaction.create({
+                data: {
+                    contact_uuid,
+                    user_uuid,
+                    type: InteractionType.STATUS_CHANGE,
+                    status_change: {
+                        from: LeadStatus.NEW,
+                        to: LeadStatus.CONTACTED,
+                        auto: true,
+                        trigger,
+                    },
+                },
+            }),
+        ];
+    }
+
+    async syncContactSearchIndex(contact_uuid: string): Promise<void> {
+        await this.reindexContact(contact_uuid);
+    }
+
     async updateTags(
         user_uuid: string,
         uuid: string,

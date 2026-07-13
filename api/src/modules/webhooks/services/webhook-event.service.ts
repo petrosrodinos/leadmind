@@ -3,12 +3,14 @@ import {
     CampaignContactStatus,
     Channel,
     InteractionType,
+    LeadStatus,
     MsgDirection,
     MsgStatus,
     Prisma,
 } from '@/generated/prisma';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { ResendAdapter } from '@/integrations/notifications/resend/resend/resend.adapter';
+import { ContactsService } from '@/modules/contacts/contacts.service';
 import { CampaignMessageSendService } from '@/modules/marketing-campaigns/services/campaign-message-send.service';
 
 export type WebhookEvent =
@@ -45,6 +47,7 @@ export class WebhookEventService {
         private readonly prisma: PrismaService,
         private readonly resendAdapter: ResendAdapter,
         private readonly campaignSendService: CampaignMessageSendService,
+        private readonly contactsService: ContactsService,
     ) { }
 
     async resolveOutboundMessageIdFromReceived(
@@ -278,10 +281,38 @@ export class WebhookEventService {
             );
         }
 
+        let shouldSyncContactSearchIndex = false;
+        const shouldPromoteCrmStatus =
+            (event.kind === 'delivered' && event.channel === 'email') ||
+            (event.kind === 'replied' && message.channel === Channel.EMAIL);
+
+        if (shouldPromoteCrmStatus) {
+            const contact = await this.prisma.contact.findUnique({
+                where: { uuid: message.contact_uuid },
+                select: { status: true },
+            });
+
+            if (contact?.status === LeadStatus.NEW) {
+                ops.push(
+                    ...this.contactsService.buildPromoteToContactedIfNewOps(
+                        message.contact_uuid,
+                        message.user_uuid,
+                        event.kind === 'delivered' ? 'email_delivered' : 'email_replied',
+                        contact.status,
+                    ),
+                );
+                shouldSyncContactSearchIndex = true;
+            }
+        }
+
         await this.prisma.$transaction(ops);
         this.logger.log(
             `[ingest] Transaction committed: kind=${event.kind} message=${message.uuid}`,
         );
+
+        if (shouldSyncContactSearchIndex) {
+            await this.contactsService.syncContactSearchIndex(message.contact_uuid);
+        }
 
         if (message.campaign_uuid) {
             await this.campaignSendService.checkCompletion(message.campaign_uuid);

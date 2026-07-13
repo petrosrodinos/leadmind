@@ -1,9 +1,10 @@
 import { Processor, WorkerHost, OnWorkerEvent } from '@nestjs/bullmq';
 import { Logger, OnModuleInit } from '@nestjs/common';
 import { Job } from 'bullmq';
-import { Channel, InteractionType, MsgStatus } from '@/generated/prisma';
+import { Channel, ExternalIntegrationProvider, InteractionType, LeadStatus, MsgStatus } from '@/generated/prisma';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { OUTREACH_SEND_QUEUE } from '@/core/queues/queues.constants';
+import { ContactsService } from '@/modules/contacts/contacts.service';
 import { MessageSendService } from '@/modules/outreach/services/message-send.service';
 
 interface OutreachSendJobData {
@@ -17,6 +18,7 @@ export class OutreachSendWorker extends WorkerHost implements OnModuleInit {
     constructor(
         private readonly prisma: PrismaService,
         private readonly messageSendService: MessageSendService,
+        private readonly contactsService: ContactsService,
     ) {
         super();
     }
@@ -74,6 +76,9 @@ export class OutreachSendWorker extends WorkerHost implements OnModuleInit {
             const { provider_message_id, integration_metadata } =
                 await this.messageSendService.deliverOutreachMessage(message);
 
+            const shouldPromoteOnSend =
+                message.channel === Channel.EMAIL && message.contact.status === LeadStatus.NEW;
+
             await this.prisma.$transaction([
                 this.messageSendService.messageSentOperation(
                     message.uuid,
@@ -88,7 +93,19 @@ export class OutreachSendWorker extends WorkerHost implements OnModuleInit {
                     outreach_message_uuid: message.uuid,
                 }),
                 this.messageSendService.contactInteractedOperation(message.contact_uuid),
+                ...(shouldPromoteOnSend
+                    ? this.contactsService.buildPromoteToContactedIfNewOps(
+                          message.contact_uuid,
+                          message.user_uuid,
+                          'email_sent',
+                          message.contact.status,
+                      )
+                    : []),
             ]);
+
+            if (shouldPromoteOnSend) {
+                await this.contactsService.syncContactSearchIndex(message.contact_uuid);
+            }
             this.logger.log(
                 `Outreach send succeeded message=${message.uuid} providerMessageId=${provider_message_id}`,
             );

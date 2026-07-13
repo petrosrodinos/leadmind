@@ -34,7 +34,7 @@ export function ComposeMessageModal({
         (mode === "bulk" ? (contactUuids?.length ?? 0) > 0 : Boolean(contactUuid));
 
     return (
-        <Modal.Backdrop isOpen={isOpen} onOpenChange={handleOpenChange}>
+        <Modal.Backdrop isOpen={isOpen} onOpenChange={handleOpenChange} isDismissable={false}>
             <Modal.Container>
                 <Modal.Dialog className="sm:max-w-2xl">
                     <Modal.CloseTrigger />

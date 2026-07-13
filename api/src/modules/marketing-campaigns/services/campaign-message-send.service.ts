@@ -11,13 +11,16 @@ import {
     CampaignContactStatus,
     CampaignStatus,
     Channel,
+    ExternalIntegrationProvider,
     InteractionType,
+    LeadStatus,
     MsgStatus,
     Prisma,
 } from '@/generated/prisma';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { MARKETING_MESSAGE_SEND_QUEUE } from '@/core/queues/queues.constants';
 import { sanitizeEmailHtml } from '@/shared/utils/sanitize-html.util';
+import { ContactsService } from '@/modules/contacts/contacts.service';
 import { MessageSendService } from '@/modules/outreach/services/message-send.service';
 import { EmailProviderTarget } from '@/modules/integrations/interfaces/email-credentials.interface';
 import { EmailCredentialsService } from '@/modules/integrations/services/email-credentials.service';
@@ -43,6 +46,7 @@ export class CampaignMessageSendService {
         private readonly messageSendService: MessageSendService,
         private readonly emailCredentialsService: EmailCredentialsService,
         private readonly senderProfilesService: SenderProfilesService,
+        private readonly contactsService: ContactsService,
         @InjectQueue(MARKETING_MESSAGE_SEND_QUEUE)
         private readonly messageSendQueue: Queue,
     ) { }
@@ -178,6 +182,9 @@ export class CampaignMessageSendService {
                 providerOverride,
             );
 
+            const shouldPromoteOnSend =
+                mcc.channel === Channel.EMAIL && mcc.contact.status === LeadStatus.NEW;
+
             await this.prisma.$transaction([
                 this.messageSendService.messageSentOperation(
                     message.uuid,
@@ -211,7 +218,19 @@ export class CampaignMessageSendService {
                         queued_count: { decrement: 1 },
                     },
                 }),
+                ...(shouldPromoteOnSend
+                    ? this.contactsService.buildPromoteToContactedIfNewOps(
+                          mcc.contact_uuid,
+                          mcc.campaign.user_uuid,
+                          'email_sent',
+                          mcc.contact.status,
+                      )
+                    : []),
             ]);
+
+            if (shouldPromoteOnSend) {
+                await this.contactsService.syncContactSearchIndex(mcc.contact_uuid);
+            }
 
             await this.checkCompletion(mcc.campaign_uuid);
             this.logger.log(
