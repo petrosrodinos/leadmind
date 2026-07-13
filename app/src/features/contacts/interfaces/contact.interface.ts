@@ -340,7 +340,7 @@ export interface UpdateContactPayload {
     email?: string;
     phone?: string;
     company?: string;
-    website?: string;
+    website?: string | null;
     google_maps_url?: string;
     title?: string;
     location?: string;

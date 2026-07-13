@@ -284,7 +284,12 @@ function EditForm({ contact, onDone }: { contact: Contact; onDone: () => void })
             email: t(draft.email) || undefined,
             phone: t(draft.phone) || undefined,
             company: t(draft.company) || undefined,
-            website: t(draft.website) || undefined,
+            website: (() => {
+                const next = t(draft.website);
+                const prev = (contact.website ?? "").trim();
+                if (next === prev) return undefined;
+                return next ? next : null;
+            })(),
             google_maps_url: t(draft.google_maps_url) || undefined,
             title: t(draft.title) || undefined,
             location: t(draft.location) || undefined,
