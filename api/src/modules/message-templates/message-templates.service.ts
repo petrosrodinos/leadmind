@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { Channel } from '@/generated/prisma';
+import { Channel, MarketingCampaign } from '@/generated/prisma';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
+import { isEmailHtmlEmpty, sanitizeEmailHtml } from '@/shared/utils/sanitize-html.util';
 import { CreateMessageTemplateDto } from './dto/create-message-template.dto';
 import { UpdateMessageTemplateDto } from './dto/update-message-template.dto';
 import { CreateTemplateFromSourceDto } from './dto/create-template-from-source.dto';
@@ -12,14 +13,17 @@ function deriveChannelsFromContent(input: {
     sms_content?: string | null;
 }): Channel[] {
     const channels: Channel[] = [];
-    if (input.email_content?.trim()) channels.push(Channel.EMAIL);
+    if (input.email_content && !isEmailHtmlEmpty(input.email_content)) channels.push(Channel.EMAIL);
     if (input.sms_content?.trim()) channels.push(Channel.SMS);
     return channels;
 }
 
 function normalizeTemplateData(dto: CreateMessageTemplateDto | UpdateMessageTemplateDto) {
     const emailSubject = dto.email_subject?.trim() || null;
-    const emailContent = dto.email_content?.trim() || null;
+    const emailContent =
+        dto.email_content && !isEmailHtmlEmpty(dto.email_content)
+            ? sanitizeEmailHtml(dto.email_content)
+            : null;
     const smsContent = dto.sms_content?.trim() || null;
 
     if (dto.channels?.includes(Channel.EMAIL) && !emailContent) {
@@ -101,6 +105,57 @@ export class MessageTemplatesService {
         return this.templateAiService.generate(user_uuid, dto, {});
     }
 
+    private async resolveCampaignTemplateContent(
+        user_uuid: string,
+        campaign: MarketingCampaign,
+    ): Promise<{
+        emailSubject: string | null;
+        emailContent: string | null;
+        smsContent: string | null;
+    }> {
+        let emailSubject = campaign.email_subject?.trim() || null;
+        let emailContent =
+            campaign.email_content && !isEmailHtmlEmpty(campaign.email_content)
+                ? campaign.email_content
+                : null;
+        let smsContent = campaign.sms_content?.trim() || null;
+
+        if (!emailContent) {
+            const emailDraft = await this.prisma.outreachMessage.findFirst({
+                where: {
+                    campaign_uuid: campaign.uuid,
+                    user_uuid,
+                    channel: Channel.EMAIL,
+                    content: { not: '' },
+                },
+                orderBy: { created_at: 'asc' },
+            });
+
+            if (emailDraft?.content.trim() && !isEmailHtmlEmpty(emailDraft.content)) {
+                emailSubject = emailDraft.subject?.trim() || emailSubject;
+                emailContent = emailDraft.content;
+            }
+        }
+
+        if (!smsContent) {
+            const smsDraft = await this.prisma.outreachMessage.findFirst({
+                where: {
+                    campaign_uuid: campaign.uuid,
+                    user_uuid,
+                    channel: Channel.SMS,
+                    content: { not: '' },
+                },
+                orderBy: { created_at: 'asc' },
+            });
+
+            if (smsDraft?.content.trim()) {
+                smsContent = smsDraft.content.trim();
+            }
+        }
+
+        return { emailSubject, emailContent, smsContent };
+    }
+
     async createFromCampaign(
         user_uuid: string,
         campaign_uuid: string,
@@ -111,8 +166,10 @@ export class MessageTemplatesService {
         });
         if (!campaign) throw new NotFoundException(`Campaign ${campaign_uuid} not found`);
 
-        const emailContent = campaign.email_content?.trim() || null;
-        const smsContent = campaign.sms_content?.trim() || null;
+        const { emailSubject, emailContent, smsContent } = await this.resolveCampaignTemplateContent(
+            user_uuid,
+            campaign,
+        );
 
         if (!emailContent && !smsContent) {
             throw new BadRequestException('Campaign has no email or SMS content to save as a template');
@@ -126,7 +183,7 @@ export class MessageTemplatesService {
                 user_uuid,
                 name,
                 channels,
-                email_subject: campaign.email_subject?.trim() || null,
+                email_subject: channels.includes(Channel.EMAIL) ? emailSubject : null,
                 email_content: emailContent,
                 sms_content: smsContent,
                 source_campaign_uuid: campaign.uuid,

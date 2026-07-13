@@ -2,27 +2,33 @@ import { useEffect, useState, type FC } from "react";
 import { Button, FieldError, Input, Label, ListBox, Modal, Select } from "@heroui/react";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import { useCampaigns } from "@/features/marketing-campaigns/hooks/use-marketing-campaigns";
-import { useCreateTemplateFromCampaign } from "@/features/message-templates/hooks/use-message-templates";
+import type { MessageComposerValue } from "@/features/messaging/components/message-composer";
+import { loadCampaignTemplatePrefill } from "@/features/message-templates/utils/campaign-template-prefill";
+
+export interface CampaignTemplatePrefillReady {
+    prefill: MessageComposerValue;
+    defaultName: string;
+}
 
 interface CreateFromCampaignModalProps {
     isOpen: boolean;
     onOpenChange: (open: boolean) => void;
-    onSaved?: () => void;
+    onReady?: (data: CampaignTemplatePrefillReady) => void;
     preselectedCampaignUuid?: string | null;
 }
 
 export const CreateFromCampaignModal: FC<CreateFromCampaignModalProps> = ({
     isOpen,
     onOpenChange,
-    onSaved,
+    onReady,
     preselectedCampaignUuid = null,
 }) => {
     const { data: campaignsPage, isLoading } = useCampaigns({ page: 1, limit: 100 });
-    const createMut = useCreateTemplateFromCampaign();
 
     const [campaignUuid, setCampaignUuid] = useState<string | null>(null);
     const [name, setName] = useState("");
     const [error, setError] = useState<string | null>(null);
+    const [pending, setPending] = useState(false);
 
     const campaigns = campaignsPage?.data ?? [];
 
@@ -33,18 +39,25 @@ export const CreateFromCampaignModal: FC<CreateFromCampaignModalProps> = ({
         setError(null);
     }, [isOpen, preselectedCampaignUuid]);
 
-    const handleCreate = async () => {
+    const handleContinue = async () => {
         if (!campaignUuid) {
             setError("Select a campaign");
             return;
         }
         setError(null);
-        await createMut.mutateAsync({
-            campaignUuid,
-            payload: name.trim() ? { name: name.trim() } : undefined,
-        });
-        onSaved?.();
-        onOpenChange(false);
+        setPending(true);
+        try {
+            const result = await loadCampaignTemplatePrefill(
+                campaignUuid,
+                name.trim() || undefined,
+            );
+            onReady?.(result);
+            onOpenChange(false);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "Could not load campaign");
+        } finally {
+            setPending(false);
+        }
     };
 
     return (
@@ -100,11 +113,11 @@ export const CreateFromCampaignModal: FC<CreateFromCampaignModalProps> = ({
                         </Button>
                         <ActionButtonWithPending
                             size="sm"
-                            isDisabled={createMut.isPending}
-                            isPending={createMut.isPending}
-                            onPress={() => void handleCreate()}
+                            isDisabled={pending}
+                            isPending={pending}
+                            onPress={() => void handleContinue()}
                         >
-                            Create template
+                            Continue
                         </ActionButtonWithPending>
                     </Modal.Footer>
                 </Modal.Dialog>

@@ -8,8 +8,8 @@ interface ContactsActionsDropdownProps {
     quickBrowseDisabled?: boolean;
     onScoreSelected?: () => void;
     scoreDisabled?: boolean;
-    onDraftMessagesSelected?: () => void;
-    draftMessagesDisabled?: boolean;
+    onSendMessagesSelected?: () => void;
+    sendMessagesDisabled?: boolean;
     onEnrichSelected?: () => void;
     enrichDisabled?: boolean;
     onScrapeEmailsSelected?: () => void;
@@ -23,8 +23,8 @@ export const ContactsActionsDropdown: FC<ContactsActionsDropdownProps> = ({
     quickBrowseDisabled = false,
     onScoreSelected,
     scoreDisabled = false,
-    onDraftMessagesSelected,
-    draftMessagesDisabled = false,
+    onSendMessagesSelected,
+    sendMessagesDisabled = false,
     onEnrichSelected,
     enrichDisabled = false,
     onScrapeEmailsSelected,
@@ -47,7 +47,7 @@ export const ContactsActionsDropdown: FC<ContactsActionsDropdownProps> = ({
                 onAction={(key) => {
                     if (key === "quick-browse") onQuickBrowse?.();
                     if (key === "score-selected") onScoreSelected?.();
-                    if (key === "draft-messages-selected") onDraftMessagesSelected?.();
+                    if (key === "send-messages-selected") onSendMessagesSelected?.();
                     if (key === "enrich-selected") onEnrichSelected?.();
                     if (key === "scrape-emails-selected") onScrapeEmailsSelected?.();
                     if (key === "add-contact") onAddContact();
@@ -101,15 +101,15 @@ export const ContactsActionsDropdown: FC<ContactsActionsDropdownProps> = ({
                         </span>
                     </Dropdown.Item>
                 ) : null}
-                {onDraftMessagesSelected ? (
+                {onSendMessagesSelected ? (
                     <Dropdown.Item
-                        id="draft-messages-selected"
-                        textValue="Draft messages for selected"
-                        isDisabled={draftMessagesDisabled}
+                        id="send-messages-selected"
+                        textValue="Send messages to selected"
+                        isDisabled={sendMessagesDisabled}
                     >
                         <span className="flex items-center gap-2.5 antialiased">
                             <Mail className="size-4 shrink-0 text-muted" strokeWidth={2} />
-                            <span className="font-medium text-foreground">Draft messages for selected</span>
+                            <span className="font-medium text-foreground">Send messages to selected</span>
                         </span>
                     </Dropdown.Item>
                 ) : null}

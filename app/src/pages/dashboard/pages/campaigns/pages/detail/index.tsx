@@ -19,9 +19,9 @@ import { Channel } from "@/features/contacts/interfaces/contact.interface";
 import { Routes } from "@/routes/routes";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import {
-    EmailProviderAllocationPicker,
+    EmailProviderSelect,
     isEmailProviderAllocationValid,
-} from "@/features/messaging/components/email-provider-allocation-picker";
+} from "@/features/messaging/components/email-provider-select";
 import { SenderProfileSelect } from "@/features/messaging/components/sender-profile-select";
 import { CampaignStatusBadge } from "../../components/campaign-status-badge";
 import { CampaignStatsSection } from "../../components/campaign-stats-section";
@@ -29,7 +29,9 @@ import { RecipientsTable } from "../../components/recipients-table";
 import { CampaignActionsDropdown } from "../../components/campaign-actions-dropdown";
 import { CampaignDetailSkeleton } from "../../components/campaign-detail-skeleton";
 import { DraftedMessagesTable } from "../../components/drafted-messages-table";
-import { CreateFromCampaignModal } from "@/pages/dashboard/pages/message-templates/components/create-from-campaign-modal";
+import { MessageTemplateModal } from "@/pages/dashboard/pages/message-templates/components/message-template-modal";
+import type { MessageComposerValue } from "@/features/messaging/components/message-composer";
+import { loadCampaignTemplatePrefill } from "@/features/message-templates/utils/campaign-template-prefill";
 
 const RECIPIENT_STATUS_OPTIONS: { id: CampaignContactStatus | "ALL"; label: string }[] = [
     { id: "ALL", label: "All statuses" },
@@ -52,6 +54,9 @@ export default function CampaignDetailPage() {
     const [recipientStatus, setRecipientStatus] = useState<CampaignContactStatus | "ALL">("ALL");
     const [confirmSend, setConfirmSend] = useState(false);
     const [saveTemplateOpen, setSaveTemplateOpen] = useState(false);
+    const [templatePrefill, setTemplatePrefill] = useState<MessageComposerValue | null>(null);
+    const [templateDefaultName, setTemplateDefaultName] = useState("");
+    const [saveTemplateLoading, setSaveTemplateLoading] = useState(false);
     const [emailAllocations, setEmailAllocations] = useState<EmailProviderAllocation[]>([]);
     const [senderProfileUuid, setSenderProfileUuid] = useState<string | null>(null);
     const { data: campaign, isLoading } = useCampaign(uuid);
@@ -71,6 +76,11 @@ export default function CampaignDetailPage() {
         setSenderProfileUuid(campaign.sender_profile_uuid);
     }, [campaign?.sender_profile_uuid, senderProfileUuid]);
 
+    useEffect(() => {
+        if (!campaign?.email_provider_allocations?.length || emailAllocations.length > 0) return;
+        setEmailAllocations(campaign.email_provider_allocations);
+    }, [campaign?.email_provider_allocations, emailAllocations.length]);
+
     if (isLoading || !campaign) {
         return <CampaignDetailSkeleton />;
     }
@@ -80,21 +90,41 @@ export default function CampaignDetailPage() {
     const batchDraftsPending = isPersonalized && !!campaign.draft_batch_id;
     const includesEmail = campaign.channels.includes(Channel.EMAIL);
     const pendingEmailCount = pendingEmailContacts?.total ?? 0;
-    const showEmailAllocation = isPersonalized && includesEmail && isDraftsReady;
-    const emailAllocationValid =
-        !showEmailAllocation ||
-        isEmailProviderAllocationValid(emailAllocations, pendingEmailCount);
+    const showEmailProvider = isPersonalized && includesEmail && isDraftsReady;
+    const emailProviderMissing =
+        showEmailProvider &&
+        pendingEmailCount > 0 &&
+        !isEmailProviderAllocationValid(emailAllocations, pendingEmailCount);
     const hasTemplateContent = !!(
-        campaign.email_content?.trim() || campaign.sms_content?.trim()
+        campaign.email_content?.trim() ||
+        campaign.sms_content?.trim() ||
+        campaign.campaign_type === CampaignType.PERSONALIZED
     );
 
+    const handleSaveAsTemplate = async () => {
+        if (!campaign || saveTemplateLoading) return;
+        setSaveTemplateLoading(true);
+        try {
+            const result = await loadCampaignTemplatePrefill(campaign.uuid);
+            setTemplatePrefill(result.prefill);
+            setTemplateDefaultName(result.defaultName);
+            setSaveTemplateOpen(true);
+        } catch {
+            // loadCampaignTemplatePrefill throws with message; toast could be added later
+        } finally {
+            setSaveTemplateLoading(false);
+        }
+    };
+
     const handleSendCampaign = async () => {
-        if (showEmailAllocation && !emailAllocationValid) return;
+        if (emailProviderMissing) return;
         if (!senderProfileUuid) return;
         await sendDraftsMutation.mutateAsync({
             uuid: campaign.uuid,
-            ...(showEmailAllocation
-                ? { email_provider_allocations: emailAllocations }
+            ...(showEmailProvider && emailAllocations.length > 0
+                ? {
+                      email_provider_allocations: emailAllocations,
+                  }
                 : {}),
             sender_profile_uuid: senderProfileUuid,
         });
@@ -128,10 +158,15 @@ export default function CampaignDetailPage() {
                 </div>
                 <div className="flex items-center gap-2">
                     {hasTemplateContent ? (
-                        <Button size="sm" variant="secondary" onPress={() => setSaveTemplateOpen(true)}>
-                            <FileText className="size-4" />
+                        <ActionButtonWithPending
+                            size="sm"
+                            variant="secondary"
+                            onPress={() => void handleSaveAsTemplate()}
+                            isPending={saveTemplateLoading}
+                            idleLeading={<FileText className="size-4" />}
+                        >
                             Save as template
-                        </Button>
+                        </ActionButtonWithPending>
                     ) : null}
                     {isPersonalized && isDraftsReady && (
                         <ActionButtonWithPending
@@ -215,10 +250,10 @@ export default function CampaignDetailPage() {
                     <>
                         This will queue {pendingEmailCount} email
                         {pendingEmailCount === 1 ? "" : "s"} for delivery using your selected
-                        provider accounts.
-                        {showEmailAllocation ? (
+                        provider account.
+                        {showEmailProvider ? (
                             <div className="mt-4">
-                                <EmailProviderAllocationPicker
+                                <EmailProviderSelect
                                     totalCount={pendingEmailCount}
                                     value={emailAllocations}
                                     onChange={setEmailAllocations}
@@ -237,16 +272,21 @@ export default function CampaignDetailPage() {
                 }
                 confirmLabel="Send now"
                 isPending={sendDraftsMutation.isPending}
-                isConfirmDisabled={
-                    (showEmailAllocation && !emailAllocationValid) || !senderProfileUuid
-                }
+                isConfirmDisabled={emailProviderMissing || !senderProfileUuid}
                 onConfirm={handleSendCampaign}
             />
 
-            <CreateFromCampaignModal
+            <MessageTemplateModal
                 isOpen={saveTemplateOpen}
-                onOpenChange={setSaveTemplateOpen}
-                preselectedCampaignUuid={campaign.uuid}
+                onOpenChange={(open) => {
+                    setSaveTemplateOpen(open);
+                    if (!open) {
+                        setTemplatePrefill(null);
+                        setTemplateDefaultName("");
+                    }
+                }}
+                prefill={templatePrefill}
+                defaultName={templateDefaultName}
             />
         </div>
     );

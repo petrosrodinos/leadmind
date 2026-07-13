@@ -1,6 +1,6 @@
 import type { FC } from "react";
 import { Button, Dropdown } from "@heroui/react";
-import { ChevronDown, ChevronsUpDown, Globe, Pencil, UserPlus } from "lucide-react";
+import { ChevronDown, ChevronsUpDown, Globe, Mail, Pencil, UserPlus } from "lucide-react";
 
 interface ListActionsDropdownProps {
     showContactsActions?: boolean;
@@ -11,6 +11,8 @@ interface ListActionsDropdownProps {
     onScrapeEmails?: () => void;
     scrapeEmailsDisabled?: boolean;
     scrapeEmailsPending?: boolean;
+    onSendMessagesSelected?: () => void;
+    sendMessagesDisabled?: boolean;
 }
 
 export const ListActionsDropdown: FC<ListActionsDropdownProps> = ({
@@ -22,6 +24,8 @@ export const ListActionsDropdown: FC<ListActionsDropdownProps> = ({
     onScrapeEmails,
     scrapeEmailsDisabled = false,
     scrapeEmailsPending = false,
+    onSendMessagesSelected,
+    sendMessagesDisabled = false,
 }) => (
     <Dropdown>
         <Dropdown.Trigger>
@@ -41,6 +45,7 @@ export const ListActionsDropdown: FC<ListActionsDropdownProps> = ({
                     if (key === "add-contacts") onAddContacts?.();
                     if (key === "edit-list") onEditList();
                     if (key === "scrape-emails") onScrapeEmails?.();
+                    if (key === "send-messages-selected") onSendMessagesSelected?.();
                 }}
             >
                 {showContactsActions && onQuickBrowse ? (
@@ -60,6 +65,18 @@ export const ListActionsDropdown: FC<ListActionsDropdownProps> = ({
                         <span className="flex items-center gap-2.5 antialiased">
                             <UserPlus className="size-4 shrink-0 text-accent" strokeWidth={2} />
                             <span className="font-medium text-foreground">Add contacts</span>
+                        </span>
+                    </Dropdown.Item>
+                ) : null}
+                {showContactsActions && onSendMessagesSelected ? (
+                    <Dropdown.Item
+                        id="send-messages-selected"
+                        textValue="Send messages to selected"
+                        isDisabled={sendMessagesDisabled}
+                    >
+                        <span className="flex items-center gap-2.5 antialiased">
+                            <Mail className="size-4 shrink-0 text-muted" strokeWidth={2} />
+                            <span className="font-medium text-foreground">Send messages to selected</span>
                         </span>
                     </Dropdown.Item>
                 ) : null}

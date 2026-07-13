@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState, type FC } from "react";
-import { Button, Checkbox, FieldError, Input, Label, Modal } from "@heroui/react";
+import { useLayoutEffect, useRef, useState, type FC } from "react";
+import { Button, FieldError, Input, Label, Modal } from "@heroui/react";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import { Channel } from "@/features/contacts/interfaces/contact.interface";
 import {
@@ -7,38 +7,47 @@ import {
     type MessageComposerValue,
 } from "@/features/messaging/components/message-composer";
 import { DEFAULT_CAMPAIGN_ACTIONS } from "@/features/messaging/constants/ai-actions";
-import { EMPTY_MESSAGE_COMPOSER_VALUE } from "@/features/messaging/utils/compose-message";
+import {
+    EMPTY_MESSAGE_COMPOSER_VALUE,
+    isComposerContentEmpty,
+} from "@/features/messaging/utils/compose-message";
 import {
     useCreateMessageTemplate,
     useGenerateTemplateMessage,
     useUpdateMessageTemplate,
 } from "@/features/message-templates/hooks/use-message-templates";
 import type { MessageTemplate } from "@/features/message-templates/interfaces/message-template.interface";
+import { messageTemplateToComposerValue } from "@/features/message-templates/utils/message-template-composer.utils";
 
 interface MessageTemplateModalProps {
     isOpen: boolean;
     onOpenChange: (open: boolean) => void;
     initial?: MessageTemplate | null;
+    prefill?: MessageComposerValue | null;
+    defaultName?: string;
     onSaved?: () => void;
 }
 
 function templateToComposerValue(template?: MessageTemplate | null): MessageComposerValue {
     if (!template) return EMPTY_MESSAGE_COMPOSER_VALUE;
-    return {
-        emailSubject: template.email_subject ?? "",
-        emailContent: template.email_content ?? "",
-        smsContent: template.sms_content ?? "",
-        callContent: "",
-        linkedinContent: "",
-    };
+    return messageTemplateToComposerValue(template);
 }
 
-const TEMPLATE_CHANNEL_OPTIONS = [Channel.EMAIL, Channel.SMS] as const;
+const TEMPLATE_COMPOSER_CHANNELS = [Channel.EMAIL, Channel.SMS] as const;
+
+function deriveTemplateChannels(value: MessageComposerValue): Channel[] {
+    const channels: Channel[] = [];
+    if (!isComposerContentEmpty(Channel.EMAIL, value)) channels.push(Channel.EMAIL);
+    if (!isComposerContentEmpty(Channel.SMS, value)) channels.push(Channel.SMS);
+    return channels;
+}
 
 export const MessageTemplateModal: FC<MessageTemplateModalProps> = ({
     isOpen,
     onOpenChange,
     initial = null,
+    prefill = null,
+    defaultName = "",
     onSaved,
 }) => {
     const createMut = useCreateMessageTemplate();
@@ -46,68 +55,77 @@ export const MessageTemplateModal: FC<MessageTemplateModalProps> = ({
     const aiGenerate = useGenerateTemplateMessage();
 
     const [name, setName] = useState("");
-    const [selectedChannels, setSelectedChannels] = useState<Channel[]>([Channel.EMAIL]);
     const [composerValue, setComposerValue] = useState<MessageComposerValue>(EMPTY_MESSAGE_COMPOSER_VALUE);
     const [activeChannel, setActiveChannel] = useState<Channel>(Channel.EMAIL);
     const [nameError, setNameError] = useState<string | null>(null);
+    const [contentError, setContentError] = useState<string | null>(null);
+    const [composerKey, setComposerKey] = useState(0);
+    const [composerReady, setComposerReady] = useState(false);
+    const wasOpenRef = useRef(false);
 
-    useEffect(() => {
-        if (!isOpen) return;
-        const channels =
-            initial?.channels.filter((c) => c === Channel.EMAIL || c === Channel.SMS) ?? [Channel.EMAIL];
-        setName(initial?.name ?? "");
-        setSelectedChannels(channels.length > 0 ? channels : [Channel.EMAIL]);
-        setComposerValue(templateToComposerValue(initial));
-        setActiveChannel(channels[0] ?? Channel.EMAIL);
-        setNameError(null);
-    }, [isOpen, initial]);
-
-    const composerChannels = useMemo(
-        () => selectedChannels.filter((c) => c === Channel.EMAIL || c === Channel.SMS),
-        [selectedChannels],
-    );
-
-    useEffect(() => {
-        if (!composerChannels.includes(activeChannel)) {
-            setActiveChannel(composerChannels[0] ?? Channel.EMAIL);
+    useLayoutEffect(() => {
+        if (!isOpen) {
+            setComposerReady(false);
+            wasOpenRef.current = false;
+            return;
         }
-    }, [composerChannels, activeChannel]);
 
-    const toggleChannel = (channel: Channel, checked: boolean) => {
-        setSelectedChannels((prev) => {
-            if (checked) return prev.includes(channel) ? prev : [...prev, channel];
-            const next = prev.filter((c) => c !== channel);
-            return next.length > 0 ? next : prev;
-        });
-    };
+        if (!wasOpenRef.current) {
+            if (initial) {
+                setName(initial.name);
+                setComposerValue(templateToComposerValue(initial));
+                const channels = initial.channels.filter(
+                    (c) => c === Channel.EMAIL || c === Channel.SMS,
+                );
+                setActiveChannel(channels[0] ?? Channel.EMAIL);
+            } else if (prefill) {
+                setName(defaultName);
+                setComposerValue(prefill);
+                setActiveChannel(
+                    !isComposerContentEmpty(Channel.EMAIL, prefill) ? Channel.EMAIL : Channel.SMS,
+                );
+            } else {
+                setName("");
+                setComposerValue(EMPTY_MESSAGE_COMPOSER_VALUE);
+                setActiveChannel(Channel.EMAIL);
+            }
+            setComposerKey((k) => k + 1);
+            setNameError(null);
+            setContentError(null);
+            setComposerReady(true);
+        }
 
-    const validate = (): boolean => {
+        wasOpenRef.current = isOpen;
+    }, [isOpen, initial, prefill, defaultName]);
+
+    const validate = (): Channel[] | null => {
         if (!name.trim()) {
             setNameError("Name is required");
-            return false;
-        }
-        if (selectedChannels.includes(Channel.EMAIL) && !composerValue.emailContent.trim()) {
-            return false;
-        }
-        if (selectedChannels.includes(Channel.SMS) && !composerValue.smsContent.trim()) {
-            return false;
+            return null;
         }
         setNameError(null);
-        return true;
+
+        const channels = deriveTemplateChannels(composerValue);
+        if (channels.length === 0) {
+            setContentError("Add email or SMS content");
+            return null;
+        }
+        setContentError(null);
+        return channels;
     };
 
     const handleSave = async () => {
-        if (!validate()) return;
+        const channels = validate();
+        if (!channels) return;
+
         const payload = {
             name: name.trim(),
-            channels: selectedChannels,
-            email_subject: selectedChannels.includes(Channel.EMAIL)
+            channels,
+            email_subject: channels.includes(Channel.EMAIL)
                 ? composerValue.emailSubject.trim() || undefined
                 : undefined,
-            email_content: selectedChannels.includes(Channel.EMAIL)
-                ? composerValue.emailContent
-                : undefined,
-            sms_content: selectedChannels.includes(Channel.SMS) ? composerValue.smsContent : undefined,
+            email_content: channels.includes(Channel.EMAIL) ? composerValue.emailContent : undefined,
+            sms_content: channels.includes(Channel.SMS) ? composerValue.smsContent : undefined,
         };
         if (initial) {
             await updateMut.mutateAsync({ uuid: initial.uuid, payload });
@@ -159,39 +177,23 @@ export const MessageTemplateModal: FC<MessageTemplateModalProps> = ({
                             {nameError ? <FieldError>{nameError}</FieldError> : null}
                         </div>
 
-                        <div className="flex flex-col gap-2">
-                            <Label>Channels</Label>
-                            <div className="flex flex-wrap gap-4">
-                                {TEMPLATE_CHANNEL_OPTIONS.map((channel) => (
-                                    <Checkbox
-                                        key={channel}
-                                        isSelected={selectedChannels.includes(channel)}
-                                        onChange={(checked) => toggleChannel(channel, checked)}
-                                    >
-                                        <Checkbox.Control>
-                                            <Checkbox.Indicator />
-                                        </Checkbox.Control>
-                                        <Checkbox.Content>
-                                            <Label>{channel === Channel.EMAIL ? "Email" : "SMS"}</Label>
-                                        </Checkbox.Content>
-                                    </Checkbox>
-                                ))}
-                            </div>
-                        </div>
-
-                        {composerChannels.length > 0 ? (
+                        {composerReady ? (
                             <MessageComposer
-                                channels={composerChannels}
+                                key={composerKey}
+                                channels={[...TEMPLATE_COMPOSER_CHANNELS]}
                                 activeChannel={activeChannel}
                                 onActiveChannelChange={setActiveChannel}
                                 value={composerValue}
-                                onChange={(patch) => setComposerValue((prev) => ({ ...prev, ...patch }))}
+                                onChange={(patch) =>
+                                    setComposerValue((prev) => ({ ...prev, ...patch }))
+                                }
                                 onAiGenerate={handleAi}
                                 aiActions={DEFAULT_CAMPAIGN_ACTIONS}
                                 isAiPending={aiGenerate.isPending}
                                 disabled={pending}
                             />
                         ) : null}
+                        {contentError ? <FieldError>{contentError}</FieldError> : null}
                     </Modal.Body>
                     <Modal.Footer className="gap-2 justify-end shrink-0">
                         <Button

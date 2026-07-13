@@ -6,6 +6,7 @@ import {
     useMessageTemplates,
 } from "@/features/message-templates/hooks/use-message-templates";
 import type { MessageTemplate } from "@/features/message-templates/interfaces/message-template.interface";
+import type { MessageComposerValue } from "@/features/messaging/components/message-composer";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { MessageTemplatesTable } from "./components/message-templates-table";
 import { MessageTemplateModal } from "./components/message-template-modal";
@@ -18,6 +19,8 @@ const MessageTemplatesPage: FC = () => {
     const [modalOpen, setModalOpen] = useState(false);
     const [fromCampaignOpen, setFromCampaignOpen] = useState(false);
     const [editing, setEditing] = useState<MessageTemplate | null>(null);
+    const [prefill, setPrefill] = useState<MessageComposerValue | null>(null);
+    const [defaultName, setDefaultName] = useState("");
     const [deleteTarget, setDeleteTarget] = useState<MessageTemplate | null>(null);
 
     return (
@@ -42,6 +45,8 @@ const MessageTemplatesPage: FC = () => {
                         size="sm"
                         onPress={() => {
                             setEditing(null);
+                            setPrefill(null);
+                            setDefaultName("");
                             setModalOpen(true);
                         }}
                     >
@@ -68,16 +73,27 @@ const MessageTemplatesPage: FC = () => {
                 isOpen={modalOpen}
                 onOpenChange={(open) => {
                     setModalOpen(open);
-                    if (!open) setEditing(null);
+                    if (!open) {
+                        setEditing(null);
+                        setPrefill(null);
+                        setDefaultName("");
+                    }
                 }}
                 initial={editing}
+                prefill={editing ? null : prefill}
+                defaultName={editing ? undefined : defaultName}
                 onSaved={() => void refetch()}
             />
 
             <CreateFromCampaignModal
                 isOpen={fromCampaignOpen}
                 onOpenChange={setFromCampaignOpen}
-                onSaved={() => void refetch()}
+                onReady={({ prefill: nextPrefill, defaultName: nextName }) => {
+                    setEditing(null);
+                    setPrefill(nextPrefill);
+                    setDefaultName(nextName);
+                    setModalOpen(true);
+                }}
             />
 
             <ConfirmDialog

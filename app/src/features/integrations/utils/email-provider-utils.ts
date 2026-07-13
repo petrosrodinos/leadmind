@@ -181,3 +181,41 @@ export function resolveDefaultEmailTarget(
 export function allocationKey(row: EmailProviderTarget): string {
     return `${row.provider}:${row.account}`;
 }
+
+export function emailProviderFromAllocations(
+    allocations: EmailProviderAllocation[] | null | undefined,
+): EmailProviderTarget | null {
+    const first = allocations?.[0];
+    if (!first) return null;
+    return { provider: first.provider, account: first.account };
+}
+
+export function emailProviderToAllocations(
+    target: EmailProviderTarget,
+    count: number,
+): EmailProviderAllocation[] {
+    if (count <= 0) return [];
+    return [{ provider: target.provider, account: target.account, count }];
+}
+
+export function assignEmailProviders(
+    contactUuids: string[],
+    allocations: EmailProviderAllocation[],
+): Map<string, EmailProviderTarget> {
+    const sorted = [...contactUuids].sort();
+    const assignments = new Map<string, EmailProviderTarget>();
+    let index = 0;
+
+    for (const allocation of allocations) {
+        for (let count = 0; count < allocation.count; count++) {
+            if (index >= sorted.length) break;
+            assignments.set(sorted[index], {
+                provider: allocation.provider,
+                account: allocation.account,
+            });
+            index += 1;
+        }
+    }
+
+    return assignments;
+}

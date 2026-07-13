@@ -21,7 +21,8 @@ interface MessageTemplatesTableProps {
 function previewText(template: MessageTemplate): string {
     if (template.channels.includes(Channel.EMAIL) && template.email_content) {
         const stripped = template.email_content.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
-        return template.email_subject?.trim() || stripped.slice(0, 120) || "Email template";
+        if (stripped) return stripped.slice(0, 120);
+        return template.email_subject?.trim() || "Email template";
     }
     if (template.channels.includes(Channel.SMS) && template.sms_content) {
         return template.sms_content.trim().slice(0, 120);

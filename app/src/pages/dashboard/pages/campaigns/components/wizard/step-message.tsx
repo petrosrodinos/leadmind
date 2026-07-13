@@ -1,11 +1,16 @@
-import { useEffect, useMemo } from "react";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { PersonalizedMessageGoalField } from "@/features/messaging/components/personalized-message-goal-field";
 import { MessageComposer, type MessageComposerValue } from "@/features/messaging/components/message-composer";
+import { MessageTemplateSelect } from "@/features/messaging/components/message-template-select";
 import { DEFAULT_CAMPAIGN_ACTIONS } from "@/features/messaging/constants/ai-actions";
 import { Channel } from "@/features/contacts/interfaces/contact.interface";
 import { CampaignType } from "@/features/marketing-campaigns/interfaces/campaign.interface";
 import { useCampaignAiGenerate } from "@/features/marketing-campaigns/hooks/use-marketing-campaigns";
+import {
+    mergeTemplateIntoComposer,
+    preferredChannelAfterTemplateApply,
+} from "@/features/message-templates/utils/message-template-composer.utils";
+import type { MessageTemplate } from "@/features/message-templates/interfaces/message-template.interface";
 
 interface StepMessageProps {
   campaignUuid: string;
@@ -29,6 +34,7 @@ export function StepMessage({
   const aiGenerate = useCampaignAiGenerate();
   const defaultChannel = channels[0] ?? Channel.EMAIL;
   const [activeChannel, setActiveChannel] = useState<Channel>(defaultChannel);
+  const [composerKey, setComposerKey] = useState(0);
 
   useEffect(() => {
     if (!channels.includes(activeChannel)) {
@@ -56,6 +62,15 @@ export function StepMessage({
     [channels],
   );
 
+  const handleTemplateSelect = (template: MessageTemplate) => {
+    onChange(mergeTemplateIntoComposer(value, template));
+    const nextChannel = preferredChannelAfterTemplateApply(template);
+    if (nextChannel && composerChannels.includes(nextChannel)) {
+      setActiveChannel(nextChannel);
+    }
+    setComposerKey((k) => k + 1);
+  };
+
   if (campaignType === CampaignType.PERSONALIZED) {
     return (
       <PersonalizedMessageGoalField value={aiPrompt} onChange={onAiPromptChange} />
@@ -65,7 +80,21 @@ export function StepMessage({
   return (
     <div className="space-y-3">
       <p className="text-sm text-muted max-w-2xl">The AI panel helps draft, improve, shorten, or change tone — the output goes straight into the editor below for you to tweak before sending.</p>
-      <MessageComposer channels={composerChannels} activeChannel={activeChannel} onActiveChannelChange={setActiveChannel} value={value} onChange={(patch) => onChange({ ...value, ...patch })} onAiGenerate={handleAi} aiActions={DEFAULT_CAMPAIGN_ACTIONS} isAiPending={aiGenerate.isPending} />
+      <MessageTemplateSelect
+        allowedChannels={composerChannels}
+        onSelect={handleTemplateSelect}
+      />
+      <MessageComposer
+        key={composerKey}
+        channels={composerChannels}
+        activeChannel={activeChannel}
+        onActiveChannelChange={setActiveChannel}
+        value={value}
+        onChange={(patch) => onChange({ ...value, ...patch })}
+        onAiGenerate={handleAi}
+        aiActions={DEFAULT_CAMPAIGN_ACTIONS}
+        isAiPending={aiGenerate.isPending}
+      />
     </div>
   );
 }

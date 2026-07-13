@@ -6,7 +6,7 @@ import { ContactsTable } from "./components/contacts-table";
 import { PipelineView } from "./components/pipeline-view";
 import { NewContactModal } from "./components/new-contact-modal";
 import { BulkScoreContactsPopover } from "./components/bulk-score-contacts-popover";
-import { ComposeMessageModal } from "@/features/messaging/components/compose-message-modal";
+import { BulkSendMessageModal } from "@/pages/dashboard/components/bulk-send-message-modal";
 import { BulkEnrichmentRunModal } from "@/components/ui/bulk-enrichment-run-modal";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { ContactsActionsDropdown } from "./components/contacts-actions-dropdown";
@@ -120,6 +120,10 @@ export default function ContactsPage() {
 
   const contacts = data?.data ?? [];
   const contactUuids = contacts.map((contact) => contact.uuid);
+  const selectedContacts = useMemo(
+    () => contacts.filter((c) => selectedKeys.has(c.uuid)),
+    [contacts, selectedKeys],
+  );
   const total = data?.total ?? 0;
   const totalPages = data?.totalPages ?? 1;
 
@@ -151,10 +155,10 @@ export default function ContactsPage() {
                 quickBrowseDisabled={!quickBrowse.hasContacts}
                 onScoreSelected={view === "table" ? () => setScoreOpen(true) : undefined}
                 scoreDisabled={selectedKeys.size === 0}
-                onDraftMessagesSelected={
+                onSendMessagesSelected={
                   view === "table" ? () => setComposeOpen(true) : undefined
                 }
-                draftMessagesDisabled={selectedKeys.size === 0}
+                sendMessagesDisabled={selectedKeys.size === 0}
                 onEnrichSelected={view === "table" ? () => setEnrichOpen(true) : undefined}
                 enrichDisabled={selectedKeys.size === 0 || enrichBulk.isPending}
                 onScrapeEmailsSelected={view === "table" ? () => setScrapeConfirmOpen(true) : undefined}
@@ -219,12 +223,11 @@ export default function ContactsPage() {
             />
           ) : null}
           {view === "table" ? (
-            <ComposeMessageModal
+            <BulkSendMessageModal
               isOpen={composeOpen}
               onOpenChange={setComposeOpen}
-              mode="bulk"
-              contactUuids={[...selectedKeys]}
-              onBulkComplete={() => setSelectedKeys(new Set())}
+              contacts={selectedContacts}
+              onComplete={() => setSelectedKeys(new Set())}
             />
           ) : null}
           {view === "table" ? (

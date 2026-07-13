@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Button } from "@heroui/react";
 import {
     Bold,
@@ -14,7 +14,7 @@ import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import Underline from "@tiptap/extension-underline";
 import { cn } from "@/lib/utils";
-import { sanitizeEmailHtml } from "@/lib/sanitize-html";
+import { isEmailHtmlEmpty, sanitizeEmailHtml } from "@/lib/sanitize-html";
 
 interface RichTextEditorProps {
     value: string;
@@ -45,6 +45,11 @@ export function RichTextEditor({
     className,
     "aria-label": ariaLabel,
 }: RichTextEditorProps) {
+    const suppressUpdateRef = useRef(false);
+    const acceptsEmptyUpdateRef = useRef(false);
+    const onChangeRef = useRef(onChange);
+    onChangeRef.current = onChange;
+
     const editor = useEditor({
         extensions: [
             StarterKit.configure({
@@ -61,7 +66,7 @@ export function RichTextEditor({
                 },
             }),
         ],
-        content: value || "",
+        content: "",
         editable: !disabled,
         editorProps: {
             attributes: {
@@ -72,17 +77,24 @@ export function RichTextEditor({
                 ...(placeholder ? { "data-placeholder": placeholder } : {}),
             },
         },
-        onUpdate: ({ editor }) => {
-            onChange(sanitizeEmailHtml(editor.getHTML()));
+        onUpdate: ({ editor: activeEditor }) => {
+            if (suppressUpdateRef.current) return;
+            const html = sanitizeEmailHtml(activeEditor.getHTML());
+            if (!acceptsEmptyUpdateRef.current && isEmailHtmlEmpty(html)) return;
+            acceptsEmptyUpdateRef.current = true;
+            onChangeRef.current(html);
         },
     });
 
     useEffect(() => {
         if (!editor) return;
+        const next = value || "";
         const current = editor.getHTML();
-        if (value !== current && value !== sanitizeEmailHtml(current)) {
-            editor.commands.setContent(value || "", { emitUpdate: false });
-        }
+        if (next === current || next === sanitizeEmailHtml(current)) return;
+        suppressUpdateRef.current = true;
+        editor.commands.setContent(next, { emitUpdate: false });
+        suppressUpdateRef.current = false;
+        acceptsEmptyUpdateRef.current = isEmailHtmlEmpty(next);
     }, [value, editor]);
 
     useEffect(() => {

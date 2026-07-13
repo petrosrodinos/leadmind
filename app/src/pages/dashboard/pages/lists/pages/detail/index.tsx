@@ -1,4 +1,4 @@
-import { useState, type Key } from "react";
+import { useMemo, useState, type Key } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { Tabs } from "@heroui/react";
 import { ArrowLeft, List } from "lucide-react";
@@ -13,6 +13,7 @@ import { ListMembersTable } from "./components/list-members-table";
 import { AddContactsModal } from "./components/add-contacts-modal";
 import { ListActionsDropdown } from "./components/list-actions-dropdown";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { BulkSendMessageModal } from "@/pages/dashboard/components/bulk-send-message-modal";
 import { ContactAudienceAnalyticsPanel } from "@/pages/dashboard/components/audience-analytics/contact-audience-analytics-panel";
 import { ContactStackViewerScope } from "@/pages/dashboard/components/contact-stack-viewer";
 import { ListDetailSkeleton } from "./components/list-detail-skeleton";
@@ -31,6 +32,7 @@ export default function ListDetailPage() {
     const [addContactsOpen, setAddContactsOpen] = useState(false);
     const [selectedKeys, setSelectedKeys] = useState<Set<string>>(new Set());
     const [scrapeConfirmOpen, setScrapeConfirmOpen] = useState(false);
+    const [composeOpen, setComposeOpen] = useState(false);
 
     const scrapeEmailsBulk = useBulkScrapeContactEmails();
 
@@ -51,6 +53,10 @@ export default function ListDetailPage() {
     });
 
     const members = membersData?.data ?? [];
+    const selectedMembers = useMemo(
+        () => members.filter((m) => selectedKeys.has(m.uuid)),
+        [members, selectedKeys],
+    );
     const total = membersData?.total ?? 0;
     const totalPages = membersData?.totalPages ?? 1;
     const memberUuids = members.map((member) => member.uuid);
@@ -162,6 +168,12 @@ export default function ListDetailPage() {
                                 }
                                 scrapeEmailsDisabled={!canScrapeEmails}
                                 scrapeEmailsPending={scrapeEmailsBulk.isPending}
+                                onSendMessagesSelected={
+                                    currentTab === ListDetailTabIds.CONTACTS
+                                        ? () => setComposeOpen(true)
+                                        : undefined
+                                }
+                                sendMessagesDisabled={selectedKeys.size === 0}
                             />
                         </div>
                     </div>
@@ -224,6 +236,12 @@ export default function ListDetailPage() {
                         confirmLabel="Start lookup"
                         isPending={scrapeEmailsBulk.isPending}
                         onConfirm={handleScrapeEmails}
+                    />
+                    <BulkSendMessageModal
+                        isOpen={composeOpen}
+                        onOpenChange={setComposeOpen}
+                        contacts={selectedMembers}
+                        onComplete={() => setSelectedKeys(new Set())}
                     />
                 </div>
             )}

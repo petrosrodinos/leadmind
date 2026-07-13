@@ -20,9 +20,9 @@ import { Routes } from "@/routes/routes";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import type { MessageComposerValue } from "@/features/messaging/components/message-composer";
 import {
-    EmailProviderAllocationPicker,
+    EmailProviderSelect,
     isEmailProviderAllocationValid,
-} from "@/features/messaging/components/email-provider-allocation-picker";
+} from "@/features/messaging/components/email-provider-select";
 import { SenderProfileSelect } from "@/features/messaging/components/sender-profile-select";
 import { WizardShell, type WizardStepKey, WIZARD_STEPS } from "./wizard-shell";
 import { StepBasics, type BasicsValues } from "./step-basics";
@@ -89,7 +89,7 @@ export function CampaignWizard({ campaign }: CampaignWizardProps) {
         campaign.selected_contact_count > 0 ? campaign.selected_contact_count : 0,
     );
     const [emailAllocations, setEmailAllocations] = useState<EmailProviderAllocation[]>(
-        (campaign.email_provider_allocations as EmailProviderAllocation[] | null) ?? [],
+        () => campaign.email_provider_allocations ?? [],
     );
     const [senderProfileUuid, setSenderProfileUuid] = useState<string | null>(
         campaign.sender_profile_uuid,
@@ -101,10 +101,11 @@ export function CampaignWizard({ campaign }: CampaignWizardProps) {
     const isDraft = campaign.status === CampaignStatuses.DRAFT;
     const isPersonalized = basics.campaign_type === CampaignType.PERSONALIZED;
     const includesEmail = basics.channels.includes(Channel.EMAIL);
-    const showEmailAllocation = includesEmail && !isPersonalized;
-    const emailAllocationValid =
-        !showEmailAllocation ||
-        isEmailProviderAllocationValid(emailAllocations, emailAudienceCount);
+    const showEmailProvider = includesEmail && !isPersonalized;
+    const emailProviderMissing =
+        showEmailProvider &&
+        emailAudienceCount > 0 &&
+        !isEmailProviderAllocationValid(emailAllocations, emailAudienceCount);
 
     useEffect(() => {
         if (activeStep !== "review") return;
@@ -181,8 +182,10 @@ export function CampaignWizard({ campaign }: CampaignWizardProps) {
                           ? message.linkedinContent || undefined
                           : null,
                   }),
-            ...(showEmailAllocation
-                ? { email_provider_allocations: emailAllocations }
+            ...(showEmailProvider && emailAllocations.length > 0
+                ? {
+                      email_provider_allocations: emailAllocations,
+                  }
                 : {}),
             ...(senderProfileUuid ? { sender_profile_uuid: senderProfileUuid } : {}),
             ...extra,
@@ -210,14 +213,16 @@ export function CampaignWizard({ campaign }: CampaignWizardProps) {
     };
 
     const handleStart = async () => {
-        if (showEmailAllocation && !emailAllocationValid) return;
+        if (emailProviderMissing) return;
         if (!senderProfileUuid) return;
         try {
             await persist();
             await startMutation.mutateAsync({
                 uuid: campaign.uuid,
-                ...(showEmailAllocation
-                    ? { email_provider_allocations: emailAllocations }
+                ...(showEmailProvider && emailAllocations.length > 0
+                    ? {
+                          email_provider_allocations: emailAllocations,
+                      }
                     : {}),
                 sender_profile_uuid: senderProfileUuid,
             });
@@ -362,9 +367,9 @@ export function CampaignWizard({ campaign }: CampaignWizardProps) {
                         ) : (
                             <>This will dispatch the campaign to all matched contacts immediately.</>
                         )}
-                        {showEmailAllocation ? (
+                        {showEmailProvider ? (
                             <div className="mt-4">
-                                <EmailProviderAllocationPicker
+                                <EmailProviderSelect
                                     totalCount={emailAudienceCount}
                                     value={emailAllocations}
                                     onChange={setEmailAllocations}
@@ -385,9 +390,7 @@ export function CampaignWizard({ campaign }: CampaignWizardProps) {
                     isPersonalized ? "Generate Drafts" : basics.scheduled_at ? "Schedule" : "Start now"
                 }
                 isPending={startMutation.isPending || updateMutation.isPending}
-                isConfirmDisabled={
-                    (showEmailAllocation && !emailAllocationValid) || !senderProfileUuid
-                }
+                isConfirmDisabled={emailProviderMissing || !senderProfileUuid}
                 onConfirm={handleStart}
             />
         </div>

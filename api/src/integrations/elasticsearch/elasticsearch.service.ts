@@ -21,6 +21,7 @@ import {
     LEADS_INDEX,
     LEADS_MAPPING,
 } from './elasticsearch.constants';
+import { ELASTICSEARCH_CONFIG } from './elasticsearch.config';
 import {
     SearchQuery,
     SearchResult,
@@ -217,7 +218,7 @@ export class ElasticsearchService implements OnModuleInit {
         const page = query.page ?? 1;
         const from = (page - 1) * limit;
 
-        if (query.q && userUuid) {
+        if (query.q && userUuid && ELASTICSEARCH_CONFIG.create_embedding) {
             const vector = await this.embed(userUuid, query.q);
             const response = await this.client.search({
                 index,
@@ -308,6 +309,10 @@ export class ElasticsearchService implements OnModuleInit {
     }
 
     private async embed(user_uuid: string, text: string): Promise<number[]> {
+        if (!ELASTICSEARCH_CONFIG.create_embedding) {
+            return [];
+        }
+
         return this.aiService.embedText(user_uuid, text.trim() || ' ', {
             operation: 'EMBEDDING',
         });
