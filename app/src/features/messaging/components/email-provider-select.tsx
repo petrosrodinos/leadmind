@@ -1,11 +1,11 @@
 import { useEffect, useMemo } from "react";
-import { Label, ListBox, Select } from "@heroui/react";
+import { Chip, Header, Label, ListBox, Select } from "@heroui/react";
 import { Link } from "react-router-dom";
 import { useIntegrations } from "@/features/integrations/hooks/use-integrations";
 import type { EmailProviderTarget } from "@/features/integrations/interfaces/integrations.interface";
 import {
     allocationKey,
-    listSendableEmailAccounts,
+    groupSendableEmailAccounts,
     resolveDefaultEmailTarget,
 } from "@/features/integrations/utils/email-provider-utils";
 import { Routes } from "@/routes/routes";
@@ -22,9 +22,13 @@ export function EmailProviderSelect({
     disabled = false,
 }: EmailProviderSelectProps) {
     const { data: integrations, isLoading } = useIntegrations();
-    const sendableAccounts = useMemo(
-        () => listSendableEmailAccounts(integrations),
+    const groupedAccounts = useMemo(
+        () => groupSendableEmailAccounts(integrations),
         [integrations],
+    );
+    const sendableAccounts = useMemo(
+        () => groupedAccounts.flatMap((group) => group.accounts),
+        [groupedAccounts],
     );
 
     const selectedKey = value ? allocationKey(value) : null;
@@ -59,6 +63,10 @@ export function EmailProviderSelect({
         );
     }
 
+    const selectedAccount = sendableAccounts.find(
+        (row) => allocationKey(row) === selectedKey,
+    );
+
     return (
         <div className="space-y-1.5">
             <Label className="text-sm text-foreground">Send from</Label>
@@ -76,34 +84,62 @@ export function EmailProviderSelect({
                 isDisabled={disabled}
             >
                 <Select.Trigger>
-                    <Select.Value />
+                    <Select.Value>
+                        {selectedAccount ? (
+                            <span className="flex items-center gap-2 min-w-0">
+                                <span className="truncate">{selectedAccount.label}</span>
+                                {selectedAccount.isDefault ? (
+                                    <Chip size="sm" variant="soft" color="warning">
+                                        <Chip.Label>Default</Chip.Label>
+                                    </Chip>
+                                ) : null}
+                            </span>
+                        ) : null}
+                    </Select.Value>
                     <Select.Indicator />
                 </Select.Trigger>
                 <Select.Popover>
                     <ListBox>
-                        {sendableAccounts.map((account) => {
-                            const key = allocationKey(account);
-                            const hint = account.last4 ? ` ····${account.last4}` : "";
-                            return (
-                                <ListBox.Item
-                                    key={key}
-                                    id={key}
-                                    textValue={`${account.label}${hint}`}
-                                >
-                                    {account.label}
-                                    {hint ? (
-                                        <span className="font-mono text-xs text-muted">
-                                            {hint}
-                                        </span>
-                                    ) : null}
-                                    <ListBox.ItemIndicator />
-                                </ListBox.Item>
-                            );
-                        })}
+                        {groupedAccounts.map((group) => (
+                            <ListBox.Section key={group.provider}>
+                                <Header className="text-xs font-medium uppercase tracking-wide text-muted">
+                                    {group.label}
+                                </Header>
+                                {group.accounts.map((account) => {
+                                    const key = allocationKey(account);
+                                    return (
+                                        <ListBox.Item
+                                            key={key}
+                                            id={key}
+                                            textValue={account.label}
+                                        >
+                                            <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+                                                <span className="truncate text-sm">
+                                                    Account {account.account}
+                                                </span>
+                                                {account.detail ? (
+                                                    <span className="truncate font-mono text-xs text-muted">
+                                                        {account.detail}
+                                                    </span>
+                                                ) : null}
+                                            </div>
+                                            {account.isDefault ? (
+                                                <Chip size="sm" variant="soft" color="warning">
+                                                    <Chip.Label>Default</Chip.Label>
+                                                </Chip>
+                                            ) : null}
+                                            <ListBox.ItemIndicator />
+                                        </ListBox.Item>
+                                    );
+                                })}
+                            </ListBox.Section>
+                        ))}
                     </ListBox>
                 </Select.Popover>
             </Select>
             <p className="text-xs text-muted">
+                {sendableAccounts.length} sendable account
+                {sendableAccounts.length === 1 ? "" : "s"} across Resend and SMTP.
                 SMTP sends won&apos;t receive delivery or open webhooks.
             </p>
         </div>

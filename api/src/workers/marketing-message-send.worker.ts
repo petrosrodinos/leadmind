@@ -25,6 +25,9 @@ export class MarketingMessageSendWorker extends WorkerHost {
     }
 
     async process(job: Job<MessageSendJobData>): Promise<void> {
+        this.logger.log(
+            `Campaign send job started jobId=${job.id} mcc=${job.data.mcc_uuid} campaign=${job.data.campaign_uuid} provider=${job.data.email_provider ?? 'default'} account=${job.data.email_account ?? 'default'}`,
+        );
         try {
             const providerOverride =
                 job.data.email_provider && job.data.email_account
@@ -34,12 +37,16 @@ export class MarketingMessageSendWorker extends WorkerHost {
                       }
                     : undefined;
             const result = await this.sendService.sendByMcc(job.data.mcc_uuid, providerOverride);
+            this.logger.log(
+                `Campaign send job finished mcc=${job.data.mcc_uuid} status=${result.status}${result.reason ? ` reason=${result.reason}` : ''}`,
+            );
             if (result.status === 'failed') {
                 throw new Error(result.reason ?? 'send failed');
             }
         } catch (error) {
             this.logger.error(
                 `Send job for MCC ${job.data.mcc_uuid} threw: ${error instanceof Error ? error.message : error}`,
+                error instanceof Error ? error.stack : undefined,
             );
             throw error;
         }

@@ -23,12 +23,19 @@ export class ResendAdapter {
   }
 
   public async sendEmail(createEmail: CreateEmail, apiKey?: string) {
+    const from = createEmail.from || this.emailFromAddresses.confirmation;
+    const keySource = apiKey ? 'integration' : 'default';
+
+    this.logger.log(
+      `Sending Resend email to=${createEmail.to} subject="${createEmail.subject}" from=${from} keySource=${keySource}`,
+    );
+
     try {
       const resendClient = apiKey
         ? this.resendConfig.createClient(apiKey)
         : this.resendConfig.getResendClient();
-      return await resendClient.emails.send({
-        from: createEmail.from || this.emailFromAddresses.confirmation,
+      const response = await resendClient.emails.send({
+        from,
         to: createEmail.to,
         subject: createEmail.subject,
         text: createEmail.text,
@@ -38,9 +45,41 @@ export class ResendAdapter {
         replyTo: createEmail.replyTo,
         headers: createEmail.headers,
       });
+
+      if (response.error) {
+        this.logger.error(
+          `Resend API error to=${createEmail.to} subject="${createEmail.subject}": ${response.error.name} - ${response.error.message}`,
+        );
+        throw new InternalServerErrorException(
+          `Failed to send email with Resend: ${response.error.message}`,
+        );
+      }
+
+      if (!response.data?.id) {
+        this.logger.error(
+          `Resend API returned no id to=${createEmail.to} subject="${createEmail.subject}" response=${JSON.stringify(response)}`,
+        );
+      }
+
+      this.logger.log(
+        `Resend email sent to=${createEmail.to} id=${response.data?.id ?? 'unknown'}`,
+      );
+
+      return response;
     } catch (error) {
-      this.logger.error(error);
+      if (error instanceof InternalServerErrorException) {
+        throw error;
+      }
+
+      this.logger.error(
+        `Resend send failed to=${createEmail.to} subject="${createEmail.subject}": ${this.errMsg(error)}`,
+        error instanceof Error ? error.stack : undefined,
+      );
       throw new InternalServerErrorException('Failed to send email with Resend');
     }
+  }
+
+  private errMsg(error: unknown): string {
+    return error instanceof Error ? error.message : String(error);
   }
 }

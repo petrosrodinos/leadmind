@@ -40,6 +40,7 @@ export interface IntegrationKey {
     label: string;
     env_name: string;
     last4: string | null;
+    display_value: string | null;
     created_at: string;
     updated_at: string;
 }

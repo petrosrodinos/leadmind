@@ -4,6 +4,7 @@ import {
     ConflictException,
     ForbiddenException,
     Injectable,
+    Logger,
     NotFoundException,
 } from '@nestjs/common';
 import { Queue } from 'bullmq';
@@ -36,6 +37,8 @@ import {
 
 @Injectable()
 export class OutreachService {
+    private readonly logger = new Logger(OutreachService.name);
+
     constructor(
         private readonly prisma: PrismaService,
         private readonly emailCredentialsService: EmailCredentialsService,
@@ -210,6 +213,11 @@ export class OutreachService {
             return { jobId: String(job.id) };
         }
 
+        if (message.status === MsgStatus.QUEUED) {
+            const job = await this.enqueueMessage(message.uuid, message.scheduled_at ?? undefined);
+            return { jobId: String(job.id) };
+        }
+
         if (message.status === MsgStatus.FAILED) {
             const preservedMetadata = message.metadata;
             await this.prisma.outreachMessage.update({
@@ -225,7 +233,7 @@ export class OutreachService {
             return { jobId: String(job.id) };
         }
 
-        throw new ConflictException('Only pending or failed messages can be sent');
+        throw new ConflictException('Only pending, queued, or failed messages can be sent');
     }
 
     async deleteMessage(user_uuid: string, message_uuid: string): Promise<void> {
@@ -318,13 +326,40 @@ export class OutreachService {
         });
     }
 
+    private async removeStaleOutreachSendJob(message_uuid: string): Promise<void> {
+        const existing = await this.outreachSendQueue.getJob(message_uuid);
+        if (!existing) {
+            return;
+        }
+        const state = await existing.getState();
+        if (state === 'active') {
+            this.logger.warn(
+                `Outreach job still active message=${message_uuid}; not enqueueing duplicate`,
+            );
+            throw new ConflictException('Message is already being sent');
+        }
+        await existing.remove();
+        this.logger.log(`Removed stale outreach job message=${message_uuid} state=${state}`);
+    }
+
     private async enqueueMessage(message_uuid: string, scheduled_at?: Date) {
+        await this.removeStaleOutreachSendJob(message_uuid);
+
         const delay = scheduled_at ? Math.max(0, scheduled_at.getTime() - Date.now()) : 0;
-        return this.outreachSendQueue.add(
+        const job = await this.outreachSendQueue.add(
             `outreach-send:${message_uuid}`,
             { message_uuid },
-            { delay, removeOnComplete: 100, removeOnFail: 100 },
+            {
+                delay,
+                jobId: message_uuid,
+                removeOnComplete: 100,
+                removeOnFail: 100,
+            },
         );
+        this.logger.log(
+            `Outreach message queued message=${message_uuid} jobId=${job.id} delayMs=${delay}`,
+        );
+        return job;
     }
 
     private async requireOwnedContact(user_uuid: string, contact_uuid: string) {

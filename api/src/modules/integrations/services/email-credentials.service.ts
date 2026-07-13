@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import {
     ExternalIntegrationProvider,
     IntegrationKeyType,
@@ -23,22 +23,30 @@ const EMAIL_PROVIDERS = [
 
 @Injectable()
 export class EmailCredentialsService {
+    private readonly logger = new Logger(EmailCredentialsService.name);
+
     constructor(
         private readonly integrationsService: IntegrationsService,
         private readonly prisma: PrismaService,
     ) {}
 
     async getResendApiKey(user_uuid: string, account: string): Promise<string> {
+        this.logger.log(`Loading Resend API key user=${user_uuid} account=${account}`);
         await this.assertSendableAccount(user_uuid, ExternalIntegrationProvider.RESEND, account);
-        return this.integrationsService.getDecryptedSecret(
+        const secret = await this.integrationsService.getDecryptedSecret(
             user_uuid,
             ExternalIntegrationProvider.RESEND,
             IntegrationKeyType.API_KEY,
             account,
         );
+        this.logger.log(
+            `Resend API key loaded user=${user_uuid} account=${account} last4=${secret.slice(-4)}`,
+        );
+        return secret;
     }
 
     async getSmtpConfig(user_uuid: string, account: string): Promise<SmtpConfig> {
+        this.logger.log(`Loading SMTP config user=${user_uuid} account=${account}`);
         await this.assertSendableAccount(user_uuid, ExternalIntegrationProvider.SMTP, account);
         const [host, port, username, password, fromEmail] = await Promise.all([
             this.integrationsService.getDecryptedSecret(
@@ -78,13 +86,17 @@ export class EmailCredentialsService {
             throw new BadRequestException(`Invalid SMTP port for account ${account}`);
         }
 
-        return {
+        const config = {
             host: host.trim(),
             port: parsedPort,
             username: username.trim(),
             password,
             fromEmail: fromEmail.trim(),
         };
+        this.logger.log(
+            `SMTP config loaded user=${user_uuid} account=${account} host=${config.host}:${config.port} from=${config.fromEmail} smtpUser=${config.username}`,
+        );
+        return config;
     }
 
     async assertSendableAccount(
@@ -97,10 +109,16 @@ export class EmailCredentialsService {
             (row) => row.provider === provider && row.account === account.trim(),
         );
         if (!match) {
+            this.logger.warn(
+                `Sendable account check failed user=${user_uuid} provider=${provider} account=${account} available=${sendable.map((row) => `${row.provider}:${row.account}`).join(',') || 'none'}`,
+            );
             throw new BadRequestException(
                 `${provider} account "${account}" is not configured or incomplete`,
             );
         }
+        this.logger.log(
+            `Sendable account verified user=${user_uuid} provider=${provider} account=${account}`,
+        );
     }
 
     async resolveSendableAccounts(user_uuid: string): Promise<SendableEmailAccount[]> {
@@ -137,6 +155,7 @@ export class EmailCredentialsService {
     }
 
     async resolveDefaultTarget(user_uuid: string): Promise<EmailProviderTarget | null> {
+        this.logger.log(`Resolving default email target user=${user_uuid}`);
         const integrations = await this.prisma.integration.findMany({
             where: {
                 user_uuid,
@@ -154,9 +173,13 @@ export class EmailCredentialsService {
             );
             if (!account) continue;
             if (!this.isAccountComplete(provider, integration.keys, account)) continue;
+            this.logger.log(
+                `Default email target user=${user_uuid} provider=${provider} account=${account}`,
+            );
             return { provider, account };
         }
 
+        this.logger.warn(`No default email target user=${user_uuid}`);
         return null;
     }
 

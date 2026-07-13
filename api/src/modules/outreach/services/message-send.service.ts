@@ -50,6 +50,10 @@ export class MessageSendService {
         message: OutreachMessage & { contact: Contact },
         providerOverride?: EmailProviderTarget,
     ): Promise<DeliveredMessage> {
+        this.logger.log(
+            `Deliver outreach message=${message.uuid} channel=${message.channel} user=${message.user_uuid} contact=${message.contact_uuid}`,
+        );
+
         if (message.channel === Channel.PHONE_CALL) {
             if (!message.contact.phone) {
                 throw new Error('Contact has no phone');
@@ -105,6 +109,10 @@ export class MessageSendService {
                 parseEmailProviderMetadata(message.metadata) ??
                 (await this.emailCredentialsService.resolveDefaultTarget(message.user_uuid));
 
+            this.logger.log(
+                `Email send message=${message.uuid} to=${message.contact.email} subject="${rendered.subject ?? 'Outreach message'}" provider=${target?.provider ?? 'none'} account=${target?.account ?? 'none'} replyTo=${replyTo}`,
+            );
+
             const result: any = await this.sendEmailWithProvider(
                 message.user_uuid,
                 createEmail,
@@ -112,6 +120,15 @@ export class MessageSendService {
             );
             const provider_message_id =
                 result?.data?.id ?? result?.id ?? null;
+            if (!provider_message_id) {
+                this.logger.error(
+                    `Email provider returned no message id message=${message.uuid} provider=${target?.provider ?? 'none'} account=${target?.account ?? 'none'} result=${JSON.stringify(result)}`,
+                );
+                throw new Error('Email provider did not confirm delivery');
+            }
+            this.logger.log(
+                `Email delivered message=${message.uuid} providerMessageId=${provider_message_id}`,
+            );
             return { provider_message_id };
         }
 
@@ -142,6 +159,9 @@ export class MessageSendService {
         target: EmailProviderTarget | null,
     ) {
         if (target?.provider === ExternalIntegrationProvider.SMTP) {
+            this.logger.log(
+                `Using SMTP account=${target.account} user=${user_uuid} to=${createEmail.to}`,
+            );
             const smtpConfig = await this.emailCredentialsService.getSmtpConfig(
                 user_uuid,
                 target.account,
@@ -153,6 +173,9 @@ export class MessageSendService {
         }
 
         if (target?.provider === ExternalIntegrationProvider.RESEND) {
+            this.logger.log(
+                `Using Resend account=${target.account} user=${user_uuid} to=${createEmail.to}`,
+            );
             const apiKey = await this.emailCredentialsService.getResendApiKey(
                 user_uuid,
                 target.account,
@@ -162,9 +185,15 @@ export class MessageSendService {
 
         const envKey = this.configService.get<string>('RESEND_API_KEY');
         if (envKey) {
+            this.logger.log(
+                `Using Resend env RESEND_API_KEY to=${createEmail.to} (no integration target)`,
+            );
             return this.resendMailService.sendEmail(createEmail, envKey);
         }
 
+        this.logger.error(
+            `No email provider configured user=${user_uuid} to=${createEmail.to} target=${JSON.stringify(target)} envResend=${envKey ? 'set' : 'missing'}`,
+        );
         throw new Error('No email provider configured');
     }
 
@@ -180,6 +209,8 @@ export class MessageSendService {
             where: { uuid: message_uuid },
             data: {
                 status: MsgStatus.FAILED,
+                sent_at: null,
+                provider_message_id: null,
                 metadata: { error: error_message } as Prisma.InputJsonValue,
             },
         });
@@ -200,6 +231,8 @@ export class MessageSendService {
             where: { uuid: message_uuid },
             data: {
                 status: MsgStatus.FAILED,
+                sent_at: null,
+                provider_message_id: null,
                 metadata: metadata as Prisma.InputJsonValue,
             },
         });

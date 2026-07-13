@@ -18,12 +18,12 @@ export class ResendConfig {
   private initResend() {
     const apiKey = this.configService.get<string>('RESEND_API_KEY');
     if (!apiKey) {
-      this.logger.error('RESEND_API_KEY is not configured');
+      this.logger.warn('RESEND_API_KEY is not configured in environment');
       return;
     }
 
     this.resendClient = new Resend(apiKey);
-    this.logger.debug('Resend initialized');
+    this.logger.log(`Resend env client initialized last4=${apiKey.slice(-4)}`);
   }
 
   getResendClient(): Resend {
@@ -35,6 +35,9 @@ export class ResendConfig {
   }
 
   createClient(apiKey: string): Resend {
+    this.logger.log(
+      `Creating Resend client keySource=integration last4=${apiKey.slice(-4)}`,
+    );
     return createResendClient(apiKey);
   }
 }

@@ -55,6 +55,32 @@ export const MASKED_INTEGRATION_KEY_TYPES = new Set<IntegrationKeyType>([
     "PASSWORD",
 ]);
 
+const SMTP_DISPLAYABLE_KEY_TYPES = new Set<IntegrationKeyType>([
+    "HOST",
+    "PORT",
+    "USERNAME",
+    "FROM_EMAIL",
+]);
+
+export function shouldExposeIntegrationKeyDisplayValue(
+    provider: IntegrationProvider,
+    keyType: IntegrationKeyType,
+): boolean {
+    return provider === "SMTP" && SMTP_DISPLAYABLE_KEY_TYPES.has(keyType);
+}
+
+export function formatIntegrationKeyDisplay(
+    key: Pick<IntegrationKey, "last4" | "display_value">,
+): string | null {
+    if (key.display_value) {
+        return key.display_value;
+    }
+    if (key.last4) {
+        return `•••• ${key.last4}`;
+    }
+    return null;
+}
+
 export function formatIntegrationKeyEnvName(
     provider: IntegrationProvider,
     keyType: IntegrationKeyType,
@@ -101,6 +127,82 @@ export function providerSupportsDefaultAccountSelection(
     provider: IntegrationProvider,
 ): boolean {
     return DEFAULT_ACCOUNT_SELECTION_PROVIDERS.includes(provider);
+}
+
+export function resolveEffectiveDefaultAccount(
+    stored: string | null | undefined,
+    keys: IntegrationKey[],
+): string | null {
+    const accounts = listDistinctIntegrationAccounts(keys);
+    if (accounts.length === 0) {
+        return null;
+    }
+    if (stored?.trim() && accounts.includes(stored.trim())) {
+        return stored.trim();
+    }
+    return accounts[0];
+}
+
+export function suggestNextAccountLabel(keys: IntegrationKey[]): string {
+    const accounts = listDistinctIntegrationAccounts(keys);
+    if (accounts.length === 0) {
+        return "1";
+    }
+
+    const numericAccounts = accounts
+        .map((account) => Number.parseInt(account, 10))
+        .filter((value) => !Number.isNaN(value));
+
+    if (numericAccounts.length === accounts.length) {
+        return String(Math.max(...numericAccounts) + 1);
+    }
+
+    let candidate = 1;
+    while (accounts.includes(String(candidate))) {
+        candidate += 1;
+    }
+    return String(candidate);
+}
+
+export function getMissingKeyTypesForAccount(
+    provider: IntegrationProvider,
+    keys: IntegrationKey[],
+    account: string,
+): IntegrationKeyType[] {
+    const accountKeys = keys.filter((key) => key.account === account);
+    const used = new Set(accountKeys.map((key) => key.key_type));
+    return PROVIDER_KEY_TYPES[provider].filter((keyType) => !used.has(keyType));
+}
+
+export function isEmailAccountSendable(
+    provider: Extract<IntegrationProvider, "RESEND" | "SMTP">,
+    keys: IntegrationKey[],
+    account: string,
+): boolean {
+    const accountKeys = keys.filter((key) => key.account === account);
+    if (provider === "RESEND") {
+        return accountKeys.some((key) => key.key_type === "API_KEY");
+    }
+    return PROVIDER_KEY_TYPES.SMTP.every((keyType) =>
+        accountKeys.some((key) => key.key_type === keyType),
+    );
+}
+
+export function countSendableEmailAccounts(
+    providerView: IntegrationProviderView,
+): number {
+    if (providerView.provider !== "RESEND" && providerView.provider !== "SMTP") {
+        return 0;
+    }
+    return listDistinctIntegrationAccounts(providerView.keys).filter((account) =>
+        isEmailAccountSendable(providerView.provider as "RESEND" | "SMTP", providerView.keys, account),
+    ).length;
+}
+
+function listDistinctIntegrationAccounts(keys: IntegrationKey[]): string[] {
+    return [...new Set(keys.map((key) => key.account))].sort((left, right) =>
+        left.localeCompare(right, undefined, { numeric: true }),
+    );
 }
 
 export function canShowAddKeyButton(providerView: IntegrationProviderView): boolean {

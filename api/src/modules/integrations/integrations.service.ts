@@ -2,6 +2,7 @@ import {
     BadRequestException,
     ConflictException,
     Injectable,
+    Logger,
     NotFoundException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -34,6 +35,8 @@ import {
     providerAllowsMultipleAccounts,
     providerSupportsDefaultAccountSelection,
     resolveEffectiveDefaultAccount,
+    shouldExposeIntegrationKeyDisplayValue,
+    suggestNextIntegrationAccount,
 } from './constants/integration-key-types.constants';
 import { CreateIntegrationKeyDto } from './dto/create-integration-key.dto';
 import { SetDefaultIntegrationAccountDto } from './dto/set-default-integration-account.dto';
@@ -46,6 +49,8 @@ import {
 
 @Injectable()
 export class IntegrationsService {
+    private readonly logger = new Logger(IntegrationsService.name);
+
     constructor(
         private readonly prisma: PrismaService,
         private readonly config: ConfigService,
@@ -96,6 +101,11 @@ export class IntegrationsService {
         }
 
         const integration = await this.ensureIntegration(user_uuid, provider);
+        const integrationWithKeys = await this.prisma.integration.findUnique({
+            where: { uuid: integration.uuid },
+            include: { keys: true },
+        });
+        const existingKeys = integrationWithKeys?.keys ?? [];
 
         if (!allowsMultipleAccounts) {
             const existing = await this.prisma.integrationKey.findFirst({
@@ -107,6 +117,25 @@ export class IntegrationsService {
             if (existing) {
                 throw new ConflictException(
                     `${KEY_TYPE_LABELS[dto.key_type]} is already configured for ${INTEGRATION_PROVIDER_LABELS[provider]}. Update the existing key instead.`,
+                );
+            }
+        } else {
+            const existingForAccount =
+                await this.prisma.integrationKey.findUnique({
+                    where: {
+                        integration_uuid_key_type_account: {
+                            integration_uuid: integration.uuid,
+                            key_type: dto.key_type,
+                            account,
+                        },
+                    },
+                });
+            if (existingForAccount) {
+                const suggestedAccount = suggestNextIntegrationAccount(
+                    existingKeys,
+                );
+                throw new ConflictException(
+                    `${KEY_TYPE_LABELS[dto.key_type]} already exists for account "${account}". Update the existing key or add a new account (for example "${suggestedAccount}").`,
                 );
             }
         }
@@ -271,10 +300,16 @@ export class IntegrationsService {
             },
         });
         if (!key) {
+            this.logger.error(
+                `Integration credential not found user=${user_uuid} env=${formatIntegrationKeyEnvName(provider, key_type, resolvedAccount)}`,
+            );
             throw new NotFoundException(
                 `Credential ${formatIntegrationKeyEnvName(provider, key_type, resolvedAccount)} not found`,
             );
         }
+        this.logger.log(
+            `Integration credential loaded user=${user_uuid} env=${formatIntegrationKeyEnvName(provider, key_type, resolvedAccount)} last4=${key.last4 ?? 'n/a'}`,
+        );
         return decryptIntegrationSecret(key.secret, this.encryptionKey());
     }
 
@@ -389,6 +424,11 @@ export class IntegrationsService {
         key: IntegrationKey,
         provider: ExternalIntegrationProvider,
     ): IntegrationKeyResponse {
+        const exposeDisplayValue = shouldExposeIntegrationKeyDisplayValue(
+            provider,
+            key.key_type,
+        );
+
         return {
             uuid: key.uuid,
             key_type: key.key_type,
@@ -399,7 +439,10 @@ export class IntegrationsService {
                 key.key_type,
                 key.account,
             ),
-            last4: key.last4,
+            last4: exposeDisplayValue ? null : key.last4,
+            display_value: exposeDisplayValue
+                ? decryptIntegrationSecret(key.secret, this.encryptionKey())
+                : null,
             created_at: key.created_at,
             updated_at: key.updated_at,
         };

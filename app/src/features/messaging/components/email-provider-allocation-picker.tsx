@@ -6,7 +6,7 @@ import type { EmailProviderAllocation } from "@/features/integrations/interfaces
 import {
     allocationKey,
     buildEqualAllocations,
-    listSendableEmailAccounts,
+    groupSendableEmailAccounts,
     validateAllocations,
 } from "@/features/integrations/utils/email-provider-utils";
 import { Routes } from "@/routes/routes";
@@ -25,9 +25,13 @@ export function EmailProviderAllocationPicker({
     disabled = false,
 }: EmailProviderAllocationPickerProps) {
     const { data: integrations, isLoading } = useIntegrations();
-    const sendableAccounts = useMemo(
-        () => listSendableEmailAccounts(integrations),
+    const groupedAccounts = useMemo(
+        () => groupSendableEmailAccounts(integrations),
         [integrations],
+    );
+    const sendableAccounts = useMemo(
+        () => groupedAccounts.flatMap((group) => group.accounts),
+        [groupedAccounts],
     );
 
     const selectedKeys = useMemo(
@@ -75,8 +79,10 @@ export function EmailProviderAllocationPicker({
     const validationError = validateAllocations(value, totalCount);
     const allocated = value.reduce((sum, row) => sum + row.count, 0);
 
-    const resendAccounts = sendableAccounts.filter((row) => row.provider === "RESEND");
-    const smtpAccounts = sendableAccounts.filter((row) => row.provider === "SMTP");
+    const resendAccounts =
+        groupedAccounts.find((group) => group.provider === "RESEND")?.accounts ?? [];
+    const smtpAccounts =
+        groupedAccounts.find((group) => group.provider === "SMTP")?.accounts ?? [];
 
     const toggleAccount = (account: (typeof sendableAccounts)[number], checked: boolean) => {
         const key = allocationKey(account);
@@ -162,7 +168,7 @@ export function EmailProviderAllocationPicker({
                                         {account.label}
                                         {account.last4 ? (
                                             <span className="ml-1 font-mono text-xs text-muted">
-                                                ····{account.last4}
+                                                {account.last4}
                                             </span>
                                         ) : null}
                                     </span>

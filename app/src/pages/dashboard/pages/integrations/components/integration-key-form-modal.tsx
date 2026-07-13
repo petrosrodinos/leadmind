@@ -16,9 +16,12 @@ import {
 } from "@/features/integrations/hooks/use-integrations";
 import {
     formatIntegrationKeyEnvName,
+    getMissingKeyTypesForAccount,
     KEY_TYPE_PLACEHOLDERS,
     MASKED_INTEGRATION_KEY_TYPES,
     providerAllowsMultipleAccounts,
+    shouldExposeIntegrationKeyDisplayValue,
+    suggestNextAccountLabel,
 } from "@/features/integrations/constants/integration-key-types";
 import type {
     IntegrationKey,
@@ -32,6 +35,7 @@ interface IntegrationKeyFormModalProps {
     providerView: IntegrationProviderView;
     keyItem?: IntegrationKey | null;
     initialKeyType?: IntegrationKeyType;
+    initialAccount?: string;
 }
 
 export function IntegrationKeyFormModal({
@@ -40,6 +44,7 @@ export function IntegrationKeyFormModal({
     providerView,
     keyItem,
     initialKeyType,
+    initialAccount,
 }: IntegrationKeyFormModalProps) {
     const createKey = useCreateIntegrationKey(providerView.provider);
     const updateKey = useUpdateIntegrationKey();
@@ -49,13 +54,38 @@ export function IntegrationKeyFormModal({
         providerView.allows_multiple_accounts ??
         providerAllowsMultipleAccounts(providerView.provider);
 
+    const suggestedAccount = useMemo(
+        () => suggestNextAccountLabel(providerView.keys),
+        [providerView.keys],
+    );
+
     const availableKeyTypes = useMemo(() => {
-        if (allowsMultipleAccounts || isEdit) {
+        if (isEdit) {
             return providerView.keyTypes;
         }
-        const used = new Set(providerView.keys.map((key) => key.key_type));
-        return providerView.keyTypes.filter((row) => !used.has(row.key_type));
-    }, [allowsMultipleAccounts, isEdit, providerView.keyTypes, providerView.keys]);
+        if (!allowsMultipleAccounts) {
+            const used = new Set(providerView.keys.map((key) => key.key_type));
+            return providerView.keyTypes.filter((row) => !used.has(row.key_type));
+        }
+        const accountForTypes = (initialAccount ?? suggestedAccount).trim();
+        const missing = getMissingKeyTypesForAccount(
+            providerView.provider,
+            providerView.keys,
+            accountForTypes,
+        );
+        if (missing.length === 0) {
+            return providerView.keyTypes;
+        }
+        return providerView.keyTypes.filter((row) => missing.includes(row.key_type));
+    }, [
+        allowsMultipleAccounts,
+        initialAccount,
+        isEdit,
+        providerView.keyTypes,
+        providerView.keys,
+        providerView.provider,
+        suggestedAccount,
+    ]);
 
     const defaultKeyType =
         initialKeyType ??
@@ -79,12 +109,20 @@ export function IntegrationKeyFormModal({
     useEffect(() => {
         if (!isOpen) return;
         setKeyType(keyItem?.key_type ?? initialKeyType ?? defaultKeyType);
-        setAccount(keyItem?.account ?? "1");
-        setSecret("");
+        setAccount(keyItem?.account ?? initialAccount ?? suggestedAccount);
+        setSecret(
+            keyItem &&
+                shouldExposeIntegrationKeyDisplayValue(
+                    providerView.provider,
+                    keyItem.key_type,
+                )
+                ? (keyItem.display_value ?? "")
+                : "",
+        );
         setKeyTypeError(null);
         setAccountError(null);
         setSecretError(null);
-    }, [isOpen, keyItem, initialKeyType, defaultKeyType]);
+    }, [isOpen, initialAccount, keyItem, initialKeyType, defaultKeyType, suggestedAccount, providerView.provider]);
 
     const pending = createKey.isPending || updateKey.isPending;
     const envPreview = formatIntegrationKeyEnvName(

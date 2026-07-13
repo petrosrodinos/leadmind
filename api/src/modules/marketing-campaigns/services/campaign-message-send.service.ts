@@ -165,6 +165,10 @@ export class CampaignMessageSendService {
         }
 
         try {
+            const providerMeta = parseEmailProviderMetadata(message.metadata);
+            this.logger.log(
+                `Campaign deliver mcc=${mcc.uuid} message=${message.uuid} channel=${mcc.channel} provider=${providerOverride?.provider ?? providerMeta?.provider ?? 'default'} account=${providerOverride?.account ?? providerMeta?.account ?? 'default'} to=${mcc.contact.email ?? mcc.contact.phone ?? 'unknown'}`,
+            );
             const { provider_message_id } = await this.messageSendService.deliverOutreachMessage(
                 {
                     ...message,
@@ -204,6 +208,9 @@ export class CampaignMessageSendService {
             ]);
 
             await this.checkCompletion(mcc.campaign_uuid);
+            this.logger.log(
+                `Campaign send succeeded mcc=${mcc.uuid} message=${message.uuid} providerMessageId=${provider_message_id}`,
+            );
             return { status: 'sent' };
         } catch (error) {
             const error_message = error instanceof Error ? error.message : 'Unknown error';
@@ -240,7 +247,7 @@ export class CampaignMessageSendService {
                 }),
             ]);
             await this.checkCompletion(mcc.campaign_uuid);
-            this.logger.error(`MCC ${mcc.uuid} send failed: ${error_message}`);
+            this.logger.error(`MCC ${mcc.uuid} send failed: ${error_message}`, error instanceof Error ? error.stack : undefined);
             return { status: 'failed', reason: error_message };
         }
     }

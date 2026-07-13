@@ -8,6 +8,7 @@ import { ContactsModule } from '@/modules/contacts/contacts.module';
 import { OutreachModule } from '@/modules/outreach/outreach.module';
 import { MarketingCampaignsModule } from '@/modules/marketing-campaigns/marketing-campaigns.module';
 import { ResendModule } from '@/integrations/notifications/resend/resend.module';
+import { SmtpModule } from '@/integrations/notifications/smtp/smtp.module';
 import { TwillioModule } from '@/integrations/notifications/twillio/twillio.module';
 import { GatewaysModule } from '@/gateways/gateways.module';
 import {
@@ -35,6 +36,7 @@ import { ReminderTriggerWorker } from './reminder-trigger.worker';
         OutreachModule,
         MarketingCampaignsModule,
         ResendModule,
+        SmtpModule,
         TwillioModule,
         GatewaysModule,
         BullModule.registerQueue(

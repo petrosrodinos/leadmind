@@ -9,11 +9,17 @@ import {
     Server,
     Sparkles,
 } from "lucide-react";
-import { DISABLED_INTEGRATION_PROVIDERS, canShowAddKeyButton } from "@/features/integrations/constants/integration-key-types";
+import {
+    canShowAddKeyButton,
+    countSendableEmailAccounts,
+    DISABLED_INTEGRATION_PROVIDERS,
+    suggestNextAccountLabel,
+} from "@/features/integrations/constants/integration-key-types";
 import { useIntegrations } from "@/features/integrations/hooks/use-integrations";
 import type { IntegrationProviderView } from "@/features/integrations/interfaces/integrations.interface";
 import { IntegrationDetailModal } from "./components/integration-detail-modal";
 import { IntegrationKeyFormModal } from "./components/integration-key-form-modal";
+import { SmtpAccountFormModal } from "./components/smtp-account-form-modal";
 
 const providerIcons: Record<string, ComponentType<{ className?: string }>> = {
     OPENAI: Sparkles,
@@ -133,6 +139,7 @@ export default function IntegrationsPage() {
     const [selected, setSelected] = useState<IntegrationProviderView | null>(null);
     const [detailOpen, setDetailOpen] = useState(false);
     const [quickAdd, setQuickAdd] = useState<IntegrationProviderView | null>(null);
+    const [smtpQuickAdd, setSmtpQuickAdd] = useState<IntegrationProviderView | null>(null);
 
     const providers = (data ?? FALLBACK_PROVIDERS).filter(
         (providerView) => providerView.provider !== "ANTHROPIC",
@@ -154,13 +161,12 @@ export default function IntegrationsPage() {
                     Integrations
                 </h1>
                 <p className="text-sm text-muted max-w-2xl">
-                    Store one credential per type for most providers. Resend and SMTP
-                    support multiple accounts — pick a default account for outbound
-                    email. Twilio also supports multiple accounts, e.g.{" "}
-                    <span className="font-mono">SMTP_HOST_1</span>,{" "}
-                    <span className="font-mono">SMTP_PORT_1</span>, and{" "}
-                    <span className="font-mono">SMTP_PASSWORD_1</span> for the same
-                    account reference.
+                    Connect API keys for AI, email, and scraping. Resend and SMTP
+                    support multiple accounts — use account labels like{" "}
+                    <span className="font-mono">1</span>,{" "}
+                    <span className="font-mono">2</span>, or{" "}
+                    <span className="font-mono">production</span>. Pick a default
+                    account for outbound email, or choose a provider when sending.
                 </p>
             </header>
 
@@ -176,7 +182,12 @@ export default function IntegrationsPage() {
                             onOpen={() => openDetail(providerView)}
                             onQuickAdd={() => {
                                 if (isProviderDisabled(providerView)) return;
-                                setQuickAdd(resolveProvider(providerView));
+                                const resolved = resolveProvider(providerView);
+                                if (resolved.provider === "SMTP") {
+                                    setSmtpQuickAdd(resolved);
+                                    return;
+                                }
+                                setQuickAdd(resolved);
                             }}
                         />
                     ))}
@@ -199,6 +210,20 @@ export default function IntegrationsPage() {
                         if (!open) setQuickAdd(null);
                     }}
                     providerView={quickAdd}
+                    initialAccount={suggestNextAccountLabel(quickAdd.keys)}
+                    initialKeyType={
+                        quickAdd.provider === "RESEND" ? "API_KEY" : undefined
+                    }
+                />
+            )}
+
+            {smtpQuickAdd && (
+                <SmtpAccountFormModal
+                    isOpen={!!smtpQuickAdd}
+                    onOpenChange={(open) => {
+                        if (!open) setSmtpQuickAdd(null);
+                    }}
+                    providerView={smtpQuickAdd}
                 />
             )}
         </div>
@@ -219,8 +244,11 @@ function IntegrationCard({
     const Icon = providerIcons[providerView.provider];
     const keyCount = providerView.keys.length;
     const accountCount = new Set(providerView.keys.map((row) => row.account)).size;
+    const sendableAccountCount = countSendableEmailAccounts(providerView);
     const configured = keyCount > 0;
     const showAddKey = canShowAddKeyButton(providerView);
+    const isEmailProvider =
+        providerView.provider === "RESEND" || providerView.provider === "SMTP";
 
     return (
         <article
@@ -285,12 +313,16 @@ function IntegrationCard({
                         ? "Unavailable"
                         : keyCount === 0
                           ? "No keys"
-                          : `${keyCount} key${keyCount === 1 ? "" : "s"} · ${accountCount} account${accountCount === 1 ? "" : "s"}`}
+                          : isEmailProvider && sendableAccountCount > 0
+                            ? `${sendableAccountCount} sendable account${sendableAccountCount === 1 ? "" : "s"} · ${keyCount} key${keyCount === 1 ? "" : "s"}`
+                            : `${keyCount} key${keyCount === 1 ? "" : "s"} · ${accountCount} account${accountCount === 1 ? "" : "s"}`}
                 </span>
                 {!disabled && showAddKey && (
                     <span onClick={(e) => e.stopPropagation()}>
                         <Button size="sm" variant="secondary" onPress={onQuickAdd}>
-                            Add key
+                            {providerView.provider === "SMTP"
+                                ? "Add account"
+                                : "Add key"}
                         </Button>
                     </span>
                 )}

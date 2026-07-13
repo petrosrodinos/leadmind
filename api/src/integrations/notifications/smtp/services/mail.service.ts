@@ -10,11 +10,25 @@ export class SmtpMailService {
     constructor(private readonly smtpAdapter: SmtpAdapter) {}
 
     async sendEmail(createEmail: CreateEmail, smtpConfig: SmtpConfig) {
+        this.logger.log(
+            `SMTP send requested to=${createEmail.to} subject="${createEmail.subject}" from=${createEmail.from ?? smtpConfig.fromEmail}`,
+        );
+
         try {
-            return await this.smtpAdapter.sendEmail(createEmail, smtpConfig);
+            const result = await this.smtpAdapter.sendEmail(createEmail, smtpConfig);
+            this.logger.log(`SMTP send completed to=${createEmail.to} id=${result?.id ?? 'unknown'}`);
+            return result;
         } catch (error) {
-            this.logger.error(error);
-            throw new InternalServerErrorException('Failed to send email with SMTP');
+            this.logger.error(
+                `SMTP send service failed to=${createEmail.to}: ${error instanceof Error ? error.message : String(error)}`,
+                error instanceof Error ? error.stack : undefined,
+            );
+            if (error instanceof InternalServerErrorException) {
+                throw error;
+            }
+            throw new InternalServerErrorException(
+                `Failed to send email with SMTP: ${error instanceof Error ? error.message : String(error)}`,
+            );
         }
     }
 }

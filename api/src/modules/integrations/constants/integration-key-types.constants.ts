@@ -64,6 +64,23 @@ export function isKeyTypeAllowedForProvider(
     return PROVIDER_KEY_TYPES[provider].includes(key_type);
 }
 
+const SMTP_DISPLAYABLE_KEY_TYPES = new Set<IntegrationKeyType>([
+    IntegrationKeyType.HOST,
+    IntegrationKeyType.PORT,
+    IntegrationKeyType.USERNAME,
+    IntegrationKeyType.FROM_EMAIL,
+]);
+
+export function shouldExposeIntegrationKeyDisplayValue(
+    provider: ExternalIntegrationProvider,
+    key_type: IntegrationKeyType,
+): boolean {
+    return (
+        provider === ExternalIntegrationProvider.SMTP &&
+        SMTP_DISPLAYABLE_KEY_TYPES.has(key_type)
+    );
+}
+
 export function formatIntegrationKeyEnvName(
     provider: ExternalIntegrationProvider,
     key_type: IntegrationKeyType,
@@ -113,4 +130,27 @@ export function resolveEffectiveDefaultAccount(
         return stored.trim();
     }
     return accounts[0];
+}
+
+export function suggestNextIntegrationAccount(
+    keys: { account: string }[],
+): string {
+    const accounts = listDistinctIntegrationAccounts(keys);
+    if (accounts.length === 0) {
+        return '1';
+    }
+
+    const numericAccounts = accounts
+        .map((account) => Number.parseInt(account, 10))
+        .filter((value) => !Number.isNaN(value));
+
+    if (numericAccounts.length === accounts.length) {
+        return String(Math.max(...numericAccounts) + 1);
+    }
+
+    let candidate = 1;
+    while (accounts.includes(String(candidate))) {
+        candidate += 1;
+    }
+    return String(candidate);
 }
