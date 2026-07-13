@@ -76,6 +76,7 @@ export function ComposeMessageForm({
     const [isBulkSubmitting, setIsBulkSubmitting] = useState(false);
     const [isSingleSubmitting, setIsSingleSubmitting] = useState(false);
     const [composerKey, setComposerKey] = useState(0);
+    const [emailSubjectError, setEmailSubjectError] = useState<string | null>(null);
 
     const aiDraft = useAiDraftMessage();
 
@@ -86,6 +87,7 @@ export function ComposeMessageForm({
 
     const isPending = aiDraft.isPending || isBulkSubmitting || isSingleSubmitting;
     const contentEmpty = isComposerContentEmpty(activeChannel, value);
+    const emailSubjectMissing = showEmailProviders && value.emailSubject.trim().length === 0;
 
     const invalidateContacts = (uuids: string[]) => {
         queryClient.invalidateQueries({ queryKey: contactsQueryKeys.all });
@@ -124,6 +126,10 @@ export function ComposeMessageForm({
     const runBulk = async (send: boolean) => {
         if (contentEmpty || isPending) return;
         if (!senderProfileUuid) return;
+        if (emailSubjectMissing) {
+            setEmailSubjectError("Subject is required.");
+            return;
+        }
         if (showEmailProviders && isBulk && !isEmailProviderAllocationValid(emailAllocations, bulkCount)) {
             return;
         }
@@ -181,6 +187,10 @@ export function ComposeMessageForm({
             return;
         }
         if (contentEmpty || isPending || !contactUuid) return;
+        if (emailSubjectMissing) {
+            setEmailSubjectError("Subject is required.");
+            return;
+        }
         if (showEmailProviders && !emailProvider) return;
         if (!senderProfileUuid) return;
         setIsSingleSubmitting(true);
@@ -215,6 +225,10 @@ export function ComposeMessageForm({
             return;
         }
         if (contentEmpty || isPending || !contactUuid) return;
+        if (emailSubjectMissing) {
+            setEmailSubjectError("Subject is required.");
+            return;
+        }
         if (showEmailProviders && !emailProvider) return;
         if (!senderProfileUuid) return;
         setIsSingleSubmitting(true);
@@ -289,13 +303,20 @@ export function ComposeMessageForm({
                             onActiveChannelChange={(c) => {
                                 if (isPending) return;
                                 setActiveChannel(c);
+                                setEmailSubjectError(null);
                             }}
                             value={value}
-                            onChange={(patch) => setValue((v) => ({ ...v, ...patch }))}
+                            onChange={(patch) => {
+                                setValue((v) => ({ ...v, ...patch }));
+                                if (typeof patch.emailSubject === "string" && patch.emailSubject.trim().length > 0) {
+                                    setEmailSubjectError(null);
+                                }
+                            }}
                             onAiGenerate={aiContactUuid ? handleAi : undefined}
                             aiActions={DEFAULT_CAMPAIGN_ACTIONS}
                             isAiPending={aiDraft.isPending}
                             disabled={isPending}
+                            emailSubjectError={showEmailProviders ? emailSubjectError : null}
                         />
                         {showEmailProviders ? (
                             isBulk ? (

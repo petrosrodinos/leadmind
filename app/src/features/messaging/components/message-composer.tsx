@@ -49,6 +49,7 @@ export interface MessageComposerProps {
     disabled?: boolean;
     /** Hint text under the message body referencing placeholders. */
     placeholderHint?: React.ReactNode;
+    emailSubjectError?: string | null;
 }
 
 export function MessageComposer({
@@ -62,6 +63,7 @@ export function MessageComposer({
     isAiPending = false,
     disabled = false,
     placeholderHint,
+    emailSubjectError = null,
 }: MessageComposerProps) {
     const [prompt, setPrompt] = useState("");
     const [language, setLanguage] = useState<OutreachLanguage>(DEFAULT_LANGUAGE);
@@ -226,7 +228,11 @@ export function MessageComposer({
                         value={value.emailSubject}
                         onChange={(e) => onChange({ emailSubject: e.target.value })}
                         disabled={disabled || isAiPending}
+                        aria-invalid={Boolean(emailSubjectError) || undefined}
                     />
+                    {emailSubjectError ? (
+                        <p className="mt-1 text-xs text-danger">{emailSubjectError}</p>
+                    ) : null}
                 </TextField>
             )}
 
