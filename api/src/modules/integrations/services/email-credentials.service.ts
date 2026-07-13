@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import {
     ExternalIntegrationProvider,
     IntegrationKeyType,
@@ -43,6 +43,55 @@ export class EmailCredentialsService {
             `Resend API key loaded user=${user_uuid} account=${account} last4=${secret.slice(-4)}`,
         );
         return secret;
+    }
+
+    async getResendWebhookSecret(user_uuid: string, account: string): Promise<string> {
+        return this.integrationsService.getDecryptedSecret(
+            user_uuid,
+            ExternalIntegrationProvider.RESEND,
+            IntegrationKeyType.WEBHOOK_SECRET,
+            account,
+        );
+    }
+
+    async tryGetResendWebhookSecret(
+        user_uuid: string,
+        account: string,
+    ): Promise<string | null> {
+        try {
+            return await this.getResendWebhookSecret(user_uuid, account);
+        } catch (error) {
+            if (error instanceof NotFoundException) {
+                return null;
+            }
+            throw error;
+        }
+    }
+
+    async listResendWebhookSecrets(user_uuid: string): Promise<string[]> {
+        const integration = await this.prisma.integration.findUnique({
+            where: {
+                user_uuid_provider: {
+                    user_uuid,
+                    provider: ExternalIntegrationProvider.RESEND,
+                },
+            },
+            include: {
+                keys: {
+                    where: { key_type: IntegrationKeyType.WEBHOOK_SECRET },
+                },
+            },
+        });
+        if (!integration?.keys.length) {
+            return [];
+        }
+
+        const secrets = await Promise.all(
+            integration.keys.map((key) =>
+                this.tryGetResendWebhookSecret(user_uuid, key.account),
+            ),
+        );
+        return secrets.filter((secret): secret is string => Boolean(secret));
     }
 
     async getSmtpConfig(user_uuid: string, account: string): Promise<SmtpConfig> {

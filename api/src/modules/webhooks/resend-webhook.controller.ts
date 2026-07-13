@@ -1,5 +1,4 @@
 import {
-    BadRequestException,
     Body,
     Controller,
     Headers,
@@ -11,7 +10,8 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
-import { ConfigService } from '@nestjs/config';
+import { PrismaService } from '@/core/databases/prisma/prisma.service';
+import { EmailCredentialsService } from '@/modules/integrations/services/email-credentials.service';
 import { WebhookEvent, WebhookEventService } from './services/webhook-event.service';
 import { verifyResendSignature } from './utils/verify-svix.util';
 
@@ -52,8 +52,9 @@ export class ResendWebhookController {
 
     constructor(
         private readonly webhookEventService: WebhookEventService,
-        private readonly configService: ConfigService,
-    ) { }
+        private readonly prisma: PrismaService,
+        private readonly emailCredentials: EmailCredentialsService,
+    ) {}
 
     @Post()
     @HttpCode(200)
@@ -69,20 +70,33 @@ export class ResendWebhookController {
             `Received Resend webhook: type=${body.type} email_id=${body.data?.email_id ?? 'none'}`,
         );
 
-        const secret = this.configService.get<string>('RESEND_WEBHOOK_SECRET');
-        if (secret) {
-            const raw = req.rawBody ? req.rawBody.toString('utf8') : JSON.stringify(body);
-            const ok = verifyResendSignature(
+        const raw = req.rawBody ? req.rawBody.toString('utf8') : JSON.stringify(body);
+        const userUuid = await this.resolveUserUuid(body);
+        if (!userUuid) {
+            this.logger.warn(
+                `Resend webhook: could not resolve user for type=${body.type} email_id=${body.data?.email_id ?? 'none'}`,
+            );
+            return { ok: true };
+        }
+
+        const webhookSecrets = await this.emailCredentials.listResendWebhookSecrets(userUuid);
+        if (webhookSecrets.length === 0) {
+            this.logger.warn(`Resend webhook: no webhook secret for user ${userUuid}`);
+            return { ok: true };
+        }
+
+        const verified = webhookSecrets.some((secret) =>
+            verifyResendSignature(
                 raw,
                 { svixId, svixTimestamp, svixSignature },
                 secret,
+            ),
+        );
+        if (!verified) {
+            this.logger.error(
+                `Resend webhook signature verification failed for user ${userUuid}`,
             );
-            if (!ok) {
-                this.logger.error('Resend webhook signature verification failed — rejecting');
-                throw new UnauthorizedException('Invalid svix signature');
-            }
-        } else {
-            this.logger.warn('RESEND_WEBHOOK_SECRET not configured — accepting webhook unverified');
+            throw new UnauthorizedException('Invalid svix signature');
         }
 
         if (body.type === 'email.received') {
@@ -109,9 +123,33 @@ export class ResendWebhookController {
             this.logger.error(
                 `Failed processing Resend event ${body.type}: ${error instanceof Error ? error.message : error}`,
             );
-            // Return 200 to prevent retry storms; we logged the error
         }
         return { ok: true };
+    }
+
+    private async resolveUserUuid(body: ResendWebhookBody): Promise<string | null> {
+        if (body.type === 'email.received') {
+            const from = parseFromAddress(body.data?.from);
+            if (!from) {
+                return null;
+            }
+            const contact = await this.prisma.contact.findFirst({
+                where: { email: { equals: from, mode: 'insensitive' } },
+                select: { user_uuid: true },
+            });
+            return contact?.user_uuid ?? null;
+        }
+
+        const providerMessageId = body.data?.email_id;
+        if (!providerMessageId) {
+            return null;
+        }
+
+        const message = await this.prisma.outreachMessage.findFirst({
+            where: { provider_message_id: providerMessageId },
+            select: { user_uuid: true },
+        });
+        return message?.user_uuid ?? null;
     }
 
     private async handleReceived(body: ResendWebhookBody): Promise<void> {

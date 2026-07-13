@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from '@/core/databases/prisma/prisma.module';
 import { AiIntegrationModule } from '@/integrations/ai/ai.module';
 import { ResendModule } from '@/integrations/notifications/resend/resend.module';
+import { IntegrationsModule } from '@/modules/integrations/integrations.module';
 import { MarketingCampaignsModule } from '@/modules/marketing-campaigns/marketing-campaigns.module';
 import { ContactsModule } from '@/modules/contacts/contacts.module';
 import { LeadsModule } from '@/modules/leads/leads.module';
@@ -18,8 +18,8 @@ import { OpenAiBatchDispatchService } from './services/openai-batch-dispatch.ser
 
 @Module({
     imports: [
-        ConfigModule,
         PrismaModule,
+        IntegrationsModule,
         ResendModule,
         AiIntegrationModule,
         MarketingCampaignsModule,
