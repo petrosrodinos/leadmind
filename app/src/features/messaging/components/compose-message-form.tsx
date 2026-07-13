@@ -115,7 +115,7 @@ export function ComposeMessageForm({
     const handleTemplateSelect = (template: MessageTemplate) => {
         setValue((prev) => mergeTemplateIntoComposer(prev, template));
         const nextChannel = preferredChannelAfterTemplateApply(template);
-        if (nextChannel && BULK_CHANNELS.includes(nextChannel)) {
+        if (nextChannel && (BULK_CHANNELS as readonly Channel[]).includes(nextChannel)) {
             setActiveChannel(nextChannel);
         }
         setComposerKey((k) => k + 1);

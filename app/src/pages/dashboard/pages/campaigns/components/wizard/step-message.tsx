@@ -65,7 +65,7 @@ export function StepMessage({
   const handleTemplateSelect = (template: MessageTemplate) => {
     onChange(mergeTemplateIntoComposer(value, template));
     const nextChannel = preferredChannelAfterTemplateApply(template);
-    if (nextChannel && composerChannels.includes(nextChannel)) {
+    if (nextChannel && (composerChannels as readonly Channel[]).includes(nextChannel)) {
       setActiveChannel(nextChannel);
     }
     setComposerKey((k) => k + 1);

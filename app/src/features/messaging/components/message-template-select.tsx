@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import type { Key } from "@react-types/shared";
 import { Label, ListBox, Select } from "@heroui/react";
 import { FileText } from "lucide-react";
 import { Channel } from "@/features/contacts/interfaces/contact.interface";
@@ -25,7 +26,13 @@ export function MessageTemplateSelect({
         [templates, allowedChannels],
     );
 
-    const handleChange = (value: string | null) => {
+    const placeholder = isLoading
+        ? "Loading templates…"
+        : options.length === 0
+          ? "No templates available"
+          : "Choose a template";
+
+    const handleChange = (value: Key | null) => {
         if (!value || typeof value !== "string") return;
         const template = options.find((item) => item.uuid === value);
         if (!template) return;
@@ -41,20 +48,13 @@ export function MessageTemplateSelect({
             </Label>
             <Select
                 aria-label="Message template"
+                placeholder={placeholder}
                 value={selectedUuid ?? undefined}
                 onChange={handleChange}
                 isDisabled={disabled || isLoading || options.length === 0}
             >
                 <Select.Trigger>
-                    <Select.Value
-                        placeholder={
-                            isLoading
-                                ? "Loading templates…"
-                                : options.length === 0
-                                  ? "No templates available"
-                                  : "Choose a template"
-                        }
-                    />
+                    <Select.Value />
                     <Select.Indicator />
                 </Select.Trigger>
                 <Select.Popover>

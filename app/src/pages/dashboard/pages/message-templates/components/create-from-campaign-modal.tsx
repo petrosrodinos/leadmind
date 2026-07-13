@@ -76,12 +76,13 @@ export const CreateFromCampaignModal: FC<CreateFromCampaignModalProps> = ({
                             <Label>Campaign</Label>
                             <Select
                                 aria-label="Campaign"
+                                placeholder="Select campaign"
                                 value={campaignUuid ?? undefined}
                                 onChange={(v) => setCampaignUuid(typeof v === "string" ? v : null)}
                                 isDisabled={isLoading || !!preselectedCampaignUuid}
                             >
                                 <Select.Trigger>
-                                    <Select.Value placeholder="Select campaign" />
+                                    <Select.Value />
                                     <Select.Indicator />
                                 </Select.Trigger>
                                 <Select.Popover>
