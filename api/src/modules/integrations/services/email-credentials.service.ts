@@ -30,6 +30,17 @@ export class EmailCredentialsService {
         private readonly prisma: PrismaService,
     ) {}
 
+    async getResendFromEmail(user_uuid: string, account: string): Promise<string> {
+        await this.assertSendableAccount(user_uuid, ExternalIntegrationProvider.RESEND, account);
+        const fromEmail = await this.integrationsService.getDecryptedSecret(
+            user_uuid,
+            ExternalIntegrationProvider.RESEND,
+            IntegrationKeyType.FROM_EMAIL,
+            account,
+        );
+        return fromEmail.trim();
+    }
+
     async getResendApiKey(user_uuid: string, account: string): Promise<string> {
         this.logger.log(`Loading Resend API key user=${user_uuid} account=${account}`);
         await this.assertSendableAccount(user_uuid, ExternalIntegrationProvider.RESEND, account);
@@ -239,7 +250,13 @@ export class EmailCredentialsService {
     ): boolean {
         const accountKeys = keys.filter((key) => key.account.trim() === account.trim());
         if (provider === ExternalIntegrationProvider.RESEND) {
-            return accountKeys.some((key) => key.key_type === IntegrationKeyType.API_KEY);
+            const required = [
+                IntegrationKeyType.API_KEY,
+                IntegrationKeyType.FROM_EMAIL,
+            ];
+            return required.every((key_type) =>
+                accountKeys.some((key) => key.key_type === key_type),
+            );
         }
         if (provider === ExternalIntegrationProvider.SMTP) {
             const required = PROVIDER_KEY_TYPES[ExternalIntegrationProvider.SMTP];

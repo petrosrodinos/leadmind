@@ -21,17 +21,17 @@ const borderedFieldClass = cn(
     "focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/40",
 );
 
-interface SmtpAccountFormModalProps {
+interface ResendAccountFormModalProps {
     isOpen: boolean;
     onOpenChange: (open: boolean) => void;
     providerView: IntegrationProviderView;
 }
 
-export function SmtpAccountFormModal({
+export function ResendAccountFormModal({
     isOpen,
     onOpenChange,
     providerView,
-}: SmtpAccountFormModalProps) {
+}: ResendAccountFormModalProps) {
     const qc = useQueryClient();
     const [pending, setPending] = useState(false);
     const defaultAccount = useMemo(
@@ -40,20 +40,14 @@ export function SmtpAccountFormModal({
     );
 
     const [account, setAccount] = useState(defaultAccount);
-    const [host, setHost] = useState("");
-    const [port, setPort] = useState("587");
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+    const [apiKey, setApiKey] = useState("");
     const [fromEmail, setFromEmail] = useState("");
     const [formError, setFormError] = useState<string | null>(null);
 
     useEffect(() => {
         if (!isOpen) return;
         setAccount(defaultAccount);
-        setHost("");
-        setPort("587");
-        setUsername("");
-        setPassword("");
+        setApiKey("");
         setFromEmail("");
         setFormError(null);
     }, [defaultAccount, isOpen]);
@@ -61,10 +55,7 @@ export function SmtpAccountFormModal({
     const handleSubmit = async () => {
         const trimmedAccount = account.trim();
         const fields = {
-            HOST: host.trim(),
-            PORT: port.trim(),
-            USERNAME: username.trim(),
-            PASSWORD: password.trim(),
+            API_KEY: apiKey.trim(),
             FROM_EMAIL: fromEmail.trim(),
         };
 
@@ -74,7 +65,7 @@ export function SmtpAccountFormModal({
         }
 
         if (Object.values(fields).some((value) => !value)) {
-            setFormError("All SMTP fields are required.");
+            setFormError("API key and from email are required.");
             return;
         }
 
@@ -83,20 +74,20 @@ export function SmtpAccountFormModal({
 
         try {
             const entries = Object.entries(fields) as Array<
-                ["HOST" | "PORT" | "USERNAME" | "PASSWORD" | "FROM_EMAIL", string]
+                ["API_KEY" | "FROM_EMAIL", string]
             >;
             for (const [key_type, secret] of entries) {
-                await createIntegrationKey("SMTP", {
+                await createIntegrationKey("RESEND", {
                     key_type,
                     account: trimmedAccount,
                     secret,
                 });
             }
             await qc.invalidateQueries({ queryKey: integrationsQueryKeys.all });
-            toast({ title: "SMTP account saved", duration: 1500 });
+            toast({ title: "Resend account saved", duration: 1500 });
             onOpenChange(false);
         } catch (error) {
-            setFormError(error instanceof Error ? error.message : "Could not save SMTP account.");
+            setFormError(error instanceof Error ? error.message : "Could not save Resend account.");
         } finally {
             setPending(false);
         }
@@ -109,75 +100,48 @@ export function SmtpAccountFormModal({
                     <Modal.Dialog>
                         <Modal.CloseTrigger />
                         <Modal.Header>
-                            <Modal.Heading>Add SMTP account</Modal.Heading>
+                            <Modal.Heading>Add Resend account</Modal.Heading>
                         </Modal.Header>
                         <Modal.Body className="space-y-4">
                             <div className="flex flex-col gap-1.5">
-                                <Label htmlFor="smtp-account-label">Account label</Label>
+                                <Label htmlFor="resend-account-label">Account label</Label>
                                 <Input
-                                    id="smtp-account-label"
+                                    id="resend-account-label"
                                     className={borderedFieldClass}
                                     value={account}
                                     onChange={(e) => setAccount(e.target.value)}
                                     placeholder="1, production, sales"
                                 />
                                 <p className="text-xs text-muted">
-                                    Use one label for all SMTP credentials in this account.
+                                    Use one label for all Resend credentials in this account.
                                 </p>
                             </div>
 
-                            <div className="grid gap-3 sm:grid-cols-2">
-                                <div className="flex flex-col gap-1.5 sm:col-span-2">
-                                    <Label htmlFor="smtp-host">Host</Label>
-                                    <Input
-                                        id="smtp-host"
-                                        className={borderedFieldClass}
-                                        value={host}
-                                        onChange={(e) => setHost(e.target.value)}
-                                        placeholder="smtp.example.com"
-                                    />
-                                </div>
+                            <div className="grid gap-3">
                                 <div className="flex flex-col gap-1.5">
-                                    <Label htmlFor="smtp-port">Port</Label>
+                                    <Label htmlFor="resend-api-key">API key</Label>
                                     <Input
-                                        id="smtp-port"
-                                        className={borderedFieldClass}
-                                        value={port}
-                                        onChange={(e) => setPort(e.target.value)}
-                                        placeholder="587"
-                                    />
-                                </div>
-                                <div className="flex flex-col gap-1.5">
-                                    <Label htmlFor="smtp-from">From email</Label>
-                                    <Input
-                                        id="smtp-from"
-                                        className={borderedFieldClass}
-                                        value={fromEmail}
-                                        onChange={(e) => setFromEmail(e.target.value)}
-                                        placeholder="noreply@example.com"
-                                    />
-                                </div>
-                                <div className="flex flex-col gap-1.5 sm:col-span-2">
-                                    <Label htmlFor="smtp-username">Username</Label>
-                                    <Input
-                                        id="smtp-username"
-                                        className={borderedFieldClass}
-                                        value={username}
-                                        onChange={(e) => setUsername(e.target.value)}
-                                        placeholder="user@example.com"
-                                    />
-                                </div>
-                                <div className="flex flex-col gap-1.5 sm:col-span-2">
-                                    <Label htmlFor="smtp-password">Password</Label>
-                                    <Input
-                                        id="smtp-password"
+                                        id="resend-api-key"
                                         className={borderedFieldClass}
                                         type="password"
                                         autoComplete="off"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        placeholder="App password"
+                                        value={apiKey}
+                                        onChange={(e) => setApiKey(e.target.value)}
+                                        placeholder="re_..."
                                     />
+                                </div>
+                                <div className="flex flex-col gap-1.5">
+                                    <Label htmlFor="resend-from">From address</Label>
+                                    <Input
+                                        id="resend-from"
+                                        className={borderedFieldClass}
+                                        value={fromEmail}
+                                        onChange={(e) => setFromEmail(e.target.value)}
+                                        placeholder="noreply@yourdomain.com"
+                                    />
+                                    <p className="text-xs text-muted">
+                                        Must be a verified domain or address in your Resend account.
+                                    </p>
                                 </div>
                             </div>
 
@@ -189,7 +153,7 @@ export function SmtpAccountFormModal({
                             </Button>
                             <ActionButtonWithPending isPending={pending} onPress={handleSubmit}>
                                 <Save className="size-4" />
-                                Save SMTP account
+                                Save Resend account
                             </ActionButtonWithPending>
                         </Modal.Footer>
                     </Modal.Dialog>

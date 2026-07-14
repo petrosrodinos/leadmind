@@ -37,6 +37,14 @@ function buildAccountDetail(
     account: string,
 ): string | null {
     if (provider === "RESEND") {
+        const fromEmail = keys.find(
+            (row) => row.account === account && row.key_type === "FROM_EMAIL",
+        );
+        const fromHint =
+            fromEmail?.display_value ?? (fromEmail?.last4 ? fromEmail.last4 : null);
+        if (fromHint) {
+            return `from ${fromHint}`;
+        }
         return keyValueHint(keys, account, "API_KEY");
     }
 
@@ -96,7 +104,7 @@ export function listSendableEmailAccounts(
                 last4: keyValueHint(
                     integration.keys,
                     account,
-                    provider === "RESEND" ? "API_KEY" : "FROM_EMAIL",
+                    "FROM_EMAIL",
                 ),
                 isDefault: integration.default_account === account,
             });

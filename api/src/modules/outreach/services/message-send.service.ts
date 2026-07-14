@@ -185,11 +185,14 @@ export class MessageSendService {
             this.logger.log(
                 `Using Resend account=${target.account} user=${user_uuid} to=${createEmail.to}`,
             );
-            const apiKey = await this.emailCredentialsService.getResendApiKey(
-                user_uuid,
-                target.account,
+            const [apiKey, fromEmail] = await Promise.all([
+                this.emailCredentialsService.getResendApiKey(user_uuid, target.account),
+                this.emailCredentialsService.getResendFromEmail(user_uuid, target.account),
+            ]);
+            const result = await this.resendMailService.sendEmail(
+                { ...createEmail, from: fromEmail },
+                apiKey,
             );
-            const result = await this.resendMailService.sendEmail(createEmail, apiKey);
             return { result, deliveryTarget: target };
         }
 

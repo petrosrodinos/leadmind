@@ -14,6 +14,7 @@ export const PROVIDER_KEY_TYPES: Record<
     [ExternalIntegrationProvider.ANTHROPIC]: [IntegrationKeyType.API_KEY],
     [ExternalIntegrationProvider.RESEND]: [
         IntegrationKeyType.API_KEY,
+        IntegrationKeyType.FROM_EMAIL,
         IntegrationKeyType.WEBHOOK_SECRET,
     ],
     [ExternalIntegrationProvider.SMTP]: [
@@ -71,13 +72,23 @@ const SMTP_DISPLAYABLE_KEY_TYPES = new Set<IntegrationKeyType>([
     IntegrationKeyType.FROM_EMAIL,
 ]);
 
+const RESEND_DISPLAYABLE_KEY_TYPES = new Set<IntegrationKeyType>([
+    IntegrationKeyType.FROM_EMAIL,
+]);
+
 export function shouldExposeIntegrationKeyDisplayValue(
     provider: ExternalIntegrationProvider,
     key_type: IntegrationKeyType,
 ): boolean {
-    return (
+    if (
         provider === ExternalIntegrationProvider.SMTP &&
         SMTP_DISPLAYABLE_KEY_TYPES.has(key_type)
+    ) {
+        return true;
+    }
+    return (
+        provider === ExternalIntegrationProvider.RESEND &&
+        RESEND_DISPLAYABLE_KEY_TYPES.has(key_type)
     );
 }
 

@@ -22,6 +22,7 @@ import type {
     IntegrationProviderView,
 } from "@/features/integrations/interfaces/integrations.interface";
 import { IntegrationKeyFormModal } from "./integration-key-form-modal";
+import { ResendAccountFormModal } from "./resend-account-form-modal";
 import { SmtpAccountFormModal } from "./smtp-account-form-modal";
 
 interface IntegrationDetailModalProps {
@@ -40,6 +41,7 @@ export function IntegrationDetailModal({
 
     const [formOpen, setFormOpen] = useState(false);
     const [smtpFormOpen, setSmtpFormOpen] = useState(false);
+    const [resendFormOpen, setResendFormOpen] = useState(false);
     const [editingKey, setEditingKey] = useState<IntegrationKey | null>(null);
     const [initialKeyType, setInitialKeyType] = useState<
         IntegrationKeyType | undefined
@@ -94,11 +96,15 @@ export function IntegrationDetailModal({
 
     const openAddAccount = () => {
         if (!providerView) return;
-        const nextAccount = suggestNextAccountLabel(providerView.keys);
         if (providerView.provider === "SMTP") {
             setSmtpFormOpen(true);
             return;
         }
+        if (providerView.provider === "RESEND") {
+            setResendFormOpen(true);
+            return;
+        }
+        const nextAccount = suggestNextAccountLabel(providerView.keys);
         openCreate("API_KEY", nextAccount);
     };
 
@@ -351,6 +357,12 @@ export function IntegrationDetailModal({
             <SmtpAccountFormModal
                 isOpen={smtpFormOpen}
                 onOpenChange={setSmtpFormOpen}
+                providerView={providerView}
+            />
+
+            <ResendAccountFormModal
+                isOpen={resendFormOpen}
+                onOpenChange={setResendFormOpen}
                 providerView={providerView}
             />
 

@@ -95,7 +95,11 @@ function EmailProviderSingleSelect({
                     <Select.Value className="min-w-0 flex-1 overflow-hidden">
                         {selectedAccount ? (
                             <span className="flex min-w-0 items-center gap-2">
-                                <span className="truncate">{selectedAccount.label}</span>
+                                <span className="truncate">
+                                    {selectedAccount.detail?.startsWith("from ")
+                                        ? selectedAccount.detail.slice(5)
+                                        : selectedAccount.label}
+                                </span>
                                 {selectedAccount.isDefault ? (
                                     <Chip size="sm" variant="soft" color="warning" className="shrink-0">
                                         <Chip.Label>Default</Chip.Label>
@@ -125,7 +129,9 @@ function EmailProviderSingleSelect({
                                             <div className="min-w-0 overflow-hidden">
                                                 <div className="flex items-center gap-2">
                                                     <span className="truncate text-sm">
-                                                        Account {account.account}
+                                                        {account.detail?.startsWith("from ")
+                                                            ? account.detail.slice(5)
+                                                            : `Account ${account.account}`}
                                                     </span>
                                                     {account.isDefault ? (
                                                         <Chip
@@ -138,11 +144,11 @@ function EmailProviderSingleSelect({
                                                         </Chip>
                                                     ) : null}
                                                 </div>
-                                                {account.detail ? (
-                                                    <span className="truncate font-mono text-xs text-muted">
-                                                        {account.detail}
-                                                    </span>
-                                                ) : null}
+                                                <span className="truncate font-mono text-xs text-muted">
+                                                    {account.detail?.startsWith("from ")
+                                                        ? `Account ${account.account}`
+                                                        : account.detail ?? null}
+                                                </span>
                                             </div>
                                             <ListBox.ItemIndicator className="shrink-0" />
                                         </ListBox.Item>

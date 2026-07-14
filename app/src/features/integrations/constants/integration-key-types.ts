@@ -9,7 +9,7 @@ export const PROVIDER_KEY_TYPES: Record<IntegrationProvider, IntegrationKeyType[
     {
         OPENAI: ["API_KEY", "WEBHOOK_SECRET"],
         ANTHROPIC: ["API_KEY"],
-        RESEND: ["API_KEY", "WEBHOOK_SECRET"],
+        RESEND: ["API_KEY", "FROM_EMAIL", "WEBHOOK_SECRET"],
         SMTP: ["HOST", "PORT", "USERNAME", "PASSWORD", "FROM_EMAIL"],
         TWILIO: ["ACCOUNT_SID", "AUTH_TOKEN"],
         APIFY: ["API_KEY"],
@@ -62,11 +62,16 @@ const SMTP_DISPLAYABLE_KEY_TYPES = new Set<IntegrationKeyType>([
     "FROM_EMAIL",
 ]);
 
+const RESEND_DISPLAYABLE_KEY_TYPES = new Set<IntegrationKeyType>(["FROM_EMAIL"]);
+
 export function shouldExposeIntegrationKeyDisplayValue(
     provider: IntegrationProvider,
     keyType: IntegrationKeyType,
 ): boolean {
-    return provider === "SMTP" && SMTP_DISPLAYABLE_KEY_TYPES.has(keyType);
+    if (provider === "SMTP" && SMTP_DISPLAYABLE_KEY_TYPES.has(keyType)) {
+        return true;
+    }
+    return provider === "RESEND" && RESEND_DISPLAYABLE_KEY_TYPES.has(keyType);
 }
 
 export function formatIntegrationKeyDisplay(
@@ -181,7 +186,10 @@ export function isEmailAccountSendable(
 ): boolean {
     const accountKeys = keys.filter((key) => key.account === account);
     if (provider === "RESEND") {
-        return accountKeys.some((key) => key.key_type === "API_KEY");
+        const required: IntegrationKeyType[] = ["API_KEY", "FROM_EMAIL"];
+        return required.every((keyType) =>
+            accountKeys.some((key) => key.key_type === keyType),
+        );
     }
     return PROVIDER_KEY_TYPES.SMTP.every((keyType) =>
         accountKeys.some((key) => key.key_type === keyType),

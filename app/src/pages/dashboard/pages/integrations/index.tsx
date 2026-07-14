@@ -19,6 +19,7 @@ import { useIntegrations } from "@/features/integrations/hooks/use-integrations"
 import type { IntegrationProviderView } from "@/features/integrations/interfaces/integrations.interface";
 import { IntegrationDetailModal } from "./components/integration-detail-modal";
 import { IntegrationKeyFormModal } from "./components/integration-key-form-modal";
+import { ResendAccountFormModal } from "./components/resend-account-form-modal";
 import { SmtpAccountFormModal } from "./components/smtp-account-form-modal";
 
 const providerIcons: Record<string, ComponentType<{ className?: string }>> = {
@@ -51,12 +52,18 @@ const FALLBACK_PROVIDERS: IntegrationProviderView[] = [
         provider: "RESEND",
         uuid: null,
         label: "Resend",
-        description: "Transactional email and inbound webhooks.",
+        description:
+            "Transactional email and inbound webhooks. Add API key and from address per account.",
         allows_multiple_accounts: true,
         supports_default_account_selection: true,
         default_account: null,
         keyTypes: [
             { key_type: "API_KEY", label: "API key", placeholder: "re_..." },
+            {
+                key_type: "FROM_EMAIL",
+                label: "From email",
+                placeholder: "noreply@example.com",
+            },
             {
                 key_type: "WEBHOOK_SECRET",
                 label: "Webhook secret",
@@ -140,6 +147,7 @@ export default function IntegrationsPage() {
     const [detailOpen, setDetailOpen] = useState(false);
     const [quickAdd, setQuickAdd] = useState<IntegrationProviderView | null>(null);
     const [smtpQuickAdd, setSmtpQuickAdd] = useState<IntegrationProviderView | null>(null);
+    const [resendQuickAdd, setResendQuickAdd] = useState<IntegrationProviderView | null>(null);
 
     const providers = (data ?? FALLBACK_PROVIDERS).filter(
         (providerView) => providerView.provider !== "ANTHROPIC",
@@ -187,6 +195,10 @@ export default function IntegrationsPage() {
                                     setSmtpQuickAdd(resolved);
                                     return;
                                 }
+                                if (resolved.provider === "RESEND") {
+                                    setResendQuickAdd(resolved);
+                                    return;
+                                }
                                 setQuickAdd(resolved);
                             }}
                         />
@@ -211,9 +223,16 @@ export default function IntegrationsPage() {
                     }}
                     providerView={quickAdd}
                     initialAccount={suggestNextAccountLabel(quickAdd.keys)}
-                    initialKeyType={
-                        quickAdd.provider === "RESEND" ? "API_KEY" : undefined
-                    }
+                />
+            )}
+
+            {resendQuickAdd && (
+                <ResendAccountFormModal
+                    isOpen={!!resendQuickAdd}
+                    onOpenChange={(open) => {
+                        if (!open) setResendQuickAdd(null);
+                    }}
+                    providerView={resendQuickAdd}
                 />
             )}
 

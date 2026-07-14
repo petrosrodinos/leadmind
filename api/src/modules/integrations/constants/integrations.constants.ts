@@ -35,7 +35,7 @@ export const INTEGRATION_PROVIDER_DESCRIPTIONS: Record<
         'GPT models for enrichment, scoring, and message drafting.',
     [ExternalIntegrationProvider.ANTHROPIC]: 'Claude models for AI workflows.',
     [ExternalIntegrationProvider.RESEND]:
-        'Transactional email and inbound webhooks.',
+        'Transactional email and inbound webhooks. Add API key and from address per account.',
     [ExternalIntegrationProvider.SMTP]:
         'Custom SMTP servers for outbound email. Add multiple accounts with host, port, username, password, and from address.',
     [ExternalIntegrationProvider.TWILIO]: 'SMS outreach credentials.',
