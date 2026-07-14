@@ -148,6 +148,28 @@ export function resolveEffectiveDefaultAccount(
     return accounts[0];
 }
 
+export function suggestAccountForKeyType(
+    provider: IntegrationProvider,
+    keys: IntegrationKey[],
+    keyType: IntegrationKeyType,
+): string {
+    if (provider === "RESEND" && keyType === "FROM_EMAIL") {
+        const apiKeyAccounts = keys
+            .filter((key) => key.key_type === "API_KEY")
+            .map((key) => key.account);
+        const missingFrom = apiKeyAccounts.find(
+            (account) =>
+                !keys.some(
+                    (key) => key.account === account && key.key_type === "FROM_EMAIL",
+                ),
+        );
+        if (missingFrom) {
+            return missingFrom;
+        }
+    }
+    return suggestNextAccountLabel(keys);
+}
+
 export function suggestNextAccountLabel(keys: IntegrationKey[]): string {
     const accounts = listDistinctIntegrationAccounts(keys);
     if (accounts.length === 0) {
@@ -177,6 +199,20 @@ export function getMissingKeyTypesForAccount(
     const accountKeys = keys.filter((key) => key.account === account);
     const used = new Set(accountKeys.map((key) => key.key_type));
     return PROVIDER_KEY_TYPES[provider].filter((keyType) => !used.has(keyType));
+}
+
+export function isEmailProviderAccountVisible(
+    provider: Extract<IntegrationProvider, "RESEND" | "SMTP">,
+    keys: IntegrationKey[],
+    account: string,
+): boolean {
+    const accountKeys = keys.filter((key) => key.account === account);
+    if (provider === "RESEND") {
+        return accountKeys.some((key) => key.key_type === "API_KEY");
+    }
+    return PROVIDER_KEY_TYPES.SMTP.every((keyType) =>
+        accountKeys.some((key) => key.key_type === keyType),
+    );
 }
 
 export function isEmailAccountSendable(

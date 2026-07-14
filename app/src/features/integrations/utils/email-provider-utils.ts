@@ -1,5 +1,6 @@
 import {
     isEmailAccountSendable,
+    isEmailProviderAccountVisible,
 } from "@/features/integrations/constants/integration-key-types";
 import type {
     EmailProviderAllocation,
@@ -13,6 +14,7 @@ export interface SendableEmailAccount extends EmailProviderTarget {
     detail: string | null;
     last4: string | null;
     isDefault: boolean;
+    canSend: boolean;
 }
 
 const EMAIL_PROVIDERS = ["RESEND", "SMTP"] as const;
@@ -44,6 +46,12 @@ function buildAccountDetail(
             fromEmail?.display_value ?? (fromEmail?.last4 ? fromEmail.last4 : null);
         if (fromHint) {
             return `from ${fromHint}`;
+        }
+        const hasApiKey = keys.some(
+            (row) => row.account === account && row.key_type === "API_KEY",
+        );
+        if (hasApiKey) {
+            return "from address missing";
         }
         return keyValueHint(keys, account, "API_KEY");
     }
@@ -80,6 +88,18 @@ function buildAccountLabel(
     return `${integrationLabel} · Account ${account}`;
 }
 
+function listProviderAccounts(
+    provider: EmailProviderTarget["provider"],
+    keys: IntegrationKey[],
+): string[] {
+    if (provider === "RESEND") {
+        return [...new Set(keys.filter((key) => key.key_type === "API_KEY").map((key) => key.account))].sort(
+            (left, right) => left.localeCompare(right, undefined, { numeric: true }),
+        );
+    }
+    return distinctAccounts(keys);
+}
+
 export function listSendableEmailAccounts(
     integrations: IntegrationProviderView[] | undefined,
 ): SendableEmailAccount[] {
@@ -91,10 +111,11 @@ export function listSendableEmailAccounts(
         const integration = integrations.find((row) => row.provider === provider);
         if (!integration) continue;
 
-        for (const account of distinctAccounts(integration.keys)) {
-            if (!isEmailAccountSendable(provider, integration.keys, account)) {
+        for (const account of listProviderAccounts(provider, integration.keys)) {
+            if (!isEmailProviderAccountVisible(provider, integration.keys, account)) {
                 continue;
             }
+            const canSend = isEmailAccountSendable(provider, integration.keys, account);
             const detail = buildAccountDetail(provider, integration.keys, account);
             accounts.push({
                 provider,
@@ -107,6 +128,7 @@ export function listSendableEmailAccounts(
                     "FROM_EMAIL",
                 ),
                 isDefault: integration.default_account === account,
+                canSend,
             });
         }
     }
@@ -118,6 +140,12 @@ export function listSendableEmailAccounts(
             { numeric: true },
         ),
     );
+}
+
+export function listReadyEmailAccounts(
+    integrations: IntegrationProviderView[] | undefined,
+): SendableEmailAccount[] {
+    return listSendableEmailAccounts(integrations).filter((row) => row.canSend);
 }
 
 export function groupSendableEmailAccounts(
@@ -182,7 +210,7 @@ export function resolveDefaultEmailTarget(
         return { provider, account };
     }
 
-    const sendable = listSendableEmailAccounts(integrations);
+    const sendable = listReadyEmailAccounts(integrations);
     return sendable[0] ?? null;
 }
 

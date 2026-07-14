@@ -22,6 +22,7 @@ import {
     providerAllowsMultipleAccounts,
     shouldExposeIntegrationKeyDisplayValue,
     suggestNextAccountLabel,
+    suggestAccountForKeyType,
 } from "@/features/integrations/constants/integration-key-types";
 import type {
     IntegrationKey,
@@ -115,7 +116,11 @@ export function IntegrationKeyFormModal({
     useEffect(() => {
         if (!isOpen) return;
         setKeyType(keyItem?.key_type ?? initialKeyType ?? defaultKeyType);
-        setAccount(keyItem?.account ?? initialAccount ?? suggestedAccount);
+        setAccount(
+            keyItem?.account ??
+                initialAccount ??
+                suggestAccountForKeyType(providerView.provider, providerView.keys, keyItem?.key_type ?? initialKeyType ?? defaultKeyType),
+        );
         setSecret(
             keyItem &&
                 shouldExposeIntegrationKeyDisplayValue(
@@ -129,6 +134,15 @@ export function IntegrationKeyFormModal({
         setAccountError(null);
         setSecretError(null);
     }, [isOpen, initialAccount, keyItem, initialKeyType, defaultKeyType, suggestedAccount, providerView.provider]);
+
+    useEffect(() => {
+        if (!isOpen || isEdit) return;
+        if (providerView.provider === "RESEND" && keyType === "FROM_EMAIL") {
+            setAccount(
+                suggestAccountForKeyType(providerView.provider, providerView.keys, keyType),
+            );
+        }
+    }, [isEdit, isOpen, keyType, providerView.keys, providerView.provider]);
 
     const pending = createKey.isPending || updateKey.isPending;
     const envPreview = formatIntegrationKeyEnvName(
