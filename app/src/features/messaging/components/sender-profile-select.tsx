@@ -7,6 +7,7 @@ import {
     resolveDefaultSenderProfileUuid,
 } from "@/features/sender-profiles/utils/sender-profile-utils";
 import { Routes } from "@/routes/routes";
+import { cn } from "@/lib/utils";
 
 export interface SenderProfileSelectProps {
     value: string | null;
@@ -63,10 +64,16 @@ export function SenderProfileSelect({
                     }
                 }}
                 isDisabled={disabled}
+                fullWidth
             >
-                <Select.Trigger>
-                    <Select.Value />
-                    <Select.Indicator />
+                <Select.Trigger
+                    className={cn(
+                        "grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2 rounded-md border border-border bg-surface-primary",
+                        "focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/40",
+                    )}
+                >
+                    <Select.Value className="min-w-0 flex-1 overflow-hidden" />
+                    <Select.Indicator className="shrink-0" />
                 </Select.Trigger>
                 <Select.Popover>
                     <ListBox>
@@ -78,16 +85,15 @@ export function SenderProfileSelect({
                                     key={profile.uuid}
                                     id={profile.uuid}
                                     textValue={textValue}
+                                    className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3"
                                 >
-                                    <span className="flex min-w-0 flex-1 items-center gap-2">
+                                    <span className="flex min-w-0 items-center gap-2 overflow-hidden">
                                         <span className="truncate">{label}</span>
                                         {profile.is_default ? (
-                                            <span className="shrink-0 text-xs text-muted">
-                                                Default
-                                            </span>
+                                            <span className="shrink-0 text-xs text-muted">Default</span>
                                         ) : null}
                                     </span>
-                                    <ListBox.ItemIndicator />
+                                    <ListBox.ItemIndicator className="shrink-0" />
                                 </ListBox.Item>
                             );
                         })}

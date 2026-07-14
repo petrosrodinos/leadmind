@@ -237,6 +237,11 @@ export function MessageComposer({
                 <TextField className="w-full" name="composer-subject">
                     <Label>Subject</Label>
                     <Input
+                        className={cn(
+                            "rounded-md border border-border bg-surface-primary",
+                            "focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/40",
+                            emailSubjectError && "border-danger",
+                        )}
                         placeholder="Email subject"
                         value={value.emailSubject}
                         onChange={(e) => onChange({ emailSubject: e.target.value })}

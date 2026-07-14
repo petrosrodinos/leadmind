@@ -14,6 +14,7 @@ import {
     validateAllocations,
 } from "@/features/integrations/utils/email-provider-utils";
 import { Routes } from "@/routes/routes";
+import { cn } from "@/lib/utils";
 
 type EmailProviderSelectBaseProps = {
     disabled?: boolean;
@@ -83,21 +84,27 @@ function EmailProviderSingleSelect({
                     }
                 }}
                 isDisabled={disabled}
+                fullWidth
             >
-                <Select.Trigger>
-                    <Select.Value>
+                <Select.Trigger
+                    className={cn(
+                        "grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2 rounded-md border border-border bg-surface-primary",
+                        "focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/40",
+                    )}
+                >
+                    <Select.Value className="min-w-0 flex-1 overflow-hidden">
                         {selectedAccount ? (
-                            <span className="flex items-center gap-2 min-w-0">
+                            <span className="flex min-w-0 items-center gap-2">
                                 <span className="truncate">{selectedAccount.label}</span>
                                 {selectedAccount.isDefault ? (
-                                    <Chip size="sm" variant="soft" color="warning">
+                                    <Chip size="sm" variant="soft" color="warning" className="shrink-0">
                                         <Chip.Label>Default</Chip.Label>
                                     </Chip>
                                 ) : null}
                             </span>
                         ) : null}
                     </Select.Value>
-                    <Select.Indicator />
+                    <Select.Indicator className="shrink-0" />
                 </Select.Trigger>
                 <Select.Popover>
                     <ListBox>
@@ -113,23 +120,31 @@ function EmailProviderSingleSelect({
                                             key={key}
                                             id={key}
                                             textValue={account.label}
+                                            className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3"
                                         >
-                                            <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-                                                <span className="truncate text-sm">
-                                                    Account {account.account}
-                                                </span>
+                                            <div className="min-w-0 overflow-hidden">
+                                                <div className="flex items-center gap-2">
+                                                    <span className="truncate text-sm">
+                                                        Account {account.account}
+                                                    </span>
+                                                    {account.isDefault ? (
+                                                        <Chip
+                                                            size="sm"
+                                                            variant="soft"
+                                                            color="warning"
+                                                            className="shrink-0"
+                                                        >
+                                                            <Chip.Label>Default</Chip.Label>
+                                                        </Chip>
+                                                    ) : null}
+                                                </div>
                                                 {account.detail ? (
                                                     <span className="truncate font-mono text-xs text-muted">
                                                         {account.detail}
                                                     </span>
                                                 ) : null}
                                             </div>
-                                            {account.isDefault ? (
-                                                <Chip size="sm" variant="soft" color="warning">
-                                                    <Chip.Label>Default</Chip.Label>
-                                                </Chip>
-                                            ) : null}
-                                            <ListBox.ItemIndicator />
+                                            <ListBox.ItemIndicator className="shrink-0" />
                                         </ListBox.Item>
                                     );
                                 })}

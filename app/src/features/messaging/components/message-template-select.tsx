@@ -6,6 +6,7 @@ import { Channel } from "@/features/contacts/interfaces/contact.interface";
 import { useMessageTemplates } from "@/features/message-templates/hooks/use-message-templates";
 import type { MessageTemplate } from "@/features/message-templates/interfaces/message-template.interface";
 import { filterTemplatesForChannels } from "@/features/message-templates/utils/message-template-composer.utils";
+import { cn } from "@/lib/utils";
 
 interface MessageTemplateSelectProps {
     allowedChannels: Channel[];
@@ -52,8 +53,14 @@ export function MessageTemplateSelect({
                 value={selectedUuid ?? undefined}
                 onChange={handleChange}
                 isDisabled={disabled || isLoading || options.length === 0}
+                fullWidth
             >
-                <Select.Trigger>
+                <Select.Trigger
+                    className={cn(
+                        "rounded-md border border-border bg-surface-primary",
+                        "focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/40",
+                    )}
+                >
                     <Select.Value />
                     <Select.Indicator />
                 </Select.Trigger>
