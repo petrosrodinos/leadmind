@@ -11,7 +11,6 @@ import { Queue } from 'bullmq';
 import {
     Channel,
     Contact,
-    ExternalIntegrationProvider,
     MsgStatus,
     OutreachMessage,
     OutreachSequence,
@@ -35,8 +34,6 @@ import { SenderProfilesService } from '@/modules/sender-profiles/sender-profiles
 import {
     mergeSenderProfileMetadata,
 } from './utils/sender-profile-metadata.util';
-import { logSmtp } from '@/integrations/notifications/smtp/smtp-flow-log.util';
-
 @Injectable()
 export class OutreachService {
     private readonly logger = new Logger(OutreachService.name);
@@ -103,14 +100,6 @@ export class OutreachService {
                         account: dto.email_account.trim(),
                     }),
                 };
-                if (dto.email_provider === ExternalIntegrationProvider.SMTP) {
-                    logSmtp(this.logger, 'log', {
-                        step: 'metadata-resolved',
-                        user: user_uuid,
-                        source: 'request',
-                        account: dto.email_account.trim(),
-                    });
-                }
             } else {
                 const defaultTarget = await this.emailCredentialsService.resolveDefaultTarget(user_uuid);
                 if (defaultTarget) {
@@ -118,14 +107,6 @@ export class OutreachService {
                         ...metadata,
                         ...buildEmailProviderMetadata(defaultTarget),
                     };
-                    if (defaultTarget.provider === ExternalIntegrationProvider.SMTP) {
-                        logSmtp(this.logger, 'log', {
-                            step: 'metadata-resolved',
-                            user: user_uuid,
-                            source: 'default',
-                            account: defaultTarget.account,
-                        });
-                    }
                 }
             }
         }
@@ -413,29 +394,6 @@ export class OutreachService {
                 removeOnFail: 100,
             },
         );
-        const queuedMessage = await this.prisma.outreachMessage.findUnique({
-            where: { uuid: message_uuid },
-            select: { channel: true, metadata: true },
-        });
-        if (queuedMessage?.channel === Channel.EMAIL) {
-            const meta =
-                queuedMessage.metadata &&
-                typeof queuedMessage.metadata === 'object' &&
-                !Array.isArray(queuedMessage.metadata)
-                    ? (queuedMessage.metadata as Record<string, unknown>)
-                    : null;
-            const provider = meta?.email_provider;
-            const account = meta?.email_account;
-            if (provider === ExternalIntegrationProvider.SMTP) {
-                logSmtp(this.logger, 'log', {
-                    step: 'queue-enqueued',
-                    message: message_uuid,
-                    jobId: job.id,
-                    delayMs: delay,
-                    account: typeof account === 'string' ? account : 'unknown',
-                });
-            }
-        }
         this.logger.log(
             `Outreach message queued message=${message_uuid} jobId=${job.id} delayMs=${delay}`,
         );

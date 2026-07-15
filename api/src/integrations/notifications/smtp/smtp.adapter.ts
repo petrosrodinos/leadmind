@@ -5,52 +5,19 @@ import * as nodemailer from 'nodemailer';
 import type SMTPTransport from 'nodemailer/lib/smtp-transport';
 import { CreateEmail } from '../sendgrid/interfaces/mail.interfaces';
 import { SmtpConfig } from '@/modules/integrations/interfaces/email-credentials.interface';
-import {
-    createNodemailerLogger,
-    logSmtp,
-    SmtpFlowTimer,
-} from './smtp-flow-log.util';
 
 @Injectable()
 export class SmtpAdapter {
     private readonly logger = new Logger(SmtpAdapter.name);
 
     async sendEmail(createEmail: CreateEmail, smtpConfig: SmtpConfig) {
-        const timer = new SmtpFlowTimer();
         const from = createEmail.from || smtpConfig.fromEmail;
         const connectHost = await this.resolveIpv4Host(smtpConfig.host);
-
-        logSmtp(this.logger, 'log', {
-            step: 'adapter-start',
-            to: createEmail.to,
-            subject: createEmail.subject,
-            from,
-            host: smtpConfig.host,
-            connectHost,
-            port: smtpConfig.port,
-            username: smtpConfig.username,
-            secure: smtpConfig.port === 465,
-            requireTls: smtpConfig.port !== 465 && smtpConfig.port !== 25,
-        });
-
-        timer.mark('transport-create');
         const transporter = nodemailer.createTransport(
             this.buildTransportOptions(smtpConfig, connectHost),
         );
-        logSmtp(this.logger, 'log', {
-            step: 'transport-created',
-            durationMs: timer.sinceMark('transport-create'),
-        });
 
         try {
-            timer.mark('send-mail');
-            logSmtp(this.logger, 'log', {
-                step: 'send-mail-start',
-                to: createEmail.to,
-                host: smtpConfig.host,
-                port: smtpConfig.port,
-            });
-
             const info = await transporter.sendMail({
                 from,
                 to: createEmail.to,
@@ -63,37 +30,8 @@ export class SmtpAdapter {
                 headers: createEmail.headers,
             });
 
-            logSmtp(this.logger, 'log', {
-                step: 'send-mail-done',
-                to: createEmail.to,
-                messageId: info.messageId,
-                accepted: info.accepted,
-                rejected: info.rejected,
-                response: info.response,
-                sendDurationMs: timer.sinceMark('send-mail'),
-                totalDurationMs: timer.sinceStart(),
-            });
-
-            if (info.rejected?.length) {
-                logSmtp(this.logger, 'warn', {
-                    step: 'recipients-rejected',
-                    to: createEmail.to,
-                    rejected: info.rejected,
-                });
-            }
-
             return { id: info.messageId, data: { id: info.messageId } };
         } catch (error) {
-            logSmtp(this.logger, 'error', {
-                step: 'send-mail-failed',
-                to: createEmail.to,
-                subject: createEmail.subject,
-                host: smtpConfig.host,
-                port: smtpConfig.port,
-                error: this.errMsg(error),
-                sendDurationMs: timer.sinceMark('send-mail'),
-                totalDurationMs: timer.sinceStart(),
-            });
             this.logger.error(
                 error instanceof Error ? error.stack : undefined,
             );
@@ -101,13 +39,7 @@ export class SmtpAdapter {
                 this.formatSendFailure(error, smtpConfig),
             );
         } finally {
-            timer.mark('transport-close');
             transporter.close();
-            logSmtp(this.logger, 'log', {
-                step: 'transport-closed',
-                closeDurationMs: timer.sinceMark('transport-close'),
-                totalDurationMs: timer.sinceStart(),
-            });
         }
     }
 
@@ -118,20 +50,8 @@ export class SmtpAdapter {
 
         try {
             const addresses = await dns.promises.resolve4(hostname);
-            const address = addresses[0];
-            logSmtp(this.logger, 'debug', {
-                step: 'dns-resolve4',
-                hostname,
-                address,
-                candidates: addresses.length,
-            });
-            return address;
-        } catch (error) {
-            logSmtp(this.logger, 'warn', {
-                step: 'dns-resolve4-fallback',
-                hostname,
-                error: this.errMsg(error),
-            });
+            return addresses[0];
+        } catch {
             return hostname;
         }
     }
@@ -165,26 +85,8 @@ export class SmtpAdapter {
                     return;
                 }
 
-                dns.lookup(hostname, { family: 4, verbatim: true }, (error, address, family) => {
-                    if (error) {
-                        logSmtp(this.logger, 'error', {
-                            step: 'dns-lookup-failed',
-                            hostname,
-                            error: error.message,
-                        });
-                    } else {
-                        logSmtp(this.logger, 'debug', {
-                            step: 'dns-lookup-done',
-                            hostname,
-                            address,
-                            family,
-                        });
-                    }
-                    callback(error, address, family);
-                });
+                dns.lookup(hostname, { family: 4, verbatim: true }, callback);
             },
-            logger: createNodemailerLogger(this.logger) as SMTPTransport.Options['logger'],
-            debug: true,
         } as SMTPTransport.Options;
     }
 

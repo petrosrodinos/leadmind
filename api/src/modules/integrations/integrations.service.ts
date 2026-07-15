@@ -47,8 +47,6 @@ import {
     IntegrationKeyTypeOption,
     IntegrationResponse,
 } from './interfaces/integration.interface';
-import { logSmtp, SmtpFlowTimer } from '@/integrations/notifications/smtp/smtp-flow-log.util';
-
 @Injectable()
 export class IntegrationsService {
     private readonly logger = new Logger(IntegrationsService.name);
@@ -179,18 +177,8 @@ export class IntegrationsService {
         user_uuid: string,
         dto: CreateSmtpAccountDto,
     ): Promise<IntegrationResponse> {
-        const timer = new SmtpFlowTimer();
         const provider = ExternalIntegrationProvider.SMTP;
         const account = dto.account.trim();
-        logSmtp(this.logger, 'log', {
-            step: 'create-account-start',
-            user: user_uuid,
-            account,
-            host: dto.host.trim(),
-            port: dto.port,
-            username: dto.username.trim(),
-            from: dto.from_email.trim(),
-        });
         const entries: Array<{ key_type: IntegrationKeyType; secret: string }> = [
             { key_type: IntegrationKeyType.HOST, secret: dto.host.trim() },
             { key_type: IntegrationKeyType.PORT, secret: String(dto.port) },
@@ -207,11 +195,6 @@ export class IntegrationsService {
         const existingKeys = integrationWithKeys?.keys ?? [];
         const hasAccountKeys = existingKeys.some((key) => key.account === account);
         if (hasAccountKeys) {
-            logSmtp(this.logger, 'warn', {
-                step: 'create-account-conflict',
-                user: user_uuid,
-                account,
-            });
             const suggestedAccount = suggestNextIntegrationAccount(existingKeys);
             throw new ConflictException(
                 `SMTP account "${account}" already exists. Use a different account label (for example "${suggestedAccount}").`,
@@ -220,7 +203,6 @@ export class IntegrationsService {
 
         const encryptionKey = this.encryptionKey();
 
-        timer.mark('transaction');
         await this.prisma.$transaction(
             entries.map(({ key_type, secret }) =>
                 this.prisma.integrationKey.create({
@@ -234,13 +216,6 @@ export class IntegrationsService {
                 }),
             ),
         );
-        logSmtp(this.logger, 'log', {
-            step: 'create-account-keys-saved',
-            user: user_uuid,
-            account,
-            keyCount: entries.length,
-            transactionDurationMs: timer.sinceMark('transaction'),
-        });
 
         await this.ensureDefaultAccountAfterKeyChange(integration.uuid, provider);
 
@@ -251,13 +226,6 @@ export class IntegrationsService {
                     orderBy: [{ account: 'asc' }, { key_type: 'asc' }],
                 },
             },
-        });
-
-        logSmtp(this.logger, 'log', {
-            step: 'create-account-done',
-            user: user_uuid,
-            account,
-            totalDurationMs: timer.sinceStart(),
         });
 
         return this.toIntegrationResponse(provider, refreshed ?? undefined);
@@ -362,15 +330,6 @@ export class IntegrationsService {
         key_type: IntegrationKeyType,
         account?: string,
     ): Promise<string> {
-        const isSmtp = provider === ExternalIntegrationProvider.SMTP;
-        if (isSmtp) {
-            logSmtp(this.logger, 'debug', {
-                step: 'decrypt-secret-start',
-                user: user_uuid,
-                keyType: key_type,
-                account: account ?? 'default',
-            });
-        }
         const integration = await this.prisma.integration.findUnique({
             where: { user_uuid_provider: { user_uuid, provider } },
             include: { keys: true },
@@ -399,35 +358,16 @@ export class IntegrationsService {
             },
         });
         if (!key) {
-            if (isSmtp) {
-                logSmtp(this.logger, 'error', {
-                    step: 'decrypt-secret-missing',
-                    user: user_uuid,
-                    keyType: key_type,
-                    account: resolvedAccount,
-                });
-            } else {
-                this.logger.error(
-                    `Integration credential not found user=${user_uuid} env=${formatIntegrationKeyEnvName(provider, key_type, resolvedAccount)}`,
-                );
-            }
+            this.logger.error(
+                `Integration credential not found user=${user_uuid} env=${formatIntegrationKeyEnvName(provider, key_type, resolvedAccount)}`,
+            );
             throw new NotFoundException(
                 `Credential ${formatIntegrationKeyEnvName(provider, key_type, resolvedAccount)} not found`,
             );
         }
-        if (isSmtp) {
-            logSmtp(this.logger, 'debug', {
-                step: 'decrypt-secret-done',
-                user: user_uuid,
-                keyType: key_type,
-                account: resolvedAccount,
-                last4: key.last4 ?? 'n/a',
-            });
-        } else {
-            this.logger.log(
-                `Integration credential loaded user=${user_uuid} env=${formatIntegrationKeyEnvName(provider, key_type, resolvedAccount)} last4=${key.last4 ?? 'n/a'}`,
-            );
-        }
+        this.logger.log(
+            `Integration credential loaded user=${user_uuid} env=${formatIntegrationKeyEnvName(provider, key_type, resolvedAccount)} last4=${key.last4 ?? 'n/a'}`,
+        );
         return decryptIntegrationSecret(key.secret, this.encryptionKey());
     }
 
