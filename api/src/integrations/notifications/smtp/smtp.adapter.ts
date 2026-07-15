@@ -1,5 +1,6 @@
 import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import * as dns from 'node:dns';
+import * as net from 'node:net';
 import * as nodemailer from 'nodemailer';
 import type SMTPTransport from 'nodemailer/lib/smtp-transport';
 import { CreateEmail } from '../sendgrid/interfaces/mail.interfaces';
@@ -17,6 +18,7 @@ export class SmtpAdapter {
     async sendEmail(createEmail: CreateEmail, smtpConfig: SmtpConfig) {
         const timer = new SmtpFlowTimer();
         const from = createEmail.from || smtpConfig.fromEmail;
+        const connectHost = await this.resolveIpv4Host(smtpConfig.host);
 
         logSmtp(this.logger, 'log', {
             step: 'adapter-start',
@@ -24,6 +26,7 @@ export class SmtpAdapter {
             subject: createEmail.subject,
             from,
             host: smtpConfig.host,
+            connectHost,
             port: smtpConfig.port,
             username: smtpConfig.username,
             secure: smtpConfig.port === 465,
@@ -32,7 +35,7 @@ export class SmtpAdapter {
 
         timer.mark('transport-create');
         const transporter = nodemailer.createTransport(
-            this.buildTransportOptions(smtpConfig),
+            this.buildTransportOptions(smtpConfig, connectHost),
         );
         logSmtp(this.logger, 'log', {
             step: 'transport-created',
@@ -108,14 +111,43 @@ export class SmtpAdapter {
         }
     }
 
-    private buildTransportOptions(smtpConfig: SmtpConfig): SMTPTransport.Options {
+    private async resolveIpv4Host(hostname: string): Promise<string> {
+        if (net.isIP(hostname)) {
+            return hostname;
+        }
+
+        try {
+            const addresses = await dns.promises.resolve4(hostname);
+            const address = addresses[0];
+            logSmtp(this.logger, 'debug', {
+                step: 'dns-resolve4',
+                hostname,
+                address,
+                candidates: addresses.length,
+            });
+            return address;
+        } catch (error) {
+            logSmtp(this.logger, 'warn', {
+                step: 'dns-resolve4-fallback',
+                hostname,
+                error: this.errMsg(error),
+            });
+            return hostname;
+        }
+    }
+
+    private buildTransportOptions(
+        smtpConfig: SmtpConfig,
+        connectHost: string,
+    ): SMTPTransport.Options {
         const secure = smtpConfig.port === 465;
 
         return {
-            host: smtpConfig.host,
+            host: connectHost,
             port: smtpConfig.port,
             secure,
             requireTLS: !secure && smtpConfig.port !== 25,
+            family: 4,
             auth: {
                 user: smtpConfig.username,
                 pass: smtpConfig.password,
@@ -125,14 +157,15 @@ export class SmtpAdapter {
             socketTimeout: 60_000,
             tls: {
                 minVersion: 'TLSv1.2',
+                servername: smtpConfig.host,
             },
             lookup: (hostname, _options, callback) => {
-                logSmtp(this.logger, 'debug', {
-                    step: 'dns-lookup',
-                    hostname,
-                    family: 4,
-                });
-                dns.lookup(hostname, { family: 4 }, (error, address, family) => {
+                if (net.isIP(hostname)) {
+                    callback(null, hostname, net.isIPv6(hostname) ? 6 : 4);
+                    return;
+                }
+
+                dns.lookup(hostname, { family: 4, verbatim: true }, (error, address, family) => {
                     if (error) {
                         logSmtp(this.logger, 'error', {
                             step: 'dns-lookup-failed',
