@@ -15,6 +15,7 @@ import {
     SendableEmailAccount,
     SmtpConfig,
 } from '../interfaces/email-credentials.interface';
+import { logSmtp, SmtpFlowTimer } from '@/integrations/notifications/smtp/smtp-flow-log.util';
 
 const EMAIL_PROVIDERS = [
     ExternalIntegrationProvider.RESEND,
@@ -106,8 +107,14 @@ export class EmailCredentialsService {
     }
 
     async getSmtpConfig(user_uuid: string, account: string): Promise<SmtpConfig> {
-        this.logger.log(`Loading SMTP config user=${user_uuid} account=${account}`);
+        const timer = new SmtpFlowTimer();
+        logSmtp(this.logger, 'log', {
+            step: 'load-config-start',
+            user: user_uuid,
+            account,
+        });
         await this.assertSendableAccount(user_uuid, ExternalIntegrationProvider.SMTP, account);
+        timer.mark('secrets');
         const [host, port, username, password, fromEmail] = await Promise.all([
             this.integrationsService.getDecryptedSecret(
                 user_uuid,
@@ -140,9 +147,21 @@ export class EmailCredentialsService {
                 account,
             ),
         ]);
+        logSmtp(this.logger, 'log', {
+            step: 'load-config-secrets',
+            user: user_uuid,
+            account,
+            secretsDurationMs: timer.sinceMark('secrets'),
+        });
 
         const parsedPort = parseInt(port, 10);
         if (!Number.isFinite(parsedPort) || parsedPort <= 0) {
+            logSmtp(this.logger, 'error', {
+                step: 'load-config-invalid-port',
+                user: user_uuid,
+                account,
+                port,
+            });
             throw new BadRequestException(`Invalid SMTP port for account ${account}`);
         }
 
@@ -153,9 +172,17 @@ export class EmailCredentialsService {
             password,
             fromEmail: fromEmail.trim(),
         };
-        this.logger.log(
-            `SMTP config loaded user=${user_uuid} account=${account} host=${config.host}:${config.port} from=${config.fromEmail} smtpUser=${config.username}`,
-        );
+        logSmtp(this.logger, 'log', {
+            step: 'load-config-done',
+            user: user_uuid,
+            account,
+            host: config.host,
+            port: config.port,
+            from: config.fromEmail,
+            username: config.username,
+            passwordLast4: config.password.slice(-4),
+            totalDurationMs: timer.sinceStart(),
+        });
         return config;
     }
 
@@ -169,16 +196,28 @@ export class EmailCredentialsService {
             (row) => row.provider === provider && row.account === account.trim(),
         );
         if (!match) {
-            this.logger.warn(
-                `Sendable account check failed user=${user_uuid} provider=${provider} account=${account} available=${sendable.map((row) => `${row.provider}:${row.account}`).join(',') || 'none'}`,
-            );
+            logSmtp(this.logger, 'warn', {
+                step: 'assert-sendable-failed',
+                user: user_uuid,
+                provider,
+                account,
+                available: sendable.map((row) => `${row.provider}:${row.account}`),
+            });
             throw new BadRequestException(
                 `${provider} account "${account}" is not configured or incomplete`,
             );
         }
-        this.logger.log(
-            `Sendable account verified user=${user_uuid} provider=${provider} account=${account}`,
-        );
+        if (provider === ExternalIntegrationProvider.SMTP) {
+            logSmtp(this.logger, 'log', {
+                step: 'assert-sendable-ok',
+                user: user_uuid,
+                account,
+            });
+        } else {
+            this.logger.log(
+                `Sendable account verified user=${user_uuid} provider=${provider} account=${account}`,
+            );
+        }
     }
 
     async resolveSendableAccounts(user_uuid: string): Promise<SendableEmailAccount[]> {
@@ -195,6 +234,9 @@ export class EmailCredentialsService {
         for (const integration of integrations) {
             const distinctAccounts = listDistinctIntegrationAccounts(integration.keys);
             for (const account of distinctAccounts) {
+                if (integration.provider === ExternalIntegrationProvider.SMTP) {
+                    this.logSmtpAccountState(integration.keys, account);
+                }
                 if (this.isAccountComplete(integration.provider, integration.keys, account)) {
                     accounts.push({
                         provider: integration.provider as EmailProviderTarget['provider'],
@@ -204,6 +246,12 @@ export class EmailCredentialsService {
                 }
             }
         }
+
+        logSmtp(this.logger, 'debug', {
+            step: 'list-sendable-accounts',
+            user: user_uuid,
+            accounts: accounts.map((row) => `${row.provider}:${row.account}`),
+        });
 
         return accounts.sort((left, right) =>
             `${left.provider}:${left.account}`.localeCompare(
@@ -232,15 +280,45 @@ export class EmailCredentialsService {
                 integration.keys,
             );
             if (!account) continue;
-            if (!this.isAccountComplete(provider, integration.keys, account)) continue;
-            this.logger.log(
-                `Default email target user=${user_uuid} provider=${provider} account=${account}`,
-            );
+            if (!this.isAccountComplete(provider, integration.keys, account)) {
+                if (provider === ExternalIntegrationProvider.SMTP) {
+                    this.logSmtpAccountState(integration.keys, account);
+                }
+                continue;
+            }
+            logSmtp(this.logger, 'log', {
+                step: 'resolve-default-target',
+                user: user_uuid,
+                account,
+            });
             return { provider, account };
         }
 
-        this.logger.warn(`No default email target user=${user_uuid}`);
+        logSmtp(this.logger, 'warn', {
+            step: 'resolve-default-target-missing',
+            user: user_uuid,
+        });
         return null;
+    }
+
+    private logSmtpAccountState(
+        keys: { key_type: IntegrationKeyType; account: string }[],
+        account: string,
+    ): void {
+        const required = PROVIDER_KEY_TYPES[ExternalIntegrationProvider.SMTP];
+        const accountKeys = keys.filter((key) => key.account.trim() === account.trim());
+        const present = required.filter((key_type) =>
+            accountKeys.some((key) => key.key_type === key_type),
+        );
+        const missing = required.filter(
+            (key_type) => !accountKeys.some((key) => key.key_type === key_type),
+        );
+        logSmtp(this.logger, missing.length > 0 ? 'warn' : 'debug', {
+            step: missing.length > 0 ? 'account-incomplete' : 'account-complete',
+            account,
+            present,
+            missing,
+        });
     }
 
     private isAccountComplete(

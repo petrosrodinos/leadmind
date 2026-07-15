@@ -31,6 +31,7 @@ import {
 } from '@/modules/outreach/utils/email-provider-allocation.util';
 import { mergeSenderProfileMetadata } from '@/modules/outreach/utils/sender-profile-metadata.util';
 import { SenderProfilesService } from '@/modules/sender-profiles/sender-profiles.service';
+import { logSmtp } from '@/integrations/notifications/smtp/smtp-flow-log.util';
 
 interface SendResult {
     status: 'sent' | 'failed' | 'skipped' | 'noop';
@@ -170,6 +171,17 @@ export class CampaignMessageSendService {
 
         try {
             const providerMeta = parseEmailProviderMetadata(message.metadata);
+            const effectiveProvider = providerOverride?.provider ?? providerMeta?.provider;
+            const effectiveAccount = providerOverride?.account ?? providerMeta?.account ?? 'default';
+            if (mcc.channel === Channel.EMAIL && effectiveProvider === ExternalIntegrationProvider.SMTP) {
+                logSmtp(this.logger, 'log', {
+                    step: 'campaign-deliver-start',
+                    mcc: mcc.uuid,
+                    message: message.uuid,
+                    account: effectiveAccount,
+                    to: mcc.contact.email,
+                });
+            }
             this.logger.log(
                 `Campaign deliver mcc=${mcc.uuid} message=${message.uuid} channel=${mcc.channel} provider=${providerOverride?.provider ?? providerMeta?.provider ?? 'default'} account=${providerOverride?.account ?? providerMeta?.account ?? 'default'} to=${mcc.contact.email ?? mcc.contact.phone ?? 'unknown'}`,
             );
@@ -181,6 +193,14 @@ export class CampaignMessageSendService {
                 },
                 providerOverride,
             );
+            if (mcc.channel === Channel.EMAIL && effectiveProvider === ExternalIntegrationProvider.SMTP) {
+                logSmtp(this.logger, 'log', {
+                    step: 'campaign-deliver-done',
+                    mcc: mcc.uuid,
+                    message: message.uuid,
+                    providerMessageId: provider_message_id,
+                });
+            }
 
             const shouldPromoteOnSend =
                 mcc.channel === Channel.EMAIL && mcc.contact.status === LeadStatus.NEW;
@@ -239,6 +259,20 @@ export class CampaignMessageSendService {
             return { status: 'sent' };
         } catch (error) {
             const error_message = error instanceof Error ? error.message : 'Unknown error';
+            const failedProviderMeta = parseEmailProviderMetadata(message.metadata);
+            const failedEffectiveProvider =
+                providerOverride?.provider ?? failedProviderMeta?.provider;
+            if (
+                mcc.channel === Channel.EMAIL &&
+                failedEffectiveProvider === ExternalIntegrationProvider.SMTP
+            ) {
+                logSmtp(this.logger, 'error', {
+                    step: 'campaign-deliver-failed',
+                    mcc: mcc.uuid,
+                    message: message.uuid,
+                    error: error_message,
+                });
+            }
             await this.prisma.$transaction([
                 this.messageSendService.messageFailedOperationPreservingProvider(
                     message.uuid,

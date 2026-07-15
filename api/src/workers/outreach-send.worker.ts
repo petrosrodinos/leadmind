@@ -6,6 +6,8 @@ import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { OUTREACH_SEND_QUEUE } from '@/core/queues/queues.constants';
 import { ContactsService } from '@/modules/contacts/contacts.service';
 import { MessageSendService } from '@/modules/outreach/services/message-send.service';
+import { parseEmailProviderMetadata } from '@/modules/outreach/utils/email-provider-allocation.util';
+import { logSmtp } from '@/integrations/notifications/smtp/smtp-flow-log.util';
 
 interface OutreachSendJobData {
     message_uuid: string;
@@ -64,6 +66,18 @@ export class OutreachSendWorker extends WorkerHost implements OnModuleInit {
             return;
         }
 
+        const providerMeta = parseEmailProviderMetadata(message.metadata);
+        if (message.channel === Channel.EMAIL) {
+            logSmtp(this.logger, 'log', {
+                step: 'worker-start',
+                jobId: job.id,
+                message: message.uuid,
+                user: message.user_uuid,
+                provider: providerMeta?.provider ?? 'default',
+                account: providerMeta?.account ?? 'default',
+            });
+        }
+
         await this.prisma.outreachMessage.update({
             where: { uuid: message.uuid },
             data: { status: MsgStatus.QUEUED },
@@ -109,8 +123,24 @@ export class OutreachSendWorker extends WorkerHost implements OnModuleInit {
             this.logger.log(
                 `Outreach send succeeded message=${message.uuid} providerMessageId=${provider_message_id}`,
             );
+            if (message.channel === Channel.EMAIL && providerMeta?.provider === ExternalIntegrationProvider.SMTP) {
+                logSmtp(this.logger, 'log', {
+                    step: 'worker-done',
+                    jobId: job.id,
+                    message: message.uuid,
+                    providerMessageId: provider_message_id,
+                });
+            }
         } catch (error) {
             const error_message = error instanceof Error ? error.message : 'Unknown error';
+            if (message.channel === Channel.EMAIL && providerMeta?.provider === ExternalIntegrationProvider.SMTP) {
+                logSmtp(this.logger, 'error', {
+                    step: 'worker-failed',
+                    jobId: job.id,
+                    message: message.uuid,
+                    error: error_message,
+                });
+            }
             await this.messageSendService.messageFailedOperationPreservingProvider(
                 message.uuid,
                 error_message,

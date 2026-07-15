@@ -26,6 +26,7 @@ import {
 } from '@/modules/outreach/utils/email-provider-allocation.util';
 import { parseSenderProfileMetadata } from '@/modules/outreach/utils/sender-profile-metadata.util';
 import { OutreachRenderService } from './outreach-render.service';
+import { logSmtp, SmtpFlowTimer } from '@/integrations/notifications/smtp/smtp-flow-log.util';
 
 export interface DeliveredMessage {
     provider_message_id: string | null;
@@ -106,10 +107,31 @@ export class MessageSendService {
                 replyTo,
             };
 
-            const target =
-                providerOverride ??
-                parseEmailProviderMetadata(message.metadata) ??
-                (await this.emailCredentialsService.resolveDefaultTarget(message.user_uuid));
+            const metadataProvider = parseEmailProviderMetadata(message.metadata);
+            const defaultTarget =
+                providerOverride || metadataProvider
+                    ? null
+                    : await this.emailCredentialsService.resolveDefaultTarget(message.user_uuid);
+
+            const target = providerOverride ?? metadataProvider ?? defaultTarget;
+            const providerSource = providerOverride
+                ? 'override'
+                : metadataProvider
+                  ? 'metadata'
+                  : defaultTarget
+                    ? 'default'
+                    : 'none';
+
+            if (target?.provider === ExternalIntegrationProvider.SMTP) {
+                logSmtp(this.logger, 'log', {
+                    step: 'resolve-provider',
+                    message: message.uuid,
+                    user: message.user_uuid,
+                    source: providerSource,
+                    account: target.account,
+                    to: message.contact.email,
+                });
+            }
 
             this.logger.log(
                 `Email send message=${message.uuid} to=${message.contact.email} subject="${rendered.subject ?? 'Outreach message'}" provider=${target?.provider ?? 'none'} account=${target?.account ?? 'none'} replyTo=${replyTo}`,
@@ -119,6 +141,7 @@ export class MessageSendService {
                 message.user_uuid,
                 createEmail,
                 target,
+                message.uuid,
             );
             const provider_message_id =
                 result?.data?.id ?? result?.id ?? null;
@@ -165,19 +188,40 @@ export class MessageSendService {
             replyTo: string;
         },
         target: EmailProviderTarget | null,
+        messageUuid?: string,
     ): Promise<{ result: any; deliveryTarget: EmailProviderTarget }> {
         if (target?.provider === ExternalIntegrationProvider.SMTP) {
-            this.logger.log(
-                `Using SMTP account=${target.account} user=${user_uuid} to=${createEmail.to}`,
-            );
+            const timer = new SmtpFlowTimer();
+            logSmtp(this.logger, 'log', {
+                step: 'send-path-start',
+                message: messageUuid,
+                user: user_uuid,
+                account: target.account,
+                to: createEmail.to,
+                subject: createEmail.subject,
+            });
+            timer.mark('config');
             const smtpConfig = await this.emailCredentialsService.getSmtpConfig(
                 user_uuid,
                 target.account,
             );
+            logSmtp(this.logger, 'log', {
+                step: 'send-path-config-loaded',
+                message: messageUuid,
+                configDurationMs: timer.sinceMark('config'),
+            });
+            timer.mark('send');
             const result = await this.smtpMailService.sendEmail(
                 { ...createEmail, from: smtpConfig.fromEmail },
                 smtpConfig,
             );
+            logSmtp(this.logger, 'log', {
+                step: 'send-path-done',
+                message: messageUuid,
+                messageId: result?.id ?? result?.data?.id ?? 'unknown',
+                sendDurationMs: timer.sinceMark('send'),
+                totalDurationMs: timer.sinceStart(),
+            });
             return { result, deliveryTarget: target };
         }
 
@@ -214,6 +258,14 @@ export class MessageSendService {
         this.logger.error(
             `No email provider configured user=${user_uuid} to=${createEmail.to} target=${JSON.stringify(target)} envResend=${envKey ? 'set' : 'missing'}`,
         );
+        logSmtp(this.logger, 'error', {
+            step: 'send-path-no-provider',
+            message: messageUuid,
+            user: user_uuid,
+            to: createEmail.to,
+            targetProvider: target?.provider ?? null,
+            targetAccount: target?.account ?? null,
+        });
         throw new Error('No email provider configured');
     }
 
