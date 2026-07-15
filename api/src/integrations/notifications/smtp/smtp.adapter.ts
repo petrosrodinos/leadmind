@@ -98,7 +98,7 @@ export class SmtpAdapter {
                 error instanceof Error ? error.stack : undefined,
             );
             throw new InternalServerErrorException(
-                `Failed to send email with SMTP: ${this.errMsg(error)}`,
+                this.formatSendFailure(error, smtpConfig),
             );
         } finally {
             timer.mark('transport-close');
@@ -190,5 +190,24 @@ export class SmtpAdapter {
 
     private errMsg(error: unknown): string {
         return error instanceof Error ? error.message : String(error);
+    }
+
+    private formatSendFailure(error: unknown, smtpConfig: SmtpConfig): string {
+        const message = this.errMsg(error);
+        const code =
+            error && typeof error === 'object' && 'code' in error
+                ? String((error as { code?: unknown }).code ?? '')
+                : '';
+        const isNetworkBlocked =
+            code === 'ETIMEDOUT' ||
+            code === 'ESOCKET' ||
+            code === 'ENETUNREACH' ||
+            /connection timeout/i.test(message);
+
+        if (isNetworkBlocked) {
+            return `Failed to send email with SMTP: cannot reach ${smtpConfig.host}:${smtpConfig.port} (${message}). Cloud hosts often block outbound SMTP; use Resend or another HTTP email provider for production.`;
+        }
+
+        return `Failed to send email with SMTP: ${message}`;
     }
 }
