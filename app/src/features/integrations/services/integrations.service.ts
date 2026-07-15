@@ -3,6 +3,7 @@ import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type {
     CreateIntegrationKeyPayload,
+    CreateSmtpAccountPayload,
     IntegrationKey,
     IntegrationProvider,
     IntegrationProviderView,
@@ -42,6 +43,20 @@ export const createIntegrationKey = async (
         return response.data;
     } catch (error) {
         throw new Error(apiErrorMessage(error, "Failed to store key."));
+    }
+};
+
+export const createSmtpAccount = async (
+    payload: CreateSmtpAccountPayload,
+): Promise<IntegrationProviderView> => {
+    try {
+        const response = await axiosInstance.post(
+            ApiRoutes.integrations.createSmtpAccount,
+            payload,
+        );
+        return response.data;
+    } catch (error) {
+        throw new Error(apiErrorMessage(error, "Failed to save SMTP account."));
     }
 };
 

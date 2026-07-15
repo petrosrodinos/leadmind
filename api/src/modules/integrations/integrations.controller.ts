@@ -20,6 +20,7 @@ import { CurrentUser } from '@/shared/decorators/current-user.decorator';
 import { JwtGuard } from '@/shared/guards/jwt.guard';
 import { IntegrationsService } from './integrations.service';
 import { CreateIntegrationKeyDto } from './dto/create-integration-key.dto';
+import { CreateSmtpAccountDto } from './dto/create-smtp-account.dto';
 import { SetDefaultIntegrationAccountDto } from './dto/set-default-integration-account.dto';
 import { UpdateIntegrationKeyDto } from './dto/update-integration-key.dto';
 
@@ -45,6 +46,15 @@ export class IntegrationsController {
         @Body() dto: CreateIntegrationKeyDto,
     ) {
         return this.integrationsService.createKey(user_uuid, provider, dto);
+    }
+
+    @Post('SMTP/accounts')
+    @ApiOperation({ summary: 'Create a complete SMTP account in one request' })
+    createSmtpAccount(
+        @CurrentUser('uuid') user_uuid: string,
+        @Body() dto: CreateSmtpAccountDto,
+    ) {
+        return this.integrationsService.createSmtpAccount(user_uuid, dto);
     }
 
     @Patch('keys/:uuid')

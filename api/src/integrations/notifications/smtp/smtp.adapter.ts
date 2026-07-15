@@ -1,5 +1,7 @@
 import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
+import * as dns from 'node:dns';
 import * as nodemailer from 'nodemailer';
+import type SMTPTransport from 'nodemailer/lib/smtp-transport';
 import { CreateEmail } from '../sendgrid/interfaces/mail.interfaces';
 import { SmtpConfig } from '@/modules/integrations/interfaces/email-credentials.interface';
 
@@ -13,17 +15,11 @@ export class SmtpAdapter {
             `Sending SMTP email to=${createEmail.to} subject="${createEmail.subject}" from=${from} host=${smtpConfig.host}:${smtpConfig.port} user=${smtpConfig.username}`,
         );
 
-        try {
-            const transporter = nodemailer.createTransport({
-                host: smtpConfig.host,
-                port: smtpConfig.port,
-                secure: smtpConfig.port === 465,
-                auth: {
-                    user: smtpConfig.username,
-                    pass: smtpConfig.password,
-                },
-            });
+        const transporter = nodemailer.createTransport(
+            this.buildTransportOptions(smtpConfig),
+        );
 
+        try {
             const info = await transporter.sendMail({
                 from,
                 to: createEmail.to,
@@ -55,7 +51,33 @@ export class SmtpAdapter {
             throw new InternalServerErrorException(
                 `Failed to send email with SMTP: ${this.errMsg(error)}`,
             );
+        } finally {
+            transporter.close();
         }
+    }
+
+    private buildTransportOptions(smtpConfig: SmtpConfig): SMTPTransport.Options {
+        const secure = smtpConfig.port === 465;
+
+        return {
+            host: smtpConfig.host,
+            port: smtpConfig.port,
+            secure,
+            requireTLS: !secure && smtpConfig.port !== 25,
+            auth: {
+                user: smtpConfig.username,
+                pass: smtpConfig.password,
+            },
+            connectionTimeout: 30_000,
+            greetingTimeout: 30_000,
+            socketTimeout: 60_000,
+            tls: {
+                minVersion: 'TLSv1.2',
+            },
+            lookup: (hostname, _options, callback) => {
+                dns.lookup(hostname, { family: 4 }, callback);
+            },
+        } as SMTPTransport.Options;
     }
 
     private errMsg(error: unknown): string {

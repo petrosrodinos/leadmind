@@ -39,6 +39,7 @@ import {
     suggestNextIntegrationAccount,
 } from './constants/integration-key-types.constants';
 import { CreateIntegrationKeyDto } from './dto/create-integration-key.dto';
+import { CreateSmtpAccountDto } from './dto/create-smtp-account.dto';
 import { SetDefaultIntegrationAccountDto } from './dto/set-default-integration-account.dto';
 import { UpdateIntegrationKeyDto } from './dto/update-integration-key.dto';
 import {
@@ -171,6 +172,64 @@ export class IntegrationsService {
             }
             throw error;
         }
+    }
+
+    async createSmtpAccount(
+        user_uuid: string,
+        dto: CreateSmtpAccountDto,
+    ): Promise<IntegrationResponse> {
+        const provider = ExternalIntegrationProvider.SMTP;
+        const account = dto.account.trim();
+        const entries: Array<{ key_type: IntegrationKeyType; secret: string }> = [
+            { key_type: IntegrationKeyType.HOST, secret: dto.host.trim() },
+            { key_type: IntegrationKeyType.PORT, secret: String(dto.port) },
+            { key_type: IntegrationKeyType.USERNAME, secret: dto.username.trim() },
+            { key_type: IntegrationKeyType.PASSWORD, secret: dto.password },
+            { key_type: IntegrationKeyType.FROM_EMAIL, secret: dto.from_email.trim() },
+        ];
+
+        const integration = await this.ensureIntegration(user_uuid, provider);
+        const integrationWithKeys = await this.prisma.integration.findUnique({
+            where: { uuid: integration.uuid },
+            include: { keys: true },
+        });
+        const existingKeys = integrationWithKeys?.keys ?? [];
+        const hasAccountKeys = existingKeys.some((key) => key.account === account);
+        if (hasAccountKeys) {
+            const suggestedAccount = suggestNextIntegrationAccount(existingKeys);
+            throw new ConflictException(
+                `SMTP account "${account}" already exists. Use a different account label (for example "${suggestedAccount}").`,
+            );
+        }
+
+        const encryptionKey = this.encryptionKey();
+
+        await this.prisma.$transaction(
+            entries.map(({ key_type, secret }) =>
+                this.prisma.integrationKey.create({
+                    data: {
+                        integration_uuid: integration.uuid,
+                        key_type,
+                        account,
+                        secret: encryptIntegrationSecret(secret, encryptionKey),
+                        last4: secretLast4(secret),
+                    },
+                }),
+            ),
+        );
+
+        await this.ensureDefaultAccountAfterKeyChange(integration.uuid, provider);
+
+        const refreshed = await this.prisma.integration.findUnique({
+            where: { uuid: integration.uuid },
+            include: {
+                keys: {
+                    orderBy: [{ account: 'asc' }, { key_type: 'asc' }],
+                },
+            },
+        });
+
+        return this.toIntegrationResponse(provider, refreshed ?? undefined);
     }
 
     async updateKey(

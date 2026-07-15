@@ -8,7 +8,7 @@ import {
 } from "@heroui/react";
 import { Save } from "lucide-react";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
-import { createIntegrationKey } from "@/features/integrations/services/integrations.service";
+import { createSmtpAccount } from "@/features/integrations/services/integrations.service";
 import { suggestNextAccountLabel } from "@/features/integrations/constants/integration-key-types";
 import type { IntegrationProviderView } from "@/features/integrations/interfaces/integrations.interface";
 import { useQueryClient } from "@tanstack/react-query";
@@ -82,16 +82,14 @@ export function SmtpAccountFormModal({
         setFormError(null);
 
         try {
-            const entries = Object.entries(fields) as Array<
-                ["HOST" | "PORT" | "USERNAME" | "PASSWORD" | "FROM_EMAIL", string]
-            >;
-            for (const [key_type, secret] of entries) {
-                await createIntegrationKey("SMTP", {
-                    key_type,
-                    account: trimmedAccount,
-                    secret,
-                });
-            }
+            await createSmtpAccount({
+                account: trimmedAccount,
+                host: fields.HOST,
+                port: Number.parseInt(fields.PORT, 10),
+                username: fields.USERNAME,
+                password: fields.PASSWORD,
+                from_email: fields.FROM_EMAIL,
+            });
             await qc.invalidateQueries({ queryKey: integrationsQueryKeys.all });
             toast({ title: "SMTP account saved", duration: 1500 });
             onOpenChange(false);

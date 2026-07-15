@@ -79,6 +79,15 @@ export interface CreateIntegrationKeyPayload {
     secret: string;
 }
 
+export interface CreateSmtpAccountPayload {
+    account: string;
+    host: string;
+    port: number;
+    username: string;
+    password: string;
+    from_email: string;
+}
+
 export interface UpdateIntegrationKeyPayload {
     secret: string;
 }

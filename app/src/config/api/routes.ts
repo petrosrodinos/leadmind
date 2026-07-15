@@ -109,6 +109,7 @@ export const ApiRoutes = {
         prefix: "/integrations",
         list: "/integrations",
         createKey: (provider: string) => `/integrations/${provider}/keys`,
+        createSmtpAccount: "/integrations/SMTP/accounts",
         setDefaultAccount: (provider: string) =>
             `/integrations/${provider}/default-account`,
         updateKey: (uuid: string) => `/integrations/keys/${uuid}`,
