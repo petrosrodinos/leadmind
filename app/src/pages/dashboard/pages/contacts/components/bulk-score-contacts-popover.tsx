@@ -93,7 +93,7 @@ export function BulkScoreContactsPopover({
                             {selectedContactUuids.length} contact
                             {selectedContactUuids.length === 1 ? "" : "s"} selected. Choose filters, then scoring
                             rules attached to those filters. Each contact is only scored for rules that exist on its
-                            own filter.
+                            linked filters.
                         </p>
                         <div>
                             <Label className="mb-1 block text-xs text-muted">Filters</Label>

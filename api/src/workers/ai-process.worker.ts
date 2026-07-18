@@ -91,6 +91,17 @@ export class AiProcessWorker extends WorkerHost {
                         filter_scoring_instructions: { include: { scoring_instruction: true } },
                     },
                 },
+                contact_filters: {
+                    include: {
+                        filter: {
+                            include: {
+                                filter_scoring_instructions: {
+                                    include: { scoring_instruction: true },
+                                },
+                            },
+                        },
+                    },
+                },
             },
         });
         if (!contact) {
@@ -98,10 +109,31 @@ export class AiProcessWorker extends WorkerHost {
             return;
         }
 
-        const { lead, filter } = contact;
+        const { lead } = contact;
+        const linkedFilters = contact.contact_filters.map((row) => row.filter);
+        const combinedFilter =
+            linkedFilters.length > 0
+                ? {
+                      ...linkedFilters[0],
+                      enrichment_sources: [
+                          ...new Set(linkedFilters.flatMap((f) => f.enrichment_sources)),
+                      ],
+                      filter_scoring_instructions: [
+                          ...new Map(
+                              linkedFilters
+                                  .flatMap((f) => f.filter_scoring_instructions)
+                                  .map((link) => [link.scoring_instruction.uuid, link]),
+                          ).values(),
+                      ],
+                  }
+                : contact.filter;
         const action = data.action;
         const full_pipeline = action === undefined;
-        const sources = resolveContactEnrichmentSources(data, filter);
+        const sources = resolveContactEnrichmentSources(
+            data,
+            combinedFilter,
+            linkedFilters.slice(1),
+        );
 
         if (full_pipeline || action === 'enrich') {
             try {
@@ -117,14 +149,14 @@ export class AiProcessWorker extends WorkerHost {
             }
         }
 
-        if ((full_pipeline || action === 'score') && filter) {
+        if ((full_pipeline || action === 'score') && combinedFilter) {
             try {
                 const fresh_lead = await this.prisma.lead.findUnique({ where: { uuid: lead.uuid } });
                 if (fresh_lead) {
                     await this.contactAiService.scoreContact(
                         contact,
                         fresh_lead,
-                        filter,
+                        combinedFilter,
                         data.scoring_instruction_uuids?.length
                             ? { onlyInstructionUuids: data.scoring_instruction_uuids }
                             : undefined,
@@ -133,21 +165,31 @@ export class AiProcessWorker extends WorkerHost {
             } catch (error) {
                 this.logger.error(`Contact ${contact.uuid} score step failed: ${this.errMsg(error)}`);
             }
-        } else if ((full_pipeline || action === 'score') && !filter) {
-            this.logger.warn(`Contact ${contact.uuid} has no filter — skipping score`);
+        } else if ((full_pipeline || action === 'score') && !combinedFilter) {
+            this.logger.warn(`Contact ${contact.uuid} has no linked filters — skipping score`);
         }
 
-        if ((full_pipeline || action === 'draft') && filter) {
+        if (full_pipeline || action === 'draft') {
+            const draftFilters =
+                linkedFilters.length > 0
+                    ? linkedFilters
+                    : contact.filter
+                      ? [contact.filter]
+                      : [];
+            if (draftFilters.length === 0) {
+                this.logger.warn(`Contact ${contact.uuid} has no linked filters — skipping draft`);
+                return;
+            }
             try {
                 const fresh_lead = await this.prisma.lead.findUnique({ where: { uuid: lead.uuid } });
                 if (fresh_lead) {
-                    await this.contactAiService.draftOutreachMessages(contact, fresh_lead, filter);
+                    for (const filter of draftFilters) {
+                        await this.contactAiService.draftOutreachMessages(contact, fresh_lead, filter);
+                    }
                 }
             } catch (error) {
                 this.logger.error(`Contact ${contact.uuid} draft step failed: ${this.errMsg(error)}`);
             }
-        } else if ((full_pipeline || action === 'draft') && !filter) {
-            this.logger.warn(`Contact ${contact.uuid} has no filter — skipping draft`);
         }
     }
 

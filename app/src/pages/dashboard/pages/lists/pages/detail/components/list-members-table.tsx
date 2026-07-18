@@ -16,6 +16,7 @@ import {
     ContactTableNameCell,
     ContactTableQuickViewButton,
 } from "@/pages/dashboard/components/contact-stack-viewer";
+import { ContactAlsoFoundByHint } from "@/pages/dashboard/components/contact-also-found-by-hint";
 
 const columnHelper = createColumnHelper<Contact>();
 
@@ -142,6 +143,14 @@ export function ListMembersTable({
                 id: "score",
                 header: "Score",
                 cell: (info) => <ContactScoresCompact contact={info.row.original} />,
+            }),
+            columnHelper.display({
+                id: "filters",
+                header: "Filters",
+                cell: (info) => {
+                    const hint = <ContactAlsoFoundByHint contact={info.row.original} />;
+                    return hint ?? <span className="text-muted">—</span>;
+                },
             }),
             columnHelper.display({
                 id: "actions",

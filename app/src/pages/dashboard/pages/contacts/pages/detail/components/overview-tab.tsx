@@ -171,8 +171,11 @@ function IdentitySidebar({ contact }: { contact: Contact }) {
 function DetailPanel({ contact, onEdit }: { contact: Contact; onEdit: () => void }) {
     const { data: filters = [] } = useFilters();
     const filterName = useMemo(
-        () => filters.find((f) => f.uuid === contact.filter_uuid)?.name ?? null,
-        [filters, contact.filter_uuid],
+        () =>
+            contact.filter?.name ??
+            filters.find((f) => f.uuid === contact.filter_uuid)?.name ??
+            null,
+        [contact.filter?.name, contact.filter_uuid, filters],
     );
 
     const websiteHref = contact.website?.trim() ? normalizeUrl(contact.website.trim()) : undefined;
@@ -238,8 +241,19 @@ function DetailPanel({ contact, onEdit }: { contact: Contact; onEdit: () => void
 
             <SectionCard title="Context" icon={Tag}>
                 {filterName ? (
-                    <Row label="Filter">
+                    <Row label="Primary source filter">
                         <ProfileValue value={filterName} />
+                    </Row>
+                ) : null}
+                {(contact.also_found_by?.length ?? 0) > 0 ? (
+                    <Row label="Also found by">
+                        <div className="flex flex-wrap gap-1.5">
+                            {contact.also_found_by!.map((f) => (
+                                <Chip key={f.uuid} size="sm" variant="secondary">
+                                    {f.name}
+                                </Chip>
+                            ))}
+                        </div>
                     </Row>
                 ) : null}
                 <Row label="About">
@@ -333,7 +347,7 @@ function EditForm({ contact, onDone }: { contact: Contact; onDone: () => void })
                         onChange={(v) => setField("filter_uuid", (v as string) ?? "")}
                         isDisabled={filterOptions.length === 0}
                     >
-                        <Label>Filter</Label>
+                        <Label>Primary source filter</Label>
                         <Select.Trigger>
                             <Select.Value />
                             <Select.Indicator />

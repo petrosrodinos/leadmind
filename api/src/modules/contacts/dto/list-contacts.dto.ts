@@ -59,7 +59,10 @@ export class ListContactsDto {
     @IsString()
     search?: string;
 
-    @ApiPropertyOptional({ description: 'Restrict to contacts that came from this filter' })
+    @ApiPropertyOptional({
+        description:
+            'Restrict to contacts linked to this filter (via contact_filters join; includes primary and also-found-by)',
+    })
     @IsOptional()
     @IsString()
     filter_uuid?: string;

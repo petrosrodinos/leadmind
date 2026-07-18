@@ -8,6 +8,11 @@ import { GemiService } from '@/integrations/gemi/gemi.service';
 import { ElasticsearchService } from '@/integrations/elasticsearch/elasticsearch.service';
 import { NormalizedLead } from '@/integrations/apify/interfaces/apify.interfaces';
 import { contactProfileFromLead } from '@/modules/contacts/utils/contact-profile.utils';
+import {
+    findOwnedContactByEmail,
+    ensureContactFilterLink,
+    linkContactToFilter,
+} from '@/modules/contacts/utils/contact-filter-link.utils';
 import { resolveLeadWebsite } from '@/modules/leads/utils/lead-website.utils';
 import {
     AI_PROCESS_QUEUE,
@@ -177,16 +182,59 @@ export class FilterScrapeWorker extends WorkerHost {
 
             await this.elasticsearchService.indexLead(lead);
 
-            const existing_contact = await this.prisma.contact.findUnique({
-                where: {
-                    user_uuid_lead_uuid: {
-                        user_uuid: filter.user_uuid,
-                        lead_uuid: lead.uuid,
-                    },
-                },
-            });
+            let existing_contact =
+                normalized.email
+                    ? await findOwnedContactByEmail(
+                          this.prisma,
+                          filter.user_uuid,
+                          normalized.email,
+                      )
+                    : null;
 
             if (!existing_contact) {
+                existing_contact = await this.prisma.contact.findUnique({
+                    where: {
+                        user_uuid_lead_uuid: {
+                            user_uuid: filter.user_uuid,
+                            lead_uuid: lead.uuid,
+                        },
+                    },
+                });
+            }
+
+            if (existing_contact) {
+                await linkContactToFilter(this.prisma, existing_contact, filter.uuid);
+                if (existing_contact.lead_uuid !== lead.uuid) {
+                    const conflict = await this.prisma.contact.findUnique({
+                        where: {
+                            user_uuid_lead_uuid: {
+                                user_uuid: filter.user_uuid,
+                                lead_uuid: lead.uuid,
+                            },
+                        },
+                    });
+                    if (!conflict) {
+                        await this.prisma.contact.update({
+                            where: { uuid: existing_contact.uuid },
+                            data: {
+                                lead_uuid: lead.uuid,
+                                ...contactProfileFromLead(lead),
+                            },
+                        });
+                    } else {
+                        await this.prisma.contact.update({
+                            where: { uuid: existing_contact.uuid },
+                            data: contactProfileFromLead(lead),
+                        });
+                    }
+                } else if (!is_new_lead) {
+                    await this.prisma.contact.update({
+                        where: { uuid: existing_contact.uuid },
+                        data: contactProfileFromLead(lead),
+                    });
+                }
+                await this.reindexContactsForLead(lead.uuid);
+            } else {
                 const contact = await this.prisma.contact.create({
                     data: {
                         user_uuid: filter.user_uuid,
@@ -195,10 +243,9 @@ export class FilterScrapeWorker extends WorkerHost {
                         ...contactProfileFromLead(lead),
                     },
                 });
+                await ensureContactFilterLink(this.prisma, contact.uuid, filter.uuid);
                 await this.elasticsearchService.indexContact({ ...contact, lead, tags: [] });
                 new_contact_uuids.push(contact.uuid);
-            } else if (!is_new_lead) {
-                await this.reindexContactsForLead(lead.uuid);
             }
 
             await this.prisma.rawLead.update({

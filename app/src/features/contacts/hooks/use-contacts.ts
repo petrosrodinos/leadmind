@@ -123,11 +123,11 @@ export function useCreateContact() {
         mutationFn: (payload: CreateContactPayload) => createContact(payload),
         onSuccess: () => {
             qc.invalidateQueries({ queryKey: contactsQueryKeys.all });
-            toast({ title: "Lead added", duration: 1500 });
+            toast({ title: "Contact saved", duration: 1500 });
         },
         onError: (error: Error) => {
             toast({
-                title: "Could not add lead",
+                title: "Could not save contact",
                 description: error.message,
                 duration: 3000,
                 variant: "error",

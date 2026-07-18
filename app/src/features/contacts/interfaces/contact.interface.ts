@@ -198,6 +198,11 @@ export interface ContactScoreRow {
     };
 }
 
+export interface ContactFilterRef {
+    uuid: string;
+    name: string;
+}
+
 export interface Contact {
     uuid: string;
     user_uuid: string;
@@ -225,14 +230,17 @@ export interface Contact {
     lead: Lead;
     filter?: {
         uuid: string;
-        enrichment_sources: EnrichmentSource[];
-        scoring_instructions: Array<{
+        name?: string;
+        enrichment_sources?: EnrichmentSource[];
+        scoring_instructions?: Array<{
             uuid: string;
             name: string;
             instructions: string;
         }>;
-        outreach_instructions: string | null;
+        outreach_instructions?: string | null;
     } | null;
+    also_found_by?: ContactFilterRef[];
+    filters?: ContactFilterRef[];
     outreach_messages?: OutreachMessage[];
     interactions?: Interaction[];
 }

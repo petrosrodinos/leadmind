@@ -17,9 +17,19 @@ export function resolveLeadEnrichmentSources(sources: EnrichmentSource[] | null 
 export function resolveContactEnrichmentSources(
     sources: EnrichmentSource[] | null | undefined,
     filter: { enrichment_sources: EnrichmentSource[] } | null | undefined,
+    extraFilters?: Array<{ enrichment_sources: EnrichmentSource[] }>,
 ): EnrichmentSource[] {
     if (sources !== undefined) {
         return normalizeEnrichmentSources(sources);
     }
-    return normalizeEnrichmentSources(filter?.enrichment_sources);
+    const merged = new Set<EnrichmentSource>();
+    for (const source of filter?.enrichment_sources ?? []) {
+        merged.add(source);
+    }
+    for (const row of extraFilters ?? []) {
+        for (const source of row.enrichment_sources) {
+            merged.add(source);
+        }
+    }
+    return normalizeEnrichmentSources([...merged]);
 }

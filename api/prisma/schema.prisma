@@ -66,6 +66,7 @@ model Filter {
   user                         User                         @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
   raw_leads                    RawLead[]
   contacts                     Contact[]
+  contact_filters              ContactFilter[]
   jobs                         FilterJob[]
   filter_scoring_instructions  FilterScoringInstruction[]
   audience_analyses            ContactAudienceAnalysis[]
@@ -204,6 +205,7 @@ model Contact {
   user              User                       @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
   lead              Lead                       @relation(fields: [lead_uuid], references: [uuid], onDelete: Cascade)
   filter            Filter?                    @relation(fields: [filter_uuid], references: [uuid], onDelete: SetNull)
+  contact_filters   ContactFilter[]
   tags              ContactTag[]
   interactions      Interaction[]
   outreach_messages OutreachMessage[]
@@ -221,6 +223,19 @@ model Contact {
   @@index([email])
   @@index([unsubscribed_at])
   @@index([last_interaction_at])
+}
+
+model ContactFilter {
+  contact_uuid String
+  filter_uuid  String
+  created_at   DateTime @default(now())
+
+  contact Contact @relation(fields: [contact_uuid], references: [uuid], onDelete: Cascade)
+  filter  Filter  @relation(fields: [filter_uuid], references: [uuid], onDelete: Cascade)
+
+  @@id([contact_uuid, filter_uuid])
+  @@index([filter_uuid])
+  @@map("contact_filters")
 }
 
 model ContactEnrichment {

@@ -240,6 +240,12 @@ exports.Prisma.ContactScalarFieldEnum = {
   updated_at: 'updated_at'
 };
 
+exports.Prisma.ContactFilterScalarFieldEnum = {
+  contact_uuid: 'contact_uuid',
+  filter_uuid: 'filter_uuid',
+  created_at: 'created_at'
+};
+
 exports.Prisma.ContactEnrichmentScalarFieldEnum = {
   id: 'id',
   uuid: 'uuid',
@@ -888,6 +894,7 @@ exports.Prisma.ModelName = {
   Lead: 'Lead',
   LeadEnrichment: 'LeadEnrichment',
   Contact: 'Contact',
+  ContactFilter: 'ContactFilter',
   ContactEnrichment: 'ContactEnrichment',
   ContactScore: 'ContactScore',
   ContactList: 'ContactList',

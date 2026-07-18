@@ -13,6 +13,7 @@ import { isTableNavInteractiveCell, renderTableNavCellContent, tableNavInteracti
 import { ContactScoresCompact } from "./badges";
 import { STATUS_OPTIONS } from "@/features/contacts/constants/contacts.constants";
 import { Routes } from "@/routes/routes";
+import { ContactAlsoFoundByHint } from "@/pages/dashboard/components/contact-also-found-by-hint";
 
 const columnHelper = createColumnHelper<Contact>();
 
@@ -59,7 +60,15 @@ export function LeadsTable({ contacts, isLoading, isFetching, page, pageSize, to
       columnHelper.accessor((row) => row.lead.source_type, {
         id: "source",
         header: "Source",
-        cell: (info) => <SourceBadge source={info.getValue()} />,
+        cell: (info) => {
+          const contact = info.row.original;
+          return (
+            <div className="flex flex-col gap-1">
+              <SourceBadge source={info.getValue()} />
+              <ContactAlsoFoundByHint contact={contact} />
+            </div>
+          );
+        },
       }),
       columnHelper.accessor("status", {
         id: "status",

@@ -46,9 +46,11 @@ export class ContactsController {
     constructor(private readonly contactsService: ContactsService) { }
 
     @Post()
-    @ApiOperation({ summary: 'Create a contact (creates a MANUAL Lead behind the scenes)' })
+    @ApiOperation({
+        summary:
+            'Create a contact (creates a MANUAL Lead behind the scenes). If email already exists for this user, links the selected filter to that contact and returns it.',
+    })
     @ApiResponse({ status: 201 })
-    @ApiResponse({ status: 409, description: 'A contact with this email already exists' })
     create(@CurrentUser('uuid') user_uuid: string, @Body() dto: CreateContactDto) {
         return this.contactsService.create(user_uuid, dto);
     }
@@ -60,10 +62,12 @@ export class ContactsController {
     }
 
     @Post('from-lead/:lead_uuid')
-    @ApiOperation({ summary: 'Adopt a public Lead as a Contact for the current user' })
+    @ApiOperation({
+        summary:
+            'Adopt a public Lead as a Contact for the current user. Returns existing contact if already adopted or email already matches.',
+    })
     @ApiResponse({ status: 201 })
     @ApiResponse({ status: 404, description: 'Lead not found' })
-    @ApiResponse({ status: 409, description: 'Contact already exists for this lead' })
     convertFromLead(
         @CurrentUser('uuid') user_uuid: string,
         @Param('lead_uuid') lead_uuid: string,

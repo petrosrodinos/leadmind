@@ -55,7 +55,10 @@ export class CampaignFiltersDto {
     @IsString()
     search?: string;
 
-    @ApiPropertyOptional()
+    @ApiPropertyOptional({
+        description:
+            'Restrict to contacts linked to this filter (via contact_filters; primary or also-found-by)',
+    })
     @IsOptional()
     @IsUUID()
     filter_uuid?: string;

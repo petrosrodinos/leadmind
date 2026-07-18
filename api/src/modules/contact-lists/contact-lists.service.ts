@@ -6,6 +6,7 @@ import {
 import { Prisma } from '@/generated/prisma';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { ContactsService } from '@/modules/contacts/contacts.service';
+import { shapeContactFilterFields } from '@/modules/contacts/utils/contact-filter-link.utils';
 import { CampaignContactResolverService } from '@/modules/marketing-campaigns/services/campaign-contact-resolver.service';
 import { CampaignFiltersDto } from '@/modules/marketing-campaigns/dto/campaign-filters.dto';
 import { CreateContactListDto } from './dto/create-contact-list.dto';
@@ -137,6 +138,10 @@ export class ContactListsService {
                         include: {
                             tags: true,
                             lead: true,
+                            filter: { select: { uuid: true, name: true } },
+                            contact_filters: {
+                                include: { filter: { select: { uuid: true, name: true } } },
+                            },
                             contact_scores: {
                                 include: {
                                     scoring_instruction: { select: { uuid: true, name: true } },
@@ -153,12 +158,23 @@ export class ContactListsService {
         ]);
 
         return {
-            data: members.map((m) => ({
-                ...m.contact,
-                tags: m.contact.tags.map((t) => t.tag),
-                member_uuid: m.uuid,
-                added_at: m.created_at,
-            })),
+            data: members.map((m) => {
+                const { contact_filters, filter, tags, ...rest } = m.contact;
+                const shaped = shapeContactFilterFields({
+                    ...m.contact,
+                    filter,
+                    contact_filters,
+                });
+                return {
+                    ...rest,
+                    filter: shaped.filter,
+                    also_found_by: shaped.also_found_by,
+                    filters: shaped.filters,
+                    tags: tags.map((t) => t.tag),
+                    member_uuid: m.uuid,
+                    added_at: m.created_at,
+                };
+            }),
             total,
             page,
             limit,

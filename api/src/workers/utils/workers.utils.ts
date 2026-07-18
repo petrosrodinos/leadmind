@@ -27,8 +27,9 @@ export const isLeadJob = (data: AiProcessJobData): data is LeadJobData =>
 export function resolveContactEnrichmentSources(
     job: ContactJobData,
     filter: { enrichment_sources: EnrichmentSource[] } | null | undefined,
+    extraFilters?: Array<{ enrichment_sources: EnrichmentSource[] }>,
 ): EnrichmentSource[] {
-    return resolveContactSourceList(job.enrichment_sources, filter);
+    return resolveContactSourceList(job.enrichment_sources, filter, extraFilters);
 }
 
 export function resolveLeadJobEnrichmentSources(job: LeadJobData): EnrichmentSource[] {

@@ -18,6 +18,7 @@ import {
 } from "@/pages/dashboard/components/contact-stack-viewer";
 import { STATUS_OPTIONS } from "@/features/contacts/constants/contacts.constants";
 import { Routes } from "@/routes/routes";
+import { ContactAlsoFoundByHint } from "@/pages/dashboard/components/contact-also-found-by-hint";
 
 const lastInteractionAt = (contact: Contact): string | null => {
   const interactions = contact.interactions ?? [];
@@ -121,6 +122,14 @@ export function ContactsTable({ contacts, isLoading, isFetching, page, pageSize,
         id: "score",
         header: "Score",
         cell: (info) => <ContactScoresCompact contact={info.row.original} />,
+      }),
+      columnHelper.display({
+        id: "filters",
+        header: "Filters",
+        cell: (info) => {
+          const hint = <ContactAlsoFoundByHint contact={info.row.original} />;
+          return hint ?? <span className="text-muted">—</span>;
+        },
       }),
       columnHelper.accessor("tags", {
         id: "tags",
