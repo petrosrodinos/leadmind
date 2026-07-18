@@ -1,12 +1,17 @@
 import { useState, type Key } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Button, Chip, Dropdown, Tabs } from "@heroui/react";
-import { ArrowLeft, MoreVertical, Pause, Play, Trash2 } from "lucide-react";
+import { ArrowLeft, MoreVertical, Pause, Play, Square, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Channel } from "@/features/contacts/interfaces/contact.interface";
 import { SourceBadge } from "@/components/ui/source-badge";
 import { SourceType } from "@/features/leads/interfaces/lead.interface";
-import { useDeleteFilter, useFilter, useLatestFilterJob, useRunFilter, useUpdateFilter } from "@/features/filters/hooks/use-filters";
+import {
+  useDeleteFilter,
+  useFilter,
+  useFilterRunUiState,
+  useUpdateFilter,
+} from "@/features/filters/hooks/use-filters";
 import { FilterDetailTabIds, Routes } from "@/routes/routes";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { FilterDetailHeaderActionsSkeleton, FilterDetailHeaderSkeleton } from "@/pages/dashboard/pages/filters/components/filter-detail-header-skeleton";
@@ -36,9 +41,15 @@ export default function FilterDetailPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { data: filter, isLoading } = useFilter(uuid);
   const updateFilter = useUpdateFilter();
-  const runFilter = useRunFilter();
   const deleteFilter = useDeleteFilter();
-  const { isActive: isJobActive } = useLatestFilterJob(uuid);
+  const {
+    isJobActive,
+    runStarting,
+    runBusy,
+    stopBusy,
+    run,
+    stop,
+  } = useFilterRunUiState(uuid);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
 
   const allowedTabIds = new Set<string>(TABS.map((t) => t.id));
@@ -46,18 +57,20 @@ export default function FilterDetailPage() {
   const currentTab = rawTab && allowedTabIds.has(rawTab) ? rawTab : FilterDetailTabIds.FILTER;
 
   const isManual = filter?.source_type === SourceType.MANUAL;
-  const runStarting = runFilter.isPending && !isJobActive;
   const runJobRunning = isJobActive;
-  const runBusy = runFilter.isPending || isJobActive;
 
   const runDisabled = !filter || runBusy || isManual || !filter.enabled;
+  const stopDisabled = !filter || !isJobActive || stopBusy;
   const toggleDisabled = !filter || updateFilter.isPending;
 
   const handleAction = (key: Key) => {
     if (!filter) return;
     switch (key) {
       case "run":
-        if (!runDisabled) runFilter.mutate(filter.uuid);
+        if (!runDisabled) run(filter.uuid);
+        break;
+      case "stop":
+        if (!stopDisabled) stop(filter.uuid);
         break;
       case "toggle":
         if (!toggleDisabled) {
@@ -164,6 +177,21 @@ export default function FilterDetailPage() {
                         </span>
                       </span>
                     </Dropdown.Item>
+                    {isJobActive ? (
+                      <Dropdown.Item
+                        id="stop"
+                        isDisabled={stopDisabled}
+                        textValue="Stop run"
+                        variant="danger"
+                      >
+                        <span className="flex items-center gap-2.5 antialiased">
+                          <Square className="size-4 shrink-0 fill-current text-red-500" strokeWidth={2} />
+                          <span className="font-medium text-red-400">
+                            {stopBusy ? "Stopping…" : "Stop run"}
+                          </span>
+                        </span>
+                      </Dropdown.Item>
+                    ) : null}
                     <Dropdown.Item
                       id="toggle"
                       isDisabled={toggleDisabled}

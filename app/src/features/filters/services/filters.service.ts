@@ -6,6 +6,7 @@ import type {
     ListFilterJobsQuery,
     ManualRunResponse,
     PaginatedFilterJobs,
+    StopFilterResponse,
     UpdateFilterPayload,
 } from "../interfaces/filter.interface";
 
@@ -63,6 +64,15 @@ export const runFilter = async (uuid: string): Promise<ManualRunResponse> => {
         return response.data;
     } catch (error: any) {
         throw new Error(error?.response?.data?.message || "Failed to enqueue run.");
+    }
+};
+
+export const stopFilter = async (uuid: string): Promise<StopFilterResponse> => {
+    try {
+        const response = await axiosInstance.post(ApiRoutes.filters.stop(uuid));
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error?.response?.data?.message || "Failed to stop filter run.");
     }
 };
 

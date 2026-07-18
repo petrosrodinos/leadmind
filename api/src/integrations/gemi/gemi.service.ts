@@ -27,7 +27,7 @@ export class GemiService {
         return this.client.getCompanyByArGemi(ar_gemi);
     }
 
-    async scrapeLeads(query_config: object): Promise<NormalizedLead[]> {
+    async scrapeLeads(query_config: object, signal?: AbortSignal): Promise<NormalizedLead[]> {
         const query = query_config as GemiQueryConfig;
         const max_leads = query.maxLeads ?? GEMI_DEFAULT_MAX_LEADS;
         const all_companies: GemiCompany[] = [];
@@ -35,6 +35,9 @@ export class GemiService {
         let total_count: number | undefined;
 
         while (all_companies.length < max_leads) {
+            if (signal?.aborted) {
+                throw new Error('Filter scrape aborted');
+            }
             const page_size = Math.min(GEMI_MAX_PAGE_SIZE, max_leads - all_companies.length);
             const response = await this.client.searchCompanies(query, offset, page_size);
             const { searchResults, searchMetadata } = response;

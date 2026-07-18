@@ -79,6 +79,7 @@ export const ApiRoutes = {
         update: (uuid: string) => `/filters/${uuid}`,
         remove: (uuid: string) => `/filters/${uuid}`,
         run: (uuid: string) => `/filters/${uuid}/run`,
+        stop: (uuid: string) => `/filters/${uuid}/stop`,
         jobs: (uuid: string) => `/filters/${uuid}/jobs`,
         stats: (uuid: string) => `/filters/${uuid}/stats`,
         analyses: (uuid: string) => `/filters/${uuid}/analyses`,

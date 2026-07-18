@@ -38,15 +38,18 @@ type ContactForIndex = Contact & {
 @Injectable()
 export class ElasticsearchService implements OnModuleInit {
     private readonly logger = new Logger(ElasticsearchService.name);
+    private clientAvailable = true;
 
     constructor(
         @Inject(ELASTICSEARCH_CLIENT) private readonly client: Client | null,
         private readonly aiService: AiService,
         private readonly prisma: PrismaService,
-    ) {}
+    ) {
+        this.clientAvailable = this.client !== null;
+    }
 
     get enabled(): boolean {
-        return this.client !== null;
+        return this.client !== null && this.clientAvailable;
     }
 
     async onModuleInit(): Promise<void> {
@@ -55,6 +58,7 @@ export class ElasticsearchService implements OnModuleInit {
             await this.ensureIndex(LEADS_INDEX, LEADS_MAPPING);
             await this.ensureIndex(CONTACTS_INDEX, CONTACTS_MAPPING);
         } catch (error) {
+            this.clientAvailable = false;
             this.logger.warn(
                 `Elasticsearch unreachable at startup: ${this.errMsg(error)} — search features disabled`,
             );
@@ -73,7 +77,7 @@ export class ElasticsearchService implements OnModuleInit {
     }
 
     async indexLead(lead: Lead): Promise<void> {
-        if (!this.client) return;
+        if (!this.enabled) return;
         try {
             const metadata = this.buildLeadMetadata(lead);
             const user_uuid = await this.resolveUserUuidForLead(lead.uuid);
@@ -103,7 +107,7 @@ export class ElasticsearchService implements OnModuleInit {
     }
 
     async indexContact(contact: ContactForIndex): Promise<void> {
-        if (!this.client) return;
+        if (!this.enabled) return;
         try {
             const tags = contact.tags.map((t) => t.tag);
             const metadata = this.buildContactMetadata(contact, tags);
@@ -143,7 +147,7 @@ export class ElasticsearchService implements OnModuleInit {
     }
 
     async deleteLead(uuid: string): Promise<void> {
-        if (!this.client) return;
+        if (!this.enabled) return;
         try {
             await this.client.delete({ index: LEADS_INDEX, id: uuid });
         } catch (error: any) {
@@ -153,7 +157,7 @@ export class ElasticsearchService implements OnModuleInit {
     }
 
     async deleteContact(uuid: string): Promise<void> {
-        if (!this.client) return;
+        if (!this.enabled) return;
         try {
             await this.client.delete({ index: CONTACTS_INDEX, id: uuid });
         } catch (error: any) {
@@ -163,7 +167,7 @@ export class ElasticsearchService implements OnModuleInit {
     }
 
     async searchLeads(query: SearchQuery): Promise<SearchResult> {
-        if (!this.client) return { hits: [], total: 0 };
+        if (!this.enabled) return { hits: [], total: 0 };
 
         const filter: any[] = [];
         if (query.source_type) filter.push({ term: { source_type: query.source_type } });
@@ -175,7 +179,7 @@ export class ElasticsearchService implements OnModuleInit {
         userUuid: string,
         query: SearchQuery,
     ): Promise<SearchResult> {
-        if (!this.client) return { hits: [], total: 0 };
+        if (!this.enabled) return { hits: [], total: 0 };
 
         const filter: any[] = [{ term: { user_uuid: userUuid } }];
         if (query.status) filter.push({ term: { status: query.status } });
@@ -212,7 +216,7 @@ export class ElasticsearchService implements OnModuleInit {
         filter: any[],
         userUuid?: string,
     ): Promise<SearchResult> {
-        if (!this.client) return { hits: [], total: 0 };
+        if (!this.enabled) return { hits: [], total: 0 };
 
         const limit = query.limit ?? 20;
         const page = query.page ?? 1;

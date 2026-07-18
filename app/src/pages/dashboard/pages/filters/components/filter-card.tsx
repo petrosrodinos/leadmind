@@ -3,12 +3,12 @@ import { Chip, Switch } from "@heroui/react";
 import { Calendar } from "lucide-react";
 import { SourceBadge } from "@/components/ui/source-badge";
 import { Channel } from "@/features/contacts/interfaces/contact.interface";
-import { JobStatus, type Filter, type FilterJob } from "@/features/filters/interfaces/filter.interface";
+import { JobStatus, type Filter } from "@/features/filters/interfaces/filter.interface";
 import { SourceType } from "@/features/leads/interfaces/lead.interface";
-import { useFilterJobs, useRunFilter, useUpdateFilter } from "@/features/filters/hooks/use-filters";
+import { useFilterRunUiState, useUpdateFilter } from "@/features/filters/hooks/use-filters";
 import { humanizeCron } from "@/lib/cron";
 import { Routes } from "@/routes/routes";
-import { FilterRunButton } from "@/pages/dashboard/pages/filters/components/filter-run-controls";
+import { FilterRunButton, FilterStopButton } from "@/pages/dashboard/pages/filters/components/filter-run-controls";
 
 const CHANNEL_LABEL: Record<Channel, string> = {
   [Channel.EMAIL]: "Email",
@@ -22,6 +22,7 @@ const JOB_STATUS_COLOR: Record<JobStatus, "default" | "success" | "warning" | "d
   [JobStatus.RUNNING]: "warning",
   [JobStatus.COMPLETED]: "success",
   [JobStatus.FAILED]: "danger",
+  [JobStatus.CANCELLED]: "default",
 };
 
 interface FilterCardProps {
@@ -31,14 +32,16 @@ interface FilterCardProps {
 export function FilterCard({ filter }: FilterCardProps) {
   const navigate = useNavigate();
   const updateFilter = useUpdateFilter();
-  const runFilter = useRunFilter();
-
-  const { data: jobsPage } = useFilterJobs(filter.uuid, { page: 1, limit: 1 });
-  const lastJob: FilterJob | undefined = jobsPage?.items[0];
-  const isJobActive = lastJob?.status === JobStatus.RUNNING || lastJob?.status === JobStatus.PENDING;
+  const {
+    lastJob,
+    isJobActive,
+    runStarting,
+    stopBusy,
+    run,
+    stop,
+  } = useFilterRunUiState(filter.uuid);
 
   const isManual = filter.source_type === SourceType.MANUAL;
-  const isStarting = runFilter.isPending && !isJobActive;
   const isJobRunning = isJobActive;
 
   const handleToggle = (next: boolean) => {
@@ -99,8 +102,21 @@ export function FilterCard({ filter }: FilterCardProps) {
         </div>
       )}
 
-      <div onClick={stopBubble} className="mt-auto pt-1">
-        <FilterRunButton onPress={() => runFilter.mutate(filter.uuid)} isStarting={isStarting} isJobRunning={isJobRunning} isManual={isManual} filterEnabled={filter.enabled} />
+      <div onClick={stopBubble} className="mt-auto pt-1 flex items-center gap-2">
+        {isJobActive ? (
+          <FilterStopButton
+            onPress={() => stop(filter.uuid)}
+            isStopping={stopBusy}
+          />
+        ) : (
+          <FilterRunButton
+            onPress={() => run(filter.uuid)}
+            isStarting={runStarting}
+            isJobRunning={isJobRunning}
+            isManual={isManual}
+            filterEnabled={filter.enabled}
+          />
+        )}
       </div>
     </div>
   );

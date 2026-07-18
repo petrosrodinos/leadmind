@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
     createFilter,
@@ -6,6 +7,7 @@ import {
     listFilterJobs,
     listFilters,
     runFilter,
+    stopFilter,
     updateFilter,
 } from "../services/filters.service";
 import { JobStatus } from "../interfaces/filter.interface";
@@ -149,6 +151,61 @@ export function useRunFilter() {
     });
 }
 
+export function useStopFilter() {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: (uuid: string) => stopFilter(uuid),
+        onMutate: async (uuid) => {
+            await qc.cancelQueries({ queryKey: filtersQueryKeys.jobsRoot(uuid) });
+            const previous = qc.getQueriesData<PaginatedFilterJobs>({
+                queryKey: filtersQueryKeys.jobsRoot(uuid),
+            });
+
+            const completedAt = new Date().toISOString();
+            qc.setQueriesData<PaginatedFilterJobs>(
+                { queryKey: filtersQueryKeys.jobsRoot(uuid) },
+                (old) => {
+                    if (!old) return old;
+                    return {
+                        ...old,
+                        items: old.items.map((job) =>
+                            job.status === JobStatus.RUNNING || job.status === JobStatus.PENDING
+                                ? {
+                                      ...job,
+                                      status: JobStatus.CANCELLED,
+                                      error: "Stopped by user",
+                                      completed_at: completedAt,
+                                  }
+                                : job,
+                        ),
+                    };
+                },
+            );
+
+            return { previous };
+        },
+        onError: (error: Error, _uuid, context) => {
+            context?.previous.forEach(([key, data]) => {
+                qc.setQueryData(key, data);
+            });
+            toast({
+                title: "Could not stop filter",
+                description: error.message,
+                duration: 3000,
+                variant: "error",
+            });
+        },
+        onSuccess: async (_data, uuid) => {
+            await qc.invalidateQueries({ queryKey: filtersQueryKeys.jobsRoot(uuid) });
+            toast({
+                title: "Run stopped",
+                description: "The scrape job was cancelled.",
+                duration: 2000,
+            });
+        },
+    });
+}
+
 /**
  * Convenience: returns whether the latest job for a filter is active
  * (RUNNING or PENDING). Backed by the same react-query cache as the
@@ -160,4 +217,46 @@ export function useLatestFilterJob(uuid: string | null | undefined) {
     const isActive =
         lastJob?.status === JobStatus.RUNNING || lastJob?.status === JobStatus.PENDING;
     return { lastJob, isActive, query };
+}
+
+export function useFilterRunUiState(uuid: string | null | undefined) {
+    const [localStopped, setLocalStopped] = useState(false);
+    const { lastJob, isActive, query } = useLatestFilterJob(uuid);
+    const runFilter = useRunFilter();
+    const stopFilterMutation = useStopFilter();
+
+    useEffect(() => {
+        if (localStopped && !isActive) {
+            setLocalStopped(false);
+        }
+    }, [localStopped, isActive]);
+
+    const run = (filterUuid: string) => {
+        setLocalStopped(false);
+        runFilter.mutate(filterUuid);
+    };
+
+    const stop = (filterUuid: string) => {
+        setLocalStopped(true);
+        stopFilterMutation.mutate(filterUuid, {
+            onError: () => setLocalStopped(false),
+        });
+    };
+
+    const isJobActive = localStopped ? false : isActive;
+    const runStarting = runFilter.isPending && !isJobActive;
+    const runBusy = runFilter.isPending || isJobActive;
+
+    return {
+        lastJob,
+        query,
+        isJobActive,
+        runStarting,
+        runBusy,
+        stopBusy: stopFilterMutation.isPending || localStopped,
+        run,
+        stop,
+        runFilter,
+        stopFilter: stopFilterMutation,
+    };
 }

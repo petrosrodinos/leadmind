@@ -72,6 +72,12 @@ export class FiltersController {
         return this.filtersService.manualRun(user_uuid, uuid);
     }
 
+    @Post(':uuid/stop')
+    @ApiOperation({ summary: 'Stop a running or queued scrape job for a filter' })
+    stop(@CurrentUser('uuid') user_uuid: string, @Param('uuid') uuid: string) {
+        return this.filtersService.stop(user_uuid, uuid);
+    }
+
     @Get(':uuid/jobs')
     @ApiOperation({ summary: 'List FilterJob records for a filter (paginated)' })
     findJobs(

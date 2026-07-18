@@ -7,6 +7,7 @@ export const JobStatus = {
     RUNNING: "RUNNING",
     COMPLETED: "COMPLETED",
     FAILED: "FAILED",
+    CANCELLED: "CANCELLED",
 } as const;
 
 export type JobStatus = (typeof JobStatus)[keyof typeof JobStatus];
@@ -121,4 +122,11 @@ export interface ManualRunResponse {
     queue_job_id: string;
     filter_uuid: string;
     status: "queued";
+}
+
+export interface StopFilterResponse {
+    filter_uuid: string;
+    status: "stopped";
+    cancelled_jobs: number;
+    removed_queue_jobs: number;
 }

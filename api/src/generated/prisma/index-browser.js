@@ -750,7 +750,8 @@ exports.JobStatus = exports.$Enums.JobStatus = {
   PENDING: 'PENDING',
   RUNNING: 'RUNNING',
   COMPLETED: 'COMPLETED',
-  FAILED: 'FAILED'
+  FAILED: 'FAILED',
+  CANCELLED: 'CANCELLED'
 };
 
 exports.JobTrigger = exports.$Enums.JobTrigger = {

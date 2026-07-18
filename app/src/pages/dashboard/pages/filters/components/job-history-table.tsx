@@ -14,6 +14,7 @@ const JOB_STATUS_COLOR: Record<JobStatus, "default" | "success" | "warning" | "d
     [JobStatus.RUNNING]: "warning",
     [JobStatus.COMPLETED]: "success",
     [JobStatus.FAILED]: "danger",
+    [JobStatus.CANCELLED]: "default",
 };
 
 const JOB_TRIGGER_LABEL: Record<JobTrigger, string> = {

@@ -1,14 +1,19 @@
 import {
     BadRequestException,
+    ConflictException,
     Injectable,
     Logger,
     NotFoundException,
 } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
-import { Prisma, Filter, ScoringInstruction, SourceType } from '@/generated/prisma';
+import { JobStatus, Prisma, Filter, ScoringInstruction, SourceType } from '@/generated/prisma';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
-import { FILTER_SCRAPE_QUEUE } from '@/core/queues/queues.constants';
+import {
+    FILTER_SCRAPE_LOCK_DURATION_MS,
+    FILTER_SCRAPE_QUEUE,
+} from '@/core/queues/queues.constants';
+import { abortFilterScrape, clearFilterScrapeStopRequest } from '@/workers/utils/filter-scrape-cancel.registry';
 import { ScoringInstructionsService } from '@/modules/scoring-instructions/scoring-instructions.service';
 import { ApifyCredentialsService } from '@/integrations/apify/services/apify-credentials.service';
 import { CreateFilterDto } from './dto/create-filter.dto';
@@ -180,16 +185,80 @@ export class FiltersService {
             throw new BadRequestException('MANUAL filters cannot be run');
         }
 
+        await this.clearStaleActiveJobs(filter.uuid);
+
+        const active = await this.prisma.filterJob.findFirst({
+            where: {
+                filter_uuid: filter.uuid,
+                status: { in: [JobStatus.PENDING, JobStatus.RUNNING] },
+            },
+        });
+        if (active) {
+            throw new ConflictException('Filter already has a running job');
+        }
+
+        clearFilterScrapeStopRequest(filter.uuid);
+
         const job = await this.scrapeQueue.add(
             this.jobName(filter.uuid),
             { filter_uuid: filter.uuid, manual: true },
-            { removeOnComplete: 100, removeOnFail: 100 },
+            { attempts: 1, removeOnComplete: 100, removeOnFail: 100 },
         );
 
         return {
             queue_job_id: String(job.id),
             filter_uuid: filter.uuid,
             status: 'queued',
+        };
+    }
+
+    async stop(user_uuid: string, uuid: string): Promise<{
+        filter_uuid: string;
+        status: 'stopped';
+        cancelled_jobs: number;
+        removed_queue_jobs: number;
+    }> {
+        const filter = await this.prisma.filter.findFirst({ where: { uuid, user_uuid } });
+        if (!filter) throw new NotFoundException(`Filter ${uuid} not found`);
+
+        const activeJobs = await this.prisma.filterJob.findMany({
+            where: {
+                filter_uuid: filter.uuid,
+                status: { in: [JobStatus.PENDING, JobStatus.RUNNING] },
+            },
+        });
+
+        const has_active_queue_job = await this.hasActiveScrapeQueueJob(filter.uuid);
+        const removed_queue_jobs = await this.removeQueuedScrapeJobs(filter.uuid);
+
+        if (activeJobs.length === 0 && removed_queue_jobs === 0 && !has_active_queue_job) {
+            throw new ConflictException('No running or queued job to stop');
+        }
+
+        const now = new Date();
+        const cancelled = await this.prisma.filterJob.updateMany({
+            where: {
+                filter_uuid: filter.uuid,
+                status: { in: [JobStatus.PENDING, JobStatus.RUNNING] },
+            },
+            data: {
+                status: JobStatus.CANCELLED,
+                error: 'Stopped by user',
+                completed_at: now,
+            },
+        });
+
+        const abort_signaled = abortFilterScrape(filter.uuid);
+
+        this.logger.log(
+            `Filter ${filter.uuid} stop: cancelled_db=${cancelled.count} removed_queue=${removed_queue_jobs} active_queue=${has_active_queue_job} abort_signaled=${abort_signaled}`,
+        );
+
+        return {
+            filter_uuid: filter.uuid,
+            status: 'stopped',
+            cancelled_jobs: cancelled.count,
+            removed_queue_jobs,
         };
     }
 
@@ -229,7 +298,7 @@ export class FiltersService {
         const job = await this.scrapeQueue.add(
             this.jobName(filter_uuid),
             { filter_uuid },
-            { repeat: { pattern: cron_schedule } },
+            { attempts: 1, repeat: { pattern: cron_schedule } },
         );
 
         const repeat_key = job.repeatJobKey ?? `${this.jobName(filter_uuid)}:::${cron_schedule}`;
@@ -258,6 +327,78 @@ export class FiltersService {
 
     private jobName(filter_uuid: string): string {
         return `filter-scrape:${filter_uuid}`;
+    }
+
+    private async clearStaleActiveJobs(filter_uuid: string): Promise<void> {
+        const active = await this.prisma.filterJob.findMany({
+            where: {
+                filter_uuid,
+                status: { in: [JobStatus.PENDING, JobStatus.RUNNING] },
+            },
+        });
+        if (active.length === 0) return;
+
+        const queueJobs = await this.scrapeQueue.getJobs([
+            'waiting',
+            'delayed',
+            'paused',
+            'active',
+            'waiting-children',
+        ]);
+        const hasQueueWork = queueJobs.some((job) => job?.data?.filter_uuid === filter_uuid);
+
+        const now = Date.now();
+        const staleUuids = active
+            .filter((job) => {
+                const ageMs = now - job.started_at.getTime();
+                if (ageMs >= FILTER_SCRAPE_LOCK_DURATION_MS) return true;
+                return !hasQueueWork && ageMs >= 60_000;
+            })
+            .map((job) => job.uuid);
+
+        if (staleUuids.length === 0) return;
+
+        await this.prisma.filterJob.updateMany({
+            where: { uuid: { in: staleUuids } },
+            data: {
+                status: JobStatus.FAILED,
+                error: 'Stale job cleared (worker restarted or lock expired)',
+                completed_at: new Date(),
+            },
+        });
+        this.logger.warn(
+            `Cleared ${staleUuids.length} stale filter job(s) for ${filter_uuid}`,
+        );
+    }
+
+    private async hasActiveScrapeQueueJob(filter_uuid: string): Promise<boolean> {
+        const jobs = await this.scrapeQueue.getJobs(['active']);
+        return jobs.some((job) => job?.data?.filter_uuid === filter_uuid);
+    }
+
+    private async removeQueuedScrapeJobs(filter_uuid: string): Promise<number> {
+        const states: Array<'waiting' | 'delayed' | 'paused' | 'waiting-children'> = [
+            'waiting',
+            'delayed',
+            'paused',
+            'waiting-children',
+        ];
+        const jobs = await this.scrapeQueue.getJobs(states);
+        let removed = 0;
+
+        for (const job of jobs) {
+            if (!job || job.data?.filter_uuid !== filter_uuid) continue;
+            try {
+                await job.remove();
+                removed += 1;
+            } catch (error) {
+                this.logger.warn(
+                    `Failed removing scrape job ${job.id} for filter ${filter_uuid}: ${error instanceof Error ? error.message : error}`,
+                );
+            }
+        }
+
+        return removed;
     }
 
     private async assertApifyForSourceType(

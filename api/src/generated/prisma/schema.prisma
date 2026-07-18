@@ -598,6 +598,7 @@ enum JobStatus {
   RUNNING
   COMPLETED
   FAILED
+  CANCELLED
 }
 
 enum JobTrigger {

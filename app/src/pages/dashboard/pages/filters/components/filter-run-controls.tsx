@@ -1,6 +1,6 @@
 import { Button } from "@heroui/react";
 import { Spinner } from "@heroui/react/spinner";
-import { Play } from "lucide-react";
+import { Play, Square } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function FilterRunLeadingVisual({
@@ -81,6 +81,36 @@ export function FilterRunButton({
             />
             <span className="hidden @[18rem]:inline tabular-nums">{labelWide}</span>
             <span className="@[18rem]:hidden tabular-nums">{labelNarrow}</span>
+        </Button>
+    );
+}
+
+export function FilterStopButton({
+    onPress,
+    isStopping,
+}: {
+    onPress: () => void;
+    isStopping: boolean;
+}) {
+    return (
+        <Button
+            size="sm"
+            variant="danger"
+            isDisabled={isStopping}
+            isPending={isStopping}
+            onPress={onPress}
+            aria-label="Stop filter run"
+            className="min-h-8"
+        >
+            {isStopping ? (
+                <Spinner size="sm" color="current" className="size-3.5 shrink-0" />
+            ) : (
+                <Square className="size-3.5 shrink-0 fill-current" />
+            )}
+            <span className="hidden @[18rem]:inline tabular-nums">
+                {isStopping ? "Stopping…" : "Stop"}
+            </span>
+            <span className="@[18rem]:hidden tabular-nums">{isStopping ? "…" : "Stop"}</span>
         </Button>
     );
 }

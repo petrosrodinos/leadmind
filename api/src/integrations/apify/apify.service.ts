@@ -30,6 +30,7 @@ export class ApifyService {
         source_type: SourceType,
         query_config: object,
         usage?: ApifyUsageOptions,
+        signal?: AbortSignal,
     ): Promise<NormalizedLead[]> {
         const { adapter, actor_id } = this.resolve(source_type);
 
@@ -37,13 +38,19 @@ export class ApifyService {
         this.logger.debug(`Running Apify actor ${actor_id} for source ${source_type}`);
 
         const token = await this.credentials.getApifyApiToken(user_uuid);
-        const raw_items = await this.client.runActor(token, actor_id, input, {
-            user_uuid,
-            operation: usage?.operation ?? ApifyUsageOperation.FILTER_SCRAPE,
-            reference_type: usage?.reference_type,
-            reference_uuid: usage?.reference_uuid,
-            metadata: usage?.metadata,
-        });
+        const raw_items = await this.client.runActor(
+            token,
+            actor_id,
+            input,
+            {
+                user_uuid,
+                operation: usage?.operation ?? ApifyUsageOperation.FILTER_SCRAPE,
+                reference_type: usage?.reference_type,
+                reference_uuid: usage?.reference_uuid,
+                metadata: usage?.metadata,
+            },
+            signal,
+        );
         return adapter.normalize(raw_items);
     }
 

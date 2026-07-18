@@ -19,6 +19,11 @@ import {
     FILTER_SCRAPE_LOCK_DURATION_MS,
     FILTER_SCRAPE_QUEUE,
 } from '@/core/queues/queues.constants';
+import {
+    abortFilterScrape,
+    beginFilterScrapeCancel,
+    endFilterScrapeCancel,
+} from '@/workers/utils/filter-scrape-cancel.registry';
 
 interface FilterScrapeJobData {
     filter_uuid: string;
@@ -56,6 +61,13 @@ export class FilterScrapeWorker extends WorkerHost {
             return null;
         }
 
+        const cancelSignal = beginFilterScrapeCancel(filter.uuid);
+        if (cancelSignal.aborted) {
+            endFilterScrapeCancel(filter.uuid, cancelSignal);
+            this.logger.warn(`Filter ${filter.uuid} stop requested — skipping job ${job.id}`);
+            return null;
+        }
+
         await this.prisma.filterJob.updateMany({
             where: { filter_uuid: filter.uuid, status: JobStatus.RUNNING },
             data: {
@@ -74,14 +86,37 @@ export class FilterScrapeWorker extends WorkerHost {
             },
         });
 
+        if (cancelSignal.aborted || (await this.isCancelled(filter_job.uuid))) {
+            await this.markCancelled(filter_job.uuid);
+            endFilterScrapeCancel(filter.uuid, cancelSignal);
+            this.logger.warn(`Filter ${filter.uuid} cancelled before scrape start`);
+            return null;
+        }
+
         let status: JobStatus = JobStatus.COMPLETED;
         let leads_found = 0;
         let new_contacts = 0;
         let error_message: string | undefined;
+        const cancelPoll = setInterval(() => {
+            void this.isCancelled(filter_job.uuid).then((cancelled) => {
+                if (cancelled) {
+                    abortFilterScrape(filter.uuid);
+                }
+            });
+        }, 1500);
 
         try {
+            if (cancelSignal.aborted || (await this.isCancelled(filter_job.uuid))) {
+                abortFilterScrape(filter.uuid);
+                await this.markCancelled(filter_job.uuid);
+                return null;
+            }
+
             const normalized_leads = filter.source_type === SourceType.GEMI
-                ? await this.gemiService.scrapeLeads(filter.query_config as Record<string, any>)
+                ? await this.gemiService.scrapeLeads(
+                    filter.query_config as Record<string, any>,
+                    cancelSignal,
+                )
                 : await this.apifyService.scrapeLeads(
                     filter.user_uuid,
                     filter.source_type,
@@ -92,7 +127,16 @@ export class FilterScrapeWorker extends WorkerHost {
                         reference_uuid: filter.uuid,
                         metadata: { source_type: filter.source_type },
                     },
+                    cancelSignal,
                 );
+
+            if (cancelSignal.aborted || (await this.isCancelled(filter_job.uuid))) {
+                this.logger.warn(
+                    `Filter ${filter.uuid} cancelled after scrape — skipping persist`,
+                );
+                await this.markCancelled(filter_job.uuid);
+                return null;
+            }
 
             const { new_contact_uuids, leads_processed } = await this.persistLeads(
                 filter,
@@ -118,22 +162,78 @@ export class FilterScrapeWorker extends WorkerHost {
 
             return { filter_job_uuid: filter_job.uuid, new_contacts };
         } catch (error) {
+            if (this.isAbortError(error) || cancelSignal.aborted) {
+                await this.markCancelled(filter_job.uuid);
+                this.logger.warn(`Filter ${filter.uuid} scrape aborted by user`);
+                return null;
+            }
             status = JobStatus.FAILED;
             error_message = (error instanceof Error ? error.message : 'Unknown error').slice(0, 1000);
             this.logger.error(`Filter ${filter.uuid} scrape failed: ${error_message}`);
             throw error;
         } finally {
-            await this.prisma.filterJob.update({
-                where: { uuid: filter_job.uuid },
+            clearInterval(cancelPoll);
+            endFilterScrapeCancel(filter.uuid, cancelSignal);
+            const duration = Date.now() - filter_job.started_at.getTime();
+            const keptCancelled = await this.prisma.filterJob.updateMany({
+                where: {
+                    uuid: filter_job.uuid,
+                    status: JobStatus.CANCELLED,
+                },
                 data: {
-                    status,
                     leads_found,
-                    error: error_message,
+                    duration,
                     completed_at: new Date(),
-                    duration: Date.now() - filter_job.started_at.getTime(),
                 },
             });
+            if (keptCancelled.count === 0) {
+                await this.prisma.filterJob.updateMany({
+                    where: {
+                        uuid: filter_job.uuid,
+                        status: { not: JobStatus.CANCELLED },
+                    },
+                    data: {
+                        status,
+                        leads_found,
+                        error: error_message,
+                        completed_at: new Date(),
+                        duration,
+                    },
+                });
+            } else {
+                this.logger.warn(
+                    `Filter ${filter.uuid} scrape finished after cancel — keeping CANCELLED status`,
+                );
+            }
         }
+    }
+
+    private async isCancelled(filter_job_uuid: string): Promise<boolean> {
+        const current = await this.prisma.filterJob.findUnique({
+            where: { uuid: filter_job_uuid },
+            select: { status: true },
+        });
+        return current?.status === JobStatus.CANCELLED;
+    }
+
+    private async markCancelled(filter_job_uuid: string): Promise<void> {
+        await this.prisma.filterJob.updateMany({
+            where: {
+                uuid: filter_job_uuid,
+                status: { in: [JobStatus.PENDING, JobStatus.RUNNING] },
+            },
+            data: {
+                status: JobStatus.CANCELLED,
+                error: 'Stopped by user',
+                completed_at: new Date(),
+            },
+        });
+    }
+
+    private isAbortError(error: unknown): boolean {
+        if (!error || typeof error !== 'object') return false;
+        const message = error instanceof Error ? error.message : String(error);
+        return /aborted|canceled|cancelled/i.test(message);
     }
 
     private async persistLeads(
@@ -235,17 +335,47 @@ export class FilterScrapeWorker extends WorkerHost {
                 }
                 await this.reindexContactsForLead(lead.uuid);
             } else {
-                const contact = await this.prisma.contact.create({
-                    data: {
-                        user_uuid: filter.user_uuid,
-                        lead_uuid: lead.uuid,
-                        filter_uuid: filter.uuid,
-                        ...contactProfileFromLead(lead),
-                    },
-                });
-                await ensureContactFilterLink(this.prisma, contact.uuid, filter.uuid);
-                await this.elasticsearchService.indexContact({ ...contact, lead, tags: [] });
-                new_contact_uuids.push(contact.uuid);
+                try {
+                    const contact = await this.prisma.contact.create({
+                        data: {
+                            user_uuid: filter.user_uuid,
+                            lead_uuid: lead.uuid,
+                            filter_uuid: filter.uuid,
+                            ...contactProfileFromLead(lead),
+                        },
+                    });
+                    await ensureContactFilterLink(this.prisma, contact.uuid, filter.uuid);
+                    await this.elasticsearchService.indexContact({ ...contact, lead, tags: [] });
+                    new_contact_uuids.push(contact.uuid);
+                } catch (error) {
+                    if (
+                        !(
+                            error instanceof Prisma.PrismaClientKnownRequestError &&
+                            error.code === 'P2002'
+                        )
+                    ) {
+                        throw error;
+                    }
+                    const raced =
+                        (normalized.email
+                            ? await findOwnedContactByEmail(
+                                  this.prisma,
+                                  filter.user_uuid,
+                                  normalized.email,
+                              )
+                            : null) ??
+                        (await this.prisma.contact.findUnique({
+                            where: {
+                                user_uuid_lead_uuid: {
+                                    user_uuid: filter.user_uuid,
+                                    lead_uuid: lead.uuid,
+                                },
+                            },
+                        }));
+                    if (!raced) throw error;
+                    await linkContactToFilter(this.prisma, raced, filter.uuid);
+                    await this.reindexContactsForLead(lead.uuid);
+                }
             }
 
             await this.prisma.rawLead.update({
