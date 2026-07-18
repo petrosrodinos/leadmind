@@ -13,6 +13,7 @@ import type {
 } from "@/features/contacts/interfaces/contact.interface";
 import { contactsQueryKeys } from "@/features/contacts/hooks/use-contacts";
 import { sendHistoryQueryKeys } from "@/features/outreach/hooks/use-send-history";
+import { syncCachesAfterOutreachSend } from "@/features/outreach/utils/sync-contact-caches-after-send";
 import { toast } from "@/hooks/use-toast";
 
 interface MessageMutationContext {
@@ -61,8 +62,8 @@ export function useSendOutreachMessage() {
     return useMutation({
         mutationFn: (vars: { uuid: string; payload?: SendMessagePayload } & MessageMutationContext) =>
             sendOutreachMessage(vars.uuid, vars.payload),
-        onSuccess: (_data, vars) => {
-            invalidateAfterMessageChange(qc, vars);
+        onSuccess: async (_data, vars) => {
+            await syncCachesAfterOutreachSend(qc, vars);
             toast({
                 title: "Message queued for send",
                 description: "We'll update its status when delivery completes.",
@@ -103,8 +104,8 @@ export function useCreateAndSendMessage() {
     const qc = useQueryClient();
     return useMutation({
         mutationFn: (payload: CreateMessagePayload) => createAndSendMessage(payload),
-        onSuccess: (_data, payload) => {
-            invalidateAfterMessageChange(qc, { contact_uuid: payload.contact_uuid });
+        onSuccess: async (_data, payload) => {
+            await syncCachesAfterOutreachSend(qc, { contact_uuid: payload.contact_uuid });
             toast({
                 title: "Message queued for send",
                 description: "We'll update its status when delivery completes.",

@@ -10,6 +10,7 @@ import {
     createDraftMessage,
 } from "@/features/outreach/services/outreach.service";
 import { sendHistoryQueryKeys } from "@/features/outreach/hooks/use-send-history";
+import { syncCachesAfterOutreachSend } from "@/features/outreach/utils/sync-contact-caches-after-send";
 import type {
     EmailProviderAllocation,
     EmailProviderTarget,
@@ -98,6 +99,10 @@ export function ComposeMessageForm({
         }
     };
 
+    const syncAfterSend = (uuids: string[]) => syncCachesAfterOutreachSend(queryClient, {
+        contact_uuids: uuids,
+    });
+
     const handleAi = async (args: AiGenerateArgs) => {
         if (!aiContactUuid) {
             throw new Error("No contact available for AI preview.");
@@ -165,7 +170,11 @@ export function ComposeMessageForm({
                 }
             }
 
-            invalidateContacts(contactUuids);
+            if (send) {
+                await syncAfterSend(contactUuids);
+            } else {
+                invalidateContacts(contactUuids);
+            }
             toast({
                 title: send ? "Messages queued" : "Drafts saved",
                 description: formatBulkResult(created, failed, send),
@@ -242,7 +251,7 @@ export function ComposeMessageForm({
                     senderProfileUuid,
                 ),
             );
-            invalidateContacts([contactUuid]);
+            await syncAfterSend([contactUuid]);
             toast({
                 title: "Message queued for send",
                 description: "We'll update its status when delivery completes.",
