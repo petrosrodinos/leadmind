@@ -51,6 +51,7 @@ export const ContactStackViewerScope: FC<ContactStackViewerScopeProps> = ({
                 isOpen={stackViewer.isOpen}
                 onOpenChange={stackViewer.setIsOpen}
                 contactUuids={contactUuids}
+                activeUuid={stackViewer.activeUuid}
                 currentIndex={stackViewer.currentIndex}
                 onIndexChange={stackViewer.setCurrentIndex}
                 totalCount={totalCount}

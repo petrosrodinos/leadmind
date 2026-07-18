@@ -48,6 +48,7 @@ export class ContactsController {
     @Post()
     @ApiOperation({ summary: 'Create a contact (creates a MANUAL Lead behind the scenes)' })
     @ApiResponse({ status: 201 })
+    @ApiResponse({ status: 409, description: 'A contact with this email already exists' })
     create(@CurrentUser('uuid') user_uuid: string, @Body() dto: CreateContactDto) {
         return this.contactsService.create(user_uuid, dto);
     }

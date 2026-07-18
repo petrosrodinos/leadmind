@@ -13,6 +13,7 @@ export const ContactStackViewerModal: FC<ContactStackViewerProps> = ({
     isOpen,
     onOpenChange,
     contactUuids,
+    activeUuid,
     currentIndex,
     onIndexChange,
     totalCount,
@@ -23,7 +24,6 @@ export const ContactStackViewerModal: FC<ContactStackViewerProps> = ({
     hasPrevPage = false,
 }) => {
     const queryClient = useQueryClient();
-    const activeUuid = contactUuids[currentIndex] ?? "";
     const [navigationLocked, setNavigationLocked] = useState(false);
 
     const { navigation, goPrev, goNext } = useContactStackNavigation({

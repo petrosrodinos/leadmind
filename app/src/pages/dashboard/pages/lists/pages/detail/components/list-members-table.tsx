@@ -86,15 +86,19 @@ export function ListMembersTable({
                     if (!website) return "—";
                     const href = normalizeUrl(website);
                     return (
-                        <a
-                            href={href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-accent hover:underline truncate block max-w-48"
+                        <div
+                            onPointerDown={(e) => e.stopPropagation()}
                             onClick={(e) => e.stopPropagation()}
                         >
-                            {website}
-                        </a>
+                            <a
+                                href={href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-accent hover:underline truncate block max-w-48"
+                            >
+                                {website}
+                            </a>
+                        </div>
                     );
                 },
             }),
@@ -263,6 +267,7 @@ export function ListMembersTable({
                                                   cell.getContext(),
                                               );
                                               const isInteractive = isTableNavInteractiveCell(cell.column.id, [
+                                                  "website",
                                                   "status",
                                                   "actions",
                                               ]);

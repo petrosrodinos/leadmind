@@ -70,9 +70,9 @@ body {
   --overlay:            oklch(0.185 0.005 192);
   --overlay-foreground: oklch(0.935 0.004 192);
 
-  --field-background:  oklch(0.180 0.005 192);
-  --field-border:      oklch(0.290 0.008 192);
-  --field-placeholder: oklch(0.46 0.008 192);
+  --field-background:  oklch(0.255 0.005 192);
+  --field-border:      oklch(0.400 0.008 192);
+  --field-placeholder: oklch(0.52 0.008 192);
 
   --focus: var(--accent);
   --link:  oklch(0.82 0.09 192);

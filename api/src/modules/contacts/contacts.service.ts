@@ -105,11 +105,16 @@ export class ContactsService {
             throw new NotFoundException('Filter not found');
         }
 
+        const email = dto.email?.trim() || undefined;
+        if (email) {
+            await this.assertEmailAvailable(user_uuid, email);
+        }
+
         const lead = await this.prisma.lead.create({
             data: {
                 source_type: SourceType.MANUAL,
                 name: dto.name,
-                email: dto.email,
+                email,
                 phone: dto.phone,
                 company: dto.company,
                 website: dto.website,
@@ -435,7 +440,15 @@ export class ContactsService {
             }
             data.filter = { connect: { uuid: dto.filter_uuid } };
         }
+        if (dto.email !== undefined) {
+            const email = dto.email.trim() || null;
+            if (email) {
+                await this.assertEmailAvailable(user_uuid, email, uuid);
+            }
+            data.email = email;
+        }
         for (const key of CONTACT_PROFILE_UPDATE_KEYS) {
+            if (key === 'email') continue;
             if (dto[key] !== undefined) {
                 data[key] = dto[key] as never;
             }
@@ -1207,6 +1220,24 @@ export class ContactsService {
             where: { contact_uuid: uuid },
             orderBy: { created_at: 'desc' },
         });
+    }
+
+    private async assertEmailAvailable(
+        user_uuid: string,
+        email: string,
+        exclude_contact_uuid?: string,
+    ): Promise<void> {
+        const existing = await this.prisma.contact.findFirst({
+            where: {
+                user_uuid,
+                email: { equals: email, mode: 'insensitive' },
+                ...(exclude_contact_uuid ? { uuid: { not: exclude_contact_uuid } } : {}),
+            },
+            select: { uuid: true },
+        });
+        if (existing) {
+            throw new ConflictException('A contact with this email already exists');
+        }
     }
 
     private async requireOwnedContact(user_uuid: string, uuid: string): Promise<Contact> {

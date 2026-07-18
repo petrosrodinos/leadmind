@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 interface UseContactStackViewerOptions {
     contactUuids: string[];
@@ -16,17 +16,27 @@ export function useContactStackViewer({
     pageSize,
 }: UseContactStackViewerOptions) {
     const [isOpen, setIsOpen] = useState(false);
-    const [currentIndex, setCurrentIndex] = useState(0);
+    const [activeUuid, setActiveUuid] = useState<string | null>(null);
     const [pendingPageNav, setPendingPageNav] = useState<"next" | "prev" | null>(null);
 
-    const openAt = useCallback(
-        (contactUuid: string) => {
-            const index = contactUuids.findIndex((id) => id === contactUuid);
-            setCurrentIndex(index >= 0 ? index : 0);
-            setIsOpen(true);
+    const currentIndex = useMemo(() => {
+        if (!activeUuid) return 0;
+        const index = contactUuids.findIndex((id) => id === activeUuid);
+        return index >= 0 ? index : 0;
+    }, [activeUuid, contactUuids]);
+
+    const setCurrentIndex = useCallback(
+        (index: number) => {
+            const uuid = contactUuids[index];
+            if (uuid) setActiveUuid(uuid);
         },
         [contactUuids],
     );
+
+    const openAt = useCallback((contactUuid: string) => {
+        setActiveUuid(contactUuid);
+        setIsOpen(true);
+    }, []);
 
     const close = useCallback(() => {
         setIsOpen(false);
@@ -49,9 +59,9 @@ export function useContactStackViewer({
         if (!pendingPageNav || contactUuids.length === 0) return;
 
         if (pendingPageNav === "next") {
-            setCurrentIndex(0);
+            setActiveUuid(contactUuids[0] ?? null);
         } else {
-            setCurrentIndex(contactUuids.length - 1);
+            setActiveUuid(contactUuids[contactUuids.length - 1] ?? null);
         }
         setPendingPageNav(null);
     }, [contactUuids, pendingPageNav]);
@@ -59,6 +69,7 @@ export function useContactStackViewer({
     return {
         isOpen,
         setIsOpen,
+        activeUuid: activeUuid ?? "",
         currentIndex,
         setCurrentIndex,
         openAt,

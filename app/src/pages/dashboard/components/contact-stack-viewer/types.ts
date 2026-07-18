@@ -2,6 +2,7 @@ export interface ContactStackViewerProps {
     isOpen: boolean;
     onOpenChange: (open: boolean) => void;
     contactUuids: string[];
+    activeUuid: string;
     currentIndex: number;
     onIndexChange: (index: number) => void;
     totalCount?: number;
