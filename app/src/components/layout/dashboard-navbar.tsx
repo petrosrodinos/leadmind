@@ -19,6 +19,14 @@ const pageTitles: Record<string, string> = {
   [Routes.dashboard.settings]: "Settings",
   [Routes.dashboard.settings_usage]: "Usage",
   [Routes.dashboard.lists]: "Lists",
+  [Routes.dashboard.send_history]: "Send history",
+  [Routes.dashboard.campaigns]: "Campaigns",
+  [Routes.dashboard.message_templates]: "Templates",
+  [Routes.dashboard.reminders]: "Reminders",
+  [Routes.dashboard.forms]: "Forms",
+  [Routes.dashboard.integrations]: "Integrations",
+  [Routes.dashboard.sender_profiles]: "Sender Profiles",
+  [Routes.dashboard.filters]: "Filters",
 };
 
 function resolveDefaultTitle(pathname: string): string {

@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Button, Input, ListBox, Select, Spinner, TextField } from "@heroui/react";
-import { Mail, Search } from "lucide-react";
+import { Button, Spinner } from "@heroui/react";
 import { Channel, MsgStatus } from "@/features/contacts/interfaces/contact.interface";
 import { useSendHistory } from "@/features/outreach/hooks/use-send-history";
 import {
@@ -10,9 +9,20 @@ import {
 } from "@/features/outreach/interfaces/send-history.interface";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { useCampaigns } from "@/features/marketing-campaigns/hooks/use-marketing-campaigns";
+import { useDashboardNavbarTitle } from "@/components/providers/dashboard-navbar-provider";
+import { ContactsToolbar } from "@/pages/dashboard/pages/contacts/components/contacts-toolbar";
 import { SendHistoryTable } from "./components/send-history-table";
+import { SendHistoryFiltersBar } from "./components/send-history-filters-bar";
 
 const PAGE_SIZE = 25;
+
+function dateToStartIso(date: string): string {
+    return new Date(`${date}T00:00:00`).toISOString();
+}
+
+function dateToEndIso(date: string): string {
+    return new Date(`${date}T23:59:59.999`).toISOString();
+}
 
 const CHANNEL_OPTIONS = [
     { id: "", label: "All channels" },
@@ -55,8 +65,12 @@ export default function SendHistoryPage() {
     const status = searchParams.get("status") ?? "";
     const emailProvider = searchParams.get("email_provider") ?? "";
     const campaignUuid = searchParams.get("campaign_uuid") ?? "";
+    const dateFrom = searchParams.get("date_from") ?? "";
+    const dateTo = searchParams.get("date_to") ?? "";
 
     const debouncedSearch = useDebouncedValue(search, 300);
+
+    useDashboardNavbarTitle("Send history");
 
     const updateParams = (next: Record<string, string | undefined | null>) => {
         const params = new URLSearchParams(searchParams);
@@ -66,6 +80,14 @@ export default function SendHistoryPage() {
         }
         setSearchParams(params, { replace: true });
     };
+
+    const clearFilters = () => {
+        setSearchParams(new URLSearchParams({ page: "1" }), { replace: true });
+    };
+
+    const hasActiveFilters = Boolean(
+        search || channel || source || status || emailProvider || campaignUuid || dateFrom || dateTo,
+    );
 
     const query = useMemo(
         () => ({
@@ -79,6 +101,8 @@ export default function SendHistoryPage() {
             email_provider:
                 (emailProvider as typeof EmailIntegrationProvider.RESEND) || undefined,
             campaign_uuid: campaignUuid || undefined,
+            date_from: dateFrom ? dateToStartIso(dateFrom) : undefined,
+            date_to: dateTo ? dateToEndIso(dateTo) : undefined,
         }),
         [
             page,
@@ -88,6 +112,8 @@ export default function SendHistoryPage() {
             status,
             emailProvider,
             campaignUuid,
+            dateFrom,
+            dateTo,
         ],
     );
 
@@ -109,100 +135,74 @@ export default function SendHistoryPage() {
         [campaignsData?.data],
     );
 
+    const meta = isLoading
+        ? undefined
+        : `${total} send${total === 1 ? "" : "s"}${isFetching ? " · Updating…" : ""}`;
+
     return (
-        <div className="space-y-6">
-            <header className="space-y-1">
-                <div className="flex items-center gap-2">
-                    <Mail className="size-5 text-muted" />
-                    <h1 className="text-xl font-semibold text-foreground">Send history</h1>
-                </div>
-                <p className="text-sm text-muted max-w-2xl">
-                    Every email and SMS sent to a contact or through a campaign, including which
-                    integration delivered it.
-                </p>
-            </header>
+        <div className="space-y-4">
+            <ContactsToolbar title="Send history" meta={meta} />
 
-            <div className="flex flex-wrap gap-3 items-end">
-                <div className="w-72 relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted pointer-events-none" />
-                    <TextField name="search" className="w-full">
-                        <Input
-                            className="pl-9"
-                            placeholder="Search contact name, email, or phone"
-                            value={search}
-                            onChange={(e) =>
-                                updateParams({ search: e.target.value || null, page: "1" })
-                            }
-                        />
-                    </TextField>
-                </div>
-
-                <FilterSelect
-                    label="Channel"
-                    value={channel}
-                    options={CHANNEL_OPTIONS}
-                    onChange={(value) => updateParams({ channel: value || null, page: "1" })}
-                />
-
-                <FilterSelect
-                    label="Source"
-                    value={source}
-                    options={SOURCE_OPTIONS}
-                    onChange={(value) => updateParams({ source: value || null, page: "1" })}
-                />
-
-                <FilterSelect
-                    label="Status"
-                    value={status}
-                    options={STATUS_OPTIONS}
-                    onChange={(value) => updateParams({ status: value || null, page: "1" })}
-                />
-
-                <FilterSelect
-                    label="Integration"
-                    value={emailProvider}
-                    options={PROVIDER_OPTIONS}
-                    onChange={(value) =>
-                        updateParams({ email_provider: value || null, page: "1" })
-                    }
-                />
-
-                <FilterSelect
-                    label="Campaign"
-                    value={campaignUuid}
-                    options={campaignOptions}
-                    onChange={(value) =>
-                        updateParams({ campaign_uuid: value || null, page: "1" })
-                    }
-                />
-            </div>
+            <SendHistoryFiltersBar
+                search={search}
+                channel={channel}
+                source={source}
+                status={status}
+                emailProvider={emailProvider}
+                campaignUuid={campaignUuid}
+                dateFrom={dateFrom}
+                dateTo={dateTo}
+                channelOptions={CHANNEL_OPTIONS}
+                sourceOptions={SOURCE_OPTIONS}
+                statusOptions={STATUS_OPTIONS}
+                providerOptions={PROVIDER_OPTIONS}
+                campaignOptions={campaignOptions}
+                hasActiveFilters={hasActiveFilters}
+                onSearchChange={(value) => updateParams({ search: value || null, page: "1" })}
+                onChannelChange={(value) => updateParams({ channel: value || null, page: "1" })}
+                onSourceChange={(value) => updateParams({ source: value || null, page: "1" })}
+                onStatusChange={(value) => updateParams({ status: value || null, page: "1" })}
+                onEmailProviderChange={(value) =>
+                    updateParams({ email_provider: value || null, page: "1" })
+                }
+                onCampaignChange={(value) =>
+                    updateParams({ campaign_uuid: value || null, page: "1" })
+                }
+                onDateFromChange={(value) =>
+                    updateParams({ date_from: value || null, page: "1" })
+                }
+                onDateToChange={(value) => updateParams({ date_to: value || null, page: "1" })}
+                onClear={clearFilters}
+            />
 
             {isLoading ? (
                 <div className="flex justify-center py-16">
                     <Spinner size="lg" />
                 </div>
             ) : (
-                <>
-                    <div className="flex items-center justify-between gap-3 text-sm text-muted">
-                        <span>
-                            {total} send{total === 1 ? "" : "s"}
+                <div className="space-y-3">
+                    <div className="flex items-center justify-between gap-3">
+                        <p className="text-[12px] text-muted tabular-nums">
+                            {total.toLocaleString()} result{total === 1 ? "" : "s"}
                             {isFetching ? " · Updating…" : ""}
-                        </span>
-                        <div className="flex items-center gap-2">
+                        </p>
+                        <div className="flex items-center gap-1.5">
                             <Button
                                 size="sm"
                                 variant="secondary"
+                                className="h-7 px-2.5 text-[12px]"
                                 isDisabled={page <= 1}
                                 onPress={() => updateParams({ page: String(page - 1) })}
                             >
                                 Previous
                             </Button>
-                            <span className="tabular-nums">
-                                Page {page} of {Math.max(totalPages, 1)}
+                            <span className="min-w-[5.5rem] text-center text-[12px] text-muted tabular-nums">
+                                {page} / {Math.max(totalPages, 1)}
                             </span>
                             <Button
                                 size="sm"
                                 variant="secondary"
+                                className="h-7 px-2.5 text-[12px]"
                                 isDisabled={page >= totalPages}
                                 onPress={() => updateParams({ page: String(page + 1) })}
                             >
@@ -212,46 +212,8 @@ export default function SendHistoryPage() {
                     </div>
 
                     <SendHistoryTable rows={rows} />
-                </>
+                </div>
             )}
         </div>
-    );
-}
-
-function FilterSelect({
-    label,
-    value,
-    options,
-    onChange,
-}: {
-    label: string;
-    value: string;
-    options: { id: string; label: string }[];
-    onChange: (value: string) => void;
-}) {
-    const selected = options.find((option) => option.id === value) ?? options[0];
-
-    return (
-        <Select
-            className="w-44"
-            aria-label={label}
-            selectedKey={selected.id}
-            onSelectionChange={(key) => onChange(String(key ?? ""))}
-        >
-            <Select.Trigger>
-                <Select.Value />
-                <Select.Indicator />
-            </Select.Trigger>
-            <Select.Popover>
-                <ListBox>
-                    {options.map((option) => (
-                        <ListBox.Item key={option.id} id={option.id} textValue={option.label}>
-                            {option.label}
-                            <ListBox.ItemIndicator />
-                        </ListBox.Item>
-                    ))}
-                </ListBox>
-            </Select.Popover>
-        </Select>
     );
 }
