@@ -64,3 +64,7 @@ export interface BulkAddListContactsPayload {
 export interface AddListContactsResult {
     added: number;
 }
+
+export interface RemoveListContactsResult {
+    removed: number;
+}

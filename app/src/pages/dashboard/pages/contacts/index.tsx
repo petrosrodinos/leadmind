@@ -10,6 +10,7 @@ import { BulkSendMessageModal } from "@/pages/dashboard/components/bulk-send-mes
 import { BulkEnrichmentRunModal } from "@/components/ui/bulk-enrichment-run-modal";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { ContactsActionsDropdown } from "./components/contacts-actions-dropdown";
+import { ContactsToolbar } from "./components/contacts-toolbar";
 import {
     DEFAULT_ENRICHMENT_SOURCES,
     enrichmentSourceOptionsForBulk,
@@ -17,7 +18,11 @@ import {
 import { useEnrichContactsBulk } from "@/features/enrichment/hooks/use-enrichment";
 import { ContactFiltersForm } from "@/pages/dashboard/components/contact-filters-form";
 import { ContactStackViewerScope } from "@/pages/dashboard/components/contact-stack-viewer";
-import { useContacts, useBulkScrapeContactEmails } from "@/features/contacts/hooks/use-contacts";
+import {
+  useContacts,
+  useBulkScrapeContactEmails,
+  useDeleteContactsBulk,
+} from "@/features/contacts/hooks/use-contacts";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import {
   contactFiltersToListQuery,
@@ -28,6 +33,7 @@ import {
 } from "@/lib/contact-filter-params";
 import type { ContactFilters } from "@/interfaces/contact-filters.interface";
 import { Routes } from "@/routes/routes";
+import { useDashboardNavbarTitle } from "@/components/providers/dashboard-navbar-provider";
 
 const TABLE_PAGE_SIZE = 20;
 const PIPELINE_PAGE_SIZE = 100;
@@ -64,9 +70,11 @@ export default function ContactsPage() {
   const [composeOpen, setComposeOpen] = useState(false);
   const [enrichOpen, setEnrichOpen] = useState(false);
   const [scrapeConfirmOpen, setScrapeConfirmOpen] = useState(false);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
 
   const enrichBulk = useEnrichContactsBulk();
   const scrapeEmailsBulk = useBulkScrapeContactEmails();
+  const deleteContactsBulk = useDeleteContactsBulk();
 
   const updateFilters = (patch: Partial<ContactFilters>, resetPage = true) => {
     const next = { ...filters, ...patch };
@@ -107,6 +115,18 @@ export default function ContactsPage() {
       ? `We'll visit each selected contact's website to look for an email. Only contacts without an email but with a website are processed. Target: ${selectedKeys.size} selected contact${selectedKeys.size === 1 ? "" : "s"}.`
       : `We'll visit each matching contact's website to look for an email. Only contacts without an email but with a website are processed. Target: all contacts matching your current filters.`;
 
+  const deleteConfirmDescription =
+    selectedKeys.size === 1
+      ? "This removes the contact from your CRM. The underlying lead record stays in the public directory."
+      : `This removes ${selectedKeys.size} contacts from your CRM. Underlying lead records stay in the public directory.`;
+
+  const handleDeleteSelected = async () => {
+    if (selectedKeys.size === 0) return;
+    await deleteContactsBulk.mutateAsync([...selectedKeys]);
+    setSelectedKeys(new Set());
+    setDeleteConfirmOpen(false);
+  };
+
   const query = useMemo(
     () =>
       contactFiltersToListQuery(debouncedFilters, {
@@ -135,6 +155,12 @@ export default function ContactsPage() {
 
   const goToDetail = (uuid: string) => navigate(Routes.dashboard.contacts_detail.replace(":uuid", uuid));
 
+  useDashboardNavbarTitle("Contacts");
+
+  const contactMeta = isLoading
+    ? undefined
+    : `${total} contact${total === 1 ? "" : "s"}`;
+
   return (
     <ContactStackViewerScope
       contactUuids={contactUuids}
@@ -146,45 +172,51 @@ export default function ContactsPage() {
     >
       {(quickBrowse) => (
         <div className="space-y-4">
-          <div className="flex items-center justify-between gap-2 flex-wrap">
-            <h1 className="text-xl font-semibold text-foreground">Contacts</h1>
-            <div className="flex items-center gap-2">
-              <ContactsActionsDropdown
-                onAddContact={() => setCreateOpen(true)}
-                onQuickBrowse={view === "table" ? quickBrowse.openFirst : undefined}
-                quickBrowseDisabled={!quickBrowse.hasContacts}
-                onScoreSelected={view === "table" ? () => setScoreOpen(true) : undefined}
-                scoreDisabled={selectedKeys.size === 0}
-                onSendMessagesSelected={
-                  view === "table" ? () => setComposeOpen(true) : undefined
-                }
-                sendMessagesDisabled={selectedKeys.size === 0}
-                onEnrichSelected={view === "table" ? () => setEnrichOpen(true) : undefined}
-                enrichDisabled={selectedKeys.size === 0 || enrichBulk.isPending}
-                onScrapeEmailsSelected={view === "table" ? () => setScrapeConfirmOpen(true) : undefined}
-                scrapeEmailsDisabled={!canScrapeEmails}
-                scrapeEmailsPending={scrapeEmailsBulk.isPending}
-              />
-              <Tabs selectedKey={view} onSelectionChange={(key) => setView(String(key) as View)}>
-                <Tabs.List className="inline-flex gap-1 rounded-lg bg-surface-secondary p-1 border border-border">
-                  <Tabs.Tab
-                    id="table"
-                    className="px-3 py-1.5 text-sm font-medium rounded-md cursor-pointer transition-colors text-muted hover:text-foreground data-[selected]:bg-accent data-[selected]:text-accent-foreground data-[selected]:shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-accent inline-flex items-center gap-1.5"
-                  >
-                    <LayoutList className="size-3.5" />
-                    Table
-                  </Tabs.Tab>
-                  <Tabs.Tab
-                    id="pipeline"
-                    className="px-3 py-1.5 text-sm font-medium rounded-md cursor-pointer transition-colors text-muted hover:text-foreground data-[selected]:bg-accent data-[selected]:text-accent-foreground data-[selected]:shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-accent inline-flex items-center gap-1.5"
-                  >
-                    <Columns3 className="size-3.5" />
-                    Pipeline
-                  </Tabs.Tab>
-                </Tabs.List>
-              </Tabs>
-            </div>
-          </div>
+          <ContactsToolbar
+            title="Contacts"
+            meta={contactMeta}
+            actions={
+              <>
+                <ContactsActionsDropdown
+                  onAddContact={() => setCreateOpen(true)}
+                  onQuickBrowse={view === "table" ? quickBrowse.openFirst : undefined}
+                  quickBrowseDisabled={!quickBrowse.hasContacts}
+                  onScoreSelected={view === "table" ? () => setScoreOpen(true) : undefined}
+                  scoreDisabled={selectedKeys.size === 0}
+                  onSendMessagesSelected={
+                    view === "table" ? () => setComposeOpen(true) : undefined
+                  }
+                  sendMessagesDisabled={selectedKeys.size === 0}
+                  onEnrichSelected={view === "table" ? () => setEnrichOpen(true) : undefined}
+                  enrichDisabled={selectedKeys.size === 0 || enrichBulk.isPending}
+                  onScrapeEmailsSelected={view === "table" ? () => setScrapeConfirmOpen(true) : undefined}
+                  scrapeEmailsPending={scrapeEmailsBulk.isPending}
+                  scrapeEmailsDisabled={!canScrapeEmails}
+                  onDeleteSelected={view === "table" ? () => setDeleteConfirmOpen(true) : undefined}
+                  deleteDisabled={selectedKeys.size === 0}
+                  deletePending={deleteContactsBulk.isPending}
+                />
+                <Tabs selectedKey={view} onSelectionChange={(key) => setView(String(key) as View)}>
+                  <Tabs.List className="inline-flex gap-1 rounded-lg bg-surface-secondary p-1 border border-border">
+                    <Tabs.Tab
+                      id="table"
+                      className="px-3 py-1.5 text-sm font-medium rounded-md cursor-pointer transition-colors text-muted hover:text-foreground data-[selected]:bg-accent data-[selected]:text-accent-foreground data-[selected]:shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-accent inline-flex items-center gap-1.5"
+                    >
+                      <LayoutList className="size-3.5" />
+                      Table
+                    </Tabs.Tab>
+                    <Tabs.Tab
+                      id="pipeline"
+                      className="px-3 py-1.5 text-sm font-medium rounded-md cursor-pointer transition-colors text-muted hover:text-foreground data-[selected]:bg-accent data-[selected]:text-accent-foreground data-[selected]:shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-accent inline-flex items-center gap-1.5"
+                    >
+                      <Columns3 className="size-3.5" />
+                      Pipeline
+                    </Tabs.Tab>
+                  </Tabs.List>
+                </Tabs>
+              </>
+            }
+          />
 
           <ContactFiltersForm
             value={filters}
@@ -257,6 +289,23 @@ export default function ContactsPage() {
               confirmLabel="Start lookup"
               isPending={scrapeEmailsBulk.isPending}
               onConfirm={handleScrapeEmails}
+            />
+          ) : null}
+          {view === "table" ? (
+            <ConfirmDialog
+              isOpen={deleteConfirmOpen}
+              onOpenChange={setDeleteConfirmOpen}
+              title={
+                selectedKeys.size === 1
+                  ? "Delete selected contact?"
+                  : `Delete ${selectedKeys.size} selected contacts?`
+              }
+              description={deleteConfirmDescription}
+              confirmLabel="Delete"
+              cancelLabel="Cancel"
+              variant="danger"
+              isPending={deleteContactsBulk.isPending}
+              onConfirm={handleDeleteSelected}
             />
           ) : null}
         </div>

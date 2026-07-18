@@ -8,7 +8,6 @@ import { isTableNavInteractiveCell, tableNavInteractiveCellClassName, tableNavRo
 import type { Contact } from "@/features/contacts/interfaces/contact.interface";
 import { LeadStatus } from "@/features/contacts/interfaces/contact.interface";
 import { STATUS_OPTIONS } from "@/features/contacts/constants/contacts.constants";
-import { useRemoveListContact } from "@/features/contact-lists/hooks/use-contact-lists";
 import { useUpdateContactStatus } from "@/features/contacts/hooks/use-contacts";
 import { normalizeUrl } from "@/lib/profile";
 import { ContactScoresCompact } from "@/pages/dashboard/pages/leads/components/badges";
@@ -21,7 +20,6 @@ import {
 const columnHelper = createColumnHelper<Contact>();
 
 interface ListMembersTableProps {
-    listUuid: string;
     contacts: Contact[];
     isLoading: boolean;
     isFetching: boolean;
@@ -33,10 +31,11 @@ interface ListMembersTableProps {
     onContactOpen?: (contactUuid: string) => void;
     selectedKeys: Set<string>;
     onSelectionChange: (keys: Set<string>) => void;
+    onDeleteContact?: (contactUuid: string) => void;
+    deletePending?: boolean;
 }
 
 export function ListMembersTable({
-    listUuid,
     contacts,
     isLoading,
     isFetching,
@@ -48,8 +47,9 @@ export function ListMembersTable({
     onContactOpen,
     selectedKeys,
     onSelectionChange,
+    onDeleteContact,
+    deletePending = false,
 }: ListMembersTableProps) {
-    const removeContact = useRemoveListContact();
     const updateStatus = useUpdateContactStatus();
 
     const columns = useMemo(
@@ -153,27 +153,24 @@ export function ListMembersTable({
                                 onOpen={onContactOpen}
                             />
                             <ContactTableDetailLink contactUuid={contact.uuid} contactName={contact.name} />
-                            <Button
-                                size="sm"
-                                variant="tertiary"
-                                className="text-danger"
-                                isDisabled={removeContact.isPending}
-                                onPress={() =>
-                                    removeContact.mutate({
-                                        listUuid,
-                                        contactUuid: contact.uuid,
-                                    })
-                                }
-                                aria-label="Remove from list"
-                            >
-                                <Trash2 className="size-3.5" />
-                            </Button>
+                            {onDeleteContact ? (
+                                <Button
+                                    size="sm"
+                                    variant="tertiary"
+                                    className="text-danger"
+                                    isDisabled={deletePending}
+                                    onPress={() => onDeleteContact(contact.uuid)}
+                                    aria-label="Delete contact"
+                                >
+                                    <Trash2 className="size-3.5" />
+                                </Button>
+                            ) : null}
                         </div>
                     );
                 },
             }),
         ],
-        [listUuid, onContactOpen, removeContact, updateStatus],
+        [deletePending, onContactOpen, onDeleteContact, updateStatus],
     );
 
     const table = useReactTable({

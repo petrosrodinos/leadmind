@@ -5,6 +5,7 @@ import {
     createContact,
     createContactFromLead,
     deleteContact,
+    deleteContactsBulk,
     enrichContact,
     getContact,
     getContactTags,
@@ -141,11 +142,39 @@ export function useDeleteContact() {
         mutationFn: (uuid: string) => deleteContact(uuid),
         onSuccess: () => {
             qc.invalidateQueries({ queryKey: contactsQueryKeys.all });
+            qc.invalidateQueries({ queryKey: ["contact-lists"] });
             toast({ title: "Contact deleted", duration: 1500 });
         },
         onError: (error: Error) => {
             toast({
                 title: "Could not delete contact",
+                description: error.message,
+                duration: 3000,
+                variant: "error",
+            });
+        },
+    });
+}
+
+export function useDeleteContactsBulk() {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: (uuids: string[]) => deleteContactsBulk(uuids),
+        onSuccess: (data) => {
+            qc.invalidateQueries({ queryKey: contactsQueryKeys.all });
+            qc.invalidateQueries({ queryKey: ["contact-lists"] });
+            toast({
+                title: data.deleted === 1 ? "Contact deleted" : "Contacts deleted",
+                description:
+                    data.deleted === 1
+                        ? undefined
+                        : `${data.deleted} contacts removed from your CRM.`,
+                duration: 2000,
+            });
+        },
+        onError: (error: Error) => {
+            toast({
+                title: "Could not delete contacts",
                 description: error.message,
                 duration: 3000,
                 variant: "error",

@@ -9,6 +9,7 @@ import {
     listContactListMembers,
     listContactLists,
     removeListContact,
+    removeListContactsBulk,
     updateContactList,
 } from "../services/contact-lists.service";
 import type {
@@ -182,6 +183,35 @@ export function useRemoveListContact() {
         onError: (error: Error) => {
             toast({
                 title: "Could not remove contact",
+                description: error.message,
+                duration: 3000,
+                variant: "error",
+            });
+        },
+    });
+}
+
+export function useRemoveListContactsBulk() {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: (vars: { listUuid: string; contactUuids: string[] }) =>
+            removeListContactsBulk(vars.listUuid, vars.contactUuids),
+        onSuccess: (data, vars) => {
+            qc.invalidateQueries({ queryKey: contactListQueryKeys.all });
+            qc.invalidateQueries({ queryKey: contactListQueryKeys.detail(vars.listUuid) });
+            qc.invalidateQueries({ queryKey: contactListQueryKeys.members(vars.listUuid, {}) });
+            toast({
+                title: data.removed === 1 ? "Contact removed from list" : "Contacts removed from list",
+                description:
+                    data.removed === 1
+                        ? undefined
+                        : `${data.removed} contacts removed from this list.`,
+                duration: 2000,
+            });
+        },
+        onError: (error: Error) => {
+            toast({
+                title: "Could not remove contacts",
                 description: error.message,
                 duration: 3000,
                 variant: "error",

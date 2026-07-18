@@ -18,6 +18,7 @@ import { UpdateContactListDto } from './dto/update-contact-list.dto';
 import { ListContactListsDto } from './dto/list-contact-lists.dto';
 import { AddListContactsDto } from './dto/add-list-contacts.dto';
 import { BulkAddListContactsDto } from './dto/bulk-add-list-contacts.dto';
+import { BulkRemoveListContactsDto } from './dto/bulk-remove-list-contacts.dto';
 import { ListContactListMembersDto } from './dto/list-contact-list-members.dto';
 import { ContactAudienceStatsService } from '@/modules/contact-audience-stats/contact-audience-stats.service';
 import { ContactAudienceAnalysisService } from '@/modules/contact-audience-stats/contact-audience-analysis.service';
@@ -97,6 +98,16 @@ export class ContactListsController {
         @Body() dto: BulkAddListContactsDto,
     ) {
         return this.contactListsService.bulkAddContacts(user_uuid, uuid, dto);
+    }
+
+    @Post(':uuid/contacts/bulk-remove')
+    @ApiOperation({ summary: 'Remove multiple contacts from a list' })
+    removeContacts(
+        @CurrentUser('uuid') user_uuid: string,
+        @Param('uuid') uuid: string,
+        @Body() dto: BulkRemoveListContactsDto,
+    ) {
+        return this.contactListsService.removeContacts(user_uuid, uuid, dto.contact_uuids);
     }
 
     @Delete(':uuid/contacts/:contactUuid')

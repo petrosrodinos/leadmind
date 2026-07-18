@@ -65,6 +65,17 @@ export const deleteContact = async (uuid: string): Promise<{ uuid: string }> => 
     }
 };
 
+export const deleteContactsBulk = async (
+    uuids: string[],
+): Promise<{ deleted: number }> => {
+    try {
+        const response = await axiosInstance.post(ApiRoutes.contacts.bulk_delete, { uuids });
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error?.response?.data?.message || "Failed to delete contacts.");
+    }
+};
+
 export const createContactFromLead = async (lead_uuid: string): Promise<Contact> => {
     try {
         const response = await axiosInstance.post(ApiRoutes.contacts.from_lead(lead_uuid));

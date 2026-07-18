@@ -100,3 +100,11 @@ body {
   --focus: var(--accent);
   --link:  oklch(0.50 0.12 192);
 }
+
+.checkbox__control {
+  border: 1px solid oklch(0.48 0.008 192);
+}
+
+[data-theme="light"] .checkbox__control {
+  border-color: var(--field-border);
+}

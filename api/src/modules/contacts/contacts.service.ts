@@ -28,6 +28,7 @@ import { AiDraftMessageDto } from './dto/ai-draft-message.dto';
 import { BulkTriggerScoreDto } from './dto/bulk-trigger-score.dto';
 import { CreateContactDto } from './dto/create-contact.dto';
 import { EnrichContactDto } from './dto/enrich-contact.dto';
+import { BulkDeleteContactsDto } from './dto/bulk-delete-contacts.dto';
 import { BulkEnrichContactsDto } from './dto/bulk-enrich-contacts.dto';
 import { BulkScrapeContactEmailsDto } from './dto/bulk-scrape-contact-emails.dto';
 import { ListContactsDto } from './dto/list-contacts.dto';
@@ -452,6 +453,32 @@ export class ContactsService {
         await this.prisma.contact.delete({ where: { uuid } });
         await this.elasticsearchService.deleteContact(uuid);
         return { uuid };
+    }
+
+    async removeMany(
+        user_uuid: string,
+        dto: BulkDeleteContactsDto,
+    ): Promise<{ deleted: number }> {
+        const unique = [...new Set(dto.uuids)];
+        const rows = await this.prisma.contact.findMany({
+            where: { user_uuid, uuid: { in: unique } },
+            select: { uuid: true },
+        });
+        if (rows.length !== unique.length) {
+            const found = new Set(rows.map((r) => r.uuid));
+            const missing = unique.filter((u) => !found.has(u));
+            throw new NotFoundException(`Contact(s) not found: ${missing.join(', ')}`);
+        }
+
+        await this.prisma.contact.deleteMany({
+            where: { user_uuid, uuid: { in: unique } },
+        });
+
+        await Promise.all(
+            unique.map((uuid) => this.elasticsearchService.deleteContact(uuid)),
+        );
+
+        return { deleted: unique.length };
     }
 
     async updateStatus(

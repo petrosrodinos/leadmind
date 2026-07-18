@@ -21,6 +21,7 @@ import { ContactsService } from './contacts.service';
 import { AddNoteDto } from './dto/add-note.dto';
 import { AiDraftMessageDto } from './dto/ai-draft-message.dto';
 import { BulkAiDraftMessagesDto } from './dto/bulk-ai-draft-messages.dto';
+import { BulkDeleteContactsDto } from './dto/bulk-delete-contacts.dto';
 import { BulkEnrichContactsDto } from './dto/bulk-enrich-contacts.dto';
 import { BulkScrapeContactEmailsDto } from './dto/bulk-scrape-contact-emails.dto';
 import { BulkTriggerScoreDto } from './dto/bulk-trigger-score.dto';
@@ -123,6 +124,17 @@ export class ContactsController {
         @Body() dto: BulkScrapeContactEmailsDto,
     ) {
         return this.contactsService.triggerBulkScrapeEmailsFromWebsites(user_uuid, dto);
+    }
+
+    @Post('bulk-delete')
+    @ApiOperation({ summary: 'Delete multiple contacts' })
+    @ApiResponse({ status: 201 })
+    @ApiResponse({ status: 404 })
+    removeMany(
+        @CurrentUser('uuid') user_uuid: string,
+        @Body() dto: BulkDeleteContactsDto,
+    ) {
+        return this.contactsService.removeMany(user_uuid, dto);
     }
 
     @Get(':uuid')

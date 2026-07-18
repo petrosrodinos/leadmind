@@ -258,6 +258,29 @@ export class ContactListsService {
         return { contact_uuid: contactUuid };
     }
 
+    async removeContacts(user_uuid: string, listUuid: string, contactUuids: string[]) {
+        await this.ensureListOwned(user_uuid, listUuid);
+
+        const unique = [...new Set(contactUuids)];
+        const result = await this.prisma.contactListMember.deleteMany({
+            where: {
+                list_uuid: listUuid,
+                contact_uuid: { in: unique },
+            },
+        });
+
+        if (result.count === 0) {
+            throw new NotFoundException('None of the contacts are in this list');
+        }
+
+        await this.prisma.contactList.update({
+            where: { uuid: listUuid },
+            data: { updated_at: new Date() },
+        });
+
+        return { removed: result.count };
+    }
+
     async getMemberContactUuids(listUuid: string): Promise<string[]> {
         const rows = await this.prisma.contactListMember.findMany({
             where: { list_uuid: listUuid },

@@ -10,6 +10,7 @@ import type {
     ListContactListsQuery,
     PaginatedContactLists,
     PaginatedListMembers,
+    RemoveListContactsResult,
     UpdateContactListPayload,
 } from "../interfaces/contact-list.interface";
 
@@ -120,5 +121,20 @@ export const removeListContact = async (
         return response.data;
     } catch (error: any) {
         throw new Error(error?.response?.data?.message || "Failed to remove contact from list.");
+    }
+};
+
+export const removeListContactsBulk = async (
+    listUuid: string,
+    contact_uuids: string[],
+): Promise<RemoveListContactsResult> => {
+    try {
+        const response = await axiosInstance.post(
+            ApiRoutes.contact_lists.bulk_remove_contacts(listUuid),
+            { contact_uuids },
+        );
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error?.response?.data?.message || "Failed to remove contacts from list.");
     }
 };

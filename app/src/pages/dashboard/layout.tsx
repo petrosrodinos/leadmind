@@ -6,12 +6,17 @@ import SidebarContent from "@/components/layout/sidebar-content";
 import { AppLogo } from "@/components/layout/app-logo";
 import UserMenuPopover from "@/components/layout/user-menu-popover";
 import { WebsocketProvider } from "@/components/providers/websocket-provider";
+import {
+  DashboardNavbarProvider,
+  useDashboardNavbarSlots,
+} from "@/components/providers/dashboard-navbar-provider";
 import { useReminderNotifications } from "@/features/reminders/hooks/use-reminder-notifications";
 import { environments } from "@/config/environments";
 import { Routes } from "@/routes/routes";
 
-function DashboardLayoutInner() {
+function DashboardShell() {
   const drawerState = useOverlayState();
+  const { setSubnavEl } = useDashboardNavbarSlots();
   useReminderNotifications();
 
   return (
@@ -20,6 +25,7 @@ function DashboardLayoutInner() {
 
       <div className="flex min-h-0 flex-1 flex-col overflow-hidden mr-3">
         <DashboardNavbar onMenuClick={drawerState.open} />
+        <div ref={setSubnavEl} className="mx-3 mt-2 shrink-0 empty:hidden" />
         <main className="min-h-0 flex-1 overflow-y-auto p-6">
           <Outlet />
         </main>
@@ -29,7 +35,7 @@ function DashboardLayoutInner() {
         <Drawer.Backdrop
           isDismissable
           className="backdrop-blur-sm"
-          style={{ background: 'color-mix(in oklch, black 30%, transparent)' }}
+          style={{ background: "color-mix(in oklch, black 30%, transparent)" }}
         />
         <Drawer.Content placement="left">
           <Drawer.Dialog
@@ -41,7 +47,6 @@ function DashboardLayoutInner() {
               `,
             }}
           >
-            {/* Header — matches desktop sidebar header */}
             <Drawer.Header className="border-b border-border h-[54px] px-3 shrink-0 flex items-center gap-2">
               <NavLink
                 to={Routes.root}
@@ -56,7 +61,6 @@ function DashboardLayoutInner() {
               <Drawer.CloseTrigger className="p-1.5 rounded-lg text-muted hover:text-foreground hover:bg-surface-secondary transition-colors shrink-0" />
             </Drawer.Header>
 
-            {/* Nav items + user section */}
             <Drawer.Body className="px-2 pt-2.5 pb-2 flex flex-col gap-0">
               <SidebarContent collapsed={false} onNavigate={drawerState.close} />
               <div className="mt-4 pt-2 border-t border-border">
@@ -67,6 +71,14 @@ function DashboardLayoutInner() {
         </Drawer.Content>
       </Drawer>
     </div>
+  );
+}
+
+function DashboardLayoutInner() {
+  return (
+    <DashboardNavbarProvider>
+      <DashboardShell />
+    </DashboardNavbarProvider>
   );
 }
 

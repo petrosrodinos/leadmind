@@ -1,17 +1,27 @@
 import { useMemo, useState, type Key } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { Tabs } from "@heroui/react";
-import { ArrowLeft, List } from "lucide-react";
 import { Routes, ListDetailTabIds } from "@/routes/routes";
 import {
     useContactList,
     useContactListMembers,
+    useRemoveListContactsBulk,
 } from "@/features/contact-lists/hooks/use-contact-lists";
-import { useBulkScrapeContactEmails } from "@/features/contacts/hooks/use-contacts";
+import {
+    useBulkScrapeContactEmails,
+    useDeleteContactsBulk,
+} from "@/features/contacts/hooks/use-contacts";
+import { useDashboardNavbarTitle } from "@/components/providers/dashboard-navbar-provider";
 import { ContactListFormModal } from "../../components/contact-list-form-modal";
 import { ListMembersTable } from "./components/list-members-table";
 import { AddContactsModal } from "./components/add-contacts-modal";
 import { ListActionsDropdown } from "./components/list-actions-dropdown";
+import { ListDetailToolbar } from "./components/list-detail-toolbar";
+import {
+    ListMemberDeleteModes,
+    ListMembersDeleteDialog,
+    type ListMemberDeleteMode,
+} from "./components/list-members-delete-dialog";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { BulkSendMessageModal } from "@/pages/dashboard/components/bulk-send-message-modal";
 import { ContactAudienceAnalyticsPanel } from "@/pages/dashboard/components/audience-analytics/contact-audience-analytics-panel";
@@ -33,8 +43,12 @@ export default function ListDetailPage() {
     const [selectedKeys, setSelectedKeys] = useState<Set<string>>(new Set());
     const [scrapeConfirmOpen, setScrapeConfirmOpen] = useState(false);
     const [composeOpen, setComposeOpen] = useState(false);
+    const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+    const [pendingDeleteUuids, setPendingDeleteUuids] = useState<string[]>([]);
 
     const scrapeEmailsBulk = useBulkScrapeContactEmails();
+    const removeListContactsBulk = useRemoveListContactsBulk();
+    const deleteContactsBulk = useDeleteContactsBulk();
 
     const allowedTabIds = new Set<string>(TABS.map((t) => t.id));
     const rawTab = searchParams.get(Routes.dashboard.lists_detail_tab_query);
@@ -52,6 +66,8 @@ export default function ListDetailPage() {
         limit: MEMBERS_PAGE_SIZE,
     });
 
+    useDashboardNavbarTitle("Lists");
+
     const members = membersData?.data ?? [];
     const selectedMembers = useMemo(
         () => members.filter((m) => selectedKeys.has(m.uuid)),
@@ -60,6 +76,9 @@ export default function ListDetailPage() {
     const total = membersData?.total ?? 0;
     const totalPages = membersData?.totalPages ?? 1;
     const memberUuids = members.map((member) => member.uuid);
+    const deletePending = removeListContactsBulk.isPending || deleteContactsBulk.isPending;
+    const contactCount = list?.contact_count ?? total;
+    const contactMeta = `${contactCount} contact${contactCount === 1 ? "" : "s"}`;
 
     const handleMembersPageChange = (p: number) => {
         const params = new URLSearchParams(searchParams);
@@ -87,6 +106,33 @@ export default function ListDetailPage() {
         }
         await scrapeEmailsBulk.mutateAsync({ list_uuid: uuid });
         setScrapeConfirmOpen(false);
+    };
+
+    const openDeleteDialog = (uuids: string[]) => {
+        if (uuids.length === 0) return;
+        setPendingDeleteUuids(uuids);
+        setDeleteConfirmOpen(true);
+    };
+
+    const handleDeleteConfirm = async (mode: ListMemberDeleteMode) => {
+        if (!uuid || pendingDeleteUuids.length === 0) return;
+
+        if (mode === ListMemberDeleteModes.FROM_LIST) {
+            await removeListContactsBulk.mutateAsync({
+                listUuid: uuid,
+                contactUuids: pendingDeleteUuids,
+            });
+        } else {
+            await deleteContactsBulk.mutateAsync(pendingDeleteUuids);
+        }
+
+        setSelectedKeys((prev) => {
+            const next = new Set(prev);
+            for (const id of pendingDeleteUuids) next.delete(id);
+            return next;
+        });
+        setPendingDeleteUuids([]);
+        setDeleteConfirmOpen(false);
     };
 
     const scrapeConfirmDescription =
@@ -123,30 +169,11 @@ export default function ListDetailPage() {
             onPageChange={handleMembersPageChange}
         >
             {(quickBrowse) => (
-                <div className="flex flex-col gap-8">
-                    <div className="flex flex-col gap-4">
-                        <Link
-                            to={Routes.dashboard.lists}
-                            className="inline-flex items-center gap-1.5 text-sm text-muted hover:text-foreground w-fit"
-                        >
-                            <ArrowLeft className="size-4" />
-                            Back to lists
-                        </Link>
-
-                        <div className="flex flex-wrap items-start justify-between gap-3">
-                            <div className="flex items-start gap-3 min-w-0">
-                                <List className="size-5 text-muted shrink-0 mt-1" />
-                                <div className="min-w-0">
-                                    <h1 className="text-xl font-semibold text-foreground">{list.title}</h1>
-                                    {list.description ? (
-                                        <p className="text-sm text-muted mt-1">{list.description}</p>
-                                    ) : null}
-                                    <p className="text-xs text-muted mt-2">
-                                        {list.contact_count ?? total} contact
-                                        {(list.contact_count ?? total) === 1 ? "" : "s"}
-                                    </p>
-                                </div>
-                            </div>
+                <div className="flex flex-col gap-6">
+                    <ListDetailToolbar
+                        title={list.title}
+                        meta={contactMeta}
+                        actions={
                             <ListActionsDropdown
                                 showContactsActions={currentTab === ListDetailTabIds.CONTACTS}
                                 onQuickBrowse={
@@ -174,9 +201,22 @@ export default function ListDetailPage() {
                                         : undefined
                                 }
                                 sendMessagesDisabled={selectedKeys.size === 0}
+                                onDeleteSelected={
+                                    currentTab === ListDetailTabIds.CONTACTS
+                                        ? () => openDeleteDialog([...selectedKeys])
+                                        : undefined
+                                }
+                                deleteDisabled={selectedKeys.size === 0}
+                                deletePending={deletePending}
                             />
-                        </div>
-                    </div>
+                        }
+                    />
+
+                    {list.description ? (
+                        <p className="text-sm text-muted leading-relaxed max-w-3xl -mt-2">
+                            {list.description}
+                        </p>
+                    ) : null}
 
                     <Tabs selectedKey={currentTab} onSelectionChange={handleTabChange}>
                         <Tabs.List className="inline-flex gap-1 rounded-lg bg-surface-secondary p-1 border border-border">
@@ -192,35 +232,31 @@ export default function ListDetailPage() {
                         </Tabs.List>
                     </Tabs>
 
-                    <div className="pt-2">
-                        {currentTab === ListDetailTabIds.CONTACTS && (
-                            <section className="flex flex-col gap-4">
-                                <div className="flex flex-col gap-1">
-                                    <h2 className="text-base font-semibold text-foreground">Contacts in list</h2>
-                                    <p className="text-xs text-muted">
-                                        Click a name or use the up/down icon to open quick browse. Use arrow keys to move between contacts.
-                                    </p>
-                                </div>
-                                <ListMembersTable
-                                    listUuid={uuid}
-                                    contacts={members}
-                                    isLoading={membersLoading}
-                                    isFetching={membersFetching}
-                                    page={membersPage}
-                                    pageSize={MEMBERS_PAGE_SIZE}
-                                    total={total}
-                                    totalPages={totalPages}
-                                    onPageChange={handleMembersPageChange}
-                                    onContactOpen={quickBrowse.openAt}
-                                    selectedKeys={selectedKeys}
-                                    onSelectionChange={setSelectedKeys}
-                                />
-                            </section>
-                        )}
-                        {currentTab === ListDetailTabIds.ANALYTICS && (
-                            <ContactAudienceAnalyticsPanel scope={{ type: "list", uuid }} />
-                        )}
-                    </div>
+                    {currentTab === ListDetailTabIds.CONTACTS && (
+                        <section className="flex flex-col gap-4">
+                            <p className="text-xs text-muted">
+                                Click a name or use the up/down icon to open quick browse. Use arrow keys to move between contacts.
+                            </p>
+                            <ListMembersTable
+                                contacts={members}
+                                isLoading={membersLoading}
+                                isFetching={membersFetching}
+                                page={membersPage}
+                                pageSize={MEMBERS_PAGE_SIZE}
+                                total={total}
+                                totalPages={totalPages}
+                                onPageChange={handleMembersPageChange}
+                                onContactOpen={quickBrowse.openAt}
+                                selectedKeys={selectedKeys}
+                                onSelectionChange={setSelectedKeys}
+                                onDeleteContact={(contactUuid) => openDeleteDialog([contactUuid])}
+                                deletePending={deletePending}
+                            />
+                        </section>
+                    )}
+                    {currentTab === ListDetailTabIds.ANALYTICS && (
+                        <ContactAudienceAnalyticsPanel scope={{ type: "list", uuid }} />
+                    )}
 
                     <ContactListFormModal isOpen={editOpen} onOpenChange={setEditOpen} editing={list} />
                     <AddContactsModal
@@ -236,6 +272,16 @@ export default function ListDetailPage() {
                         confirmLabel="Start lookup"
                         isPending={scrapeEmailsBulk.isPending}
                         onConfirm={handleScrapeEmails}
+                    />
+                    <ListMembersDeleteDialog
+                        isOpen={deleteConfirmOpen}
+                        onOpenChange={(open) => {
+                            setDeleteConfirmOpen(open);
+                            if (!open) setPendingDeleteUuids([]);
+                        }}
+                        count={pendingDeleteUuids.length}
+                        isPending={deletePending}
+                        onConfirm={handleDeleteConfirm}
                     />
                     <BulkSendMessageModal
                         isOpen={composeOpen}

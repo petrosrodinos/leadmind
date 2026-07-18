@@ -168,6 +168,7 @@ export class CampaignMessageSendService {
         }
 
         try {
+            const providerMeta = parseEmailProviderMetadata(message.metadata);
             this.logger.log(
                 `Campaign deliver mcc=${mcc.uuid} message=${message.uuid} channel=${mcc.channel} provider=${providerOverride?.provider ?? providerMeta?.provider ?? 'default'} account=${providerOverride?.account ?? providerMeta?.account ?? 'default'} to=${mcc.contact.email ?? mcc.contact.phone ?? 'unknown'}`,
             );

@@ -1,6 +1,6 @@
 import type { FC } from "react";
 import { Button, Dropdown } from "@heroui/react";
-import { ChevronDown, ChevronsUpDown, Globe, Mail, Pencil, UserPlus } from "lucide-react";
+import { ChevronDown, ChevronsUpDown, Globe, Mail, Pencil, Trash2, UserPlus } from "lucide-react";
 
 interface ListActionsDropdownProps {
     showContactsActions?: boolean;
@@ -13,6 +13,9 @@ interface ListActionsDropdownProps {
     scrapeEmailsPending?: boolean;
     onSendMessagesSelected?: () => void;
     sendMessagesDisabled?: boolean;
+    onDeleteSelected?: () => void;
+    deleteDisabled?: boolean;
+    deletePending?: boolean;
 }
 
 export const ListActionsDropdown: FC<ListActionsDropdownProps> = ({
@@ -26,6 +29,9 @@ export const ListActionsDropdown: FC<ListActionsDropdownProps> = ({
     scrapeEmailsPending = false,
     onSendMessagesSelected,
     sendMessagesDisabled = false,
+    onDeleteSelected,
+    deleteDisabled = false,
+    deletePending = false,
 }) => (
     <Dropdown>
         <Dropdown.Trigger>
@@ -46,6 +52,7 @@ export const ListActionsDropdown: FC<ListActionsDropdownProps> = ({
                     if (key === "edit-list") onEditList();
                     if (key === "scrape-emails") onScrapeEmails?.();
                     if (key === "send-messages-selected") onSendMessagesSelected?.();
+                    if (key === "delete-selected") onDeleteSelected?.();
                 }}
             >
                 {showContactsActions && onQuickBrowse ? (
@@ -89,6 +96,18 @@ export const ListActionsDropdown: FC<ListActionsDropdownProps> = ({
                         <span className="flex items-center gap-2.5 antialiased">
                             <Globe className="size-4 shrink-0 text-muted" strokeWidth={2} />
                             <span className="font-medium text-foreground">Find emails from websites</span>
+                        </span>
+                    </Dropdown.Item>
+                ) : null}
+                {showContactsActions && onDeleteSelected ? (
+                    <Dropdown.Item
+                        id="delete-selected"
+                        textValue="Delete selected"
+                        isDisabled={deleteDisabled || deletePending}
+                    >
+                        <span className="flex items-center gap-2.5 antialiased">
+                            <Trash2 className="size-4 shrink-0 text-danger" strokeWidth={2} />
+                            <span className="font-medium text-danger">Delete selected</span>
                         </span>
                     </Dropdown.Item>
                 ) : null}
