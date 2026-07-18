@@ -103,7 +103,7 @@ export function ContactFiltersForm({
                             <Select.Value />
                             <Select.Indicator />
                         </Select.Trigger>
-                        <Select.Popover>
+                        <Select.Popover className="max-h-72">
                             <ListBox>
                                 <ListBox.Item id="" textValue="Any filter">
                                     Any filter

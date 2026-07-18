@@ -141,7 +141,7 @@ export function LeadFilters({
                         <Select.Value />
                         <Select.Indicator />
                     </Select.Trigger>
-                    <Select.Popover>
+                    <Select.Popover className="max-h-72">
                         <ListBox>
                             <ListBox.Item id="" textValue="All filters">
                                 All filters

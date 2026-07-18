@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Chip, FieldError, Input, Label, ListBox, Modal, Select, TextArea } from "@heroui/react";
+import { Button, Chip, FieldError, Input, Label, Modal, TextArea } from "@heroui/react";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
+import { MultiSelect } from "@/components/ui/multi-select";
 import { Plus, X } from "lucide-react";
 import { useCreateContact } from "@/features/contacts/hooks/use-contacts";
 import type { CreateContactPayload } from "@/features/contacts/interfaces/contact.interface";
@@ -38,11 +39,6 @@ export function CreateContactModal({ isOpen, onOpenChange }: CreateContactModalP
   const [tagDraft, setTagDraft] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  const filterOptions = useMemo(() => {
-    const enabled = filters.filter((f) => f.enabled);
-    return enabled.length > 0 ? enabled : filters;
-  }, [filters]);
-
   useEffect(() => {
     if (isOpen) {
       setForm(emptyForm());
@@ -52,14 +48,14 @@ export function CreateContactModal({ isOpen, onOpenChange }: CreateContactModalP
   }, [isOpen]);
 
   useEffect(() => {
-    if (!isOpen || filterOptions.length === 0) return;
+    if (!isOpen || filters.length === 0) return;
     setForm((prev) => {
-      if (prev.filter_uuid && filterOptions.some((f) => f.uuid === prev.filter_uuid)) {
+      if (prev.filter_uuid && filters.some((f) => f.uuid === prev.filter_uuid)) {
         return prev;
       }
-      return { ...prev, filter_uuid: filterOptions[0].uuid };
+      return { ...prev, filter_uuid: filters[0].uuid };
     });
-  }, [isOpen, filterOptions]);
+  }, [isOpen, filters]);
 
   const set = <K extends keyof CreateContactPayload>(key: K, value: CreateContactPayload[K]) => setForm((f) => ({ ...f, [key]: value }));
 
@@ -94,7 +90,7 @@ export function CreateContactModal({ isOpen, onOpenChange }: CreateContactModalP
 
     const filterUuid = form.filter_uuid?.trim() ?? "";
     if (!filterUuid) {
-      setError(filterOptions.length === 0 ? "Create a filter in Filters before adding a lead." : "Select a filter.");
+      setError(filters.length === 0 ? "Create a filter in Filters before adding a lead." : "Select a filter.");
       return;
     }
 
@@ -128,23 +124,19 @@ export function CreateContactModal({ isOpen, onOpenChange }: CreateContactModalP
             <Modal.Body className="min-h-0 flex-1 overflow-y-auto p-6">
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="flex flex-col gap-1.5 sm:col-span-2">
-                  <Select className="w-full" placeholder={filterOptions.length === 0 ? "No filters yet" : "Select a filter"} value={form.filter_uuid || null} onChange={(v) => set("filter_uuid", (v as string) ?? "")} isDisabled={filterOptions.length === 0}>
-                    <Label>Filter</Label>
-                    <Select.Trigger>
-                      <Select.Value />
-                      <Select.Indicator />
-                    </Select.Trigger>
-                    <Select.Popover>
-                      <ListBox>
-                        {filterOptions.map((f) => (
-                          <ListBox.Item key={f.uuid} id={f.uuid} textValue={f.name}>
-                            {f.name}
-                            <ListBox.ItemIndicator />
-                          </ListBox.Item>
-                        ))}
-                      </ListBox>
-                    </Select.Popover>
-                  </Select>
+                  <Label>Filter</Label>
+                  <MultiSelect
+                    selectionMode="single"
+                    aria-label="Filter"
+                    placeholder={filters.length === 0 ? "No filters yet" : "Select a filter"}
+                    searchPlaceholder="Search filters…"
+                    disabled={filters.length === 0}
+                    options={[...filters]
+                      .toSorted((a, b) => a.name.localeCompare(b.name))
+                      .map((f) => ({ value: f.uuid, label: f.name }))}
+                    value={form.filter_uuid ? [form.filter_uuid] : []}
+                    onChange={(next) => set("filter_uuid", next[0] ?? "")}
+                  />
                 </div>
                 <div className="flex flex-col gap-1.5 sm:col-span-2">
                   <Label htmlFor="cl-name">Name</Label>
@@ -235,7 +227,7 @@ export function CreateContactModal({ isOpen, onOpenChange }: CreateContactModalP
               </Button>
               <ActionButtonWithPending
                 type="submit"
-                isDisabled={createContact.isPending || filterOptions.length === 0}
+                isDisabled={createContact.isPending || filters.length === 0}
                 isPending={createContact.isPending}
                 idleLeading={<Plus className="size-4" />}
               >

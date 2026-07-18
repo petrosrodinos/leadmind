@@ -18,6 +18,23 @@ const FREE_EMAIL_DOMAINS = new Set([
     'ymail.com',
 ]);
 
+const GENERIC_WEBSITE_HOSTS = new Set([
+    ...FREE_EMAIL_DOMAINS,
+    'bit.ly',
+    'facebook.com',
+    'fb.com',
+    'instagram.com',
+    'linktr.ee',
+    'linkedin.com',
+    't.co',
+    'twitter.com',
+    'x.com',
+    'youtube.com',
+    'youtu.be',
+    'maps.google.com',
+    'goo.gl',
+]);
+
 export function websiteFromBusinessEmail(email: string | undefined | null): string | undefined {
     if (!email?.trim()) return undefined;
 
@@ -30,6 +47,20 @@ export function websiteFromBusinessEmail(email: string | undefined | null): stri
     if (FREE_EMAIL_DOMAINS.has(domain)) return undefined;
 
     return normalizeWebsiteUrl(domain);
+}
+
+export function normalizeWebsiteHost(website: string | null | undefined): string | null {
+    if (!website?.trim()) return null;
+    try {
+        const normalized = normalizeWebsiteUrl(website.trim());
+        const host = new URL(normalized).hostname.toLowerCase().replace(/^www\./, '');
+        if (!host || !host.includes('.') || GENERIC_WEBSITE_HOSTS.has(host)) {
+            return null;
+        }
+        return host;
+    } catch {
+        return null;
+    }
 }
 
 export function resolveLeadWebsite(

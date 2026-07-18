@@ -7,9 +7,10 @@ import { ApifyService } from '@/integrations/apify/apify.service';
 import { GemiService } from '@/integrations/gemi/gemi.service';
 import { ElasticsearchService } from '@/integrations/elasticsearch/elasticsearch.service';
 import { NormalizedLead } from '@/integrations/apify/interfaces/apify.interfaces';
-import { contactProfileFromLead } from '@/modules/contacts/utils/contact-profile.utils';
+import { contactProfileFromLead, fillEmptyContactProfileFromLead } from '@/modules/contacts/utils/contact-profile.utils';
 import {
     findOwnedContactByEmail,
+    findOwnedContactByWebsite,
     ensureContactFilterLink,
     linkContactToFilter,
 } from '@/modules/contacts/utils/contact-filter-link.utils';
@@ -302,8 +303,17 @@ export class FilterScrapeWorker extends WorkerHost {
                 });
             }
 
+            if (!existing_contact) {
+                existing_contact = await findOwnedContactByWebsite(
+                    this.prisma,
+                    filter.user_uuid,
+                    lead.website ?? normalized.website,
+                );
+            }
+
             if (existing_contact) {
                 await linkContactToFilter(this.prisma, existing_contact, filter.uuid);
+                const profilePatch = fillEmptyContactProfileFromLead(existing_contact, lead);
                 if (existing_contact.lead_uuid !== lead.uuid) {
                     const conflict = await this.prisma.contact.findUnique({
                         where: {
@@ -318,19 +328,19 @@ export class FilterScrapeWorker extends WorkerHost {
                             where: { uuid: existing_contact.uuid },
                             data: {
                                 lead_uuid: lead.uuid,
-                                ...contactProfileFromLead(lead),
+                                ...profilePatch,
                             },
                         });
-                    } else {
+                    } else if (Object.keys(profilePatch).length > 0) {
                         await this.prisma.contact.update({
                             where: { uuid: existing_contact.uuid },
-                            data: contactProfileFromLead(lead),
+                            data: profilePatch,
                         });
                     }
-                } else if (!is_new_lead) {
+                } else if (!is_new_lead && Object.keys(profilePatch).length > 0) {
                     await this.prisma.contact.update({
                         where: { uuid: existing_contact.uuid },
-                        data: contactProfileFromLead(lead),
+                        data: profilePatch,
                     });
                 }
                 await this.reindexContactsForLead(lead.uuid);

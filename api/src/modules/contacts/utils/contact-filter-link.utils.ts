@@ -1,6 +1,9 @@
-import { Contact, Filter, Prisma } from '@/generated/prisma';
+import { Contact, Filter, InteractionType, Prisma } from '@/generated/prisma';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { ElasticsearchService } from '@/integrations/elasticsearch/elasticsearch.service';
+import { normalizeWebsiteHost } from '@/modules/leads/utils/lead-website.utils';
+import { pickHigherLeadStatus } from '@/modules/contacts/constants/lead-status.constants';
+import { CONTACT_PROFILE_UPDATE_KEYS } from '@/modules/contacts/constants/contact-profile.constants';
 
 type PrismaClient = PrismaService | Prisma.TransactionClient;
 
@@ -17,6 +20,28 @@ export async function findOwnedContactByEmail(
             email: { equals: trimmed, mode: 'insensitive' },
         },
     });
+}
+
+export async function findOwnedContactByWebsite(
+    prisma: PrismaClient,
+    user_uuid: string,
+    website: string | null | undefined,
+): Promise<Contact | null> {
+    const host = normalizeWebsiteHost(website);
+    if (!host) return null;
+
+    const candidates = await prisma.contact.findMany({
+        where: {
+            user_uuid,
+            website: { contains: host, mode: 'insensitive' },
+        },
+        orderBy: { created_at: 'asc' },
+        take: 40,
+    });
+
+    return (
+        candidates.find((row) => normalizeWebsiteHost(row.website) === host) ?? null
+    );
 }
 
 export async function ensureContactFilterLink(
@@ -92,7 +117,44 @@ export async function mergeContactsIntoCanonical(
     if (!source) return target_uuid;
     if (!target) throw new Error('Target contact not found');
 
+    const mergedStatus = pickHigherLeadStatus(source.status, target.status);
+    const profilePatch: Prisma.ContactUpdateInput = {};
+    for (const key of CONTACT_PROFILE_UPDATE_KEYS) {
+        if (key === 'email') continue;
+        const targetVal = target[key];
+        const sourceVal = source[key];
+        if ((targetVal == null || targetVal === '') && sourceVal != null && sourceVal !== '') {
+            profilePatch[key] = sourceVal as never;
+        }
+    }
+    if (!target.filter_uuid && source.filter_uuid) {
+        profilePatch.filter = { connect: { uuid: source.filter_uuid } };
+    }
+    if (mergedStatus !== target.status) {
+        profilePatch.status = mergedStatus;
+    }
+
     await prisma.$transaction(async (tx) => {
+        if (Object.keys(profilePatch).length > 0) {
+            await tx.contact.update({
+                where: { uuid: target_uuid },
+                data: profilePatch,
+            });
+        }
+        if (mergedStatus !== target.status) {
+            await tx.interaction.create({
+                data: {
+                    contact_uuid: target_uuid,
+                    user_uuid,
+                    type: InteractionType.STATUS_CHANGE,
+                    status_change: {
+                        from: target.status,
+                        to: mergedStatus,
+                    },
+                },
+            });
+        }
+
         const sourceLinks = await tx.contactFilter.findMany({
             where: { contact_uuid: source_uuid },
         });
@@ -112,13 +174,6 @@ export async function mergeContactsIntoCanonical(
             });
         }
         await tx.contactFilter.deleteMany({ where: { contact_uuid: source_uuid } });
-
-        if (!target.filter_uuid && source.filter_uuid) {
-            await tx.contact.update({
-                where: { uuid: target_uuid },
-                data: { filter_uuid: source.filter_uuid },
-            });
-        }
 
         const targetTags = await tx.contactTag.findMany({
             where: { contact_uuid: target_uuid },

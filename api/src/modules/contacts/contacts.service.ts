@@ -422,6 +422,12 @@ export class ContactsService {
                         filter: { select: { uuid: true, name: true } },
                     },
                 },
+                list_memberships: {
+                    include: {
+                        list: { select: { uuid: true, title: true } },
+                    },
+                    orderBy: { created_at: 'asc' },
+                },
                 interactions: {
                     orderBy: { created_at: 'desc' },
                     take: 20,
@@ -445,7 +451,7 @@ export class ContactsService {
         if (!contact) {
             throw new NotFoundException(`Contact ${uuid} not found`);
         }
-        const { filter: rawFilter, contact_filters, ...rest } = contact;
+        const { filter: rawFilter, contact_filters, list_memberships, ...rest } = contact;
         const filter = rawFilter
             ? (() => {
                   const { filter_scoring_instructions, ...frest } = rawFilter;
@@ -467,32 +473,68 @@ export class ContactsService {
             filter,
             also_found_by: shaped.also_found_by,
             filters: shaped.filters,
+            lists: list_memberships.map((m) => ({
+                uuid: m.list.uuid,
+                title: m.list.title,
+            })),
             tags: contact.tags.map((t) => t.tag),
         };
     }
 
     async update(user_uuid: string, uuid: string, dto: UpdateContactDto) {
         await this.requireOwnedContact(user_uuid, uuid);
+
+        if (dto.email !== undefined) {
+            const email = dto.email.trim() || null;
+            if (email) {
+                const existingByEmail = await findOwnedContactByEmail(
+                    this.prisma,
+                    user_uuid,
+                    email,
+                );
+                if (existingByEmail && existingByEmail.uuid !== uuid) {
+                    await mergeContactsIntoCanonical(
+                        this.prisma,
+                        this.elasticsearchService,
+                        user_uuid,
+                        uuid,
+                        existingByEmail.uuid,
+                    );
+                    const data: Prisma.ContactUpdateInput = { email };
+                    if (dto.notes !== undefined) {
+                        data.notes = dto.notes;
+                    }
+                    await this.prisma.contact.update({
+                        where: { uuid: existingByEmail.uuid },
+                        data,
+                    });
+                    if (dto.list_uuids !== undefined) {
+                        await this.replaceContactListMemberships(
+                            user_uuid,
+                            existingByEmail.uuid,
+                            dto.list_uuids,
+                        );
+                    }
+                    await this.reindexContact(existingByEmail.uuid);
+                    return this.findOne(user_uuid, existingByEmail.uuid);
+                }
+            }
+        }
+
+        return this.applyUpdateToContact(user_uuid, uuid, dto);
+    }
+
+    private async applyUpdateToContact(
+        user_uuid: string,
+        uuid: string,
+        dto: UpdateContactDto,
+    ) {
         const data: Prisma.ContactUpdateInput = {};
         if (dto.notes !== undefined) {
             data.notes = dto.notes;
         }
-        if (dto.filter_uuid !== undefined) {
-            const filter = await this.prisma.filter.findFirst({
-                where: { uuid: dto.filter_uuid, user_uuid },
-            });
-            if (!filter) {
-                throw new NotFoundException('Filter not found');
-            }
-            data.filter = { connect: { uuid: dto.filter_uuid } };
-            await ensureContactFilterLink(this.prisma, uuid, dto.filter_uuid);
-        }
         if (dto.email !== undefined) {
-            const email = dto.email.trim() || null;
-            if (email) {
-                await this.assertEmailAvailable(user_uuid, email, uuid);
-            }
-            data.email = email;
+            data.email = dto.email.trim() || null;
         }
         for (const key of CONTACT_PROFILE_UPDATE_KEYS) {
             if (key === 'email') continue;
@@ -500,12 +542,53 @@ export class ContactsService {
                 data[key] = dto[key] as never;
             }
         }
-        await this.prisma.contact.update({
-            where: { uuid },
-            data,
-        });
+        if (Object.keys(data).length > 0) {
+            await this.prisma.contact.update({
+                where: { uuid },
+                data,
+            });
+        }
+        if (dto.list_uuids !== undefined) {
+            await this.replaceContactListMemberships(user_uuid, uuid, dto.list_uuids);
+        }
         await this.reindexContact(uuid);
         return this.findOne(user_uuid, uuid);
+    }
+
+    private async replaceContactListMemberships(
+        user_uuid: string,
+        contact_uuid: string,
+        list_uuids: string[],
+    ): Promise<void> {
+        const unique = [...new Set(list_uuids)];
+        if (unique.length > 0) {
+            const lists = await this.prisma.contactList.findMany({
+                where: { user_uuid, uuid: { in: unique } },
+                select: { uuid: true },
+            });
+            if (lists.length !== unique.length) {
+                const found = new Set(lists.map((l) => l.uuid));
+                const missing = unique.filter((id) => !found.has(id));
+                throw new NotFoundException(`List(s) not found: ${missing.join(', ')}`);
+            }
+        }
+
+        await this.prisma.contactListMember.deleteMany({
+            where: {
+                contact_uuid,
+                ...(unique.length > 0 ? { list_uuid: { notIn: unique } } : {}),
+            },
+        });
+
+        if (unique.length === 0) return;
+
+        await this.prisma.contactListMember.createMany({
+            data: unique.map((list_uuid) => ({
+                list_uuid,
+                contact_uuid,
+            })),
+            skipDuplicates: true,
+        });
     }
 
     async remove(user_uuid: string, uuid: string): Promise<{ uuid: string }> {
@@ -1357,17 +1440,6 @@ export class ContactsService {
                     content: dto.notes.trim(),
                 },
             });
-        }
-    }
-
-    private async assertEmailAvailable(
-        user_uuid: string,
-        email: string,
-        exclude_contact_uuid?: string,
-    ): Promise<void> {
-        const existing = await findOwnedContactByEmail(this.prisma, user_uuid, email);
-        if (existing && existing.uuid !== exclude_contact_uuid) {
-            throw new ConflictException('A contact with this email already exists');
         }
     }
 

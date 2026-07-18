@@ -150,7 +150,10 @@ export class ContactsController {
     }
 
     @Put(':uuid')
-    @ApiOperation({ summary: 'Update contact profile fields and notes' })
+    @ApiOperation({
+        summary:
+            'Update contact profile fields and notes. If email already belongs to another contact, merges into that contact and returns it (keeps the higher status).',
+    })
     update(
         @CurrentUser('uuid') user_uuid: string,
         @Param('uuid') uuid: string,

@@ -345,11 +345,18 @@ export function useUpdateContact() {
             }
             return { lists, listMembers, detail };
         },
-        onSuccess: (_data, vars) => {
-            qc.invalidateQueries({ queryKey: contactsQueryKeys.detail(vars.uuid) });
+        onSuccess: (data, vars) => {
+            if (data.uuid !== vars.uuid) {
+                qc.removeQueries({ queryKey: contactsQueryKeys.detail(vars.uuid) });
+                qc.setQueryData(contactsQueryKeys.detail(data.uuid), data);
+            }
+            qc.invalidateQueries({ queryKey: contactsQueryKeys.detail(data.uuid) });
             qc.invalidateQueries({ queryKey: contactsQueryKeys.all });
             qc.invalidateQueries({ queryKey: contactListQueryKeys.all });
-            toast({ title: "Contact updated", duration: 1500 });
+            toast({
+                title: data.uuid !== vars.uuid ? "Merged into existing contact" : "Contact updated",
+                duration: 2000,
+            });
         },
         onError: (error: Error) => {
             toast({

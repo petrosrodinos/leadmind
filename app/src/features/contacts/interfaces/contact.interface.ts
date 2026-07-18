@@ -241,8 +241,14 @@ export interface Contact {
     } | null;
     also_found_by?: ContactFilterRef[];
     filters?: ContactFilterRef[];
+    lists?: ContactListRef[];
     outreach_messages?: OutreachMessage[];
     interactions?: Interaction[];
+}
+
+export interface ContactListRef {
+    uuid: string;
+    title: string;
 }
 
 export interface ListContactsQuery {
@@ -343,7 +349,7 @@ export interface CreateContactPayload {
 }
 
 export interface UpdateContactPayload {
-    filter_uuid?: string;
+    list_uuids?: string[];
     name?: string;
     email?: string;
     phone?: string;

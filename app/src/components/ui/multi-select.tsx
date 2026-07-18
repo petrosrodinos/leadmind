@@ -16,6 +16,7 @@ interface MultiSelectProps {
     searchPlaceholder?: string;
     className?: string;
     disabled?: boolean;
+    selectionMode?: "multiple" | "single";
     /** Cap the rendered option list while the search is empty. Default: 200. */
     maxRendered?: number;
     "aria-label"?: string;
@@ -33,9 +34,11 @@ export function MultiSelect({
     searchPlaceholder = "Search…",
     className,
     disabled,
+    selectionMode = "multiple",
     maxRendered = 200,
     "aria-label": ariaLabel,
 }: MultiSelectProps) {
+    const single = selectionMode === "single";
     const reactId = useId();
     const inputId = id ?? reactId;
     const listboxId = `${inputId}-listbox`;
@@ -85,6 +88,12 @@ export function MultiSelect({
     }, [query, open]);
 
     const toggle = (val: string) => {
+        if (single) {
+            onChange(selectedSet.has(val) ? [] : [val]);
+            setOpen(false);
+            setQuery("");
+            return;
+        }
         if (selectedSet.has(val)) {
             onChange(value.filter((v) => v !== val));
         } else {
@@ -191,8 +200,8 @@ export function MultiSelect({
                     <ul
                         id={listboxId}
                         role="listbox"
-                        aria-multiselectable
-                        className="max-h-64 overflow-auto py-1"
+                        aria-multiselectable={!single}
+                        className="max-h-64 overflow-y-auto overscroll-contain py-1"
                     >
                         {filtered.length === 0 ? (
                             <li className="px-3 py-2 text-sm text-muted">No matches.</li>

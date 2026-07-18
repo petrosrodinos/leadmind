@@ -3,7 +3,7 @@ import type { ProfileDraft } from "../types";
 
 export function profileDraftFromContact(contact: Contact): ProfileDraft {
   return {
-    filter_uuid: contact.filter_uuid ?? "",
+    list_uuids: (contact.lists ?? []).map((l) => l.uuid),
     name: contact.name ?? "",
     email: contact.email ?? "",
     phone: contact.phone ?? "",
@@ -16,4 +16,10 @@ export function profileDraftFromContact(contact: Contact): ProfileDraft {
     industry: contact.industry ?? "",
     description: contact.description ?? "",
   };
+}
+
+export function sameUuidSet(a: string[], b: string[]): boolean {
+  if (a.length !== b.length) return false;
+  const set = new Set(a);
+  return b.every((id) => set.has(id));
 }

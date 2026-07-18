@@ -1,10 +1,16 @@
 import { ApiPropertyOptional, PartialType, PickType } from '@nestjs/swagger';
-import { IsOptional, IsString, MaxLength } from 'class-validator';
+import {
+    ArrayUnique,
+    IsArray,
+    IsOptional,
+    IsString,
+    IsUUID,
+    MaxLength,
+} from 'class-validator';
 import { CreateContactDto } from './create-contact.dto';
 
 export class UpdateContactDto extends PartialType(
     PickType(CreateContactDto, [
-        'filter_uuid',
         'name',
         'email',
         'phone',
@@ -18,6 +24,17 @@ export class UpdateContactDto extends PartialType(
         'description',
     ] as const),
 ) {
+    @ApiPropertyOptional({
+        type: [String],
+        format: 'uuid',
+        description: 'Replace contact list memberships with this set of list uuids.',
+    })
+    @IsOptional()
+    @IsArray()
+    @ArrayUnique()
+    @IsUUID('4', { each: true })
+    list_uuids?: string[];
+
     @ApiPropertyOptional({ maxLength: 5000 })
     @IsOptional()
     @IsString()
