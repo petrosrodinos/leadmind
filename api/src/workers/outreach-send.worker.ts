@@ -6,6 +6,7 @@ import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { OUTREACH_SEND_QUEUE } from '@/core/queues/queues.constants';
 import { ContactsService } from '@/modules/contacts/contacts.service';
 import { MessageSendService } from '@/modules/outreach/services/message-send.service';
+import { hasUsableContactEmail } from '@/shared/utils/contact-email.util';
 
 interface OutreachSendJobData {
     message_uuid: string;
@@ -59,6 +60,23 @@ export class OutreachSendWorker extends WorkerHost implements OnModuleInit {
             await this.failSkippedMessage(
                 message.uuid,
                 `Message is ${message.status} and cannot be sent`,
+                message.metadata,
+            );
+            return;
+        }
+
+        if (message.channel === Channel.EMAIL && !hasUsableContactEmail(message.contact.email)) {
+            await this.failSkippedMessage(
+                message.uuid,
+                'Contact has no email',
+                message.metadata,
+            );
+            return;
+        }
+        if (message.channel === Channel.SMS && !message.contact.phone?.trim()) {
+            await this.failSkippedMessage(
+                message.uuid,
+                'Contact has no phone',
                 message.metadata,
             );
             return;

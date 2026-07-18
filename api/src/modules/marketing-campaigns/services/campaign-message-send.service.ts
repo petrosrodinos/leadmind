@@ -19,6 +19,7 @@ import {
 } from '@/generated/prisma';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { MARKETING_MESSAGE_SEND_QUEUE } from '@/core/queues/queues.constants';
+import { hasUsableContactEmail } from '@/shared/utils/contact-email.util';
 import { sanitizeEmailHtml } from '@/shared/utils/sanitize-html.util';
 import { ContactsService } from '@/modules/contacts/contacts.service';
 import { MessageSendService } from '@/modules/outreach/services/message-send.service';
@@ -73,7 +74,10 @@ export class CampaignMessageSendService {
             return { status: 'skipped', reason: 'cancelled' };
         }
 
-        if (mcc.channel === Channel.EMAIL && !mcc.contact.email) {
+        if (mcc.channel === Channel.EMAIL && !hasUsableContactEmail(mcc.contact.email)) {
+            this.logger.warn(
+                `MCC ${mcc.uuid} skipped: no usable email (raw=${JSON.stringify(mcc.contact.email)})`,
+            );
             await this.markSkipped(mcc.uuid, mcc.campaign_uuid, 'no_email');
             return { status: 'skipped', reason: 'no_email' };
         }
@@ -328,7 +332,7 @@ export class CampaignMessageSendService {
             throw new ConflictException('Message is already queued for send');
         }
 
-        if (message.channel === Channel.EMAIL && !message.contact.email) {
+        if (message.channel === Channel.EMAIL && !hasUsableContactEmail(message.contact.email)) {
             throw new BadRequestException('Contact has no email');
         }
         if (message.channel === Channel.SMS && !message.contact.phone) {

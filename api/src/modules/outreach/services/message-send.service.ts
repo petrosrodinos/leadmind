@@ -16,6 +16,7 @@ import { SmtpMailService } from '@/integrations/notifications/smtp/services/mail
 import { CallsService } from '@/integrations/notifications/twillio/services/calls.service';
 import { TwillioSmsService } from '@/integrations/notifications/twillio/services/sms.service';
 import { EmailConfig } from '@/shared/config/email';
+import { hasUsableContactEmail, normalizeContactEmail } from '@/shared/utils/contact-email.util';
 import { sanitizeEmailHtml } from '@/shared/utils/sanitize-html.util';
 import { EmailCredentialsService } from '@/modules/integrations/services/email-credentials.service';
 import { EmailProviderTarget } from '@/modules/integrations/interfaces/email-credentials.interface';
@@ -55,6 +56,13 @@ export class MessageSendService {
             `Deliver outreach message=${message.uuid} channel=${message.channel} user=${message.user_uuid} contact=${message.contact_uuid}`,
         );
 
+        if (message.channel === Channel.EMAIL && !hasUsableContactEmail(message.contact.email)) {
+            this.logger.warn(
+                `Skip email send message=${message.uuid} contact=${message.contact_uuid}: no usable email (raw=${JSON.stringify(message.contact.email)})`,
+            );
+            throw new Error('Contact has no email');
+        }
+
         if (message.channel === Channel.PHONE_CALL) {
             if (!message.contact.phone) {
                 throw new Error('Contact has no phone');
@@ -83,9 +91,7 @@ export class MessageSendService {
         );
 
         if (message.channel === Channel.EMAIL) {
-            if (!message.contact.email) {
-                throw new Error('Contact has no email');
-            }
+            const toEmail = normalizeContactEmail(message.contact.email)!;
             let html = sanitizeEmailHtml(rendered.content);
             if (message.campaign_uuid) {
                 html = await this.appendUnsubscribeFooter(message.contact_uuid, html);
@@ -98,7 +104,7 @@ export class MessageSendService {
             }
             const replyTo = await this.resolveReplyTo(message);
             const createEmail = {
-                to: message.contact.email,
+                to: toEmail,
                 subject: rendered.subject ?? 'Outreach message',
                 html,
                 headers,
@@ -114,7 +120,7 @@ export class MessageSendService {
             const target = providerOverride ?? metadataProvider ?? defaultTarget;
 
             this.logger.log(
-                `Email send message=${message.uuid} to=${message.contact.email} subject="${rendered.subject ?? 'Outreach message'}" provider=${target?.provider ?? 'none'} account=${target?.account ?? 'none'} replyTo=${replyTo}`,
+                `Email send message=${message.uuid} to=${toEmail} subject="${rendered.subject ?? 'Outreach message'}" provider=${target?.provider ?? 'none'} account=${target?.account ?? 'none'} replyTo=${replyTo}`,
             );
 
             const { result, deliveryTarget } = await this.sendEmailWithProvider(

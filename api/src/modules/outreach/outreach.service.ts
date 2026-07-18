@@ -18,6 +18,7 @@ import {
 } from '@/generated/prisma';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { OUTREACH_SEND_QUEUE } from '@/core/queues/queues.constants';
+import { hasUsableContactEmail } from '@/shared/utils/contact-email.util';
 import { isEmailHtmlEmpty, sanitizeEmailHtml } from '@/shared/utils/sanitize-html.util';
 import { AssignSequenceDto } from './dto/assign-sequence.dto';
 import { CreateSequenceDto } from './dto/create-sequence.dto';
@@ -48,6 +49,7 @@ export class OutreachService {
     async createAndQueue(user_uuid: string, dto: SendOutreachDto): Promise<OutreachMessage> {
         const { content } = this.normalizeContentForChannel(dto.channel, dto.content);
         const contact = await this.requireOwnedContact(user_uuid, dto.contact_uuid);
+        this.assertContactCanReceiveChannel(contact, dto.channel);
         const scheduled_at = dto.scheduled_at ? new Date(dto.scheduled_at) : undefined;
         const metadata = await this.resolveMessageMetadata(user_uuid, dto);
         const message = await this.prisma.outreachMessage.create({
@@ -69,6 +71,7 @@ export class OutreachService {
     async createDraft(user_uuid: string, dto: SendOutreachDto): Promise<OutreachMessage> {
         const { content } = this.normalizeContentForChannel(dto.channel, dto.content);
         const contact = await this.requireOwnedContact(user_uuid, dto.contact_uuid);
+        this.assertContactCanReceiveChannel(contact, dto.channel);
         const metadata = await this.resolveMessageMetadata(user_uuid, dto);
         return this.prisma.outreachMessage.create({
             data: {
@@ -172,6 +175,11 @@ export class OutreachService {
         dto: SendExistingMessageDto = {},
     ): Promise<{ jobId: string }> {
         let message = await this.requireOwnedMessage(user_uuid, message_uuid);
+
+        if (message.channel === Channel.EMAIL || message.channel === Channel.SMS) {
+            const contact = await this.requireOwnedContact(user_uuid, message.contact_uuid);
+            this.assertContactCanReceiveChannel(contact, message.channel);
+        }
 
         if (
             message.channel === Channel.EMAIL &&
@@ -434,6 +442,18 @@ export class OutreachService {
     private ensurePending(message: OutreachMessage): void {
         if (message.status !== MsgStatus.PENDING) {
             throw new ConflictException('Only PENDING messages can be modified');
+        }
+    }
+
+    private assertContactCanReceiveChannel(
+        contact: Contact,
+        channel: Channel,
+    ): void {
+        if (channel === Channel.EMAIL && !hasUsableContactEmail(contact.email)) {
+            throw new BadRequestException('Contact has no email');
+        }
+        if (channel === Channel.SMS && !contact.phone?.trim()) {
+            throw new BadRequestException('Contact has no phone');
         }
     }
 
