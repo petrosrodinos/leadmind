@@ -812,7 +812,8 @@ exports.IntegrationKeyType = exports.$Enums.IntegrationKeyType = {
   PORT: 'PORT',
   USERNAME: 'USERNAME',
   PASSWORD: 'PASSWORD',
-  FROM_EMAIL: 'FROM_EMAIL'
+  FROM_EMAIL: 'FROM_EMAIL',
+  FROM_NAME: 'FROM_NAME'
 };
 
 exports.ReminderStatus = exports.$Enums.ReminderStatus = {

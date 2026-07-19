@@ -179,6 +179,7 @@ export class IntegrationsService {
     ): Promise<IntegrationResponse> {
         const provider = ExternalIntegrationProvider.SMTP;
         const account = dto.account.trim();
+        const fromName = dto.from_name?.trim();
         const entries: Array<{ key_type: IntegrationKeyType; secret: string }> = [
             { key_type: IntegrationKeyType.HOST, secret: dto.host.trim() },
             { key_type: IntegrationKeyType.PORT, secret: String(dto.port) },
@@ -186,6 +187,9 @@ export class IntegrationsService {
             { key_type: IntegrationKeyType.PASSWORD, secret: dto.password },
             { key_type: IntegrationKeyType.FROM_EMAIL, secret: dto.from_email.trim() },
         ];
+        if (fromName) {
+            entries.push({ key_type: IntegrationKeyType.FROM_NAME, secret: fromName });
+        }
 
         const integration = await this.ensureIntegration(user_uuid, provider);
         const integrationWithKeys = await this.prisma.integration.findUnique({

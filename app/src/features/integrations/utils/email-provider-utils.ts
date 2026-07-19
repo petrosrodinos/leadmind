@@ -62,14 +62,20 @@ function buildAccountDetail(
     const fromEmail = keys.find(
         (row) => row.account === account && row.key_type === "FROM_EMAIL",
     );
+    const fromName = keys.find(
+        (row) => row.account === account && row.key_type === "FROM_NAME",
+    );
     const hostHint = host?.display_value ?? (host?.last4 ? `····${host.last4}` : null);
     const fromHint = fromEmail?.display_value ?? (fromEmail?.last4 ? fromEmail.last4 : null);
+    const nameHint = fromName?.display_value?.trim() || null;
+    const fromLabel =
+        fromHint && nameHint ? `${nameHint} <${fromHint}>` : fromHint;
 
-    if (hostHint && fromHint) {
-        return `host ${hostHint} · from ${fromHint}`;
+    if (hostHint && fromLabel) {
+        return `host ${hostHint} · from ${fromLabel}`;
     }
-    if (fromHint) {
-        return `from ${fromHint}`;
+    if (fromLabel) {
+        return `from ${fromLabel}`;
     }
     if (hostHint) {
         return `host ${hostHint}`;

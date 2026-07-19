@@ -26,6 +26,7 @@ import {
     parseEmailProviderMetadata,
 } from '@/modules/outreach/utils/email-provider-allocation.util';
 import { parseSenderProfileMetadata } from '@/modules/outreach/utils/sender-profile-metadata.util';
+import { formatSmtpFromAddress } from '@/integrations/notifications/smtp/utils/format-smtp-from-address.util';
 import { OutreachRenderService } from './outreach-render.service';
 export interface DeliveredMessage {
     provider_message_id: string | null;
@@ -179,8 +180,12 @@ export class MessageSendService {
                 user_uuid,
                 target.account,
             );
+            const from = formatSmtpFromAddress(
+                smtpConfig.fromEmail,
+                smtpConfig.fromName,
+            );
             const result = await this.smtpMailService.sendEmail(
-                { ...createEmail, from: smtpConfig.fromEmail },
+                { ...createEmail, from },
                 smtpConfig,
             );
             return { result, deliveryTarget: target };

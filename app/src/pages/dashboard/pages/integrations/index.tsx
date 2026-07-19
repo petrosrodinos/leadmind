@@ -91,6 +91,11 @@ const FALLBACK_PROVIDERS: IntegrationProviderView[] = [
                 label: "From email",
                 placeholder: "noreply@example.com",
             },
+            {
+                key_type: "FROM_NAME",
+                label: "Sender name",
+                placeholder: "Acme Sales",
+            },
         ],
         keys: [],
     },

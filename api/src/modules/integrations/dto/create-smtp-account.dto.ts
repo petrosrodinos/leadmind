@@ -1,5 +1,15 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsInt, IsString, Matches, Max, Min, MinLength } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import {
+    IsEmail,
+    IsInt,
+    IsOptional,
+    IsString,
+    Matches,
+    Max,
+    MaxLength,
+    Min,
+    MinLength,
+} from 'class-validator';
 
 export class CreateSmtpAccountDto {
     @ApiProperty({ example: '1' })
@@ -31,4 +41,10 @@ export class CreateSmtpAccountDto {
     @ApiProperty({ example: 'noreply@example.com' })
     @IsEmail()
     from_email!: string;
+
+    @ApiPropertyOptional({ example: 'Acme Sales' })
+    @IsOptional()
+    @IsString()
+    @MaxLength(120)
+    from_name?: string;
 }

@@ -45,6 +45,7 @@ export function SmtpAccountFormModal({
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [fromEmail, setFromEmail] = useState("");
+    const [fromName, setFromName] = useState("");
     const [formError, setFormError] = useState<string | null>(null);
 
     useEffect(() => {
@@ -55,11 +56,13 @@ export function SmtpAccountFormModal({
         setUsername("");
         setPassword("");
         setFromEmail("");
+        setFromName("");
         setFormError(null);
     }, [defaultAccount, isOpen]);
 
     const handleSubmit = async () => {
         const trimmedAccount = account.trim();
+        const trimmedFromName = fromName.trim();
         const fields = {
             HOST: host.trim(),
             PORT: port.trim(),
@@ -89,6 +92,7 @@ export function SmtpAccountFormModal({
                 username: fields.USERNAME,
                 password: fields.PASSWORD,
                 from_email: fields.FROM_EMAIL,
+                ...(trimmedFromName ? { from_name: trimmedFromName } : {}),
             });
             await qc.invalidateQueries({ queryKey: integrationsQueryKeys.all });
             toast({ title: "SMTP account saved", duration: 1500 });
@@ -154,6 +158,19 @@ export function SmtpAccountFormModal({
                                         onChange={(e) => setFromEmail(e.target.value)}
                                         placeholder="noreply@example.com"
                                     />
+                                </div>
+                                <div className="flex flex-col gap-1.5 sm:col-span-2">
+                                    <Label htmlFor="smtp-from-name">Sender name</Label>
+                                    <Input
+                                        id="smtp-from-name"
+                                        className={borderedFieldClass}
+                                        value={fromName}
+                                        onChange={(e) => setFromName(e.target.value)}
+                                        placeholder="Acme Sales"
+                                    />
+                                    <p className="text-xs text-muted">
+                                        Shown to recipients as the From display name (optional).
+                                    </p>
                                 </div>
                                 <div className="flex flex-col gap-1.5 sm:col-span-2">
                                     <Label htmlFor="smtp-username">Username</Label>

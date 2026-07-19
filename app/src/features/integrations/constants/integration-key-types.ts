@@ -10,7 +10,7 @@ export const PROVIDER_KEY_TYPES: Record<IntegrationProvider, IntegrationKeyType[
         OPENAI: ["API_KEY", "WEBHOOK_SECRET"],
         ANTHROPIC: ["API_KEY"],
         RESEND: ["API_KEY", "FROM_EMAIL", "WEBHOOK_SECRET"],
-        SMTP: ["HOST", "PORT", "USERNAME", "PASSWORD", "FROM_EMAIL"],
+        SMTP: ["HOST", "PORT", "USERNAME", "PASSWORD", "FROM_EMAIL", "FROM_NAME"],
         TWILIO: ["ACCOUNT_SID", "AUTH_TOKEN"],
         APIFY: ["API_KEY"],
         HUBSPOT: ["ACCESS_TOKEN"],
@@ -32,6 +32,7 @@ export const KEY_TYPE_LABELS: Record<IntegrationKeyType, string> = {
     USERNAME: "Username",
     PASSWORD: "Password",
     FROM_EMAIL: "From email",
+    FROM_NAME: "Sender name",
 };
 
 export const KEY_TYPE_PLACEHOLDERS: Record<IntegrationKeyType, string> = {
@@ -45,7 +46,21 @@ export const KEY_TYPE_PLACEHOLDERS: Record<IntegrationKeyType, string> = {
     USERNAME: "user@example.com",
     PASSWORD: "App password",
     FROM_EMAIL: "noreply@example.com",
+    FROM_NAME: "Acme Sales",
 };
+
+export const OPTIONAL_PROVIDER_KEY_TYPES: Partial<
+    Record<IntegrationProvider, IntegrationKeyType[]>
+> = {
+    SMTP: ["FROM_NAME"],
+};
+
+export function requiredKeyTypesForProvider(
+    provider: IntegrationProvider,
+): IntegrationKeyType[] {
+    const optional = new Set(OPTIONAL_PROVIDER_KEY_TYPES[provider] ?? []);
+    return PROVIDER_KEY_TYPES[provider].filter((keyType) => !optional.has(keyType));
+}
 
 export const MASKED_INTEGRATION_KEY_TYPES = new Set<IntegrationKeyType>([
     "API_KEY",
@@ -60,6 +75,7 @@ const SMTP_DISPLAYABLE_KEY_TYPES = new Set<IntegrationKeyType>([
     "PORT",
     "USERNAME",
     "FROM_EMAIL",
+    "FROM_NAME",
 ]);
 
 const RESEND_DISPLAYABLE_KEY_TYPES = new Set<IntegrationKeyType>(["FROM_EMAIL"]);
@@ -210,7 +226,7 @@ export function isEmailProviderAccountVisible(
     if (provider === "RESEND") {
         return accountKeys.some((key) => key.key_type === "API_KEY");
     }
-    return PROVIDER_KEY_TYPES.SMTP.every((keyType) =>
+    return requiredKeyTypesForProvider("SMTP").every((keyType) =>
         accountKeys.some((key) => key.key_type === keyType),
     );
 }
@@ -227,7 +243,7 @@ export function isEmailAccountSendable(
             accountKeys.some((key) => key.key_type === keyType),
         );
     }
-    return PROVIDER_KEY_TYPES.SMTP.every((keyType) =>
+    return requiredKeyTypesForProvider("SMTP").every((keyType) =>
         accountKeys.some((key) => key.key_type === keyType),
     );
 }

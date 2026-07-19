@@ -390,7 +390,8 @@ export const IntegrationKeyType: {
   PORT: 'PORT',
   USERNAME: 'USERNAME',
   PASSWORD: 'PASSWORD',
-  FROM_EMAIL: 'FROM_EMAIL'
+  FROM_EMAIL: 'FROM_EMAIL',
+  FROM_NAME: 'FROM_NAME'
 };
 
 export type IntegrationKeyType = (typeof IntegrationKeyType)[keyof typeof IntegrationKeyType]

@@ -733,6 +733,7 @@ enum IntegrationKeyType {
   USERNAME
   PASSWORD
   FROM_EMAIL
+  FROM_NAME
 }
 
 model Integration {

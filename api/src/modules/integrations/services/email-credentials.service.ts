@@ -7,9 +7,10 @@ import { IntegrationsService } from '../integrations.service';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import {
     listDistinctIntegrationAccounts,
-    PROVIDER_KEY_TYPES,
+    requiredKeyTypesForProvider,
     resolveEffectiveDefaultAccount,
 } from '../constants/integration-key-types.constants';
+import { formatSmtpFromAddress } from '@/integrations/notifications/smtp/utils/format-smtp-from-address.util';
 import {
     EmailProviderTarget,
     SendableEmailAccount,
@@ -107,7 +108,7 @@ export class EmailCredentialsService {
 
     async getSmtpConfig(user_uuid: string, account: string): Promise<SmtpConfig> {
         await this.assertSendableAccount(user_uuid, ExternalIntegrationProvider.SMTP, account);
-        const [host, port, username, password, fromEmail] = await Promise.all([
+        const [host, port, username, password, fromEmail, fromName] = await Promise.all([
             this.integrationsService.getDecryptedSecret(
                 user_uuid,
                 ExternalIntegrationProvider.SMTP,
@@ -138,6 +139,7 @@ export class EmailCredentialsService {
                 IntegrationKeyType.FROM_EMAIL,
                 account,
             ),
+            this.tryGetSmtpFromName(user_uuid, account),
         ]);
 
         const parsedPort = parseInt(port, 10);
@@ -151,7 +153,27 @@ export class EmailCredentialsService {
             username: username.trim(),
             password,
             fromEmail: fromEmail.trim(),
+            fromName: fromName?.trim() || null,
         };
+    }
+
+    private async tryGetSmtpFromName(
+        user_uuid: string,
+        account: string,
+    ): Promise<string | null> {
+        try {
+            return await this.integrationsService.getDecryptedSecret(
+                user_uuid,
+                ExternalIntegrationProvider.SMTP,
+                IntegrationKeyType.FROM_NAME,
+                account,
+            );
+        } catch (error) {
+            if (error instanceof NotFoundException) {
+                return null;
+            }
+            throw error;
+        }
     }
 
     async assertSendableAccount(
@@ -246,7 +268,7 @@ export class EmailCredentialsService {
             );
         }
         if (provider === ExternalIntegrationProvider.SMTP) {
-            const required = PROVIDER_KEY_TYPES[ExternalIntegrationProvider.SMTP];
+            const required = requiredKeyTypesForProvider(ExternalIntegrationProvider.SMTP);
             return required.every((key_type) =>
                 accountKeys.some((key) => key.key_type === key_type),
             );

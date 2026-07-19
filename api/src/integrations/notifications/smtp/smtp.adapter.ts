@@ -5,13 +5,19 @@ import * as nodemailer from 'nodemailer';
 import type SMTPTransport from 'nodemailer/lib/smtp-transport';
 import { CreateEmail } from '../sendgrid/interfaces/mail.interfaces';
 import { SmtpConfig } from '@/modules/integrations/interfaces/email-credentials.interface';
+import { formatSmtpFromAddress } from './utils/format-smtp-from-address.util';
 
 @Injectable()
 export class SmtpAdapter {
     private readonly logger = new Logger(SmtpAdapter.name);
 
     async sendEmail(createEmail: CreateEmail, smtpConfig: SmtpConfig) {
-        const from = createEmail.from || smtpConfig.fromEmail;
+        const from =
+            createEmail.from ||
+            formatSmtpFromAddress(smtpConfig.fromEmail, smtpConfig.fromName);
+        this.logger.log(
+            `SMTP send host=${smtpConfig.host} from=${from} to=${createEmail.to} subject="${createEmail.subject}"`,
+        );
         const connectHost = await this.resolveIpv4Host(smtpConfig.host);
         const transporter = nodemailer.createTransport(
             this.buildTransportOptions(smtpConfig, connectHost),
@@ -29,6 +35,10 @@ export class SmtpAdapter {
                 replyTo: createEmail.replyTo,
                 headers: createEmail.headers,
             });
+
+            this.logger.log(
+                `SMTP sent messageId=${info.messageId ?? 'unknown'} from=${from} to=${createEmail.to}`,
+            );
 
             return { id: info.messageId, data: { id: info.messageId } };
         } catch (error) {

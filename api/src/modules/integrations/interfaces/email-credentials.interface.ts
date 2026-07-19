@@ -15,6 +15,7 @@ export interface SmtpConfig {
     username: string;
     password: string;
     fromEmail: string;
+    fromName: string | null;
 }
 
 export interface SendableEmailAccount extends EmailProviderTarget {

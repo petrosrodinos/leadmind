@@ -12,6 +12,7 @@ import {
     getMissingKeyTypesForAccount,
     groupKeysByAccount,
     isEmailAccountSendable,
+    OPTIONAL_PROVIDER_KEY_TYPES,
     providerAllowsMultipleAccounts,
     providerSupportsDefaultAccountSelection,
     suggestNextAccountLabel,
@@ -210,6 +211,17 @@ export function IntegrationDetailModal({
                                                     providerView.keys,
                                                     group.account,
                                                 );
+                                            const optionalMissingTypes = (
+                                                OPTIONAL_PROVIDER_KEY_TYPES[
+                                                    providerView.provider
+                                                ] ?? []
+                                            ).filter((keyType) =>
+                                                missingTypes.includes(keyType),
+                                            );
+                                            const requiredMissingTypes = missingTypes.filter(
+                                                (keyType) =>
+                                                    !optionalMissingTypes.includes(keyType),
+                                            );
 
                                             return (
                                                 <section
@@ -229,7 +241,7 @@ export function IntegrationDetailModal({
                                                                     <p className="text-xs text-muted mt-0.5">
                                                                         {sendable
                                                                             ? "Ready to send email"
-                                                                            : `Missing: ${missingTypes.join(", ").toLowerCase()}`}
+                                                                            : `Missing: ${requiredMissingTypes.join(", ").toLowerCase()}`}
                                                                     </p>
                                                                 ) : null}
                                                             </div>
@@ -323,6 +335,41 @@ export function IntegrationDetailModal({
                                                                     </Button>
                                                                 </div>
                                                             </li>
+                                                            );
+                                                        })}
+                                                        {optionalMissingTypes.map((keyType) => {
+                                                            const meta = providerView.keyTypes.find(
+                                                                (row) => row.key_type === keyType,
+                                                            );
+                                                            return (
+                                                                <li
+                                                                    key={`missing-${group.account}-${keyType}`}
+                                                                    className="flex items-center gap-3 px-3 py-2.5"
+                                                                >
+                                                                    <KeyRound className="size-4 text-muted shrink-0" />
+                                                                    <div className="flex-1 min-w-0">
+                                                                        <p className="text-sm font-medium text-foreground truncate">
+                                                                            {meta?.label ?? keyType}
+                                                                        </p>
+                                                                        <p className="text-xs text-muted">
+                                                                            Not set yet — recipients
+                                                                            see only the from email.
+                                                                        </p>
+                                                                    </div>
+                                                                    <Button
+                                                                        size="sm"
+                                                                        variant="secondary"
+                                                                        onPress={() =>
+                                                                            openCreate(
+                                                                                keyType,
+                                                                                group.account,
+                                                                            )
+                                                                        }
+                                                                    >
+                                                                        <Plus className="size-3.5" />
+                                                                        Add
+                                                                    </Button>
+                                                                </li>
                                                             );
                                                         })}
                                                     </ul>
