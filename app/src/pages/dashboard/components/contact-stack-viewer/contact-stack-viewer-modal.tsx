@@ -76,7 +76,7 @@ export const ContactStackViewerModal: FC<ContactStackViewerProps> = ({
                 <Modal.Dialog
                     className={cn(
                         "!m-0 !max-w-none !w-full !h-[100dvh] !rounded-none",
-                        "flex flex-col bg-background overflow-hidden",
+                        "flex flex-col bg-background overflow-hidden p-0",
                     )}
                 >
                     {activeUuid ? (
